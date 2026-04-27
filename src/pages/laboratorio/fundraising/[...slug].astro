@@ -1,0 +1,257 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, getEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
+  return all.map((entry) => ({ params: { slug: entry.slug } }));
+};
+
+const { slug } = Astro.params;
+const entry = await getEntry('diagnosticos', slug as string);
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await entry.render();
+const d = entry.data;
+
+const fmt = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// Mezcla de ingresos: solo barras con valor > 0, ordenadas
+const mezcla = Object.entries(d.mezcla_ingresos)
+  .filter(([, v]) => v > 0)
+  .sort(([, a], [, b]) => b - a)
+  .map(([k, v]) => ({
+    key: k,
+    label: ({
+      subvencion_publica: 'Subvención pública',
+      donantes_individuales: 'Donantes individuales',
+      empresas: 'Empresas',
+      fundaciones_privadas: 'Fundaciones privadas',
+      eventos_y_actividades: 'Eventos y actividades',
+      otros: 'Otros',
+    } as Record<string, string>)[k],
+    value: v,
+  }));
+
+// Otros diagnósticos (excluyendo el actual)
+const todos = await getCollection('diagnosticos', ({ data }) => !data.draft);
+const otros = todos
+  .filter((e) => e.slug !== entry.slug)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+---
+
+<Base
+  title={`${d.title} — Diagnósticos · Startidea`}
+  description={d.description}
+  ogSlug={`page/laboratorio-fundraising`}
+>
+  <article>
+    <!-- Hero / portada -->
+    <header class="border-b border-ink/15 bg-paper py-16 md:py-24">
+      <div class="container-x">
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          <a href="/laboratorio/fundraising" class="link-underline text-ink/70 hover:text-ink">← Diagnósticos de fundraising</a>
+        </p>
+
+        <div class="mt-6 grid grid-cols-12 gap-x-8 gap-y-6">
+          <div class="col-span-12 lg:col-span-8">
+            <span class="label">— Diagnóstico publicado el {fmt.format(d.pubDate)}</span>
+            <h1 class="mt-4 font-display text-display-lg leading-[1.02] text-ink">
+              {d.title}
+            </h1>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">
+              {d.description}
+            </p>
+          </div>
+
+          <aside class="col-span-12 lg:col-span-4 lg:pl-6 lg:border-l lg:border-ink/15">
+            <span class="label">— Ficha técnica</span>
+            <dl class="mt-4 divide-y divide-ink/10 border-y border-ink/10 text-sm">
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Sector</dt>
+                <dd class="text-right font-medium text-ink">{d.sector}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Tipología</dt>
+                <dd class="text-right font-medium text-ink">{d.tipologia}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Geografía</dt>
+                <dd class="text-right font-medium text-ink">{d.geografia}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Tamaño</dt>
+                <dd class="text-right font-medium text-ink">{d.tamaño}</dd>
+              </div>
+              {d.base_social && d.base_social > 0 && (
+                <div class="flex justify-between gap-4 py-3">
+                  <dt class="text-ink-mute">Base social</dt>
+                  <dd class="text-right font-medium text-ink">{d.base_social.toLocaleString('es-ES')} socios/donantes</dd>
+                </div>
+              )}
+              {d.edad_media_donante && d.edad_media_donante > 0 && (
+                <div class="flex justify-between gap-4 py-3">
+                  <dt class="text-ink-mute">Edad media donante</dt>
+                  <dd class="text-right font-medium text-ink">{d.edad_media_donante} años</dd>
+                </div>
+              )}
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Duración</dt>
+                <dd class="text-right font-medium text-ink">{d.duracion_diagnostico}</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    <!-- Visualización de la mezcla de ingresos -->
+    {mezcla.length > 0 && (
+      <section class="bg-paper-warm py-16 md:py-20">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-4">
+              <span class="label">— Mezcla de ingresos</span>
+              <h2 class="mt-4 font-display text-3xl leading-tight text-ink md:text-4xl">
+                De dónde <em class="italic text-magenta">venía el dinero</em>.
+              </h2>
+              <p class="mt-4 max-w-measure text-sm text-ink/80">
+                Foto-fija del último ejercicio cerrado al iniciar el diagnóstico. La concentración en una fuente cuenta más historia que cualquier párrafo.
+              </p>
+            </div>
+
+            <div class="col-span-12 mt-8 lg:col-span-7 lg:col-start-6 lg:mt-0">
+              <ul class="space-y-3">
+                {mezcla.map((m) => (
+                  <li>
+                    <div class="flex items-baseline justify-between gap-4">
+                      <span class="font-display text-base text-ink md:text-lg">{m.label}</span>
+                      <span class="font-mono text-sm font-medium text-ink">{m.value}%</span>
+                    </div>
+                    <div class="mt-1.5 h-2 w-full overflow-hidden border border-ink/15 bg-paper">
+                      <div
+                        class="h-full bg-magenta transition-[width] duration-700 ease-out"
+                        style={`width: ${m.value}%;`}
+                      ></div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Cuerpo editorial -->
+    <section class="bg-paper py-16 md:py-24">
+      <div class="container-narrow prose prose-startidea">
+        <Content />
+      </div>
+    </section>
+  </article>
+
+  <!-- Otros diagnósticos -->
+  {otros.length > 0 && (
+    <section class="border-t border-ink/15 bg-paper-warm py-20 md:py-24">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Sigue leyendo</span>
+            <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+              Otros <em class="italic text-magenta">diagnósticos</em>.
+            </h2>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <ul class="grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+              {otros.map((o) => (
+                <li>
+                  <a href={`/laboratorio/fundraising/${o.slug}`} class="group flex h-full flex-col bg-paper-warm p-6 transition-colors hover:bg-paper">
+                    <span class="label">{o.data.sector}</span>
+                    <p class="mt-3 font-display text-xl leading-tight text-ink transition-colors group-hover:text-magenta">
+                      {o.data.title}
+                    </p>
+                    <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-ink/70">
+                      {o.data.description}
+                    </p>
+                    <span aria-hidden="true" class="mt-6 font-mono text-sm text-ink/50 transition-transform group-hover:translate-x-1 group-hover:text-magenta">
+                      Leer →
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— ¿Tu entidad?</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+            Si reconoces tu organización <em class="italic text-magenta">en este diagnóstico</em>...
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Empezamos por una conversación de 30 minutos. Si encajamos, lanzamos un diagnóstico para tu caso. Si no — te lo decimos.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/fundraising" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              Ver servicio completo
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .prose-startidea {
+    @apply text-base leading-relaxed text-ink/90 md:text-lg;
+  }
+  .prose-startidea h2 {
+    @apply mt-12 mb-5 font-display text-2xl leading-tight text-ink md:text-3xl;
+  }
+  .prose-startidea h2:first-child { @apply mt-0; }
+  .prose-startidea h3 {
+    @apply mt-8 mb-3 font-display text-xl leading-tight text-ink md:text-2xl;
+  }
+  .prose-startidea p {
+    @apply mb-5;
+  }
+  .prose-startidea ul, .prose-startidea ol {
+    @apply mb-5 ml-5 space-y-2;
+  }
+  .prose-startidea ul { @apply list-disc; }
+  .prose-startidea ol { @apply list-decimal; }
+  .prose-startidea strong { @apply font-bold text-ink; }
+  .prose-startidea em { @apply italic; }
+  .prose-startidea a { @apply text-magenta underline; }
+  .prose-startidea hr {
+    @apply my-12 border-ink/15;
+  }
+  .prose-startidea table {
+    @apply my-6 w-full border-collapse text-sm;
+  }
+  .prose-startidea th, .prose-startidea td {
+    @apply border border-ink/15 px-3 py-2 text-left;
+  }
+  .prose-startidea th {
+    @apply bg-paper-warm font-display font-bold text-ink;
+  }
+</style>

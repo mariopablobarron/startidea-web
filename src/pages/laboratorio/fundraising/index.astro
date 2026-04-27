@@ -1,0 +1,191 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
+all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long' });
+
+// Filtros únicos para la barra superior
+const sectores = Array.from(new Set(all.map((d) => d.data.sector))).sort();
+const geografias = Array.from(new Set(all.map((d) => d.data.geografia))).sort();
+---
+
+<Base
+  title="Diagnósticos de fundraising — Laboratorio · Startidea"
+  description="Diagnósticos públicos y anonimizados de fundraising en entidades del Tercer Sector. Radiografía, palancas detectadas y recomendaciones — el método Startidea aplicado a casos reales."
+  ogSlug="page/laboratorio-fundraising"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Laboratorio · Diagnósticos de fundraising</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        El método.<br/>
+        <em class="italic text-magenta">Aplicado.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Cada entidad del Tercer Sector con la que trabajamos arranca con un diagnóstico de fundraising — la radiografía honesta de su mezcla de ingresos, sus dependencias y sus palancas. Una selección está aquí, anonimizada, para que veas cómo pensamos antes de proponer.
+      </p>
+      <p class="mt-4 max-w-measure font-mono text-xs leading-relaxed text-ink-mute">
+        Los nombres y cifras se generalizan por respeto al cliente. La metodología y los hallazgos son los reales.
+      </p>
+    </div>
+  </section>
+
+  {all.length > 0 ? (
+    <section class="bg-paper py-16 md:py-24">
+      <div class="container-x">
+        <!-- Barra de filtros -->
+        <div class="grid grid-cols-12 gap-x-8 gap-y-4 border-y border-ink/15 py-6">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Filtrar</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[11px] uppercase tracking-widest">
+            <span class="text-ink-mute">Sector:</span>
+            <button data-filter="sector" data-value="" class="filter-pill active">Todos</button>
+            {sectores.map((s) => (
+              <button data-filter="sector" data-value={s} class="filter-pill">{s}</button>
+            ))}
+            <span class="ml-4 text-ink-mute">Geografía:</span>
+            <button data-filter="geografia" data-value="" class="filter-pill active">Todas</button>
+            {geografias.map((g) => (
+              <button data-filter="geografia" data-value={g} class="filter-pill">{g}</button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Listado -->
+        <ol id="diagnosticos-list" class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+          {all.map((d, i) => (
+            <li
+              data-sector={d.data.sector}
+              data-geografia={d.data.geografia}
+              class="diagnostico-item"
+            >
+              <a href={`/laboratorio/fundraising/${d.slug}`} class="reveal group grid grid-cols-12 gap-x-8 gap-y-4 py-10 transition-colors hover:bg-paper-warm">
+                <div class="col-span-12 lg:col-span-3">
+                  <span class="num-edit text-5xl md:text-6xl">{String(i + 1).padStart(2, '0')}</span>
+                  <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                    {fmt.format(d.data.pubDate)}
+                  </p>
+                </div>
+                <div class="col-span-12 lg:col-span-7">
+                  <h2 class="font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-3xl">
+                    {d.data.title}
+                  </h2>
+                  <p class="mt-3 max-w-measure text-ink/75">
+                    {d.data.description}
+                  </p>
+                  <div class="mt-4 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-wider">
+                    <span class="border border-magenta/40 px-2 py-0.5 text-magenta">{d.data.sector}</span>
+                    <span class="border border-ink/30 px-2 py-0.5 text-ink/70">{d.data.geografia}</span>
+                    <span class="border border-ink/30 px-2 py-0.5 text-ink/70">{d.data.tipologia}</span>
+                    <span class="border border-ink/30 px-2 py-0.5 text-ink/70">{d.data.tamaño}</span>
+                  </div>
+                </div>
+                <div class="col-span-12 lg:col-span-2 lg:text-right">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                    {d.data.duracion_diagnostico}
+                  </span>
+                  <p class="mt-2 font-mono text-xs text-ink/70 transition-colors group-hover:text-magenta">
+                    Leer →
+                  </p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        <p id="empty-msg" class="mt-12 hidden text-center font-display text-xl text-ink/60">
+          No hay diagnósticos que coincidan con los filtros seleccionados.
+        </p>
+      </div>
+    </section>
+  ) : (
+    <section class="bg-paper py-16 md:py-24">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+            <p class="font-display text-2xl leading-snug text-ink/60 md:text-3xl">
+              Pronto publicaremos los primeros diagnósticos. Si trabajas en una entidad del Tercer Sector y quieres ser de los primeros en conversar — escríbenos.
+            </p>
+            <div class="mt-8">
+              <a href="/contacto" class="btn">
+                Hablar con nosotras
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— ¿Tu entidad?</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+            Si esto te resuena, <em class="italic text-magenta">empecemos por un diagnóstico</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            La primera conversación es de 30 minutos, sin compromiso. Te decimos honestamente si encajamos antes de que tú decidas invertir nada.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/fundraising" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              Ver el servicio completo
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .filter-pill {
+    @apply border border-ink/30 px-3 py-1.5 text-ink/70 transition-colors hover:border-ink hover:text-ink;
+  }
+  .filter-pill.active {
+    @apply border-ink bg-ink text-paper;
+  }
+</style>
+
+<script>
+  const state: Record<string, string> = { sector: '', geografia: '' };
+  const items = document.querySelectorAll<HTMLElement>('.diagnostico-item');
+  const empty = document.getElementById('empty-msg');
+
+  function applyFilter() {
+    let visibles = 0;
+    items.forEach((el) => {
+      const matchSector = !state.sector || el.dataset.sector === state.sector;
+      const matchGeo = !state.geografia || el.dataset.geografia === state.geografia;
+      const ok = matchSector && matchGeo;
+      el.style.display = ok ? '' : 'none';
+      if (ok) visibles++;
+    });
+    if (empty) empty.classList.toggle('hidden', visibles > 0);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.filter-pill').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter as 'sector' | 'geografia';
+      const value = btn.dataset.value || '';
+      state[filter] = value;
+      document
+        .querySelectorAll<HTMLButtonElement>(`.filter-pill[data-filter="${filter}"]`)
+        .forEach((b) => b.classList.toggle('active', (b.dataset.value || '') === value));
+      applyFilter();
+    });
+  });
+</script>

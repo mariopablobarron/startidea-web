@@ -122,6 +122,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'no existe',
       subtitle: 'O nunca existió, o la movimos de sitio sin avisar. Te dejamos atajos para volver a algo útil.',
     },
+    'page/laboratorio-fundraising': {
+      kind: 'page',
+      eyebrow: '— Laboratorio · Diagnósticos de fundraising',
+      title: 'El método. Aplicado.',
+      accent: 'Aplicado',
+      subtitle: 'Diagnósticos públicos y anonimizados del Tercer Sector. Radiografía, palancas detectadas y recomendaciones — el método Startidea aplicado a casos reales.',
+    },
   };
 
   // Casos individuales
