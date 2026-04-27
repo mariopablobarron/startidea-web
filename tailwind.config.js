@@ -49,12 +49,12 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        // Escala display con clamp() — escala fluido en TODOS los tamaños hasta 4K.
-        // El máximo se sube para que en pantallas grandes el hero respire.
-        'display-xl': ['clamp(3.5rem, 9vw, 12rem)',   { lineHeight: '0.94', letterSpacing: '-0.035em' }],
-        'display-lg': ['clamp(2.75rem, 6.5vw, 8.5rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
-        'display-md': ['clamp(2rem, 4.5vw, 5.25rem)',  { lineHeight: '1.02', letterSpacing: '-0.025em' }],
-        'lede':       ['clamp(1.25rem, 1.75vw, 1.875rem)', { lineHeight: '1.45', letterSpacing: '-0.005em' }],
+        // Escala display con clamp() — escala fluido desde móviles pequeños (360px)
+        // hasta TVs 4K. Mínimos pensados para que el texto largo quepa en 360px.
+        'display-xl': ['clamp(2.5rem, 9vw, 12rem)',   { lineHeight: '0.96', letterSpacing: '-0.035em' }],
+        'display-lg': ['clamp(2.125rem, 6.5vw, 8.5rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
+        'display-md': ['clamp(1.75rem, 4.5vw, 5.25rem)',  { lineHeight: '1.02', letterSpacing: '-0.025em' }],
+        'lede':       ['clamp(1.125rem, 1.75vw, 1.875rem)', { lineHeight: '1.5', letterSpacing: '-0.005em' }],
       },
       letterSpacing: {
         wider: '0.18em',
