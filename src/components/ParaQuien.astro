@@ -1,0 +1,77 @@
+---
+const audiences = [
+  {
+    num: '01',
+    tag: 'Tercer sector',
+    title: 'ONG, fundaciones y asociaciones que necesitan profesionalizar lo que cuentan.',
+    body: 'Direcciones de comunicación y patronatos con presupuesto y voluntad de mover la aguja en captación, vínculo con donantes y narrativa de impacto.',
+    quote: '"Comunicar bien no es opcional cuando lo que está en juego es tu causa."',
+    href: '/para-quien/tercer-sector',
+  },
+  {
+    num: '02',
+    tag: 'Instituciones',
+    title: 'Administración pública, fundaciones públicas y entidades con base ética o religiosa.',
+    body: 'Hablamos los códigos del sector institucional sin folclorismo ni edulcorante. Modernizamos lenguaje, no identidad.',
+    quote: '"Modernizar el lenguaje sin traicionar la identidad. Es posible. Es necesario."',
+    href: '/para-quien/instituciones',
+  },
+  {
+    num: '03',
+    tag: 'Empresas con propósito',
+    title: 'Direcciones de comunicación, sostenibilidad y RSC que quieren dejar de hacer ESG de postureo.',
+    body: 'Convertimos el discurso de propósito en hechos comunicables y articulamos partnerships reales con el tercer sector.',
+    quote: '"El propósito o se demuestra o no existe. Te ayudamos a demostrarlo."',
+    href: '/para-quien/empresas',
+  },
+];
+---
+
+<section id="para-quien" class="relative bg-paper py-24 md:py-32">
+  <div class="container-x">
+    <!-- Encabezado de sección -->
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 md:col-span-3">
+        <span class="label">— Para quién</span>
+      </div>
+      <div class="col-span-12 mt-6 md:col-span-9 md:mt-0">
+        <h2 class="font-display text-display-lg leading-[0.98] text-ink">
+          Tres audiencias.
+          <span class="block italic text-ink/55">Tres conversaciones distintas.</span>
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-ink/80">
+          La home te habla a las tres a la vez. Cada audiencia tiene su página propia con su lenguaje, sus casos y un punto de entrada cualificado.
+        </p>
+      </div>
+    </div>
+
+    <!-- Grid editorial de tres audiencias -->
+    <div class="mt-20 grid grid-cols-1 gap-x-8 gap-y-14 lg:grid-cols-3">
+      {audiences.map((a) => (
+        <a href={a.href} class="reveal card-edit group cursor-pointer">
+          <div class="flex items-baseline justify-between">
+            <span class="num-edit text-7xl">{a.num}</span>
+            <span class="label">{a.tag}</span>
+          </div>
+
+          <h3 class="mt-8 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
+            {a.title}
+          </h3>
+
+          <p class="mt-5 text-ink/75">
+            {a.body}
+          </p>
+
+          <p class="mt-7 font-display text-xl italic leading-snug text-magenta">
+            {a.quote}
+          </p>
+
+          <span class="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink/70 transition-colors group-hover:text-magenta">
+            Leer más
+            <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base
+  title="404 — Página no encontrada · Startidea"
+  description="La página que buscas no existe o ha sido movida. Volvamos a tierra firme."
+  ogSlug="page/404"
+>
+  <section class="bg-paper py-24 md:py-36 lg:py-44">
+    <div class="container-x">
+      <span class="label">— Error 404</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Esta página<br/>
+        <em class="italic text-magenta">no existe</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        O nunca existió, o la movimos de sitio sin avisar. En cualquier caso, no es culpa tuya. Te dejamos atajos para volver a algo útil.
+      </p>
+
+      <div class="mt-12 flex flex-wrap gap-4">
+        <a href="/" class="btn">
+          Ir a la portada
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/casos" class="btn-ghost">
+          Ver casos
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/contacto" class="btn-ghost">
+          Hablemos
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Atajos</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ul class="divide-y divide-ink/15 border-y border-ink/15">
+            <li><a href="/manifiesto" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Manifiesto <span aria-hidden="true">→</span></a></li>
+            <li><a href="/como-trabajamos" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Cómo trabajamos <span aria-hidden="true">→</span></a></li>
+            <li><a href="/para-quien" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Para quién <span aria-hidden="true">→</span></a></li>
+            <li><a href="/notas" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Notas <span aria-hidden="true">→</span></a></li>
+            <li><a href="/sobre" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Sobre Startidea <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

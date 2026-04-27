@@ -1,0 +1,255 @@
+---
+import Base from '@/layouts/Base.astro';
+import { casos, getCasoBySlug } from '@/data/casos';
+
+export function getStaticPaths() {
+  return casos.map((c) => ({ params: { slug: c.slug } }));
+}
+
+const { slug } = Astro.params;
+const caso = getCasoBySlug(slug!);
+if (!caso) {
+  return Astro.redirect('/casos');
+}
+
+const nextCaso = caso.next ? getCasoBySlug(caso.next) : null;
+const prevCaso = caso.prev ? getCasoBySlug(caso.prev) : null;
+---
+
+<Base
+  title={`${caso.cliente} — Casos · Startidea`}
+  description={caso.body}
+  ogSlug={`casos/${caso.slug}`}
+>
+  <!-- Cabecera del caso -->
+  <article>
+    <header class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+      <div class="container-x">
+        <!-- Migas -->
+        <nav class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute" aria-label="Migas">
+          <a href="/casos" class="link-underline hover:text-ink">Casos</a>
+          <span aria-hidden="true">/</span>
+          <span>{caso.num}</span>
+        </nav>
+
+        <div class="mt-10 grid grid-cols-12 gap-x-8">
+          <!-- Número grande -->
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-8xl md:text-9xl">{caso.num}</span>
+          </div>
+
+          <div class="col-span-12 lg:col-span-9">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="label">{caso.sector}</span>
+              {caso.kind === 'propio' && (
+                <span class="border border-magenta px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-magenta">
+                  · Iniciativa propia
+                </span>
+              )}
+            </div>
+            <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+              {caso.cliente}
+            </h1>
+            <p class="mt-8 max-w-3xl font-display text-2xl italic leading-snug text-magenta md:text-3xl">
+              {caso.title}
+            </p>
+            {caso.externalUrl && (
+              <p class="mt-6">
+                <a href={caso.externalUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 border-b border-ink/30 pb-1 text-sm text-ink transition-colors hover:border-magenta hover:text-magenta">
+                  Visitar la web del proyecto
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </p>
+            )}
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <dl class="mt-16 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-ink/15 pt-8 md:grid-cols-4">
+          <div>
+            <dt class="label">Audiencia</dt>
+            <dd class="mt-2 font-display text-xl text-ink">{caso.audience}</dd>
+          </div>
+          <div>
+            <dt class="label">Disciplina</dt>
+            <dd class="mt-2 font-display text-xl text-magenta">{caso.discipline}</dd>
+          </div>
+          <div>
+            <dt class="label">Año</dt>
+            <dd class="mt-2 font-display text-xl text-ink">{caso.year}</dd>
+          </div>
+          <div>
+            <dt class="label">Duración</dt>
+            <dd class="mt-2 font-display text-xl text-ink">{caso.duration}</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <!-- Contexto -->
+    <section class="bg-paper py-20 md:py-28">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Contexto</span>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <p class="font-display text-display-md leading-tight text-ink">
+              {caso.context}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reto -->
+    <section class="bg-paper-warm py-20 md:py-28">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— El reto</span>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <p class="max-w-measure text-lede text-ink/85">
+              {caso.challenge}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enfoque -->
+    <section class="bg-paper py-20 md:py-28">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Cómo lo abordamos</span>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <ol class="space-y-8">
+              {caso.approach.map((step, i) => (
+                <li class="grid grid-cols-12 gap-x-6 border-t border-ink/15 pt-6">
+                  <span class="num-edit col-span-2 text-3xl md:text-4xl">{String(i + 1).padStart(2, '0')}</span>
+                  <p class="col-span-10 font-display text-xl leading-snug text-ink md:text-2xl">{step}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Entregables + Resultados (dos columnas) -->
+    <section class="bg-paper-warm py-20 md:py-28">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-6">
+            <span class="label">— Lo que entregamos</span>
+            <ul class="mt-6 space-y-3">
+              {caso.deliverables.map((d) => (
+                <li class="flex items-start gap-3 border-t border-ink/15 pt-3">
+                  <span class="mt-2.5 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+                  <span class="font-display text-xl text-ink md:text-2xl">{d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="col-span-12 lg:col-span-6">
+            <span class="label">— Resultado</span>
+            <ul class="mt-6 space-y-3">
+              {caso.result.map((r) => (
+                <li class="flex items-start gap-3 border-t border-magenta/30 pt-3">
+                  <span class="mt-2.5 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+                  <span class="font-display text-xl leading-snug text-ink md:text-2xl">{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Métrica destacada -->
+    <section class="bg-ink py-20 text-paper md:py-28">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label !text-paper/60">— Cifra destacada</span>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <p class="font-display text-display-xl leading-[0.92] text-magenta">
+              {caso.metric.value}
+            </p>
+            <p class="mt-6 max-w-measure text-lede text-paper/85">
+              {caso.metric.label}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonio -->
+    {caso.testimonial && (
+      <section class="bg-paper py-20 md:py-28">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— Testimonio</span>
+            </div>
+            <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+              <blockquote class="font-display text-display-md italic leading-[1.1] text-ink md:text-display-lg">
+                "{caso.testimonial.quote}"
+              </blockquote>
+              <footer class="mt-8 flex items-baseline gap-3 font-mono text-xs uppercase tracking-widest text-ink-mute">
+                <span class="font-sans text-base font-medium text-ink not-italic">{caso.testimonial.author}</span>
+                <span aria-hidden="true">·</span>
+                <span>{caso.testimonial.role}</span>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- CTA + Navegación entre casos -->
+    <section class="bg-paper-warm py-20 md:py-24">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 gap-y-10 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-6">
+            <span class="label">— ¿Tienes un reto parecido?</span>
+            <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+              Reservamos <em class="italic text-magenta">treinta minutos</em>.
+            </h2>
+            <p class="mt-5 max-w-measure text-ink/80">
+              Sin compromiso. Tú nos cuentas el reto, nosotras te decimos honestamente si encajamos.
+            </p>
+            <div class="mt-8">
+              <a href="/contacto" class="btn">
+                Reservar diagnóstico
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <nav class="col-span-12 lg:col-span-6" aria-label="Navegación entre casos">
+            <span class="label">— Otros casos</span>
+            <div class="mt-4 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+              {prevCaso && (
+                <a href={`/casos/${prevCaso.slug}`} class="group flex flex-col gap-3 bg-paper-warm p-6 transition-colors hover:bg-paper">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">← Anterior</span>
+                  <span class="font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta">{prevCaso.cliente}</span>
+                </a>
+              )}
+              {nextCaso && (
+                <a href={`/casos/${nextCaso.slug}`} class="group flex flex-col gap-3 bg-paper-warm p-6 text-right transition-colors hover:bg-paper">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Siguiente →</span>
+                  <span class="font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta">{nextCaso.cliente}</span>
+                </a>
+              )}
+            </div>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </article>
+</Base>

@@ -1,0 +1,165 @@
+---
+// Membresías y afiliaciones — carrusel horizontal en bucle continuo.
+// Algunas tienen enlace a directorio oficial; otras solo nombre.
+const membresias = [
+  {
+    name: 'AJE Granada',
+    role: 'Asociado',
+    note: 'Asociación de Jóvenes Empresarios',
+    href: 'https://ajeandalucia.org/granada/asociado/startidea/',
+  },
+  {
+    name: 'FYVAR',
+    role: 'Bronze Partner · desde 2016',
+    note: 'Fabricantes y Vendedores de Artículos Promocionales',
+    href: 'https://www.fyvar.es/',
+  },
+  {
+    name: 'Cámara de Comercio de Granada',
+    role: 'Empresa adscrita',
+    note: 'Ecosistema institucional empresarial',
+  },
+  {
+    name: 'Club Cámara Granada',
+    role: 'Empresa miembro',
+    note: 'Club de empresas líderes de Granada',
+  },
+  {
+    name: 'Film in Granada',
+    role: 'Empresa audiovisual',
+    note: 'Granada Film Office',
+    href: 'https://filmgranada.com/empresasaudiovisuale/startidea/',
+  },
+  {
+    name: 'UGR',
+    role: 'Colaboración docente',
+    note: 'Universidad de Granada · UGRemprendedora',
+    href: 'https://ugremprendedora.ugr.es/el-marketing-social-como-herramienta-de-concienciacion-por-mario-pablo-sanchez/',
+  },
+  {
+    name: 'Andalucía Vuela',
+    role: 'Empresa del catálogo',
+    note: 'Junta de Andalucía · transformación digital',
+    href: 'https://catalogo.andaluciavuela.es/empresas/startidea/',
+  },
+  {
+    name: 'CEAJE',
+    role: 'Vinculación',
+    note: 'Confederación Española de Asociaciones de Jóvenes Empresarios',
+    href: 'https://ceaje.es/',
+  },
+  {
+    name: 'ACdP',
+    role: 'Miembro',
+    note: 'Asociación Católica de Propagandistas',
+  },
+  {
+    name: 'ASE',
+    role: 'Vinculación',
+    note: 'Asociación Sectorial de Comunicación Eclesial',
+  },
+  {
+    name: 'Hub Startidea',
+    role: 'Impulsor',
+    note: 'Hub de Innovación Social · Granada',
+  },
+  {
+    name: 'Granada Social',
+    role: 'Fundador y dirección editorial',
+    note: 'Medio digital sociocultural',
+  },
+];
+
+// Duplicamos para crear el efecto de loop infinito
+const loop = [...membresias, ...membresias];
+---
+
+<section class="bg-paper py-20 md:py-28">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-4">
+        <span class="label">— Pertenecemos a</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Donde <em class="italic text-magenta">estamos</em>.
+        </h2>
+      </div>
+      <div class="col-span-12 mt-6 lg:col-span-7 lg:col-start-6 lg:mt-0">
+        <p class="max-w-measure text-ink/80">
+          No coleccionamos membresías. Estamos donde tiene sentido para nuestros clientes y para el oficio: ecosistema empresarial joven, sector audiovisual, sector promocional, universidad pública, comunicación eclesial e innovación social.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrusel a sangre completa -->
+  <div class="marquee mt-14 border-y-2 border-ink/15 bg-paper-warm py-2">
+    <ul class="marquee-track" aria-label="Afiliaciones de Startidea" role="list">
+      {loop.map((m, i) => {
+        const Tag = m.href ? 'a' : 'div';
+        const props: any = m.href
+          ? { href: m.href, target: '_blank', rel: 'noopener' }
+          : {};
+        return (
+          <li class="marquee-item" aria-hidden={i >= membresias.length ? 'true' : undefined}>
+            <Tag
+              {...props}
+              class={`group flex h-full min-h-[180px] w-[280px] flex-col justify-between border-r border-ink/10 bg-paper-warm p-6 transition-colors ${m.href ? 'hover:bg-paper' : ''}`}
+            >
+              <div>
+                <p class="label">{m.role}</p>
+                <p class={`mt-3 font-display text-2xl leading-tight text-ink transition-colors ${m.href ? 'group-hover:text-magenta' : ''}`}>
+                  {m.name}
+                </p>
+              </div>
+              <p class="mt-5 text-xs leading-relaxed text-ink/70">
+                {m.note}
+                {m.href && (
+                  <span aria-hidden="true" class="ml-1 inline-block transition-transform group-hover:translate-x-0.5 group-hover:text-magenta">↗</span>
+                )}
+              </p>
+            </Tag>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 70s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-item {
+    flex: 0 0 auto;
+    list-style: none;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+    .marquee {
+      overflow-x: auto;
+    }
+  }
+</style>

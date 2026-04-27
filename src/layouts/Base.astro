@@ -1,0 +1,89 @@
+---
+import '@/styles/global.css';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import Splash from '@/components/Splash.astro';
+import CookieBanner from '@/components/CookieBanner.astro';
+import ChatChip from '@/components/ChatChip.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogSlug?: string;  // ej. 'home', 'page/manifiesto', 'casos/down-granada'
+}
+
+const {
+  title = 'Startidea — Innovación social que cambia la conversación',
+  description = 'Agencia de innovación social en Granada. Comunicación, consultoría, fundraising y producción audiovisual al servicio de organizaciones con propósito.',
+  ogSlug = 'home',
+} = Astro.props;
+
+const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
+const ogImageUrl = `${SITE_URL}/og/${ogSlug}.png`;
+const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Startidea — Notas" href="/rss.xml" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Startidea" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class="overflow-x-hidden">
+    <Splash />
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <ChatChip />
+    <CookieBanner />
+
+    <script>
+      // Reveal on scroll
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

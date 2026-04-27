@@ -1,0 +1,103 @@
+---
+const ejes = [
+  {
+    num: '01',
+    tag: 'Estrategia',
+    title: 'La pregunta antes que la respuesta.',
+    diagnosis: 'Demasiadas organizaciones contratan ejecución sin haber decidido qué intentan mover. Hacemos lo contrario.',
+    body: 'Trabajo de fondo: análisis de posicionamiento, plan de comunicación a 12-24 meses, arquitectura de marca, frameworks de medición de impacto. Si la estrategia no aguanta una conversación incómoda con tu patronato, no sirve.',
+    examples: ['Plan estratégico de comunicación', 'Arquitectura de marca', 'Diagnóstico de propósito y narrativa', 'Plan de captación de fondos'],
+  },
+  {
+    num: '02',
+    tag: 'Comunicación',
+    title: 'Contar bien lo que importa.',
+    diagnosis: 'El sector con propósito está lleno de buenas intenciones mal contadas. Cambiamos la narrativa, no solo la estética.',
+    body: 'Producción editorial, audiovisual, campañas. De la memoria anual al podcast institucional. De la web de proyecto al dossier para donantes. Sobriedad cuando toca, audacia cuando suma.',
+    examples: ['Memorias y reporting de impacto', 'Producción audiovisual y podcast', 'Campañas integradas', 'Dirección creativa y editorial'],
+  },
+  {
+    num: '03',
+    tag: 'Producto digital',
+    title: 'Plataformas que aguantan.',
+    diagnosis: 'No vivimos en WordPress por defecto. Cuando el proyecto exige una plataforma seria, la construimos en serio.',
+    body: 'Webs editoriales, intranets, plataformas de gestión, herramientas a medida. Stack moderno (Next.js, React, Astro), infraestructura propia, performance medible. Cuando no hace falta, también lo decimos.',
+    examples: ['Webs institucionales y editoriales', 'Plataformas a medida', 'Migraciones tecnológicas', 'Auditorías de producto digital'],
+  },
+];
+---
+
+<section id="como-trabajamos" class="relative bg-ink py-24 text-paper md:py-32">
+  <div class="container-x">
+    <!-- Encabezado -->
+    <div class="grid grid-cols-12 gap-x-8 border-t border-paper/15 pt-8">
+      <div class="col-span-12 lg:col-span-3">
+        <span class="label !text-paper/55">— Cómo trabajamos</span>
+      </div>
+      <div class="col-span-12 mt-6 lg:col-span-9 md:mt-0">
+        <h2 class="font-display text-display-lg leading-[1.0] text-paper">
+          Estrategia, comunicación y producto digital
+          <span class="block italic text-paper/55">bajo el mismo techo.</span>
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-paper/80">
+          Las tres preguntas se responden juntas o no se responden bien. Pocas agencias combinan los tres ejes con solvencia real. Lo decimos porque es nuestro principal diferenciador.
+        </p>
+      </div>
+    </div>
+
+    <!-- Tres ejes en formato editorial -->
+    <div class="mt-20 space-y-20 md:space-y-24">
+      {ejes.map((eje, i) => (
+        <article class="reveal grid grid-cols-12 gap-x-8 gap-y-8 border-t border-paper/15 pt-12">
+          <!-- Número grande -->
+          <div class="col-span-12 lg:col-span-3">
+            <div class="flex items-baseline gap-4">
+              <span class="num-edit !text-paper/30 text-8xl md:text-9xl">{eje.num}</span>
+              <span class="label !text-paper/60">{eje.tag}</span>
+            </div>
+          </div>
+
+          <!-- Contenido principal -->
+          <div class="col-span-12 lg:col-span-6">
+            <h3 class="font-display text-display-md text-paper">
+              {eje.title}
+            </h3>
+            <p class="mt-6 font-display text-xl italic leading-snug text-paper/55">
+              {eje.diagnosis}
+            </p>
+            <p class="mt-6 max-w-measure text-paper/85">
+              {eje.body}
+            </p>
+          </div>
+
+          <!-- Lista de capacidades -->
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label !text-paper/50">Capacidades</span>
+            <ul class="mt-4 space-y-2.5">
+              {eje.examples.map((ex) => (
+                <li class="flex items-start gap-3 text-sm text-paper/85">
+                  <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-paper/35"></span>
+                  <span>{ex}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Pie de sección -->
+    <div class="mt-20 grid grid-cols-12 gap-x-8 border-t border-paper/15 pt-8">
+      <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+        <p class="font-display text-2xl leading-snug text-paper/85">
+          ¿Tu reto no encaja en uno solo de los tres ejes?
+          <span class="text-paper">Bienvenida.</span> Casi ninguno de los nuestros lo hace.
+        </p>
+        <a href="/como-trabajamos" class="mt-6 inline-flex items-center gap-2 border-b border-paper/40 pb-1 text-sm text-paper transition-colors hover:border-paper">
+          Ver cómo combinamos los tres
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

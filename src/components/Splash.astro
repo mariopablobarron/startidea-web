@@ -1,0 +1,62 @@
+---
+// Splash screen — solo primera visita por sesión.
+// Reproduce el logo oficial 3.2s y se desvanece.
+---
+
+<div
+  id="splash"
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-paper transition-opacity duration-700 ease-out"
+  style="opacity:0; pointer-events:none;"
+  aria-hidden="true"
+>
+  <video
+    id="splash-video"
+    class="h-full w-full object-cover"
+    muted
+    playsinline
+    preload="auto"
+  >
+    <source src="/brand/logo-animado.mp4" type="video/mp4" />
+  </video>
+</div>
+
+<script>
+  const splash = document.getElementById('splash') as HTMLDivElement | null;
+  const video = document.getElementById('splash-video') as HTMLVideoElement | null;
+  if (!splash || !video) {
+    // nada
+  } else {
+    const KEY = 'startidea:splashShown';
+    const shown = sessionStorage.getItem(KEY);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (shown || reduce) {
+      // Eliminar splash inmediatamente
+      splash.remove();
+    } else {
+      // Mostrar splash, reproducir, esconder al terminar
+      splash.style.opacity = '1';
+      splash.style.pointerEvents = 'auto';
+      // Bloquear scroll mientras dura
+      document.documentElement.style.overflow = 'hidden';
+
+      video.play().catch(() => {
+        // Si autoplay falla por política del navegador, ocultar splash directo
+        splash.remove();
+        document.documentElement.style.overflow = '';
+        sessionStorage.setItem(KEY, '1');
+      });
+
+      const finish = () => {
+        splash.style.opacity = '0';
+        document.documentElement.style.overflow = '';
+        sessionStorage.setItem(KEY, '1');
+        setTimeout(() => splash.remove(), 800);
+      };
+
+      video.addEventListener('ended', finish);
+      // Failsafe: si por alguna razón el evento ended no dispara en 5s, cerramos
+      setTimeout(finish, 5000);
+    }
+  }
+</script>

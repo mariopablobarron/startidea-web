@@ -1,0 +1,208 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const pilares = [
+  {
+    title: 'Claridad y dirección',
+    body: 'Convertimos ideas dispersas en una hoja de ruta clara y realista. Si no se entiende en cinco minutos, no se ejecuta.',
+  },
+  {
+    title: 'Proyectos con base',
+    body: 'Diseñamos proyectos bien formulados, financiables y ejecutables. Que aguanten una conversación incómoda con un patronato o una administración.',
+  },
+  {
+    title: 'Orden y sostenibilidad',
+    body: 'Mejoramos procesos internos para captar más recursos con menos fricción. La consultoría que no deja la organización mejor de cómo la encontró no sirve.',
+  },
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Estrategia y fortalecimiento organizativo',
+    body: 'Trabajamos con dirección, patronato y equipo técnico para alinear propósito, estrategia y operación. La organización que sabe qué quiere mover en 12 meses ejecuta diferente.',
+    items: [
+      { name: 'Diagnóstico estratégico de la entidad', desc: 'Foto-fija organizativa: estructura, recursos, procesos, comunicación, captación. Identificamos lo que sostiene y lo que frena.' },
+      { name: 'Planificación estratégica y anual', desc: 'Plan a 3-5 años con prioridades claras + plan operativo anual con responsables y KPIs.' },
+      { name: 'Optimización de procesos internos', desc: 'Mapeo de procesos, identificación de fricciones, rediseño con criterio. Que el equipo dedique su tiempo a lo que importa.' },
+      { name: 'Acompañamiento a equipos directivos', desc: 'Sparring sostenido a dirección y juntas en decisiones estratégicas, conflictos y pivotes organizativos.' },
+    ],
+  },
+  {
+    num: '02',
+    title: 'Diseño y formulación de proyectos',
+    body: 'De la idea al expediente listo para presentar. Marco lógico, indicadores, presupuesto y narrativa. Convocatorias públicas, privadas y cooperación internacional.',
+    items: [
+      { name: 'Formulación y diseño de proyectos sociales', desc: 'Estructura completa: justificación, objetivos, actividades, cronograma, presupuesto, sistema de seguimiento.' },
+      { name: 'Formulación de proyectos de cooperación internacional', desc: 'Especialidad en convocatorias AECID, UE y agencias multilaterales. Cumplimos los formatos al milímetro.' },
+      { name: 'Marco lógico, teoría del cambio e indicadores', desc: 'La columna vertebral del proyecto. Sin ella, la justificación posterior se complica el doble.' },
+      { name: 'Diseño de planes de trabajo y sistemas de seguimiento', desc: 'Cómo se operará el proyecto: hitos, responsables, herramientas de gestión y reporting interno.' },
+    ],
+  },
+  {
+    num: '03',
+    title: 'Financiación y captación de recursos',
+    body: 'Diversificación real de ingresos: convocatorias, donantes, partnerships, crowdfunding, eventos. Plan de fundraising y arquitectura del relato.',
+    items: [
+      { name: 'Mapeo de convocatorias públicas y privadas', desc: 'Calendario anual con plazos, requisitos y compatibilidades. La convocatoria adecuada a la entidad adecuada.' },
+      { name: 'Estrategia de financiación y priorización', desc: 'No todas las oportunidades suman. Decidimos a qué presentarse y a qué no — con criterio de coste-oportunidad.' },
+      { name: 'Preparación técnica de candidaturas', desc: 'Acompañamiento en redacción, presupuesto, anexos y revisión final antes de presentar.' },
+      { name: 'Diseño de alianzas y colaboraciones', desc: 'Partnerships con sentido — entre entidades del tercer sector, con empresas y con instituciones públicas.' },
+    ],
+  },
+  {
+    num: '04',
+    title: 'Gestión técnica, documental y justificación',
+    body: 'Acompañamos durante la vida del proyecto: justificación técnica y económica, documentación, reporting a financiadores. Que no se pierda dinero por un papel mal presentado.',
+    items: [
+      { name: 'Gestión documental y revisión técnica', desc: 'Sistema de archivo, control de versiones, validación cruzada de entregables.' },
+      { name: 'Supervisión de ejecución y cumplimiento', desc: 'Revisión periódica del cumplimiento de hitos, gasto y procedimientos pactados con el financiador.' },
+      { name: 'Acompañamiento en justificaciones técnicas y económicas', desc: 'Memoria, anexos, informes intermedios y finales. Trabajamos a cuatro manos con vuestra administración.' },
+      { name: 'Preparación para auditorías', desc: 'Pre-auditoría interna, simulacros y preparación documental antes de la visita oficial.' },
+    ],
+  },
+  {
+    num: '05',
+    title: 'Evaluación, impacto y mejora',
+    body: 'Convertir el "creemos que ha funcionado" en "podemos demostrarlo". Sistemas de medición, evaluación intermedia y final, lecciones aprendidas para la siguiente convocatoria.',
+    items: [
+      { name: 'Sistema de medición de resultados', desc: 'Diseño de métricas — cuantitativas y cualitativas — alineadas con la teoría del cambio del proyecto.' },
+      { name: 'Informes de resultados e impacto', desc: 'Memoria editorial — no administrativa — que se lee, se entiende y sirve para el siguiente donante.' },
+      { name: 'Lecciones aprendidas y mejora continua', desc: 'Sesiones estructuradas con el equipo para extraer aprendizaje y dejarlo escrito antes de empezar el siguiente ciclo.' },
+      { name: 'Estandarización de plantillas', desc: 'Plantillas reutilizables de seguimiento, justificación e informes — para que la organización gane velocidad año a año.' },
+    ],
+  },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico (gratuito)', body: '30 minutos. Tú nos cuentas el reto, nosotras te decimos honestamente si encajamos.' },
+  { step: '02', title: 'Propuesta cerrada', body: 'En una semana: alcance, plazos, equipo, presupuesto. Sin "depende".' },
+  { step: '03', title: 'Co-construcción', body: 'Trabajamos con tu equipo, no en sustitución. La consultoría que monopoliza el conocimiento se rompe cuando se va.' },
+  { step: '04', title: 'Entrega + acompañamiento', body: 'Documentación, capacitación, hand-off. Y un check-in a los 6 meses para ver qué se mantuvo y qué necesita ajuste.' },
+];
+---
+
+<Base
+  title="Consultoría e Innovación Social — Startidea"
+  description="Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido."
+  ogSlug="page/consultoria"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Consultoría e Innovación Social</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Pensar mejor.<br/>
+        <em class="italic text-magenta">Decidir con criterio.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido. Ordenamos la estrategia, diseñamos proyectos sólidos, fortalecemos la captación de recursos y ayudamos a demostrar resultados.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn">
+          Pide una reunión de diagnóstico gratuita
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Tres pilares</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">defendemos</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {pilares.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas detalladas -->
+  {areas.map((area, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{area.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">
+              {area.title}
+            </h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">
+              {area.body}
+            </p>
+
+            <!-- Sub-items con descripción -->
+            <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+              {area.items.map((it, idx) => (
+                <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                  <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/55 sm:col-span-2">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div class="col-span-12 sm:col-span-10">
+                    <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.name}</p>
+                    <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Proceso -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Proceso</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Cómo trabajamos<em class="italic text-magenta"> contigo</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-ink p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl text-paper">{p.title}</h3>
+                <p class="mt-3 text-sm text-paper/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Pide una reunión de diagnóstico gratuita
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="consultoria" />
+</Base>

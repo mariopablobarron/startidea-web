@@ -1,0 +1,231 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const pilares = [
+  {
+    title: 'Estrategia antes que ruido',
+    body: 'No empezamos haciendo piezas. Empezamos pensando. Una campaña sin estrategia detrás es solo gasto.',
+  },
+  {
+    title: 'Comunicación con propósito',
+    body: 'No comunicamos por comunicar. Comunicamos para generar impacto. Cada acción tiene un objetivo medible.',
+  },
+  {
+    title: 'Visibilidad que sostiene proyectos',
+    body: 'La comunicación como palanca de reputación, alianzas y recursos. No como decoración.',
+  },
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Estrategia de comunicación y posicionamiento',
+    body: 'El qué decir, el cómo decirlo y dónde. Antes de tocar redes ni piezas, definimos la dirección. Si la estrategia no aguanta una conversación incómoda con tu patronato, no sirve.',
+    items: [
+      { name: 'Diagnóstico de comunicación y marca', desc: 'Foto-fija de cómo se percibe hoy la organización: presencia, narrativa, tono, posicionamiento real vs deseado.' },
+      { name: 'Plan de comunicación estratégico', desc: 'Plan a 12-24 meses con objetivos, audiencias, mensajes y canales priorizados. Documento defendible ante junta.' },
+      { name: 'Definición de relato, mensajes clave y narrativa', desc: 'Tres niveles: titular, párrafo y manifiesto. Cómo contar la causa en 30 segundos, en 3 minutos y en 3 páginas.' },
+      { name: 'Posicionamiento institucional y reputación', desc: 'Dónde quieres estar en la conversación pública del sector y cómo llegar — sin atajos cosméticos.' },
+      { name: 'Arquitectura de marca y coherencia de canales', desc: 'Que el mensaje sea el mismo en LinkedIn, en la memoria anual y en la sala del director general.' },
+    ],
+  },
+  {
+    num: '02',
+    title: 'Contenidos, storytelling y medios',
+    body: 'De la idea a la pieza editorial publicable. Trabajamos guion, redacción, edición y publicación con criterio. Sin clichés del sector.',
+    items: [
+      { name: 'Estrategia de contenidos', desc: 'Plan editorial con líneas, frecuencias y formatos. Que el equipo sepa qué publicar el martes que viene sin reuniones de cinco personas.' },
+      { name: 'Storytelling de proyectos, causas e impacto', desc: 'La realidad cruda contada con dignidad. Sin pornografía emocional, sin épica simplista.' },
+      { name: 'Redacción de artículos, entrevistas y contenidos editoriales', desc: 'Producción de pieza acabada — no plantillas para que las rellenéis vosotros.' },
+      { name: 'Guiones para vídeo, podcast y piezas audiovisuales', desc: 'Guion editorial — no script publicitario. La diferencia se nota cuando la pieza se publica.' },
+      { name: 'Gestión de medios propios (blogs, plataformas, Granada Social)', desc: 'Convertir vuestros canales en activos editoriales que la gente vuelve a leer, no archivos donde acumular contenido.' },
+    ],
+  },
+  {
+    num: '03',
+    title: 'Redes sociales y comunidad',
+    body: 'Las redes como canal editorial, no como tablón de anuncios. Trabajamos con foco en conversación y comunidad — no en métricas vanidosas.',
+    items: [
+      { name: 'Estrategia de redes sociales', desc: 'Qué redes sí y cuáles no. Para muchas organizaciones, dejar Twitter/X o no entrar en TikTok es la decisión correcta.' },
+      { name: 'Gestión de perfiles sociales', desc: 'Producción y publicación con criterio editorial. Calendario, copy, creatividad, programación, moderación.' },
+      { name: 'Calendario editorial y campañas temáticas', desc: 'Estructura mensual y trimestral. Aprovechar fechas clave del sector sin caer en el oportunismo del calendario.' },
+      { name: 'Cobertura de eventos y acciones', desc: 'Producción en directo y resumen editorial post-evento. Foto, vídeo, copy y publicación coordinados.' },
+      { name: 'Construcción de comunidad y dinamización', desc: 'Comunidad real — no audiencia. Trabajo de moderación, conversación y vínculo a medio plazo.' },
+    ],
+  },
+  {
+    num: '04',
+    title: 'Campañas con causa y sensibilización',
+    body: 'Campañas que mueven la aguja: en captación, en conciencia pública, en activación interna. Concepto, producción y plan de medios.',
+    items: [
+      { name: 'Diseño de campañas de sensibilización y movilización social', desc: 'Tema sensible bien tratado: ni alarmismo, ni heroización. Activar sin manipular.' },
+      { name: 'Campañas de captación de fondos o apoyos', desc: 'Estructura clásica del fundraising aplicada con criterio editorial — no plantilla genérica de ONG.' },
+      { name: 'Campañas de RSC y propósito para empresas', desc: 'ESG con retorno mutuo, no postureo. Articulamos partnerships reales con tercer sector.' },
+      { name: 'Acciones especiales, eventos y lanzamientos', desc: 'Producción integral: concepto, comunicación previa, cobertura y post-evento.' },
+      { name: 'Creatividad conceptual y desarrollo de mensajes', desc: 'Concepto creativo defendible — el que sobreviviría a un focus group con el donante exigente.' },
+    ],
+  },
+  {
+    num: '05',
+    title: 'Marketing digital con sentido',
+    body: 'Cuando hace falta, lo hacemos. Sin convertirte en una agencia de growth: medimos por causa, no por clicks.',
+    items: [
+      { name: 'Estrategia digital y embudos con propósito', desc: 'Captación, conversión y fidelización adaptados al ciclo del donante o del socio. No vendemos zapatillas — vendemos causa.' },
+      { name: 'Webs y landings orientadas a conversión', desc: 'Páginas de captación, páginas de campaña, páginas de evento. Stack moderno (Astro/Next.js) cuando suma.' },
+      { name: 'Email marketing y automatizaciones', desc: 'Newsletter editorial — no boletín corporativo. Con respeto al inbox y a la privacidad.' },
+      { name: 'Campañas en Meta, Google y redes (si procede)', desc: '"Si procede" es importante — no toda organización necesita gastar en paid. Cuando lo hacemos, lo hacemos con auditoría.' },
+      { name: 'Optimización de captación de leads y socios', desc: 'A/B testing, mejora continua, integración con CRM. Trabajo metódico, no pirotecnia.' },
+    ],
+  },
+  {
+    num: '06',
+    title: 'Marca, identidad y piezas clave',
+    body: 'Identidad coherente y piezas que la sostienen. No rediseñamos por moda — rediseñamos cuando la marca actual está bloqueando algo.',
+    items: [
+      { name: 'Definición o rediseño de identidad', desc: 'Logo, sistema visual, tipografía, paleta. Con manual y reglas claras para que el equipo lo use sin pedirnos permiso.' },
+      { name: 'Manual básico de marca', desc: 'Documento de uso operativo — no biblia inalcanzable. Que el voluntariado pueda usarlo sin formación previa.' },
+      { name: 'Diseño de piezas clave (presentaciones, dosieres, memorias)', desc: 'Las piezas que importan: la memoria anual, el dossier para grandes donantes, la presentación a junta directiva.' },
+      { name: 'Creatividades para campañas', desc: 'Adaptaciones consistentes de cada campaña a todos los formatos y soportes — sin perder el concepto.' },
+      { name: 'Coherencia visual en todos los canales', desc: 'Auditoría periódica: que la web, las redes, las plantillas internas y los materiales impresos hablen el mismo idioma.' },
+    ],
+  },
+  {
+    num: '07',
+    title: 'Comunicación institucional y crisis',
+    body: 'Comunicación corporativa e institucional con altura. Y, cuando llega el problema, plan de crisis profesional.',
+    items: [
+      { name: 'Comunicación corporativa e institucional', desc: 'Reportes anuales, comunicados oficiales, relaciones con instituciones. El registro adecuado a cada interlocutor.' },
+      { name: 'Mensajes clave para portavoces', desc: 'Argumentarios, preguntas frecuentes, posicionamientos pre-trabajados. Para que nadie improvise en el momento crítico.' },
+      { name: 'Gestión de situaciones sensibles o de crisis', desc: 'Plan de respuesta, coordinación interna, gestión con medios. Trabajo confidencial cuando hace falta.' },
+      { name: 'Discursos, posicionamientos públicos y comunicados', desc: 'Producción editorial para intervenciones de dirección, presidencia o portavocía oficial.' },
+    ],
+  },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico', body: '30 minutos. Tú nos cuentas el reto, nosotras te decimos honestamente si encajamos.' },
+  { step: '02', title: 'Estrategia clara y priorizada', body: 'Plan defendible — qué se hace primero, qué después y qué se descarta.' },
+  { step: '03', title: 'Ejecución con criterio', body: 'Producción con calendario, responsables y revisión. Sin sorpresas finales.' },
+  { step: '04', title: 'Medición y ajuste', body: 'KPIs acordados, revisión periódica y ajuste según lo que funcione.' },
+];
+---
+
+<Base
+  title="Comunicación Estratégica y Marketing Social — Startidea"
+  description="Ayudamos a organizaciones, entidades sociales y empresas con propósito a comunicar mejor lo que hacen, por qué lo hacen y para qué sirve."
+  ogSlug="page/comunicacion"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Comunicación Estratégica y Marketing Social</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Comunicar mejor.<br/>
+        <em class="italic text-magenta">Comunicar para algo</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Ayudamos a organizaciones, entidades sociales, empresas con propósito y proyectos con impacto a comunicar mejor lo que hacen, por qué lo hacen y para qué sirve, convirtiendo su comunicación en una herramienta real de posicionamiento, movilización y sostenibilidad.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn">
+          Pide una reunión de diagnóstico gratuita
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Tres pilares</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">defendemos</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {pilares.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  {areas.map((area, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{area.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">{area.title}</h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">{area.body}</p>
+
+            <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+              {area.items.map((it, idx) => (
+                <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                  <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/55 sm:col-span-2">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div class="col-span-12 sm:col-span-10">
+                    <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.name}</p>
+                    <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Proceso -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Proceso</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Cómo trabajamos<em class="italic text-magenta"> contigo</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-ink p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl text-paper">{p.title}</h3>
+                <p class="mt-3 text-sm text-paper/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Pide una reunión de diagnóstico gratuita
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="comunicacion" />
+</Base>

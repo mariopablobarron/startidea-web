@@ -1,0 +1,230 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const principios = [
+  {
+    title: 'No vivimos en WordPress por defecto',
+    body: 'Cuando el proyecto exige una plataforma seria, la construimos en serio. Cuando lo correcto es WordPress bien hecho, también lo decimos.',
+  },
+  {
+    title: 'La elección tecnológica responde al problema',
+    body: 'No al currículum del equipo, no a la moda del momento, no a lo que ahorre tiempo a corto plazo. Stack moderno cuando suma; estable cuando es lo que toca.',
+  },
+  {
+    title: 'Performance, accesibilidad y SEO no son extras',
+    body: 'Son la línea de salida. Una web que carga en cuatro segundos o que falla un lector de pantalla, no es una buena web por mucho que sea bonita.',
+  },
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Webs editoriales e institucionales',
+    body: 'Webs que aguantan tráfico, que el equipo puede actualizar sin tocar código, y que el día que cambia la dirección no hay que rehacer desde cero. Astro, Next.js, headless CMS cuando suma; WordPress profesional cuando es lo que toca.',
+    items: [
+      'Stack moderno: Astro · Next.js · React · TypeScript',
+      'Headless CMS para autonomía editorial (Sanity, Decap, Contentful)',
+      'WordPress profesional cuando el equipo lo necesita',
+      'Performance > 95 en Core Web Vitals',
+      'SEO técnico desde el día cero',
+    ],
+  },
+  {
+    num: '02',
+    title: 'Plataformas a medida',
+    body: 'Intranets, gestión de socios, comunidades, herramientas internas, plataformas de gestión de proyectos. Cuando el "off-the-shelf" no encaja con cómo trabaja realmente la organización.',
+    items: [
+      'Intranets para entidades del tercer sector',
+      'Sistemas de gestión de socios y donantes',
+      'Plataformas de comunidad y eventos',
+      'Herramientas internas a medida',
+      'Integraciones con Salesforce, HubSpot, sistemas legacy',
+    ],
+  },
+  {
+    num: '03',
+    title: 'Producto digital con IA',
+    body: 'Cuando una organización con propósito puede entregar más valor con un asistente, una plataforma de mentoría o una herramienta inteligente, lo construimos. Con criterio: la IA es la herramienta, el método y la supervisión los pone un equipo humano.',
+    items: [
+      'Asistentes y agentes para causas concretas',
+      'Plataformas de acompañamiento (caso: Tres Mil Millones de Latidos)',
+      'Automatización de procesos internos',
+      'Análisis y procesamiento de datos del tercer sector',
+      'Diseño con supervisión clínica/profesional cuando aplica',
+    ],
+  },
+  {
+    num: '04',
+    title: 'Migraciones tecnológicas sin pérdida SEO',
+    body: 'Mover una web envejecida a un stack moderno sin romper el tráfico orgánico. Plan de redirects, SEO técnico, paridad de contenido, validación post-migración.',
+    items: [
+      'Auditoría SEO técnico previa',
+      'Plan de redirects 301 con mapeo completo',
+      'Validación post-lanzamiento con Search Console',
+      'Conservación de URLs canónicas y rich snippets',
+      'Casos de migración con cero pérdida de tráfico orgánico',
+    ],
+  },
+  {
+    num: '05',
+    title: 'Auditorías de producto digital',
+    body: 'Para organizaciones con web ya en marcha. Diagnóstico técnico (performance, SEO, accesibilidad), análisis de UX, recomendaciones priorizadas. Sin reinvenciones costosas: lo que toque cambiar y lo que no.',
+    items: [
+      'Auditoría WCAG 2.1 AA',
+      'Performance audit (Lighthouse, Core Web Vitals)',
+      'SEO técnico y arquitectura de información',
+      'UX review con jerarquía de fixes',
+      'Plan de mejora priorizado por impacto/coste',
+    ],
+  },
+  {
+    num: '06',
+    title: 'Accesibilidad WCAG 2.1 AA por defecto',
+    body: 'No como casilla de cumplimiento. La accesibilidad amplía la audiencia, mejora SEO y suele ser un requisito legal en sector público y tercer sector. La aplicamos desde el primer wireframe.',
+    items: [
+      'Cumplimiento AA verificable',
+      'Navegación completa por teclado',
+      'Lectores de pantalla testeados',
+      'Lenguaje fácil donde aplica',
+      'Auditoría externa al cierre del proyecto',
+    ],
+  },
+];
+
+const stack = [
+  { name: 'Astro', use: 'Webs editoriales rápidas, blogs con CMS' },
+  { name: 'Next.js', use: 'Plataformas con dashboards, SSR, autenticación' },
+  { name: 'React + TypeScript', use: 'UI compleja, componentes a medida' },
+  { name: 'Tailwind CSS', use: 'Sistema de diseño consistente' },
+  { name: 'Vercel · Netlify · Hostinger', use: 'Despliegue sin fricción' },
+  { name: 'Sanity · Decap CMS', use: 'CMS headless para equipos no técnicos' },
+  { name: 'WordPress profesional', use: 'Cuando es lo correcto, no por defecto' },
+  { name: 'PostgreSQL · Supabase', use: 'Base de datos robusta' },
+  { name: 'OpenAI · Anthropic', use: 'IA con criterio y supervisión humana' },
+];
+---
+
+<Base
+  title="Tecnología — Startidea"
+  description="Plataformas que aguantan. Stack moderno cuando suma, estable cuando toca. Webs editoriales, plataformas a medida, producto digital con IA, migraciones sin pérdida SEO, accesibilidad AA por defecto."
+  ogSlug="page/tecnologia"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Tecnología</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Plataformas<br/>
+        <em class="italic text-magenta">que aguantan</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        No vivimos en WordPress por defecto. Cuando el proyecto exige una plataforma seria, la construimos en serio. Stack moderno cuando suma — Astro, Next.js, React, infraestructura propia. Estable cuando es lo correcto. Performance medible y accesibilidad WCAG 2.1 AA en todo lo que entregamos.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn">
+          Reservar diagnóstico
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/casos/tres-mil-millones-latidos" class="btn-ghost">
+          Ver caso: Tres Mil Millones de Latidos
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principios -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Principios</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cómo elegimos <em class="italic text-magenta">la tecnología</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {principios.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  {areas.map((area, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{area.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">
+              {area.title}
+            </h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">
+              {area.body}
+            </p>
+
+            <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
+              {area.items.map((it) => (
+                <li class="flex items-start gap-3 border-t border-ink/15 pt-3 text-sm text-ink/85">
+                  <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+                  <span>{it}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Stack -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Stack</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            Con qué <em class="italic text-magenta">construimos</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-lede text-paper/85">
+            La tecnología es secundaria al problema, pero la lista es honesta. Lo que usamos hoy:
+          </p>
+
+          <ul class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-3">
+            {stack.map((s) => (
+              <li class="bg-ink p-6">
+                <p class="font-display text-2xl text-paper">{s.name}</p>
+                <p class="mt-2 text-sm text-paper/70">{s.use}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico técnico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="tecnologia" />
+</Base>

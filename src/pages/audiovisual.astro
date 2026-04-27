@@ -1,0 +1,233 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const pilares = [
+  {
+    title: 'Contenidos con intención',
+    body: 'No grabamos por grabar. Diseñamos cada contenido con un objetivo claro y medible.',
+  },
+  {
+    title: 'Producción completa',
+    body: 'De la idea al guion, de la grabación a la difusión. Cadena editorial entera bajo el mismo techo.',
+  },
+  {
+    title: 'Formato que construye marca',
+    body: 'Podcast, vídeo o serie como activo estratégico — no como ocurrencia. Patrimonio editorial reutilizable.',
+  },
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Estrategia de contenidos y formatos',
+    body: 'Antes de grabar nada, decidimos por qué se graba. Línea editorial, formato, frecuencia, audiencia objetivo.',
+    items: [
+      { name: 'Diseño de estrategia de contenidos audiovisuales y podcast', desc: 'Plan editorial alineado con objetivos de comunicación y captación de la organización.' },
+      { name: 'Definición de formatos, secciones y líneas editoriales', desc: 'Estructura repetible — no episodios sueltos. Que el espectador sepa qué esperar la próxima semana.' },
+      { name: 'Conceptualización de programas, series y canales', desc: 'De cero a "ya tenéis vuestro propio podcast/canal/serie con identidad editorial propia".' },
+      { name: 'Alineación con marca y objetivos de comunicación', desc: 'El audiovisual al servicio de la estrategia general — no como satélite descoordinado.' },
+    ],
+  },
+  {
+    num: '02',
+    title: 'Producción de podcast y videopodcast',
+    body: 'Estudio propio en Granada con todo el equipamiento. Producimos del primer episodio piloto al programa que lleva tres temporadas.',
+    items: [
+      { name: 'Producción integral de podcasts', desc: 'Concepto, guion, grabación, edición, mezcla, publicación. Llave en mano.' },
+      { name: 'Producción de videopodcasts', desc: 'Vídeo + audio coordinados — para distribución cross-channel: YouTube, Spotify, redes.' },
+      { name: 'Grabación en estudio Startidea o en localización', desc: 'Estudio acústicamente preparado en Hub Startidea, o equipo móvil para grabaciones in-situ.' },
+      { name: 'Edición, mezcla y postproducción', desc: 'Postproducción profesional con limpieza de audio, mastering y entrega lista para publicación.' },
+      { name: 'Diseño de cabeceras, intros y cierres', desc: 'Elementos sonoros y visuales propios — no plantillas — que dan identidad sostenida al programa.' },
+      { name: 'Gestión de publicación en plataformas', desc: 'Spotify, Apple Podcasts, ivoox, YouTube, Amazon Music. Configuración, RSS, metadatos, distribución completa.' },
+    ],
+  },
+  {
+    num: '03',
+    title: 'Producción audiovisual corporativa y social',
+    body: 'Vídeo institucional con criterio editorial. Sin clichés del "vídeo corporativo" — la pieza tiene que servir, no decorar.',
+    items: [
+      { name: 'Vídeos corporativos e institucionales', desc: 'Pieza que defiende a la organización en presentaciones a junta, donantes, partners. Concepto + guion + producción.' },
+      { name: 'Vídeos de proyectos, impacto y memorias', desc: 'Documentación visual del trabajo real — para complementar memoria anual y reportes a financiadores.' },
+      { name: 'Entrevistas, testimonios y piezas documentales', desc: 'Captación de voces — beneficiarios, equipo, expertos — con dignidad y rigor editorial. No spot publicitario.' },
+      { name: 'Vídeos para campañas y redes', desc: 'Piezas cortas optimizadas para Instagram Reels, TikTok, LinkedIn, formatos verticales y horizontales.' },
+      { name: 'Cobertura de eventos', desc: 'Producción en directo + resumen editorial post-evento. Foto, vídeo y publicación coordinados.' },
+    ],
+  },
+  {
+    num: '04',
+    title: 'Guion, narrativa y preparación de contenidos',
+    body: 'El guion es lo primero — porque sin guion, el rodaje es un caos y la edición un milagro.',
+    items: [
+      { name: 'Guionización de episodios y vídeos', desc: 'Estructura, escaleta, diálogos. Trabajo editorial completo antes de la grabación.' },
+      { name: 'Estructura de entrevistas y escaletas', desc: 'Preguntas, orden, tiempos, transiciones. La entrevista bien preparada se nota en la edición — y en el resultado final.' },
+      { name: 'Preparación de portavoces e invitados', desc: 'Sesión previa para que la persona delante del micro o la cámara llegue cómoda y con mensaje claro.' },
+      { name: 'Entrenamiento básico para cámara y micrófono', desc: 'Para equipos internos que van a hacer contenido de forma sostenida — que ganen autonomía.' },
+    ],
+  },
+  {
+    num: '05',
+    title: 'Distribución y amplificación de contenidos',
+    body: 'Producir es la mitad. Distribuir bien es la otra. Sin estrategia de distribución, la mejor pieza se queda en YouTube con 47 visualizaciones.',
+    items: [
+      { name: 'Estrategia de difusión de podcast y vídeo', desc: 'Plan de lanzamiento + plan sostenido en plataformas y redes. Cómo se hace que la pieza llegue.' },
+      { name: 'Clips, reels y piezas cortas para redes', desc: 'De cada episodio largo, 4-6 piezas cortas optimizadas para alimentar redes durante semanas.' },
+      { name: 'Optimización para plataformas (YouTube, Spotify, ivoox)', desc: 'SEO de plataforma: títulos, descripciones, miniaturas, capítulos, keywords. Lo que hace que se encuentre orgánicamente.' },
+      { name: 'Integración con estrategia de comunicación y marketing', desc: 'El audiovisual no vive aparte — coordinamos con redes, newsletter, web y campañas.' },
+    ],
+  },
+  {
+    num: '06',
+    title: 'Estudio, plató y servicios técnicos',
+    body: 'Para quien quiere usar nuestro estudio o necesita servicio técnico puntual: alquiler, técnicos, equipo completo.',
+    items: [
+      { name: 'Alquiler de estudio y plató de grabación', desc: 'Estudio en Hub Startidea: acústica, iluminación, multicámara, sonido profesional. Por horas o jornadas completas.' },
+      { name: 'Servicio técnico completo (cámaras, sonido, luces)', desc: 'Equipo técnico desplazable a localización para producciones que no se pueden hacer en estudio.' },
+      { name: 'Realización y dirección técnica', desc: 'Director técnico que coordina cámaras, sonido y emisión durante la grabación o el directo.' },
+      { name: 'Producciones en directo o híbridas', desc: 'Streaming en directo a YouTube/RRSS, eventos híbridos presencial-online con producción profesional.' },
+    ],
+  },
+  {
+    num: '07',
+    title: 'Series, proyectos especiales y branded content',
+    body: 'Cuando el proyecto es grande: serie de 8 capítulos, documental, podcast de marca, canal propio de contenido. Producción de envergadura editorial.',
+    items: [
+      { name: 'Diseño de series de contenido', desc: 'Series temáticas con estructura narrativa — para causas, campañas o proyectos de larga duración.' },
+      { name: 'Proyectos documentales', desc: 'Documental editorial sobre un caso real — para entidades del tercer sector, instituciones o iniciativas con peso.' },
+      { name: 'Podcast de marca (branded podcast)', desc: 'Para empresas con propósito: podcast editorial que aporta valor, no podcast publicitario que ahuyenta.' },
+      { name: 'Canales propios de contenido', desc: 'Para organizaciones que quieren tener su propio "medio" — YouTube, podcast, plataforma editorial. Concepto y producción sostenida.' },
+      { name: 'Proyectos con Granada Social / Startidea Sessions', desc: 'Co-producción con nuestros propios canales editoriales — visibilidad amplificada con audiencias ya construidas.' },
+    ],
+  },
+];
+
+const proceso = [
+  { step: '01', title: 'Definimos objetivo y formato', body: 'Antes de tocar cámara, decidimos qué se quiere mover y cómo se va a contar.' },
+  { step: '02', title: 'Diseñamos contenido y guion', body: 'Estructura editorial, escaleta, preparación de personas. Trabajo previo serio.' },
+  { step: '03', title: 'Producimos y grabamos', body: 'Estudio o localización con equipo técnico completo. Sin sorpresas en el rodaje.' },
+  { step: '04', title: 'Editamos, publicamos y difundimos', body: 'Postproducción + estrategia de lanzamiento + amplificación coordinada.' },
+];
+---
+
+<Base
+  title="Producción Audiovisual y Podcast — Startidea"
+  description="Convertimos ideas, conocimientos y causas en contenidos audiovisuales y podcasts de calidad, pensados para construir marca, comunidad y reputación."
+  ogSlug="page/audiovisual"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Producción Audiovisual y Podcast</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Vídeo y podcast<br/>
+        <em class="italic text-magenta">con propósito</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Ayudamos a organizaciones, empresas y proyectos con propósito a convertir sus ideas, conocimientos y causas en contenidos audiovisuales y podcasts de calidad — pensados no solo para verse o escucharse, sino para construir marca, comunidad y reputación.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn">
+          Pide una reunión de diagnóstico
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="https://hubstartidea.es" target="_blank" rel="noopener" class="btn-ghost">
+          Reservar estudio
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Tres pilares</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">defendemos</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {pilares.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  {areas.map((area, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{area.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">{area.title}</h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">{area.body}</p>
+
+            <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+              {area.items.map((it, idx) => (
+                <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                  <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/55 sm:col-span-2">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div class="col-span-12 sm:col-span-10">
+                    <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.name}</p>
+                    <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Proceso -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Proceso</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Cómo trabajamos<em class="italic text-magenta"> contigo</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-ink p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl text-paper">{p.title}</h3>
+                <p class="mt-3 text-sm text-paper/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Pide una reunión de diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="audiovisual" />
+</Base>

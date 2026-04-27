@@ -1,0 +1,146 @@
+---
+import Logo from './Logo.astro';
+
+const links = [
+  { label: 'Sobre', href: '/sobre' },
+  { label: 'Servicios', href: '/#ecosistema' },
+  { label: 'Casos', href: '/casos' },
+  { label: 'Notas', href: '/notas' },
+  { label: 'Manifiesto', href: '/manifiesto' },
+];
+
+const propiedades = [
+  { label: 'Hub Startidea', href: 'https://hubstartidea.es', tag: 'Coworking · Estudio' },
+  { label: 'Merchandising', href: 'https://merchandising.startidea.es', tag: 'Catálogo' },
+  { label: 'Granada Social', href: 'https://granadasocial.org', tag: 'Medio sociocultural' },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-ink/15 bg-paper/95 backdrop-blur supports-[backdrop-filter]:bg-paper/85">
+  <div class="container-x flex items-center justify-between gap-4 py-3 md:py-4 lg:py-5">
+    <Logo class="h-20 sm:h-24 md:h-28 lg:h-32 xl:h-36" />
+
+    <!-- Nav desktop -->
+    <nav class="hidden xl:block" aria-label="Principal">
+      <ul class="flex items-center gap-6 2xl:gap-8">
+        {links.map((l) => (
+          <li>
+            <a href={l.href} class="link-underline text-sm text-ink/85 hover:text-ink">
+              {l.label}
+            </a>
+          </li>
+        ))}
+
+        <!-- Dropdown Propiedades -->
+        <li class="relative group">
+          <button
+            type="button"
+            class="link-underline flex items-center gap-1 text-sm text-ink/85 hover:text-ink"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Propiedades
+            <span aria-hidden="true" class="text-xs">↗</span>
+          </button>
+          <div class="invisible absolute right-0 top-full z-10 mt-3 w-72 border border-ink bg-paper opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+            <ul class="divide-y divide-ink/10">
+              {propiedades.map((p) => (
+                <li>
+                  <a href={p.href} target="_blank" rel="noopener" class="block px-5 py-4 transition-colors hover:bg-paper-warm">
+                    <p class="font-display text-lg leading-tight text-ink">
+                      {p.label}
+                      <span aria-hidden="true" class="ml-1 text-magenta">↗</span>
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{p.tag}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+
+        <li class="ml-2">
+          <a href="/contacto" class="btn !py-2.5 !px-4 text-[13px]">
+            Reservar diagnóstico
+            <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Burger (mobile + tablet + small desktop) -->
+    <button
+      type="button"
+      id="nav-toggle"
+      class="xl:hidden border border-ink px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      Menú
+    </button>
+  </div>
+
+  <!-- Mobile / tablet / small desktop fullscreen menu -->
+  <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper xl:hidden">
+    <div class="container-x py-8">
+      <ul class="flex flex-col">
+        {links.map((l) => (
+          <li class="border-b border-ink/10">
+            <a href={l.href} class="block py-4 font-display text-2xl text-ink hover:text-magenta sm:text-3xl">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-10 border-t-2 border-ink/15 pt-6">
+        <span class="label">— Nuestras propiedades</span>
+        <ul class="mt-4 divide-y divide-ink/10 border-y border-ink/10">
+          {propiedades.map((p) => (
+            <li>
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noopener"
+                class="flex items-center justify-between gap-4 py-4 hover:text-magenta"
+              >
+                <div>
+                  <p class="font-display text-xl leading-tight text-ink sm:text-2xl">
+                    {p.label}
+                  </p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{p.tag}</p>
+                </div>
+                <span aria-hidden="true" class="text-magenta">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="mt-10">
+        <a href="/contacto" class="btn w-full">
+          Reservar diagnóstico →
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const mobile = document.getElementById('nav-mobile');
+  toggle?.addEventListener('click', () => {
+    const isHidden = mobile?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!isHidden));
+    toggle.textContent = isHidden ? 'Menú' : 'Cerrar';
+  });
+
+  // Cerrar menú móvil al navegar a un ancla en la misma página
+  document.querySelectorAll('#nav-mobile a').forEach((a) => {
+    a.addEventListener('click', () => {
+      mobile?.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+      if (toggle) toggle.textContent = 'Menú';
+    });
+  });
+</script>

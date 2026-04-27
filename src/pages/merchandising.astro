@@ -1,0 +1,141 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const categorias = [
+  { name: 'Textil y moda', body: 'Camisetas, sudaderas, polos, chaquetas. Modelos unisex, mujer y niño. Algodón orgánico y RPET cuando aplica.' },
+  { name: 'Accesorios y complementos', body: 'Bolsas, mochilas, tazas, llaveros, libretas. El detalle que se usa todos los días.' },
+  { name: 'Oficina y escritura', body: 'Bolígrafos, libretas, agendas, sets corporativos. Para regalo interno o cliente.' },
+  { name: 'High-tech', body: 'Cargadores, baterías, accesorios USB, gadgets de oficina. Útiles, no decorativos.' },
+  { name: 'Hogar y decoración', body: 'Botellas reutilizables, vajilla, textil para el hogar. Ideal para campañas con causa.' },
+  { name: 'Belleza y bienestar', body: 'Estuches de viaje, cremas, neceseres. Detalles de bienvenida, eventos y acciones de cuidado.' },
+  { name: 'Deportes', body: 'Material deportivo personalizable para clubes, eventos solidarios y carreras populares.' },
+  { name: 'Fiesta y eventos', body: 'Material para galas, congresos, ferias y carreras. Identifican la marca sin recargar.' },
+  { name: 'Marroquinería y viajes', body: 'Maletas, fundas, neceseres y carteras. Regalos corporativos de tramo alto.' },
+];
+
+const tecnicas = [
+  { name: 'Serigrafía', body: 'Para textil. Tinta plastisol o al agua. Acabado duradero, ideal para tirajes medios y grandes.' },
+  { name: 'Bordado', body: 'Acabado premium en polos, sudaderas y mochilas. La opción que comunica calidad sin decir nada.' },
+  { name: 'Grabado láser', body: 'Para metal, madera y cristal. Detalles corporativos de tramo alto que aguantan toda la vida.' },
+];
+---
+
+<Base
+  title="Merchandising con propósito — Startidea"
+  description="Textil orgánico, accesorios RPET, regalos corporativos sostenibles. Personalización en serigrafía, bordado y grabado láser. Pedidos desde 1 unidad. Catálogo completo en merchandising.startidea.es."
+  ogSlug="page/merchandising"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Merchandising</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Detalles que se usan.<br/>
+        <em class="italic text-magenta">Que se ven. Que se recuerdan.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Más de 500 productos personalizables: textil orgánico, RPET, ecología-ética. Para entidades sociales, empresas con propósito, instituciones y campañas con causa. <strong>Bronze Partner de FYVAR desde 2016</strong> — la federación que agrupa al sector promocional en España.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="https://merchandising.startidea.es" target="_blank" rel="noopener" class="btn">
+          Ver el catálogo completo
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a href="mailto:pedidos@startidea.es" class="btn-ghost">
+          Pedir presupuesto
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorías -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Categorías</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Nueve familias de <em class="italic text-magenta">producto</em>.
+          </h2>
+
+          <ul class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+            {categorias.map((c, i) => (
+              <li class="bg-paper-warm p-6">
+                <span class="font-mono text-xs uppercase tracking-widest text-ink/55">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 class="mt-3 font-display text-xl leading-tight text-ink md:text-2xl">{c.name}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{c.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Técnicas de personalización -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Personalización</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tres técnicas. <em class="italic text-magenta">Una decisión.</em>
+          </h2>
+          <p class="mt-5 max-w-measure text-ink/80">
+            Cada producto tolera una o varias técnicas. Te asesoramos en función del soporte, el volumen y el resultado que buscas.
+          </p>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-3">
+            {tecnicas.map((t, i) => (
+              <li class="bg-paper p-8">
+                <span class="num-edit text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink md:text-3xl">{t.name}</h3>
+                <p class="mt-4 text-sm leading-relaxed text-ink/80">{t.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA externa -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— Catálogo completo</span>
+          <h2 class="mt-4 font-display text-display-lg leading-[1.02] text-paper">
+            Más de 500 productos en<br/>
+            <a href="https://merchandising.startidea.es" target="_blank" rel="noopener" class="italic text-magenta hover:underline">
+              merchandising.startidea.es ↗
+            </a>
+          </h2>
+          <p class="mt-8 max-w-measure text-paper/80">
+            Catálogo navegable, fichas técnicas, opciones de personalización y formulario de presupuesto. Pedidos desde 1 unidad. Para volúmenes mayores, escríbenos directamente a pedidos@startidea.es.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href="https://merchandising.startidea.es" target="_blank" rel="noopener" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Ir al catálogo
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="mailto:pedidos@startidea.es" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              pedidos@startidea.es
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="merchandising" />
+</Base>

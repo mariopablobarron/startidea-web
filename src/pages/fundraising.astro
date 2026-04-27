@@ -1,0 +1,258 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+
+const pilares = [
+  {
+    title: 'Diversificar para resistir',
+    body: 'Una entidad que depende de una convocatoria está a una decisión administrativa de pararse. La sostenibilidad nace de la mezcla.',
+  },
+  {
+    title: 'Aliados con sentido',
+    body: 'No firmamos por firmar. Una alianza vale por lo que comparte de propósito, no por el logo en la web.',
+  },
+  {
+    title: 'Profesionalizar la captación',
+    body: 'Sistemas, materiales y argumentos para que captar deje de ser un esfuerzo extraordinario y pase a ser una función estable de la organización.',
+  },
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Diagnóstico financiero estratégico',
+    body: 'Foto-fija de la realidad económica: de dónde vienen los ingresos, en qué dependes, qué propuesta de valor tienes para financiadores y dónde está el potencial de crecimiento.',
+    items: [
+      { name: 'Análisis de fuentes de ingreso', desc: 'Mapa de ingresos por origen, plazo y nivel de previsibilidad. Detectamos concentraciones de riesgo y palancas dormidas.' },
+      { name: 'Nivel de dependencia de subvenciones', desc: 'Ratio de subvención pública sobre presupuesto total. Indicador clave para conversaciones con patronato y donantes privados.' },
+      { name: 'Capacidades internas para captar', desc: 'Equipo, herramientas, procesos y materiales de captación. Qué hay, qué falta, qué se puede activar ya.' },
+      { name: 'Propuesta de valor para financiadores', desc: 'Cómo se cuenta lo que hace la entidad. La organización buena que se cuenta mal, capta mal.' },
+      { name: 'Potencial de crecimiento por línea', desc: 'Por cada vía de ingreso, evaluación del techo realista a 12-24 meses con los recursos disponibles.' },
+    ],
+  },
+  {
+    num: '02',
+    title: 'Plan de fundraising y alianzas a 12 meses',
+    body: 'De los hallazgos al plan ejecutable: objetivos económicos, líneas activas, materiales necesarios, hoja de ruta y responsables. Un documento que se aplica, no que se archiva.',
+    items: [
+      { name: 'Objetivos económicos por trimestre', desc: 'Metas cuantificadas y desglosadas por origen de ingreso, no un total agregado. Para que el seguimiento sea posible.' },
+      { name: 'Activación por líneas', desc: 'Empresas, donantes individuales, padrinazgos, campañas, eventos, fundaciones privadas. Qué se prioriza y por qué.' },
+      { name: 'Mensajes y argumentarios', desc: 'Discurso adaptado a cada audiencia (CEO, fundación, donante particular). Sin un solo mensaje genérico.' },
+      { name: 'Calendario operativo', desc: 'Hitos semanales, responsables, dependencias. Visible en cualquier herramienta de gestión.' },
+      { name: 'Presupuesto de captación', desc: 'Cuánto cuesta captar cada euro por línea — el dato que casi ninguna entidad calcula y que cambia las decisiones.' },
+    ],
+  },
+  {
+    num: '03',
+    title: 'Materiales de apoyo a la captación',
+    body: 'Los documentos que sostienen la conversación con un financiador potencial: claros, breves, de marca. Que se puedan enviar el lunes a alguien que los pidió el viernes.',
+    items: [
+      { name: 'Dossier corporativo', desc: 'Versión institucional sólida — quién, por qué, qué hace, con qué resultados. La carta de presentación que abre puertas.' },
+      { name: 'Propuestas de colaboración', desc: 'Plantillas modulares por tipo de aliado: empresa, fundación, institución, particular. Adaptables en una hora.' },
+      { name: 'Argumentarios de venta social', desc: 'Para el equipo que conversa con potenciales donantes: respuestas a las objeciones reales, no las imaginadas.' },
+      { name: 'Estructuras de patrocinio y partnership', desc: 'Tramos económicos, contraprestaciones, reportes. Para que el patrocinador sepa qué recibe a cambio.' },
+      { name: 'Memoria de impacto editorial', desc: 'No la administrativa: una pieza que se lee, se entiende y se reenvía. La memoria que vende sin venderse.' },
+    ],
+  },
+  {
+    num: '04',
+    title: 'Mapeo de aliados estratégicos',
+    body: 'No basta con tener el plan: hay que saber a quién golpear la puerta. Identificación, priorización y vías de entrada para cada categoría de aliado posible.',
+    items: [
+      { name: 'Empresas con alineamiento real', desc: 'Más allá de las grandes obvias — sectores, geografías y propósitos compatibles. Con datos públicos de RSC y memoria.' },
+      { name: 'Fundaciones privadas activas', desc: 'Calendario de convocatorias, líneas de interés y contactos de referencia para cada una.' },
+      { name: 'Redes empresariales y clubes', desc: 'Cámaras, clubes de empresarios, asociaciones sectoriales. Las puertas que se abren a través de pertenencia.' },
+      { name: 'Stakeholders institucionales clave', desc: 'Mapa de poder e influencia local, regional y nacional. Quién decide y a través de quién se llega.' },
+    ],
+  },
+  {
+    num: '05',
+    title: 'Acompañamiento en la activación',
+    body: 'El plan no se ejecuta solo. Trabajamos a cuatro manos durante los primeros meses para que la organización gane músculo y velocidad propia.',
+    items: [
+      { name: 'Preparación de reuniones clave', desc: 'Briefing previo, materiales adaptados, ensayo del pitch. Cero improvisación en las conversaciones que importan.' },
+      { name: 'Refinamiento de propuestas', desc: 'Revisión a cuatro manos antes de enviar. Corregimos lo que no se ve hasta que el otro lo lee mal.' },
+      { name: 'Priorización de esfuerzos', desc: 'Decidir cada mes a qué decir sí y a qué decir no — con criterio de coste-oportunidad real.' },
+      { name: 'Revisión de mensajes en uso', desc: 'Lo que funciona se mantiene y se sistematiza. Lo que no, se cambia. Mensual.' },
+      { name: 'Sparring para decisiones estratégicas', desc: 'A disposición de dirección para los pivotes que surgen — y siempre surgen.' },
+    ],
+  },
+];
+
+const modalidades = [
+  {
+    num: '01',
+    title: 'Diagnóstico + Plan',
+    body: 'El punto de partida. 6-8 semanas. Sales con la radiografía financiera y un plan operable a 12 meses.',
+  },
+  {
+    num: '02',
+    title: 'Plan + Materiales + Activación',
+    body: 'El paquete completo. 4-6 meses. Diagnóstico, plan, materiales clave y acompañamiento en los primeros 90 días.',
+  },
+  {
+    num: '03',
+    title: 'Acompañamiento estratégico anual',
+    body: 'Función fundraising externalizada. Sparring continuo, revisión trimestral, soporte en candidaturas, revisión de materiales.',
+  },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico (gratuito)', body: '30 minutos. Tú nos cuentas el reto, nosotras te decimos honestamente si encajamos.' },
+  { step: '02', title: 'Propuesta cerrada', body: 'En una semana: alcance, plazos, equipo, presupuesto. Sin "depende".' },
+  { step: '03', title: 'Co-construcción', body: 'Trabajamos con tu equipo de captación, no en sustitución. Conocimiento que se queda dentro.' },
+  { step: '04', title: 'Hand-off + check-in', body: 'Documentación, capacitación, transferencia. Y un seguimiento a los 6 meses para ajustar lo que el plan no previó.' },
+];
+---
+
+<Base
+  title="Fundraising y Alianzas Estratégicas — Startidea"
+  description="Diversificación de ingresos, plan de fundraising a 12 meses, materiales de captación y mapeo de aliados. Para entidades sociales, fundaciones y proyectos con propósito que quieren dejar de depender de una sola fuente."
+  ogSlug="page/fundraising"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Fundraising y Alianzas</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Diversificar.<br/>
+        <em class="italic text-magenta">Profesionalizar.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Ayudamos a entidades sociales y proyectos con propósito a asegurar su sostenibilidad económica diversificando ingresos, construyendo alianzas estratégicas y profesionalizando la función de captación. La organización que depende de una convocatoria está a una decisión administrativa de pararse.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn">
+          Pide una reunión de diagnóstico gratuita
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Tres pilares</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">defendemos</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {pilares.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas detalladas -->
+  {areas.map((area, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{area.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">
+              {area.title}
+            </h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">
+              {area.body}
+            </p>
+
+            <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+              {area.items.map((it, idx) => (
+                <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                  <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/55 sm:col-span-2">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div class="col-span-12 sm:col-span-10">
+                    <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.name}</p>
+                    <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Modalidades de contratación -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo se contrata</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tres <em class="italic text-magenta">modalidades</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-ink/80">
+            Según el momento de la entidad y el alcance que necesites. El presupuesto se cierra después del diagnóstico — sin "depende".
+          </p>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-3">
+            {modalidades.map((m) => (
+              <li class="bg-paper p-8">
+                <span class="num-edit text-5xl md:text-6xl">{m.num}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink md:text-3xl">{m.title}</h3>
+                <p class="mt-4 text-sm leading-relaxed text-ink/80">{m.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proceso -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Proceso</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Cómo trabajamos<em class="italic text-magenta"> contigo</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-ink p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl text-paper">{p.title}</h3>
+                <p class="mt-3 text-sm text-paper/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Pide una reunión de diagnóstico gratuita
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="fundraising" />
+</Base>

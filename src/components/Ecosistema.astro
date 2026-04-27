@@ -1,0 +1,151 @@
+---
+// Ecosistema en dos bloques claros:
+//   - 4 Disciplinas (servicios internos de la agencia)
+//   - 3 Propiedades (sub-marcas/dominios autónomos)
+
+const disciplinas = [
+  {
+    num: '01',
+    nombre: 'Consultoría',
+    tag: 'Innovación social · Proyectos',
+    body: 'Estrategia organizativa, formulación y captación de proyectos, evaluación de impacto. Pensar mejor, decidir con criterio.',
+    href: '/consultoria',
+  },
+  {
+    num: '02',
+    nombre: 'Comunicación',
+    tag: 'Estratégica · Marketing social',
+    body: 'Estrategia, contenidos, redes, campañas con causa, marketing digital, marca, comunicación institucional y crisis.',
+    href: '/comunicacion',
+  },
+  {
+    num: '03',
+    nombre: 'Audiovisual',
+    tag: 'Vídeo · Podcast · Estudio',
+    body: 'Producción audiovisual y de podcast con estudio propio. De la idea al guion, de la grabación a la difusión.',
+    href: '/audiovisual',
+  },
+  {
+    num: '04',
+    nombre: 'Tecnología',
+    tag: 'Plataformas · Producto · IA',
+    body: 'Webs editoriales, plataformas a medida, producto digital con IA. Stack moderno cuando suma, estable cuando es lo correcto.',
+    href: '/tecnologia',
+  },
+];
+
+const propiedades = [
+  {
+    num: '05',
+    nombre: 'Hub Startidea',
+    tag: 'Coworking · Estudio podcast',
+    body: 'Espacio físico en Granada. Coworking, salas de reuniones, estudio de podcast y radio. Comunidad de profesionales con propósito.',
+    url: 'hubstartidea.es',
+    href: 'https://hubstartidea.es',
+  },
+  {
+    num: '06',
+    nombre: 'Merchandising',
+    tag: 'Productos con propósito',
+    body: 'Más de 500 productos personalizables: textil orgánico, RPET, ecología-ética. Serigrafía, bordado, grabado láser.',
+    url: 'merchandising.startidea.es',
+    href: 'https://merchandising.startidea.es',
+  },
+  {
+    num: '07',
+    nombre: 'Granada Social',
+    tag: 'Medio · Comunidad',
+    body: 'Plataforma sociocultural: videopodcasts, noticias, opinión, galas solidarias. La voz pública de la innovación social en Granada.',
+    url: 'granadasocial.org',
+    href: 'https://granadasocial.org',
+  },
+  {
+    num: '08',
+    nombre: '3.000M de Latidos',
+    tag: 'IA · Salud mental',
+    body: 'Plataforma propia de mentoría con IA en español. Acompañamiento emocional sin registro, con supervisión clínica humana.',
+    url: 'tresmilmillonesdelatidos.es',
+    href: 'https://tresmilmillonesdelatidos.es',
+  },
+];
+---
+
+<section id="ecosistema" class="relative bg-paper-warm py-24 md:py-32">
+  <div class="container-x">
+    <!-- Encabezado -->
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-3">
+        <span class="label">— Ecosistema</span>
+      </div>
+      <div class="col-span-12 mt-6 lg:col-span-9 md:mt-0">
+        <h2 class="font-display text-display-lg leading-[0.98] text-ink">
+          Una casa.
+          <span class="block italic text-ink/55">Siete voces que se hablan.</span>
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-ink/80">
+          Cuatro disciplinas internas que se contratan juntas o por separado, y tres propiedades digitales con vida propia. Todo bajo un mismo techo en Granada.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bloque 1: DISCIPLINAS -->
+    <div class="mt-16">
+      <div class="flex items-baseline gap-4 border-b border-ink/15 pb-4">
+        <span class="num-edit text-3xl">·</span>
+        <span class="label">— Disciplinas</span>
+        <span class="font-mono text-xs text-ink-mute">Servicios contratables · enlaces internos</span>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {disciplinas.map((p) => (
+          <a href={p.href} class="reveal group card-edit !pt-10">
+            <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
+              <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
+              <span class="label text-right">{p.tag}</span>
+            </div>
+            <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
+              {p.nombre}
+            </h3>
+            <p class="mt-5 text-sm leading-relaxed text-ink/75">{p.body}</p>
+            <div class="mt-7 flex items-center justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/60 transition-colors group-hover:text-magenta">
+                /{p.nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}
+              </span>
+              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Bloque 2: PROPIEDADES -->
+    <div class="mt-20">
+      <div class="flex items-baseline gap-4 border-b border-ink/15 pb-4">
+        <span class="num-edit text-3xl">·</span>
+        <span class="label">— Propiedades</span>
+        <span class="font-mono text-xs text-ink-mute">Sub-marcas con dominio propio · enlaces externos</span>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {propiedades.map((p) => (
+          <a href={p.href} target="_blank" rel="noopener" class="reveal group card-edit !pt-10">
+            <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
+              <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
+              <span class="label text-right">{p.tag}</span>
+            </div>
+            <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
+              {p.nombre}
+            </h3>
+            <p class="mt-5 text-sm leading-relaxed text-ink/75">{p.body}</p>
+            <div class="mt-7 flex items-center justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/60 transition-colors group-hover:text-magenta">
+                {p.url}
+              </span>
+              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

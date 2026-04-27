@@ -1,0 +1,237 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base
+  title="Contacto — Startidea"
+  description="Reserva una llamada de diagnóstico de 30 minutos. Sin compromiso. Te decimos honestamente si somos el partner adecuado para tu reto."
+  ogSlug="page/contacto"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Hablemos</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Treinta minutos.<br/>
+        <em class="italic text-magenta">Sin compromiso.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Una llamada de diagnóstico. Tú nos cuentas el reto, nosotras te decimos honestamente si somos el partner adecuado para resolverlo. Si no lo somos, te orientamos hacia quien sí — sin segundas intenciones.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calendario embed + datos -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <!-- Calendario embed -->
+        <div class="col-span-12 lg:col-span-7">
+          <span class="label">— Reserva directa</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Elige hueco en el <em class="italic text-magenta">calendario</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-ink/80">
+            Reserva 30 minutos de cuando te venga bien. Te llamamos por Google Meet o por teléfono, lo que prefieras.
+          </p>
+
+          <!-- Embed Cal.com — bloqueado hasta consentimiento -->
+          <div
+            id="cal-embed-wrapper"
+            class="mt-10 min-h-[640px] border border-ink/15 bg-paper-warm"
+            data-cal-link="startidea/30min"
+          >
+            <noscript>
+              <div class="flex min-h-[420px] flex-col items-center justify-center p-12 text-center">
+                <p class="max-w-md font-display text-2xl leading-snug text-ink/85">
+                  Para reservar hueco necesitas JavaScript activado. Si no, escribe a
+                  <a href="mailto:hola@startidea.es" class="link-underline text-ink">hola@startidea.es</a>.
+                </p>
+              </div>
+            </noscript>
+          </div>
+
+          <p class="mt-4 font-mono text-xs leading-relaxed text-ink-mute">
+            ↗ El calendario se carga desde Cal.com solo cuando aceptas las cookies de terceros. Mientras tanto, puedes escribirnos por email.
+          </p>
+        </div>
+
+        <!-- Datos de contacto -->
+        <div class="col-span-12 lg:col-span-4 lg:col-start-9">
+          <span class="label">— Otras vías</span>
+
+          <div class="mt-6 space-y-8">
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Email general</p>
+              <a href="mailto:hola@startidea.es" class="mt-2 block font-display text-2xl leading-tight text-ink hover:text-magenta">
+                hola@startidea.es
+              </a>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Pedidos merchandising</p>
+              <a href="mailto:pedidos@startidea.es" class="mt-2 block font-display text-2xl leading-tight text-ink hover:text-magenta">
+                pedidos@startidea.es
+              </a>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Granada Social</p>
+              <a href="mailto:redaccion@granadasocial.org" class="mt-2 block font-display text-2xl leading-tight text-ink hover:text-magenta">
+                redaccion@granadasocial.org
+              </a>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Teléfono</p>
+              <a href="tel:+34958045789" class="mt-2 block font-display text-2xl leading-tight text-ink hover:text-magenta">
+                +34 958 045 789
+              </a>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">WhatsApp</p>
+              <a href="https://wa.me/34958045789" target="_blank" rel="noopener" class="mt-2 block font-display text-2xl leading-tight text-ink hover:text-magenta">
+                Escribir por WhatsApp ↗
+              </a>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Dirección</p>
+              <p class="mt-2 font-display text-xl leading-tight text-ink">
+                C/ Conde Cifuentes, 33<br/>
+                18005 Granada · España
+              </p>
+            </div>
+            <div class="border-t border-ink/15 pt-5">
+              <p class="label">Redes</p>
+              <ul class="mt-3 space-y-1.5 text-sm text-ink/85">
+                <li><a href="https://www.linkedin.com/company/agenciastartidea" class="link-underline">LinkedIn</a></li>
+                <li><a href="https://www.instagram.com/agenciastartidea" class="link-underline">Instagram</a></li>
+                <li><a href="https://www.facebook.com/agenciastartidea" class="link-underline">Facebook</a></li>
+                <li><a href="https://x.com/startideasocial" class="link-underline">X (Twitter)</a></li>
+                <li><a href="https://www.youtube.com/c/AgenciadeComunicaciónSocialSTARTIDEA" class="link-underline">YouTube</a></li>
+                <li><a href="https://open.spotify.com/show/3c3Pm70Up3v1GOdYuSxj05" class="link-underline">Spotify</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ rápido -->
+  <section class="bg-paper-warm py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Antes de hablar</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">a veces preguntan</em>.
+          </h2>
+
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">¿La llamada es gratuita?</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">Sí. 30 minutos sin compromiso, sin coste. La hacemos para entender si encajamos antes de que tú decidas invertir nada.</dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">¿Trabajáis con presupuestos pequeños?</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">Depende del problema. Hay proyectos de 3.000€ y proyectos de 300.000€. Lo que no hacemos es bajar la calidad para hacer caber un alcance grande en un presupuesto que no llega.</dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">¿Trabajáis solo en Granada?</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">No. Operamos desde Granada con clientes en toda España y proyectos europeos. Cerca cuando importa, lejos cuando hace falta.</dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">¿Hace falta que llegue a la llamada con un brief?</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">No. Una idea aproximada del reto basta. Si tienes un brief o una RFP, mejor — los leemos antes y la conversación rinde más.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var wrapper = document.getElementById('cal-embed-wrapper');
+      if (!wrapper) return;
+      var calLink = wrapper.dataset.calLink || 'startidea/30min';
+      var loaded = false;
+
+      function renderConsentGate() {
+        wrapper.innerHTML =
+          '<div class="flex min-h-[420px] flex-col items-center justify-center p-12 text-center">' +
+          '  <span class="label">Calendario externo</span>' +
+          '  <p class="mt-4 max-w-md font-display text-2xl leading-snug text-ink/85">El calendario se carga desde <strong class="text-magenta">Cal.com</strong>, un servicio de terceros. Acepta las cookies para verlo aquí o reserva por email.</p>' +
+          '  <div class="mt-8 flex flex-wrap justify-center gap-3">' +
+          '    <button type="button" id="cal-accept" class="btn">Aceptar y cargar calendario <span aria-hidden="true">→</span></button>' +
+          '    <a href="mailto:hola@startidea.es" class="btn-ghost">Escribir por email</a>' +
+          '  </div>' +
+          '</div>';
+        var btn = document.getElementById('cal-accept');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            try { localStorage.setItem('startidea.cookieconsent.v1', 'all'); } catch (_) {}
+            loadCal();
+          });
+        }
+      }
+
+      function loadCal() {
+        if (loaded) return;
+        loaded = true;
+        wrapper.innerHTML = '<div id="cal-inline" style="width:100%;height:100%;min-height:640px;overflow:scroll"></div>';
+        // Loader oficial Cal.com
+        (function (C, A, L) {
+          var p = function (a, ar) { a.q.push(ar); };
+          var d = C.document;
+          C.Cal = C.Cal || function () {
+            var cal = C.Cal;
+            var ar = arguments;
+            if (!cal.loaded) {
+              cal.ns = {};
+              cal.q = cal.q || [];
+              d.head.appendChild(d.createElement('script')).src = A;
+              cal.loaded = true;
+            }
+            if (ar[0] === L) {
+              var api = function () { p(api, arguments); };
+              var namespace = ar[1];
+              api.q = api.q || [];
+              if (typeof namespace === 'string') {
+                cal.ns[namespace] = cal.ns[namespace] || api;
+                p(cal.ns[namespace], ar);
+                p(cal, ['initNamespace', namespace]);
+              } else { p(cal, ar); }
+              return;
+            }
+            p(cal, ar);
+          };
+        })(window, 'https://app.cal.com/embed/embed.js', 'init');
+
+        Cal('init', '30min', { origin: 'https://cal.com' });
+        Cal.ns['30min']('inline', {
+          elementOrSelector: '#cal-inline',
+          calLink: calLink,
+          layout: 'month_view',
+        });
+        Cal.ns['30min']('ui', {
+          theme: 'light',
+          cssVarsPerTheme: {
+            light: { 'cal-brand': '#E6356B' },
+          },
+          hideEventTypeDetails: false,
+          layout: 'month_view',
+        });
+      }
+
+      function decide() {
+        var consent = null;
+        try { consent = localStorage.getItem('startidea.cookieconsent.v1'); } catch (_) {}
+        if (consent === 'all') loadCal(); else renderConsentGate();
+      }
+
+      document.addEventListener('cookieconsent:all', loadCal);
+      decide();
+    })();
+  </script>
+</Base>

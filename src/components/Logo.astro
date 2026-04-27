@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import logoDefault from '@/assets/brand/logo-original.png';
+import logoInverse from '@/assets/brand/logo-blanco.png';
+
+interface Props {
+  class?: string;
+  variant?: 'default' | 'inverse';
+  height?: number;
+}
+const { class: className = '', variant = 'default', height = 96 } = Astro.props;
+const src = variant === 'inverse' ? logoInverse : logoDefault;
+
+// Pre-renderizamos a 2× la altura más grande prevista (≈192) para que
+// quede nítido en cualquier breakpoint del responsive.
+const baseHeight = Math.max(height, 144);
+const ratio = src.width / src.height;
+const renderedWidth = Math.round(baseHeight * ratio);
+---
+
+<a
+  href="/"
+  class={`group inline-flex items-center transition-transform duration-300 ease-out hover:-translate-y-0.5 ${className}`}
+  aria-label="Startidea — inicio"
+>
+  <Image
+    src={src}
+    alt="Startidea"
+    width={renderedWidth * 2}
+    height={baseHeight * 2}
+    densities={[1, 2]}
+    format="webp"
+    quality={92}
+    style={className.includes('h-') ? 'height:100%; width:auto; display:block;' : `height:${height}px; width:auto; display:block;`}
+    class="transition-opacity duration-300 group-hover:opacity-90"
+  />
+</a>

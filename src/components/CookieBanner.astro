@@ -1,0 +1,80 @@
+---
+// Banner de consentimiento minimalista, RGPD-friendly.
+// Estados guardados en localStorage: 'all' | 'essential'.
+// Dispara el evento `cookieconsent:all` cuando se aceptan terceros.
+---
+
+<div
+  id="cookie-banner"
+  class="fixed inset-x-0 bottom-0 z-[60] hidden border-t-2 border-ink bg-paper shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.18)]"
+  role="dialog"
+  aria-live="polite"
+  aria-label="Aviso de cookies"
+>
+  <div class="container-x py-5 md:py-6">
+    <div class="grid grid-cols-12 items-center gap-x-6 gap-y-4">
+      <div class="col-span-12 lg:col-span-7">
+        <p class="label">— Cookies</p>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-ink/85">
+          Usamos cookies técnicas (necesarias para que el sitio funcione) y, si tú quieres, cookies de terceros para cargar el calendario de Cal.com en la página de contacto. Sin tracking publicitario.
+          <a href="/cookies" class="link-underline text-ink">Más detalles</a>.
+        </p>
+      </div>
+      <div class="col-span-12 flex flex-wrap items-center justify-start gap-3 lg:col-span-5 lg:justify-end">
+        <button id="cookie-reject" type="button" class="btn-ghost">
+          Solo esenciales
+        </button>
+        <button id="cookie-accept" type="button" class="btn">
+          Aceptar todas
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'startidea.cookieconsent.v1';
+    var banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+
+    function emit(value) {
+      try {
+        document.dispatchEvent(new CustomEvent('cookieconsent:' + value));
+      } catch (_) {}
+    }
+
+    function save(value) {
+      try {
+        localStorage.setItem(KEY, value);
+      } catch (_) {}
+      banner.classList.add('hidden');
+      emit(value);
+    }
+
+    var current = null;
+    try {
+      current = localStorage.getItem(KEY);
+    } catch (_) {}
+
+    if (current === 'all' || current === 'essential') {
+      banner.classList.add('hidden');
+      // Re-emite el estado para que los listeners que se añaden después sepan dónde estamos.
+      setTimeout(function () { emit(current); }, 0);
+    } else {
+      banner.classList.remove('hidden');
+    }
+
+    var accept = document.getElementById('cookie-accept');
+    var reject = document.getElementById('cookie-reject');
+    if (accept) accept.addEventListener('click', function () { save('all'); });
+    if (reject) reject.addEventListener('click', function () { save('essential'); });
+
+    // API mínima para que otras páginas puedan reabrir el banner.
+    window.startideaConsent = {
+      get: function () { try { return localStorage.getItem(KEY); } catch (_) { return null; } },
+      reopen: function () { banner.classList.remove('hidden'); },
+    };
+  })();
+</script>

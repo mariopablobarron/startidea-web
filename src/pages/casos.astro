@@ -1,0 +1,121 @@
+---
+import Base from '@/layouts/Base.astro';
+import { casos } from '@/data/casos';
+
+const audiencias = ['Todas', ...new Set(casos.map(c => c.audience))];
+const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
+---
+
+<Base
+  title="Casos — Startidea"
+  description="Proyectos reales con organizaciones reales: Down Granada, Granada Social, Proyecto Hombre, Tres Mil Millones de Latidos."
+  ogSlug="page/casos"
+>
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Casos</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Lo que hacemos.<br/>
+        <em class="italic text-magenta">Con su nombre y apellidos.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Proyectos reales, con organizaciones reales, con autorización escrita. También trabajamos con clientes que prefieren discreción — si quieres conocer la lista completa, hablamos en privado.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-b border-ink/15 bg-paper py-8">
+    <div class="container-x flex flex-wrap items-center gap-x-10 gap-y-4">
+      <div>
+        <span class="label mr-3">Audiencia</span>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {audiencias.map((a) => (
+            <button class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85 transition-colors hover:border-magenta hover:text-magenta">
+              {a}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <span class="label mr-3">Disciplina</span>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {disciplinas.map((d) => (
+            <button class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85 transition-colors hover:border-magenta hover:text-magenta">
+              {d}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="divide-y divide-ink/15 border-y border-ink/15">
+        {casos.map((caso) => (
+          <a href={`/casos/${caso.slug}`} class="reveal group grid grid-cols-12 gap-x-8 gap-y-6 py-12 transition-colors hover:bg-paper-warm lg:py-14">
+            <div class="col-span-12 lg:col-span-3">
+              <div class="flex items-baseline gap-4">
+                <span class="num-edit text-6xl md:text-7xl">{caso.num}</span>
+              </div>
+              <div class="mt-4">
+                <p class="font-display text-2xl leading-tight text-ink md:text-3xl">{caso.cliente}</p>
+                <span class="mt-2 block label">{caso.sector}</span>
+                <p class="mt-2 font-mono text-xs text-ink/60">{caso.intervention}</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="border border-ink/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/70">{caso.audience}</span>
+                  <span class="border border-magenta/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-magenta">{caso.discipline}</span>
+                  {caso.kind === 'propio' && (
+                    <span class="border border-magenta bg-magenta/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-magenta">
+                      Propia
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-6">
+              <h3 class="font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-3xl">
+                {caso.title}
+              </h3>
+              <p class="mt-4 max-w-measure text-ink/75">
+                {caso.body}
+              </p>
+              <span class="mt-5 inline-flex items-center gap-2 text-sm text-ink/70 transition-colors group-hover:text-magenta">
+                Ver caso completo
+                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+
+            <div class="col-span-12 lg:col-span-3 lg:border-l lg:border-ink/15 lg:pl-8">
+              <span class="label">Resultado</span>
+              <p class="mt-3 font-display text-4xl text-magenta md:text-5xl">{caso.metric.value}</p>
+              <p class="mt-2 max-w-[14rem] text-sm text-ink/70">{caso.metric.label}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            ¿Quieres conocer los <em class="italic text-magenta">casos privados</em>?
+          </h2>
+          <p class="mt-5 max-w-measure text-lede text-paper/85">
+            Trabajamos con organizaciones que prefieren no aparecer en escaparate. Si quieres oírlos contados — y entender por qué — reservamos 30 minutos.
+          </p>
+          <div class="mt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

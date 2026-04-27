@@ -1,0 +1,159 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const notas = await getCollection('notas', ({ data }) => !data.draft);
+  // Ordenadas por fecha desc para construir prev/next
+  notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+  return notas.map((nota, i) => ({
+    params: { slug: nota.slug },
+    props: {
+      nota,
+      prev: notas[i + 1] ?? null,
+      next: notas[i - 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  nota: CollectionEntry<'notas'>;
+  prev: CollectionEntry<'notas'> | null;
+  next: CollectionEntry<'notas'> | null;
+}
+
+const { nota, prev, next } = Astro.props;
+const { Content } = await nota.render();
+
+const fmtDate = new Intl.DateTimeFormat('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(nota.data.pubDate);
+
+// Tiempo de lectura estimado (200 wpm)
+const words = nota.body.trim().split(/\s+/).length;
+const readingTime = Math.max(1, Math.round(words / 200));
+---
+
+<Base
+  title={`${nota.data.title} — Notas · Startidea`}
+  description={nota.data.description}
+  ogSlug={`notas/${nota.slug}`}
+>
+  <article>
+    <!-- Cabecera -->
+    <header class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+      <div class="container-narrow">
+        <nav class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute" aria-label="Migas">
+          <a href="/notas" class="link-underline hover:text-ink">Notas</a>
+          <span aria-hidden="true">/</span>
+          <span>{fmtDate}</span>
+        </nav>
+
+        <h1 class="mt-8 font-display text-display-lg leading-[1.0] text-ink md:text-display-xl">
+          {nota.data.title}
+        </h1>
+
+        <p class="mt-8 max-w-measure text-lede text-ink/80">
+          {nota.data.description}
+        </p>
+
+        <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-ink/15 pt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          <span>{nota.data.author}</span>
+          <span aria-hidden="true">·</span>
+          <span>{nota.data.authorRole}</span>
+          <span aria-hidden="true">·</span>
+          <span>~ {readingTime} min de lectura</span>
+          {nota.data.audience !== 'Todas' && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span class="text-magenta">Para {nota.data.audience.toLowerCase()}</span>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- Cuerpo del artículo -->
+    <section class="bg-paper py-16 md:py-24">
+      <div class="container-narrow">
+        <div class="prose-editorial">
+          <Content />
+        </div>
+
+        <!-- Tags -->
+        {nota.data.tags.length > 0 && (
+          <div class="mt-16 border-t border-ink/15 pt-8">
+            <span class="label">— Etiquetas</span>
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {nota.data.tags.map((tag) => (
+                <li class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85">
+                  #{tag}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Navegación entre notas -->
+    {(prev || next) && (
+      <section class="bg-paper-warm py-16 md:py-20">
+        <div class="container-narrow">
+          <div class="grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            {prev ? (
+              <a href={`/notas/${prev.slug}`} class="group flex flex-col gap-3 bg-paper-warm p-6 transition-colors hover:bg-paper">
+                <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">← Nota anterior</span>
+                <span class="font-display text-xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-2xl">{prev.data.title}</span>
+              </a>
+            ) : <div class="bg-paper-warm p-6"></div>}
+            {next ? (
+              <a href={`/notas/${next.slug}`} class="group flex flex-col gap-3 bg-paper-warm p-6 text-right transition-colors hover:bg-paper">
+                <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Nota siguiente →</span>
+                <span class="font-display text-xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-2xl">{next.data.title}</span>
+              </a>
+            ) : <div class="bg-paper-warm p-6"></div>}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- CTA final + suscripción -->
+    <section class="bg-ink py-20 text-paper md:py-24">
+      <div class="container-narrow">
+        <span class="label !text-paper/60">— Una nota al mes</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+          Si te ha resonado, <em class="italic text-magenta">no te pierdas la próxima</em>.
+        </h2>
+        <p class="mt-5 max-w-measure text-lede text-paper/85">
+          Una al mes. Cinco minutos. Sin tracking pixels.
+        </p>
+
+        <form
+          class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-stretch"
+          action="https://buttondown.email/api/emails/embed-subscribe/startidea"
+          method="post"
+          target="popupwindow"
+          onsubmit="window.open('https://buttondown.email/startidea', 'popupwindow')"
+        >
+          <label class="sr-only" for="nota-newsletter-email">Tu email</label>
+          <input
+            id="nota-newsletter-email"
+            type="email"
+            name="email"
+            required
+            placeholder="tu@email.com"
+            autocomplete="email"
+            class="flex-1 border border-paper bg-ink px-4 py-3 font-mono text-sm text-paper placeholder:text-paper/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          />
+          <button type="submit" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+            Suscribirme
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+      </div>
+    </section>
+  </article>
+</Base>

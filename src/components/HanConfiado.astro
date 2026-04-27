@@ -1,0 +1,111 @@
+---
+// Han confiado en nosotros — selección curada por reconocimiento de marca y
+// relevancia sectorial, agrupada por audiencia para que el lector entienda
+// el alcance. Wordmark tipográfico hasta que lleguen los logos vectoriales.
+const grupos = [
+  {
+    label: 'Tercer sector · estatal',
+    clientes: [
+      { name: 'Cruz Roja Española' },
+      { name: 'Fundación Save the Children' },
+      { name: 'Fundación Acción Contra el Hambre' },
+      { name: 'YMCA España' },
+      { name: 'Fundación Proyecto Solidario por la Infancia' },
+      { name: 'Asociación Provivienda' },
+      { name: 'Fundación Nantik Lum' },
+      { name: 'Asociación Católica de Propagandistas' },
+      { name: 'Fundación Foro NESI' },
+    ],
+  },
+  {
+    label: 'Tercer sector · Granada',
+    clientes: [
+      { name: 'Down Granada' },
+      { name: 'Proyecto Hombre Granada' },
+      { name: 'Fundación UAPO' },
+      { name: 'Aspaym Granada' },
+      { name: 'Aldaima' },
+      { name: 'Arrabal-AID' },
+      { name: 'Tres Mil Millones de Latidos' },
+      { name: 'Relevos x la Vida' },
+    ],
+  },
+  {
+    label: 'Educación con propósito',
+    clientes: [
+      { name: 'Fundación Maristas Ibérica' },
+      { name: 'Fundación Educativa Escolapias' },
+      { name: 'Fundación Marcelino Champagnat' },
+      { name: 'Fundación Enrique de Ossó' },
+      { name: 'CONFER' },
+      { name: 'Fundación Santa María la Real' },
+    ],
+  },
+  {
+    label: 'Instituciones públicas',
+    clientes: [
+      { name: 'Diputación de Granada' },
+      { name: 'Ayuntamiento de Granada' },
+      { name: 'Universidad de Granada' },
+      { name: 'Fundación Pública Andaluza Progreso y Salud' },
+      { name: 'Ayuntamiento de Vila-real' },
+    ],
+  },
+  {
+    label: 'Empresa con propósito',
+    clientes: [
+      { name: 'Clínica Dental Arturo Baca' },
+      { name: 'Fundación Espadafor' },
+    ],
+  },
+  {
+    label: 'Iniciativas propias',
+    clientes: [
+      { name: 'Granada Social' },
+      { name: '#HamadaYJavi' },
+      { name: 'Granadown Report' },
+    ],
+  },
+];
+---
+
+<section class="relative bg-paper-warm py-20 md:py-28">
+  <div class="container-x">
+    <!-- Encabezado -->
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-4">
+        <span class="label">— Han confiado</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Organizaciones que <em class="italic text-magenta">cuentan con nosotras</em>.
+        </h2>
+      </div>
+      <div class="col-span-12 mt-6 lg:col-span-7 lg:col-start-6 lg:mt-0">
+        <p class="max-w-measure text-ink/80">
+          Cada relación se abre con una llamada de diagnóstico de 30 minutos. Si encajamos, nos quedamos años. La selección que sigue son organizaciones reales, agrupadas por el tipo de conversación que tenemos con cada una — hay más cuya discreción es parte del acuerdo.
+        </p>
+      </div>
+    </div>
+
+    <!-- Grupos editoriales -->
+    <div class="mt-16 space-y-12">
+      {grupos.map((grupo) => (
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— {grupo.label}</span>
+          </div>
+          <div class="col-span-12 mt-4 lg:col-span-9 lg:mt-0">
+            <ul class="grid grid-cols-2 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3 lg:grid-cols-3">
+              {grupo.clientes.map((c) => (
+                <li class="group flex aspect-[3/2] items-center justify-center bg-paper-warm p-6 text-center transition-colors hover:bg-paper">
+                  <p class="font-display text-lg leading-tight text-ink transition-colors group-hover:text-magenta md:text-xl">
+                    {c.name}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

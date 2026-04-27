@@ -1,0 +1,289 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Tipografías ─────────────────────────────────────────── */
+/* Las fuentes se cargan vía <link> en Base.astro (más fiable que @import) */
+
+/* ─── Reset y base ────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans;
+    font-feature-settings: 'ss01', 'cv11';
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    @apply bg-magenta text-paper;
+  }
+
+  /* Display: Montserrat 800 (extrabold) por defecto — peso brutal pero limpio.
+     H1 sube a 900 (black) para máxima jerarquía */
+  h1, h2, h3 {
+    @apply font-display font-extrabold;
+    letter-spacing: -0.03em;
+  }
+  h1 { font-weight: 900; }
+  body { font-weight: 400; }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-paper-warm;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-mute;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-magenta;
+  }
+}
+
+/* ─── Componentes utilitarios ─────────────────────────────── */
+@layer components {
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-widest text-ink-mute;
+  }
+
+  .rule {
+    @apply border-t border-ink/15;
+  }
+
+  .container-x {
+    @apply mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16;
+  }
+  .container-narrow {
+    @apply mx-auto max-w-[920px] px-6 md:px-10;
+  }
+
+  /* Botón principal — el rosa se gana
+     Micro-animations senior: shadow magenta sutil al hover + arrow desplazado */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2 border border-ink bg-ink px-6 py-3.5 text-sm font-medium text-paper transition-all duration-300 ease-out hover:bg-magenta hover:border-magenta hover:-translate-y-0.5;
+    box-shadow: 0 0 0 0 rgba(230, 53, 107, 0);
+  }
+  .btn:hover {
+    box-shadow: 0 8px 24px -8px rgba(230, 53, 107, 0.45);
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 border border-ink bg-transparent px-6 py-3.5 text-sm font-medium text-ink transition-all duration-300 ease-out hover:bg-ink hover:text-paper hover:-translate-y-0.5;
+  }
+  .btn-magenta {
+    @apply relative inline-flex items-center justify-center gap-2 border border-magenta bg-magenta px-6 py-3.5 text-sm font-medium text-paper transition-all duration-300 ease-out hover:bg-magenta-dark hover:border-magenta-dark hover:-translate-y-0.5;
+  }
+  .btn-text {
+    @apply inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors duration-300 hover:text-magenta;
+  }
+  /* Flecha que se desplaza dentro de los botones — usar <span aria-hidden> */
+  .btn span[aria-hidden="true"],
+  .btn-ghost span[aria-hidden="true"],
+  .btn-magenta span[aria-hidden="true"],
+  .btn-text span[aria-hidden="true"] {
+    @apply inline-block transition-transform duration-300 ease-out;
+  }
+  .btn:hover span[aria-hidden="true"],
+  .btn-ghost:hover span[aria-hidden="true"],
+  .btn-magenta:hover span[aria-hidden="true"],
+  .btn-text:hover span[aria-hidden="true"] {
+    transform: translateX(4px);
+  }
+
+  /* Link con underline que entra de derecha a izquierda al hover (sutil pero deliberado) */
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover::after {
+    @apply origin-left scale-x-100;
+  }
+
+  .pull-quote {
+    @apply font-display text-display-md italic text-magenta;
+  }
+
+  .num-edit {
+    @apply font-display font-normal text-ink/30;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Tarjeta editorial — top border que crece de lado a lado al hover */
+  .card-edit {
+    @apply relative border-t border-ink/15 pt-8 transition-all duration-300;
+  }
+  .card-edit::after {
+    content: '';
+    @apply absolute -top-px left-0 h-px w-0 bg-magenta transition-[width] duration-500 ease-out;
+  }
+  .card-edit:hover::after {
+    @apply w-full;
+  }
+  .card-edit:hover {
+    @apply border-transparent;
+  }
+}
+
+/* ─── Prose editorial — Markdown de notas ─────────────────── */
+.prose-editorial {
+  @apply max-w-[68ch] text-ink/85;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  letter-spacing: -0.005em;
+}
+
+.prose-editorial > * + * {
+  margin-top: 1.4em;
+}
+
+.prose-editorial h2 {
+  @apply font-display text-3xl text-ink md:text-display-md;
+  font-weight: 800;
+  margin-top: 2.4em;
+  margin-bottom: 0.6em;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.prose-editorial h2:first-child {
+  margin-top: 0;
+}
+
+.prose-editorial h3 {
+  @apply font-display text-2xl text-ink md:text-3xl;
+  font-weight: 700;
+  margin-top: 1.8em;
+  margin-bottom: 0.4em;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.prose-editorial p {
+  @apply text-ink/85;
+}
+
+.prose-editorial p strong,
+.prose-editorial li strong {
+  @apply text-ink font-semibold;
+}
+
+.prose-editorial em {
+  @apply italic text-ink;
+}
+
+.prose-editorial a {
+  @apply text-ink underline decoration-magenta/50 underline-offset-4 transition-colors hover:text-magenta hover:decoration-magenta;
+}
+
+.prose-editorial ul,
+.prose-editorial ol {
+  @apply pl-6;
+  margin-top: 1.2em;
+}
+
+.prose-editorial ul {
+  @apply list-disc;
+}
+
+.prose-editorial ol {
+  @apply list-decimal;
+}
+
+.prose-editorial li {
+  margin-top: 0.5em;
+  padding-left: 0.4em;
+}
+
+.prose-editorial li::marker {
+  @apply text-magenta;
+}
+
+.prose-editorial blockquote {
+  @apply border-l-2 border-magenta pl-6 italic text-ink;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 1.35em;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+}
+
+.prose-editorial code {
+  @apply font-mono text-[0.92em] text-ink bg-paper-warm px-1.5 py-0.5 rounded-sm;
+}
+
+.prose-editorial hr {
+  @apply border-t border-ink/15;
+  margin-top: 2.8em;
+  margin-bottom: 2.8em;
+}
+
+.prose-editorial img {
+  @apply w-full border border-ink/15;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* ─── Animaciones contenidas ──────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger automático para hijos directos de un .reveal-stagger */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respeta prefers-reduced-motion en todas las reveals */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes blink-soft {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.3; }
+}
+.cursor-blink {
+  animation: blink-soft 1.2s steps(2) infinite;
+}

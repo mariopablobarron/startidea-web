@@ -1,0 +1,250 @@
+---
+import Base from '@/layouts/Base.astro';
+import { Picture } from 'astro:assets';
+import marioPortrait from '@/assets/brand/mario-fundador.jpg';
+
+const hitos = [
+  { year: '2010', title: 'Fundación de Startidea', body: 'Granada. Primera asignación: comunicación estratégica para una plataforma confesional nacional. Lo que iba a ser un encargo se convirtió en relación de tres años.' },
+  { year: '2014', title: 'Primer estudio audiovisual propio', body: 'Apertura de capacidad de producción audiovisual y podcast in-house. Deja de ser una agencia que subcontrata y empieza a controlar la cadena editorial entera.' },
+  { year: '2018', title: 'Consolidación en tercer sector', body: 'La cartera se especializa en organizaciones con propósito. Se decide explícitamente no trabajar con sectores incompatibles con la línea editorial.' },
+  { year: '2020', title: 'Primera iniciativa propia: Granada Social', body: 'Lanzamiento de Granada Social como medio digital sociocultural. La agencia deja de ser solo proveedor y empieza a producir conversación pública.' },
+  { year: '2023', title: 'Hub Startidea', body: 'Apertura del espacio físico en Granada. Tres salas, estudio podcast y comunidad de profesionales. La agencia gana cuerpo.' },
+  { year: '2025', title: 'Startidea', body: 'Reorganización societaria. La línea de consultoría e innovación social toma personalidad jurídica propia.' },
+];
+
+const proyectosClave = [
+  'Plataformas confesionales nacionales — comunicación estratégica multianual',
+  'Down Granada — web institucional accesible WCAG 2.1',
+  'Proyecto Hombre — campañas de sensibilización',
+  'Granada Social — dirección editorial y producción audiovisual',
+  'Tres Mil Millones de Latidos — narrativa y comunicación',
+  'Redes nacionales de ONGD — gestión integral de comunicación',
+];
+
+const vinculaciones = [
+  { name: 'Asociación Católica de Propagandistas (ACdP)', note: 'Miembro' },
+  { name: 'Asociación Sectorial de Comunicación Eclesial (ASE)', note: 'Vinculado' },
+  { name: 'Granada Social', note: 'Fundador y director editorial' },
+  { name: 'Hub de Innovación Social Startidea', note: 'Impulsor' },
+];
+
+const valores = [
+  'Trabajamos con organizaciones cuyos fines compartimos. Decimos que no a las que no.',
+  'Las propuestas se cierran con presupuesto y plazo. Sin "depende".',
+  'Cada proyecto se mide. Si no movió algo, no lo hicimos bien.',
+  'Honestidad antes que ventas. Si no encajamos, lo decimos en la primera llamada.',
+];
+---
+
+<Base
+  title="Sobre — Startidea"
+  description="Mario P. Barrón fundó Startidea en Granada en 2010. Quince años acompañando a organizaciones con propósito en su comunicación, su estrategia y sus herramientas digitales."
+  ogSlug="page/sobre"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Sobre Startidea</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Quince años.<br/>
+        <em class="italic text-magenta">Una manera de mirar.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea es agencia, hub, medio y línea de productos. Una casa con cuatro voces que comparten un mismo origen: convertir el propósito en resultado para las organizaciones que existen para algo más.
+      </p>
+    </div>
+  </section>
+
+  <!-- Fundador -->
+  <section id="fundador" class="bg-paper py-24 md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Fundador</span>
+        </div>
+
+        <div class="col-span-12 lg:col-span-9">
+          <div class="grid grid-cols-12 gap-x-8 gap-y-12">
+            <div class="col-span-12 sm:col-span-5 lg:col-span-5">
+              <div class="group aspect-[4/5] w-full overflow-hidden border border-ink/15 bg-paper-warm">
+                <Picture
+                  src={marioPortrait}
+                  alt="Mario P. Barrón, fundador de Startidea"
+                  widths={[500, 800, 1200, 1600]}
+                  sizes="(min-width: 1024px) 480px, (min-width: 640px) 50vw, 100vw"
+                  formats={['avif', 'webp']}
+                  fallbackFormat="jpg"
+                  quality={85}
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+              </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-7 lg:col-span-7">
+              <h2 class="font-display text-display-lg leading-[1.0] text-ink">
+                Mario<br/>
+                P. Barrón
+              </h2>
+              <p class="mt-4 label">Fundador y director</p>
+
+              <div class="mt-10 space-y-5 max-w-measure text-ink/85">
+                <p>
+                  Fundó Startidea en Granada en 2010 con una conclusión sencilla: el sector con propósito comunica peor de lo que merece, y eso le hace daño a sus causas. Quince años después la conclusión no ha cambiado, pero la respuesta sí.
+                </p>
+                <p>
+                  Su trabajo ha estado centrado en la comunicación estratégica de entidades del tercer sector, plataformas confesionales y organizaciones con base ética. Combina formación en consultoría con producción digital y editorial — una mezcla rara que se ha convertido en la firma de la casa.
+                </p>
+                <p>
+                  Compagina la dirección de la agencia con la dirección editorial de Granada Social, la coordinación del Hub de Innovación Social y, ocasionalmente, formación universitaria sobre comunicación con propósito.
+                </p>
+              </div>
+
+              <div class="mt-10 flex flex-wrap items-center gap-6 border-t border-ink/15 pt-8">
+                <a href="https://www.linkedin.com/" class="btn-ghost" rel="noopener">
+                  Ver perfil LinkedIn
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a href="/contacto" class="link-underline text-sm text-ink/85">
+                  Reservar diagnóstico
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cita destacada -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <span class="label !text-paper/60">— En sus palabras</span>
+          <blockquote class="mt-6 font-display text-display-lg italic leading-[1.05] text-paper">
+            "El sector con propósito está lleno de buenas intenciones <span class="text-magenta">mal contadas</span>. Llevo quince años intentando lo contrario: contar bien lo que importa, con rigor, con estética y con resultados."
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hitos -->
+  <section class="bg-paper py-24 md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Recorrido</span>
+        </div>
+
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.0] text-ink">
+            Quince años en <em class="italic text-magenta">seis hitos</em>.
+          </h2>
+
+          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {hitos.map((h) => (
+              <li class="grid grid-cols-12 gap-x-8 py-8">
+                <div class="col-span-12 sm:col-span-3 lg:col-span-2">
+                  <span class="font-display text-4xl text-magenta md:text-5xl">{h.year}</span>
+                </div>
+                <div class="col-span-12 sm:col-span-9 lg:col-span-10">
+                  <h3 class="font-display text-2xl leading-tight text-ink md:text-3xl">{h.title}</h3>
+                  <p class="mt-3 max-w-measure text-ink/75">{h.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proyectos clave + Vinculaciones (dos columnas) -->
+  <section class="bg-paper-warm py-24 md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-6">
+          <span class="label">— Proyectos clave</span>
+          <h3 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Por dónde ha <em class="italic text-magenta">pasado</em>.
+          </h3>
+          <ul class="mt-8 space-y-3">
+            {proyectosClave.map((p) => (
+              <li class="flex items-start gap-3 border-t border-ink/15 pt-3 text-base text-ink/85">
+                <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="col-span-12 lg:col-span-6">
+          <span class="label">— Vinculaciones</span>
+          <h3 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Casa<em class="italic text-magenta">s</em> que comparte.
+          </h3>
+          <ul class="mt-8 space-y-3">
+            {vinculaciones.map((v) => (
+              <li class="grid grid-cols-12 gap-x-4 border-t border-ink/15 pt-3">
+                <span class="col-span-12 sm:col-span-7 font-display text-lg text-ink">{v.name}</span>
+                <span class="col-span-12 sm:col-span-5 mt-1 sm:mt-0 sm:text-right font-mono text-xs uppercase tracking-widest text-ink-mute">{v.note}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-8 max-w-measure font-mono text-xs leading-relaxed text-ink-mute">
+            ↗ Las vinculaciones se publican con discreción. Para detalles, los compartimos en conversación privada.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores / Cómo trabajamos -->
+  <section class="bg-paper py-24 md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo trabajamos</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.0] text-ink">
+            Cuatro reglas <em class="italic text-magenta">no negociables</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            {valores.map((v, i) => (
+              <li class="bg-paper p-8 lg:p-10">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <p class="mt-4 font-display text-xl leading-snug text-ink md:text-2xl">{v}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            ¿Quieres oírlo <em class="italic text-magenta">en directo</em>?
+          </h2>
+          <p class="mt-5 max-w-measure text-lede text-paper/85">
+            Mario hace personalmente las llamadas de diagnóstico. 30 minutos, sin compromiso, te decimos honestamente si encajamos.
+          </p>
+          <div class="mt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
