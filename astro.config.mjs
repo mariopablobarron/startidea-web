@@ -40,6 +40,12 @@ export default defineConfig({
     '/fundraising-alianzas/':                             '/fundraising',
     '/hub-startidea-espacios-y-comunidad':                '/hub',
     '/hub-startidea-espacios-y-comunidad/':               '/hub',
+
+    // Redirecciones desde slugs antiguos de casos
+    '/casos/valientes':                                   '/casos/acogimiento-familiar-granada',
+    '/casos/valientes/':                                  '/casos/acogimiento-familiar-granada',
+    '/casos/relevos-vida':                                '/casos',
+    '/casos/relevos-vida/':                               '/casos',
   },
   integrations: [
     tailwind({
