@@ -58,11 +58,15 @@
     @apply border-t border-ink/15;
   }
 
+  /* container-x: ancho máximo escalonado para que en pantallas grandes
+     el contenido respire pero no se disperse. Tope en TVs ~4K a 2200px. */
   .container-x {
-    @apply mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16;
+    @apply mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16
+           2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2000px] 5xl:max-w-[2200px];
   }
   .container-narrow {
-    @apply mx-auto max-w-[920px] px-6 md:px-10;
+    @apply mx-auto max-w-[920px] px-6 md:px-10
+           2xl:max-w-[1040px] 3xl:max-w-[1200px];
   }
 
   /* Botón principal — el rosa se gana

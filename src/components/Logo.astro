@@ -11,9 +11,9 @@ interface Props {
 const { class: className = '', variant = 'default', height = 96 } = Astro.props;
 const src = variant === 'inverse' ? logoInverse : logoDefault;
 
-// Pre-renderizamos a 2× la altura más grande prevista (≈192) para que
-// quede nítido en cualquier breakpoint del responsive.
-const baseHeight = Math.max(height, 144);
+// Pre-renderizamos a 2× la altura más grande prevista (≈192-240) para que
+// quede nítido en cualquier breakpoint del responsive, incluyendo TVs 4K.
+const baseHeight = Math.max(height, 200);
 const ratio = src.width / src.height;
 const renderedWidth = Math.round(baseHeight * ratio);
 ---

@@ -2,6 +2,18 @@
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
+    // Breakpoints extendidos para monitores grandes y TVs (4K/5K).
+    // Mantenemos los defaults Tailwind y añadimos 3xl/4xl/5xl.
+    screens: {
+      'sm':  '640px',
+      'md':  '768px',
+      'lg':  '1024px',
+      'xl':  '1280px',
+      '2xl': '1536px',
+      '3xl': '1920px', // FHD landscape, monitor estándar grande
+      '4xl': '2560px', // QHD / monitor 27"+
+      '5xl': '3200px', // 4K downscaled / TV grande
+    },
     extend: {
       colors: {
         // ─── Paleta Startidea (extraída del logo oficial) ───
@@ -37,11 +49,12 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        // Escala display recalibrada para sans pesada (Montserrat 800/900)
-        'display-xl': ['clamp(3.5rem, 9vw, 8.5rem)', { lineHeight: '0.94', letterSpacing: '-0.035em' }],
-        'display-lg': ['clamp(2.75rem, 6.5vw, 6rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
-        'display-md': ['clamp(2rem, 4.5vw, 3.75rem)', { lineHeight: '1.02', letterSpacing: '-0.025em' }],
-        'lede': ['clamp(1.25rem, 1.75vw, 1.5rem)', { lineHeight: '1.45', letterSpacing: '-0.005em' }],
+        // Escala display con clamp() — escala fluido en TODOS los tamaños hasta 4K.
+        // El máximo se sube para que en pantallas grandes el hero respire.
+        'display-xl': ['clamp(3.5rem, 9vw, 12rem)',   { lineHeight: '0.94', letterSpacing: '-0.035em' }],
+        'display-lg': ['clamp(2.75rem, 6.5vw, 8.5rem)', { lineHeight: '0.98', letterSpacing: '-0.03em' }],
+        'display-md': ['clamp(2rem, 4.5vw, 5.25rem)',  { lineHeight: '1.02', letterSpacing: '-0.025em' }],
+        'lede':       ['clamp(1.25rem, 1.75vw, 1.875rem)', { lineHeight: '1.45', letterSpacing: '-0.005em' }],
       },
       letterSpacing: {
         wider: '0.18em',
