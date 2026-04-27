@@ -28,4 +28,7 @@ ENV NODE_ENV=production
 
 EXPOSE 4321
 
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:4321/ > /dev/null || exit 1
+
 CMD ["node", "./dist/server/entry.mjs"]

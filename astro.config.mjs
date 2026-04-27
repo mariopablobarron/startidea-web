@@ -7,6 +7,7 @@ export default defineConfig({
   site: 'https://startidea.es',
   output: 'static',
   adapter: node({ mode: 'standalone' }),
+  prefetch: true,
   integrations: [
     tailwind({
       applyBaseStyles: false,

@@ -5,9 +5,12 @@ dist
 .gitignore
 .env
 .env.*
+!.env.example
 .DS_Store
 .vscode
 .idea
 *.zip
 README.md
 .claude
+video/
+*.log
