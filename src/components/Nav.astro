@@ -83,33 +83,33 @@ const propiedades = [
 
   <!-- Mobile / tablet / small desktop fullscreen menu -->
   <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper xl:hidden">
-    <div class="container-x py-8">
+    <div class="container-x py-5">
       <ul class="flex flex-col">
         {links.map((l) => (
           <li class="border-b border-ink/10">
-            <a href={l.href} class="block py-4 font-display text-2xl text-ink hover:text-magenta sm:text-3xl">
+            <a href={l.href} class="block py-2.5 font-display text-lg text-ink hover:text-magenta sm:text-xl">
               {l.label}
             </a>
           </li>
         ))}
       </ul>
 
-      <div class="mt-10 border-t-2 border-ink/15 pt-6">
+      <div class="mt-5 border-t-2 border-ink/15 pt-3">
         <span class="label">— Nuestras propiedades</span>
-        <ul class="mt-4 divide-y divide-ink/10 border-y border-ink/10">
+        <ul class="mt-2 divide-y divide-ink/10 border-y border-ink/10">
           {propiedades.map((p) => (
             <li>
               <a
                 href={p.href}
                 target="_blank"
                 rel="noopener"
-                class="flex items-center justify-between gap-4 py-4 hover:text-magenta"
+                class="flex items-center justify-between gap-3 py-2.5 hover:text-magenta"
               >
                 <div>
-                  <p class="font-display text-xl leading-tight text-ink sm:text-2xl">
+                  <p class="font-display text-base leading-tight text-ink sm:text-lg">
                     {p.label}
                   </p>
-                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{p.tag}</p>
+                  <p class="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{p.tag}</p>
                 </div>
                 <span aria-hidden="true" class="text-magenta">↗</span>
               </a>
@@ -118,8 +118,8 @@ const propiedades = [
         </ul>
       </div>
 
-      <div class="mt-10">
-        <a href="/contacto" class="btn w-full">
+      <div class="mt-5">
+        <a href="/contacto" class="btn w-full !py-2.5 text-sm">
           Reservar diagnóstico →
         </a>
       </div>
