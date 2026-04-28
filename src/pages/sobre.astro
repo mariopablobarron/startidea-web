@@ -4,7 +4,7 @@ import { Picture } from 'astro:assets';
 import marioPortrait from '@/assets/brand/mario-fundador.jpg';
 
 const hitos = [
-  { year: '2010', title: 'Fundación de Startidea', body: 'Granada. Primera asignación: comunicación estratégica para una plataforma confesional nacional. Lo que iba a ser un encargo se convirtió en relación de tres años.' },
+  { year: '2011', title: 'Fundación de Startidea', body: 'Febrero de 2011, Granada. Mario Pablo Sánchez Barrón funda la agencia. Primera asignación: comunicación estratégica para una plataforma confesional nacional. Lo que iba a ser un encargo se convirtió en relación de tres años.' },
   { year: '2014', title: 'Primer estudio audiovisual propio', body: 'Apertura de capacidad de producción audiovisual y podcast in-house. Deja de ser una agencia que subcontrata y empieza a controlar la cadena editorial entera.' },
   { year: '2018', title: 'Consolidación en tercer sector', body: 'La cartera se especializa en organizaciones con propósito. Se decide explícitamente no trabajar con sectores incompatibles con la línea editorial.' },
   { year: '2020', title: 'Primera iniciativa propia: Granada Social', body: 'Lanzamiento de Granada Social como medio digital sociocultural. La agencia deja de ser solo proveedor y empieza a producir conversación pública.' },
@@ -23,7 +23,7 @@ const proyectosClave = [
 
 const vinculaciones = [
   { name: 'Asociación Católica de Propagandistas (ACdP)', note: 'Miembro' },
-  { name: 'Asociación Sectorial de Comunicación Eclesial (ASE)', note: 'Vinculado' },
+  { name: 'Acción Social Empresarial (ASE)', note: 'Vinculado' },
   { name: 'Granada Social', note: 'Fundador y director editorial' },
   { name: 'Hub de Innovación Social Startidea', note: 'Impulsor' },
 ];
@@ -38,7 +38,7 @@ const valores = [
 
 <Base
   title="Sobre — Startidea"
-  description="Mario P. Barrón fundó Startidea en Granada en 2010. Quince años acompañando a organizaciones con propósito en su comunicación, su estrategia y sus herramientas digitales."
+  description="Mario Pablo Sánchez Barrón fundó Startidea en Granada en febrero de 2011. Quince años acompañando a organizaciones con propósito en su comunicación, su estrategia y sus herramientas digitales."
   ogSlug="page/sobre"
 >
   <!-- Hero -->
@@ -83,14 +83,14 @@ const valores = [
 
             <div class="col-span-12 sm:col-span-7 lg:col-span-7">
               <h2 class="font-display text-display-lg leading-[1.0] text-ink">
-                Mario<br/>
-                P. Barrón
+                Mario Pablo<br/>
+                Sánchez Barrón
               </h2>
               <p class="mt-4 label">Fundador y director</p>
 
               <div class="mt-10 space-y-5 max-w-measure text-ink/85">
                 <p>
-                  Fundó Startidea en Granada en 2010 con una conclusión sencilla: el sector con propósito comunica peor de lo que merece, y eso le hace daño a sus causas. Quince años después la conclusión no ha cambiado, pero la respuesta sí.
+                  Fundó Startidea en Granada en febrero de 2011 con una conclusión sencilla: el sector con propósito comunica peor de lo que merece, y eso le hace daño a sus causas. Quince años después la conclusión no ha cambiado, pero la respuesta sí.
                 </p>
                 <p>
                   Su trabajo ha estado centrado en la comunicación estratégica de entidades del tercer sector, plataformas confesionales y organizaciones con base ética. Combina formación en consultoría con producción digital y editorial — una mezcla rara que se ha convertido en la firma de la casa.
@@ -125,37 +125,6 @@ const valores = [
           <blockquote class="mt-6 font-display text-display-lg italic leading-[1.05] text-paper">
             "El sector con propósito está lleno de buenas intenciones <span class="text-magenta">mal contadas</span>. Llevo quince años intentando lo contrario: contar bien lo que importa, con rigor, con estética y con resultados."
           </blockquote>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Hitos -->
-  <section class="bg-paper py-24 md:py-32">
-    <div class="container-x">
-      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
-        <div class="col-span-12 lg:col-span-3">
-          <span class="label">— Recorrido</span>
-        </div>
-
-        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
-          <h2 class="font-display text-display-lg leading-[1.0] text-ink">
-            Quince años en <em class="italic text-magenta">seis hitos</em>.
-          </h2>
-
-          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
-            {hitos.map((h) => (
-              <li class="grid grid-cols-12 gap-x-8 py-8">
-                <div class="col-span-12 sm:col-span-3 lg:col-span-2">
-                  <span class="font-display text-4xl text-magenta md:text-5xl">{h.year}</span>
-                </div>
-                <div class="col-span-12 sm:col-span-9 lg:col-span-10">
-                  <h3 class="font-display text-2xl leading-tight text-ink md:text-3xl">{h.title}</h3>
-                  <p class="mt-3 max-w-measure text-ink/75">{h.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
         </div>
       </div>
     </div>

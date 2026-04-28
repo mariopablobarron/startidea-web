@@ -29,7 +29,7 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       eyebrow: '— Sobre',
       title: 'Quince años. Una manera de mirar.',
       accent: 'Una manera de mirar',
-      subtitle: 'Startidea es agencia, hub, medio y línea de productos. Una casa con cuatro voces, fundada en Granada en 2010 por Mario P. Barrón.',
+      subtitle: 'Startidea es agencia, hub, medio y línea de productos. Una casa con cuatro voces, fundada en Granada en febrero de 2011 por Mario Pablo Sánchez Barrón.',
     },
     'page/contacto': {
       kind: 'page',

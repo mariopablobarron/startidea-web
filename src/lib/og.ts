@@ -162,7 +162,7 @@ export async function renderOg(input: OgInput): Promise<Uint8Array> {
         color:${PALETTE.inkMute};
       ">
         <span style="color:${PALETTE.ink};">startidea.es</span>
-        <span>Innovación social · Granada · Est. 2010</span>
+        <span>Innovación social · Granada · Est. 2011</span>
       </div>
     </div>
   `;
