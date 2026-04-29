@@ -1,0 +1,274 @@
+---
+// Asistente conversacional IA flotante.
+// Conectado a /api/chat (OpenRouter) con streaming SSE.
+// Si no hay API key configurada, muestra fallback con email/Telegram.
+---
+
+<!-- Botón flotante (chip texto en md+, círculo en mobile) -->
+<button
+  type="button"
+  id="ai-chip"
+  class="fixed bottom-6 right-6 z-40 hidden md:inline-flex items-center gap-2 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
+  aria-haspopup="dialog"
+  aria-controls="ai-panel"
+  aria-expanded="false"
+>
+  <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-magenta"></span>
+  <span>Asistente IA</span>
+</button>
+
+<button
+  type="button"
+  id="ai-chip-mobile"
+  class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:border-magenta md:hidden"
+  aria-haspopup="dialog"
+  aria-controls="ai-panel"
+  aria-expanded="false"
+  aria-label="Abrir asistente IA"
+>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</button>
+
+<div
+  id="ai-panel"
+  class="fixed inset-x-4 bottom-20 z-50 hidden max-h-[85vh] flex-col overflow-hidden border-2 border-ink bg-paper shadow-[0_24px_48px_-16px_rgba(0,0,0,0.35)] sm:right-6 sm:left-auto sm:bottom-24 sm:w-[420px] md:max-h-[600px]"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="ai-title"
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b-2 border-ink bg-ink px-5 py-3 text-paper">
+    <div>
+      <p id="ai-title" class="font-mono text-[11px] uppercase tracking-widest">— Asistente · Startidea</p>
+      <p class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/55">Pregunta lo que necesites</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        id="ai-send-team"
+        class="font-mono text-[10px] uppercase tracking-widest text-magenta hover:text-paper"
+        title="Enviar la conversación al equipo humano"
+      >
+        Pasar al equipo
+      </button>
+      <button
+        type="button"
+        id="ai-close"
+        class="font-mono text-[11px] uppercase tracking-widest text-paper/70 hover:text-paper"
+        aria-label="Cerrar"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+
+  <!-- Hilo -->
+  <div id="ai-thread" class="flex-1 overflow-y-auto bg-paper-warm px-4 py-4 text-sm leading-relaxed"></div>
+
+  <!-- Input -->
+  <form id="ai-form" class="flex items-end gap-2 border-t-2 border-ink bg-paper p-3">
+    <textarea
+      id="ai-input"
+      rows="2"
+      maxlength="1500"
+      placeholder="Escribe tu pregunta…"
+      class="flex-1 resize-none border border-ink bg-paper px-3 py-2.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+    ></textarea>
+    <button
+      type="submit"
+      id="ai-submit"
+      class="border-2 border-ink bg-ink px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-paper transition-colors hover:bg-magenta hover:border-magenta disabled:opacity-50"
+    >
+      Enviar
+    </button>
+  </form>
+</div>
+
+<style>
+  .ai-bubble {
+    @apply mb-3 max-w-[85%] px-4 py-2.5 text-sm leading-relaxed;
+  }
+  .ai-bubble.assistant {
+    @apply mr-auto bg-paper border border-ink/15 text-ink;
+  }
+  .ai-bubble.user {
+    @apply ml-auto bg-ink text-paper;
+  }
+  .ai-bubble.error {
+    @apply mr-auto bg-paper border border-magenta text-magenta;
+  }
+  .ai-bubble p { @apply mb-1.5; }
+  .ai-bubble p:last-child { @apply mb-0; }
+  .ai-bubble strong { @apply font-bold; }
+  .ai-bubble code {
+    @apply rounded bg-ink/10 px-1 py-0.5 font-mono text-[12px];
+  }
+  .ai-typing {
+    @apply inline-block h-2 w-2 animate-pulse rounded-full bg-magenta;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var chip = document.getElementById('ai-chip');
+    var chipMobile = document.getElementById('ai-chip-mobile');
+    var panel = document.getElementById('ai-panel');
+    var closeBtn = document.getElementById('ai-close');
+    var form = document.getElementById('ai-form');
+    var input = document.getElementById('ai-input');
+    var submit = document.getElementById('ai-submit');
+    var thread = document.getElementById('ai-thread');
+    var sendTeam = document.getElementById('ai-send-team');
+    if (!panel || !form) return;
+
+    var history = [];
+    var isStreaming = false;
+
+    function setOpen(open) {
+      panel.style.display = open ? 'flex' : 'none';
+      panel.classList.toggle('hidden', !open);
+      [chip, chipMobile].forEach(function (b) { b && b.setAttribute('aria-expanded', String(open)); });
+      if (open) {
+        if (history.length === 0) saludarInicio();
+        setTimeout(function () { input && input.focus(); }, 100);
+      }
+    }
+
+    function toggle() { setOpen(panel.classList.contains('hidden')); }
+    chip && chip.addEventListener('click', toggle);
+    chipMobile && chipMobile.addEventListener('click', toggle);
+    closeBtn && closeBtn.addEventListener('click', function () { setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.classList.contains('hidden')) setOpen(false);
+    });
+
+    function appendBubble(role, text) {
+      var div = document.createElement('div');
+      div.className = 'ai-bubble ' + role;
+      div.textContent = text || '';
+      thread.appendChild(div);
+      thread.scrollTop = thread.scrollHeight;
+      return div;
+    }
+
+    function saludarInicio() {
+      appendBubble('assistant', 'Hola, soy el asistente de Startidea. Puedo orientarte sobre servicios, precios orientativos, casos publicados y cómo arrancar un diagnóstico. ¿Qué te trae por aquí?');
+    }
+
+    async function enviarMensaje(texto) {
+      if (!texto || isStreaming) return;
+      appendBubble('user', texto);
+      history.push({ role: 'user', content: texto });
+      input.value = '';
+      input.style.height = '';
+      isStreaming = true;
+      submit.disabled = true;
+
+      var bubble = appendBubble('assistant', '');
+      var typing = document.createElement('span');
+      typing.className = 'ai-typing';
+      bubble.appendChild(typing);
+
+      try {
+        var resp = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            messages: history,
+            meta: window.location.pathname,
+          }),
+        });
+
+        if (!resp.ok) {
+          var err = await resp.json().catch(function () { return { message: 'Error del servidor' }; });
+          bubble.className = 'ai-bubble error';
+          bubble.textContent = err.message || 'No se pudo procesar la respuesta. Escribe a hola@startidea.es y te respondemos en horas.';
+          return;
+        }
+
+        bubble.textContent = '';
+        var reader = resp.body.getReader();
+        var decoder = new TextDecoder('utf-8');
+        var buffer = '';
+        var fullText = '';
+
+        while (true) {
+          var chunk = await reader.read();
+          if (chunk.done) break;
+          buffer += decoder.decode(chunk.value, { stream: true });
+          var lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line || !line.startsWith('data:')) continue;
+            var data = line.slice(5).trim();
+            if (data === '[DONE]') break;
+            try {
+              var json = JSON.parse(data);
+              var delta = json.choices && json.choices[0] && json.choices[0].delta && json.choices[0].delta.content;
+              if (delta) {
+                fullText += delta;
+                bubble.textContent = fullText;
+                thread.scrollTop = thread.scrollHeight;
+              }
+            } catch (_) {}
+          }
+        }
+
+        if (fullText) history.push({ role: 'assistant', content: fullText });
+      } catch (e) {
+        bubble.className = 'ai-bubble error';
+        bubble.textContent = 'Sin conexión con el modelo. Inténtalo en un minuto o escribe a hola@startidea.es.';
+      } finally {
+        isStreaming = false;
+        submit.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var t = (input.value || '').trim();
+      if (!t) return;
+      enviarMensaje(t);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    // "Pasar al equipo" — pide email y manda toda la conversación a Telegram
+    sendTeam && sendTeam.addEventListener('click', function () {
+      if (history.length === 0) {
+        alert('Cuéntame primero algo y luego paso la conversación al equipo.');
+        return;
+      }
+      var email = prompt('¿A qué email te respondemos? (opcional, deja vacío para enviar sin contacto)');
+      var transcript = history
+        .map(function (m) { return (m.role === 'user' ? '> ' : '') + m.content; })
+        .join('\n\n');
+      fetch('/api/contacto', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: email ? 'Visitante (' + email + ')' : 'Visitante anónimo',
+          email: email || 'sin-email@startidea.local',
+          message: '🤖 Conversación con asistente IA:\n\n' + transcript,
+          path: window.location.pathname,
+        }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j.ok) appendBubble('assistant', 'He pasado la conversación al equipo. Si dejaste email, te contestan en las próximas 24h.');
+          else appendBubble('error', 'No se pudo enviar. Escribe a hola@startidea.es directamente.');
+        })
+        .catch(function () {
+          appendBubble('error', 'No se pudo enviar. Escribe a hola@startidea.es directamente.');
+        });
+    });
+  })();
+</script>

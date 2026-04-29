@@ -4,7 +4,7 @@ import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
-import ChatChip from '@/components/ChatChip.astro';
+import AsistenteIA from '@/components/AsistenteIA.astro';
 
 interface Props {
   title?: string;
@@ -67,7 +67,7 @@ const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
       <slot />
     </main>
     <Footer />
-    <ChatChip />
+    <AsistenteIA />
     <CookieBanner />
 
     <script>
