@@ -36,7 +36,7 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       eyebrow: '— Hablemos',
       title: 'Treinta minutos. Sin compromiso.',
       accent: 'Sin compromiso',
-      subtitle: 'Una llamada de diagnóstico. Tú nos cuentas el reto, nosotras te decimos honestamente si encajamos.',
+      subtitle: 'Una llamada de diagnóstico. Tú cuentas el reto y te decimos honestamente si encajamos.',
     },
     'page/para-quien': {
       kind: 'page',

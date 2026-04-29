@@ -7,9 +7,9 @@ tags: ['producto', 'tecnología', 'startidea', 'caso']
 draft: false
 ---
 
-Esta web que estás leyendo es nueva. La anterior llevaba años en WordPress y, como tantas webs de tantas agencias del sector, **había envejecido sin que la mirásemos**. La nueva la hemos construido en doce horas. No por presumir de velocidad, sino para contarlo: porque lo que hicimos para nosotros es exactamente lo que defendemos para nuestros clientes.
+Esta web que estás leyendo es nueva. La anterior llevaba años en WordPress y, como tantas webs de tantas agencias del sector, **había envejecido sin que la mirásemos**. La nueva la hemos construido en doce horas. No por presumir de velocidad, sino para contarlo: porque lo que aplicamos en casa es exactamente lo que defendemos para nuestros clientes.
 
-## El diagnóstico que nos hicimos a nosotros mismos
+## El diagnóstico que nos hicimos en casa
 
 Tres heridas que reconocimos sin discusión:
 
@@ -31,7 +31,7 @@ No fue magia. Fue una decisión consciente de no contratar agencia, no abrir Fig
 - Carga rápida, mobile-first verificado en pantallas de 360 px hasta 4K.
 - Un Laboratorio público de diagnósticos de fundraising — empezando por casos anonimizados que muestran cómo pensamos antes de proponer.
 - Chat directo a nuestro Telegram, sin pixeles de tracking, sin cookies de terceros más allá del calendario de citas.
-- Un agente automatizado que cada mañana audita la web, propone ideas para el Laboratorio y para estas notas, y deja un reporte ejecutivo. Trabaja por nosotros mientras dormimos.
+- Un agente automatizado que cada mañana audita la web, propone ideas para el Laboratorio y para estas notas, y deja un reporte ejecutivo. Trabaja por la casa mientras dormimos.
 
 ## Lo que aprendimos (y lo que vamos a recomendar)
 
