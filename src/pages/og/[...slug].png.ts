@@ -129,6 +129,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'Aplicado',
       subtitle: 'Diagnósticos públicos y anonimizados del Tercer Sector. Radiografía, palancas detectadas y recomendaciones — el método Startidea aplicado a casos reales.',
     },
+    'page/presupuesto': {
+      kind: 'page',
+      eyebrow: '— Pedir presupuesto',
+      title: 'Una estimación. Después un diagnóstico.',
+      accent: 'Después un diagnóstico',
+      subtitle: 'Calculadora orientativa y briefing en cuatro pasos. Te enviamos un presupuesto detallado con la respuesta del diagnóstico — sin compromiso.',
+    },
   };
 
   // Casos individuales
