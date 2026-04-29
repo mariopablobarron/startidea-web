@@ -189,7 +189,7 @@ export const casos: Caso[] = [
     ],
     testimonial: {
       quote: 'La IA es la herramienta. El método y la supervisión los pone un equipo humano.',
-      author: 'Mario P. Barrón',
+      author: 'Mario Pablo Sánchez Barrón',
       role: 'Fundador · Startidea',
     },
     prev: 'proyecto-hombre',

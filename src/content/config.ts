@@ -12,7 +12,7 @@ const notas = defineCollection({
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
     draft: z.boolean().default(false),
-    author: z.string().default('Mario P. Barrón'),
+    author: z.string().default('Mario Pablo Sánchez Barrón'),
     authorRole: z.string().default('Fundador · Startidea'),
   }),
 });
@@ -51,7 +51,7 @@ const diagnosticos = defineCollection({
     duracion_diagnostico: z.string().default('6-8 semanas'),
     permitir_descarga: z.boolean().default(false),
     draft: z.boolean().default(false),
-    author: z.string().default('Mario P. Barrón'),
+    author: z.string().default('Mario Pablo Sánchez Barrón'),
     authorRole: z.string().default('Fundador · Startidea'),
   }),
 });
