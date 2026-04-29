@@ -56,4 +56,9 @@ const diagnosticos = defineCollection({
   }),
 });
 
-export const collections = { notas, diagnosticos };
+const knowledge = defineCollection({
+  type: 'content',
+  schema: z.object({}).passthrough().optional(),
+});
+
+export const collections = { notas, diagnosticos, knowledge };

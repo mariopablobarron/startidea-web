@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
-import fs from 'node:fs';
-import path from 'node:path';
+import { getCollection } from 'astro:content';
 
 export const prerender = false;
 
@@ -22,29 +21,28 @@ function rateLimited(ip: string): boolean {
   return arr.length > MAX_PER_WINDOW;
 }
 
-// ─── Carga de la knowledge base (una vez por proceso) ───────────────────
+// ─── Carga de la knowledge base (Content Collection, cache por proceso) ─
 let knowledgeCache: string | null = null;
-function loadKnowledge(): string {
+async function loadKnowledge(): Promise<string> {
   if (knowledgeCache !== null) return knowledgeCache;
-  const dir = path.resolve(process.cwd(), 'src/content/knowledge');
-  let combined = '';
   try {
-    const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md')).sort();
-    for (const f of files) {
-      const body = fs.readFileSync(path.join(dir, f), 'utf-8');
-      combined += `\n\n---\n# Fuente: ${f}\n\n${body}`;
-    }
+    const entries = await getCollection('knowledge');
+    entries.sort((a, b) => a.id.localeCompare(b.id));
+    const combined = entries
+      .map((e) => `\n\n---\n# Fuente: ${e.id}\n\n${e.body}`)
+      .join('');
+    knowledgeCache = combined;
+    return combined;
   } catch (err) {
     console.error('[chat] no se pudo leer knowledge base', err);
-    combined = '';
+    knowledgeCache = '';
+    return '';
   }
-  knowledgeCache = combined;
-  return combined;
 }
 
-function buildSystemPrompt(): string {
-  const kb = loadKnowledge();
-  return `Eres el asistente conversacional de Startidea. Responde en español neutro, en 2-4 frases máximo. Reglas y conocimiento:\n${kb}\n\nRecuerda: nunca uses 'nosotras' ni 'nosotros'. Habla en tercera persona ('Startidea recomienda…') o reformula. Mantén respuestas breves.`;
+async function buildSystemPrompt(): Promise<string> {
+  const kb = await loadKnowledge();
+  return `Eres el asistente conversacional de Startidea (startidea.es). Responde en español neutro, en 2-4 frases máximo, breve y útil. Usa SOLO la información de la knowledge base que sigue. Si te preguntan algo que no está en ella, di que necesitas pasar al equipo humano y deriva a /contacto o hola@startidea.es. Nunca inventes precios, casos ni datos.\n\nRecuerda: NUNCA uses 'nosotras' ni 'nosotros'. Habla siempre de Startidea en tercera persona ('Startidea recomienda…', 'el equipo te dice honestamente…') o reformula. Mantén respuestas breves.\n\n=== KNOWLEDGE BASE ===\n${kb}\n=== FIN KNOWLEDGE BASE ===`;
 }
 
 // ─── Validación de input ────────────────────────────────────────────────
@@ -118,8 +116,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const lastUser = history[history.length - 1].content;
   const meta = clean(body?.meta, 200);
 
+  const systemPrompt = await buildSystemPrompt();
   const messages = [
-    { role: 'system' as const, content: buildSystemPrompt() },
+    { role: 'system' as const, content: systemPrompt },
     ...history,
   ];
 
