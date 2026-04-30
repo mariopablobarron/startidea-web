@@ -37,3 +37,6 @@ startidea_dev_*.zip
 # proyecto de video local (HyperFrames) — fuera del despliegue web
 video/
 .playwright-mcp/
+data/*.db
+data/*.db-shm
+data/*.db-wal
