@@ -1,0 +1,39 @@
+---
+/**
+ * Métricas grandes de credibilidad — banda editorial bajo el hero.
+ *
+ * Decisión editorial: 3 cifras, ni una más. Las grandes agencias del sector
+ * (Materia Gris "30 años", SocialCo "16 años") ponen una sola; Startidea pone
+ * 3 porque combina antigüedad + volumen + alcance. Si una se queda débil al
+ * actualizarse, mejor quitarla que hincharla.
+ *
+ * Para actualizar las cifras: modifica este archivo y haz commit. Coolify
+ * redespliega solo (cuando esté el webhook).
+ */
+
+const metricas = [
+  { numero: '15', sufijo: 'años', body: 'Acompañando organizaciones con propósito desde febrero de 2011.' },
+  { numero: '90+', sufijo: 'organizaciones', body: 'Tercer sector, instituciones y empresas con propósito real.' },
+  { numero: '320+', sufijo: 'proyectos', body: 'Estrategia, comunicación, audiovisual, tecnología y fundraising.' },
+];
+---
+
+<section class="border-y border-ink/15 bg-paper-warm py-14 md:py-20">
+  <div class="container-x">
+    <ol class="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-3">
+      {metricas.map((m) => (
+        <li class="border-t-2 border-ink/15 pt-5">
+          <p class="font-display text-display-lg leading-[0.92] text-ink">
+            <span class="text-magenta">{m.numero}</span>
+            <span class="ml-2 align-baseline font-mono text-base uppercase tracking-widest text-ink-mute md:text-lg">
+              {m.sufijo}
+            </span>
+          </p>
+          <p class="mt-4 max-w-measure text-sm leading-relaxed text-ink/80 md:text-base">
+            {m.body}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,82 @@
+---
+/**
+ * Pared de logos de clientes — social proof visual.
+ *
+ * Decisión: cuando hay logos vectoriales (SVG/PNG transparentes), se renderizan
+ * en grid con filtro grayscale + hover color. Si NO hay logos, este componente
+ * se queda vacío y dejamos que HanConfiado.astro (wordmark editorial) cubra.
+ *
+ * Para añadir logos: pon el archivo en `public/clientes/` y referéncialo aquí.
+ * Naming sugerido: kebab-case sin prefijos (down-granada.svg, no logo-down.svg).
+ *
+ * Estética: SIEMPRE un mismo alto visual (h-14) y ancho automático. SVG ideal,
+ * PNG transparente segundo, JPG último. Logos con fondo blanco rompen — pedir
+ * versión transparente al cliente.
+ */
+
+interface Logo {
+  name: string;
+  src: string;
+  href?: string; // sitio del cliente (opcional)
+}
+
+const logos: Logo[] = [
+  // ⚠️ Pendiente de recopilar (Sprint 1, tarea 1.1):
+  // poner SVGs/PNGs transparentes en public/clientes/ y registrar aquí.
+  /*
+  { name: 'Cruz Roja Española', src: '/clientes/cruz-roja.svg', href: 'https://www2.cruzroja.es' },
+  { name: 'Down Granada',       src: '/clientes/down-granada.svg', href: 'https://downgranada.org' },
+  { name: 'Save the Children',  src: '/clientes/save-the-children.svg' },
+  { name: 'Acción Contra el Hambre', src: '/clientes/accion-contra-el-hambre.svg' },
+  { name: 'Cáritas',            src: '/clientes/caritas.svg' },
+  { name: 'YMCA España',        src: '/clientes/ymca.svg' },
+  // ... hasta 20-25
+  */
+];
+
+const tieneLogos = logos.length >= 8;
+---
+
+{tieneLogos && (
+  <section class="border-t border-ink/15 bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Han confiado</span>
+          <h2 class="mt-4 font-display text-2xl leading-tight text-ink md:text-3xl">
+            <em class="italic text-magenta">Marcas reales</em>, no genéricas.
+          </h2>
+        </div>
+
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ul class="grid grid-cols-3 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-4 lg:grid-cols-5">
+            {logos.map((logo) => {
+              const inner = (
+                <div class="flex h-24 items-center justify-center bg-paper p-4 transition-all duration-300 hover:bg-paper-warm">
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    loading="lazy"
+                    class="max-h-12 w-auto opacity-70 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+                  />
+                </div>
+              );
+              return (
+                <li>
+                  {logo.href ? (
+                    <a href={logo.href} target="_blank" rel="noopener" title={logo.name}>{inner}</a>
+                  ) : (
+                    <span title={logo.name}>{inner}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+            Mostradas con autorización · {logos.length}+ organizaciones acompañadas
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+)}

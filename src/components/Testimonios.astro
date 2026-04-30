@@ -1,0 +1,81 @@
+---
+/**
+ * Testimonios destacados — 4 quotes con nombre, cargo, organización.
+ *
+ * Estructura editorial: cita directa (1-2 frases máx, ≤30 palabras), atribución
+ * con nombre completo + cargo + organización. SIN texto inflado, SIN superlativos
+ * que olvidan los lectores.
+ *
+ * Para añadir un testimonio nuevo: edita el array `testimonios` con un objeto
+ * { quote, author, role, organization, photo? }. Si no hay foto, se usa la
+ * inicial sobre fondo magenta como avatar limpio.
+ *
+ * NOTA: No mostrar testimonios si quedan menos de 3. Mejor cero que poco.
+ */
+
+const testimonios = [
+  // ⚠️ Pendiente de recopilar (Sprint 1, tarea 1.2):
+  // pedir a 4 clientes activos un quote de 2 frases.
+  // Mientras tanto, dejamos placeholders comentados:
+  /*
+  {
+    quote: 'No queríamos una web bonita. Queríamos una herramienta que sirviera. Eso es lo que tenemos.',
+    author: 'Equipo de Comunicación',
+    role: 'Comunicación',
+    organization: 'Down Granada',
+    photo: null,
+  },
+  {
+    quote: '...',
+    author: '...',
+    role: '...',
+    organization: '...',
+    photo: null,
+  },
+  */
+];
+
+const tieneTestimonios = testimonios.length >= 3;
+---
+
+{tieneTestimonios && (
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-4">
+          <span class="label">— Lo que dicen</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Las palabras de <em class="italic text-magenta">quienes han trabajado con Startidea</em>.
+          </h2>
+        </div>
+
+        <div class="col-span-12 mt-6 lg:col-span-8 lg:mt-0">
+          <ol class="grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            {testimonios.map((t) => (
+              <li class="bg-paper-warm p-7">
+                <p class="font-display text-lg leading-snug text-ink md:text-xl">
+                  "{t.quote}"
+                </p>
+                <div class="mt-6 flex items-center gap-3 border-t border-ink/15 pt-4">
+                  {t.photo ? (
+                    <img src={t.photo} alt={t.author} class="h-12 w-12 rounded-full object-cover" />
+                  ) : (
+                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-magenta font-display text-base font-bold text-paper">
+                      {t.author.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                    </span>
+                  )}
+                  <div class="min-w-0">
+                    <p class="font-display text-sm font-bold text-ink truncate">{t.author}</p>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute truncate">
+                      {t.role} · {t.organization}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
