@@ -1,0 +1,218 @@
+---
+export const prerender = false;
+import Base from '@/layouts/Base.astro';
+import { isAdmin } from '@/lib/seo/auth';
+import { getDb } from '@/lib/seo/db';
+
+const url = Astro.url;
+const tokenParam = url.searchParams.get('token') || '';
+const cookieToken = Astro.cookies.get('startidea_admin')?.value || '';
+const expected = process.env.ADMIN_TOKEN || '';
+const authed = !!expected && (tokenParam === expected || cookieToken === expected);
+
+if (authed && tokenParam) {
+  Astro.cookies.set('startidea_admin', tokenParam, {
+    path: '/', httpOnly: true, sameSite: 'strict', secure: true, maxAge: 60 * 60 * 8,
+  });
+}
+
+const KIND_LABEL: Record<string, string> = {
+  p4_20: 'Posición 4-20',
+  low_ctr: 'CTR bajo',
+  traffic_drop: 'Caída de tráfico',
+  growing_imp: 'Impresiones crecientes',
+  cannibalization: 'Canibalización',
+  low_conv: 'Baja conversión',
+  high_conv_low_traffic: 'Alta conv, poco tráfico',
+  content_gap: 'Hueco de contenido',
+  title_meta: 'Title/meta',
+  internal_linking: 'Enlazado interno',
+};
+
+let opportunities: any[] = [];
+let lastRun: any = null;
+let connections: any[] = [];
+let totalsByKind: Array<{ kind: string; n: number }> = [];
+let dbError: string | null = null;
+
+if (authed) {
+  try {
+    const db = getDb();
+    opportunities = db.prepare(`
+      SELECT id, priority, kind, url, keyword, metric_summary, recommendation, detected_at
+      FROM seo_opportunities
+      WHERE resolved_at IS NULL
+      ORDER BY priority ASC, detected_at DESC
+      LIMIT 200
+    `).all();
+    lastRun = db.prepare(`
+      SELECT id, started_at, finished_at, status, ga4_rows_synced,
+             gsc_query_rows_synced, gsc_page_rows_synced, opportunities_created, error_message
+      FROM seo_agent_runs
+      ORDER BY id DESC LIMIT 1
+    `).get();
+    connections = db.prepare(`
+      SELECT id, google_account_email, updated_at FROM google_connections WHERE revoked_at IS NULL
+    `).all();
+    totalsByKind = db.prepare(`
+      SELECT kind, COUNT(*) AS n FROM seo_opportunities WHERE resolved_at IS NULL
+      GROUP BY kind ORDER BY n DESC
+    `).all();
+  } catch (err) {
+    dbError = (err as Error).message;
+  }
+}
+
+const fmt = (ts: number | null) =>
+  ts ? new Intl.DateTimeFormat('es-ES', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts * 1000)) : '—';
+
+const PRIORITY_LABEL = ['', '1 · Alta', '2 · Media-alta', '3 · Media', '4 · Baja', '5 · Mínima'];
+const noTokenConfigured = !expected;
+---
+
+<Base title="Admin · SEO · Startidea" description="" ogSlug="page/404">
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <span class="label">— Admin · SEO</span>
+      <h1 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Oportunidades <em class="italic text-magenta">SEO</em>.
+      </h1>
+
+      {noTokenConfigured && (
+        <div class="mt-10 border-2 border-magenta bg-paper-warm p-6">
+          <p class="font-display text-xl text-magenta">⚠ Falta <code class="font-mono">ADMIN_TOKEN</code> en Coolify.</p>
+        </div>
+      )}
+
+      {!authed && !noTokenConfigured && (
+        <form method="get" class="mt-10 max-w-md space-y-3">
+          <p class="label">— Acceso</p>
+          <input name="token" type="password" required placeholder="Token admin"
+            class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          <button type="submit" class="btn">Entrar <span aria-hidden="true">→</span></button>
+        </form>
+      )}
+
+      {authed && (
+        <>
+          {dbError && (
+            <div class="mt-8 border-2 border-magenta bg-paper-warm p-5">
+              <p class="font-display text-lg text-magenta">⚠ Error de DB</p>
+              <pre class="mt-2 text-xs">{dbError}</pre>
+            </div>
+          )}
+
+          <!-- Status barra superior -->
+          <div class="mt-10 grid grid-cols-12 gap-x-6 gap-y-4 border-y border-ink/15 py-6">
+            <div class="col-span-12 md:col-span-3">
+              <span class="label">— Cuentas Google</span>
+              <p class="mt-2 font-display text-2xl text-ink">{connections.length}</p>
+              <a href="/admin/google/status" class="font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta">
+                Gestionar →
+              </a>
+            </div>
+            <div class="col-span-12 md:col-span-4">
+              <span class="label">— Última sincronización</span>
+              <p class="mt-2 font-display text-base text-ink">
+                {lastRun ? fmt(lastRun.finished_at || lastRun.started_at) : 'nunca'}
+              </p>
+              {lastRun && (
+                <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                  Estado: <span class={lastRun.status === 'success' ? 'text-ink' : 'text-magenta'}>{lastRun.status}</span>
+                  {lastRun.status === 'success' && (
+                    <> · {lastRun.ga4_rows_synced} GA4 · {lastRun.gsc_query_rows_synced + lastRun.gsc_page_rows_synced} GSC</>
+                  )}
+                </p>
+              )}
+            </div>
+            <div class="col-span-12 md:col-span-5 flex items-end justify-end gap-3">
+              <form method="POST" action="/admin/seo/sync">
+                <button type="submit" class="btn !py-2.5 text-sm">
+                  Sincronizar ahora
+                  <span aria-hidden="true">→</span>
+                </button>
+              </form>
+              <a href="/admin/seo/report" class="btn-ghost !py-2.5 text-sm">
+                Exportar CSV
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </div>
+
+          {lastRun?.status === 'failed' && lastRun.error_message && (
+            <div class="mt-6 border-2 border-magenta bg-paper-warm p-5">
+              <p class="font-display text-lg text-magenta">⚠ La última sincronización falló</p>
+              <pre class="mt-2 text-xs whitespace-pre-wrap">{lastRun.error_message}</pre>
+            </div>
+          )}
+
+          <!-- Resumen por tipo -->
+          {totalsByKind.length > 0 && (
+            <div class="mt-10 flex flex-wrap gap-2">
+              {totalsByKind.map((t) => (
+                <span class="border border-ink/30 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-ink/75">
+                  {KIND_LABEL[t.kind] || t.kind}: <strong class="text-ink">{t.n}</strong>
+                </span>
+              ))}
+            </div>
+          )}
+
+          <!-- Tabla de oportunidades -->
+          <div class="mt-10">
+            {opportunities.length === 0 ? (
+              <div class="border-t border-ink/15 pt-10">
+                <p class="font-display text-2xl text-ink/60">
+                  Aún no hay oportunidades. Conecta una cuenta Google y pulsa "Sincronizar ahora".
+                </p>
+              </div>
+            ) : (
+              <table class="w-full border-collapse text-sm">
+                <thead>
+                  <tr class="border-y-2 border-ink/15 text-left">
+                    <th class="py-3 pr-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">P</th>
+                    <th class="py-3 pr-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Tipo</th>
+                    <th class="py-3 pr-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">URL / Keyword</th>
+                    <th class="py-3 pr-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Métricas</th>
+                    <th class="py-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Recomendación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {opportunities.map((o) => {
+                    const m = (() => { try { return JSON.parse(o.metric_summary); } catch { return {}; } })();
+                    return (
+                      <tr class="border-b border-ink/10 align-top">
+                        <td class="py-4 pr-3 font-mono text-xs">
+                          <span class={`inline-block border px-1.5 ${o.priority === 1 ? 'border-magenta text-magenta' : 'border-ink/40 text-ink/70'}`}>
+                            {o.priority}
+                          </span>
+                        </td>
+                        <td class="py-4 pr-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                          {KIND_LABEL[o.kind] || o.kind}
+                        </td>
+                        <td class="py-4 pr-3">
+                          {o.url && <p class="font-mono text-xs text-ink/85 break-all">{o.url}</p>}
+                          {o.keyword && <p class="font-display text-base text-ink">{o.keyword}</p>}
+                        </td>
+                        <td class="py-4 pr-3 font-mono text-[11px] text-ink/70">
+                          {Object.entries(m).slice(0, 4).map(([k, v]) => (
+                            <p>{k}: <strong class="text-ink">{Array.isArray(v) ? v.join(', ').slice(0, 80) : String(v)}</strong></p>
+                          ))}
+                        </td>
+                        <td class="py-4 text-sm text-ink/85">{o.recommendation}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          <div class="mt-12 border-t border-ink/15 pt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+            <p>Top 200 oportunidades · ordenadas por prioridad</p>
+            <p class="mt-1">Endpoints: <code>/admin/seo/sync</code> · <code>/admin/seo/report?kind=...</code></p>
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>
