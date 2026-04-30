@@ -10,12 +10,14 @@ interface Props {
   title?: string;
   description?: string;
   ogSlug?: string;  // ej. 'home', 'page/manifiesto', 'casos/down-granada'
+  noindex?: boolean;
 }
 
 const {
   title = 'Startidea — Innovación social que cambia la conversación',
   description = 'Agencia de innovación social en Granada. Comunicación, consultoría, fundraising y producción audiovisual al servicio de organizaciones con propósito.',
   ogSlug = 'home',
+  noindex = false,
 } = Astro.props;
 
 const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
@@ -35,6 +37,7 @@ const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />

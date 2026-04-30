@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diagnóstico modelo de fundraising — Startidea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;0,900;1,600;1,800&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <style>
+    /* ─── Reset y base ──────────────────────────────────────── */
+    *,*::before,*::after { box-sizing: border-box; }
+    html, body { margin:0; padding:0; }
+
+    :root {
+      --ink: #3d3d40;
+      --ink-mute: #6e6f70;
+      --ink-faint: #9c9c9d;
+      --magenta: #e6356b;
+      --paper: #faf8f5;
+      --paper-warm: #f3efe8;
+      --paper-line: #d8d2c4;
+    }
+
+    body {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 11pt;
+      line-height: 1.55;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ─── Tipografía ────────────────────────────────────────── */
+    h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin: 0; }
+    h1 { font-size: 36pt; font-weight: 900; }
+    h2 { font-size: 22pt; }
+    h3 { font-size: 14pt; margin-top: 1.4em; margin-bottom: 0.4em; }
+    h4 { font-size: 12pt; }
+    em { font-style: italic; color: var(--magenta); }
+    strong { font-weight: 800; }
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ink-mute);
+    }
+    .num-edit { font-family: 'JetBrains Mono', monospace; color: var(--magenta); font-weight: 500; }
+
+    /* ─── Página A4 ─────────────────────────────────────────── */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 22mm 20mm 20mm;
+      page-break-after: always;
+      position: relative;
+      background: var(--paper);
+    }
+    .page:last-child { page-break-after: auto; }
+
+    .page-footer {
+      position: absolute;
+      bottom: 12mm;
+      left: 20mm;
+      right: 20mm;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      color: var(--ink-faint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding-top: 6pt;
+      border-top: 1px solid var(--paper-line);
+    }
+
+    /* ─── Portada ───────────────────────────────────────────── */
+    .cover {
+      background: var(--paper-warm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cover .label { color: var(--ink); }
+    .cover-title {
+      font-size: 56pt;
+      line-height: 0.92;
+      letter-spacing: -0.035em;
+      font-weight: 900;
+      max-width: 90%;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14pt 24pt;
+      font-size: 10pt;
+    }
+    .cover-meta dt { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.16em; font-size: 7.5pt; color: var(--ink-mute); }
+    .cover-meta dd { font-weight: 600; margin: 2pt 0 0; }
+
+    .brand {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 14pt;
+      letter-spacing: -0.02em;
+    }
+    .brand .start, .brand .ea { color: var(--magenta); }
+
+    /* ─── Sección de contenido ──────────────────────────────── */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--magenta);
+      margin-bottom: 16pt;
+    }
+    p { margin: 0 0 10pt; max-width: 62ch; }
+    ul, ol { margin: 8pt 0 14pt; padding-left: 1.4em; max-width: 62ch; }
+    li { margin: 0 0 4pt; }
+
+    .key-stat {
+      border-left: 3px solid var(--magenta);
+      padding: 4pt 0 4pt 12pt;
+      margin: 14pt 0;
+      max-width: 62ch;
+    }
+    .key-stat strong { font-size: 14pt; display: inline-block; margin-right: 6pt; }
+
+    /* Mezcla de ingresos */
+    .mix { margin: 20pt 0; }
+    .mix-row { display: grid; grid-template-columns: 60% 40%; align-items: center; gap: 8pt; padding: 4pt 0; border-bottom: 1px solid var(--paper-line); }
+    .mix-row:last-child { border-bottom: 0; }
+    .mix-bar { background: var(--paper-warm); height: 8pt; position: relative; border: 1px solid var(--paper-line); }
+    .mix-fill { position: absolute; inset: 0 auto 0 0; background: var(--magenta); }
+    .mix-name { font-size: 10pt; }
+    .mix-pct { font-family: 'JetBrains Mono', monospace; font-size: 9pt; text-align: right; font-weight: 600; }
+
+    /* Tabla de palancas */
+    table { width: 100%; border-collapse: collapse; margin: 14pt 0; font-size: 9.5pt; }
+    th, td { padding: 6pt 8pt; border-bottom: 1px solid var(--paper-line); text-align: left; vertical-align: top; }
+    th { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-size: 7.5pt; letter-spacing: 0.14em; color: var(--ink-mute); border-bottom: 2px solid var(--ink); }
+    td.center { text-align: center; }
+
+    /* CTA final */
+    .cta-page {
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cta-page h2 { color: var(--paper); font-size: 30pt; line-height: 1.0; }
+    .cta-page em { color: var(--magenta); }
+    .cta-button {
+      display: inline-block;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 12pt 18pt;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11pt;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .cta-page .label { color: rgba(250,248,245,0.6); }
+    .cta-page p { color: rgba(250,248,245,0.85); max-width: 64ch; }
+
+    .footnote {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8pt;
+      color: var(--ink-faint);
+      line-height: 1.5;
+      max-width: 70ch;
+    }
+
+    @media print { body { background: white; } }
+  </style>
+</head>
+<body>
+
+  <!-- ───────── PORTADA ───────── -->
+  <section class="page cover">
+    <div>
+      <div class="brand"><span class="start">start</span><span>id</span><span class="ea">ea</span></div>
+      <p class="label" style="margin-top: 6pt; color: var(--ink-mute);">Diagnóstico de fundraising · documento modelo</p>
+    </div>
+
+    <div>
+      <h1 class="cover-title">
+        El modelo<br />
+        del <em>diagnóstico</em><br />
+        de fundraising.
+      </h1>
+      <p style="margin-top: 18pt; font-size: 13pt; max-width: 64ch; color: var(--ink-mute);">
+        Cómo radiografiamos la mezcla de ingresos de una entidad del Tercer Sector. Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública.
+      </p>
+    </div>
+
+    <dl class="cover-meta">
+      <div>
+        <dt>Sector</dt><dd>Discapacidad · regional</dd>
+      </div>
+      <div>
+        <dt>Duración</dt><dd>6 semanas</dd>
+      </div>
+      <div>
+        <dt>Tamaño</dt><dd>Mediana · 1,8 M€/año</dd>
+      </div>
+      <div>
+        <dt>Publicado</dt><dd>Abril de 2026</dd>
+      </div>
+    </dl>
+
+    <div class="page-footer">
+      <span>startidea.es · Granada · febrero 2011</span>
+      <span>1 / 12</span>
+    </div>
+  </section>
+
+  <!-- ───────── ÍNDICE ───────── -->
+  <section class="page">
+    <p class="eyebrow">— Índice</p>
+    <h2>Lo que vas a encontrar.</h2>
+
+    <ol style="font-size: 12pt; line-height: 2; margin-top: 24pt;">
+      <li><strong>Contexto</strong> — quién es la organización, qué pidieron</li>
+      <li><strong>Situación de partida</strong> — la radiografía honesta</li>
+      <li><strong>Hipótesis estratégica</strong> — qué creemos que pasa de verdad</li>
+      <li><strong>Palancas detectadas</strong> — ordenadas por impacto/esfuerzo</li>
+      <li><strong>Recomendaciones</strong> — decisiones, no abstracciones</li>
+      <li><strong>Riesgos y supuestos</strong> — lo que asume el plan</li>
+      <li><strong>Métrica de éxito a 12 meses</strong></li>
+      <li><strong>Aprendizaje transferible</strong> — lo que vale para otras</li>
+    </ol>
+
+    <div style="margin-top: 40pt; border-top: 2px solid var(--ink); padding-top: 16pt;">
+      <p class="label">— Por qué publicamos este diagnóstico</p>
+      <p style="margin-top: 8pt; font-size: 11pt; max-width: 60ch;">
+        Cada entidad del Tercer Sector con la que trabajamos arranca con un diagnóstico de fundraising. Anonimizamos uno y lo publicamos así para que <em>cualquiera</em> pueda ver cómo pensamos antes de proponer. La metodología y los hallazgos son los reales.
+      </p>
+    </div>
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>2 / 12</span></div>
+  </section>
+
+  <!-- ───────── 1. CONTEXTO ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 1 · Contexto</p>
+    <h2>Quién es la organización.</h2>
+
+    <p style="margin-top: 20pt;">
+      Federación regional con catorce entidades miembro, dirección compartida con presidencia y un equipo técnico de catorce personas. Veintiocho años de historia, presupuesto medio anual de <strong>1,8 M€</strong>, gestión profesional de proyectos europeos y autonómicos.
+    </p>
+    <p>
+      Causa con consenso social transversal: discapacidad. La conversación interna estaba puesta en cómo aprovechar los próximos fondos europeos de inclusión, no en otras fuentes.
+    </p>
+
+    <h3>Qué pidieron</h3>
+    <p>
+      Llegamos cuando el patronato pidió un diagnóstico tras una <strong>reducción del 12%</strong> en una de las convocatorias anuales de la Junta. La pregunta era: <em>"¿podemos diversificar antes de que la próxima recorte sea peor?"</em>. La respuesta corta era sí, pero no por el camino que esperaban.
+    </p>
+
+    <div class="key-stat">
+      <p style="margin: 0; font-size: 11pt;">
+        <strong>1,8 M€</strong>presupuesto anual · <strong>14</strong>entidades miembro · <strong>14</strong>personas equipo técnico
+      </p>
+    </div>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>3 / 12</span></div>
+  </section>
+
+  <!-- ───────── 2. RADIOGRAFÍA ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 2 · Situación de partida</p>
+    <h2>La radiografía.</h2>
+
+    <p style="margin-top: 18pt;">El diagnóstico arrancó con una foto-fija del último ejercicio cerrado:</p>
+
+    <div class="mix">
+      <div class="mix-row">
+        <div>
+          <p class="mix-name"><strong>Subvención pública</strong> — concentrada en 4 convocatorias autonómicas y 1 europea plurianual</p>
+        </div>
+        <div>
+          <div class="mix-bar"><div class="mix-fill" style="width: 86%"></div></div>
+          <div class="mix-pct">86%</div>
+        </div>
+      </div>
+      <div class="mix-row">
+        <div>
+          <p class="mix-name"><strong>Fundaciones privadas</strong> — relación estable con 2 fundaciones bancarias</p>
+        </div>
+        <div>
+          <div class="mix-bar"><div class="mix-fill" style="width: 5%"></div></div>
+          <div class="mix-pct">5%</div>
+        </div>
+      </div>
+      <div class="mix-row">
+        <div>
+          <p class="mix-name"><strong>Donantes individuales</strong> — base de 420 socios, edad media 71</p>
+        </div>
+        <div>
+          <div class="mix-bar"><div class="mix-fill" style="width: 4%"></div></div>
+          <div class="mix-pct">4%</div>
+        </div>
+      </div>
+      <div class="mix-row">
+        <div>
+          <p class="mix-name"><strong>Empresas</strong> — 6 colaboraciones puntuales sin programa estructurado</p>
+        </div>
+        <div>
+          <div class="mix-bar"><div class="mix-fill" style="width: 3%"></div></div>
+          <div class="mix-pct">3%</div>
+        </div>
+      </div>
+      <div class="mix-row">
+        <div>
+          <p class="mix-name"><strong>Eventos</strong> — gala anual estable</p>
+        </div>
+        <div>
+          <div class="mix-bar"><div class="mix-fill" style="width: 2%"></div></div>
+          <div class="mix-pct">2%</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Capacidades internas</h3>
+    <p>
+      Una persona dedicada a captación a media jornada, sin CRM, sin materiales actualizados de empresas. Comunicación externa centrada en proyectos ya en marcha, no en captación. Memoria anual administrativa, no editorial.
+    </p>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>4 / 12</span></div>
+  </section>
+
+  <!-- ───────── 3. HIPÓTESIS ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 3 · Hipótesis estratégica</p>
+    <h2>Qué creemos que pasa <em>de verdad</em>.</h2>
+
+    <p style="margin-top: 18pt;">
+      La causa "discapacidad" tiene un <strong>consenso social</strong> que pocas otras causas tienen. Y la federación lleva veintiocho años invirtiendo todo ese capital social en hablar con la administración.
+    </p>
+    <p>
+      No ha invertido en construir un puente al donante individual ni a la empresa, porque hasta ahora la administración cubría el 90% del presupuesto y la rentabilidad por euro invertido en captación pública era altísima.
+    </p>
+
+    <h3>La regla está cambiando</h3>
+    <p>
+      La financiación europea pide cofinanciación creciente, las convocatorias autonómicas reducen techo, y los fondos privados están más activos para causas con narrativa clara — <em>exactamente la causa de esta federación</em>.
+    </p>
+
+    <div class="key-stat" style="margin-top: 28pt;">
+      <h4 style="margin-bottom: 6pt;">Sub-hipótesis</h4>
+      <p style="margin: 0;">
+        La federación tiene <strong>una memoria de impacto excepcional</strong> que casi nadie lee. Está hecha para la administración, no para el donante.
+      </p>
+    </div>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>5 / 12</span></div>
+  </section>
+
+  <!-- ───────── 4. PALANCAS ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 4 · Palancas detectadas</p>
+    <h2>Lo que se puede mover.</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="center" style="width: 4%;">#</th>
+          <th>Palanca</th>
+          <th class="center" style="width: 14%;">Impacto</th>
+          <th class="center" style="width: 14%;">Esfuerzo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center"><span class="num-edit">01</span></td>
+          <td><strong>Programa de empresas regional</strong> con propuesta de valor "RSC con causa accesible"</td>
+          <td class="center">Alto</td>
+          <td class="center">Medio</td>
+        </tr>
+        <tr>
+          <td class="center"><span class="num-edit">02</span></td>
+          <td><strong>Memoria editorial que se lee</strong> — sustituye la administrativa</td>
+          <td class="center">Medio</td>
+          <td class="center">Bajo</td>
+        </tr>
+        <tr>
+          <td class="center"><span class="num-edit">03</span></td>
+          <td><strong>Renovación de base social</strong> — donante mensual recurrente, perfil 35-55</td>
+          <td class="center">Alto</td>
+          <td class="center">Alto</td>
+        </tr>
+        <tr>
+          <td class="center"><span class="num-edit">04</span></td>
+          <td><strong>Crowdfunding por proyecto vivo</strong> (no genérico)</td>
+          <td class="center">Bajo</td>
+          <td class="center">Medio</td>
+        </tr>
+        <tr>
+          <td class="center"><span class="num-edit">05</span></td>
+          <td><strong>Mapeo y candidatura</strong> a 6 fundaciones privadas estatales</td>
+          <td class="center">Medio</td>
+          <td class="center">Medio</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footnote" style="margin-top: 20pt;">
+      ↗ La priorización por impacto/esfuerzo es relativa al contexto de esta federación. Una organización pequeña en otro sector tendría la misma matriz con números muy distintos. La metodología es la misma; las cifras concretas, no.
+    </p>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>6 / 12</span></div>
+  </section>
+
+  <!-- ───────── 5. RECOMENDACIONES ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 5 · Recomendaciones</p>
+    <h2>Decisiones, no abstracciones.</h2>
+
+    <ol style="margin-top: 18pt; line-height: 1.6;">
+      <li><strong>Reorganización interna</strong>. La persona de captación pasa de jornada parcial a completa, con apoyo de Comunicación a tiempo parcial. Sin esto, el plan no se ejecuta.</li>
+      <li><strong>Programa "Empresas con propósito"</strong> estructurado en tres tramos (1.500 / 5.000 / 12.000 €/año) con contraprestación clara y reportes trimestrales. Activación con 20 conversaciones cualificadas en seis meses.</li>
+      <li><strong>Memoria editorial 2026</strong> publicada en mayo, no en diciembre. Distribución a base social, prensa especializada y red de aliados. La memoria que se reenvía no es la administrativa.</li>
+      <li><strong>Captación de socios mensuales</strong> con campaña digital muy específica al perfil 35-55 años local. Objetivo conservador: 250 socios nuevos, churn &lt;15%.</li>
+      <li><strong>Mapeo de 6 fundaciones privadas estatales</strong> alineadas con discapacidad e inclusión.</li>
+      <li><strong>Revisión de la cofinanciación europea</strong>. Las próximas convocatorias exigen 25-40% privado. Sin programa de empresas activo, no se puede acceder.</li>
+    </ol>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>7 / 12</span></div>
+  </section>
+
+  <!-- ───────── 6. RIESGOS ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 6 · Riesgos y supuestos</p>
+    <h2>Lo que asume el plan.</h2>
+
+    <h3 style="margin-top: 24pt;">Supuestos</h3>
+    <ul>
+      <li><strong>Patronato activo</strong>. Apoya el programa de empresas (incluyendo aportar contactos del propio patronato y de las entidades miembro).</li>
+      <li><strong>Resistencia 18 meses</strong>. La organización aguanta sin que la mezcla de ingresos cambie sustancialmente. Las palancas tardan en madurar — los socios nuevos no llegan en abril.</li>
+    </ul>
+
+    <h3>Riesgos</h3>
+    <ul>
+      <li><strong>Riesgo cultural</strong>. El equipo técnico interpreta el plan como "pedirles que vendan". Mitigación: formación inicial y separación clara de funciones.</li>
+      <li><strong>Riesgo de tiempos</strong>. Decisión adversa en la próxima convocatoria autonómica antes de que las palancas alternativas estén operativas. Plan B: línea de crédito puente con la entidad bancaria principal, ya negociada.</li>
+    </ul>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>8 / 12</span></div>
+  </section>
+
+  <!-- ───────── 7. MÉTRICA ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 7 · Métrica de éxito a 12 meses</p>
+    <h2>Cómo sabremos si funcionó.</h2>
+
+    <table>
+      <thead>
+        <tr><th>Indicador</th><th>Baseline</th><th>Target a 12 meses</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Subvención pública sobre el total</strong></td>
+          <td>86 %</td>
+          <td>72 %</td>
+        </tr>
+        <tr>
+          <td><strong>Programa empresas — firmas activas</strong></td>
+          <td>0 estructuradas</td>
+          <td>≥ 18 firmas · ingreso ≥120.000 €/año</td>
+        </tr>
+        <tr>
+          <td><strong>Donantes mensuales nuevos</strong></td>
+          <td>captación neta cero</td>
+          <td>+250 nuevos · churn ≤15%</td>
+        </tr>
+        <tr>
+          <td><strong>Memoria editorial</strong></td>
+          <td>memoria administrativa</td>
+          <td>5.000 descargas · 8 menciones prensa</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footnote" style="margin-top: 20pt;">
+      Los indicadores son <em>compromisos cuantificables</em> que el equipo y el patronato aceptan al inicio del plan. Sin métrica, el seguimiento se convierte en relato. Con métrica, el seguimiento es decisión.
+    </p>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>9 / 12</span></div>
+  </section>
+
+  <!-- ───────── 8. APRENDIZAJE ───────── -->
+  <section class="page">
+    <p class="eyebrow">— 8 · Aprendizaje transferible</p>
+    <h2>Lo que vale para <em>otras</em>.</h2>
+
+    <p style="margin-top: 18pt;">Tres ideas que recogemos para futuros diagnósticos del sector:</p>
+
+    <div style="margin-top: 24pt;">
+      <p class="num-edit" style="font-size: 36pt; line-height: 1; margin: 0;">01</p>
+      <h3 style="margin-top: 6pt;">"Dependencia de subvención" suele ser síntoma, no causa.</h3>
+      <p>
+        La causa real está casi siempre en la base social no renovada. La subvención es lo único que escala lo bastante rápido para tapar el hueco. Cuando el techo de la pública baja, la organización descubre que no tiene músculo construido en otras líneas.
+      </p>
+    </div>
+
+    <div style="margin-top: 24pt;">
+      <p class="num-edit" style="font-size: 36pt; line-height: 1; margin: 0;">02</p>
+      <h3 style="margin-top: 6pt;">La memoria administrativa no capta.</h3>
+      <p>
+        Si la memoria anual no se reenvía espontáneamente entre profesionales del sector, no está cumpliendo su función comercial — solo la legal. Convertirla en pieza editorial multiplica su rendimiento sin coste estructural.
+      </p>
+    </div>
+
+    <div style="margin-top: 24pt;">
+      <p class="num-edit" style="font-size: 36pt; line-height: 1; margin: 0;">03</p>
+      <h3 style="margin-top: 6pt;">El donante mensual recurrente es la línea más resistente.</h3>
+      <p>
+        Es lo último en lo que las organizaciones invierten porque tiene retorno lento, y por eso es lo que menos compite con otras entidades del sector. La paradoja: lo más rentable a largo plazo es lo menos atendido.
+      </p>
+    </div>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>10 / 12</span></div>
+  </section>
+
+  <!-- ───────── METODOLOGÍA ───────── -->
+  <section class="page">
+    <p class="eyebrow">— Cómo hicimos este diagnóstico</p>
+    <h2>El método de Startidea.</h2>
+
+    <ol style="margin-top: 18pt; line-height: 1.6;">
+      <li><strong>Diagnóstico (gratuito · 30 min).</strong> Tú cuentas el reto y te decimos honestamente si encajamos. Si no, te orientamos hacia quien sí.</li>
+      <li><strong>Propuesta cerrada (1 semana).</strong> Alcance, plazos, equipo, presupuesto. Sin "depende".</li>
+      <li><strong>Co-construcción.</strong> Trabajamos con tu equipo, no en sustitución.</li>
+      <li><strong>Hand-off + check-in.</strong> Documentación, capacitación, transferencia + seguimiento a los 6 meses.</li>
+    </ol>
+
+    <h3 style="margin-top: 28pt;">Tres reglas editoriales</h3>
+    <ul>
+      <li><strong>Si no se entiende en cinco minutos, no se ejecuta.</strong> Vale para estrategia y para producto.</li>
+      <li><strong>Decimos que no</strong> antes que decir mal que sí. Cada cliente que rechazamos también define el tipo de agencia que somos.</li>
+      <li><strong>Si no se mide, no se hizo bien.</strong> Cada propuesta entrega métrica de éxito a 12 meses.</li>
+    </ul>
+
+    <div class="page-footer"><span>Diagnóstico modelo · Federación discapacidad</span><span>11 / 12</span></div>
+  </section>
+
+  <!-- ───────── CTA ───────── -->
+  <section class="page cta-page">
+    <div>
+      <p class="label">— ¿Tu organización?</p>
+    </div>
+
+    <div>
+      <h2>
+        Si reconoces tu organización<br />
+        <em>en este diagnóstico</em>...
+      </h2>
+      <p style="margin-top: 24pt; font-size: 12pt;">
+        Empezamos por una conversación de 30 minutos. Si encajamos, lanzamos un diagnóstico para tu caso. Si no, te orientamos hacia quien sí.
+      </p>
+      <p style="margin-top: 30pt;">
+        <a class="cta-button" href="https://startidea.es/contacto">Reservar diagnóstico  →</a>
+      </p>
+    </div>
+
+    <div>
+      <div style="border-top: 1px solid rgba(250,248,245,0.15); padding-top: 14pt; display: grid; grid-template-columns: 1fr 1fr; gap: 14pt 24pt; font-size: 9pt;">
+        <div>
+          <p class="label">Email</p>
+          <p style="margin: 4pt 0; font-weight: 600; color: var(--paper);">hola@startidea.es</p>
+        </div>
+        <div>
+          <p class="label">Web</p>
+          <p style="margin: 4pt 0; font-weight: 600; color: var(--paper);">startidea.es</p>
+        </div>
+        <div>
+          <p class="label">Laboratorio público</p>
+          <p style="margin: 4pt 0; font-weight: 600; color: var(--paper);">startidea.es/laboratorio/fundraising</p>
+        </div>
+        <div>
+          <p class="label">Granada</p>
+          <p style="margin: 4pt 0; font-weight: 600; color: var(--paper);">C/ Conde Cifuentes, 33</p>
+        </div>
+      </div>
+      <div class="page-footer" style="border-top-color: rgba(250,248,245,0.2); color: rgba(250,248,245,0.55);">
+        <span>© Startidea · CIF B19583632</span>
+        <span>12 / 12</span>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

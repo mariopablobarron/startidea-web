@@ -136,6 +136,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'Después un diagnóstico',
       subtitle: 'Calculadora orientativa y briefing en cuatro pasos. Te enviamos un presupuesto detallado con la respuesta del diagnóstico — sin compromiso.',
     },
+    'page/recursos-diagnostico': {
+      kind: 'page',
+      eyebrow: '— Recurso descargable · PDF 12 páginas',
+      title: 'El modelo del diagnóstico de fundraising.',
+      accent: 'del diagnóstico',
+      subtitle: 'Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública. Mezcla de ingresos, palancas y recomendaciones.',
+    },
   };
 
   // Casos individuales

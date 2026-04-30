@@ -53,7 +53,10 @@ export default defineConfig({
     }),
     sitemap({
       filter: (page) =>
-        !page.includes('/admin/') && !page.includes('/api/') && !page.includes('/404'),
+        !page.includes('/admin/') &&
+        !page.includes('/api/') &&
+        !page.includes('/404') &&
+        !page.includes('/recursos/gracias'),
     }),
   ],
 });

@@ -1,0 +1,207 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base
+  title="Diagnóstico modelo de fundraising — Startidea"
+  description="Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública. PDF de 12 páginas con la radiografía completa, las palancas detectadas y las recomendaciones que recomendamos."
+  ogSlug="page/recursos-diagnostico"
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        <a href="/laboratorio/fundraising" class="link-underline text-ink/70 hover:text-ink">← Laboratorio</a>
+      </p>
+      <span class="label mt-6 block">— Recurso descargable</span>
+
+      <div class="mt-6 grid grid-cols-12 gap-x-8 gap-y-12">
+        <div class="col-span-12 lg:col-span-7">
+          <h1 class="font-display text-display-xl leading-[0.96] text-ink">
+            El modelo<br/>
+            del <em class="italic text-magenta">diagnóstico</em><br/>
+            de fundraising.
+          </h1>
+          <p class="mt-8 max-w-measure text-lede text-ink/80">
+            12 páginas con la radiografía completa de un caso real anonimizado: federación regional de discapacidad con <strong>86% de dependencia de subvención pública</strong>, base social envejecida, sin programa estructurado de empresas. Cómo lo diagnosticamos, qué palancas detectamos, qué recomendamos.
+          </p>
+
+          <ul class="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 max-w-md font-mono text-[11px] uppercase tracking-widest text-ink/70">
+            <li>▸ 12 páginas A4</li>
+            <li>▸ Caso real anonimizado</li>
+            <li>▸ Mezcla de ingresos visual</li>
+            <li>▸ Tabla de palancas impacto/esfuerzo</li>
+            <li>▸ Recomendaciones concretas</li>
+            <li>▸ Métricas a 12 meses</li>
+            <li>▸ Riesgos y supuestos</li>
+            <li>▸ Aprendizaje transferible</li>
+          </ul>
+        </div>
+
+        <!-- Form -->
+        <aside class="col-span-12 lg:col-span-5 lg:col-start-8">
+          <div class="border-2 border-ink bg-paper-warm p-7">
+            <p class="label">— Recibir el PDF</p>
+            <h2 class="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
+              <em class="italic text-magenta">Gratis</em>. Sin formulario largo.
+            </h2>
+
+            <form id="lead-form" class="mt-6 space-y-3" novalidate>
+              <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+              <div>
+                <label class="sr-only" for="lead-name">Tu nombre</label>
+                <input id="lead-name" name="name" type="text" required maxlength="80" autocomplete="name" placeholder="Tu nombre"
+                  class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+              <div>
+                <label class="sr-only" for="lead-email">Email</label>
+                <input id="lead-email" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="tu@email.com"
+                  class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+              <div>
+                <label class="sr-only" for="lead-org">Organización</label>
+                <input id="lead-org" name="organization" type="text" maxlength="120" placeholder="Tu organización (opcional)"
+                  class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+
+              <label class="flex items-start gap-3 py-2 text-sm text-ink/85 cursor-pointer">
+                <input type="checkbox" name="newsletter" class="mt-1 h-4 w-4 cursor-pointer accent-magenta" checked />
+                <span>Suscribirme también a la nota mensual de Startidea (cero ruido, baja cuando quieras)</span>
+              </label>
+
+              <button type="submit" id="lead-submit" class="btn w-full justify-center !py-3">
+                Descargar el PDF
+                <span aria-hidden="true">↓</span>
+              </button>
+
+              <p id="lead-status" class="min-h-[20px] font-mono text-[11px] leading-relaxed text-ink-mute" aria-live="polite"></p>
+
+              <p class="border-t border-ink/15 pt-3 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                Sin tracking pixels · Sin spam · RGPD
+              </p>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vista previa del contenido -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Lo que vas a leer</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ol class="divide-y divide-ink/15 border-y border-ink/15">
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">01</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Contexto</h3>
+                <p class="mt-1 text-sm text-ink/75">Quién es la organización (anonimizada): tipología, tamaño, presupuesto, equipo, momento estratégico.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">02</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Situación de partida — la radiografía</h3>
+                <p class="mt-1 text-sm text-ink/75">Mezcla de ingresos visual con porcentajes reales. Capacidades internas y materiales existentes.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">03</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Hipótesis estratégica</h3>
+                <p class="mt-1 text-sm text-ink/75">Qué creemos que pasa de verdad bajo los números. La lectura de Startidea, sostenida en evidencia.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">04</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Palancas detectadas</h3>
+                <p class="mt-1 text-sm text-ink/75">Tabla impacto/esfuerzo con 5 palancas priorizadas.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">05</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Recomendaciones — decisiones, no abstracciones</h3>
+                <p class="mt-1 text-sm text-ink/75">6 decisiones concretas con tramos económicos, plazos y objetivos cuantificables.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">06</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Métrica de éxito a 12 meses</h3>
+                <p class="mt-1 text-sm text-ink/75">Indicadores duros con baseline y target. Compromiso del patronato, no relato.</p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6 py-6">
+              <span class="num-edit col-span-2 text-3xl">07</span>
+              <div class="col-span-10">
+                <h3 class="font-display text-lg leading-tight text-ink md:text-xl">Aprendizaje transferible</h3>
+                <p class="mt-1 text-sm text-ink/75">Tres ideas que valen para otras organizaciones del sector. Esta sección es la que justifica que el caso sea público.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('lead-form');
+    var status = document.getElementById('lead-status');
+    var submit = document.getElementById('lead-submit');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      // Honeypot
+      if ((data.get('website') || '').toString().trim() !== '') {
+        // Bot — fingimos éxito
+        window.location.href = '/recursos/gracias?slug=diagnostico-modelo-fundraising';
+        return;
+      }
+
+      submit.setAttribute('disabled', 'true');
+      status.style.color = '';
+      status.textContent = 'Enviando…';
+
+      var payload = {
+        name: (data.get('name') || '').toString().trim(),
+        email: (data.get('email') || '').toString().trim(),
+        organization: (data.get('organization') || '').toString().trim(),
+        newsletter: data.get('newsletter') === 'on',
+        slug: 'diagnostico-modelo-fundraising',
+      };
+
+      try {
+        var r = await fetch('/api/recursos/solicitar', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        var json = await r.json().catch(function () { return { ok: false }; });
+        if (r.ok && json.ok) {
+          window.location.href = '/recursos/gracias?slug=diagnostico-modelo-fundraising';
+        } else {
+          status.style.color = '#b42318';
+          status.textContent = json.error === 'rate'
+            ? 'Espera unos segundos antes de reintentar.'
+            : 'No se pudo enviar. Escríbenos a hola@startidea.es.';
+          submit.removeAttribute('disabled');
+        }
+      } catch (_) {
+        status.style.color = '#b42318';
+        status.textContent = 'Sin conexión. Escríbenos a hola@startidea.es.';
+        submit.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,52 @@
+---
+/**
+ * Bloque "Recursos descargables" para home y /notas/.
+ * Muestra los lead magnets disponibles. Hoy hay 1; cuando haya 3+, se
+ * convierte automáticamente en grid de 3 columnas.
+ */
+
+const recursos = [
+  {
+    href: '/recursos/diagnostico-modelo-fundraising',
+    eyebrow: 'PDF · 12 páginas',
+    titulo: 'El modelo del diagnóstico de fundraising',
+    descripcion: 'Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública. Mezcla de ingresos, palancas y recomendaciones.',
+    cta: 'Descargar gratis',
+  },
+];
+---
+
+<section class="bg-paper-warm py-20 md:py-28">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-4">
+        <span class="label">— Recursos descargables</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Documentos <em class="italic text-magenta">para llevarte</em>.
+        </h2>
+        <p class="mt-5 max-w-measure text-ink/80">
+          Cada cierto tiempo publicamos un recurso pensado para usar. Sin formulario largo, sin spam. Solo email y un clic.
+        </p>
+      </div>
+
+      <div class="col-span-12 mt-6 lg:col-span-8 lg:mt-0">
+        <ul class={`grid gap-px border-2 border-ink/15 bg-ink/15 ${recursos.length >= 3 ? 'sm:grid-cols-3' : recursos.length === 2 ? 'sm:grid-cols-2' : 'grid-cols-1'}`}>
+          {recursos.map((r) => (
+            <li class="bg-paper-warm">
+              <a href={r.href} class="group flex h-full flex-col p-7 transition-colors hover:bg-paper">
+                <span class="label">{r.eyebrow}</span>
+                <h3 class="mt-3 font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-3xl">
+                  {r.titulo}
+                </h3>
+                <p class="mt-4 flex-1 text-sm leading-relaxed text-ink/75">{r.descripcion}</p>
+                <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">
+                  {r.cta} ↓
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

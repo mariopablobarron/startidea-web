@@ -1,0 +1,82 @@
+---
+import Base from '@/layouts/Base.astro';
+
+const url = Astro.url;
+const slug = url.searchParams.get('slug') || 'diagnostico-modelo-fundraising';
+
+const RECURSOS: Record<string, { titulo: string; pdfUrl: string; tamano: string }> = {
+  'diagnostico-modelo-fundraising': {
+    titulo: 'Diagnóstico modelo de fundraising',
+    pdfUrl: '/recursos/diagnostico-modelo-fundraising.pdf',
+    tamano: '~ 800 KB · 12 páginas',
+  },
+};
+
+const recurso = RECURSOS[slug] || RECURSOS['diagnostico-modelo-fundraising'];
+---
+
+<Base
+  title="Gracias — Tu PDF está listo · Startidea"
+  description="Tu copia del diagnóstico está lista para descargar."
+  ogSlug="page/recursos-diagnostico"
+  noindex={true}
+>
+  <section class="bg-paper py-20 md:py-28 lg:py-36">
+    <div class="container-x">
+      <span class="label">— Listo</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Aquí lo tienes.<br/>
+        <em class="italic text-magenta">Gracias por descargarlo.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Tu copia de "<strong>{recurso.titulo}</strong>" está lista. Pulsa el botón y se descarga al instante. Si te has suscrito al newsletter, recibirás la confirmación en tu email.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href={recurso.pdfUrl}
+          download
+          class="btn !py-4 !px-6 text-base"
+        >
+          Descargar PDF
+          <span aria-hidden="true">↓</span>
+        </a>
+        <a href="/laboratorio/fundraising" class="btn-ghost">
+          Ver más diagnósticos
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <p class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        {recurso.tamano}
+      </p>
+    </div>
+  </section>
+
+  <!-- Bloque CTA siguiente paso -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— Siguiente paso</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+            ¿Reconoces tu organización <em class="italic text-magenta">en este diagnóstico</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Empezamos por una conversación de 30 minutos. Si encajamos, lanzamos un diagnóstico para tu caso. Si no — te orientamos hacia quien sí.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico de 30 min
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/presupuesto" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              Calcular presupuesto
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
