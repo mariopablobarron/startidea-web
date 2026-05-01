@@ -55,13 +55,17 @@
     }
     .page {
       width: 210mm;
-      height: 297mm;
+      height: 296mm;
       padding: 22mm 20mm 20mm;
       page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
       position: relative;
       background: var(--paper);
+      overflow: hidden;
     }
-    .page:last-child { page-break-after: auto; }
+    .page:last-child { page-break-after: auto; break-after: auto; }
 
     .page-footer {
       position: absolute;
