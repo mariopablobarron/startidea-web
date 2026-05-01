@@ -2,6 +2,7 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { renderOg, type OgInput } from '@/lib/og';
 import { casos } from '@/data/casos';
+import { audiencias } from '@/data/audiencias';
 
 // ─── Catálogo de OGs ────────────────────────────────────────
 // Cada slug → input para renderOg
@@ -144,6 +145,17 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       subtitle: 'Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública. Mezcla de ingresos, palancas y recomendaciones.',
     },
   };
+
+  // Subpáginas de /para-quien (una OG por audiencia)
+  for (const a of audiencias) {
+    catalog[`page/para-quien-${a.id}`] = {
+      kind: 'page',
+      eyebrow: a.ogEyebrow,
+      title: a.ogTitle,
+      accent: a.ogAccent,
+      subtitle: a.ogSubtitle,
+    };
+  }
 
   // Casos individuales
   for (const caso of casos) {

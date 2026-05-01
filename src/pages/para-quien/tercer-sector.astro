@@ -1,0 +1,15 @@
+---
+import Base from '@/layouts/Base.astro';
+import AudienciaDetalle from '@/components/AudienciaDetalle.astro';
+import { getAudiencia } from '@/data/audiencias';
+
+const a = getAudiencia('tercer-sector')!;
+---
+
+<Base
+  title={a.metaTitle}
+  description={a.metaDescription}
+  ogSlug="page/para-quien-tercer-sector"
+>
+  <AudienciaDetalle audiencia={a} />
+</Base>

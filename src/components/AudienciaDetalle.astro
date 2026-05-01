@@ -1,0 +1,199 @@
+---
+/**
+ * Bloque de detalle para una audiencia (tercer-sector, instituciones, empresas).
+ * Renderiza hero + cuerpo + casos relacionados + CTA.
+ *
+ * Se usa en /para-quien/{tercer-sector,instituciones,empresas}.astro.
+ */
+import type { Audiencia } from '@/data/audiencias';
+import { audiencias } from '@/data/audiencias';
+import { casos } from '@/data/casos';
+
+interface Props {
+  audiencia: Audiencia;
+}
+
+const { audiencia: a } = Astro.props;
+
+// Casos relacionados (filtrados por slugs en audiencia)
+const relacionados = (a.casosRelacionados || [])
+  .map((slug) => casos.find((c) => c.slug === slug))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+// Otras audiencias (para "leer también")
+const otras = audiencias.filter((x) => x.id !== a.id);
+---
+
+<!-- Hero -->
+<section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+  <div class="container-x">
+    <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+      <a href="/para-quien" class="link-underline text-ink/70 hover:text-ink">← Para quién</a>
+    </p>
+
+    <div class="mt-6 grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-3">
+        <div class="flex items-baseline gap-4">
+          <span class="num-edit text-7xl">{a.num}</span>
+          <span class="label">{a.tag}</span>
+        </div>
+      </div>
+
+      <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+        <h1 class="font-display text-display-xl leading-[0.96] text-ink">
+          {a.title}
+        </h1>
+
+        <p class="mt-8 max-w-3xl font-display text-2xl italic leading-snug text-magenta md:text-3xl">
+          "{a.quote}"
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cuerpo: contexto + keywords/avoid/services -->
+<section class="bg-paper-warm py-20 md:py-28">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-7">
+        <span class="label">— Cómo Startidea os ve</span>
+        <div class="mt-6 space-y-5 max-w-measure text-ink/85 text-lede">
+          {a.body.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-5 space-y-10">
+        <div>
+          <span class="label">— Cómo os hablamos</span>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {a.keywords.map((k) => (
+              <li class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85">
+                {k}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <span class="label">— Lo que evitamos</span>
+          <ul class="mt-4 space-y-2.5">
+            {a.avoid.map((v) => (
+              <li class="flex items-start gap-3 text-sm text-ink/75">
+                <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+                <span>{v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <span class="label">— Servicios más solicitados</span>
+          <ul class="mt-4 space-y-2.5">
+            {a.services.map((s) => (
+              <li class="flex items-start gap-3 text-sm text-ink/85">
+                <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Casos relacionados -->
+{relacionados.length > 0 && (
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Casos relevantes</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">ya hicimos</em>.
+          </h2>
+        </div>
+
+        <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+          <ul class="divide-y divide-ink/15 border-y border-ink/15">
+            {relacionados.map((c) => (
+              <li>
+                <a href={`/casos/${c.slug}`} class="group grid grid-cols-12 gap-x-6 py-7 transition-colors hover:bg-paper-warm">
+                  <span class="num-edit col-span-2 text-3xl md:text-4xl">{c.num}</span>
+                  <div class="col-span-10 md:col-span-7">
+                    <h3 class="font-display text-xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-2xl">
+                      {c.title}
+                    </h3>
+                    <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                      {c.cliente} · {c.intervention}
+                    </p>
+                  </div>
+                  <div class="hidden md:flex md:col-span-3 md:items-center md:justify-end font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                    Leer caso →
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- CTA siguiente paso -->
+<section class="bg-ink py-20 text-paper md:py-28">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+        <span class="label !text-paper/60">— Siguiente paso</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+          Treinta minutos. <em class="italic text-magenta">Sin compromiso</em>.
+        </h2>
+        <p class="mt-6 max-w-measure text-paper/80">
+          Startidea empieza siempre igual: una conversación corta para entender qué necesitáis. Si encajamos, lanzamos un diagnóstico para vuestro caso. Si no, os orientamos hacia quien sí.
+        </p>
+        <div class="mt-12 flex flex-wrap gap-4">
+          <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+            {a.ctaLabel}
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="/recursos/diagnostico-modelo-fundraising" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+            Ver el modelo del diagnóstico
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Otras audiencias -->
+<section class="bg-paper-warm py-20 md:py-28">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+      <div class="col-span-12 lg:col-span-3">
+        <span class="label">— Otras audiencias</span>
+      </div>
+      <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+        <ul class="grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+          {otras.map((o) => (
+            <li class="bg-paper-warm">
+              <a href={o.href} class="group flex h-full flex-col p-7 transition-colors hover:bg-paper">
+                <span class="label">— {o.tag}</span>
+                <h3 class="mt-3 font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-3xl">
+                  {o.shortTitle}
+                </h3>
+                <p class="mt-3 flex-1 text-sm leading-relaxed text-ink/75">{o.body[0]}</p>
+                <span aria-hidden="true" class="mt-6 inline-flex items-center gap-2 font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">
+                  Leer →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

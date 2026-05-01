@@ -1,79 +1,14 @@
 ---
 import Base from '@/layouts/Base.astro';
-
-const audiencias = [
-  {
-    id: 'tercer-sector',
-    num: '01',
-    tag: 'Tercer sector',
-    title: 'ONG, fundaciones y asociaciones que necesitan profesionalizar lo que cuentan.',
-    quote: 'Comunicar bien no es opcional cuando lo que está en juego es tu causa.',
-    body: [
-      'Trabajamos con direcciones de comunicación, direcciones generales y patronatos de entidades del tercer sector con presupuesto y voluntad de profesionalizar su comunicación e impacto.',
-      'Sabemos que vivís la tensión entre misión y eficacia. Que captáis fondos sin perder al donante histórico, que demostráis impacto a un patronato que no siempre habla el mismo idioma, que profesionalizáis vuestra comunicación digital con recursos limitados.',
-      'No vamos a venderos humo de marketing. Tenemos casos parecidos al vuestro y, lo que es más importante, sabemos en qué se diferencian del que tenemos en frente.',
-    ],
-    keywords: ['Misión', 'Impacto', 'Comunidad', 'Transformación', 'Coherencia', 'Sostenibilidad'],
-    avoid: ['"Branding" sin estrategia', 'Engagement como métrica única', 'Promesas que no se pueden cumplir'],
-    services: [
-      'Plan estratégico de comunicación',
-      'Captación de fondos y fundraising digital',
-      'Memorias e informes de impacto',
-      'Producción audiovisual y podcast',
-      'Profesionalización de equipo de comunicación',
-    ],
-  },
-  {
-    id: 'instituciones',
-    num: '02',
-    tag: 'Instituciones',
-    title: 'Administración pública, fundaciones públicas y entidades con base ética o religiosa.',
-    quote: 'Modernizar el lenguaje sin traicionar la identidad. Es posible. Es necesario.',
-    body: [
-      'Responsables de áreas de comunicación, innovación social o transformación digital en administraciones, fundaciones públicas, diócesis, congregaciones, asociaciones eclesiales y plataformas confesionales.',
-      'Vuestro reto: llegar a audiencias jóvenes, modernizar el lenguaje sin traicionar la identidad, justificar la inversión en comunicación ante órganos de gobierno, evaluar resultados sin desnaturalizar la misión.',
-      'Conocemos vuestros códigos. No os vamos a forzar a parecer una startup. Sabemos comunicar lo que hacéis sin folclorismo ni edulcorante, con respeto a la identidad y rigor en la ejecución.',
-    ],
-    keywords: ['Identidad', 'Coherencia', 'Propósito', 'Evaluación', 'Rendición de cuentas', 'Narrativa institucional'],
-    avoid: ['Jerga corporativa agresiva', 'Adaptaciones que descontextualizan la misión', 'Comunicación que solo busca rejuvenecer la fachada'],
-    services: [
-      'Estrategia de comunicación institucional',
-      'Modernización de identidad sin pérdida de continuidad',
-      'Producción de jornadas, congresos y publicaciones',
-      'Comunicación digital con criterio editorial',
-      'Acompañamiento a equipos internos',
-    ],
-  },
-  {
-    id: 'empresas',
-    num: '03',
-    tag: 'Empresas con propósito',
-    title: 'Direcciones de comunicación, sostenibilidad y RSC que quieren dejar de hacer ESG de postureo.',
-    quote: 'El propósito o se demuestra o no existe. Te ayudamos a demostrarlo.',
-    body: [
-      'Direcciones de marketing, comunicación, sostenibilidad y RSC en empresas medianas y grandes con compromiso real con el propósito (no solo con el sello ESG).',
-      'Vuestro problema: convertir el discurso ESG en hechos comunicables, evitar el greenwashing, conectar con stakeholders críticos, articular alianzas con tercer sector que tengan sentido y no sean sólo foto.',
-      'Tenemos la red del tercer sector que tu equipo no tiene. Sabemos articular partnerships reales. Y la comunicación de propósito con Startidea no parece postureo — porque no lo es.',
-    ],
-    keywords: ['Propósito', 'Stakeholders', 'Impacto', 'Partnership', 'Reputación', 'Métricas'],
-    avoid: ['ESG como ejercicio cosmético', 'Alianzas decorativas con ONG sin retorno mutuo', 'Reportes de sostenibilidad ilegibles'],
-    services: [
-      'Estrategia de propósito y narrativa ESG',
-      'Articulación de partnerships con tercer sector',
-      'Comunicación de impacto y reportes legibles',
-      'Activación de empleados y stakeholders críticos',
-      'Producción audiovisual de propósito',
-    ],
-  },
-];
+import { audiencias } from '@/data/audiencias';
 ---
 
 <Base
-  title="Para quién — Startidea"
-  description="Trabajamos con tercer sector, instituciones (incluidas eclesiales) y empresas con propósito. Tres audiencias, tres conversaciones distintas."
+  title="Para quién — Tres audiencias, tres conversaciones · Startidea"
+  description="Startidea trabaja con tercer sector, instituciones (incluidas eclesiales) y empresas con propósito. Tres audiencias, tres lenguajes, tres páginas distintas."
   ogSlug="page/para-quien"
 >
-  <!-- Hero de página -->
+  <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
     <div class="container-x">
       <span class="label">— Para quién</span>
@@ -82,94 +17,153 @@ const audiencias = [
         <em class="italic text-magenta">Tres conversaciones.</em>
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        No hablamos igual a una fundación canónica que a una startup ESG. Cada audiencia tiene aquí su página, con su lenguaje, sus retos y los servicios que de verdad les sirven.
+        Startidea no habla igual a una fundación canónica que a una startup ESG. Cada audiencia tiene aquí su página, con su lenguaje, sus retos y los servicios que de verdad le sirven.
       </p>
-
-      <!-- Anchors -->
-      <nav class="mt-12 grid gap-4 border-t border-ink/15 pt-8 sm:grid-cols-3" aria-label="Audiencias">
-        {audiencias.map((a) => (
-          <a href={`#${a.id}`} class="group flex items-baseline gap-4">
-            <span class="num-edit text-3xl">{a.num}</span>
-            <span class="font-display text-xl text-ink transition-colors group-hover:text-magenta">{a.tag}</span>
-          </a>
-        ))}
-      </nav>
     </div>
   </section>
 
-  <!-- Bloques por audiencia -->
-  {audiencias.map((a, i) => (
-    <section id={a.id} class={`relative py-24 md:py-32 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
-      <div class="container-x">
-        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
-          <div class="col-span-12 lg:col-span-3">
-            <div class="flex items-baseline gap-4">
-              <span class="num-edit text-7xl">{a.num}</span>
-              <span class="label">{a.tag}</span>
-            </div>
-          </div>
-
-          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
-            <h2 class="font-display text-display-lg leading-[1.0] text-ink">
-              {a.title}
-            </h2>
-
-            <p class="mt-8 max-w-3xl font-display text-2xl italic leading-snug text-magenta md:text-3xl">
-              "{a.quote}"
-            </p>
-
-            <div class="mt-12 grid gap-12 lg:grid-cols-2">
-              <div class="space-y-5 max-w-measure text-ink/85">
-                {a.body.map((p) => <p>{p}</p>)}
+  <!-- Grid editorial -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <ul class="grid gap-px border-2 border-ink/15 bg-ink/15 lg:grid-cols-3">
+        {audiencias.map((a) => (
+          <li class="bg-paper-warm">
+            <a href={a.href} class="group flex h-full flex-col p-8 transition-colors hover:bg-paper">
+              <div class="flex items-baseline justify-between">
+                <span class="num-edit text-6xl">{a.num}</span>
+                <span class="label">{a.tag}</span>
               </div>
 
-              <div class="space-y-10">
-                <div>
-                  <span class="label">— Cómo os hablamos</span>
-                  <ul class="mt-4 flex flex-wrap gap-2">
-                    {a.keywords.map((k) => (
-                      <li class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85">
-                        {k}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <h2 class="mt-8 font-display text-2xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-3xl">
+                {a.title}
+              </h2>
 
-                <div>
-                  <span class="label">— Lo que evitamos</span>
-                  <ul class="mt-4 space-y-2.5">
-                    {a.avoid.map((v) => (
-                      <li class="flex items-start gap-3 text-sm text-ink/75">
-                        <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
-                        <span>{v}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <p class="mt-5 flex-1 text-ink/75">
+                {a.body[0]}
+              </p>
 
-                <div>
-                  <span class="label">— Servicios más solicitados</span>
-                  <ul class="mt-4 space-y-2.5">
-                    {a.services.map((s) => (
-                      <li class="flex items-start gap-3 text-sm text-ink/85">
-                        <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
+              <p class="mt-7 font-display text-lg italic leading-snug text-magenta md:text-xl">
+                "{a.quote}"
+              </p>
 
-            <div class="mt-14 border-t border-ink/15 pt-8">
-              <a href="/contacto" class="btn">
-                Reservar diagnóstico para {a.tag.toLowerCase()}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
+              <span class="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink/70 transition-colors group-hover:text-magenta">
+                Leer la página completa
+                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Tabla comparativa rápida -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Comparativa</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">cambia</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-sm text-ink/75">
+            Las tres audiencias comparten método. Lo que cambia es el lenguaje, los riesgos a evitar y los servicios que más se piden.
+          </p>
+        </div>
+
+        <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr class="border-b-2 border-ink">
+                  <th class="py-4 pr-6 align-bottom font-mono text-[11px] uppercase tracking-widest text-ink-mute">Eje</th>
+                  {audiencias.map((a) => (
+                    <th class="py-4 pr-6 align-bottom">
+                      <span class="num-edit block text-2xl">{a.num}</span>
+                      <a href={a.href} class="font-display text-base text-ink hover:text-magenta md:text-lg">
+                        {a.tag}
+                      </a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-ink/15">
+                <tr>
+                  <td class="py-5 pr-6 align-top font-mono text-[11px] uppercase tracking-widest text-ink-mute">Cómo os hablamos</td>
+                  {audiencias.map((a) => (
+                    <td class="py-5 pr-6 align-top">
+                      <ul class="flex flex-wrap gap-1.5">
+                        {a.keywords.slice(0, 3).map((k) => (
+                          <li class="border border-ink/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/85">
+                            {k}
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td class="py-5 pr-6 align-top font-mono text-[11px] uppercase tracking-widest text-ink-mute">Servicios más solicitados</td>
+                  {audiencias.map((a) => (
+                    <td class="py-5 pr-6 align-top text-ink/85">
+                      <ul class="space-y-1.5">
+                        {a.services.slice(0, 3).map((s) => (
+                          <li class="flex items-start gap-2">
+                            <span class="mt-1.5 inline-block h-px w-2 flex-shrink-0 bg-magenta"></span>
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td class="py-5 pr-6 align-top font-mono text-[11px] uppercase tracking-widest text-ink-mute">Lo que evitamos</td>
+                  {audiencias.map((a) => (
+                    <td class="py-5 pr-6 align-top text-ink/75">
+                      <ul class="space-y-1.5 text-xs">
+                        {a.avoid.slice(0, 2).map((v) => (
+                          <li class="flex items-start gap-2">
+                            <span class="mt-1 inline-block h-px w-2 flex-shrink-0 bg-ink/40"></span>
+                            <span>{v}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </section>
-  ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— ¿No sabes en qué casilla encajas?</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+            Treinta minutos. <em class="italic text-magenta">Sin compromiso</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Si tu organización no encaja del todo en ninguna de las tres, no pasa nada. Una conversación corta y te decimos honestamente si Startidea es la agencia que necesitas — o quién sí.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar diagnóstico de 30 min
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/casos" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              Ver casos
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>
