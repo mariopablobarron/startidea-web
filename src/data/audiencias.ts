@@ -87,7 +87,7 @@ export const audiencias: Audiencia[] = [
       'Comunicación digital con criterio editorial',
       'Acompañamiento a equipos internos',
     ],
-    casosRelacionados: ['proyecto-hombre'],
+    casosRelacionados: ['granada-social-5', 'proyecto-hombre'],
     ctaLabel: 'Reservar diagnóstico institucional',
     metaTitle: 'Instituciones — Administraciones y entidades con base ética · Startidea',
     metaDescription:
@@ -120,6 +120,7 @@ export const audiencias: Audiencia[] = [
       'Activación de empleados y stakeholders críticos',
       'Producción audiovisual de propósito',
     ],
+    casosRelacionados: ['clinica-baca', 'tres-mil-millones-latidos'],
     ctaLabel: 'Reservar diagnóstico de propósito',
     metaTitle: 'Empresas con propósito — ESG real, partnerships con tercer sector · Startidea',
     metaDescription:
