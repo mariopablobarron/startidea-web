@@ -1,13 +1,9 @@
 import type { APIRoute } from 'astro';
 import { exchange } from '@/lib/seo/GoogleOAuthService';
-import { requireAdmin } from '@/lib/seo/auth';
 
 export const prerender = false;
 
 export const GET: APIRoute = async (context) => {
-  const denied = requireAdmin(context);
-  if (denied) return denied;
-
   const url = new URL(context.request.url);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');

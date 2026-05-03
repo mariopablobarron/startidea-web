@@ -5,6 +5,7 @@ import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
+import GoogleTagManager from '@/components/GoogleTagManager.astro';
 
 interface Props {
   title?: string;
@@ -23,6 +24,7 @@ const {
 const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
 const ogImageUrl = `${SITE_URL}/og/${ogSlug}.png`;
 const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
 <!doctype html>
@@ -38,6 +40,7 @@ const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
@@ -62,6 +65,7 @@ const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500&display=swap"
     />
+    <GoogleTagManager />
   </head>
   <body class="overflow-x-hidden">
     <Splash />

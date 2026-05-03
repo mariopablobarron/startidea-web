@@ -1,8 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 
 // Cabeceras de seguridad aplicadas a TODAS las respuestas.
-// Si en el futuro añadimos analytics externo (Plausible, GA, etc.) habrá que
-// relajar la CSP correspondientemente.
 export const onRequest = defineMiddleware(async (context, next) => {
   const response = await next();
 

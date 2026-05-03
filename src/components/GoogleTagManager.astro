@@ -1,0 +1,31 @@
+---
+const gtmId = import.meta.env.PUBLIC_GTM_ID;
+---
+
+{gtmId && (
+  <script is:inline define:vars={{ gtmId }}>
+    (function () {
+      var KEY = 'startidea.cookieconsent.v1';
+      var loaded = false;
+
+      function hasConsent() {
+        try { return localStorage.getItem(KEY) === 'all'; } catch (_) { return false; }
+      }
+
+      function loadGtm() {
+        if (loaded || !gtmId) return;
+        loaded = true;
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var firstScript = document.getElementsByTagName('script')[0];
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
+        firstScript.parentNode.insertBefore(script, firstScript);
+      }
+
+      if (hasConsent()) loadGtm();
+      document.addEventListener('cookieconsent:all', loadGtm);
+    })();
+  </script>
+)}
