@@ -177,8 +177,8 @@ export async function analyze(runId: number): Promise<number> {
     JOIN gsc_daily_pages p ON q.date = p.date AND q.site_url = p.site_url
     WHERE q.date >= date('now', ?) AND q.query != ''
     GROUP BY q.query
-    HAVING n_pages >= 3 AND clicks >= 10
-    ORDER BY clicks DESC
+    HAVING n_pages >= 3 AND SUM(q.clicks) >= 10
+    ORDER BY SUM(q.clicks) DESC
     LIMIT 15
   `).all(recent) as { query: string; n_pages: number; pages: string; clicks: number }[];
   // Nota: este JOIN es aproximado (GSC no expone page+query simultáneo a este nivel) →
