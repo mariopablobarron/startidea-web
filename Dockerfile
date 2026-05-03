@@ -3,6 +3,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+ARG PUBLIC_GTM_ID="GTM-N3SR8J"
+ARG PUBLIC_GOOGLE_SITE_VERIFICATION=""
+ENV PUBLIC_GTM_ID=$PUBLIC_GTM_ID
+ENV PUBLIC_GOOGLE_SITE_VERIFICATION=$PUBLIC_GOOGLE_SITE_VERIFICATION
+
 # Instalamos dependencias primero (mejor caché de capas)
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
