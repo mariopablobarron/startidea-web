@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { blogPostingSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 export async function getStaticPaths() {
   const notas = await getCollection('notas', ({ data }) => !data.draft);
@@ -34,12 +35,33 @@ const fmtDate = new Intl.DateTimeFormat('es-ES', {
 // Tiempo de lectura estimado (200 wpm)
 const words = nota.body.trim().split(/\s+/).length;
 const readingTime = Math.max(1, Math.round(words / 200));
+
+const notaUrl = `${SITE_URL}/notas/${nota.slug}`;
+const jsonLd = [
+  blogPostingSchema({
+    url: notaUrl,
+    title: nota.data.title,
+    description: nota.data.description,
+    datePublished: nota.data.pubDate,
+    dateModified: nota.data.updatedDate,
+    authorName: nota.data.author,
+    authorRole: nota.data.authorRole,
+    image: `${SITE_URL}/og/notas/${nota.slug}.png`,
+    keywords: nota.data.tags,
+  }),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Notas', url: `${SITE_URL}/notas` },
+    { name: nota.data.title, url: notaUrl },
+  ]),
+];
 ---
 
 <Base
   title={`${nota.data.title} — Notas · Startidea`}
   description={nota.data.description}
   ogSlug={`notas/${nota.slug}`}
+  jsonLd={jsonLd}
 >
   <article>
     <!-- Cabecera -->
@@ -132,26 +154,33 @@ const readingTime = Math.max(1, Math.round(words / 200));
         </p>
 
         <form
-          class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-stretch"
+          class="mt-10 flex flex-col gap-3"
           action="https://buttondown.email/api/emails/embed-subscribe/startidea"
           method="post"
           target="popupwindow"
           onsubmit="window.open('https://buttondown.email/startidea', 'popupwindow')"
         >
-          <label class="sr-only" for="nota-newsletter-email">Tu email</label>
-          <input
-            id="nota-newsletter-email"
-            type="email"
-            name="email"
-            required
-            placeholder="tu@email.com"
-            autocomplete="email"
-            class="flex-1 border border-paper bg-ink px-4 py-3 font-mono text-sm text-paper placeholder:text-paper/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
-          />
-          <button type="submit" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
-            Suscribirme
-            <span aria-hidden="true">→</span>
-          </button>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+            <label class="sr-only" for="nota-newsletter-email">Tu email</label>
+            <input
+              id="nota-newsletter-email"
+              type="email"
+              name="email"
+              required
+              placeholder="tu@email.com"
+              autocomplete="email"
+              class="flex-1 border border-paper bg-ink px-4 py-3 font-mono text-sm text-paper placeholder:text-paper/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+            />
+            <button type="submit" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Suscribirme
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <label class="flex items-start gap-3 text-xs leading-relaxed text-paper/80">
+            <input type="checkbox" name="consent" required
+              class="mt-0.5 h-4 w-4 flex-shrink-0 border-paper bg-ink text-magenta focus:ring-magenta" />
+            <span>Acepto recibir la newsletter mensual y la <a href="/privacidad" class="link-underline text-paper">política de privacidad</a>. Te puedes dar de baja en cualquier momento desde el propio email.</span>
+          </label>
         </form>
       </div>
     </section>

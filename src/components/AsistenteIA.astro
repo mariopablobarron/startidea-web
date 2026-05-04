@@ -248,6 +248,8 @@
         return;
       }
       var email = prompt('¿A qué email te respondemos? (opcional, deja vacío para enviar sin contacto)');
+      var ok = confirm('Vamos a enviar esta conversación al equipo de Startidea para responderte. Tus datos se tratan según la política de privacidad (https://startidea.es/privacidad). ¿Continuamos?');
+      if (!ok) return;
       var transcript = history
         .map(function (m) { return (m.role === 'user' ? '> ' : '') + m.content; })
         .join('\n\n');
@@ -257,8 +259,9 @@
         body: JSON.stringify({
           name: email ? 'Visitante (' + email + ')' : 'Visitante anónimo',
           email: email || 'sin-email@startidea.local',
-          message: '🤖 Conversación con asistente IA:\n\n' + transcript,
+          message: 'Conversacion con asistente IA:\n\n' + transcript,
           path: window.location.pathname,
+          consent: true,
         }),
       })
         .then(function (r) { return r.json(); })

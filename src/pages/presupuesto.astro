@@ -356,6 +356,11 @@ const briefingPasos = [
         class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
       <textarea name="contexto" rows="3" placeholder="Una línea más de contexto si quieres (opcional)"
         class="w-full resize-none border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"></textarea>
+      <label class="flex items-start gap-3 pt-1 text-xs leading-relaxed text-ink/80">
+        <input type="checkbox" name="consent" required
+          class="mt-0.5 h-4 w-4 flex-shrink-0 border-ink text-magenta focus:ring-magenta" />
+        <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener" class="link-underline text-ink">política de privacidad</a>. Tus datos se usan solo para responder a esta consulta.</span>
+      </label>
       <button type="submit" class="btn w-full justify-center">
         Enviar y recibir diagnóstico
         <span aria-hidden="true">→</span>
@@ -370,6 +375,7 @@ const briefingPasos = [
       const nombre = (data.get('nombre') as string || '').trim();
       const email = (data.get('email') as string || '').trim();
       const contexto = (data.get('contexto') as string || '').trim();
+      const consent = data.get('consent') === 'on';
       const status = document.getElementById('briefing-status')!;
       const submit = form.querySelector('button[type="submit"]') as HTMLButtonElement;
       submit.disabled = true;
@@ -421,6 +427,7 @@ const briefingPasos = [
             email,
             message: cuerpo,
             path: '/presupuesto',
+            consent,
           }),
         });
         const json = await r.json().catch(() => ({ ok: false }));
@@ -429,9 +436,10 @@ const briefingPasos = [
           bubble(diagnostico, 'agente');
           bubble('Recibido. En las próximas 24h te llega el presupuesto detallado a ' + email + '.', 'agente');
         } else {
-          status.textContent = json.error === 'rate'
-            ? 'Espera unos segundos antes de reenviar.'
-            : 'No se pudo enviar. Escríbenos a hola@startidea.es.';
+          status.textContent =
+            json.error === 'rate' ? 'Espera unos segundos antes de reenviar.' :
+            json.error === 'consent' ? 'Marca la casilla de aceptación de la política de privacidad.' :
+            'No se pudo enviar. Escríbenos a hola@startidea.es.';
           submit.disabled = false;
         }
       } catch {

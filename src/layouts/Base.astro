@@ -6,12 +6,14 @@ import Splash from '@/components/Splash.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
+import JsonLd from '@/components/JsonLd.astro';
 
 interface Props {
   title?: string;
   description?: string;
   ogSlug?: string;  // ej. 'home', 'page/manifiesto', 'casos/down-granada'
   noindex?: boolean;
+  jsonLd?: unknown | unknown[];
 }
 
 const {
@@ -19,6 +21,7 @@ const {
   description = 'Agencia de innovación social en Granada. Comunicación, consultoría, fundraising y producción audiovisual al servicio de organizaciones con propósito.',
   ogSlug = 'home',
   noindex = false,
+  jsonLd = null,
 } = Astro.props;
 
 const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
@@ -34,6 +37,11 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#faf8f5" />
     <link rel="alternate" type="application/rss+xml" title="Startidea — Notas" href="/rss.xml" />
 
     <title>{title}</title>
@@ -66,6 +74,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500&display=swap"
     />
     <GoogleTagManager />
+    {jsonLd && <JsonLd data={jsonLd} />}
   </head>
   <body class="overflow-x-hidden">
     <Splash />

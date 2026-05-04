@@ -1,0 +1,17 @@
+{
+  "name": "Startidea",
+  "short_name": "Startidea",
+  "description": "Innovación social desde Granada. Estrategia, comunicación, fundraising, audiovisual y tecnología para organizaciones con propósito.",
+  "lang": "es-ES",
+  "start_url": "/",
+  "scope": "/",
+  "display": "minimal-ui",
+  "orientation": "portrait",
+  "background_color": "#faf8f5",
+  "theme_color": "#faf8f5",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,27 @@
+---
+/**
+ * Inyecta uno o varios objetos Schema.org en el <head> como JSON-LD.
+ * Acepta un objeto suelto o un array; ignora null/undefined para uso condicional.
+ *
+ * Uso:
+ *   <JsonLd data={organizationSchema()} />
+ *   <JsonLd data={[organizationSchema(), websiteSchema()]} />
+ */
+interface Props {
+  data: unknown | unknown[];
+}
+
+const { data } = Astro.props;
+const items = (Array.isArray(data) ? data : [data]).filter(
+  (x) => x !== null && x !== undefined
+);
+
+// Evita inyectar HTML rompiendo el script: escapa solo `</` que cierra script.
+function safe(json: unknown): string {
+  return JSON.stringify(json).replace(/<\/script/gi, '<\\/script');
+}
+---
+
+{items.map((item) => (
+  <script type="application/ld+json" set:html={safe(item)} is:inline />
+))}

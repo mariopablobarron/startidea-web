@@ -1,11 +1,40 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    q: '¿La llamada es gratuita?',
+    a: 'Sí. 30 minutos sin compromiso, sin coste. La hacemos para entender si encajamos antes de que tú decidas invertir nada.',
+  },
+  {
+    q: '¿Trabajáis con presupuestos pequeños?',
+    a: 'Depende del problema. Hay proyectos de 3.000€ y proyectos de 300.000€. Lo que no hacemos es bajar la calidad para hacer caber un alcance grande en un presupuesto que no llega.',
+  },
+  {
+    q: '¿Trabajáis solo en Granada?',
+    a: 'No. Operamos desde Granada con clientes en toda España y proyectos europeos. Cerca cuando importa, lejos cuando hace falta.',
+  },
+  {
+    q: '¿Hace falta que llegue a la llamada con un brief?',
+    a: 'No. Una idea aproximada del reto basta. Si tienes un brief o una RFP, mejor — los leemos antes y la conversación rinde más.',
+  },
+];
+
+const jsonLd = [
+  faqPageSchema(faqs),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Contacto', url: `${SITE_URL}/contacto` },
+  ]),
+];
 ---
 
 <Base
   title="Contacto — Startidea"
   description="Reserva una llamada de diagnóstico de 30 minutos. Sin compromiso. Te decimos honestamente si somos el partner adecuado para tu reto."
   ogSlug="page/contacto"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

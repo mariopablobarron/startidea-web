@@ -1,0 +1,59 @@
+---
+import Base from '@/layouts/Base.astro';
+
+// Astro renderiza /500 cuando algo falla en runtime SSR. La marcamos noindex
+// para que Google no la indexe nunca aunque accidentalmente quede cacheada.
+---
+
+<Base
+  title="500 — Algo se rompió · Startidea"
+  description="Algo se ha roto en el servidor. No es culpa tuya. Vuelve a intentarlo en un minuto o avísanos."
+  ogSlug="page/404"
+  noindex={true}
+>
+  <section class="bg-paper py-24 md:py-36 lg:py-44">
+    <div class="container-x">
+      <span class="label">— Error 500</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Algo se ha roto<br/>
+        <em class="italic text-magenta">por dentro</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        El servidor falló al procesar esta petición. No es culpa tuya. Si puedes, vuelve a intentarlo en un minuto. Si persiste, avísanos por email y miramos qué pasó.
+      </p>
+
+      <div class="mt-12 flex flex-wrap gap-4">
+        <a href="/" class="btn">
+          Ir a la portada
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="javascript:location.reload()" class="btn-ghost">
+          Reintentar
+          <span aria-hidden="true">↻</span>
+        </a>
+        <a href="mailto:hola@startidea.es?subject=Error%20500%20en%20startidea.es" class="btn-ghost">
+          Avisarnos por email
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Mientras tanto</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ul class="divide-y divide-ink/15 border-y border-ink/15">
+            <li><a href="/casos" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Casos <span aria-hidden="true">→</span></a></li>
+            <li><a href="/notas" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Notas <span aria-hidden="true">→</span></a></li>
+            <li><a href="/manifiesto" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Manifiesto <span aria-hidden="true">→</span></a></li>
+            <li><a href="/contacto" class="flex items-center justify-between py-5 font-display text-2xl text-ink hover:text-magenta">Contacto <span aria-hidden="true">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -103,6 +103,11 @@
           class="w-full resize-none border border-ink bg-paper px-3 py-2.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
         ></textarea>
       </div>
+      <label class="flex items-start gap-3 text-xs leading-relaxed text-ink/80">
+        <input type="checkbox" name="consent" required
+          class="mt-0.5 h-4 w-4 flex-shrink-0 border-ink text-magenta focus:ring-magenta" />
+        <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener" class="link-underline text-ink">política de privacidad</a>.</span>
+      </label>
       <button id="chat-submit" type="submit" class="btn w-full justify-center">
         Enviar
         <span aria-hidden="true">→</span>
@@ -162,6 +167,7 @@
         email: data.get('email') || '',
         message: data.get('message') || '',
         path: window.location.pathname + window.location.search,
+        consent: data.get('consent') === 'on',
       };
 
       try {
@@ -181,6 +187,7 @@
           if (json.error === 'rate') msg = 'Espera unos segundos antes de reenviar.';
           if (json.error === 'email') msg = 'Revisa el email.';
           if (json.error === 'fields') msg = 'Rellena todos los campos.';
+          if (json.error === 'consent') msg = 'Marca la casilla de aceptación de la política de privacidad.';
           status.style.color = '#b42318';
           status.textContent = msg;
         }

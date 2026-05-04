@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { casos, getCasoBySlug } from '@/data/casos';
+import { caseStudySchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 export function getStaticPaths() {
   return casos.map((c) => ({ params: { slug: c.slug } }));
@@ -14,12 +15,30 @@ if (!caso) {
 
 const nextCaso = caso.next ? getCasoBySlug(caso.next) : null;
 const prevCaso = caso.prev ? getCasoBySlug(caso.prev) : null;
+
+const casoUrl = `${SITE_URL}/casos/${caso.slug}`;
+const jsonLd = [
+  caseStudySchema({
+    url: casoUrl,
+    title: `${caso.cliente} — ${caso.title}`,
+    description: caso.body,
+    cliente: caso.cliente,
+    year: caso.year,
+    image: `${SITE_URL}/og/casos/${caso.slug}.png`,
+  }),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Casos', url: `${SITE_URL}/casos` },
+    { name: caso.cliente, url: casoUrl },
+  ]),
+];
 ---
 
 <Base
   title={`${caso.cliente} — Casos · Startidea`}
   description={caso.body}
   ogSlug={`casos/${caso.slug}`}
+  jsonLd={jsonLd}
 >
   <!-- Cabecera del caso -->
   <article>

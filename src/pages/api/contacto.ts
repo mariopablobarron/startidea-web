@@ -40,12 +40,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const email = clean(body.email, 120);
   const message = clean(body.message, 2000);
   const path = clean(body.path, 200) || '/';
+  const consent = body.consent === true;
 
   if (!name || !email || !message) {
     return new Response(JSON.stringify({ ok: false, error: 'fields' }), { status: 400 });
   }
   if (!isEmail(email)) {
     return new Response(JSON.stringify({ ok: false, error: 'email' }), { status: 400 });
+  }
+  if (!consent) {
+    return new Response(
+      JSON.stringify({ ok: false, error: 'consent' }),
+      { status: 400 }
+    );
   }
 
   const ip = clientAddress || 'unknown';
@@ -60,7 +67,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     `<b>Nuevo mensaje · startidea.es</b>\n\n` +
     `<b>De:</b> ${escape(name)}\n` +
     `<b>Email:</b> ${escape(email)}\n` +
-    `<b>Página:</b> <code>${escape(path)}</code>\n\n` +
+    `<b>Página:</b> <code>${escape(path)}</code>\n` +
+    `<b>Consentimiento RGPD:</b> ${consent ? 'sí' : 'no'}\n\n` +
     `${escape(message)}`;
 
   try {
