@@ -1,0 +1,23 @@
+{
+  "name": "startidea/php-seo-connector",
+  "description": "Conector interno PHP para GA4, Search Console y oportunidades SEO.",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "google/apiclient": "^2.18"
+  },
+  "autoload": {
+    "psr-4": {
+      "Startidea\\SeoConnector\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@php -r \"is_dir('storage/logs') || mkdir('storage/logs', 0775, true);\""
+    ]
+  }
+}
