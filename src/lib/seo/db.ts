@@ -131,6 +131,23 @@ function migrate(db: Database.Database) {
       error_message TEXT
     );
     CREATE INDEX IF NOT EXISTS idx_runs_started ON seo_agent_runs(started_at DESC);
+
+    -- Salidas de los agentes IA SEO (analista semanal y redactor de drafts).
+    -- Separada de seo_agent_runs (que es para el sync de datos GA4/GSC).
+    CREATE TABLE IF NOT EXISTS seo_agent_outputs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      kind TEXT NOT NULL CHECK (kind IN ('analyst', 'writer')),
+      started_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+      finished_at INTEGER,
+      status TEXT NOT NULL DEFAULT 'running' CHECK (status IN ('running','success','failed')),
+      input_summary TEXT,           -- contexto de entrada (keyword, n. oportunidades, etc.)
+      output_md TEXT,               -- markdown legible (informe / draft)
+      output_json TEXT,             -- payload estructurado opcional (acciones, slug propuesto, etc.)
+      tokens_used INTEGER,
+      cost_usd REAL,
+      error_message TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_agent_outputs_kind_started ON seo_agent_outputs(kind, started_at DESC);
   `);
 }
 
