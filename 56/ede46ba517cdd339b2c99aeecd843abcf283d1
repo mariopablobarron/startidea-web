@@ -1,0 +1,24 @@
+Dockerfile
+  b78442cb34b5a574 11-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "56ede46ba517cdd339b2c99aeecd843abcf283d1",
+  "prompts": {
+    "b78442cb34b5a574": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55ef9caf-a45f-4a48-8b23-485a4a19dcc0",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 2,
+      "accepted_lines": 3,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/909f81a9cb9581b788f6251043bcd0dbeebb788fffce5ab6c2bd98d54de0991f"
+    }
+  }
+}
