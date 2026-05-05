@@ -1,0 +1,24 @@
+docs/INFRA.md
+  b78442cb34b5a574 63-66,68,70-73,132-135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "87c96ed7f88feeb2afc80a6ac432af444a91769d",
+  "prompts": {
+    "b78442cb34b5a574": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55ef9caf-a45f-4a48-8b23-485a4a19dcc0",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 22,
+      "accepted_lines": 13,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/a7e06f07432fd377ec2a4aee6914bf683918fea3bb74ebce3bab14e34a03f3b9"
+    }
+  }
+}
