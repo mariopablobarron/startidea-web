@@ -1,0 +1,52 @@
+# Template del docker-compose de producción para startidea-web.
+#
+# Este archivo se renderiza en el VPS sustituyendo las variables ${...}
+# con los valores de `infra/.env.production` (no versionado). El archivo
+# resultante vive en `/docker/startidea-web-traefik/docker-compose.yml`.
+#
+# Para regenerar tras cambiar variables:
+#   ssh startidea-vps2
+#   cd /docker/startidea-web-traefik
+#   # editar .env.production o copiar uno nuevo
+#   docker compose --env-file .env.production up -d --force-recreate startidea-web
+#
+# (Hoy el compose en el VPS tiene los valores hardcoded en lugar de ${VAR}
+# — pendiente migrar a este formato; ver INFRA.md → Deuda técnica.)
+
+services:
+  startidea-web:
+    image: cmoh7d8hi001bp2a4qwjobhzy:${IMAGE_TAG:-latest}
+    container_name: startidea-web
+    restart: unless-stopped
+    environment:
+      ADMIN_TOKEN: "${ADMIN_TOKEN}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      OPENROUTER_MODEL: "${OPENROUTER_MODEL:-anthropic/claude-haiku-4.5}"
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID}"
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      GOOGLE_REDIRECT_URI: "${GOOGLE_REDIRECT_URI:-https://startidea.es/admin/google/callback}"
+      APP_ENCRYPTION_KEY: "${APP_ENCRYPTION_KEY}"
+      SEO_DB_PATH: "${SEO_DB_PATH:-/app/data/seo.db}"
+    volumes:
+      - /docker/startidea-web-traefik/data:/app/data
+    networks:
+      - coolify
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: coolify
+      traefik.http.routers.startidea-web.rule: "Host(`startidea.es`)"
+      traefik.http.routers.startidea-web.entrypoints: websecure
+      traefik.http.routers.startidea-web.tls: "true"
+      traefik.http.routers.startidea-web.tls.certresolver: letsencrypt
+      traefik.http.routers.startidea-web.service: startidea-web
+      traefik.http.services.startidea-web.loadbalancer.server.port: "4321"
+      traefik.http.routers.startidea-web-http.rule: "Host(`startidea.es`)"
+      traefik.http.routers.startidea-web-http.entrypoints: web
+      traefik.http.routers.startidea-web-http.middlewares: startidea-web-redirect
+      traefik.http.middlewares.startidea-web-redirect.redirectscheme.scheme: https
+
+networks:
+  coolify:
+    external: true

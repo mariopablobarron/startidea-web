@@ -17,6 +17,11 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+# infra: el compose real con secretos vive solo en el VPS.
+# Versionamos infra/docker-compose.production.template.yml + .env.production.example
+infra/docker-compose.production.yml
+infra/.env.production
+
 # macOS
 .DS_Store
 
