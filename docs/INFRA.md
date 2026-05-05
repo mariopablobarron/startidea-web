@@ -60,16 +60,17 @@ reales y el `.env.production` están en `.gitignore`.
 - **DB**: SQLite en volume `coolify-db` → `/app/db/prod.db`
 - **Volúmenes**: `coolify-db`, `coolify-logs`, `coolify-ssl-certs`, `coolify-letsencrypt`,
   `coolify-traefik-letsencrypt`, `coolify-local-backup`, `/var/run/docker.sock`
-- **Puerto host**: ⚠️ actualmente NO expuesto al host por bug de iptables/docker.
-  Acceso temporal vía SSH tunnel:
+- **Acceso**: <https://coolify.startidea.es> (proxy Traefik con SSL Let's Encrypt).
+  El A record en IONOS apunta a 72.61.195.108. El puerto 3000 NO está
+  expuesto al host (bug de docker-proxy tras recreate); el subdominio
+  evita necesitar el binding directo.
 
-```bash
-ssh -f -N -L 13000:172.16.48.3:3000 startidea-vps2
-# panel en http://localhost:13000
-```
+  Túnel de emergencia si el subdominio falla:
 
-  Solución limpia pendiente: subdominio `coolify.startidea.es` vía Traefik
-  (ver "Deuda técnica").
+  ```bash
+  ssh -f -N -L 13000:172.16.48.3:3000 startidea-vps2
+  # panel en http://localhost:13000
+  ```
 
 ### Recrear el container Coolify
 
@@ -128,20 +129,10 @@ docker network connect coolify-infra coolify
    añaden al panel primero), o borrar las Secrets del panel y declarar
    el compose como única fuente.
 
-2. **Subdominio `coolify.startidea.es`**.
-   Al hacer `docker rm coolify` el `-p 3000:3000` se perdió y Docker no
-   regeneró iptables NAT. Crear `A coolify.startidea.es → 72.61.195.108`
-   en IONOS y añadir al container `coolify` los labels Traefik:
-
-   ```
-   traefik.enable=true
-   traefik.docker.network=coolify
-   traefik.http.routers.coolify-panel.rule=Host(`coolify.startidea.es`)
-   traefik.http.routers.coolify-panel.entrypoints=websecure
-   traefik.http.routers.coolify-panel.tls=true
-   traefik.http.routers.coolify-panel.tls.certresolver=letsencrypt
-   traefik.http.services.coolify-panel.loadbalancer.server.port=3000
-   ```
+2. ~~**Subdominio `coolify.startidea.es`**~~. RESUELTO 2026-05-05:
+   A record creado en IONOS, Coolify v3 lo enruta solo (sin labels
+   Traefik manuales) en cuanto detecta el FQDN configurado en el panel.
+   Cert SSL automático.
 
 3. **Bug visual chat IA**: las burbujas user/assistant no se diferencian
    estéticamente. CSS con `@apply` dentro de `<style>` en
