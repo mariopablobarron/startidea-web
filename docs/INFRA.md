@@ -115,6 +115,69 @@ docker network connect coolify-infra coolify
   08:40 hora Madrid. Reportes en local `reports/curator-YYYY-MM-DD.md`.
   Nunca hace `git commit`.
 
+## Deploy automático — GitHub Actions
+
+Coolify v3 con repo público (sin GitHub App) **NO procesa webhooks**:
+el handler `gitHubEvents` exige firma SHA256 con `webhookSecret`, y la
+tabla `GithubApp` está vacía. Por eso los pushes a `main` nunca dispararon
+builds automáticos. Lo que se construyó fue siempre por click manual.
+
+Solución actual: workflow `.github/workflows/deploy.yml` que hace SSH al
+VPS en cada push a `main` y ejecuta `/root/deploy-startidea-web.sh`.
+
+### Componentes
+
+| Pieza | Ubicación |
+|---|---|
+| Workflow | `.github/workflows/deploy.yml` |
+| Script en VPS | `/root/deploy-startidea-web.sh` |
+| SSH key dedicada | secret `VPS_SSH_KEY` en GitHub repo |
+| Fingerprint del VPS | hardcoded en el workflow (anti-MITM) |
+
+### authorized_keys con `command=` forzado
+
+La SSH key del workflow está restringida en `~/.ssh/authorized_keys` del
+root del VPS para que **solo pueda ejecutar el script de deploy**:
+
+```
+restrict,no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty,command="/root/deploy-startidea-web.sh" ssh-ed25519 AAAA…
+```
+
+Si alguien roba la key del secret de GitHub, no puede entrar al VPS
+en modo shell ni copiar archivos — solo dispara el deploy.
+
+### Cómo rotar la SSH key
+
+```bash
+# 1. Generar nueva key local
+ssh-keygen -t ed25519 -f /tmp/startidea_deploy_v2 -N '' -C "github-actions-v2"
+
+# 2. Añadir la pública al VPS (manteniendo la antigua para no perder acceso)
+PUB=$(cat /tmp/startidea_deploy_v2.pub)
+ssh startidea-vps2 "echo 'restrict,...,command=\"/root/deploy-startidea-web.sh\" $PUB' >> ~/.ssh/authorized_keys"
+
+# 3. Actualizar secret VPS_SSH_KEY en GitHub repo Settings → Secrets
+
+# 4. Probar el deploy con `gh workflow run deploy.yml` o un push trivial
+
+# 5. Eliminar la key antigua de authorized_keys
+```
+
+### Rollback rápido
+
+Si un deploy rompe la web:
+
+```bash
+ssh startidea-vps2
+cd /docker/startidea-web-traefik
+ls *.bak-*   # backups del compose
+cp docker-compose.yml.bak-<timestamp> docker-compose.yml
+docker compose up -d --force-recreate startidea-web
+```
+
+Cada deploy guarda un backup del compose anterior. La imagen previa
+sigue en docker images hasta el siguiente `docker image prune`.
+
 ## Sub-marcas (no migrar)
 
 - `hubstartidea.es` — Next.js, container `hub-startidea-web`. OK.
