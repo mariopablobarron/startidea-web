@@ -1,7 +1,9 @@
 node_modules
 dist
 .astro
-.git
+# .git incluido a propósito: /changelog lee `git log` en build time.
+# El multi-stage Dockerfile lo descarta en la imagen runtime
+# (solo copia /app/dist al runtime).
 .gitignore
 .env
 .env.*
