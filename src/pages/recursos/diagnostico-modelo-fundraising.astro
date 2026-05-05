@@ -189,6 +189,11 @@ import Base from '@/layouts/Base.astro';
         });
         var json = await r.json().catch(function () { return { ok: false }; });
         if (r.ok && json.ok) {
+          window.stTrack && window.stTrack('generate_lead', {
+            method: 'lead_magnet',
+            file_name: 'diagnostico-modelo-fundraising.pdf',
+            page_path: '/recursos/diagnostico-modelo-fundraising',
+          });
           window.location.href = '/recursos/gracias?slug=diagnostico-modelo-fundraising';
         } else {
           status.style.color = '#b42318';

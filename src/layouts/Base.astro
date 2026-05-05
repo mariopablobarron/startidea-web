@@ -1,11 +1,18 @@
 ---
 import '@/styles/global.css';
+// Self-host de fonts variable (un solo woff2 por familia para
+// todos los pesos 100-900, con subsets latin + latin-ext).
+// Reemplaza la petición a fonts.googleapis.com — más rápido y mejor RGPD.
+import '@fontsource-variable/montserrat';
+import '@fontsource-variable/montserrat/wght-italic.css';
+import '@fontsource-variable/jetbrains-mono';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
+import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import JsonLd from '@/components/JsonLd.astro';
 
 interface Props {
@@ -67,13 +74,8 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
     <GoogleTagManager />
+    <AnalyticsTracker />
     {jsonLd && <JsonLd data={jsonLd} />}
   </head>
   <body class="overflow-x-hidden">

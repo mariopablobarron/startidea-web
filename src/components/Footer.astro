@@ -69,7 +69,7 @@ const redes = [
           action="https://buttondown.email/api/emails/embed-subscribe/startidea"
           method="post"
           target="popupwindow"
-          onsubmit="window.open('https://buttondown.email/startidea', 'popupwindow')"
+          onsubmit="window.stTrack && window.stTrack('newsletter_subscribe', { placement: 'footer', page_path: location.pathname }); window.open('https://buttondown.email/startidea', 'popupwindow')"
         >
           <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
             <label class="sr-only" for="footer-newsletter-email">Tu email</label>

@@ -43,10 +43,11 @@ export default {
         signal: '#a83612',
       },
       fontFamily: {
-        // Una sola familia para display y sans — Montserrat con pesos contrastados
-        display: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
-        sans: ['Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Self-host vía @fontsource-variable/* (un solo woff2 por familia,
+        // todos los pesos 100-900). Fallback al stack del sistema.
+        display: ['"Montserrat Variable"', 'Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Montserrat Variable"', 'Montserrat', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"JetBrains Mono Variable"', '"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         // Escala display con clamp() — escala fluido desde móviles pequeños (360px)

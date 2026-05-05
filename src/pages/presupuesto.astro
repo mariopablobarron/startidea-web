@@ -432,6 +432,10 @@ const briefingPasos = [
         });
         const json = await r.json().catch(() => ({ ok: false }));
         if (r.ok && json.ok) {
+          window.stTrack && window.stTrack('generate_lead', {
+            method: 'presupuesto',
+            page_path: '/presupuesto',
+          });
           inputZone.innerHTML = '';
           bubble(diagnostico, 'agente');
           bubble('Recibido. En las próximas 24h te llega el presupuesto detallado a ' + email + '.', 'agente');

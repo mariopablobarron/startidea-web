@@ -1,0 +1,58 @@
+---
+/**
+ * Sistema de tracking de eventos al dataLayer (GA4 vía GTM).
+ *
+ * Expone window.stTrack(event, params) para llamadas programáticas
+ * (chat, form submit, etc.) y monta listeners que disparan
+ * automáticamente:
+ *
+ *   - cta_click       en cualquier elemento con [data-track="cta"]
+ *                     y opcional data-track-id="..." data-track-text="..."
+ *   - file_download   en <a> con [data-track="download"]
+ *                     leyendo file_name y file_extension del href
+ *
+ * Si el usuario rechaza cookies, GTM no se carga y los push al dataLayer
+ * caen al vacío (window.dataLayer existe pero nadie lo lee). Es seguro.
+ */
+---
+
+<script is:inline>
+  (function () {
+    window.dataLayer = window.dataLayer || [];
+
+    window.stTrack = function (event, params) {
+      try {
+        window.dataLayer.push(Object.assign({ event: event }, params || {}));
+      } catch (_) { /* no-op */ }
+    };
+
+    // CTA clicks delegated
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest && e.target.closest('[data-track]');
+      if (!el) return;
+      var kind = el.getAttribute('data-track');
+
+      if (kind === 'cta') {
+        window.stTrack('cta_click', {
+          cta_id: el.getAttribute('data-track-id') || '',
+          cta_text: (el.getAttribute('data-track-text') || el.textContent || '').trim().slice(0, 80),
+          page_path: location.pathname,
+        });
+        return;
+      }
+
+      if (kind === 'download') {
+        var href = el.getAttribute('href') || '';
+        var name = href.split('/').pop() || '';
+        var ext = name.includes('.') ? name.split('.').pop().toLowerCase() : '';
+        window.stTrack('file_download', {
+          file_name: name,
+          file_extension: ext,
+          link_url: href,
+          page_path: location.pathname,
+        });
+        return;
+      }
+    }, { capture: true });
+  })();
+</script>

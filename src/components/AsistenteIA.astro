@@ -126,12 +126,17 @@
     var history = [];
     var isStreaming = false;
 
+    var trackedOpen = false;
     function setOpen(open) {
       panel.style.display = open ? 'flex' : 'none';
       panel.classList.toggle('hidden', !open);
       [chip, chipMobile].forEach(function (b) { b && b.setAttribute('aria-expanded', String(open)); });
       if (open) {
         if (history.length === 0) saludarInicio();
+        if (!trackedOpen) {
+          trackedOpen = true;
+          window.stTrack && window.stTrack('chat_open', { page_path: location.pathname });
+        }
         setTimeout(function () { input && input.focus(); }, 100);
       }
     }
@@ -161,6 +166,11 @@
       if (!texto || isStreaming) return;
       appendBubble('user', texto);
       history.push({ role: 'user', content: texto });
+      var userTurns = history.filter(function (m) { return m.role === 'user'; }).length;
+      window.stTrack && window.stTrack('chat_message_sent', {
+        turn: userTurns,
+        page_path: location.pathname,
+      });
       input.value = '';
       input.style.height = '';
       isStreaming = true;
@@ -266,8 +276,19 @@
       })
         .then(function (r) { return r.json(); })
         .then(function (j) {
-          if (j.ok) appendBubble('assistant', 'He pasado la conversación al equipo. Si dejaste email, te contestan en las próximas 24h.');
-          else appendBubble('error', 'No se pudo enviar. Escribe a hola@startidea.es directamente.');
+          if (j.ok) {
+            window.stTrack && window.stTrack('chat_send_to_team', {
+              has_email: Boolean(email),
+              page_path: location.pathname,
+            });
+            window.stTrack && window.stTrack('generate_lead', {
+              method: 'chat_ia',
+              page_path: location.pathname,
+            });
+            appendBubble('assistant', 'He pasado la conversación al equipo. Si dejaste email, te contestan en las próximas 24h.');
+          } else {
+            appendBubble('error', 'No se pudo enviar. Escribe a hola@startidea.es directamente.');
+          }
         })
         .catch(function () {
           appendBubble('error', 'No se pudo enviar. Escribe a hola@startidea.es directamente.');

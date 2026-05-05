@@ -153,10 +153,39 @@ docker exec coolify sqlite3 /app/db/prod.db \
 (Hecho 2026-05-04 para recuperar acceso. Cambiar a una contraseña que
 recuerdes desde el panel: IAM → Profile → Change password.)
 
-## Monitorización pendiente
+## Monitorización
 
-- Sin uptime monitor externo. Recomendado: BetterStack o UptimeRobot
-  pingando `https://startidea.es/` cada 60 s.
-- Sin alertas de steal time (incidente de 2026-05-04: 92 % steal sostenido,
-  Hostinger lo resolvió tras notificación). Conviene script que avise si
-  `cat /proc/stat` muestra steal > 20 % sostenido.
+### Uptime externo (pendiente activar)
+
+Endpoint listo: `https://startidea.es/api/health`. Devuelve JSON con
+`ok: true|false`, timestamp, build tag y checks (config Telegram +
+OpenRouter). Variante "deep" `?deep=1` además golpea OpenRouter para
+verificar conectividad del modelo IA (timeout 4 s).
+
+Recomendado: **UptimeRobot** (gratis hasta 50 monitors, alertas por
+email/Telegram).
+
+1. Cuenta en <https://uptimerobot.com>.
+2. Add Monitor → tipo **HTTP(s)** → URL `https://startidea.es/api/health`.
+3. **Keyword**: `"ok":true` (substring match).
+4. **Interval**: 1 min (gratuito).
+5. **Alert contacts**: tu email + el bot Telegram (@Agenciastartideabot —
+   crea un canal o chat dedicado para alertas).
+6. Opcional: segundo monitor para `?deep=1` cada 5 min, no como crítico.
+
+Alternativa: **BetterStack Uptime** (10 monitors gratis, mejor UI,
+status page pública incluida).
+
+### Alertas de steal time (pendiente)
+
+Incidente 2026-05-04: 92 % steal sostenido durante ~30 min, Hostinger lo
+resolvió tras notificación. Conviene script en el VPS que avise si
+`steal/total` > 20 % sostenido más de 5 min:
+
+```bash
+# /etc/cron.d/steal-alert (cada minuto, alerta a Telegram si steal alto)
+* * * * * root /usr/local/bin/steal-alert.sh
+```
+
+Pendiente escribir el `.sh` que lea `/proc/stat`, calcule delta vs hace
+5 min, y haga `curl` a la API de Telegram si supera el umbral.
