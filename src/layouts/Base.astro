@@ -77,6 +77,8 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <GoogleTagManager />
     <AnalyticsTracker />
     {jsonLd && <JsonLd data={jsonLd} />}
+    <!-- Umami analytics (privacy-first) -->
+    <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="17ae1dd4-5e8f-45da-870e-f86df6d41e77"></script>
   </head>
   <body class="overflow-x-hidden">
     <Splash />
