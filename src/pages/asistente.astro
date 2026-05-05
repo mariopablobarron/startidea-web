@@ -1,0 +1,243 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    q: '¿Qué hace exactamente el asistente?',
+    a: 'Responde preguntas sobre los servicios, precios orientativos, casos publicados y método de Startidea. Si encajáis, ayuda a empezar un diagnóstico humano. Si no encajáis, lo dice claro y orienta hacia otra alternativa.',
+  },
+  {
+    q: '¿Qué modelo de IA usa?',
+    a: 'Claude Haiku 4.5 de Anthropic, vía OpenRouter como proxy. Modelo rápido y económico, suficiente para conversación corta orientativa. No se ha entrenado un modelo propio: se le pasa la knowledge base de la casa en cada consulta.',
+  },
+  {
+    q: '¿Qué guarda de mi conversación?',
+    a: 'Por defecto, nada en servidores de Startidea. Solo si pulsas "Pasar al equipo" se envía la transcripción al canal de Telegram interno para que el equipo humano pueda responder. OpenRouter, como proveedor del modelo, tiene su propia política de privacidad — no almacena prompts más allá del procesado salvo que se configure expresamente, lo cual no se ha hecho aquí.',
+  },
+  {
+    q: '¿Qué información usa para responder?',
+    a: 'Cinco archivos de texto plano que viven en el repositorio público de la web (src/content/knowledge/): identidad, servicios y precios, método, FAQ y rol del asistente. No tiene acceso a CRM, ni a base de clientes, ni a datos de proyectos en curso.',
+  },
+  {
+    q: '¿Puede equivocarse?',
+    a: 'Sí. Es una IA generativa con limitaciones conocidas. Para precios formales, plazos y compromisos se cierra siempre con persona humana en una llamada de diagnóstico de 30 minutos gratuita. Si el bot dice algo que choca con la información oficial de la web, manda la oficial.',
+  },
+  {
+    q: '¿Cuándo conviene "Pasar al equipo"?',
+    a: 'Cuando la conversación ya tiene contexto suficiente y quieres una propuesta concreta, o cuando el bot no resuelve y prefieres pasar a humano. El botón está arriba a la derecha del panel del chat. Al pulsarlo, te pide email opcional y manda toda la conversación al canal interno.',
+  },
+  {
+    q: '¿Cuánto cuesta usarlo?',
+    a: 'Para ti, nada. Para Startidea, ~$0.004 por turno típico (3.500 tokens × $0.001/1K). Coste asumido como inversión en accesibilidad: que cualquier persona, a cualquier hora, pueda hacer la primera consulta sin agendar.',
+  },
+  {
+    q: '¿Funciona si rechazo las cookies?',
+    a: 'Sí. El asistente no necesita cookies de tracking para funcionar — solo localStorage para recordar si has aceptado la política de cookies del sitio. Si rechazas, la conversación funciona igual; lo único que no se carga es Google Tag Manager.',
+  },
+];
+
+const jsonLd = [
+  faqPageSchema(faqs),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Asistente', url: `${SITE_URL}/asistente` },
+  ]),
+];
+---
+
+<Base
+  title="Asistente IA — Startidea"
+  description="Cómo funciona el asistente conversacional de startidea.es: qué modelo usa, qué guarda, qué no hace, y cuándo conviene pasar a humano."
+  ogSlug="page/asistente"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Asistente IA</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Una IA<br/>
+        <em class="italic text-magenta">con honestidad</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        El chip "Asistente IA" abajo a la derecha es un bot conversacional conectado a la base de conocimiento de Startidea. Está pensado para resolver dudas básicas y derivar a humano cuando la conversación lo merece. Esta página explica cómo funciona, qué guarda y qué no, y cuándo conviene saltarlo.
+      </p>
+      <div class="mt-10">
+        <button
+          type="button"
+          onclick="document.getElementById('ai-chip')?.click() || document.getElementById('ai-chip-mobile')?.click()"
+          class="btn"
+          data-track="cta"
+          data-track-id="asistente_abrir_chip"
+        >
+          Abrir el asistente
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sí / No -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-6">
+          <span class="label">— Lo que sí hace</span>
+          <ul class="mt-6 space-y-4">
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Saludar, preguntar tipología y reto, escuchar.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Recomendar servicios concretos del catálogo.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Dar precios "desde X €" cuando proceda.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Proponer reservar diagnóstico gratuito de 30 min.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Pasar la conversación al equipo humano si lo pides.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-span-12 lg:col-span-6">
+          <span class="label">— Lo que no hace</span>
+          <ul class="mt-6 space-y-4">
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Inventar precios fuera del catálogo publicado.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Prometer plazos ni alcance no validado.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Hablar de clientes o casos no publicados.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Meterse en política, salud o temas fuera de alcance.</p>
+            </li>
+            <li class="flex items-start gap-3 border-t border-ink/15 pt-4">
+              <span class="mt-2 inline-block h-px w-3 flex-shrink-0 bg-ink/40"></span>
+              <p class="font-display text-xl text-ink md:text-2xl">Recoger ni almacenar tu conversación por defecto.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detrás del telón -->
+  <section class="bg-paper-warm py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Detrás del telón</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <dl class="divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Modelo</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                Claude Haiku 4.5 de Anthropic, servido a través de OpenRouter.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Conocimiento</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                Cinco archivos Markdown públicos en
+                <a href="https://github.com/mariopablobarron/startidea-web/tree/main/src/content/knowledge" class="link-underline" target="_blank" rel="noopener">src/content/knowledge/</a>
+                — identidad, servicios y precios, método, FAQ y rol del asistente.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Almacenamiento</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                Ninguno por defecto. Solo si pulsas "Pasar al equipo" se envía la transcripción al canal interno de Telegram, con consent explícito.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Cookies</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                Cero. Funciona también si rechazas el banner de cookies.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Coste</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                Para ti, ninguno. Para Startidea, ~$0.004 por turno típico.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Código fuente</dt>
+              <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
+                <a href="https://github.com/mariopablobarron/startidea-web/blob/main/src/pages/api/chat.ts" class="link-underline" target="_blank" rel="noopener">/api/chat</a>
+                + <a href="https://github.com/mariopablobarron/startidea-web/blob/main/src/components/AsistenteIA.astro" class="link-underline" target="_blank" rel="noopener">AsistenteIA.astro</a>. Auditable.
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <dl class="divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <details class="group py-5">
+                <summary class="cursor-pointer font-display text-xl text-ink hover:text-magenta md:text-2xl">
+                  {f.q}
+                </summary>
+                <p class="mt-3 max-w-measure leading-relaxed text-ink/85">
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Si prefieres humano directo</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            <em class="italic text-magenta">Treinta minutos</em><br/>
+            con persona, sin compromiso.
+          </h2>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="/contacto"
+              class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"
+              data-track="cta" data-track-id="asistente_reservar_diagnostico"
+            >
+              Reservar diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

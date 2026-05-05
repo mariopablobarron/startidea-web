@@ -1,0 +1,265 @@
+---
+import Base from '@/layouts/Base.astro';
+import { Image } from 'astro:assets';
+import marioImg from '@/assets/brand/mario-fundador.jpg';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Prensa', url: `${SITE_URL}/prensa` },
+]);
+
+const datosClave = [
+  { label: 'Razón social', value: 'Startidea' },
+  { label: 'CIF', value: 'B19583632' },
+  { label: 'Sede', value: 'C/ Conde Cifuentes, 33 · 18005 Granada' },
+  { label: 'Fundación', value: 'Febrero de 2011' },
+  { label: 'Fundador', value: 'Mario Pablo Sánchez Barrón' },
+  { label: 'Disciplinas', value: 'Consultoría, Comunicación, Audiovisual, Tecnología, Fundraising' },
+  { label: 'Audiencias', value: 'Tercer sector, instituciones, empresas con propósito' },
+  { label: 'Hub físico', value: 'Hub Startidea — coworking, salas de formación, estudio podcast' },
+  { label: 'Contacto prensa', value: 'hola@startidea.es' },
+  { label: 'Teléfono', value: '+34 958 045 789' },
+];
+
+const logos = [
+  { name: 'Logo principal — color', src: '/brand/logo-original.png', sizeNote: 'PNG · 2× retina', kind: 'PNG' },
+  { name: 'Logo principal — vector', src: '/brand/logo-original.pdf', sizeNote: 'PDF', kind: 'PDF' },
+  { name: 'Logo en negro', src: '/brand/logo-negro.png', sizeNote: 'PNG', kind: 'PNG' },
+  { name: 'Logo en blanco (sobre fondo oscuro)', src: '/brand/logo-blanco.png', sizeNote: 'PNG', kind: 'PNG' },
+  { name: 'Logo en rosa magenta', src: '/brand/logo-rosa.png', sizeNote: 'PNG', kind: 'PNG' },
+  { name: 'Logo rosa — vector', src: '/brand/logo-rosa.pdf', sizeNote: 'PDF', kind: 'PDF' },
+  { name: 'Isotipo', src: '/brand/logo-isotipo-only.png', sizeNote: 'PNG', kind: 'PNG' },
+  { name: 'Identidad iOS / PWA (S blanca sobre magenta)', src: '/icon-512.png', sizeNote: 'PNG 512×512', kind: 'PNG' },
+];
+
+const lineaTiempo = [
+  { year: '2011', text: 'Mario Pablo Sánchez Barrón funda Startidea en Granada.' },
+  { year: '2016', text: 'Bronze Partner de FYVAR, federación nacional del merchandising publicitario.' },
+  { year: '2020', text: 'Pivot completo hacia innovación social. Foco en el tercer sector.' },
+  { year: '2022', text: 'Hub Startidea: coworking + estudio de podcast en el centro de Granada.' },
+  { year: '2023', text: 'Alianza con Granada Social — medio sociocultural propio.' },
+  { year: '2024', text: 'Lanzamiento de iniciativas digitales propias (3000 millones de latidos, etc.).' },
+  { year: '2026', text: 'Web rehecha desde cero en Astro 5 + asistente IA conectado a la base de conocimiento de la casa.' },
+];
+---
+
+<Base
+  title="Prensa — Startidea"
+  description="Datos, logos y biografía para periodistas. Contacto directo de prensa de Startidea — innovación social desde Granada desde 2011."
+  ogSlug="page/prensa"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Prensa</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Materiales para<br/>
+        <em class="italic text-magenta">contar bien</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Si estás escribiendo sobre innovación social, tercer sector, o sobre Startidea en concreto, aquí tienes lo que necesitas para no tener que preguntarnos cosas básicas. Para entrevistas o ángulos específicos, escribe a <a href="mailto:hola@startidea.es?subject=Solicitud%20de%20prensa" class="link-underline text-ink">hola@startidea.es</a> y te respondemos en 24 horas laborables.
+      </p>
+    </div>
+  </section>
+
+  <!-- Quién es Startidea (boilerplate) -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Boilerplate</span>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Listo para copiar/pegar al pie de tu artículo</p>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <div class="border-l-2 border-magenta pl-6">
+            <p class="font-display text-2xl leading-snug text-ink md:text-3xl">
+              Startidea es una agencia de innovación social fundada en Granada en 2011. Trabaja con organizaciones del tercer sector, instituciones y empresas con propósito real combinando cinco disciplinas bajo un mismo techo: consultoría, comunicación, audiovisual, tecnología y fundraising. Con sede en el Hub Startidea (C/ Conde Cifuentes 33, Granada).
+            </p>
+            <p class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+              ~ 70 palabras · español neutro España
+            </p>
+          </div>
+
+          <details class="mt-10 border-t border-ink/15 pt-6">
+            <summary class="cursor-pointer font-display text-xl text-ink hover:text-magenta">Versión corta (~ 25 palabras)</summary>
+            <p class="mt-4 font-display text-xl leading-snug text-ink/85">
+              Startidea es una agencia de innovación social en Granada que trabaja con organizaciones del tercer sector, instituciones y empresas con propósito desde 2011.
+            </p>
+          </details>
+
+          <details class="mt-6 border-t border-ink/15 pt-6">
+            <summary class="cursor-pointer font-display text-xl text-ink hover:text-magenta">Versión larga (~ 130 palabras)</summary>
+            <p class="mt-4 leading-relaxed text-ink/85">
+              Startidea es una agencia de innovación social fundada en febrero de 2011 en Granada por Mario Pablo Sánchez Barrón. Acompaña a organizaciones del tercer sector, instituciones públicas y empresas con propósito real en proyectos de comunicación, captación de fondos, producción audiovisual, consultoría estratégica y desarrollo tecnológico. Su filosofía editorial es decir que "no" cuando un encargo no encaja con la causa social y subcontratar perfiles especializados antes que ofrecer talento que no se tiene en casa. Opera desde el Hub Startidea, un espacio físico en el centro de Granada que combina coworking, salas de formación y estudio de podcast. Es socia activa de AJE Granada, FYVAR, Cámara de Comercio de Granada, Film in Granada, Universidad de Granada y otras redes profesionales.
+            </p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos clave -->
+  <section class="bg-paper-warm py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Datos clave</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <dl class="divide-y divide-ink/15 border-y border-ink/15">
+            {datosClave.map((d) => (
+              <div class="grid grid-cols-12 gap-x-8 py-5">
+                <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">
+                  {d.label}
+                </dt>
+                <dd class="col-span-12 mt-1 font-display text-lg text-ink lg:col-span-8 lg:mt-0 lg:text-xl">
+                  {d.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Línea de tiempo -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Línea de tiempo</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ol class="space-y-6">
+            {lineaTiempo.map((h) => (
+              <li class="grid grid-cols-12 gap-x-6 border-t border-ink/15 pt-5">
+                <span class="num-edit col-span-3 text-3xl text-magenta md:col-span-2 md:text-4xl">{h.year}</span>
+                <p class="col-span-9 font-display text-lg leading-snug text-ink md:col-span-10 md:text-xl">{h.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fundador -->
+  <section class="bg-paper-warm py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Portavoz / fundador</span>
+        </div>
+        <div class="col-span-12 grid grid-cols-12 gap-x-8 gap-y-6 lg:col-span-9">
+          <div class="col-span-12 sm:col-span-4">
+            <Image
+              src={marioImg}
+              alt="Mario Pablo Sánchez Barrón, fundador de Startidea, mirando a cámara con expresión amable."
+              widths={[320, 480, 640]}
+              sizes="(min-width: 640px) 240px, 100vw"
+              format="webp"
+              quality={82}
+              class="aspect-[4/5] w-full object-cover"
+            />
+            <p class="mt-3 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Foto en alta resolución disponible bajo solicitud por email.
+            </p>
+          </div>
+          <div class="col-span-12 sm:col-span-8">
+            <p class="font-display text-2xl leading-snug text-ink md:text-3xl">
+              Mario Pablo Sánchez Barrón
+            </p>
+            <p class="mt-2 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+              Fundador · Director general
+            </p>
+            <p class="mt-5 leading-relaxed text-ink/85">
+              Comunicador audiovisual y consultor con más de 15 años de trayectoria. Funda Startidea en 2011 con la convicción de que la comunicación social debe medirse por el impacto que genera, no por su volumen. Habla con frecuencia en foros y en universidades sobre fundraising, modelos de financiación del tercer sector, y la relación entre comunicación y propósito.
+            </p>
+            <p class="mt-4 leading-relaxed text-ink/85">
+              Disponible para entrevistas en español sobre: <strong>tercer sector y cambio social, fundraising y captación de fondos, comunicación con propósito, modelos de empresa social, ecosistema cultural y empresarial de Granada</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logos descargables -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Logotipos</span>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Click derecho → guardar enlace como…</p>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <ul class="grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+            {logos.map((l) => (
+              <li class="flex flex-col gap-3 bg-paper p-5">
+                <a
+                  href={l.src}
+                  download
+                  data-track="download"
+                  class="block aspect-video bg-paper-warm p-6 transition-colors hover:bg-paper-deep"
+                >
+                  <img src={l.src} alt={l.name} class="h-full w-full object-contain" loading="lazy" />
+                </a>
+                <div class="flex items-baseline justify-between gap-3">
+                  <span class="font-display text-sm leading-tight text-ink">{l.name}</span>
+                  <span class="flex-shrink-0 border border-ink/30 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/70">{l.kind}</span>
+                </div>
+                <a
+                  href={l.src}
+                  download
+                  data-track="download"
+                  class="link-underline self-start font-mono text-[10px] uppercase tracking-widest text-ink hover:text-magenta"
+                >
+                  Descargar ↓
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA contacto prensa -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Contacto prensa</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            ¿Necesitas algo<br/>
+            <em class="italic text-magenta">que no esté aquí</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-paper/85">
+            Foto en alta de archivo, dosier completo en PDF, declaraciones específicas, datos sobre el ecosistema social de Granada, dossier sobre alguna disciplina concreta — pídelo y se prepara.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="mailto:hola@startidea.es?subject=Solicitud%20de%20prensa"
+              class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"
+              data-track="cta" data-track-id="prensa_email"
+            >
+              hola@startidea.es
+              <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="tel:+34958045789"
+              class="btn-ghost !text-paper !border-paper/50 hover:!bg-paper hover:!text-ink"
+              data-track="cta" data-track-id="prensa_telefono"
+            >
+              +34 958 045 789
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,134 @@
+---
+import Base from '@/layouts/Base.astro';
+import { readChangelog, typeLabel, typeColor } from '@/lib/changelog';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const groups = readChangelog(80);
+const totalEntries = groups.reduce((acc, g) => acc + g.entries.length, 0);
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Changelog', url: `${SITE_URL}/changelog` },
+]);
+
+// Repositorio público en GitHub: usado para generar enlaces a commits.
+const REPO = 'https://github.com/mariopablobarron/startidea-web';
+---
+
+<Base
+  title="Changelog — Startidea"
+  description="Lo que ha cambiado en startidea.es. Lista pública de commits del repositorio, generada automáticamente en cada despliegue."
+  ogSlug="page/changelog"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Changelog</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Cambios<br/>
+        <em class="italic text-magenta">en abierto</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        El código de esta web es público. Esta página se genera automáticamente desde el git log del <a href={REPO} target="_blank" rel="noopener" class="link-underline text-ink">repositorio</a> en cada despliegue. Los commits están agrupados por mes y enlazan al diff completo.
+      </p>
+      <p class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        {totalEntries} cambios · últimos {groups.length} meses con actividad
+      </p>
+    </div>
+  </section>
+
+  <!-- Lista por mes -->
+  <section class="bg-paper py-20 md:py-24">
+    <div class="container-x">
+      {groups.length === 0 ? (
+        <p class="text-ink/70">No hay commits disponibles. ¿Estás viendo esto fuera de un build con repositorio git?</p>
+      ) : (
+        <div class="space-y-20">
+          {groups.map((g) => (
+            <section>
+              <header class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+                <div class="col-span-12 lg:col-span-3">
+                  <span class="label">— {g.yearMonth}</span>
+                  <p class="mt-3 font-display text-2xl capitalize text-ink md:text-3xl">{g.label}</p>
+                  <p class="mt-2 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                    {g.entries.length} cambio{g.entries.length === 1 ? '' : 's'}
+                  </p>
+                </div>
+                <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+                  <ol class="divide-y divide-ink/15 border-y border-ink/15">
+                    {g.entries.map((e) => {
+                      const colorCls = typeColor(e.type);
+                      return (
+                        <li class="grid grid-cols-12 gap-x-6 gap-y-1 py-4">
+                          <div class="col-span-12 sm:col-span-3 lg:col-span-2">
+                            <span class={`font-mono text-[11px] uppercase tracking-widest ${colorCls}`}>
+                              {typeLabel(e.type)}
+                            </span>
+                            {e.scope && (
+                              <p class="mt-0.5 font-mono text-[10px] tracking-wider text-ink-mute">
+                                / {e.scope}
+                              </p>
+                            )}
+                          </div>
+                          <div class="col-span-12 sm:col-span-9 lg:col-span-10">
+                            <p class="font-display text-base leading-snug text-ink md:text-lg">
+                              {e.summary}
+                            </p>
+                            <p class="mt-1 flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                              <a
+                                href={`${REPO}/commit/${e.hash}`}
+                                target="_blank"
+                                rel="noopener"
+                                class="link-underline hover:text-ink"
+                              >
+                                {e.shortHash}
+                              </a>
+                              <span aria-hidden="true">·</span>
+                              <time datetime={e.date}>{e.date.slice(0, 10)}</time>
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              </header>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA: ver repo completo -->
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label">— Repositorio público</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Si te interesa el<br/>
+            <em class="italic text-magenta">cómo</em>, está todo ahí.
+          </h2>
+          <p class="mt-6 max-w-measure text-ink/85">
+            La web entera (frontend Astro, asistente IA, lead magnets, panel SEO) vive en abierto en GitHub. No solo el qué publicamos, también el cómo lo construimos.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href={REPO}
+              target="_blank"
+              rel="noopener"
+              class="btn"
+              data-track="cta"
+              data-track-id="changelog_ver_repo"
+            >
+              Ver repositorio en GitHub
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
