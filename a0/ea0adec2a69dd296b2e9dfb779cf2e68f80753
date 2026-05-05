@@ -1,0 +1,24 @@
+.dockerignore
+  b78442cb34b5a574 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "a0ea0adec2a69dd296b2e9dfb779cf2e68f80753",
+  "prompts": {
+    "b78442cb34b5a574": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55ef9caf-a45f-4a48-8b23-485a4a19dcc0",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 1,
+      "accepted_lines": 3,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/dbacc8881e8251993c761ff0faf5cded7aa9db6656391bfc37d6ebba058b74bc"
+    }
+  }
+}
