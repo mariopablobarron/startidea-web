@@ -1,0 +1,40 @@
+src/layouts/Base.astro
+  ca8f2096758898f5 80-81
+reports/curator-2026-05-05.md
+  8bb86a2490a500d7 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "d092ddeda4f07454e3cc76c2d356cbf8b93cc4d4",
+  "prompts": {
+    "8bb86a2490a500d7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cd037f7-fea1-4926-9f34-fdcd6e207113",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron",
+      "messages": [],
+      "total_additions": 51,
+      "total_deletions": 0,
+      "accepted_lines": 51,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/0524605262afa46bdac3b26d705e131942b47ebe6a80fd45e19f8d739338370f"
+    },
+    "ca8f2096758898f5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "956685d7-12e3-4b4a-b2a4-3f5bb69747d0",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/26f2bd57644a70a3d33bcdb7549f31a8f43870aeefa98eebbfca152eb91de90f"
+    }
+  }
+}
