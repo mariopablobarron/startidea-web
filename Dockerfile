@@ -8,8 +8,9 @@ ARG PUBLIC_GOOGLE_SITE_VERIFICATION=""
 ENV PUBLIC_GTM_ID=$PUBLIC_GTM_ID
 ENV PUBLIC_GOOGLE_SITE_VERIFICATION=$PUBLIC_GOOGLE_SITE_VERIFICATION
 
-# Build tools para módulos nativos (better-sqlite3)
-RUN apk add --no-cache python3 make g++
+# Build tools para módulos nativos (better-sqlite3) y git para que
+# /changelog pueda leer el historial en build time vía src/lib/changelog.ts.
+RUN apk add --no-cache python3 make g++ git
 
 # Instalamos dependencias primero (mejor caché de capas)
 COPY package.json package-lock.json ./
