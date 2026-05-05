@@ -99,15 +99,17 @@ const redes = [
       </div>
     </div>
 
-    <!-- Línea editorial superior -->
-    <div class="grid gap-12 lg:grid-cols-12">
-      <div class="lg:col-span-4">
-        <Logo height={64} />
+    <!-- Línea editorial superior — Diego v60: logo más grande (similar al
+         del header) y bloque editorial centrado verticalmente con los
+         títulos de las columnas Disciplinas/Propiedades/etc. -->
+    <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
+      <div class="lg:col-span-4 flex flex-col items-start">
+        <Logo class="h-20 sm:h-24 md:h-28 lg:h-32 xl:h-36" />
         <p class="mt-8 max-w-md font-display text-3xl font-extrabold leading-[1.05] tracking-tight text-ink md:text-4xl">
           Innovación social <em class="italic text-magenta">que se nota</em>.
         </p>
         <p class="mt-5 max-w-md text-sm leading-relaxed text-ink/70">
-          Estrategia, comunicación y herramientas para organizaciones que existen para algo más. Granada, España.
+          Estrategia, comunicación y herramientas para organizaciones que existen para algo más.
         </p>
         <div class="mt-8">
           <a href="/contacto" class="btn-ghost">

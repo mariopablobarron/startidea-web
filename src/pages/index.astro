@@ -28,11 +28,14 @@ import { organizationSchema, websiteSchema } from '@/lib/jsonld';
   <Hero />
   <MetricasHero />
   <ParaQuien />
-  <Casos />
-  <HanConfiado />
+  {/* Diego v60: Casos no debe quedar por encima de Servicios. La nav
+      "Servicios" hace scroll a #ecosistema, así que Ecosistema va antes
+      que Casos para que al aterrizar el usuario no vea Casos arriba. */}
   <Ecosistema />
   <ComoTrabajamos />
   <PresupuestoHome />
+  <Casos />
+  <HanConfiado />
   <DiagnosticosHome />
   <RecursosHome />
   <LogosClientes />
