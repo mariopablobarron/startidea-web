@@ -1,0 +1,37 @@
+---
+// Microsoft Clarity (heatmaps + session replay).
+// Carga lazy y solo tras consent ('all') del banner de cookies, igual
+// que GTM para consistencia GDPR. Project ID configurable via env;
+// fallback al ID actual de startidea.es para no romper si falta env.
+const clarityId =
+  import.meta.env.PUBLIC_CLARITY_ID || '83cb1d3176084574bd2a99701400aceb';
+---
+
+{clarityId && (
+  <script is:inline define:vars={{ clarityId }}>
+    (function () {
+      var KEY = 'startidea.cookieconsent.v1';
+      var loaded = false;
+
+      function hasConsent() {
+        try { return localStorage.getItem(KEY) === 'all'; } catch (_) { return false; }
+      }
+
+      function loadClarity() {
+        if (loaded || !clarityId) return;
+        loaded = true;
+        (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+        })(window, document, 'clarity', 'script', clarityId);
+      }
+
+      if (hasConsent()) loadClarity();
+      document.addEventListener('cookieconsent:all', loadClarity);
+    })();
+  </script>
+)}

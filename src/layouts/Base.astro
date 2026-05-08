@@ -13,6 +13,7 @@ import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
+import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
 import JsonLd from '@/components/JsonLd.astro';
 
 interface Props {
@@ -76,6 +77,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
     <GoogleTagManager />
     <AnalyticsTracker />
+    <MicrosoftClarity />
     {jsonLd && <JsonLd data={jsonLd} />}
     <!-- Umami analytics (privacy-first) -->
     <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="17ae1dd4-5e8f-45da-870e-f86df6d41e77"></script>
