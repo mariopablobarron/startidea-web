@@ -1,0 +1,35 @@
+src/components/MicrosoftClarity.astro
+  s_86996880ef7d28::t_b913be8cdbe1a4 1-37
+src/layouts/Base.astro
+  s_86996880ef7d28::t_68b06cc8e2ba0b 80
+  s_86996880ef7d28::t_52bae7815aeddb 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "03c5f9652d9138b4625063bd7655e39f42da952a",
+  "prompts": {
+    "3aba240e2f2c3e13": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a2db8bce-24a8-4b52-8133-cb5fab104dca",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>",
+      "total_additions": 51,
+      "total_deletions": 0,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  },
+  "sessions": {
+    "s_86996880ef7d28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4baeaaf7-b777-49ff-aa60-0e0373777675",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
