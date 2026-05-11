@@ -1,0 +1,23 @@
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_fc84abf46d9a4c::t_0cc157ced10eae 2-3,7
+  s_fc84abf46d9a4c::t_802261aeafaa32 1,4-6,8-14,16-27,38-65,67-81
+  s_fc84abf46d9a4c::t_245d8cae3373fb 28-37
+  s_fc84abf46d9a4c::t_d212497a09520b 66
+  s_fc84abf46d9a4c::t_cef6a48f74721d 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "340351dc66216cc8868de8549787c8fbaf55dfd0",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
