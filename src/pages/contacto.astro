@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { faqPageSchema, breadcrumbList, localBusinessSchema, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
@@ -27,12 +27,13 @@ const jsonLd = [
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Contacto', url: `${SITE_URL}/contacto` },
   ]),
+  localBusinessSchema(),
 ];
 ---
 
 <Base
-  title="Contacto — Startidea"
-  description="Reserva una llamada de diagnóstico de 30 minutos. Sin compromiso. Te decimos honestamente si somos el partner adecuado para tu reto."
+  title="Contacta con Startidea — Diagnóstico gratuito · Granada"
+  description="Reserva una llamada de 30 minutos con Startidea. Sin compromiso. Si encajamos, lanzamos un diagnóstico para tu organización; si no, te orientamos hacia quien sí. Granada — C/ Conde Cifuentes 33."
   ogSlug="page/contacto"
   jsonLd={jsonLd}
 >

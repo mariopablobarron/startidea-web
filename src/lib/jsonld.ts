@@ -55,6 +55,49 @@ export function organizationSchema() {
   return { '@context': 'https://schema.org', ...ORG };
 }
 
+/**
+ * LocalBusiness — para keywords geolocalizadas: "agencia comunicación granada",
+ * "startidea granada", "consultoría innovación social granada", etc.
+ * Google muestra rich results y Local Pack para queries con intención local.
+ *
+ * Reusa los datos de ORG pero añade geo, openingHours y priceRange para
+ * cumplir el schema completo.
+ */
+export function localBusinessSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${SITE_URL}/#localbusiness`,
+    name: ORG.name,
+    url: SITE_URL,
+    image: ORG.logo.url,
+    description: ORG.description,
+    telephone: ORG.telephone,
+    email: ORG.email,
+    address: ORG.address,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 37.1759,
+      longitude: -3.5965,
+    },
+    areaServed: [
+      { '@type': 'City', name: 'Granada' },
+      { '@type': 'AdministrativeArea', name: 'Andalucía' },
+      { '@type': 'Country', name: 'España' },
+    ],
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00',
+      },
+    ],
+    priceRange: '€€',
+    sameAs: ORG.sameAs,
+  };
+}
+
 export function websiteSchema() {
   return {
     '@context': 'https://schema.org',

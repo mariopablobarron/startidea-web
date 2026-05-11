@@ -46,6 +46,16 @@ export default defineConfig({
     '/casos/valientes/':                                  '/casos/acogimiento-familiar-granada',
     '/casos/relevos-vida':                                '/casos',
     '/casos/relevos-vida/':                               '/casos',
+
+    // Posts antiguos del blog WP que aún ranquean en GSC
+    '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas',
+    '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones/': '/notas',
+    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':  '/notas',
+    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado/': '/notas',
+
+    // Categorías de WP — redirigir todas a /notas
+    '/category/news':                                     '/notas',
+    '/category/news/':                                    '/notas',
   },
   integrations: [
     tailwind({
