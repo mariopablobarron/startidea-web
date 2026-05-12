@@ -1,0 +1,23 @@
+src/pages/diagnostico/gracias.astro
+  s_fc84abf46d9a4c::t_24637fe2712a68 1-39
+src/pages/diagnostico/index.astro
+  s_fc84abf46d9a4c::t_73fc0c07139c17 1-146
+src/pages/diagnostico/nuevo.astro
+  s_fc84abf46d9a4c::t_8c3a4acd6218be 1-423
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "8f0a8d47e8b8dbe2069db7608c6645a196dfaabf",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
