@@ -1,0 +1,25 @@
+.claude/CLAUDE.md
+  s_fc84abf46d9a4c::t_8255134e0ca88e 1-54
+.github/workflows/claude.yml
+  s_fc84abf46d9a4c::t_62148ee8791182 1-51
+.claude/settings.json
+  s_fc84abf46d9a4c::t_9dbb3ae0292ade 1-31
+.gitignore
+  s_fc84abf46d9a4c::t_32208d956ccff7 40-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "761f1f0447826b999553a7bde2f01b48f2a9647d",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
