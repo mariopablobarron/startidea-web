@@ -37,7 +37,9 @@ startidea_dev_*.zip
 *.zip
 
 # claude / sesiones locales
-.claude/
+.claude/*
+!.claude/CLAUDE.md
+!.claude/settings.json
 
 # proyecto de video local (HyperFrames) — fuera del despliegue web
 video/
