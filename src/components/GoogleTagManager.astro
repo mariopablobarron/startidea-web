@@ -1,9 +1,22 @@
 ---
-const gtmId = import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J';
+/**
+ * Tracking analytics consentido — carga GTM (legado) y/o GA4 (directo) tras consentir cookies.
+ *
+ * GTM-N3SR8J: container legacy con G-5M0SEQXCVC apuntando a propiedad GA4
+ *   compartida con tráfico de otras webs (datos contaminados).
+ * GA4 G-97JZVP7DM4: stream dedicado de la propiedad properties/410265807
+ *   "startidea.es" en accounts/171701420 (Startidea Agencia) — limpio.
+ *
+ * Por defecto cargamos GA4 directo. GTM queda opt-in vía PUBLIC_GTM_ENABLED
+ * por si en el futuro se reintroduce con tags propios.
+ */
+const ga4Id = import.meta.env.PUBLIC_GA4_ID || 'G-97JZVP7DM4';
+const gtmEnabled = import.meta.env.PUBLIC_GTM_ENABLED === 'true';
+const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
 ---
 
-{gtmId && (
-  <script is:inline define:vars={{ gtmId }}>
+{(ga4Id || gtmId) && (
+  <script is:inline define:vars={{ gtmId, ga4Id }}>
     (function () {
       var KEY = 'startidea.cookieconsent.v1';
       var loaded = false;
@@ -12,20 +25,40 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J';
         try { return localStorage.getItem(KEY) === 'all'; } catch (_) { return false; }
       }
 
-      function loadGtm() {
-        if (loaded || !gtmId) return;
-        loaded = true;
+      function loadGa4() {
+        if (!ga4Id) return;
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var firstScript = document.getElementsByTagName('script')[0];
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
-        firstScript.parentNode.insertBefore(script, firstScript);
+        function gtag(){ window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', ga4Id, { anonymize_ip: true });
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(s, first);
       }
 
-      if (hasConsent()) loadGtm();
-      document.addEventListener('cookieconsent:all', loadGtm);
+      function loadGtm() {
+        if (!gtmId) return;
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(s, first);
+      }
+
+      function loadAll() {
+        if (loaded) return;
+        loaded = true;
+        loadGa4();
+        loadGtm();
+      }
+
+      if (hasConsent()) loadAll();
+      document.addEventListener('cookieconsent:all', loadAll);
     })();
   </script>
 )}
