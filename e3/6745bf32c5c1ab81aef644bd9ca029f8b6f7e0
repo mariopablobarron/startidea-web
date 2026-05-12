@@ -1,0 +1,23 @@
+src/pages/laboratorio/index.astro
+  s_fc84abf46d9a4c::t_bc8125b2d1b79c 1-94
+src/pages/laboratorio/hyperframes.astro
+  s_fc84abf46d9a4c::t_2a28f465fcac26 1-221
+src/components/Nav.astro
+  s_fc84abf46d9a4c::t_d5322d3ed6e7c5 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "e36745bf32c5c1ab81aef644bd9ca029f8b6f7e0",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
