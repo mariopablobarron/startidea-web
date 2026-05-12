@@ -1,5 +1,6 @@
 ---
-// Bloque de entrada en home: invita a la calculadora + briefing en /presupuesto
+// Bloque de entrada en home: invita al selector + briefing en /presupuesto
+// (sin precios públicos — la suma se hace en server al recibir el form).
 ---
 
 <section id="presupuesto-home" class="bg-paper-warm py-20 md:py-28">
@@ -8,15 +9,15 @@
       <div class="col-span-12 lg:col-span-4">
         <span class="label">— Pedir presupuesto</span>
         <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
-          Estimación al instante. <em class="italic text-magenta">Diagnóstico antes que cifra final.</em>
+          Presupuesto a medida. <em class="italic text-magenta">Diagnóstico antes que cifra.</em>
         </h2>
         <p class="mt-5 max-w-measure text-ink/80">
-          Marca lo que necesitas y verás una estimación orientativa. Después responde un briefing breve y te enviamos un presupuesto detallado con la respuesta del diagnóstico — todo gratis, sin compromiso.
+          Marca los servicios que necesitas, responde un briefing breve y Startidea te envía un presupuesto detallado con la respuesta del diagnóstico. Sin tarifas públicas porque cada caso es distinto. Gratis, sin compromiso.
         </p>
         <div class="mt-8">
           <a href="/presupuesto" class="btn"
-             data-track="cta" data-track-id="home_calcular_presupuesto">
-            Calcular y pedir
+             data-track="cta" data-track-id="home_pedir_presupuesto">
+            Pedir presupuesto
             <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -48,7 +49,7 @@
               Diagnóstico inicial + presupuesto detallado
             </h3>
             <p class="mt-3 text-sm leading-relaxed text-ink/75">
-              Generamos un diagnóstico personalizado al momento. La propuesta formal con alcance y plazos te llega en 24h.
+              Startidea genera un diagnóstico personalizado al momento. La propuesta formal con alcance y plazos llega en 24h.
             </p>
           </li>
         </ol>

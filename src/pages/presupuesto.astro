@@ -66,11 +66,11 @@ const briefingPasos = [
     <div class="container-x">
       <span class="label">— Pedir presupuesto</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Marca lo que te interesa.<br/>
-        <em class="italic text-magenta">Cerramos precio tras el diagnóstico.</em>
+        Marca lo que necesitas.<br/>
+        <em class="italic text-magenta">El precio sale del diagnóstico.</em>
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Aquí no hay tarifas públicas: cada caso es distinto y el alcance se define con la conversación. Marca los servicios que se acerquen a tu necesidad, responde cuatro preguntas y Startidea te envía un presupuesto detallado con el diagnóstico inicial. Sin compromiso.
+        Startidea trabaja con presupuestos a medida. Cada proyecto pide un alcance distinto, así que no hay tarifas públicas. Marca los servicios que te encajen, responde cuatro preguntas y Startidea te envía un presupuesto detallado con el diagnóstico inicial. Sin compromiso.
       </p>
     </div>
   </section>
@@ -82,10 +82,10 @@ const briefingPasos = [
         <div class="col-span-12 lg:col-span-3">
           <span class="label">— Paso 1 · Selección</span>
           <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
-            Lo que <em class="italic text-magenta">te interesa</em>.
+            Lo que <em class="italic text-magenta">necesitas</em>.
           </h2>
           <p class="mt-4 text-sm text-ink/75">
-            Marca los servicios o espacios que se acerquen a tu necesidad. Puedes elegir todos los que quieras. El presupuesto se cierra siempre tras el diagnóstico — sin tarifas públicas porque cada caso es distinto.
+            Marca los servicios o espacios que te encajen. Tantos como quieras. El precio se cierra en el diagnóstico, con alcance y plazos claros.
           </p>
         </div>
 
@@ -133,7 +133,7 @@ const briefingPasos = [
             <span id="calc-count">Aún no has marcado nada</span>
           </p>
           <p class="mt-1 max-w-measure text-xs text-ink/65 md:text-sm">
-            El presupuesto se cierra después del diagnóstico, con alcance y plazos claros.
+            El precio se cierra en el diagnóstico, con alcance y plazos.
           </p>
         </div>
         <div class="col-span-12 sm:col-span-5 flex flex-wrap items-center justify-start gap-3 sm:justify-end">
@@ -156,7 +156,7 @@ const briefingPasos = [
             Cuatro <em class="italic text-magenta">preguntas</em>.
           </h2>
           <p class="mt-4 text-sm text-ink/75">
-            Es lo mínimo que necesitamos saber antes de proponer. Al terminar genera un diagnóstico inicial y te lo enviamos por email junto con el presupuesto detallado.
+            Lo mínimo para preparar una propuesta con sentido. Al terminar genera un diagnóstico inicial y Startidea te envía el presupuesto detallado por email.
           </p>
         </div>
 
@@ -265,7 +265,7 @@ const briefingPasos = [
   }
 
   function pedirContacto() {
-    bubble('Ya casi. ¿Cómo te llamamos y a qué email te enviamos el diagnóstico y el presupuesto?', 'agente');
+    bubble('Ya casi. ¿Tu nombre y a qué email mandar el diagnóstico y el presupuesto?', 'agente');
     const form = document.createElement('form');
     form.className = 'space-y-3';
     form.innerHTML = `
@@ -328,7 +328,7 @@ const briefingPasos = [
           inputZone.innerHTML = '';
           if (json.diagnostico) bubble(json.diagnostico, 'agente');
           bubble(
-            `Recibido. En las próximas 24h te llega el presupuesto detallado a ${email}.`,
+            `Recibido. Startidea revisa el briefing y te manda el presupuesto detallado a ${email} en las próximas 24 horas.`,
             'agente'
           );
         } else {
