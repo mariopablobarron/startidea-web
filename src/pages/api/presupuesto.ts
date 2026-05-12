@@ -148,9 +148,75 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return new Response(JSON.stringify({ ok: false, error: 'network' }), { status: 502 });
   }
 
+  // Email de confirmación al cliente (no-bloqueante: si falla, el form sigue
+  // siendo exitoso porque el equipo ya recibió el aviso por Telegram).
+  enviarEmailConfirmacion({
+    name,
+    email,
+    diagnostico,
+    serviciosNombres: calc.lineas.map((l) => l.replace(/\s*\(desde [^)]*\)/, '')),
+  }).catch((err) => console.error('[presupuesto] email fail:', err));
+
   // Devolver al cliente solo el diagnóstico (texto cualitativo, sin números)
   return new Response(
     JSON.stringify({ ok: true, diagnostico }),
     { status: 200, headers: { 'content-type': 'application/json' } }
   );
 };
+
+async function enviarEmailConfirmacion(opts: {
+  name: string;
+  email: string;
+  diagnostico: string;
+  serviciosNombres: string[];
+}): Promise<void> {
+  const RESEND_KEY = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
+  const FROM = process.env.RESEND_FROM || import.meta.env.RESEND_FROM || 'Startidea <hola@hubstartidea.es>';
+  const REPLY_TO = process.env.RESEND_REPLY_TO || import.meta.env.RESEND_REPLY_TO || 'hola@startidea.es';
+  if (!RESEND_KEY) {
+    console.warn('[presupuesto] RESEND_API_KEY no configurada — saltando email');
+    return;
+  }
+
+  const serviciosHtml = opts.serviciosNombres.length
+    ? `<ul style="padding-left:1.2em;margin:0">${opts.serviciosNombres
+        .map((s) => `<li style="margin:0 0 0.3em 0">${escapeHtml(s)}</li>`)
+        .join('')}</ul>`
+    : '<p style="color:#666;font-style:italic">No has marcado servicios concretos — lo comentamos en la llamada.</p>';
+
+  const html = `<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8" /></head>
+<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:32px 24px;background:#fafaf7">
+  <p style="margin:0 0 24px 0;font-size:14px;color:#666;text-transform:uppercase;letter-spacing:0.08em">Startidea — Agencia de innovación social · Granada</p>
+  <h1 style="font-size:28px;line-height:1.2;margin:0 0 24px 0;font-weight:600">Hola ${escapeHtml(opts.name.split(' ')[0] || opts.name)},</h1>
+  <p>Recibido tu briefing en startidea.es. Lo está leyendo el equipo y te respondemos con un presupuesto detallado en las próximas 24 horas laborales.</p>
+  <p style="margin-top:24px"><strong>Primera lectura del diagnóstico:</strong></p>
+  <p style="border-left:3px solid #E6356B;padding:4px 0 4px 16px;color:#333;font-style:italic">${escapeHtml(opts.diagnostico)}</p>
+  <p style="margin-top:24px"><strong>Servicios que marcaste:</strong></p>
+  ${serviciosHtml}
+  <p style="margin-top:32px">Si quieres acelerar, puedes <a href="https://startidea.es/contacto" style="color:#E6356B">reservar una llamada directa de 30 minutos</a>.</p>
+  <p style="margin-top:32px">— Mario Pablo · <a href="mailto:hola@startidea.es" style="color:#E6356B">hola@startidea.es</a></p>
+  <hr style="border:0;border-top:1px solid #eee;margin:40px 0 16px 0" />
+  <p style="font-size:12px;color:#999">Startidea · C/ Conde Cifuentes 33, 18005 Granada · <a href="https://startidea.es" style="color:#999">startidea.es</a></p>
+</body></html>`;
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to: [opts.email],
+      reply_to: REPLY_TO,
+      subject: 'Hemos recibido tu briefing — Startidea',
+      html,
+    }),
+  });
+  if (!r.ok) {
+    const txt = await r.text().catch(() => '');
+    throw new Error(`Resend ${r.status}: ${txt.slice(0, 200)}`);
+  }
+}
