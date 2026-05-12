@@ -1,14 +1,20 @@
 ---
 /**
- * Tracking analytics consentido — carga GTM (legado) y/o GA4 (directo) tras consentir cookies.
+ * Tracking analytics con Google Consent Mode v2 — carga GA4 (y opcional GTM)
+ * SIEMPRE, con consent por defecto en "denied". Google sigue contando eventos
+ * cookieless agregados (pageviews, sessions, conversions modeladas) sin
+ * identificar al usuario hasta que acepta cookies. Esto es lo que pide la
+ * RGPD/ePrivacy hecho bien — y lo que Google Ads exige desde marzo 2024.
  *
- * GTM-N3SR8J: container legacy con G-5M0SEQXCVC apuntando a propiedad GA4
- *   compartida con tráfico de otras webs (datos contaminados).
- * GA4 G-97JZVP7DM4: stream dedicado de la propiedad properties/410265807
- *   "startidea.es" en accounts/171701420 (Startidea Agencia) — limpio.
+ * Cuando el usuario clica "Aceptar todas" en el banner se hace
+ * gtag('consent', 'update', {...granted}) y se sube al tracking completo.
  *
- * Por defecto cargamos GA4 directo. GTM queda opt-in vía PUBLIC_GTM_ENABLED
- * por si en el futuro se reintroduce con tags propios.
+ * Si rechaza ("essential"), Google sigue en cookieless mode — sin storage
+ * personal, solo mediciones agregadas. Compliant.
+ *
+ * GA4 G-97JZVP7DM4 → propiedad limpia properties/410265807 "startidea.es".
+ * GTM-N3SR8J → legacy con stream contaminado, deshabilitado por defecto
+ *              (activar con PUBLIC_GTM_ENABLED='true').
  */
 const ga4Id = import.meta.env.PUBLIC_GA4_ID || 'G-97JZVP7DM4';
 const gtmEnabled = import.meta.env.PUBLIC_GTM_ENABLED === 'true';
@@ -19,19 +25,55 @@ const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
   <script is:inline define:vars={{ gtmId, ga4Id }}>
     (function () {
       var KEY = 'startidea.cookieconsent.v1';
-      var loaded = false;
 
-      function hasConsent() {
-        try { return localStorage.getItem(KEY) === 'all'; } catch (_) { return false; }
-      }
+      // ─── Setup base: dataLayer + gtag stub ──────────────────────────
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      window.gtag = gtag;
 
+      // ─── Consent Mode v2 — defaults ANTES de cualquier config ──────
+      // Por defecto todo "denied" → Google opera en cookieless mode.
+      // Si ya hay consent guardado, partimos directamente granted.
+      var existing = null;
+      try { existing = localStorage.getItem(KEY); } catch (_) {}
+      var defaults = existing === 'all'
+        ? {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted',
+            functionality_storage: 'granted',
+            personalization_storage: 'granted',
+            security_storage: 'granted',
+          }
+        : {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            functionality_storage: 'denied',
+            personalization_storage: 'denied',
+            security_storage: 'granted',  // siempre granted: cookies sesión, CSRF, etc.
+            wait_for_update: 500,         // espera 500ms al banner por si llega update inmediato
+          };
+      gtag('consent', 'default', defaults);
+
+      // Región EEA + UK con consent estricto (resto del mundo más permisivo)
+      gtag('consent', 'default', Object.assign({}, defaults, {
+        region: ['ES','PT','FR','DE','IT','GB','BE','NL','LU','IE','DK','SE','FI','AT','CZ','SK','PL','HU','RO','BG','GR','CY','MT','EE','LV','LT','SI','HR','NO','IS','LI'],
+      }));
+
+      // ─── Cargar GA4 (siempre) ──────────────────────────────────────
       function loadGa4() {
         if (!ga4Id) return;
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ window.dataLayer.push(arguments); }
-        window.gtag = gtag;
         gtag('js', new Date());
-        gtag('config', ga4Id, { anonymize_ip: true });
+        gtag('config', ga4Id, {
+          anonymize_ip: true,
+          // url_passthrough permite continuar tracking entre páginas sin cookies
+          url_passthrough: true,
+          // ads_data_redaction → si Google Ads activado, no transmite info personal
+          ads_data_redaction: true,
+        });
         var s = document.createElement('script');
         s.async = true;
         s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
@@ -39,9 +81,9 @@ const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
         first.parentNode.insertBefore(s, first);
       }
 
+      // ─── Cargar GTM (opcional, solo si PUBLIC_GTM_ENABLED) ─────────
       function loadGtm() {
         if (!gtmId) return;
-        window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
         var s = document.createElement('script');
         s.async = true;
@@ -50,15 +92,34 @@ const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
         first.parentNode.insertBefore(s, first);
       }
 
-      function loadAll() {
-        if (loaded) return;
-        loaded = true;
-        loadGa4();
-        loadGtm();
+      // Cargar siempre (con consent default ya configurado arriba)
+      loadGa4();
+      loadGtm();
+
+      // ─── Upgrade a granted cuando el usuario acepta ────────────────
+      function grantAll() {
+        gtag('consent', 'update', {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          analytics_storage: 'granted',
+          functionality_storage: 'granted',
+          personalization_storage: 'granted',
+        });
+      }
+      function denyAll() {
+        gtag('consent', 'update', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          functionality_storage: 'denied',
+          personalization_storage: 'denied',
+        });
       }
 
-      if (hasConsent()) loadAll();
-      document.addEventListener('cookieconsent:all', loadAll);
+      document.addEventListener('cookieconsent:all', grantAll);
+      document.addEventListener('cookieconsent:essential', denyAll);
     })();
   </script>
 )}
