@@ -11,6 +11,7 @@ import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
+import MobileCtaBar from '@/components/MobileCtaBar.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
@@ -82,7 +83,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <!-- Umami analytics (privacy-first) -->
     <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="17ae1dd4-5e8f-45da-870e-f86df6d41e77"></script>
   </head>
-  <body class="overflow-x-hidden">
+  <body class="overflow-x-hidden pb-[72px] xl:pb-0">
     <Splash />
     <Nav />
     <main>
@@ -90,6 +91,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     </main>
     <Footer />
     <AsistenteIA />
+    <MobileCtaBar />
     <CookieBanner />
 
     <script>

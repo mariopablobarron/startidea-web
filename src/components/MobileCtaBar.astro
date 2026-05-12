@@ -1,0 +1,104 @@
+---
+// Barra de CTAs móvil — fixed bottom, siempre visible mientras el visitante
+// navega desde el móvil. Lleva los 3 accesos críticos:
+//   1. Diagnóstico gratis (lead capture principal)
+//   2. Pedir presupuesto (selector + briefing)
+//   3. Llamar / WhatsApp (canal directo)
+//
+// Solo se muestra hasta el breakpoint xl (igual que el burger). En desktop
+// los CTAs están en el header sticky y en cada sección de la página.
+//
+// Padding-bottom del <body> añadido en Base.astro para que no tape contenido.
+---
+
+<nav
+  id="mobile-cta-bar"
+  aria-label="Accesos rápidos"
+  class="fixed inset-x-0 bottom-0 z-40 border-t-2 border-ink bg-paper shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.18)] xl:hidden"
+>
+  <ul class="grid grid-cols-3 divide-x divide-ink/15">
+    <li>
+      <a
+        href="/diagnostico"
+        data-track="cta"
+        data-track-id="mobile_bar_diagnostico"
+        class="flex h-full flex-col items-center justify-center gap-1 py-3 text-center hover:bg-paper-warm focus-visible:bg-paper-warm focus-visible:outline-none"
+      >
+        <span aria-hidden="true" class="text-xl">🩺</span>
+        <span class="font-display text-[11px] font-medium leading-tight text-ink">Diagnóstico</span>
+        <span class="font-mono text-[9px] uppercase tracking-wider text-ink-mute">gratis · 3 min</span>
+      </a>
+    </li>
+    <li>
+      <a
+        href="/presupuesto"
+        data-track="cta"
+        data-track-id="mobile_bar_presupuesto"
+        class="flex h-full flex-col items-center justify-center gap-1 py-3 text-center hover:bg-paper-warm focus-visible:bg-paper-warm focus-visible:outline-none"
+      >
+        <span aria-hidden="true" class="text-xl">📋</span>
+        <span class="font-display text-[11px] font-medium leading-tight text-ink">Presupuesto</span>
+        <span class="font-mono text-[9px] uppercase tracking-wider text-ink-mute">a medida</span>
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://wa.me/34958045789?text=Hola%20Startidea%2C%20quer%C3%ADa%20preguntaros%20sobre%20un%20proyecto"
+        target="_blank"
+        rel="noopener"
+        data-track="cta"
+        data-track-id="mobile_bar_whatsapp"
+        class="flex h-full flex-col items-center justify-center gap-1 py-3 text-center hover:bg-paper-warm focus-visible:bg-paper-warm focus-visible:outline-none"
+      >
+        <span aria-hidden="true" class="text-xl">💬</span>
+        <span class="font-display text-[11px] font-medium leading-tight text-magenta">Hablar ahora</span>
+        <span class="font-mono text-[9px] uppercase tracking-wider text-ink-mute">WhatsApp</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<script is:inline>
+  // Ocultar la barra cuando el menú hamburguesa está abierto, así no se
+  // solapan dos overlays. También se oculta brevemente al scroll-down y
+  // reaparece al scroll-up — patrón habitual en webs móviles.
+  (function () {
+    var bar = document.getElementById('mobile-cta-bar');
+    var navMobile = document.getElementById('nav-mobile');
+    var navToggle = document.getElementById('nav-toggle');
+    if (!bar) return;
+
+    function syncWithNav() {
+      var navOpen = navMobile && !navMobile.classList.contains('hidden');
+      bar.style.transform = navOpen ? 'translateY(120%)' : '';
+    }
+    if (navToggle) navToggle.addEventListener('click', function () {
+      setTimeout(syncWithNav, 30);
+    });
+
+    // Auto-hide on scroll-down, reveal on scroll-up
+    var lastScroll = window.scrollY;
+    var ticking = false;
+    bar.style.transition = 'transform 200ms ease';
+
+    function onScroll() {
+      var current = window.scrollY;
+      var navOpen = navMobile && !navMobile.classList.contains('hidden');
+      if (navOpen) return;
+      if (current > lastScroll && current > 80) {
+        // scrolling down past initial fold
+        bar.style.transform = 'translateY(120%)';
+      } else {
+        bar.style.transform = '';
+      }
+      lastScroll = current;
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+</script>
