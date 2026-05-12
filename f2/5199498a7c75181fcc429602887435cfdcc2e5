@@ -1,0 +1,31 @@
+src/pages/presupuesto.astro
+  s_fc84abf46d9a4c::t_3abfd2b396639a 202-204,206,210-217
+  s_fc84abf46d9a4c::t_873821e1e2a5eb 303-304,306,310,316-318,324,329-333
+  s_fc84abf46d9a4c::t_1356c2f7e253a3 126,130-136,139
+  s_fc84abf46d9a4c::t_6a10cf2619b688 3,5-9
+  s_fc84abf46d9a4c::t_cd072d4bb0c981 60-61,69-70,73
+  s_fc84abf46d9a4c::t_9b034554bb10d4 105-113
+  s_fc84abf46d9a4c::t_d33294fa0c21c6 83,88
+src/data/servicios.ts
+  s_fc84abf46d9a4c::t_335f6ec260f444 1-146
+src/pages/api/presupuesto.ts
+  s_fc84abf46d9a4c::t_c1f2d8da3208f8 1-156
+src/components/PresupuestoHome.astro
+  s_fc84abf46d9a4c::t_a94ab911919c8c 33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "f25199498a7c75181fcc429602887435cfdcc2e5",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
