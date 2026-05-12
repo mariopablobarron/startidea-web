@@ -1,74 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { gruposPublicos } from '@/data/servicios';
 
-// ─── Catálogo de servicios con precio orientativo "desde X €" ───
-// Base es lo mínimo razonable para arrancar el servicio. El presupuesto formal
-// siempre se cierra después del diagnóstico.
-const grupos = [
-  {
-    nombre: 'Consultoría e Innovación Social',
-    href: '/consultoria',
-    items: [
-      { id: 'diagnostico-estrategico', nombre: 'Diagnóstico estratégico de la entidad', precio: 2800, unidad: '€' },
-      { id: 'diseno-proyecto', nombre: 'Diseño y formulación de proyecto social', precio: 1800, unidad: '€' },
-      { id: 'plan-anual', nombre: 'Planificación estratégica anual', precio: 3200, unidad: '€' },
-      { id: 'acompanamiento-direccion', nombre: 'Acompañamiento mensual a dirección', precio: 1200, unidad: '€/mes' },
-    ],
-  },
-  {
-    nombre: 'Comunicación Estratégica',
-    href: '/comunicacion',
-    items: [
-      { id: 'plan-comunicacion', nombre: 'Plan de comunicación', precio: 2500, unidad: '€' },
-      { id: 'plan-editorial-redes-3m', nombre: 'Plan editorial + redes (3 meses)', precio: 2400, unidad: '€' },
-      { id: 'gestion-redes-mes', nombre: 'Gestión continua de redes (mensual)', precio: 800, unidad: '€/mes' },
-      { id: 'campana-con-causa', nombre: 'Campaña con causa (3 meses)', precio: 6000, unidad: '€' },
-      { id: 'memoria-editorial', nombre: 'Memoria editorial anual', precio: 3500, unidad: '€' },
-      { id: 'identidad-marca', nombre: 'Identidad de marca', precio: 3500, unidad: '€' },
-    ],
-  },
-  {
-    nombre: 'Producción Audiovisual y Podcast',
-    href: '/audiovisual',
-    items: [
-      { id: 'video-institucional', nombre: 'Vídeo institucional (3-5 min)', precio: 3500, unidad: '€' },
-      { id: 'serie-podcast', nombre: 'Serie de podcast (4 episodios)', precio: 2800, unidad: '€' },
-      { id: 'cobertura-evento', nombre: 'Cobertura audiovisual de evento', precio: 1800, unidad: '€' },
-      { id: 'documental-corto', nombre: 'Documental corto', precio: 6000, unidad: '€' },
-    ],
-  },
-  {
-    nombre: 'Tecnología y Producto Digital',
-    href: '/tecnologia',
-    items: [
-      { id: 'web-institucional', nombre: 'Web institucional', precio: 4500, unidad: '€' },
-      { id: 'plataforma-ssr', nombre: 'Plataforma a medida con SSR', precio: 9000, unidad: '€' },
-      { id: 'producto-ia', nombre: 'Producto digital con IA', precio: 12000, unidad: '€' },
-      { id: 'migracion-seo', nombre: 'Migración con redirecciones y SEO', precio: 2800, unidad: '€' },
-    ],
-  },
-  {
-    nombre: 'Fundraising y Alianzas',
-    href: '/fundraising',
-    items: [
-      { id: 'diagnostico-financiero', nombre: 'Diagnóstico financiero estratégico', precio: 2500, unidad: '€' },
-      { id: 'plan-fundraising-12m', nombre: 'Plan de fundraising a 12 meses', precio: 5500, unidad: '€' },
-      { id: 'materiales-captacion', nombre: 'Materiales de captación (dossier + propuestas)', precio: 3500, unidad: '€' },
-      { id: 'mapeo-aliados', nombre: 'Mapeo de aliados estratégicos', precio: 1800, unidad: '€' },
-      { id: 'acompanamiento-fundraising', nombre: 'Acompañamiento fundraising anual', precio: 1500, unidad: '€/mes' },
-    ],
-  },
-  {
-    nombre: 'Hub Startidea · espacios',
-    href: '/hub',
-    items: [
-      { id: 'coworking-mes', nombre: 'Plaza coworking flexible', precio: 120, unidad: '€/mes' },
-      { id: 'despacho-privado', nombre: 'Despacho privado', precio: 350, unidad: '€/mes' },
-      { id: 'sala-hora', nombre: 'Sala de formación (hora)', precio: 25, unidad: '€/h' },
-      { id: 'podcast-hora', nombre: 'Estudio de podcast (hora)', precio: 35, unidad: '€/h' },
-    ],
-  },
-];
+// El catálogo con precios vive en `src/data/servicios.ts` (server-only).
+// Aquí sólo recibimos { id, nombre, href } — sin tarifas — para renderizar
+// los checkboxes. El cliente nunca verá precios ni en HTML ni en DevTools.
+// La suma se hace en `src/pages/api/presupuesto.ts` al recibir el form.
+const grupos = gruposPublicos();
 
 // ─── Briefing guiado: árbol de preguntas + respuestas ───
 const briefingPasos = [
@@ -119,8 +57,8 @@ const briefingPasos = [
 ---
 
 <Base
-  title="Pedir presupuesto — calculadora y briefing · Startidea"
-  description="Calcula una estimación orientativa de tus servicios con Startidea y déjanos un briefing rápido. Te enviamos un presupuesto detallado con la respuesta del diagnóstico."
+  title="Pedir presupuesto a medida · Startidea"
+  description="Marca los servicios que se acercan a tu necesidad y responde un briefing breve. Startidea te envía un presupuesto detallado tras un diagnóstico inicial — sin tarifas públicas porque cada caso es distinto."
   ogSlug="page/presupuesto"
 >
   <!-- Hero -->
@@ -128,11 +66,11 @@ const briefingPasos = [
     <div class="container-x">
       <span class="label">— Pedir presupuesto</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Una estimación.<br/>
-        <em class="italic text-magenta">Después un diagnóstico.</em>
+        Marca lo que te interesa.<br/>
+        <em class="italic text-magenta">Cerramos precio tras el diagnóstico.</em>
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Marca lo que te interesa y verás una estimación orientativa al instante. Después responde un briefing breve para que la propuesta formal llegue ya con el contexto entendido. Sin compromiso.
+        Aquí no hay tarifas públicas: cada caso es distinto y el alcance se define con la conversación. Marca los servicios que se acerquen a tu necesidad, responde cuatro preguntas y Startidea te envía un presupuesto detallado con el diagnóstico inicial. Sin compromiso.
       </p>
     </div>
   </section>
@@ -142,12 +80,12 @@ const briefingPasos = [
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
         <div class="col-span-12 lg:col-span-3">
-          <span class="label">— Paso 1 · Calculadora</span>
+          <span class="label">— Paso 1 · Selección</span>
           <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
             Lo que <em class="italic text-magenta">te interesa</em>.
           </h2>
           <p class="mt-4 text-sm text-ink/75">
-            Marca los servicios o espacios que se acerquen a tu necesidad. La cifra de la derecha es <strong class="text-ink">orientativa</strong>: el precio formal lo cerramos tras el diagnóstico, con alcance y plazos claros.
+            Marca los servicios o espacios que se acerquen a tu necesidad. Puedes elegir todos los que quieras. El presupuesto se cierra siempre tras el diagnóstico — sin tarifas públicas porque cada caso es distinto.
           </p>
         </div>
 
@@ -164,22 +102,15 @@ const briefingPasos = [
                 <ul class="mt-3 divide-y divide-ink/10">
                   {g.items.map((it) => (
                     <li>
-                      <label class="grid cursor-pointer grid-cols-12 items-baseline gap-x-4 gap-y-1 py-3 transition-colors hover:bg-paper">
-                        <span class="col-span-1 flex items-baseline">
-                          <input
-                            type="checkbox"
-                            class="calc-item h-5 w-5 cursor-pointer accent-magenta"
-                            data-id={it.id}
-                            data-precio={it.precio}
-                            data-unidad={it.unidad}
-                            data-nombre={it.nombre}
-                            data-grupo={g.nombre}
-                          />
-                        </span>
-                        <span class="col-span-8 font-display text-base text-ink sm:text-lg">{it.nombre}</span>
-                        <span class="col-span-3 text-right font-mono text-sm tabular-nums text-ink-mute">
-                          desde {it.precio.toLocaleString('es-ES')} {it.unidad}
-                        </span>
+                      <label class="flex cursor-pointer items-baseline gap-4 py-3 transition-colors hover:bg-paper">
+                        <input
+                          type="checkbox"
+                          class="calc-item h-5 w-5 flex-shrink-0 cursor-pointer accent-magenta"
+                          data-id={it.id}
+                          data-nombre={it.nombre}
+                          data-grupo={g.nombre}
+                        />
+                        <span class="font-display text-base text-ink sm:text-lg">{it.nombre}</span>
                       </label>
                     </li>
                   ))}
@@ -192,21 +123,20 @@ const briefingPasos = [
     </div>
   </section>
 
-  <!-- Sticky resumen del total -->
+  <!-- Sticky resumen de la selección -->
   <div id="calc-sticky" class="sticky bottom-0 z-30 border-t-2 border-ink bg-paper shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.18)]">
     <div class="container-x py-4 md:py-5">
       <div class="grid grid-cols-12 items-center gap-x-4 gap-y-2">
-        <div class="col-span-12 sm:col-span-5">
-          <p class="label">— Estimación orientativa</p>
-          <p class="mt-1 font-display text-3xl leading-tight text-ink md:text-4xl">
-            <span id="calc-total-puntual">0 €</span>
-            <span id="calc-total-recurrente" class="block text-base text-ink/70 md:inline md:text-lg"></span>
+        <div class="col-span-12 sm:col-span-7">
+          <p class="label">— Tu selección</p>
+          <p class="mt-1 font-display text-2xl leading-tight text-ink md:text-3xl">
+            <span id="calc-count">Aún no has marcado nada</span>
+          </p>
+          <p class="mt-1 max-w-measure text-xs text-ink/65 md:text-sm">
+            El presupuesto se cierra después del diagnóstico, con alcance y plazos claros.
           </p>
         </div>
-        <div class="col-span-12 sm:col-span-7 flex flex-wrap items-center justify-end gap-3">
-          <span id="calc-count" class="font-mono text-xs uppercase tracking-widest text-ink-mute">
-            0 servicios seleccionados
-          </span>
+        <div class="col-span-12 sm:col-span-5 flex flex-wrap items-center justify-start gap-3 sm:justify-end">
           <a href="#briefing" class="btn !py-2.5 text-sm">
             Continuar con el briefing
             <span aria-hidden="true">→</span>
@@ -269,33 +199,22 @@ const briefingPasos = [
 </style>
 
 <script>
-  // ─── Calculadora ─────────────────────────────────────────────────
+  // ─── Selector de servicios ───────────────────────────────────────
+  // Sin precios en cliente: sólo se cuentan los checks. La suma real
+  // la hace el backend en /api/presupuesto al recibir los IDs.
   const items = document.querySelectorAll<HTMLInputElement>('.calc-item');
-  const totalPuntual = document.getElementById('calc-total-puntual')!;
-  const totalRecurrente = document.getElementById('calc-total-recurrente')!;
-  const totalCount = document.getElementById('calc-count')!;
-  const fmt = new Intl.NumberFormat('es-ES');
+  const countLabel = document.getElementById('calc-count')!;
 
   function recalc() {
-    let puntual = 0;
-    let mensual = 0;
-    let hora = 0;
     let count = 0;
-    items.forEach((el) => {
-      if (!el.checked) return;
-      count++;
-      const precio = parseInt(el.dataset.precio || '0', 10);
-      const unidad = el.dataset.unidad || '';
-      if (unidad.includes('mes')) mensual += precio;
-      else if (unidad.includes('h')) hora += precio;
-      else puntual += precio;
-    });
-    totalPuntual.textContent = `desde ${fmt.format(puntual)} €`;
-    const partes: string[] = [];
-    if (mensual > 0) partes.push(`+ ${fmt.format(mensual)} €/mes`);
-    if (hora > 0) partes.push(`+ ${fmt.format(hora)} €/h`);
-    totalRecurrente.textContent = partes.length ? ' ' + partes.join(' ') : '';
-    totalCount.textContent = `${count} ${count === 1 ? 'servicio seleccionado' : 'servicios seleccionados'}`;
+    items.forEach((el) => { if (el.checked) count++; });
+    if (count === 0) {
+      countLabel.textContent = 'Aún no has marcado nada';
+    } else if (count === 1) {
+      countLabel.textContent = '1 servicio marcado';
+    } else {
+      countLabel.textContent = `${count} servicios marcados`;
+    }
   }
   items.forEach((el) => el.addEventListener('change', recalc));
   recalc();
@@ -381,64 +300,37 @@ const briefingPasos = [
       submit.disabled = true;
       status.textContent = 'Enviando…';
 
-      // Resumen de la calculadora
-      const seleccionados: string[] = [];
-      let totalP = 0, totalM = 0, totalH = 0;
+      // Sólo IDs de servicios marcados (sin precios — los conoce el backend)
+      const serviciosIds: string[] = [];
       items.forEach((el) => {
-        if (!el.checked) return;
-        const p = parseInt(el.dataset.precio || '0', 10);
-        const u = el.dataset.unidad || '';
-        seleccionados.push(`• ${el.dataset.grupo} → ${el.dataset.nombre} (desde ${p} ${u})`);
-        if (u.includes('mes')) totalM += p;
-        else if (u.includes('h')) totalH += p;
-        else totalP += p;
+        if (el.checked && el.dataset.id) serviciosIds.push(el.dataset.id);
       });
 
-      const diagnostico = generarDiagnostico(respuestas);
-
-      const cuerpo = [
-        '🆕 BRIEFING DE PRESUPUESTO',
-        '',
-        `De: ${nombre}`,
-        `Email: ${email}`,
-        '',
-        '— Briefing —',
-        `Tipología: ${respuestas.tipologia || '—'}`,
-        `Reto: ${respuestas.reto || '—'}`,
-        `Urgencia: ${respuestas.urgencia || '—'}`,
-        `Presupuesto orientativo: ${respuestas.presupuesto || '—'}`,
-        contexto ? `Contexto: ${contexto}` : '',
-        '',
-        '— Diagnóstico generado —',
-        diagnostico,
-        '',
-        '— Calculadora —',
-        seleccionados.length ? seleccionados.join('\n') : '(sin servicios marcados)',
-        '',
-        `Estimación orientativa: ${totalP} €${totalM ? ` + ${totalM} €/mes` : ''}${totalH ? ` + ${totalH} €/h` : ''}`,
-      ].filter(Boolean).join('\n');
-
       try {
-        const r = await fetch('/api/contacto', {
+        const r = await fetch('/api/presupuesto', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
             name: nombre,
             email,
-            message: cuerpo,
-            path: '/presupuesto',
+            contexto,
+            respuestas,
+            servicios: serviciosIds,
             consent,
           }),
         });
         const json = await r.json().catch(() => ({ ok: false }));
         if (r.ok && json.ok) {
-          window.stTrack && window.stTrack('generate_lead', {
+          (window as any).stTrack?.('generate_lead', {
             method: 'presupuesto',
             page_path: '/presupuesto',
           });
           inputZone.innerHTML = '';
-          bubble(diagnostico, 'agente');
-          bubble('Recibido. En las próximas 24h te llega el presupuesto detallado a ' + email + '.', 'agente');
+          if (json.diagnostico) bubble(json.diagnostico, 'agente');
+          bubble(
+            `Recibido. En las próximas 24h te llega el presupuesto detallado a ${email}.`,
+            'agente'
+          );
         } else {
           status.textContent =
             json.error === 'rate' ? 'Espera unos segundos antes de reenviar.' :
@@ -451,46 +343,6 @@ const briefingPasos = [
         submit.disabled = false;
       }
     });
-  }
-
-  function generarDiagnostico(r: Record<string, string>): string {
-    const tip = r.tipologia;
-    const reto = r.reto;
-    const urg = r.urgencia;
-    const pres = r.presupuesto;
-
-    const segmento = {
-      'tercer-sector': 'Para una entidad del Tercer Sector',
-      'institucion': 'Para una institución pública',
-      'empresa-proposito': 'Para una empresa con propósito',
-      'iniciativa-propia': 'Para una iniciativa o proyecto propio',
-    }[tip] || 'Para tu caso';
-
-    const enfoque = {
-      comunicar: 'la prioridad es ordenar el relato antes de producir piezas. Recomendamos arrancar con plan de comunicación + memoria editorial.',
-      captar: 'la dependencia de fuente única suele ser el problema real. Recomendamos diagnóstico financiero + plan de fundraising a 12 meses.',
-      plataforma: 'la web debe ser activo de captación, no folleto. Recomendamos arquitectura de información antes de tocar diseño.',
-      audiovisual: 'lo audiovisual rinde cuando se planifica como serie editorial, no como pieza suelta. Recomendamos definir formato y calendario antes de producir.',
-      estrategia: 'recomendamos arrancar por un diagnóstico estratégico que ordene prioridades antes de mover el primer recurso.',
-      'no-se': 'recomendamos arrancar por una llamada de diagnóstico de 30 minutos para identificar el reto real antes de ofrecer alcance.',
-    }[reto] || 'recomendamos una primera conversación de diagnóstico.';
-
-    const ritmo = {
-      ya: 'Con tu urgencia, podemos arrancar la próxima semana.',
-      '1-3m': 'Tu plazo encaja con un arranque ordenado, sin prisa pero sin dilación.',
-      '3-6m': 'Hay margen para hacer un diagnóstico previo bien hecho.',
-      explorando: 'Estás en buen momento para conversar sin compromiso.',
-    }[urg] || '';
-
-    const presupuesto = {
-      'menos-3k': 'Con presupuesto contenido, priorizaremos un alcance acotado y de alto impacto.',
-      '3-10k': 'Tu rango permite un proyecto de tamaño medio bien acabado.',
-      '10-30k': 'Tu rango da margen para una intervención sostenida con resultados medibles.',
-      'mas-30k': 'Con ese rango podemos diseñar una intervención multi-disciplinar a varios meses.',
-      'no-se': 'No pasa nada — lo cerramos en la propuesta tras el diagnóstico.',
-    }[pres] || '';
-
-    return `${segmento}, ${enfoque} ${ritmo} ${presupuesto}`.trim();
   }
 
   siguientePaso();
