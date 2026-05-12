@@ -1,0 +1,28 @@
+src/pages/presupuesto.astro
+  s_fc84abf46d9a4c::t_30bdeb2241dfeb 159
+  s_fc84abf46d9a4c::t_71a197c5e98619 69-70,73
+  s_fc84abf46d9a4c::t_91125ca071c364 331
+  s_fc84abf46d9a4c::t_c63dc59936429b 85,88
+  s_fc84abf46d9a4c::t_8c8b90e607f15f 268
+  s_fc84abf46d9a4c::t_6c2d6bd83448ae 136
+src/components/PresupuestoHome.astro
+  s_fc84abf46d9a4c::t_adee0edd3b6aa6 52
+  s_fc84abf46d9a4c::t_c336e975ecb933 12,15,19-20
+  s_fc84abf46d9a4c::t_cc0b194f4dc08c 2-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "c555df883e200fc590268ffd3f962aa4782895aa",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
