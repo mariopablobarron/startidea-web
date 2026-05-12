@@ -1,0 +1,19 @@
+src/components/GoogleTagManager.astro
+  s_fc84abf46d9a4c::t_6c5d0fabfe26f2 2-15,18-19,28-41,43,46-57,60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "238b31e13e4a8a4f61031090b16455c611cff413",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
