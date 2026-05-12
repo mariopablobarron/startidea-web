@@ -1,0 +1,64 @@
+docs/portal-cliente-piloto.md
+  s_fc84abf46d9a4c::t_ba0836b58d3f38 1-115
+reports/curator-2026-05-07.md
+  s_3e15dfaeb9656c::t_a267942f2e1de6 1-55
+reports/curator-2026-05-06.md
+  3aba240e2f2c3e13 1-51
+reports/curator-2026-05-12.md
+  s_d3febe9f372929::t_f38c1b60544f9e 1-49
+reports/curator-2026-05-08.md
+  s_ce30a4a89a68f2::t_3663a63671b613 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "c8268dc0e09527ec20b3b72e563166d8097d26ff",
+  "prompts": {
+    "3aba240e2f2c3e13": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a2db8bce-24a8-4b52-8133-cb5fab104dca",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>",
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  },
+  "sessions": {
+    "s_3e15dfaeb9656c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "842cb1e5-5c10-4fb6-a603-f595ad82fa1d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_ce30a4a89a68f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f1cbbda-b700-4762-8bf6-4920c68e73d8",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_d3febe9f372929": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22313e37-301f-4444-b28a-71607d1db240",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
