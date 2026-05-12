@@ -1,0 +1,181 @@
+---
+/**
+ * CTA + form corto en homepage (Pack SEO P4 del agente analista 2026-05-12).
+ *
+ * Objetivo: convertir parte del tráfico que entra a / y nunca llega más allá.
+ * Form ultra corto (3 campos) → POST /api/conversion-rapida → notifica a Telegram
+ * y dispara `generate_lead` event en GA4 (G-97JZVP7DM4).
+ *
+ * Pensado para insertarse JUSTO después del Hero — visible above-the-fold en
+ * scroll corto, no roba protagonismo al Hero porque tiene fondo paper-warm.
+ */
+---
+
+<section id="cta-conversion" class="border-b border-ink/15 bg-paper-warm py-14 md:py-18">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 gap-y-8">
+      <div class="col-span-12 lg:col-span-5">
+        <span class="label">— Empieza por una conversación</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          30 minutos. <em class="italic text-magenta">Sin compromiso.</em>
+        </h2>
+        <p class="mt-5 max-w-measure text-ink/80">
+          Cuéntanos en una frase qué problema tienes. Si encajamos, agendamos una llamada de diagnóstico la misma semana. Si no, te orientamos hacia quien sí.
+        </p>
+        <p class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          Sin tracking pixels · Sin spam · RGPD
+        </p>
+      </div>
+
+      <div class="col-span-12 lg:col-span-7">
+        <form
+          id="conversion-form"
+          class="border-2 border-ink bg-paper p-6 md:p-7"
+          novalidate
+        >
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+          <div class="grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="sr-only" for="conv-name">Tu nombre</label>
+              <input
+                id="conv-name"
+                name="name"
+                type="text"
+                required
+                maxlength="80"
+                autocomplete="name"
+                placeholder="Tu nombre"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+              />
+            </div>
+            <div>
+              <label class="sr-only" for="conv-email">Email</label>
+              <input
+                id="conv-email"
+                name="email"
+                type="email"
+                required
+                maxlength="120"
+                autocomplete="email"
+                placeholder="tu@email.com"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+              />
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="sr-only" for="conv-org">Tipo de organización</label>
+            <select
+              id="conv-org"
+              name="org_type"
+              required
+              class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+            >
+              <option value="">¿Qué tipo de organización?</option>
+              <option value="tercer-sector">ONG, fundación o asociación</option>
+              <option value="institucion">Administración o institución</option>
+              <option value="empresa-proposito">Empresa con propósito</option>
+              <option value="otro">Otro / aún no lo sé</option>
+            </select>
+          </div>
+
+          <div class="mt-3">
+            <label class="sr-only" for="conv-msg">Tu reto en una frase</label>
+            <textarea
+              id="conv-msg"
+              name="message"
+              maxlength="500"
+              rows="2"
+              placeholder="¿Cuál es tu reto? (opcional, una frase)"
+              class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="conv-submit"
+            class="btn mt-4 w-full justify-center !py-3"
+            data-track="cta"
+            data-track-id="home_conversion_quick"
+          >
+            Reservar diagnóstico de 30 min
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p
+            id="conv-status"
+            class="mt-3 min-h-[20px] font-mono text-[11px] leading-relaxed text-ink-mute"
+            aria-live="polite"
+          ></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('conversion-form');
+    if (!form) return;
+    var statusEl = document.getElementById('conv-status');
+    var submit = document.getElementById('conv-submit');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      if ((data.get('website') || '').toString().trim() !== '') {
+        // Bot — silent success redirect
+        window.location.href = '/contacto?from=cta-home';
+        return;
+      }
+
+      submit.setAttribute('disabled', 'true');
+      statusEl.style.color = '';
+      statusEl.textContent = 'Enviando…';
+
+      var payload = {
+        name: (data.get('name') || '').toString().trim(),
+        email: (data.get('email') || '').toString().trim(),
+        org_type: (data.get('org_type') || '').toString(),
+        message: (data.get('message') || '').toString().trim(),
+        source: 'home_cta',
+      };
+
+      try {
+        var r = await fetch('/api/conversion-rapida', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        var json = await r.json().catch(function () { return { ok: false }; });
+        if (r.ok && json.ok) {
+          // GA4 event
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'generate_lead', {
+              method: 'home_cta_quick',
+              value: 1,
+              currency: 'EUR',
+            });
+          }
+          statusEl.style.color = '#166534';
+          statusEl.textContent = '✓ Recibido. Te escribimos en menos de 24h.';
+          form.reset();
+          setTimeout(function () {
+            window.location.href = '/contacto?from=cta-home&ok=1';
+          }, 1500);
+        } else {
+          statusEl.style.color = '#b42318';
+          statusEl.textContent = json.error === 'rate'
+            ? 'Espera unos segundos antes de reintentar.'
+            : 'No se pudo enviar. Escríbenos a hola@startidea.es.';
+          submit.removeAttribute('disabled');
+        }
+      } catch (_) {
+        statusEl.style.color = '#b42318';
+        statusEl.textContent = 'Sin conexión. Escríbenos a hola@startidea.es.';
+        submit.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>

@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Hero from '@/components/Hero.astro';
+import CtaConversion from '@/components/CtaConversion.astro';
 import MetricasHero from '@/components/MetricasHero.astro';
 import Ecosistema from '@/components/Ecosistema.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
@@ -26,6 +27,7 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
   <Hero />
+  <CtaConversion />
   <MetricasHero />
   <ParaQuien />
   {/* Diego v60: Casos no debe quedar por encima de Servicios. La nav
