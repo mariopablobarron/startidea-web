@@ -1,0 +1,146 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, localBusinessSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Diagnóstico', url: `${SITE_URL}/diagnostico` },
+  ]),
+  localBusinessSchema(),
+];
+---
+
+<Base
+  title="Diagnóstico de proyecto — Startidea · Granada"
+  description="Cuéntale a Startidea tu reto de comunicación, fundraising o consultoría en 3 minutos. Recibes un primer briefing pre-reunión preparado por el equipo antes de la llamada."
+  ogSlug="page/diagnostico"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Diagnóstico inicial</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Tres minutos.<br/>
+        <em class="italic text-magenta">Un briefing claro.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Antes de hablar, cuéntanos qué necesitas resolver. Startidea recibe el cuestionario, prepara un primer análisis y llega a la reunión con preguntas que importan — no con un guion de venta.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/diagnostico/nuevo" class="btn">Empezar diagnóstico →</a>
+        <a href="/contacto" class="btn-ghost">Prefiero una llamada directa</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo funciona</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Antes de la <em class="italic text-magenta">primera llamada</em>.
+          </h2>
+
+          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">01</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">Rellenas el cuestionario</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  Diez preguntas concretas sobre tu organización, el reto que quieres resolver y los recursos que tienes. Sin caja negra: ves todo lo que Startidea va a leer.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">02</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">Startidea prepara un briefing</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  El equipo lee tus respuestas y prepara una primera lectura: hipótesis de fondo, encaje con servicios, preguntas para abrir la conversación. No se vende nada — se entiende el problema.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">03</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">Reunión de 30 minutos</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  Mario te llama. Hablamos del reto con el briefing delante. Si Startidea es el partner adecuado, te lo decimos. Si no, te orientamos hacia quien sí — sin segundas intenciones.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Para quién -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Para quién</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Startidea trabaja con <em class="italic text-magenta">tres perfiles</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-ink/80">
+            Si tu organización encaja en alguno, este diagnóstico te puede ahorrar tiempo. Si no, dilo y te orientamos al equipo adecuado.
+          </p>
+
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Tercer sector</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                Fundaciones, ONG, asociaciones. Comunicación, marca, fundraising, replanteamiento estratégico.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Instituciones</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                Eclesiales, públicas, educativas. Comunicación interna, identidad institucional, proyectos pastorales y culturales.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Empresas con propósito</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                ASE (Acción Social Empresarial), marca empleadora, mecenazgo, programas de impacto. Empresas que quieren hacer las cosas bien y contarlo sin postureo.
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x text-center">
+      <span class="label">— Cuéntanos</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Tres minutos para empezar a <em class="italic text-magenta">resolver</em>.
+      </h2>
+      <p class="mt-6 mx-auto max-w-measure text-ink/80">
+        Sin coste. Sin compromiso. Sin cookies de terceros.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href="/diagnostico/nuevo" class="btn">Empezar diagnóstico →</a>
+      </div>
+    </div>
+  </section>
+</Base>

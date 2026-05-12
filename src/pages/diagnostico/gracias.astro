@@ -1,0 +1,39 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base
+  title="Diagnóstico recibido — Startidea"
+  description="Gracias por enviar tu diagnóstico. Startidea revisará tus respuestas y te contactará en breve."
+  ogSlug="page/diagnostico-gracias"
+  noindex={true}
+>
+  <section class="border-b border-ink/15 bg-paper py-20 md:py-28 lg:py-32">
+    <div class="container-x">
+      <span class="label">— Recibido</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Gracias.<br/>
+        <em class="italic text-magenta">Te llamamos pronto.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea ha recibido tu diagnóstico. El equipo lo lee, prepara una primera lectura y Mario te contacta en las próximas 48 horas laborales para concretar la llamada.
+      </p>
+
+      <div class="mt-12 max-w-measure border-t border-ink/15 pt-8 text-sm text-ink/80 space-y-4">
+        <p>
+          <strong class="text-ink">Mientras tanto</strong> — si quieres acelerar, puedes reservar hueco directamente en el calendario:
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/contacto" class="btn">Reservar llamada de 30min →</a>
+          <a href="/notas" class="btn-ghost">Leer las notas del blog</a>
+        </div>
+      </div>
+
+      <div class="mt-12 max-w-measure border-t border-ink/15 pt-8 text-sm text-ink-mute">
+        <p>
+          ¿Necesitas modificar algo de lo que enviaste? Escríbenos a <a href="mailto:hola@startidea.es" class="link-underline text-ink">hola@startidea.es</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

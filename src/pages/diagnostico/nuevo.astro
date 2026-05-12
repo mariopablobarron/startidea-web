@@ -1,0 +1,423 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Diagnóstico', url: `${SITE_URL}/diagnostico` },
+    { name: 'Nuevo', url: `${SITE_URL}/diagnostico/nuevo` },
+  ]),
+];
+
+// Endpoint hub para recibir el form (CORS habilitado al receiver)
+const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
+---
+
+<Base
+  title="Nuevo diagnóstico — Startidea"
+  description="Cuestionario de 3 minutos para que Startidea prepare un briefing antes de la primera reunión."
+  ogSlug="page/diagnostico-nuevo"
+  noindex={true}
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <span class="label">— Diagnóstico · paso <span data-step-label>1</span> de 3</span>
+      <h1 class="mt-4 font-display text-display-lg leading-[0.98] text-ink">
+        Cuéntanos tu <em class="italic text-magenta">reto</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-ink/80">
+        Tres pasos. Tres minutos. Sin coste. Cuando termines, Startidea recibe tu cuestionario y prepara un briefing antes de llamarte.
+      </p>
+
+      <!-- Progress bar -->
+      <div class="mt-8 flex items-center gap-2 max-w-md" aria-hidden="true">
+        <div class="h-1 flex-1 bg-ink/15 overflow-hidden">
+          <div data-progress class="h-full bg-magenta transition-all duration-300" style="width: 33%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <form
+        id="diag-form"
+        data-intake-url={INTAKE_URL}
+        class="max-w-2xl space-y-10"
+        novalidate
+      >
+        <!-- honeypot anti-bot -->
+        <input type="text" name="honeypot" tabindex="-1" autocomplete="off" class="absolute -left-[9999px]" aria-hidden="true" />
+
+        <!-- ============ PASO 1: CONTEXTO ============ -->
+        <fieldset data-step="1" class="space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">Quién eres</h2>
+            <p class="mt-2 text-sm text-ink-mute">Lo básico para poder llamarte.</p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="name" class="block text-sm font-medium text-ink">Tu nombre</label>
+            <input type="text" id="name" name="name" required minlength="2" maxlength="100"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="space-y-2">
+            <label for="email" class="block text-sm font-medium text-ink">Tu email</label>
+            <input type="email" id="email" name="email" required maxlength="200"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="space-y-2">
+            <label for="organizationName" class="block text-sm font-medium text-ink">Organización</label>
+            <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
+              placeholder="Nombre completo o razón social"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="space-y-2">
+              <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
+              <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
+              <input type="tel" id="phone" name="phone" maxlength="40"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="website" class="block text-sm font-medium text-ink">Web de la organización (opcional)</label>
+            <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿Qué tipo de organización eres?</span>
+            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
+              <input type="radio" name="audience" value="tercer-sector" required class="mt-1" />
+              <span>
+                <span class="block font-medium text-ink">Tercer sector</span>
+                <span class="block text-sm text-ink-mute">ONG, fundación, asociación, cooperativa social.</span>
+              </span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
+              <input type="radio" name="audience" value="institucion" class="mt-1" />
+              <span>
+                <span class="block font-medium text-ink">Institución</span>
+                <span class="block text-sm text-ink-mute">Eclesial, pública, educativa, sanitaria.</span>
+              </span>
+            </label>
+            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
+              <input type="radio" name="audience" value="empresa" class="mt-1" />
+              <span>
+                <span class="block font-medium text-ink">Empresa con propósito</span>
+                <span class="block text-sm text-ink-mute">Empresa con programa ASE o vocación de impacto.</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 2: RETO ============ -->
+        <fieldset data-step="2" class="space-y-8 hidden">
+          <div>
+            <h2 class="font-display text-2xl text-ink">El reto</h2>
+            <p class="mt-2 text-sm text-ink-mute">Sé concreto. No hace falta que esté redactado bonito.</p>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿En qué etapa estáis?</span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
+                <input type="radio" name="stage" value="idea" required />
+                <span class="text-sm">Idea en formación</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
+                <input type="radio" name="stage" value="lanzamiento" />
+                <span class="text-sm">Lanzamiento reciente</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
+                <input type="radio" name="stage" value="consolidado" />
+                <span class="text-sm">Proyecto consolidado</span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
+                <input type="radio" name="stage" value="replanteamiento" />
+                <span class="text-sm">Replanteamiento estratégico</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="challenge" class="block text-sm font-medium text-ink">¿Qué reto quieres resolver?</label>
+            <textarea id="challenge" name="challenge" required minlength="20" maxlength="2000" rows="6"
+              placeholder="Ej: Necesitamos profesionalizar la comunicación externa. Tenemos 1.200 socios pero la captación nueva está estancada hace dos años."
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
+            <p class="text-xs text-ink-mute"><span data-count-challenge>0</span> / 2000</p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="triedBefore" class="block text-sm font-medium text-ink">¿Qué habéis probado antes? (opcional)</label>
+            <textarea id="triedBefore" name="triedBefore" maxlength="1500" rows="3"
+              placeholder="Lo que habéis intentado y por qué no terminó de funcionar."
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 3: RECURSOS + ESPECÍFICOS ============ -->
+        <fieldset data-step="3" class="space-y-8 hidden">
+          <div>
+            <h2 class="font-display text-2xl text-ink">Recursos y plazo</h2>
+            <p class="mt-2 text-sm text-ink-mute">Estimaciones aproximadas. No hace falta precisión.</p>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Presupuesto orientativo</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="budgetRange" value="<1k" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">&lt;1.000€</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="budgetRange" value="1k-5k" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">1k - 5k</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="budgetRange" value="5k-15k" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">5k - 15k</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="budgetRange" value="15k+" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">15k+</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Plazo en mente</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="timeframe" value="asap" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">Cuanto antes</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="timeframe" value="1-3m" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">1 - 3 meses</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="timeframe" value="3-6m" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">3 - 6 meses</span>
+              </label>
+              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
+                <input type="radio" name="timeframe" value="6m+" class="sr-only peer" />
+                <span class="peer-checked:font-bold peer-checked:text-magenta">6m+</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="teamSize" class="block text-sm font-medium text-ink">Equipo dedicado al proyecto (opcional)</label>
+            <input type="text" id="teamSize" name="teamSize" maxlength="100" placeholder="ej: 2 personas part-time"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <!-- Campos condicionales según audience -->
+          <div data-audience-block="tercer-sector" class="space-y-6 hidden">
+            <div class="space-y-2">
+              <label for="mission" class="block text-sm font-medium text-ink">Misión de la organización (opcional)</label>
+              <textarea id="mission" name="mission" maxlength="500" rows="2"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
+            </div>
+            <div class="space-y-2">
+              <label for="fundingMix" class="block text-sm font-medium text-ink">Mix de financiación principal (opcional)</label>
+              <input type="text" id="fundingMix" name="fundingMix" maxlength="200"
+                placeholder="ej: 60% subvenciones, 30% cuotas socios, 10% servicios"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-audience-block="institucion" class="space-y-6 hidden">
+            <div class="space-y-2">
+              <label for="institutionType" class="block text-sm font-medium text-ink">Tipo de institución</label>
+              <input type="text" id="institutionType" name="institutionType" maxlength="150"
+                placeholder="ej: diócesis, congregación, universidad, ayuntamiento"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-audience-block="empresa" class="space-y-3 hidden">
+            <span class="block text-sm font-medium text-ink">¿Ya tenéis un programa ASE (Acción Social Empresarial)?</span>
+            <div class="flex gap-4">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="asePresent" value="true" />
+                <span class="text-sm">Sí, ya tenemos</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="asePresent" value="false" />
+                <span class="text-sm">No, queremos empezar</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="source" class="block text-sm font-medium text-ink">¿Cómo conociste Startidea? (opcional)</label>
+            <select id="source" name="source"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none">
+              <option value="">Selecciona…</option>
+              <option value="recomendacion">Recomendación de alguien</option>
+              <option value="google">Google</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="evento">Evento o ponencia</option>
+              <option value="granadasocial">Granada Social</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+
+          <div data-error class="hidden rounded border border-red-300 bg-red-50 p-4 text-sm text-red-800"></div>
+
+          <div class="flex justify-between items-center pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="submit" data-submit class="btn">Enviar diagnóstico →</button>
+          </div>
+
+          <p class="text-xs text-ink-mute">
+            Al enviar aceptas que Startidea trate tus datos para responderte. No se usarán para otra cosa. Política de privacidad en <a href="/aviso-legal" class="underline">aviso legal</a>.
+          </p>
+        </fieldset>
+
+        <!-- Estado loading/global -->
+        <div data-loading class="hidden text-center py-8">
+          <p class="text-ink/80">Enviando diagnóstico…</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById('diag-form');
+      if (!form) return;
+      const intakeUrl = form.dataset.intakeUrl;
+      const steps = form.querySelectorAll('[data-step]');
+      const progress = document.querySelector('[data-progress]');
+      const stepLabel = document.querySelector('[data-step-label]');
+      const errorBox = form.querySelector('[data-error]');
+      const loadingBox = form.querySelector('[data-loading]');
+      const challengeCount = document.querySelector('[data-count-challenge]');
+      const challengeEl = form.querySelector('[name="challenge"]');
+      let current = 1;
+
+      function show(step) {
+        steps.forEach(s => {
+          s.classList.toggle('hidden', Number(s.dataset.step) !== step);
+        });
+        if (progress) progress.style.width = ((step / 3) * 100) + '%';
+        if (stepLabel) stepLabel.textContent = String(step);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        current = step;
+      }
+
+      function validateStep(step) {
+        const fs = form.querySelector('[data-step="' + step + '"]');
+        if (!fs) return true;
+        const requireds = fs.querySelectorAll('[required]');
+        for (const el of requireds) {
+          if (el.type === 'radio') {
+            const group = fs.querySelectorAll('[name="' + el.name + '"]:checked');
+            if (group.length === 0) {
+              alert('Falta: ' + (el.closest('div')?.querySelector('span.block.text-sm')?.textContent ?? el.name));
+              return false;
+            }
+          } else if (!el.value || (el.minLength && el.value.length < el.minLength)) {
+            el.focus();
+            alert('Falta o demasiado corto: ' + (el.previousElementSibling?.textContent ?? el.name));
+            return false;
+          } else if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)) {
+            el.focus();
+            alert('Email inválido');
+            return false;
+          }
+        }
+        return true;
+      }
+
+      // Listeners de navegación
+      form.querySelectorAll('[data-next]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!validateStep(current)) return;
+          // Mostrar bloque de audience-block correcto al ir a paso 3
+          if (current === 1) {
+            const audience = form.querySelector('[name="audience"]:checked')?.value;
+            form.querySelectorAll('[data-audience-block]').forEach(b => {
+              b.classList.toggle('hidden', b.dataset.audienceBlock !== audience);
+            });
+          }
+          show(current + 1);
+        });
+      });
+
+      form.querySelectorAll('[data-prev]').forEach(btn => {
+        btn.addEventListener('click', () => show(current - 1));
+      });
+
+      // Contador de caracteres del reto
+      if (challengeEl && challengeCount) {
+        challengeEl.addEventListener('input', () => {
+          challengeCount.textContent = String(challengeEl.value.length);
+        });
+      }
+
+      // Submit
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!validateStep(3)) return;
+
+        const formData = new FormData(form);
+        const payload = {};
+        for (const [k, v] of formData.entries()) {
+          if (typeof v === 'string' && v.trim() !== '') {
+            payload[k] = k === 'asePresent' ? v === 'true' : v.trim();
+          }
+        }
+
+        errorBox?.classList.add('hidden');
+        loadingBox?.classList.remove('hidden');
+        form.querySelector('[data-step="3"]')?.classList.add('hidden');
+
+        try {
+          const res = await fetch(intakeUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.ok) {
+            throw new Error(data.error || ('HTTP ' + res.status));
+          }
+          window.location.href = '/diagnostico/gracias';
+        } catch (err) {
+          loadingBox?.classList.add('hidden');
+          form.querySelector('[data-step="3"]')?.classList.remove('hidden');
+          if (errorBox) {
+            errorBox.textContent = 'No se pudo enviar el diagnóstico (' + (err.message || 'error') + '). Inténtalo de nuevo o escríbenos a hola@startidea.es.';
+            errorBox.classList.remove('hidden');
+          }
+        }
+      });
+
+      show(1);
+    })();
+  </script>
+</Base>
