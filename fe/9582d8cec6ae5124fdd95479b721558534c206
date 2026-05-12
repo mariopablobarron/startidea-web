@@ -1,0 +1,25 @@
+src/content/notas/agencia-pequena-vs-grande.md
+  s_fc84abf46d9a4c::t_a4f486fd38a95b 1-79
+src/content/notas/metodo-diagnostico-startidea.md
+  s_fc84abf46d9a4c::t_772e2b43dfe4fa 1-98
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_fc84abf46d9a4c::t_9bd87d3a11f979 1-97
+src/pages/api/presupuesto.ts
+  s_fc84abf46d9a4c::t_965e35271f4ef4 151-159,166-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "fe9582d8cec6ae5124fdd95479b721558534c206",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
