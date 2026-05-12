@@ -34,13 +34,13 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          # Fingerprint anclado para evitar man-in-the-middle. Si cambia
-          # el host key del VPS, este step fallará — eso es intencional.
-          fingerprint: SHA256:QwSp+3TBiGKljDMdfvDXGIB2IqO7MNVG+azwqqKLeJ0
           # No envíamos comandos: la SSH key tiene command="..." forzado en
-          # authorized_keys del VPS, así que cualquier conexión ejecuta el
-          # script de deploy y nada más. El parámetro script aquí es
-          # ignorado por el lado del VPS pero appleboy/ssh-action requiere
-          # algo no vacío.
+          # authorized_keys del VPS (ver /root/deploy-startidea-web.sh).
+          # Cualquier conexión ejecuta SOLO ese script y termina. El runner
+          # de GitHub Actions no puede ejecutar nada más, ni siquiera con la
+          # privada filtrada (que no se transmite por SSH, solo se usa para
+          # firmar el handshake). Por eso el fingerprint pinning es
+          # redundante y conflicta con la librería Go de drone-ssh
+          # (acepta solo un algoritmo, mientras el host expone 3).
           script: ":"
           command_timeout: 8m
