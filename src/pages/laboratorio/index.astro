@@ -1,0 +1,94 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+  ]),
+];
+
+const ramas = [
+  {
+    titulo: 'HyperFrames',
+    subtitulo: 'Video editorial con código',
+    descripcion: 'Composiciones HTML animadas que se renderizan a MP4. Útil para hero web, memoria anual, redes e intros de evento. Coherente, editable y rápido de iterar.',
+    href: '/laboratorio/hyperframes',
+    icono: '🎬',
+    estado: 'En activo',
+  },
+  {
+    titulo: 'Diagnósticos de fundraising',
+    subtitulo: 'Casos públicos anonimizados',
+    descripcion: 'Radiografías reales de mezclas de ingresos del tercer sector, con las palancas detectadas y las recomendaciones que dimos. El método Startidea aplicado a casos.',
+    href: '/laboratorio/fundraising',
+    icono: '📊',
+    estado: 'En activo',
+  },
+];
+---
+
+<Base
+  title="Startidea Lab — Experimentos abiertos y métodos aplicados"
+  description="Startidea Lab es el espacio donde Startidea hace público su método: diagnósticos de fundraising anonimizados, herramientas de video con código, y experimentos editoriales que están en producción real con clientes."
+  ogSlug="page/laboratorio"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Startidea Lab</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        El método.<br/>
+        <em class="italic text-magenta">A la vista.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea publica aquí los experimentos y los métodos que está aplicando con clientes reales. Sin filtro de marketing: si algo funciona, te lo enseñamos; si algo lo estamos probando, también. Esto es lo que la mayoría de agencias mantiene en privado.
+      </p>
+    </div>
+  </section>
+
+  <!-- Ramas del lab -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <ol class="grid gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-2">
+        {ramas.map((r) => (
+          <li class="bg-paper-warm p-7 md:p-9">
+            <div class="flex items-baseline justify-between gap-3">
+              <span aria-hidden="true" class="text-4xl">{r.icono}</span>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">{r.estado}</span>
+            </div>
+            <h2 class="mt-5 font-display text-2xl leading-tight text-ink md:text-3xl">
+              <a href={r.href} class="hover:text-magenta">{r.titulo}</a>
+            </h2>
+            <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute">{r.subtitulo}</p>
+            <p class="mt-4 text-sm leading-relaxed text-ink/80">{r.descripcion}</p>
+            <div class="mt-6">
+              <a href={r.href} class="btn-ghost !py-2 text-sm">
+                Explorar <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x text-center">
+      <span class="label">— Aplicarlo a tu caso</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Si <em class="italic text-magenta">algo encaja</em>, hablamos.
+      </h2>
+      <p class="mt-6 mx-auto max-w-measure text-ink/80">
+        El método que ves aquí es el que Startidea aplicaría a tu organización. Sin templates ni promesas vacías. Empieza con un diagnóstico inicial y vemos si encajamos.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+        <a href="/contacto" class="btn-ghost">Reservar llamada de 30 min</a>
+      </div>
+    </div>
+  </section>
+</Base>

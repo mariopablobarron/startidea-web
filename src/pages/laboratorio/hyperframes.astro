@@ -1,0 +1,221 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio/fundraising` },
+    { name: 'HyperFrames', url: `${SITE_URL}/laboratorio/hyperframes` },
+  ]),
+];
+
+const casos = [
+  {
+    titulo: 'Hero web institucional',
+    cuerpo: 'Video de 20-30 segundos que sustituye al carrusel de imágenes en la portada. Carga rápido, dice la misión en movimiento, no se ve como template.',
+    icono: '🎬',
+  },
+  {
+    titulo: 'Memoria anual en vídeo',
+    cuerpo: 'Cifras de impacto del año animadas con texto, no narradas en off. Útil para asambleas, redes y patronato. Reusable en partes para campañas.',
+    icono: '📊',
+  },
+  {
+    titulo: 'Cabecera de redes sociales',
+    cuerpo: 'Loop corto de 5-10 segundos que abre cada publicación importante. Identidad visual coherente entre Instagram, LinkedIn y X.',
+    icono: '🎞️',
+  },
+  {
+    titulo: 'Intro de eventos y ponencias',
+    cuerpo: 'Animación de apertura para charlas, retransmisiones, podcasts. Permite cambiar texto y cifras sin re-rodar nada.',
+    icono: '🎙️',
+  },
+];
+
+const proceso = [
+  {
+    n: '01',
+    titulo: 'Diagnóstico narrativo',
+    cuerpo: 'Antes de mover un píxel, Startidea entiende qué historia cuenta tu organización ahora y qué hace falta cambiar. Sin diagnóstico no hay video.',
+  },
+  {
+    n: '02',
+    titulo: 'Composición HTML',
+    cuerpo: 'El video se escribe como HTML + animación con código, no como capas de After Effects. Eso da control de cada milisegundo y permite cambiar copy sin re-renderizar todo.',
+  },
+  {
+    n: '03',
+    titulo: 'Render y entrega',
+    cuerpo: 'Render final en 4K o 1080p, MP4 listo para web y formatos verticales/cuadrados para redes. Si la cifra cambia, el video se vuelve a renderizar en minutos.',
+  },
+];
+---
+
+<Base
+  title="HyperFrames · Video editorial hecho con código — Startidea Lab"
+  description="Startidea produce video institucional con HyperFrames: composiciones HTML animadas que se renderizan a MP4. Útil para hero web, memoria anual, redes sociales e intros de evento. Coherente, editable y rápido de iterar — sin caer en templates."
+  ogSlug="page/laboratorio-hyperframes"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Laboratorio · HyperFrames</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Video con código.<br/>
+        <em class="italic text-magenta">No con templates.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea produce video institucional escribiendo HTML animado, no apilando capas en After Effects. La diferencia: cada palabra es texto editable, cada cifra se cambia sin re-rodar, cada plano se itera en minutos. Útil para organizaciones que necesitan video coherente y reusable a lo largo del año.
+      </p>
+    </div>
+  </section>
+
+  <!-- Demo video — hero animado real -->
+  <section class="bg-paper-warm py-12 md:py-20">
+    <div class="container-x">
+      <div class="border-t border-ink/15 pt-8">
+        <span class="label">— Ejemplo en vivo</span>
+        <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+          El video que abre <em class="italic text-magenta">esta misma web</em>.
+        </h2>
+        <p class="mt-4 max-w-measure text-sm text-ink/75">
+          Composición de 20 segundos producida con HyperFrames. Renderizada a 1920×1080 desde HTML+GSAP. Pesa menos que un GIF de los antiguos y se carga progresivamente en móvil.
+        </p>
+      </div>
+
+      <div class="mt-10 overflow-hidden border-2 border-ink/15 bg-ink/5">
+        <video
+          poster="/brand/logo-original.png"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          class="block aspect-video w-full"
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+
+      <p class="mt-4 max-w-measure font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        Producido por Startidea · 1920×1080 · HyperFrames v0.6
+      </p>
+    </div>
+  </section>
+
+  <!-- Casos de uso -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Para qué sirve</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cuatro <em class="italic text-magenta">usos típicos</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-ink/75">
+            Cada uno se cierra con alcance, plazo y precio diferentes. Hablamos del tuyo en el diagnóstico.
+          </p>
+
+          <ul class="mt-12 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            {casos.map((c) => (
+              <li class="bg-paper-warm p-6 md:p-8">
+                <span aria-hidden="true" class="text-3xl">{c.icono}</span>
+                <h3 class="mt-3 font-display text-xl text-ink md:text-2xl">{c.titulo}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/75">{c.cuerpo}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo trabajamos -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo trabajamos</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tres <em class="italic text-magenta">pasos</em>.
+          </h2>
+
+          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {proceso.map((p) => (
+              <li class="grid grid-cols-12 gap-x-8 py-8">
+                <div class="col-span-12 lg:col-span-2">
+                  <span class="font-mono text-ink-mute">{p.n}</span>
+                </div>
+                <div class="col-span-12 lg:col-span-10">
+                  <h3 class="font-display text-2xl text-ink">{p.titulo}</h3>
+                  <p class="mt-3 max-w-measure text-ink/80">{p.cuerpo}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diferencia frente a templates -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Por qué no templates</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            <em class="italic text-magenta">Templates</em> versus código.
+          </h2>
+
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Cambiar una cifra</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                Con template: re-abrir After Effects, encontrar la capa, exportar de nuevo. Con HyperFrames: editar una línea de texto en HTML y volver a renderizar.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Mantener identidad</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                Con template: cada video parte de cero, se "decora" igual pero nunca es exacto. Con HyperFrames: colores, tipografías y motion viven en un solo archivo de estilo reusable entre piezas.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Versionar y mejorar</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
+                Con template: los proyectos antiguos se pierden en una carpeta. Con HyperFrames: cada composición está en Git, se diffea y se recupera años después.
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x text-center">
+      <span class="label">— Empezar</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Cuéntanos el video <em class="italic text-magenta">que necesitas</em>.
+      </h2>
+      <p class="mt-6 mx-auto max-w-measure text-ink/80">
+        Tres minutos rellenando el diagnóstico. Después una llamada de 30 min. Y una propuesta con alcance, plazos y precio. Sin compromiso.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+        <a href="/contacto" class="btn-ghost">Hablar 30 minutos</a>
+      </div>
+    </div>
+  </section>
+</Base>
