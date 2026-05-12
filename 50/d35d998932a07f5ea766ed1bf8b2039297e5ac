@@ -1,0 +1,22 @@
+src/components/MobileCtaBar.astro
+  s_fc84abf46d9a4c::t_b6ef670f5915c1 1-104
+src/layouts/Base.astro
+  s_fc84abf46d9a4c::t_9e476f406ce478 86,94
+  s_fc84abf46d9a4c::t_5e9665aff39188 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "50d35d998932a07f5ea766ed1bf8b2039297e5ac",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
