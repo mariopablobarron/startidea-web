@@ -1,15 +1,19 @@
 ---
-// Han confiado — selección curada por reconocimiento de marca y
-// relevancia sectorial, agrupada por audiencia para que el lector entienda
-// el alcance. Wordmark tipográfico hasta que lleguen los logos vectoriales.
+// Han confiado — pared de marcas con las que Startidea ha trabajado.
+// Si existe un archivo en /public/clientes/<slug>.png se muestra el logo;
+// si no, el wordmark editorial cumple su función (también queda bien).
+//
+// Para añadir un logo nuevo: poner PNG transparente (preferentemente cuadrado
+// o casi cuadrado, ~512x512px) en /public/clientes/<slug>.png y referenciar
+// el slug aquí.
 const grupos = [
   {
     label: 'Tercer sector · estatal',
     clientes: [
-      { name: 'Cruz Roja Española' },
-      { name: 'Fundación Save the Children' },
-      { name: 'Fundación Acción Contra el Hambre' },
-      { name: 'YMCA España' },
+      { name: 'Cruz Roja Española', logo: 'cruz-roja' },
+      { name: 'Fundación Save the Children', logo: 'save-the-children' },
+      { name: 'Fundación Acción Contra el Hambre', logo: 'accion-contra-el-hambre' },
+      { name: 'YMCA España', logo: 'ymca' },
       { name: 'Fundación Proyecto Solidario por la Infancia' },
       { name: 'Asociación Provivienda' },
       { name: 'Fundación Nantik Lum' },
@@ -33,7 +37,7 @@ const grupos = [
     label: 'Educación con propósito',
     clientes: [
       { name: 'Fundación Maristas Ibérica' },
-      { name: 'Fundación Educativa Escolapias' },
+      { name: 'Fundación Educativa Escolapias', logo: 'escolapias' },
       { name: 'Fundación Marcelino Champagnat' },
       { name: 'Fundación Enrique de Ossó' },
       { name: 'CONFER' },
@@ -43,8 +47,8 @@ const grupos = [
   {
     label: 'Instituciones públicas',
     clientes: [
-      { name: 'Diputación de Granada' },
-      { name: 'Ayuntamiento de Granada' },
+      { name: 'Diputación de Granada', logo: 'diputacion-granada' },
+      { name: 'Ayuntamiento de Granada', logo: 'ayuntamiento-granada' },
       { name: 'Universidad de Granada' },
       { name: 'Fundación Pública Andaluza Progreso y Salud' },
       { name: 'Ayuntamiento de Vila-real' },
@@ -65,7 +69,10 @@ const grupos = [
       { name: 'Granadown Report' },
     ],
   },
-];
+] satisfies Array<{
+  label: string;
+  clientes: Array<{ name: string; logo?: string }>;
+}>;
 ---
 
 <section class="relative bg-paper-warm py-20 md:py-28">
@@ -95,10 +102,19 @@ const grupos = [
           <div class="col-span-12 mt-4 lg:col-span-9 lg:mt-0">
             <ul class="grid grid-cols-2 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3 lg:grid-cols-3">
               {grupo.clientes.map((c) => (
-                <li class="group flex aspect-[3/2] items-center justify-center bg-paper-warm p-6 text-center transition-colors hover:bg-paper">
-                  <p class="font-display text-lg leading-tight text-ink transition-colors group-hover:text-magenta md:text-xl">
-                    {c.name}
-                  </p>
+                <li class="group flex aspect-[3/2] items-center justify-center bg-paper p-6 text-center transition-colors hover:bg-paper-warm">
+                  {c.logo ? (
+                    <img
+                      src={`/clientes/${c.logo}.png`}
+                      alt={c.name}
+                      loading="lazy"
+                      class="max-h-16 max-w-[78%] w-auto h-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:max-h-20"
+                    />
+                  ) : (
+                    <p class="font-display text-lg leading-tight text-ink transition-colors group-hover:text-magenta md:text-xl">
+                      {c.name}
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>
