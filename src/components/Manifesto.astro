@@ -1,10 +1,13 @@
 ---
-// Manifiesto resumen — versión editorial corta para la home
+// Manifiesto resumen — versión editorial corta para la home.
+// Integra ahora el vídeo HyperFrames de 20s (antes vivía en una sección
+// aparte VideoManifiesto). Recortado tras feedback cliente 14-may para
+// reducir longitud total del home.
 ---
 
 <section id="manifiesto" class="relative bg-ink py-24 text-paper md:py-32">
   <div class="container-x">
-    <div class="grid grid-cols-12 gap-x-8">
+    <div class="grid grid-cols-12 gap-x-8 gap-y-12">
       <div class="col-span-12 lg:col-span-3">
         <span class="label !text-paper/60">— Manifiesto</span>
       </div>
@@ -13,6 +16,26 @@
         <h2 class="font-display text-display-lg leading-[1.02] text-paper">
           La innovación social <em class="italic text-magenta">no es una etiqueta</em>.
         </h2>
+
+        <!-- Video integrado del manifiesto (HyperFrames, 20s sin sonido) -->
+        <div class="mt-10 border border-paper/15 bg-black/40">
+          <div class="relative aspect-video w-full">
+            <video
+              class="absolute inset-0 h-full w-full object-cover"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="/brand/logo-original.png"
+            >
+              <source src="/hero.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-paper/55">
+          ~ 20 segundos · producido con HyperFrames · sin sonido
+        </p>
 
         <div class="mt-10 space-y-7 text-lede text-paper/90 lg:max-w-measure">
           <p>

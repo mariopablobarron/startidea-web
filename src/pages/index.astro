@@ -1,22 +1,30 @@
 ---
+// Home recortada — feedback cliente 7-may: "la página es muy larga, yo
+// recortaría cosas". Pasamos de 20 secciones a 11. Lo retirado se mantiene
+// vivo en páginas dedicadas (no se borra el contenido):
+//
+//   - DiagnosticosHome → vive en /laboratorio/fundraising
+//   - RecursosHome     → vive en /notas y en el footer
+//   - LogosClientes    → consolidado dentro de HanConfiado (eran dos bloques
+//                        haciendo lo mismo: pared de marcas)
+//   - Membresias       → vive en /sobre (sección de credibilidad)
+//   - VideoManifiesto  → fusionado dentro de Manifesto
+//   - Fundador         → vive en /sobre
+//
+// Flujo narrativo: gancho → quiénes son → qué hacen → cómo → prueba social
+// → cómo empezar.
 import Base from '@/layouts/Base.astro';
 import Hero from '@/components/Hero.astro';
 import CtaConversion from '@/components/CtaConversion.astro';
 import MetricasHero from '@/components/MetricasHero.astro';
-import Ecosistema from '@/components/Ecosistema.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
+import Ecosistema from '@/components/Ecosistema.astro';
 import ComoTrabajamos from '@/components/ComoTrabajamos.astro';
-import PresupuestoHome from '@/components/PresupuestoHome.astro';
-import Casos from '@/components/Casos.astro';
-import DiagnosticosHome from '@/components/DiagnosticosHome.astro';
-import RecursosHome from '@/components/RecursosHome.astro';
-import LogosClientes from '@/components/LogosClientes.astro';
 import HanConfiado from '@/components/HanConfiado.astro';
+import Casos from '@/components/Casos.astro';
+import PresupuestoHome from '@/components/PresupuestoHome.astro';
 import Testimonios from '@/components/Testimonios.astro';
-import Membresias from '@/components/Membresias.astro';
 import Manifesto from '@/components/Manifesto.astro';
-import VideoManifiesto from '@/components/VideoManifiesto.astro';
-import Fundador from '@/components/Fundador.astro';
 import CtaFinal from '@/components/CtaFinal.astro';
 import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
 ---
@@ -26,25 +34,29 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   description="Estrategia, comunicación y herramientas digitales para organizaciones que existen para algo más. Tercer sector, instituciones y empresas con propósito."
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
+  <!-- 1. Gancho -->
   <Hero />
   <CtaConversion />
+
+  <!-- 2. Quién — credibilidad rápida -->
   <MetricasHero />
   <ParaQuien />
-  {/* Diego v60: Casos no debe quedar por encima de Servicios. La nav
-      "Servicios" hace scroll a #ecosistema, así que Ecosistema va antes
-      que Casos para que al aterrizar el usuario no vea Casos arriba. */}
+
+  <!-- 3. Qué — servicios + método -->
   <Ecosistema />
   <ComoTrabajamos />
-  <PresupuestoHome />
-  <Casos />
+
+  <!-- 4. Prueba social — quién ha confiado + casos -->
   <HanConfiado />
-  <DiagnosticosHome />
-  <RecursosHome />
-  <LogosClientes />
+  <Casos />
+
+  <!-- 5. Cómo empezar -->
+  <PresupuestoHome />
+
+  <!-- 6. Voz / Manifiesto (con video integrado) -->
   <Testimonios />
-  <Membresias />
   <Manifesto />
-  <VideoManifiesto />
-  <Fundador />
+
+  <!-- 7. CTA cierre -->
   <CtaFinal />
 </Base>

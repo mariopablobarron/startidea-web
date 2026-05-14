@@ -30,12 +30,16 @@ export default {
           mute: '#6e6f70',     // exacto del trazo del bucle
           faint: '#9c9c9d',
         },
-        // Fondo blanco roto, cálido, bajo en contraste con tinta
+        // Fondo blanco gris frío — neutro y limpio, sin tono cálido.
+        // Cambio 14-may tras feedback cliente: el crema/pastel anterior
+        // (faf8f5, f3efe8) se percibía como "decorativo" y restaba seriedad.
+        // Ahora alineado con Tailwind gray-50/100/200/300 — base de SaaS
+        // profesional moderno.
         paper: {
-          DEFAULT: '#faf8f5',  // off-white casi imperceptible — más limpio que crema
-          warm: '#f3efe8',
-          deep: '#e8e2d6',
-          line: '#d8d2c4',
+          DEFAULT: '#f9fafb',  // gray-50 — fondo principal
+          warm: '#f3f4f6',     // gray-100 — secciones alternas
+          deep: '#e5e7eb',     // gray-200 — separadores fuertes
+          line: '#d1d5db',     // gray-300 — bordes de cards
         },
         // Verde se mantiene como acento institucional muy puntual (datos críticos, success)
         forest: '#1f3d2e',
