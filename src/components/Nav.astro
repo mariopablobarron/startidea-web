@@ -10,16 +10,19 @@ const links = [
   { label: 'Notas', href: '/notas' },
 ];
 
+// Líneas editoriales / propiedades de Startidea — no incluimos aquí
+// Merchandising porque rompe la línea de innovación social (es catálogo
+// de productos). Si en el futuro lo queremos visibilizar, va en un menú
+// secundario propio o en la home como sección comercial separada.
 const propiedades = [
   { label: 'Hub Startidea', href: 'https://hubstartidea.es', tag: 'Coworking · Estudio' },
-  { label: 'Merchandising', href: 'https://merchandising.startidea.es', tag: 'Catálogo' },
   { label: 'Granada Social', href: 'https://granadasocial.org', tag: 'Medio sociocultural' },
 ];
 ---
 
 <header class="sticky top-0 z-50 border-b border-ink/15 bg-paper/95 backdrop-blur supports-[backdrop-filter]:bg-paper/85">
-  <div class="container-x flex items-center justify-between gap-4 py-3 md:py-4 lg:py-5">
-    <Logo class="h-20 sm:h-24 md:h-28 lg:h-32 xl:h-36 2xl:h-40 3xl:h-44 4xl:h-48" />
+  <div class="container-x flex items-center justify-between gap-4 py-2 md:py-2.5 lg:py-3">
+    <Logo class="h-10 sm:h-11 md:h-12 lg:h-14" />
 
     <!-- Nav desktop -->
     <nav class="hidden xl:block" aria-label="Principal">

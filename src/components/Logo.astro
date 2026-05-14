@@ -1,37 +1,42 @@
 ---
 import { Image } from 'astro:assets';
-import logoDefault from '@/assets/brand/logo-original.png';
-import logoInverse from '@/assets/brand/logo-blanco.png';
+import isotipo from '@/assets/brand/logo-isotipo-only.png';
 
 interface Props {
   class?: string;
   variant?: 'default' | 'inverse';
-  height?: number;
+  /** Si true, oculta el wordmark "Startidea" y deja solo el isotipo. */
+  iconOnly?: boolean;
 }
-const { class: className = '', variant = 'default', height = 96 } = Astro.props;
-const src = variant === 'inverse' ? logoInverse : logoDefault;
+const { class: className = '', variant = 'default', iconOnly = false } = Astro.props;
 
-// Pre-renderizamos a 2× la altura más grande prevista (≈192-240) para que
-// quede nítido en cualquier breakpoint del responsive, incluyendo TVs 4K.
-const baseHeight = Math.max(height, 200);
-const ratio = src.width / src.height;
-const renderedWidth = Math.round(baseHeight * ratio);
+// El logo es ahora una composición HTML: isotipo (PNG) + wordmark de texto.
+// Antes era un único PNG con isotipo + nombre + tagline "Agencia de innovación
+// social" todo dentro, que (a) era demasiado alto, (b) tenía un tagline
+// ilegible en mobile, y (c) bloqueaba al header en 100-200px de altura.
+// Esta versión es compacta, escalable y mantiene la jerarquía visual.
+
+const wordmarkColor = variant === 'inverse' ? 'text-paper' : 'text-ink';
 ---
 
 <a
   href="/"
-  class={`group inline-flex items-center transition-transform duration-300 ease-out hover:-translate-y-0.5 ${className}`}
+  class={`group inline-flex items-center gap-2.5 transition-transform duration-200 ease-out hover:-translate-y-0.5 sm:gap-3 ${className}`}
   aria-label="Startidea — inicio"
 >
   <Image
-    src={src}
-    alt="Startidea"
-    width={renderedWidth * 2}
-    height={baseHeight * 2}
+    src={isotipo}
+    alt=""
+    width={120}
+    height={120}
     densities={[1, 2]}
     format="webp"
     quality={92}
-    style={className.includes('h-') ? 'height:100%; width:auto; display:block;' : `height:${height}px; width:auto; display:block;`}
-    class="transition-opacity duration-300 group-hover:opacity-90"
+    class="h-full w-auto shrink-0 transition-opacity duration-200 group-hover:opacity-90"
   />
+  {!iconOnly && (
+    <span class={`font-display text-xl leading-none tracking-tight sm:text-2xl md:text-[26px] lg:text-[28px] ${wordmarkColor}`}>
+      Startidea
+    </span>
+  )}
 </a>

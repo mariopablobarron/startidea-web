@@ -55,35 +55,54 @@ const jsonLd = [
   <section class="bg-paper py-20 md:py-28">
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
-        <!-- Calendario embed -->
+        <!-- Form de contacto directo (sustituye al embed Cal.com mientras se reactiva) -->
         <div class="col-span-12 lg:col-span-7">
           <span class="label">— Reserva directa</span>
           <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
-            Elige hueco en el <em class="italic text-magenta">calendario</em>.
+            Cuéntanos en <em class="italic text-magenta">tres líneas</em>.
           </h2>
           <p class="mt-5 max-w-measure text-ink/80">
-            Reserva 30 minutos de cuando te venga bien. Te llamamos por Google Meet o por teléfono, lo que prefieras.
+            Te devolvemos la llamada en las próximas 24 horas laborales por el medio que prefieras — Google Meet, teléfono o WhatsApp. Si necesitas algo más estructurado, empieza por el <a href="/diagnostico" class="link-underline text-ink">diagnóstico inicial</a> de 3 minutos.
           </p>
 
-          <!-- Embed Cal.com — bloqueado hasta consentimiento -->
-          <div
-            id="cal-embed-wrapper"
-            class="mt-10 min-h-[640px] border border-ink/15 bg-paper-warm"
-            data-cal-link="startidea/30min"
-          >
-            <noscript>
-              <div class="flex min-h-[420px] flex-col items-center justify-center p-12 text-center">
-                <p class="max-w-md font-display text-2xl leading-snug text-ink/85">
-                  Para reservar hueco necesitas JavaScript activado. Si no, escribe a
-                  <a href="mailto:hola@startidea.es" class="link-underline text-ink">hola@startidea.es</a>.
-                </p>
-              </div>
-            </noscript>
-          </div>
+          <form id="contacto-form" class="mt-10 space-y-4" novalidate>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="absolute -left-[9999px]" aria-hidden="true" />
 
-          <p class="mt-4 font-mono text-xs leading-relaxed text-ink-mute">
-            ↗ El calendario se carga desde Cal.com solo cuando aceptas las cookies de terceros. Mientras tanto, puedes escribirnos por email.
-          </p>
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre y organización</label>
+              <input type="text" id="name" name="name" required minlength="2" maxlength="80"
+                class="w-full border border-ink/30 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/30" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-medium text-ink">Email</label>
+              <input type="email" id="email" name="email" required maxlength="120"
+                class="w-full border border-ink/30 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/30" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="message" class="block text-sm font-medium text-ink">En qué te podemos ayudar</label>
+              <textarea id="message" name="message" required minlength="20" maxlength="1500" rows="4"
+                placeholder="Reto o pregunta concreta. Tres líneas bastan."
+                class="w-full resize-y border border-ink/30 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/30"></textarea>
+            </div>
+
+            <label class="flex items-start gap-3 pt-1 text-xs leading-relaxed text-ink/80">
+              <input type="checkbox" name="consent" required
+                class="mt-0.5 h-4 w-4 flex-shrink-0 border-ink text-magenta focus:ring-magenta" />
+              <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener" class="link-underline text-ink">política de privacidad</a>. Tus datos se usan solo para responder a esta consulta.</span>
+            </label>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button type="submit" class="btn">
+                Enviar y nos llamamos
+                <span aria-hidden="true">→</span>
+              </button>
+              <a href="/diagnostico" class="btn-ghost">O empieza con un diagnóstico</a>
+            </div>
+
+            <p id="contacto-status" class="font-mono text-[11px] text-ink-mute" aria-live="polite"></p>
+          </form>
         </div>
 
         <!-- Datos de contacto -->
@@ -181,87 +200,55 @@ const jsonLd = [
   </section>
 
   <script is:inline>
+    // Form de contacto directo — POST a /api/contacto (mismo endpoint que
+    // usa el CTA de la home y los recursos). Si Resend/Telegram falla, el
+    // form muestra error legible y Mario se entera por logs.
     (function () {
-      var wrapper = document.getElementById('cal-embed-wrapper');
-      if (!wrapper) return;
-      var calLink = wrapper.dataset.calLink || 'startidea/30min';
-      var loaded = false;
+      var form = document.getElementById('contacto-form');
+      if (!form) return;
+      var status = document.getElementById('contacto-status');
 
-      function renderConsentGate() {
-        wrapper.innerHTML =
-          '<div class="flex min-h-[420px] flex-col items-center justify-center p-12 text-center">' +
-          '  <span class="label">Calendario externo</span>' +
-          '  <p class="mt-4 max-w-md font-display text-2xl leading-snug text-ink/85">El calendario se carga desde <strong class="text-magenta">Cal.com</strong>, un servicio de terceros. Acepta las cookies para verlo aquí o reserva por email.</p>' +
-          '  <div class="mt-8 flex flex-wrap justify-center gap-3">' +
-          '    <button type="button" id="cal-accept" class="btn">Aceptar y cargar calendario <span aria-hidden="true">→</span></button>' +
-          '    <a href="mailto:hola@startidea.es" class="btn-ghost">Escribir por email</a>' +
-          '  </div>' +
-          '</div>';
-        var btn = document.getElementById('cal-accept');
-        if (btn) {
-          btn.addEventListener('click', function () {
-            try { localStorage.setItem('startidea.cookieconsent.v1', 'all'); } catch (_) {}
-            loadCal();
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        status.textContent = 'Enviando…';
+
+        var data = new FormData(form);
+        try {
+          var r = await fetch('/api/contacto', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              name: (data.get('name') || '').toString().trim(),
+              email: (data.get('email') || '').toString().trim(),
+              message: (data.get('message') || '').toString().trim(),
+              path: '/contacto',
+              consent: data.get('consent') === 'on',
+              website: (data.get('website') || '').toString(),
+            }),
           });
+          var json = await r.json().catch(function () { return { ok: false }; });
+          if (r.ok && json.ok) {
+            window.stTrack && window.stTrack('generate_lead', {
+              method: 'contacto_form',
+              page_path: '/contacto',
+            });
+            form.innerHTML = '<div class="border-2 border-magenta p-6"><p class="font-display text-2xl text-ink">Recibido. Te llamamos en menos de 24 horas laborales.</p><p class="mt-2 text-sm text-ink/70">Si es urgente, escríbenos directamente a <a href="mailto:hola@startidea.es" class="link-underline">hola@startidea.es</a>.</p></div>';
+          } else {
+            status.textContent =
+              json.error === 'rate' ? 'Espera unos segundos antes de reenviar.' :
+              json.error === 'consent' ? 'Marca la casilla de aceptación de la política de privacidad.' :
+              json.error === 'email' ? 'El email no parece válido.' :
+              json.error === 'fields' ? 'Faltan datos por rellenar.' :
+              'No se pudo enviar. Escríbenos a hola@startidea.es y lo revisamos.';
+            btn.disabled = false;
+          }
+        } catch (err) {
+          status.textContent = 'Sin conexión. Escríbenos a hola@startidea.es.';
+          btn.disabled = false;
         }
-      }
-
-      function loadCal() {
-        if (loaded) return;
-        loaded = true;
-        wrapper.innerHTML = '<div id="cal-inline" style="width:100%;height:100%;min-height:640px;overflow:scroll"></div>';
-        // Loader oficial Cal.com
-        (function (C, A, L) {
-          var p = function (a, ar) { a.q.push(ar); };
-          var d = C.document;
-          C.Cal = C.Cal || function () {
-            var cal = C.Cal;
-            var ar = arguments;
-            if (!cal.loaded) {
-              cal.ns = {};
-              cal.q = cal.q || [];
-              d.head.appendChild(d.createElement('script')).src = A;
-              cal.loaded = true;
-            }
-            if (ar[0] === L) {
-              var api = function () { p(api, arguments); };
-              var namespace = ar[1];
-              api.q = api.q || [];
-              if (typeof namespace === 'string') {
-                cal.ns[namespace] = cal.ns[namespace] || api;
-                p(cal.ns[namespace], ar);
-                p(cal, ['initNamespace', namespace]);
-              } else { p(cal, ar); }
-              return;
-            }
-            p(cal, ar);
-          };
-        })(window, 'https://app.cal.com/embed/embed.js', 'init');
-
-        Cal('init', '30min', { origin: 'https://cal.com' });
-        Cal.ns['30min']('inline', {
-          elementOrSelector: '#cal-inline',
-          calLink: calLink,
-          layout: 'month_view',
-        });
-        Cal.ns['30min']('ui', {
-          theme: 'light',
-          cssVarsPerTheme: {
-            light: { 'cal-brand': '#E6356B' },
-          },
-          hideEventTypeDetails: false,
-          layout: 'month_view',
-        });
-      }
-
-      function decide() {
-        var consent = null;
-        try { consent = localStorage.getItem('startidea.cookieconsent.v1'); } catch (_) {}
-        if (consent === 'all') loadCal(); else renderConsentGate();
-      }
-
-      document.addEventListener('cookieconsent:all', loadCal);
-      decide();
+      });
     })();
   </script>
 </Base>

@@ -9,8 +9,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Compensa el header sticky al saltar a anclas (#ecosistema, #faq, etc.) */
+    scroll-padding-top: 80px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  /* Respeta prefers-reduced-motion: sin smooth scroll forzado. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
   }
 
   body {
