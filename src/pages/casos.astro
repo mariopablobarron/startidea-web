@@ -25,12 +25,17 @@ const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
   </section>
 
   <section class="border-b border-ink/15 bg-paper py-8">
-    <div class="container-x flex flex-wrap items-center gap-x-10 gap-y-4">
+    <div class="container-x flex flex-wrap items-start gap-x-10 gap-y-6">
       <div>
         <span class="label mr-3">Audiencia</span>
-        <div class="mt-2 flex flex-wrap gap-2">
+        <div class="mt-3 flex flex-wrap gap-2">
           {audiencias.map((a) => (
-            <button class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85 transition-colors hover:border-magenta hover:text-magenta">
+            <button
+              type="button"
+              data-filter="audiencia"
+              data-value={a === 'Todas' ? '' : a}
+              class={`filter-pill ${a === 'Todas' ? 'is-active' : ''}`}
+            >
               {a}
             </button>
           ))}
@@ -38,9 +43,14 @@ const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
       </div>
       <div>
         <span class="label mr-3">Disciplina</span>
-        <div class="mt-2 flex flex-wrap gap-2">
+        <div class="mt-3 flex flex-wrap gap-2">
           {disciplinas.map((d) => (
-            <button class="border border-ink/30 px-3 py-1 font-mono text-xs uppercase tracking-wider text-ink/85 transition-colors hover:border-magenta hover:text-magenta">
+            <button
+              type="button"
+              data-filter="disciplina"
+              data-value={d === 'Todas' ? '' : d}
+              class={`filter-pill ${d === 'Todas' ? 'is-active' : ''}`}
+            >
               {d}
             </button>
           ))}
@@ -51,9 +61,18 @@ const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
 
   <section class="bg-paper py-16 md:py-20">
     <div class="container-x">
-      <div class="divide-y divide-ink/15 border-y border-ink/15">
+      <p id="casos-empty" class="hidden py-8 text-center text-sm text-ink-mute">
+        Ningún caso encaja con esta combinación. Prueba a relajar los filtros.
+      </p>
+      <div id="casos-list" class="divide-y divide-ink/15 border-y border-ink/15">
         {casos.map((caso) => (
-          <a href={`/casos/${caso.slug}`} class="reveal group grid grid-cols-12 gap-x-8 gap-y-6 py-12 transition-colors hover:bg-paper-warm lg:py-14">
+          <a
+            href={`/casos/${caso.slug}`}
+            data-caso
+            data-audiencia={caso.audience}
+            data-disciplina={caso.discipline}
+            class="reveal group grid grid-cols-12 gap-x-8 gap-y-6 py-12 transition-colors hover:bg-paper-warm lg:py-14"
+          >
             <div class="col-span-12 lg:col-span-3">
               <div class="flex items-baseline gap-4">
                 <span class="num-edit text-6xl md:text-7xl">{caso.num}</span>
@@ -118,4 +137,57 @@ const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
       </div>
     </div>
   </section>
+
+  <style>
+    /* Filter pills: estilo claramente clicable (antes el cliente no entendía
+       que eran botones porque parecían etiquetas decorativas). */
+    .filter-pill {
+      @apply border border-ink/40 bg-paper px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-ink/85 transition-all cursor-pointer;
+    }
+    .filter-pill:hover {
+      @apply border-magenta bg-paper-warm text-magenta -translate-y-0.5;
+    }
+    .filter-pill.is-active {
+      @apply border-magenta bg-magenta text-paper;
+    }
+    .filter-pill:focus-visible {
+      @apply outline-none ring-2 ring-magenta/50;
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var pills = document.querySelectorAll('.filter-pill');
+      var casos = document.querySelectorAll('[data-caso]');
+      var empty = document.getElementById('casos-empty');
+      var state = { audiencia: '', disciplina: '' };
+
+      function apply() {
+        var visible = 0;
+        casos.forEach(function (el) {
+          var a = el.getAttribute('data-audiencia') || '';
+          var d = el.getAttribute('data-disciplina') || '';
+          var matchA = !state.audiencia || a === state.audiencia;
+          var matchD = !state.disciplina || d === state.disciplina;
+          var show = matchA && matchD;
+          el.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        if (empty) empty.classList.toggle('hidden', visible > 0);
+      }
+
+      pills.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var filter = btn.getAttribute('data-filter');
+          var value = btn.getAttribute('data-value') || '';
+          state[filter] = value;
+
+          document.querySelectorAll('.filter-pill[data-filter="' + filter + '"]').forEach(function (b) {
+            b.classList.toggle('is-active', (b.getAttribute('data-value') || '') === value);
+          });
+          apply();
+        });
+      });
+    })();
+  </script>
 </Base>
