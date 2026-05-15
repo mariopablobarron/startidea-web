@@ -1,0 +1,19 @@
+src/components/Splash.astro
+  s_fc84abf46d9a4c::t_b66aa1dac98563 2-11,25-27,33-38,45,47-50,52-82,85-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "7670f8f8e68ec58eab3b9ebe33a25a370689d73a",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
