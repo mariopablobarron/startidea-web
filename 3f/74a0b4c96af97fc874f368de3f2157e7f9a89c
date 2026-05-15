@@ -1,0 +1,20 @@
+src/layouts/Base.astro
+  s_fc84abf46d9a4c::t_f3d0a5c0ac83dc 9-16
+  s_fc84abf46d9a4c::t_5ca3d0ec06b43c 56-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "3f74a0b4c96af97fc874f368de3f2157e7f9a89c",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
