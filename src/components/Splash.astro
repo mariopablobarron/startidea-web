@@ -1,6 +1,14 @@
 ---
-// Splash screen — solo primera visita por sesión.
-// Reproduce el logo oficial 3.2s y se desvanece.
+// Splash screen — sólo primera visita por sesión, sólo en desktop.
+//
+// Cambio 15-may para arreglar LCP: el preload="auto" anterior descargaba
+// 405KB de MP4 antes del Hero, lo que metía 2-3s extra en LCP según
+// Lighthouse (modo "primera visita" emulado). Ahora:
+//   - preload="none" → el browser NO toca el video hasta que JS decide
+//   - Se omite en mobile (<768px) donde el coste relativo es mayor
+//   - Se omite si la sesión ya lo vio o si reduce-motion está activo
+//   - El src se inyecta tras LCP via requestIdleCallback para garantizar
+//     que el critical path inicial no incluye el video
 ---
 
 <div
@@ -14,49 +22,73 @@
     class="h-full w-full object-cover"
     muted
     playsinline
-    preload="auto"
-  >
-    <source src="/brand/logo-animado.mp4" type="video/mp4" />
-  </video>
+    preload="none"
+    data-src="/brand/logo-animado.mp4"
+  ></video>
 </div>
 
 <script>
   const splash = document.getElementById('splash') as HTMLDivElement | null;
   const video = document.getElementById('splash-video') as HTMLVideoElement | null;
+
+  function teardown() {
+    if (splash) splash.remove();
+    document.documentElement.style.overflow = '';
+  }
+
   if (!splash || !video) {
     // nada
   } else {
     const KEY = 'startidea:splashShown';
     const shown = sessionStorage.getItem(KEY);
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.innerWidth < 768;
 
-    if (shown || reduce) {
-      // Eliminar splash inmediatamente
-      splash.remove();
+    // Skip splash en mobile, sesiones repetidas o reduce-motion
+    if (shown || reduce || isMobile) {
+      teardown();
+      try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
     } else {
-      // Mostrar splash, reproducir, esconder al terminar
-      splash.style.opacity = '1';
-      splash.style.pointerEvents = 'auto';
-      // Bloquear scroll mientras dura
-      document.documentElement.style.overflow = 'hidden';
+      // Diferir descarga + reproducción hasta después del LCP
+      const start = () => {
+        const src = video.dataset.src;
+        if (!src) { teardown(); return; }
 
-      video.play().catch(() => {
-        // Si autoplay falla por política del navegador, ocultar splash directo
-        splash.remove();
-        document.documentElement.style.overflow = '';
-        sessionStorage.setItem(KEY, '1');
-      });
+        // Crear <source> dinámicamente para que el browser empiece a descargar AHORA
+        const source = document.createElement('source');
+        source.src = src;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        video.load();
 
-      const finish = () => {
-        splash.style.opacity = '0';
-        document.documentElement.style.overflow = '';
-        sessionStorage.setItem(KEY, '1');
-        setTimeout(() => splash.remove(), 800);
+        splash.style.opacity = '1';
+        splash.style.pointerEvents = 'auto';
+        document.documentElement.style.overflow = 'hidden';
+
+        video.play().catch(() => {
+          teardown();
+          try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
+        });
+
+        const finish = () => {
+          if (!splash) return;
+          splash.style.opacity = '0';
+          document.documentElement.style.overflow = '';
+          try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
+          setTimeout(() => splash.remove(), 800);
+        };
+
+        video.addEventListener('ended', finish);
+        setTimeout(finish, 5000);
       };
 
-      video.addEventListener('ended', finish);
-      // Failsafe: si por alguna razón el evento ended no dispara en 5s, cerramos
-      setTimeout(finish, 5000);
+      // requestIdleCallback ejecuta cuando el browser está libre — después
+      // de paint inicial y LCP. Fallback a setTimeout en navegadores viejos.
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(start, { timeout: 1200 });
+      } else {
+        setTimeout(start, 200);
+      }
     }
   }
 </script>
