@@ -1,0 +1,30 @@
+src/components/ParaQuien.astro
+  s_fc84abf46d9a4c::t_7fc3445cd24906 33,35-45
+  s_fc84abf46d9a4c::t_f420efd513fb2e 34
+src/data/audiencias.ts
+  s_fc84abf46d9a4c::t_af51537fff8bd9 73
+  s_fc84abf46d9a4c::t_1a170fccbba27d 23-24
+  s_fc84abf46d9a4c::t_67fc82233ab96d 107
+  s_fc84abf46d9a4c::t_9d5bd16a58ef0b 39
+src/components/HanConfiado.astro
+  s_fc84abf46d9a4c::t_51e52516bd7825 109
+  s_fc84abf46d9a4c::t_bd2a20b0634439 9,14-19,28-31,41,45,51-52,62,68
+public/clientes/granada-social.svg
+  s_fc84abf46d9a4c::t_dedf734807e89a 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "1a07006b78b7d4fc3083db1fb4428756ce5fffed",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
