@@ -109,6 +109,9 @@ const grupos = [
                       src={`/clientes/${c.logo}`}
                       alt={c.name}
                       loading="lazy"
+                      decoding="async"
+                      width="200"
+                      height="80"
                       class="max-h-14 max-w-[90%] w-auto h-auto object-contain opacity-80 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:max-h-16 md:max-h-20"
                     />
                   ) : (
