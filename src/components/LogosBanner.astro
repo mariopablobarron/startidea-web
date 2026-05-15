@@ -1,0 +1,83 @@
+---
+// Banda horizontal de logos de clientes reconocibles — social proof
+// inmediato, justo después del Hero. Sin texto, los logos hablan solos.
+//
+// Selección: 7 marcas grandes con logo descargado. Aparecen como una
+// "cinta" en grayscale, animadas en marquee en móvil (más logos en menos
+// espacio) y como grid estático en desktop.
+
+const logos = [
+  { name: 'Cruz Roja Española', src: '/clientes/cruz-roja.png' },
+  { name: 'Save the Children', src: '/clientes/save-the-children.png' },
+  { name: 'Acción Contra el Hambre', src: '/clientes/accion-contra-el-hambre.png' },
+  { name: 'YMCA España', src: '/clientes/ymca.png' },
+  { name: 'Proyecto Solidario', src: '/clientes/proyecto-solidario.png' },
+  { name: 'Diputación de Granada', src: '/clientes/diputacion-granada.png' },
+  { name: 'Ayuntamiento de Granada', src: '/clientes/ayuntamiento-granada.png' },
+];
+---
+
+<section
+  id="logos-banner"
+  aria-label="Organizaciones que han confiado en Startidea"
+  class="border-b border-ink/15 bg-paper-warm py-10 md:py-12"
+>
+  <div class="container-x">
+    <p class="text-center font-mono text-[11px] uppercase tracking-widest text-ink/55 md:text-xs">
+      Han confiado en Startidea
+    </p>
+
+    <!-- Desktop: grid estático centrado -->
+    <ul class="mt-7 hidden flex-wrap items-center justify-center gap-x-10 gap-y-6 md:flex lg:gap-x-14">
+      {logos.map((l) => (
+        <li>
+          <img
+            src={l.src}
+            alt={l.name}
+            loading="lazy"
+            class="h-10 w-auto object-contain opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 lg:h-12"
+          />
+        </li>
+      ))}
+    </ul>
+
+    <!-- Mobile: marquee continuo (más logos en menos espacio) -->
+    <div class="mt-6 md:hidden">
+      <div class="logos-marquee">
+        <ul class="logos-marquee-track flex items-center gap-10">
+          {[...logos, ...logos].map((l) => (
+            <li class="shrink-0">
+              <img
+                src={l.src}
+                alt={l.name}
+                loading="lazy"
+                class="h-9 w-auto object-contain opacity-65 grayscale"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .logos-marquee {
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .logos-marquee-track {
+    width: max-content;
+    animation: logos-marquee-slide 28s linear infinite;
+  }
+  @keyframes logos-marquee-slide {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logos-marquee-track { animation: none; }
+    .logos-marquee { overflow-x: auto; }
+  }
+</style>

@@ -16,6 +16,7 @@
 import Base from '@/layouts/Base.astro';
 import Hero from '@/components/Hero.astro';
 import CtaConversion from '@/components/CtaConversion.astro';
+import LogosBanner from '@/components/LogosBanner.astro';
 import MetricasHero from '@/components/MetricasHero.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
 import Ecosistema from '@/components/Ecosistema.astro';
@@ -38,7 +39,10 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   <Hero />
   <CtaConversion />
 
-  <!-- 2. Quién — credibilidad rápida -->
+  <!-- 2. Social proof inmediato — banda de logos reconocibles -->
+  <LogosBanner />
+
+  <!-- 3. Quién — credibilidad rápida -->
   <MetricasHero />
   <ParaQuien />
 
