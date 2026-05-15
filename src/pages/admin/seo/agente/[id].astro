@@ -1,54 +1,7 @@
 ---
-import Base from '@/layouts/Base.astro';
-import { getOutput } from '@/lib/seo-agents/shared';
-import { isAdmin } from '@/lib/seo/auth';
-
+// /admin/seo/agente/:id migrado a hub.startidea.tech (2026-05-15).
+// NOTA: los IDs del hub son distintos a los de SQLite — los antiguos
+// agente/* no resuelven en el hub, redirige al dashboard SEO general.
 export const prerender = false;
-
-const id = Number(Astro.params.id);
-if (!isAdmin(Astro)) {
-  return new Response('Unauthorized', { status: 401 });
-}
-const row = !isNaN(id) ? getOutput(id) : null;
-if (!row) {
-  return new Response('Not found', { status: 404 });
-}
-
-function fmtDate(ts: number | null): string {
-  if (!ts) return '—';
-  return new Date(ts * 1000).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' });
-}
+return Astro.redirect("https://hub.startidea.tech/startidea/admin/seo", 301);
 ---
-
-<Base title={`Agente SEO #${id} — Startidea`} description="" noindex={true}>
-  <section class="bg-paper py-16 md:py-24">
-    <div class="container-x">
-      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
-        <a href="/admin/seo" class="link-underline">← Panel SEO</a>
-      </p>
-      <h1 class="mt-6 font-display text-display-lg leading-tight text-ink">
-        Agente <em class="italic text-magenta">{row.kind === 'analyst' ? 'Analista' : 'Redactor'}</em> · #{row.id}
-      </h1>
-      <ul class="mt-8 grid grid-cols-2 gap-4 max-w-2xl font-mono text-[11px] uppercase tracking-widest text-ink/70 md:grid-cols-4">
-        <li>Estado<br/><strong class="text-ink">{row.status}</strong></li>
-        <li>Inicio<br/><strong class="text-ink">{fmtDate(row.started_at)}</strong></li>
-        <li>Fin<br/><strong class="text-ink">{fmtDate(row.finished_at)}</strong></li>
-        <li>Coste USD<br/><strong class="text-ink">{row.cost_usd != null ? `$${row.cost_usd.toFixed(4)}` : '—'}</strong></li>
-      </ul>
-      {row.input_summary && (
-        <p class="mt-6 max-w-3xl text-sm text-ink/75">
-          <span class="label">— Input</span><br/>
-          {row.input_summary}
-        </p>
-      )}
-      {row.error_message && (
-        <pre class="mt-6 max-w-3xl border border-red-300 bg-red-50 p-4 text-sm text-red-800">{row.error_message}</pre>
-      )}
-      {row.output_md && (
-        <div class="prose prose-ink mt-10 max-w-3xl">
-          <pre class="whitespace-pre-wrap font-mono text-sm text-ink">{row.output_md}</pre>
-        </div>
-      )}
-    </div>
-  </section>
-</Base>

@@ -1,22 +1,13 @@
-import type { APIRoute } from 'astro';
-import { authUrl } from '@/lib/seo/GoogleOAuthService';
-import { requireAdmin } from '@/lib/seo/auth';
+// OAuth Google migrado a hub.startidea.tech (2026-05-15).
+import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-export const GET: APIRoute = (context) => {
-  const denied = requireAdmin(context);
-  if (denied) return denied;
-
-  // Anti-CSRF: state aleatorio en cookie + URL
-  const state = crypto.randomUUID();
-  context.cookies.set('startidea_oauth_state', state, {
-    path: '/',
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: true,
-    maxAge: 600,
+export const GET: APIRoute = () =>
+  new Response(null, {
+    status: 301,
+    headers: {
+      location: "https://hub.startidea.tech/api/admin/google/connect",
+      "cache-control": "no-store",
+    },
   });
-
-  return context.redirect(authUrl(state), 302);
-};

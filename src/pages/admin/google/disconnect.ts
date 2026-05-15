@@ -1,21 +1,16 @@
-import type { APIRoute } from 'astro';
-import { revoke } from '@/lib/seo/GoogleOAuthService';
-import { requireAdmin } from '@/lib/seo/auth';
+// OAuth disconnect migrado a hub.startidea.tech (2026-05-15).
+import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-export const POST: APIRoute = async (context) => {
-  const denied = requireAdmin(context);
-  if (denied) return denied;
+const handler: APIRoute = () =>
+  new Response(null, {
+    status: 301,
+    headers: {
+      location: "https://hub.startidea.tech/startidea/admin/seo/connect",
+      "cache-control": "no-store",
+    },
+  });
 
-  const data = await context.request.formData().catch(() => null);
-  const id = Number(data?.get('connection_id') || 0);
-  if (!id) return new Response('missing connection_id', { status: 400 });
-
-  try {
-    await revoke(id);
-  } catch (err) {
-    console.error('[google/disconnect]', (err as Error).message);
-  }
-  return context.redirect('/admin/google/status', 302);
-};
+export const GET = handler;
+export const POST = handler;
