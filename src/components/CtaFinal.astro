@@ -3,7 +3,21 @@
 ---
 
 <section class="relative overflow-hidden bg-ink text-paper">
-  <div class="container-x grid grid-cols-12 gap-x-8 py-24 md:py-32 lg:py-40">
+  <!-- Imagen de fondo (Granada arquitectura) con overlay oscuro para
+       mantener legibilidad del texto blanco. Le da contexto local sin
+       distraer. -->
+  <div class="pointer-events-none absolute inset-0 z-0">
+    <img
+      src="/img/lifestyle/granada-arquitectura.jpg"
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      class="h-full w-full object-cover opacity-[0.22]"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/60"></div>
+  </div>
+
+  <div class="container-x grid grid-cols-12 gap-x-8 py-24 md:py-32 lg:py-40 relative z-10">
 
     <div class="col-span-12 lg:col-span-3">
       <span class="label !text-paper/55">— Conversación</span>
