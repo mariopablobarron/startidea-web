@@ -6,6 +6,14 @@ import '@/styles/global.css';
 import '@fontsource-variable/montserrat';
 import '@fontsource-variable/montserrat/wght-italic.css';
 import '@fontsource-variable/jetbrains-mono';
+
+// URLs hashed de los woff2 críticos del fold inicial — Astro las resuelve
+// en build para usar en <link rel="preload">. Sin preload, el browser
+// solo descubre estos archivos tras parsear el CSS principal, lo que
+// retrasa el render del <h1> del Hero y empuja el LCP a 4-5s.
+// Con preload, descargan en paralelo y el LCP cae sub-3s.
+import montserratLatin from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
+import montserratLatinItalic from '@fontsource-variable/montserrat/files/montserrat-latin-wght-italic.woff2?url';
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
@@ -45,6 +53,13 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Preload fuentes críticas del fold (Montserrat latin) — sin esto el
+         browser solo descubre el woff2 después de parsear el CSS, lo que
+         retrasaba LCP del <h1> hasta 4-5s. Con preload bajamos a ~2s. -->
+    <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={montserratLatinItalic} as="font" type="font/woff2" crossorigin />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
