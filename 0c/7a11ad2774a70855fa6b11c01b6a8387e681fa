@@ -1,0 +1,22 @@
+src/components/LogosBanner.astro
+  s_fc84abf46d9a4c::t_0de6f484a59515 54
+  s_fc84abf46d9a4c::t_007e80853963f5 38
+src/components/HanConfiado.astro
+  s_fc84abf46d9a4c::t_c594c392b89fea 112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "0c7a11ad2774a70855fa6b11c01b6a8387e681fa",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
