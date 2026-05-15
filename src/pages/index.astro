@@ -26,6 +26,7 @@ import Casos from '@/components/Casos.astro';
 import PresupuestoHome from '@/components/PresupuestoHome.astro';
 import Testimonios from '@/components/Testimonios.astro';
 import Manifesto from '@/components/Manifesto.astro';
+import GranadaSocialFeed from '@/components/GranadaSocialFeed.astro';
 import CtaFinal from '@/components/CtaFinal.astro';
 import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
 ---
@@ -61,6 +62,9 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   <Testimonios />
   <Manifesto />
 
-  <!-- 7. CTA cierre -->
+  <!-- 7. Ventana al medio editorial — Granada Social en directo -->
+  <GranadaSocialFeed />
+
+  <!-- 8. CTA cierre -->
   <CtaFinal />
 </Base>
