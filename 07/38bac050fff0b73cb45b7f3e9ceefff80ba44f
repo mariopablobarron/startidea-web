@@ -1,0 +1,37 @@
+src/pages/admin/seo/sync.ts
+  s_fc84abf46d9a4c::t_c7443bd3b7b01b 1-4,8-26
+src/pages/admin/seo/agente/[id].astro
+  s_fc84abf46d9a4c::t_a7001143f1df91 2-4,6
+src/pages/admin/seo/report.ts
+  s_fc84abf46d9a4c::t_95978fe68bf812 1-2,6-15,17-19
+src/pages/admin/google/connect.ts
+  s_fc84abf46d9a4c::t_486369abe94eab 1-2,6-12
+src/pages/admin/google/callback.ts
+  s_fc84abf46d9a4c::t_fdf4f03295854c 1-4,8-17
+src/pages/admin/seo/agent-analyst.ts
+  s_fc84abf46d9a4c::t_d960dee88a09eb 1-2,6-17,19-20
+src/pages/admin/seo/agent-writer.ts
+  s_fc84abf46d9a4c::t_67c448f9ec53e9 1-2,6-17,19-20
+src/pages/admin/google/status.astro
+  s_fc84abf46d9a4c::t_9a3b6ce127d89e 2-4,6-9
+src/pages/admin/seo/index.astro
+  s_fc84abf46d9a4c::t_e1191ba03ed109 2-4,6
+src/pages/admin/google/disconnect.ts
+  s_fc84abf46d9a4c::t_87d4c94065d9d5 1-2,6-13,15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "0738bac050fff0b73cb45b7f3e9ceefff80ba44f",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
