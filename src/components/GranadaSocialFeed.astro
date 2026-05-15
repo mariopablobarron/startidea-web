@@ -179,7 +179,9 @@ function truncate(s: string, n: number): string {
       <!-- Pie con CTA al portal completo -->
       <div class="mt-10 flex flex-wrap items-baseline justify-between gap-4 border-t border-paper/10 pt-6">
         <p class="font-mono text-[11px] uppercase tracking-widest text-paper/55">
-          Actualizado en tiempo real desde granadasocial.org
+          Refrescado el {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
+          {' · '}
+          <span class="text-paper/40">fuente: granadasocial.org</span>
         </p>
         <a
           href="https://granadasocial.org"

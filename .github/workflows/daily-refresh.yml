@@ -1,0 +1,36 @@
+name: Daily refresh (rebuild SSG con datos frescos)
+
+# Como startidea.es es SSG (`output: 'static'`), el feed RSS de Granada Social,
+# las notas editoriales y cualquier fuente externa quedan "congeladas" en el
+# momento del último build. Este cron dispara un rebuild diario para que:
+#
+#   - Bloque GranadaSocialFeed en home muestre las noticias frescas del día
+#   - Sitemap.xml refleje nuevas notas si las hay
+#   - JSON-LD y meta dates queden al día
+#
+# Hora: 05:30 UTC = 07:30 ES (invierno) / 06:30 ES (verano huso EU).
+# Antes del horario de mayor tráfico humano (mañana) pero después del
+# cron-de-cron de notas (si lo hay).
+
+on:
+  schedule:
+    - cron: '30 5 * * *'
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  trigger-deploy:
+    name: Disparar workflow de deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Disparar deploy.yml
+        run: |
+          gh workflow run deploy.yml \
+            --repo ${{ github.repository }} \
+            --ref ${{ github.ref_name }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
