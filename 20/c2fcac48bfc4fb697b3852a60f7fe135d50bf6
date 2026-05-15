@@ -1,0 +1,21 @@
+.github/workflows/daily-refresh.yml
+  s_fc84abf46d9a4c::t_3b4dd5c121f25a 1-36
+src/components/GranadaSocialFeed.astro
+  s_fc84abf46d9a4c::t_ee381e9d1d8f85 182-184
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "20c2fcac48bfc4fb697b3852a60f7fe135d50bf6",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
