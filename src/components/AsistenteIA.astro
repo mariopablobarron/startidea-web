@@ -110,7 +110,14 @@
   }
 </style>
 
-<script is:inline>
+<script>
+  // Antes era <script is:inline> — el JS quedaba pegado en el HTML como
+  // bytes síncronos en TODAS las páginas, sumando al fold inicial sin
+  // necesidad real (este código solo configura listeners de chat).
+  //
+  // Ahora Astro lo bundle como módulo ESM con defer implícito: descarga
+  // en paralelo al HTML pero no bloquea parse ni LCP. Comportamiento
+  // funcional idéntico para el usuario.
   (function () {
     var chip = document.getElementById('ai-chip');
     var chipMobile = document.getElementById('ai-chip-mobile');
