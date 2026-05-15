@@ -30,6 +30,19 @@ import { audiencias } from '@/data/audiencias';
     <div class="mt-20 grid grid-cols-1 gap-x-8 gap-y-14 lg:grid-cols-3">
       {audiencias.map((a) => (
         <a href={a.href} class="reveal card-edit group cursor-pointer">
+          {a.image && (
+            <div class="-mt-8 mb-8 overflow-hidden">
+              <div class="relative aspect-[3/2] w-full bg-paper-deep">
+                <img
+                  src={a.image}
+                  alt=""
+                  loading="lazy"
+                  class="absolute inset-0 h-full w-full object-cover saturate-[0.85] transition-all duration-500 group-hover:scale-105 group-hover:saturate-100"
+                />
+              </div>
+            </div>
+          )}
+
           <div class="flex items-baseline justify-between">
             <span class="num-edit text-7xl">{a.num}</span>
             <span class="label">{a.tag}</span>

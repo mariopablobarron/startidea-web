@@ -6,16 +6,17 @@
 // Para añadir un logo nuevo: poner PNG transparente (preferentemente cuadrado
 // o casi cuadrado, ~512x512px) en /public/clientes/<slug>.png y referenciar
 // el slug aquí.
+// Cuando el archivo no es .png, se especifica el nombre completo (jpg, svg).
 const grupos = [
   {
     label: 'Tercer sector · estatal',
     clientes: [
-      { name: 'Cruz Roja Española', logo: 'cruz-roja' },
-      { name: 'Fundación Save the Children', logo: 'save-the-children' },
-      { name: 'Fundación Acción Contra el Hambre', logo: 'accion-contra-el-hambre' },
-      { name: 'YMCA España', logo: 'ymca' },
-      { name: 'Fundación Proyecto Solidario por la Infancia' },
-      { name: 'Asociación Provivienda' },
+      { name: 'Cruz Roja Española', logo: 'cruz-roja.png' },
+      { name: 'Fundación Save the Children', logo: 'save-the-children.png' },
+      { name: 'Fundación Acción Contra el Hambre', logo: 'accion-contra-el-hambre.png' },
+      { name: 'YMCA España', logo: 'ymca.png' },
+      { name: 'Fundación Proyecto Solidario por la Infancia', logo: 'proyecto-solidario.png' },
+      { name: 'Asociación Provivienda', logo: 'provivienda.png' },
       { name: 'Fundación Nantik Lum' },
       { name: 'Asociación Católica de Propagandistas' },
       { name: 'Fundación Foro NESI' },
@@ -24,10 +25,10 @@ const grupos = [
   {
     label: 'Tercer sector · proximidad',
     clientes: [
-      { name: 'Down Granada' },
-      { name: 'Proyecto Hombre Granada' },
-      { name: 'Fundación UAPO' },
-      { name: 'Aspaym Granada' },
+      { name: 'Down Granada', logo: 'down-granada.jpg' },
+      { name: 'Proyecto Hombre Granada', logo: 'proyecto-hombre-granada.png' },
+      { name: 'Fundación UAPO', logo: 'uapo.png' },
+      { name: 'Aspaym Granada', logo: 'aspaym-granada.jpg' },
       { name: 'Aldaima' },
       { name: 'Arrabal-AID' },
       { name: 'Tres Mil Millones de Latidos' },
@@ -37,18 +38,18 @@ const grupos = [
     label: 'Educación con propósito',
     clientes: [
       { name: 'Fundación Maristas Ibérica' },
-      { name: 'Fundación Educativa Escolapias', logo: 'escolapias' },
+      { name: 'Fundación Educativa Escolapias', logo: 'escolapias.png' },
       { name: 'Fundación Marcelino Champagnat' },
       { name: 'Fundación Enrique de Ossó' },
       { name: 'CONFER' },
-      { name: 'Fundación Santa María la Real' },
+      { name: 'Fundación Santa María la Real', logo: 'santa-maria-la-real.png' },
     ],
   },
   {
     label: 'Instituciones públicas',
     clientes: [
-      { name: 'Diputación de Granada', logo: 'diputacion-granada' },
-      { name: 'Ayuntamiento de Granada', logo: 'ayuntamiento-granada' },
+      { name: 'Diputación de Granada', logo: 'diputacion-granada.png' },
+      { name: 'Ayuntamiento de Granada', logo: 'ayuntamiento-granada.png' },
       { name: 'Universidad de Granada' },
       { name: 'Fundación Pública Andaluza Progreso y Salud' },
       { name: 'Ayuntamiento de Vila-real' },
@@ -58,13 +59,13 @@ const grupos = [
     label: 'Empresa con propósito',
     clientes: [
       { name: 'Clínica Dental Arturo Baca' },
-      { name: 'Fundación Espadafor' },
+      { name: 'Fundación Espadafor', logo: 'espadafor.png' },
     ],
   },
   {
     label: 'Iniciativas propias',
     clientes: [
-      { name: 'Granada Social' },
+      { name: 'Granada Social', logo: 'granada-social.svg' },
       { name: '#HamadaYJavi' },
       { name: 'Granadown Report' },
     ],
@@ -105,7 +106,7 @@ const grupos = [
                 <li class="group flex aspect-[3/2] items-center justify-center bg-paper p-6 text-center transition-colors hover:bg-paper-warm">
                   {c.logo ? (
                     <img
-                      src={`/clientes/${c.logo}.png`}
+                      src={`/clientes/${c.logo}`}
                       alt={c.name}
                       loading="lazy"
                       class="max-h-16 max-w-[78%] w-auto h-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:max-h-20"

@@ -20,6 +20,8 @@ export type Audiencia = {
   services: string[];
   // Casos de estudio relacionados (slugs de src/data/casos.ts) — opcional
   casosRelacionados?: string[];
+  // Imagen lifestyle para card en home (16:9 o 3:2 aprox)
+  image?: string;
   // Texto del CTA al final
   ctaLabel: string;
   // SEO/OG
@@ -34,6 +36,7 @@ export type Audiencia = {
 export const audiencias: Audiencia[] = [
   {
     id: 'tercer-sector',
+    image: '/img/lifestyle/comunidad-hands.jpg',
     num: '01',
     tag: 'Tercer sector',
     href: '/para-quien/tercer-sector',
@@ -67,6 +70,7 @@ export const audiencias: Audiencia[] = [
   },
   {
     id: 'instituciones',
+    image: '/img/lifestyle/meeting-mesa.jpg',
     num: '02',
     tag: 'Instituciones',
     href: '/para-quien/instituciones',
@@ -100,6 +104,7 @@ export const audiencias: Audiencia[] = [
   },
   {
     id: 'empresas',
+    image: '/img/lifestyle/oficina-luz.jpg',
     num: '03',
     tag: 'Empresas con propósito',
     href: '/para-quien/empresas',
