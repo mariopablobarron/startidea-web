@@ -188,7 +188,10 @@
   </div>
 </div>
 
-<audio id="voice-audio" preload="auto" class="hidden"></audio>
+<!-- playsinline + webkit-playsinline: evita fullscreen takeover en iOS Safari.
+     muted al precargar para permitir un primer play() "silencioso" que
+     desbloquee el audio context (workaround autoplay policy iOS/Safari). -->
+<audio id="voice-audio" preload="auto" playsinline webkit-playsinline class="hidden"></audio>
 
 <script>
   // ─── State ──────────────────────────────────────────────────────────
@@ -240,23 +243,38 @@
   const pulse = $<HTMLSpanElement>('voice-pulse');
 
   // ─── Open / close ───────────────────────────────────────────────────
+  // Refs a los chips del AsistenteIA (texto) — los ocultamos cuando el
+  // modal de voz está abierto para evitar la pila de botones flotantes
+  // en móvil que ya está apretada con la MobileCtaBar.
+  const aiChip = document.getElementById('ai-chip');
+  const aiChipMobile = document.getElementById('ai-chip-mobile');
+
   function open() {
     panel.classList.remove('hidden');
     panel.classList.add('flex');
     chip?.setAttribute('aria-expanded', 'true');
     chipMobile?.setAttribute('aria-expanded', 'true');
+    aiChip?.classList.add('!hidden');
+    aiChipMobile?.classList.add('!hidden');
   }
   function close() {
     panel.classList.add('hidden');
     panel.classList.remove('flex');
     chip?.setAttribute('aria-expanded', 'false');
     chipMobile?.setAttribute('aria-expanded', 'false');
+    aiChip?.classList.remove('!hidden');
+    aiChipMobile?.classList.remove('!hidden');
     // Si había stream activo, liberar mic
     if (state.stream) {
       state.stream.getTracks().forEach((t) => t.stop());
       state.stream = null;
     }
     state.recording = false;
+    // Si había audio sonando, cortar
+    if (!audio.paused) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
   }
   chip?.addEventListener('click', open);
   chipMobile?.addEventListener('click', open);
@@ -266,11 +284,35 @@
   });
 
   // ─── Consent ────────────────────────────────────────────────────────
-  consentOk.addEventListener('click', () => {
+  // El click DEL USUARIO en "Acepto" es el momento ideal para:
+  //   1. Desbloquear el HTMLAudioElement en iOS Safari (autoplay policy):
+  //      reproducir 1 frame de audio silencioso "consume" el gesture token
+  //      → audio.play() posterior (tras await del LLM) ya no es bloqueado.
+  //   2. Pedir permiso del micrófono dentro del propio gesture, evitando
+  //      el fallo iOS de getUserMedia() async fuera de touch context.
+  consentOk.addEventListener('click', async () => {
     state.consent = true;
     consentDiv.classList.add('hidden');
     chatDiv.classList.remove('hidden');
     footer.classList.remove('hidden');
+
+    // 1. Audio unlock (iOS Safari)
+    try {
+      audio.muted = true;
+      // Data URI de 1 frame MP3 silencioso (44 bytes)
+      audio.src = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAGbZHBgG1OF6zM82DWbZaUmMBptgQhGjsyYqc9ae9XFz280948NMBWInljyzsNRFLPWdnZGWrddDsjK1unuSrVN9jJsK8KuQtQCtMBjCEtImISdNKJOopIpBFpNSMbIHCSRpRR5iakjTiyzLhchUUBwCgyKiweBv/7UsQbg8isVNoMPMjAAAA0gAAABEVFGmgqK////9bP/6XCykxBTUUzLjEwMKqqqqqq//tSxC2DwAABpAAAACAAADSAAAAEqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqo=';
+      const p = audio.play();
+      if (p) await p.catch(() => {/* fallback al play real */});
+      audio.pause();
+      audio.muted = false;
+      audio.src = '';
+    } catch {/* ignore */}
+
+    // 2. Mic permission upfront (iOS Safari gesture requirement)
+    // No bloqueamos si falla — el user puede usar el campo de texto.
+    ensureMicStream().catch(() => {
+      setStatus('Mic no disponible. Usa el campo de texto.');
+    });
   });
   consentNo.addEventListener('click', () => {
     close();
@@ -362,7 +404,7 @@
     }
   }
 
-  // Eventos pointer (cubre mouse + touch unificado)
+  // Eventos pointer (cubre mouse + touch unificado modernos)
   talkBtn.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     void startRecording();
@@ -370,6 +412,24 @@
   talkBtn.addEventListener('pointerup', stopRecording);
   talkBtn.addEventListener('pointerleave', stopRecording);
   talkBtn.addEventListener('pointercancel', stopRecording);
+
+  // Fallback touch redundante para iOS Safari antiguo donde pointerleave
+  // se comporta de forma errática (no se dispara aunque salgas del botón).
+  talkBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    stopRecording();
+  });
+  talkBtn.addEventListener('touchcancel', () => stopRecording());
+
+  // Teclado virtual: cuando el user hace focus en el input texto, iOS
+  // levanta el teclado y puede tapar el modal. Hacemos scroll del input
+  // a la vista tras un pequeño delay (el teclado tarda 200-400ms en
+  // animar). Sin esto, el input queda detrás del teclado en móviles.
+  textInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      textInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 350);
+  });
 
   // ─── Pipeline VOZ: transcribe → chatAndSpeak ────────────────────────
   async function onRecordingDone() {
@@ -379,7 +439,8 @@
     }
     setBusy(true, 'Transcribiendo…');
     setStatus('Transcribiendo…');
-    const blob = new Blob(state.chunks, { type: state.mediaRecorder?.mimeType ?? 'audio/webm' });
+    const blobMime = state.mediaRecorder?.mimeType ?? 'audio/webm';
+    const blob = new Blob(state.chunks, { type: blobMime });
     if (blob.size < 1500) {
       setStatus('Demasiado corto — vuelve a hablar.');
       setBusy(false);
@@ -389,7 +450,14 @@
     let userText = '';
     try {
       const fd = new FormData();
-      fd.append('audio', blob, 'utterance.webm');
+      // Extensión coherente con el MIME real (iOS Safari → mp4, resto → webm).
+      // Whisper detecta por header magic bytes pero el filename ayuda a debug.
+      const ext = blobMime.includes('mp4')
+        ? 'm4a'
+        : blobMime.includes('webm')
+          ? 'webm'
+          : 'audio';
+      fd.append('audio', blob, `utterance.${ext}`);
       const res = await fetch(`${HUB_API}/api/public/voice/transcribe`, {
         method: 'POST',
         body: fd,
