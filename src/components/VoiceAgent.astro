@@ -1,16 +1,21 @@
 ---
-// Agente de voz Startidea — botón flotante + modal push-to-talk.
+// Asistente Startidea — botón flotante + modal dual VOZ/TEXTO.
 //
-// Pipeline browser-side:
-//   1. User mantiene botón mic → MediaRecorder graba webm
-//   2. Suelta → POST FormData /api/public/voice/transcribe → texto
-//   3. POST JSON /api/public/voice/chat → respuesta + tool calls
-//   4. POST JSON /api/public/voice/speak → audio MP3 → reproduce
-//   5. Loop hasta cierre del modal
+// Dos pipelines comparten chatAndSpeak():
+//   VOZ:   mic push-to-talk → MediaRecorder webm
+//          → POST /api/public/voice/transcribe → texto
+//          → chatAndSpeak(texto, { speak: true })
+//   TEXTO: input.value → chatAndSpeak(texto, { speak: false })
+//
+// chatAndSpeak() hace:
+//   1. POST /api/public/voice/chat (LLM + tools) → respuesta texto
+//   2. Si speak=true → POST /api/public/voice/speak → audio MP3 → reproduce
+//
+// Botón "■ Stop" en el header: corta el audio TTS en curso (audio.pause()).
 //
 // RGPD: consent banner ANTES de pedir permiso del micrófono.
 // Privacy-first: no graba en silencio (push-to-talk), no guarda audio
-// en servidor (solo transcripción), no envía cookies a Eleven/OpenAI.
+// en servidor (solo transcripción).
 ---
 
 <!-- Botón flotante "Hablar". Convive con el AsistenteIA (texto) — éste
@@ -57,15 +62,24 @@
   <!-- Header -->
   <div class="flex items-center justify-between border-b-2 border-ink bg-magenta px-5 py-3 text-paper">
     <div>
-      <p id="voice-title" class="font-mono text-[11px] uppercase tracking-widest">— Agente de voz · Startidea</p>
-      <p id="voice-subtitle" class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/75">Mantén el botón para hablar</p>
+      <p id="voice-title" class="font-mono text-[11px] uppercase tracking-widest">— Asistente · Startidea</p>
+      <p id="voice-subtitle" class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/75">Habla o escribe lo que necesites</p>
     </div>
-    <button
-      type="button"
-      id="voice-close"
-      class="font-mono text-[11px] uppercase tracking-widest text-paper/85 hover:text-paper"
-      aria-label="Cerrar"
-    >Cerrar ✕</button>
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        id="voice-stop-speech"
+        class="hidden font-mono text-[10px] uppercase tracking-widest text-paper bg-ink/40 hover:bg-ink/60 px-2 py-1"
+        aria-label="Parar voz"
+        title="Parar voz que está sonando"
+      >■ Stop</button>
+      <button
+        type="button"
+        id="voice-close"
+        class="font-mono text-[11px] uppercase tracking-widest text-paper/85 hover:text-paper"
+        aria-label="Cerrar"
+      >Cerrar ✕</button>
+    </div>
   </div>
 
   <!-- Cuerpo (3 estados: consent / chat / lead-ok) -->
@@ -101,7 +115,7 @@
         <!-- mensajes injectados aquí -->
         <div class="border-l-2 border-magenta pl-3 py-1">
           <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Startidea</p>
-          <p class="mt-1 text-sm text-ink">Hola. Cuéntame qué necesitas. Mantén pulsado el micrófono para hablar.</p>
+          <p class="mt-1 text-sm text-ink">Hola. Cuéntame qué necesitas. Puedes hablar (mantén el micrófono pulsado) o escribir abajo.</p>
         </div>
       </div>
 
@@ -117,8 +131,9 @@
 
   </div>
 
-  <!-- Footer con el botón push-to-talk + status -->
-  <div id="voice-footer" class="hidden border-t-2 border-ink bg-paper-warm/40 p-4">
+  <!-- Footer dual: voz (push-to-talk) + texto (input) -->
+  <div id="voice-footer" class="hidden border-t-2 border-ink bg-paper-warm/40 p-4 space-y-3">
+    <!-- Push-to-talk (voz) -->
     <button
       type="button"
       id="voice-talk"
@@ -136,7 +151,40 @@
       </div>
       <span id="voice-talk-label">Mantén para hablar</span>
     </button>
-    <p id="voice-status" class="mt-2 text-center font-mono text-[10px] tracking-widest text-ink-mute h-4"></p>
+
+    <!-- Nota sobre cómo cortar la voz -->
+    <p class="text-center font-mono text-[10px] tracking-wider text-ink-mute">
+      Mientras Startidea hable, pulsa <span class="text-magenta">■ Stop</span> arriba para cortar.
+    </p>
+
+    <!-- Separador visual -->
+    <div class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-ink-mute">
+      <span class="flex-1 h-px bg-ink/15"></span>
+      <span>o escribe</span>
+      <span class="flex-1 h-px bg-ink/15"></span>
+    </div>
+
+    <!-- Input texto alternativo -->
+    <form id="voice-text-form" class="flex items-stretch gap-2">
+      <label class="sr-only" for="voice-text-input">Tu mensaje</label>
+      <input
+        type="text"
+        id="voice-text-input"
+        name="message"
+        autocomplete="off"
+        maxlength="500"
+        placeholder="Escribe tu mensaje y pulsa enviar…"
+        class="flex-1 border border-ink/30 bg-paper px-3 py-2 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none"
+      />
+      <button
+        type="submit"
+        id="voice-text-send"
+        class="border-2 border-ink bg-ink text-paper px-4 font-mono text-[11px] uppercase tracking-widest hover:bg-magenta hover:border-magenta disabled:opacity-50"
+        aria-label="Enviar mensaje"
+      >Enviar →</button>
+    </form>
+
+    <p id="voice-status" class="text-center font-mono text-[10px] tracking-widest text-ink-mute h-4"></p>
   </div>
 </div>
 
@@ -173,6 +221,7 @@
   const chipMobile = $<HTMLButtonElement>('voice-chip-mobile');
   const panel = $<HTMLDivElement>('voice-panel');
   const closeBtn = $<HTMLButtonElement>('voice-close');
+  const stopSpeechBtn = $<HTMLButtonElement>('voice-stop-speech');
   const consentDiv = $<HTMLDivElement>('voice-consent');
   const consentOk = $<HTMLButtonElement>('voice-consent-ok');
   const consentNo = $<HTMLButtonElement>('voice-consent-no');
@@ -183,6 +232,9 @@
   const footer = $<HTMLDivElement>('voice-footer');
   const talkBtn = $<HTMLButtonElement>('voice-talk');
   const talkLabel = $<HTMLSpanElement>('voice-talk-label');
+  const textForm = $<HTMLFormElement>('voice-text-form');
+  const textInput = $<HTMLInputElement>('voice-text-input');
+  const textSendBtn = $<HTMLButtonElement>('voice-text-send');
   const statusEl = $<HTMLParagraphElement>('voice-status');
   const audio = $<HTMLAudioElement>('voice-audio');
   const pulse = $<HTMLSpanElement>('voice-pulse');
@@ -319,7 +371,7 @@
   talkBtn.addEventListener('pointerleave', stopRecording);
   talkBtn.addEventListener('pointercancel', stopRecording);
 
-  // ─── Pipeline transcribe → chat → speak ─────────────────────────────
+  // ─── Pipeline VOZ: transcribe → chatAndSpeak ────────────────────────
   async function onRecordingDone() {
     if (state.chunks.length === 0) {
       setStatus('No se grabó audio.');
@@ -345,7 +397,7 @@
       const j = await res.json();
       if (!res.ok || !j.ok) {
         setStatus(j.error === 'voice_not_configured'
-          ? 'Voz no configurada — usa el chat de texto.'
+          ? 'Voz no configurada — usa el campo de texto.'
           : `Error transcribiendo (${j.error ?? res.status}).`);
         setBusy(false);
         return;
@@ -362,10 +414,25 @@
       setBusy(false);
       return;
     }
+    await chatAndSpeak(userText, { speak: true });
+  }
+
+  // ─── Pipeline TEXTO: submit del input → chatAndSpeak (sin TTS) ──────
+  textForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = textInput.value.trim();
+    if (!value || state.busy) return;
+    textInput.value = '';
+    // El input texto NO sintetiza voz por defecto (más rápido, menos coste).
+    // Si el usuario quiere oír la respuesta, puede preguntar en voz.
+    void chatAndSpeak(value, { speak: false });
+  });
+
+  // ─── Núcleo común: enviar mensaje → LLM → (opcional TTS) ────────────
+  async function chatAndSpeak(userText: string, opts: { speak: boolean }) {
     addMessage('user', userText);
     state.messages.push({ role: 'user', content: userText });
 
-    // → Chat LLM
     setBusy(true, 'Pensando…');
     setStatus('Pensando…');
     let answerText = '';
@@ -384,7 +451,7 @@
       const j = await res.json();
       if (!res.ok || !j.ok) {
         const friendly = j.error === 'credit_exhausted'
-          ? 'Saldo IA agotado momentáneamente. Usa el chat de texto o escribe a hola@startidea.es.'
+          ? 'Saldo IA agotado momentáneamente. Inténtalo más tarde o escribe a hola@startidea.es.'
           : j.error === 'rate_limit'
             ? 'Demasiadas conversaciones simultáneas. Espera 1 minuto.'
             : j.error === 'llm_not_configured'
@@ -423,6 +490,13 @@
       renderSuggestions(suggestSubsidies);
     }
 
+    if (!opts.speak) {
+      // Solo texto: terminamos aquí sin llamar a TTS.
+      setStatus('');
+      setBusy(false);
+      return;
+    }
+
     // → TTS
     setBusy(true, 'Hablando…');
     setStatus('Hablando…');
@@ -440,10 +514,21 @@
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       audio.src = url;
+      audio.onplay = () => stopSpeechBtn.classList.remove('hidden');
       audio.onended = () => {
         URL.revokeObjectURL(url);
+        stopSpeechBtn.classList.add('hidden');
         setStatus('');
         setBusy(false);
+      };
+      audio.onpause = () => {
+        // Si pausamos manualmente (botón Stop), liberar como si terminara
+        if (!audio.ended) {
+          URL.revokeObjectURL(url);
+          stopSpeechBtn.classList.add('hidden');
+          setStatus('Voz cortada.');
+          setBusy(false);
+        }
       };
       audio.play().catch(() => {
         setStatus('Click para activar el audio en tu navegador.');
@@ -454,6 +539,14 @@
       setBusy(false);
     }
   }
+
+  // ─── Botón Stop: corta el TTS en curso ──────────────────────────────
+  stopSpeechBtn.addEventListener('click', () => {
+    if (!audio.paused) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  });
 
   function renderSuggestions(items: Array<{ slug: string; title: string; organization?: string | null }>) {
     suggestionsDiv.innerHTML = `
