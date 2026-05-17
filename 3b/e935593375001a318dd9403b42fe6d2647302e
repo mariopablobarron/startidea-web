@@ -1,0 +1,39 @@
+src/pages/subvenciones/verificacion.astro
+  s_fc84abf46d9a4c::t_8a3d7dcf8d0192 1-137
+src/pages/subvenciones/territorio/[ccaa].astro
+  s_fc84abf46d9a4c::t_dcb0e11a3adc26 1-112
+src/pages/subvenciones/crear-alerta.astro
+  s_fc84abf46d9a4c::t_167523bb667fee 1-257
+src/pages/subvenciones/mi-alerta.astro
+  s_fc84abf46d9a4c::t_d213d899d53c80 1-105
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_9ffc9ceb968762 1-535
+src/components/Nav.astro
+  s_fc84abf46d9a4c::t_2938e4dff6331a 10
+astro.config.mjs
+  s_fc84abf46d9a4c::t_b3542cc338f390 69-71
+src/pages/subvenciones/[slug].astro
+  s_fc84abf46d9a4c::t_032ce831570586 1-342
+src/lib/subsidies-api.ts
+  s_fc84abf46d9a4c::t_f50d47667b9426 1-220
+src/components/SubsidyCard.astro
+  s_fc84abf46d9a4c::t_acfbe162a29565 1-75
+src/pages/subvenciones/categoria/[categoria].astro
+  s_fc84abf46d9a4c::t_f6673e6114acf9 1-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "3be935593375001a318dd9403b42fe6d2647302e",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
