@@ -1,0 +1,21 @@
+src/pages/contacto.astro
+  s_fc84abf46d9a4c::t_7d1d409cbe8eb6 36
+src/pages/sobre.astro
+  s_fc84abf46d9a4c::t_5f7b13a627466f 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "40f33f392571571eb4a448d0209595ccae5983d7",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
