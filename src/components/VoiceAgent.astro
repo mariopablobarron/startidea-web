@@ -381,7 +381,14 @@
       });
       const j = await res.json();
       if (!res.ok || !j.ok) {
-        setStatus(`Error del agente (${j.error ?? res.status}).`);
+        const friendly = j.error === 'credit_exhausted'
+          ? 'Saldo IA agotado momentáneamente. Usa el chat de texto o escribe a hola@startidea.es.'
+          : j.error === 'rate_limit'
+            ? 'Demasiadas conversaciones simultáneas. Espera 1 minuto.'
+            : j.error === 'llm_not_configured'
+              ? 'Agente no configurado.'
+              : `Error del agente (${j.error ?? res.status}).`;
+        setStatus(friendly);
         setBusy(false);
         return;
       }
