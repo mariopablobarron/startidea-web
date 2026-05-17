@@ -71,18 +71,20 @@
   <!-- Cuerpo (3 estados: consent / chat / lead-ok) -->
   <div id="voice-body" class="flex-1 overflow-y-auto p-5">
 
-    <!-- ESTADO 1: CONSENT RGPD -->
+    <!-- ESTADO 1: CONSENT RGPD (genérico — detalles técnicos en /privacidad) -->
     <div id="voice-consent" class="space-y-4">
       <p class="font-display text-lg text-ink">
-        Antes de empezar, lee esto.
+        Antes de empezar.
       </p>
       <ul class="space-y-2 text-sm text-ink/85">
-        <li class="flex gap-2"><span class="text-magenta">·</span> Vamos a grabar tu voz solo mientras mantengas pulsado el botón del micrófono.</li>
-        <li class="flex gap-2"><span class="text-magenta">·</span> El audio se envía a Whisper (OpenAI) para transcribirlo. <strong>El audio no se guarda</strong>; solo se guarda la transcripción.</li>
-        <li class="flex gap-2"><span class="text-magenta">·</span> La transcripción la procesa Claude (Anthropic vía OpenRouter).</li>
-        <li class="flex gap-2"><span class="text-magenta">·</span> La respuesta de Startidea se sintetiza a voz con ElevenLabs.</li>
-        <li class="flex gap-2"><span class="text-magenta">·</span> Si dejas tu email, se guarda en Startidea para que el equipo te contacte.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> La voz se graba <strong>solo</strong> mientras mantengas el botón del micrófono pulsado.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> El audio se transcribe y se descarta. Solo se conserva el texto.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> Si dejas tu email, el equipo Startidea te contacta. Sin spam, sin cesión a terceros.</li>
       </ul>
+      <p class="text-[11px] text-ink-mute">
+        Tratamiento de datos detallado en
+        <a href="/privacidad" class="underline hover:text-magenta">/privacidad</a>.
+      </p>
       <div class="border-t border-ink/15 pt-4 flex gap-3">
         <button type="button" id="voice-consent-ok" class="bg-ink px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta">
           Acepto y continuar
