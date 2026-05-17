@@ -1,0 +1,461 @@
+---
+// Agente de voz Startidea — botón flotante + modal push-to-talk.
+//
+// Pipeline browser-side:
+//   1. User mantiene botón mic → MediaRecorder graba webm
+//   2. Suelta → POST FormData /api/public/voice/transcribe → texto
+//   3. POST JSON /api/public/voice/chat → respuesta + tool calls
+//   4. POST JSON /api/public/voice/speak → audio MP3 → reproduce
+//   5. Loop hasta cierre del modal
+//
+// RGPD: consent banner ANTES de pedir permiso del micrófono.
+// Privacy-first: no graba en silencio (push-to-talk), no guarda audio
+// en servidor (solo transcripción), no envía cookies a Eleven/OpenAI.
+---
+
+<!-- Botón flotante "Hablar". Convive con el AsistenteIA (texto) — éste
+     va a su izquierda en desktop, encima en mobile. -->
+<button
+  type="button"
+  id="voice-chip"
+  class="fixed bottom-6 right-[200px] z-40 hidden md:inline-flex items-center gap-2 border-2 border-magenta bg-paper px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-magenta shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:text-paper"
+  aria-haspopup="dialog"
+  aria-controls="voice-panel"
+  aria-expanded="false"
+>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+    <line x1="12" y1="19" x2="12" y2="22"></line>
+  </svg>
+  <span>Hablar</span>
+</button>
+
+<button
+  type="button"
+  id="voice-chip-mobile"
+  class="fixed bottom-[80px] right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-magenta bg-paper text-magenta shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:text-paper md:hidden"
+  aria-haspopup="dialog"
+  aria-controls="voice-panel"
+  aria-expanded="false"
+  aria-label="Abrir agente de voz"
+>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+    <line x1="12" y1="19" x2="12" y2="22"></line>
+  </svg>
+</button>
+
+<div
+  id="voice-panel"
+  class="fixed inset-x-4 bottom-20 z-50 hidden max-h-[85vh] flex-col overflow-hidden border-2 border-ink bg-paper shadow-[0_24px_48px_-16px_rgba(0,0,0,0.35)] sm:right-6 sm:left-auto sm:bottom-24 sm:w-[460px] md:max-h-[640px]"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="voice-title"
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between border-b-2 border-ink bg-magenta px-5 py-3 text-paper">
+    <div>
+      <p id="voice-title" class="font-mono text-[11px] uppercase tracking-widest">— Agente de voz · Startidea</p>
+      <p id="voice-subtitle" class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/75">Mantén el botón para hablar</p>
+    </div>
+    <button
+      type="button"
+      id="voice-close"
+      class="font-mono text-[11px] uppercase tracking-widest text-paper/85 hover:text-paper"
+      aria-label="Cerrar"
+    >Cerrar ✕</button>
+  </div>
+
+  <!-- Cuerpo (3 estados: consent / chat / lead-ok) -->
+  <div id="voice-body" class="flex-1 overflow-y-auto p-5">
+
+    <!-- ESTADO 1: CONSENT RGPD -->
+    <div id="voice-consent" class="space-y-4">
+      <p class="font-display text-lg text-ink">
+        Antes de empezar, lee esto.
+      </p>
+      <ul class="space-y-2 text-sm text-ink/85">
+        <li class="flex gap-2"><span class="text-magenta">·</span> Vamos a grabar tu voz solo mientras mantengas pulsado el botón del micrófono.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> El audio se envía a Whisper (OpenAI) para transcribirlo. <strong>El audio no se guarda</strong>; solo se guarda la transcripción.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> La transcripción la procesa Claude (Anthropic vía OpenRouter).</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> La respuesta de Startidea se sintetiza a voz con ElevenLabs.</li>
+        <li class="flex gap-2"><span class="text-magenta">·</span> Si dejas tu email, se guarda en Startidea para que el equipo te contacte.</li>
+      </ul>
+      <div class="border-t border-ink/15 pt-4 flex gap-3">
+        <button type="button" id="voice-consent-ok" class="bg-ink px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta">
+          Acepto y continuar
+        </button>
+        <button type="button" id="voice-consent-no" class="font-mono text-[11px] uppercase tracking-widest text-ink/65 hover:text-magenta">
+          Mejor no
+        </button>
+      </div>
+    </div>
+
+    <!-- ESTADO 2: CHAT ACTIVO -->
+    <div id="voice-chat" class="hidden">
+      <div id="voice-transcript" class="space-y-3 min-h-[200px]" aria-live="polite">
+        <!-- mensajes injectados aquí -->
+        <div class="border-l-2 border-magenta pl-3 py-1">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Startidea</p>
+          <p class="mt-1 text-sm text-ink">Hola. Cuéntame qué necesitas. Mantén pulsado el micrófono para hablar.</p>
+        </div>
+      </div>
+
+      <!-- Sugerencias de subvenciones inyectadas dinámicamente -->
+      <div id="voice-suggestions" class="hidden mt-4 border-t border-ink/15 pt-3 space-y-2"></div>
+
+      <!-- Lead confirmation -->
+      <div id="voice-lead-ok" class="hidden mt-4 border-2 border-magenta bg-magenta/5 p-4">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">— Apuntado</p>
+        <p class="mt-2 text-sm text-ink">El equipo Startidea te contacta en menos de 24h laborables.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer con el botón push-to-talk + status -->
+  <div id="voice-footer" class="hidden border-t-2 border-ink bg-paper-warm/40 p-4">
+    <button
+      type="button"
+      id="voice-talk"
+      class="w-full inline-flex flex-col items-center gap-2 border-2 border-ink bg-paper px-4 py-4 font-mono text-[11px] uppercase tracking-widest text-ink transition-all select-none active:scale-[0.98] hover:border-magenta hover:text-magenta"
+      aria-label="Mantén pulsado para hablar"
+      data-talk-state="idle"
+    >
+      <div class="relative">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="22"></line>
+        </svg>
+        <span id="voice-pulse" class="hidden absolute -inset-2 rounded-full border-2 border-magenta animate-ping"></span>
+      </div>
+      <span id="voice-talk-label">Mantén para hablar</span>
+    </button>
+    <p id="voice-status" class="mt-2 text-center font-mono text-[10px] tracking-widest text-ink-mute h-4"></p>
+  </div>
+</div>
+
+<audio id="voice-audio" preload="auto" class="hidden"></audio>
+
+<script>
+  // ─── State ──────────────────────────────────────────────────────────
+  const HUB_API =
+    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+
+  type Msg = { role: 'system' | 'user' | 'assistant'; content: string };
+  type State = {
+    messages: Msg[];
+    recording: boolean;
+    busy: boolean;
+    consent: boolean;
+    mediaRecorder: MediaRecorder | null;
+    chunks: BlobPart[];
+    stream: MediaStream | null;
+  };
+  const state: State = {
+    messages: [],
+    recording: false,
+    busy: false,
+    consent: false,
+    mediaRecorder: null,
+    chunks: [],
+    stream: null,
+  };
+
+  // ─── DOM refs ───────────────────────────────────────────────────────
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const chip = $<HTMLButtonElement>('voice-chip');
+  const chipMobile = $<HTMLButtonElement>('voice-chip-mobile');
+  const panel = $<HTMLDivElement>('voice-panel');
+  const closeBtn = $<HTMLButtonElement>('voice-close');
+  const consentDiv = $<HTMLDivElement>('voice-consent');
+  const consentOk = $<HTMLButtonElement>('voice-consent-ok');
+  const consentNo = $<HTMLButtonElement>('voice-consent-no');
+  const chatDiv = $<HTMLDivElement>('voice-chat');
+  const transcript = $<HTMLDivElement>('voice-transcript');
+  const suggestionsDiv = $<HTMLDivElement>('voice-suggestions');
+  const leadOk = $<HTMLDivElement>('voice-lead-ok');
+  const footer = $<HTMLDivElement>('voice-footer');
+  const talkBtn = $<HTMLButtonElement>('voice-talk');
+  const talkLabel = $<HTMLSpanElement>('voice-talk-label');
+  const statusEl = $<HTMLParagraphElement>('voice-status');
+  const audio = $<HTMLAudioElement>('voice-audio');
+  const pulse = $<HTMLSpanElement>('voice-pulse');
+
+  // ─── Open / close ───────────────────────────────────────────────────
+  function open() {
+    panel.classList.remove('hidden');
+    panel.classList.add('flex');
+    chip?.setAttribute('aria-expanded', 'true');
+    chipMobile?.setAttribute('aria-expanded', 'true');
+  }
+  function close() {
+    panel.classList.add('hidden');
+    panel.classList.remove('flex');
+    chip?.setAttribute('aria-expanded', 'false');
+    chipMobile?.setAttribute('aria-expanded', 'false');
+    // Si había stream activo, liberar mic
+    if (state.stream) {
+      state.stream.getTracks().forEach((t) => t.stop());
+      state.stream = null;
+    }
+    state.recording = false;
+  }
+  chip?.addEventListener('click', open);
+  chipMobile?.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.classList.contains('hidden')) close();
+  });
+
+  // ─── Consent ────────────────────────────────────────────────────────
+  consentOk.addEventListener('click', () => {
+    state.consent = true;
+    consentDiv.classList.add('hidden');
+    chatDiv.classList.remove('hidden');
+    footer.classList.remove('hidden');
+  });
+  consentNo.addEventListener('click', () => {
+    close();
+  });
+
+  // ─── Render helpers ─────────────────────────────────────────────────
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!,
+    );
+  }
+  function addMessage(role: 'user' | 'assistant', text: string) {
+    const div = document.createElement('div');
+    if (role === 'user') {
+      div.className = 'border-l-2 border-ink/40 pl-3 py-1';
+      div.innerHTML = `
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Tú</p>
+        <p class="mt-1 text-sm text-ink/85">${escapeHtml(text)}</p>`;
+    } else {
+      div.className = 'border-l-2 border-magenta pl-3 py-1';
+      div.innerHTML = `
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Startidea</p>
+        <p class="mt-1 text-sm text-ink">${escapeHtml(text)}</p>`;
+    }
+    transcript.appendChild(div);
+    transcript.scrollTop = transcript.scrollHeight;
+  }
+
+  function setStatus(msg: string) {
+    statusEl.textContent = msg;
+  }
+  function setBusy(busy: boolean, label?: string) {
+    state.busy = busy;
+    talkBtn.disabled = busy;
+    talkBtn.classList.toggle('opacity-50', busy);
+    if (label) talkLabel.textContent = label;
+    else if (!busy) talkLabel.textContent = 'Mantén para hablar';
+  }
+
+  // ─── Push-to-talk ───────────────────────────────────────────────────
+  async function ensureMicStream(): Promise<MediaStream | null> {
+    if (state.stream) return state.stream;
+    try {
+      const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+      state.stream = s;
+      return s;
+    } catch (err) {
+      setStatus('No se pudo activar el micrófono.');
+      return null;
+    }
+  }
+
+  async function startRecording() {
+    if (state.busy || state.recording) return;
+    const stream = await ensureMicStream();
+    if (!stream) return;
+    state.chunks = [];
+    const mime = MediaRecorder.isTypeSupported('audio/webm')
+      ? 'audio/webm'
+      : 'audio/mp4';
+    try {
+      state.mediaRecorder = new MediaRecorder(stream, { mimeType: mime });
+    } catch {
+      state.mediaRecorder = new MediaRecorder(stream);
+    }
+    state.mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) state.chunks.push(e.data);
+    };
+    state.mediaRecorder.onstop = () => void onRecordingDone();
+    state.mediaRecorder.start();
+    state.recording = true;
+    talkBtn.dataset.talkState = 'recording';
+    talkBtn.classList.add('!border-magenta', '!text-magenta', 'bg-magenta/5');
+    pulse.classList.remove('hidden');
+    talkLabel.textContent = 'Te escucho…';
+    setStatus('');
+  }
+
+  function stopRecording() {
+    if (!state.recording) return;
+    state.recording = false;
+    talkBtn.dataset.talkState = 'idle';
+    talkBtn.classList.remove('!border-magenta', '!text-magenta', 'bg-magenta/5');
+    pulse.classList.add('hidden');
+    try {
+      state.mediaRecorder?.stop();
+    } catch {
+      // ignore
+    }
+  }
+
+  // Eventos pointer (cubre mouse + touch unificado)
+  talkBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    void startRecording();
+  });
+  talkBtn.addEventListener('pointerup', stopRecording);
+  talkBtn.addEventListener('pointerleave', stopRecording);
+  talkBtn.addEventListener('pointercancel', stopRecording);
+
+  // ─── Pipeline transcribe → chat → speak ─────────────────────────────
+  async function onRecordingDone() {
+    if (state.chunks.length === 0) {
+      setStatus('No se grabó audio.');
+      return;
+    }
+    setBusy(true, 'Transcribiendo…');
+    setStatus('Transcribiendo…');
+    const blob = new Blob(state.chunks, { type: state.mediaRecorder?.mimeType ?? 'audio/webm' });
+    if (blob.size < 1500) {
+      setStatus('Demasiado corto — vuelve a hablar.');
+      setBusy(false);
+      return;
+    }
+
+    let userText = '';
+    try {
+      const fd = new FormData();
+      fd.append('audio', blob, 'utterance.webm');
+      const res = await fetch(`${HUB_API}/api/public/voice/transcribe`, {
+        method: 'POST',
+        body: fd,
+      });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        setStatus(j.error === 'voice_not_configured'
+          ? 'Voz no configurada — usa el chat de texto.'
+          : `Error transcribiendo (${j.error ?? res.status}).`);
+        setBusy(false);
+        return;
+      }
+      userText = (j.text ?? '').trim();
+    } catch {
+      setStatus('Error de red al transcribir.');
+      setBusy(false);
+      return;
+    }
+
+    if (!userText) {
+      setStatus('No te entendí. Vuelve a intentar.');
+      setBusy(false);
+      return;
+    }
+    addMessage('user', userText);
+    state.messages.push({ role: 'user', content: userText });
+
+    // → Chat LLM
+    setBusy(true, 'Pensando…');
+    setStatus('Pensando…');
+    let answerText = '';
+    let leadCaptured = false;
+    let diagnosticSubmitted = false;
+    let suggestSubsidies: Array<{ slug: string; title: string; organization?: string | null; deadline?: string | null }> | undefined;
+    try {
+      const res = await fetch(`${HUB_API}/api/public/voice/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: state.messages,
+          sourceUrl: window.location.href,
+        }),
+      });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        setStatus(`Error del agente (${j.error ?? res.status}).`);
+        setBusy(false);
+        return;
+      }
+      answerText = (j.text ?? '').trim();
+      leadCaptured = !!j.leadCaptured;
+      diagnosticSubmitted = !!j.diagnosticSubmitted;
+      suggestSubsidies = j.suggestSubsidies;
+    } catch {
+      setStatus('Error de red al consultar al agente.');
+      setBusy(false);
+      return;
+    }
+
+    if (!answerText) {
+      // El LLM puede no devolver texto si solo hizo tool calls — sintetizamos
+      // un breve mensaje de cierre para que la conversación no se pare seca.
+      answerText = leadCaptured
+        ? 'Apuntado. El equipo te contacta pronto.'
+        : diagnosticSubmitted
+          ? 'Diagnóstico enviado. Te contactan en menos de 24 horas.'
+          : 'Listo. ¿Algo más?';
+    }
+    addMessage('assistant', answerText);
+    state.messages.push({ role: 'assistant', content: answerText });
+
+    if (leadCaptured || diagnosticSubmitted) {
+      leadOk.classList.remove('hidden');
+    }
+    if (suggestSubsidies && suggestSubsidies.length > 0) {
+      renderSuggestions(suggestSubsidies);
+    }
+
+    // → TTS
+    setBusy(true, 'Hablando…');
+    setStatus('Hablando…');
+    try {
+      const res = await fetch(`${HUB_API}/api/public/voice/speak`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: answerText }),
+      });
+      if (!res.ok) {
+        setStatus('Voz no disponible (texto OK).');
+        setBusy(false);
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      audio.src = url;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        setStatus('');
+        setBusy(false);
+      };
+      audio.play().catch(() => {
+        setStatus('Click para activar el audio en tu navegador.');
+        setBusy(false);
+      });
+    } catch {
+      setStatus('Error TTS.');
+      setBusy(false);
+    }
+  }
+
+  function renderSuggestions(items: Array<{ slug: string; title: string; organization?: string | null }>) {
+    suggestionsDiv.innerHTML = `
+      <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute mb-2">— Convocatorias relacionadas</p>
+      ${items.slice(0, 3).map((it) => `
+        <a href="/subvenciones/${escapeHtml(it.slug)}" class="block py-1.5 text-sm text-ink hover:text-magenta">
+          <span class="text-magenta">→</span> ${escapeHtml(it.title.slice(0, 90))}
+          ${it.organization ? `<span class="block ml-4 text-xs text-ink-mute italic">${escapeHtml(it.organization.slice(0, 80))}</span>` : ''}
+        </a>
+      `).join('')}
+    `;
+    suggestionsDiv.classList.remove('hidden');
+  }
+</script>
