@@ -1,0 +1,22 @@
+src/layouts/Base.astro
+  s_fc84abf46d9a4c::t_7d68693110c4ba 22
+  s_fc84abf46d9a4c::t_a3e3bad3df8223 110
+src/components/VoiceAgent.astro
+  s_fc84abf46d9a4c::t_9cbe8f7cc0ea94 1-461
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "6035e64ba1e406c53546e77dc97942f4501ef035",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
