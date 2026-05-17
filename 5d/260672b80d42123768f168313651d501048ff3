@@ -1,0 +1,21 @@
+src/components/VoiceAgent.astro
+  s_fc84abf46d9a4c::t_c0c9d87e18e337 74,77,80-82,84-87
+src/pages/privacidad.astro
+  s_fc84abf46d9a4c::t_586fd5b7d1f5e8 60-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "5d260672b80d42123768f168313651d501048ff3",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
