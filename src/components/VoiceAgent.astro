@@ -553,6 +553,16 @@
 
     if (leadCaptured || diagnosticSubmitted) {
       leadOk.classList.remove('hidden');
+      // GA4: conversión vía agente de voz
+      if (typeof (window as any).stTrack === 'function') {
+        (window as any).stTrack('generate_lead', {
+          method: diagnosticSubmitted ? 'voice_agent_diagnostico' : 'voice_agent_lead',
+          lead_source: 'voice_agent',
+          page_path: window.location.pathname,
+          value: 1,
+          currency: 'EUR',
+        });
+      }
     }
     if (suggestSubsidies && suggestSubsidies.length > 0) {
       renderSuggestions(suggestSubsidies);

@@ -406,6 +406,16 @@ const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
           if (!res.ok || !data.ok) {
             throw new Error(data.error || ('HTTP ' + res.status));
           }
+          // GA4: conversión diagnóstico completado
+          if (typeof window.stTrack === 'function') {
+            window.stTrack('generate_lead', {
+              method: 'diagnostico_form',
+              lead_source: 'diagnostico',
+              page_path: '/diagnostico/nuevo',
+              value: 1,
+              currency: 'EUR',
+            });
+          }
           window.location.href = '/diagnostico/gracias';
         } catch (err) {
           loadingBox?.classList.add('hidden');

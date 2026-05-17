@@ -224,6 +224,17 @@ const jsonLd = [
         showResult('error', j.error ?? `Error ${res.status}`);
       } else {
         form.style.display = 'none';
+        // GA4: conversión alerta de subvenciones creada (pre-verify email)
+        if (typeof (window as any).stTrack === 'function') {
+          (window as any).stTrack('generate_lead', {
+            method: 'subsidy_watch_form',
+            lead_source: 'subvenciones_alerta',
+            page_path: '/subvenciones/crear-alerta',
+            territory: body.territory,
+            value: 1,
+            currency: 'EUR',
+          });
+        }
         showResult(
           'ok',
           `<strong>Alerta creada.</strong><br/>
