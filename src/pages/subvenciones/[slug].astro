@@ -1,0 +1,342 @@
+---
+// /subvenciones/[slug] — Landing por convocatoria.
+//
+// Genera estáticamente una página por convocatoria ABIERTA en build.
+// Las cerradas viven en /subvenciones/archivo (no SEO crítico).
+//
+// SEO: cada landing = title único + meta description + JSON-LD
+// GovernmentService + breadcrumbs. CTA "necesitas ayuda" → /contacto.
+
+import Base from '@/layouts/Base.astro';
+import {
+  fetchSubsidies,
+  fetchSubsidyDetail,
+  fmtAmount,
+  fmtDate,
+  daysToDeadline,
+  finalidadLabel,
+  territorioLabel,
+  beneficiarioLabel,
+  instrumentoLabel,
+} from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+export async function getStaticPaths() {
+  // Paginar BDNS abiertas hasta hard-cap (build time vs cobertura).
+  const HARD_CAP = 3000;
+  const PAGE_SIZE = 50;
+  const slugs = new Set<string>();
+  for (let page = 0; page < HARD_CAP / PAGE_SIZE; page++) {
+    const res = await fetchSubsidies({
+      status: 'abierto',
+      pageSize: PAGE_SIZE,
+      page,
+      sort: 'recent',
+    });
+    if (!res.items || res.items.length === 0) break;
+    for (const item of res.items) {
+      if (item.slug) slugs.add(item.slug);
+    }
+    if (res.totalPages && page + 1 >= res.totalPages) break;
+  }
+  return [...slugs].map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const subsidy = await fetchSubsidyDetail(slug as string);
+
+if (!subsidy) {
+  return Astro.redirect('/subvenciones?notfound=' + encodeURIComponent(slug as string), 302);
+}
+
+const days = daysToDeadline(subsidy.deadline);
+const isUrgent = days !== null && days >= 0 && days <= 14;
+const isClosed = days !== null && days < 0;
+const finalidad = subsidy.finalidades?.[0];
+const territorio =
+  subsidy.geo_level === 'AUTONOMICA' && subsidy.ccaa
+    ? territorioLabel(subsidy.ccaa)
+    : subsidy.geo_level === 'LOCAL' && subsidy.municipality
+      ? subsidy.municipality.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+      : subsidy.geo_level === 'PROVINCIAL' && subsidy.province
+        ? subsidy.province.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+        : subsidy.geo_level === 'ESTATAL'
+          ? 'Nacional'
+          : 'Europa';
+
+const title = `${subsidy.title.slice(0, 90)} · Subvención`;
+const description =
+  subsidy.meta_description ??
+  [
+    subsidy.organization && `${subsidy.organization}.`,
+    finalidad && `Finalidad: ${finalidadLabel(finalidad)}.`,
+    subsidy.deadline && `Plazo: ${fmtDate(subsidy.deadline)}.`,
+    subsidy.amount_eur && `Dotación: ${fmtAmount(subsidy.amount_eur)}.`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .slice(0, 160);
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: subsidy.title.slice(0, 80), url: `${SITE_URL}/subvenciones/${slug}` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'GovernmentService',
+    name: subsidy.title,
+    description: subsidy.description ?? description,
+    provider: subsidy.organization
+      ? { '@type': 'GovernmentOrganization', name: subsidy.organization }
+      : undefined,
+    areaServed: territorio,
+    serviceType: finalidad ? finalidadLabel(finalidad) : 'Subvención pública',
+    url: subsidy.source_url,
+    audience: subsidy.beneficiary_types?.map((b) => ({
+      '@type': 'Audience',
+      audienceType: beneficiarioLabel(b),
+    })),
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  ogSlug="page/subvenciones"
+  jsonLd={jsonLd}
+>
+  <!-- Breadcrumbs -->
+  <section class="border-b border-ink/10 bg-paper-warm py-3">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/" class="hover:text-magenta">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/subvenciones" class="hover:text-magenta">Subvenciones</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-ink/65">{territorio}</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-8">
+        <!-- Meta -->
+        <div class="flex flex-wrap items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-ink-mute">
+          <span>{subsidy.source.toUpperCase()}</span>
+          <span aria-hidden="true">·</span>
+          <span>{territorio}</span>
+          {finalidad && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                <a href={`/subvenciones/categoria/${finalidad}`} class="hover:text-magenta">
+                  {finalidadLabel(finalidad)}
+                </a>
+              </span>
+            </>
+          )}
+          {isUrgent && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span class="text-magenta">⚠ Cierra en {days} días</span>
+            </>
+          )}
+          {isClosed && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>Plazo cerrado</span>
+            </>
+          )}
+        </div>
+
+        <h1 class="mt-4 font-display text-display-lg leading-[1.05] text-ink">
+          {subsidy.title}
+        </h1>
+        {subsidy.organization && (
+          <p class="mt-4 text-lede italic text-ink/75">{subsidy.organization}</p>
+        )}
+      </div>
+
+      <!-- Datos clave (sidebar) -->
+      <aside class="col-span-12 mt-6 lg:col-span-4 lg:mt-0">
+        <div class="border-l-2 border-magenta bg-paper-warm/40 p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">— Datos clave</p>
+          <dl class="mt-3 grid gap-2.5 text-sm">
+            {subsidy.amount_eur && (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Dotación</dt>
+                <dd class="font-display text-xl text-ink">{fmtAmount(subsidy.amount_eur)}</dd>
+              </div>
+            )}
+            {subsidy.deadline && (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Plazo cierre</dt>
+                <dd class="text-ink">{fmtDate(subsidy.deadline)}</dd>
+              </div>
+            )}
+            {subsidy.start_date && (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Plazo apertura</dt>
+                <dd class="text-ink">{fmtDate(subsidy.start_date)}</dd>
+              </div>
+            )}
+            {subsidy.published_at && (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Publicada</dt>
+                <dd class="text-ink">{fmtDate(subsidy.published_at)}</dd>
+              </div>
+            )}
+          </dl>
+          <a
+            href={subsidy.source_url}
+            target="_blank"
+            rel="noopener"
+            class="mt-5 inline-flex items-center gap-1.5 text-sm text-magenta hover:underline"
+          >
+            Ficha BDNS oficial ↗
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Resumen Startidea (si existe) -->
+  {subsidy.startidea_summary && (
+    <section class="border-b border-ink/10 bg-paper-warm/40 py-12 md:py-16">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Resumen Startidea</span>
+          </div>
+          <div class="col-span-12 mt-4 lg:col-span-8 lg:col-start-5 lg:mt-0">
+            <div class="prose prose-startidea max-w-measure text-ink/85" set:html={subsidy.startidea_summary} />
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Detalle: beneficiarios + finalidad + bases -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x grid grid-cols-12 gap-x-8 gap-y-8">
+      {subsidy.beneficiary_types?.length > 0 && (
+        <div class="col-span-12 md:col-span-6">
+          <span class="label">— Para quién</span>
+          <ul class="mt-3 space-y-1.5 text-ink/85">
+            {subsidy.beneficiary_types.map((b) => (
+              <li class="flex items-baseline gap-2">
+                <span class="text-magenta">•</span>
+                <span>{beneficiarioLabel(b)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {subsidy.instrument_types?.length > 0 && (
+        <div class="col-span-12 md:col-span-6">
+          <span class="label">— Tipo de ayuda</span>
+          <ul class="mt-3 space-y-1.5 text-ink/85">
+            {subsidy.instrument_types.map((i) => (
+              <li class="flex items-baseline gap-2">
+                <span class="text-magenta">•</span>
+                <span>{instrumentoLabel(i)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {subsidy.funding_origins?.length > 0 && (
+        <div class="col-span-12 md:col-span-6">
+          <span class="label">— Origen de fondos</span>
+          <ul class="mt-3 space-y-1.5 text-ink/85">
+            {subsidy.funding_origins.map((o) => (
+              <li class="flex items-baseline gap-2">
+                <span class="text-magenta">•</span>
+                <span>{o.replace(/-/g, ' ').toUpperCase()}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {subsidy.ai_tags?.length > 0 && (
+        <div class="col-span-12 md:col-span-6">
+          <span class="label">— Etiquetas detectadas</span>
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            {subsidy.ai_tags.map((tag) => (
+              <span class="rounded-full bg-ink/8 px-2.5 py-1 font-mono text-[11px] text-ink/65">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {subsidy.bases_text && (
+        <div class="col-span-12">
+          <span class="label">— Bases reguladoras</span>
+          <p class="mt-3 text-ink/85">{subsidy.bases_text}</p>
+          {subsidy.bases_url && (
+            <a
+              href={subsidy.bases_url}
+              target="_blank"
+              rel="noopener"
+              class="mt-3 inline-flex items-center gap-1.5 text-sm text-magenta hover:underline"
+            >
+              Bases completas (PDF) ↗
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA Startidea (consultoría) -->
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-y border-ink/15 py-10">
+        <div class="col-span-12 lg:col-span-7">
+          <span class="label">— ¿Necesitas ayuda con esta convocatoria?</span>
+          <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+            Te ayudamos a <em class="italic text-magenta">redactar la solicitud</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-ink/80">
+            Si esta convocatoria encaja con tu organización, podemos ayudarte
+            a preparar la solicitud, la memoria económica y el seguimiento.
+            Una llamada de 30 minutos sin compromiso para ver si es viable.
+          </p>
+        </div>
+        <div class="col-span-12 mt-6 flex items-end justify-end lg:col-span-5 lg:mt-0">
+          <a href="/contacto" class="btn">Hablamos →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alerta personalizada -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="text-center">
+        <span class="label">— Alerta</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+          ¿Que te avise<br />
+          <em class="italic text-magenta">la próxima vez</em>?
+        </h2>
+        <p class="mx-auto mt-4 max-w-measure text-ink/75">
+          Crea una alerta con tus palabras clave y te avisamos cuando aparezca
+          otra convocatoria como esta.
+        </p>
+        <a href="/subvenciones/crear-alerta" class="btn mt-6 inline-flex">
+          Crear alerta gratis →
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

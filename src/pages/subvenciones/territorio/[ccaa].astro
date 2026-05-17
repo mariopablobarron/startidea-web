@@ -1,0 +1,112 @@
+---
+// /subvenciones/territorio/[ccaa] — Landing SEO por CCAA.
+//
+// 19 CCAA + ceuta/melilla → 19 landings. Estatal y Europa van aparte.
+
+import Base from '@/layouts/Base.astro';
+import SubsidyCard from '@/components/SubsidyCard.astro';
+import { fetchSubsidies, TERRITORIOS_PUBLIC, territorioLabel } from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+export async function getStaticPaths() {
+  return [
+    ...TERRITORIOS_PUBLIC.map((t) => ({ params: { ccaa: t.slug } })),
+    { params: { ccaa: 'nacional' } },
+    { params: { ccaa: 'europa' } },
+  ];
+}
+
+const { ccaa } = Astro.params;
+const isNacional = ccaa === 'nacional';
+const isEuropa = ccaa === 'europa';
+const label = isNacional
+  ? 'España (estatales)'
+  : isEuropa
+    ? 'Europa'
+    : territorioLabel(ccaa as string);
+
+const queryParams: Record<string, string | number> = {
+  status: 'abierto',
+  pageSize: 50,
+  sort: 'recent',
+};
+if (isNacional) queryParams.geo = 'ESTATAL';
+else if (isEuropa) queryParams.geo = 'EUROPA';
+else queryParams.ccaa = ccaa as string;
+
+const data = await fetchSubsidies(queryParams);
+
+const title = `Subvenciones en ${label} · Buscador Startidea`;
+const description = `${data.total.toLocaleString('es-ES')} subvenciones abiertas en ${label}. Convocatorias actualizadas diariamente desde BDNS — listadas para tercer sector, instituciones y empresas con propósito.`;
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: label, url: `${SITE_URL}/subvenciones/territorio/${ccaa}` },
+  ]),
+];
+---
+
+<Base title={title} description={description} ogSlug="page/subvenciones" jsonLd={jsonLd}>
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/subvenciones" class="hover:text-magenta">← Buscador</a>
+      </nav>
+      <span class="label mt-4">— Territorio</span>
+      <h1 class="mt-3 font-display text-display-xl leading-[0.96] text-ink">
+        Subvenciones en<br />
+        <em class="italic text-magenta">{label}</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">
+        {data.total.toLocaleString('es-ES')} convocatorias abiertas. Incluye
+        BOE, boletines autonómicos, diputaciones y ayuntamientos según
+        proceda. Filtrado por organismo convocante real (no por dónde
+        operes tú).
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      {data.items.length === 0 ? (
+        <p class="py-16 text-center text-ink-mute">
+          Sin convocatorias abiertas ahora mismo en {label}. Vuelve pronto.
+        </p>
+      ) : (
+        data.items.map((item) => <SubsidyCard item={item} />)
+      )}
+
+      {data.totalPages > 1 && (
+        <div class="mt-10 text-center">
+          <a
+            href={`/subvenciones?${isNacional ? 'geo=ESTATAL' : isEuropa ? 'geo=EUROPA' : `ccaa=${ccaa}`}`}
+            class="btn"
+          >
+            Ver todas las {data.total.toLocaleString('es-ES')} convocatorias →
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x text-center">
+      <span class="label">— Alerta</span>
+      <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+        Alerta de subvenciones en <em class="italic text-magenta">{label}</em>.
+      </h2>
+      <p class="mx-auto mt-4 max-w-measure text-ink/75">
+        Te avisamos cuando aparezca una nueva convocatoria en {label} que
+        encaje con tu organización. Gratis.
+      </p>
+      <a
+        href={`/subvenciones/crear-alerta?territorio=${isNacional || isEuropa ? 'nacional' : ccaa}`}
+        class="btn mt-6 inline-flex"
+      >
+        Crear alerta →
+      </a>
+    </div>
+  </section>
+</Base>

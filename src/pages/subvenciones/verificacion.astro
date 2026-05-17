@@ -1,0 +1,137 @@
+---
+// /subvenciones/verificacion — Página de confirmación tras click en el
+// link del email. Recibe ?status=ok&manage=TOKEN o ?status=invalid.
+
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+  ]),
+];
+---
+
+<Base
+  title="Verificación de alerta · Startidea"
+  description="Verifica tu alerta de subvenciones de Startidea."
+  ogSlug="page/subvenciones"
+  noindex={true}
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl text-center">
+        <div id="verif-ok" class="hidden">
+          <span class="label">— Listo</span>
+          <h1 class="mt-3 font-display text-display-lg leading-tight text-ink">
+            Alerta <em class="italic text-magenta">activa</em>.
+          </h1>
+          <p class="mt-6 text-lede text-ink/80">
+            Te avisaremos por email cuando aparezca una convocatoria que encaje.
+            Sin spam. Sin tracking pixels. Solo cuando merezca la pena.
+          </p>
+          <div class="mt-8 border-t border-ink/15 pt-6 text-sm text-ink/70">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+              — Guardar este enlace
+            </p>
+            <p class="mt-3">
+              Este enlace te permite gestionar o borrar tu alerta sin login.
+              Cópialo y guárdalo si lo necesitas:
+            </p>
+            <code
+              id="manage-link"
+              class="mt-3 block break-all rounded border border-ink/15 bg-paper-warm/40 p-3 text-[11px]"
+            >
+              cargando…
+            </code>
+            <button
+              id="copy-link"
+              type="button"
+              class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline"
+            >
+              Copiar enlace
+            </button>
+            <button
+              id="delete-watch"
+              type="button"
+              class="ml-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta"
+            >
+              Borrar alerta
+            </button>
+            <p id="action-result" class="mt-3 hidden text-xs"></p>
+          </div>
+          <a href="/subvenciones" class="btn mt-10 inline-flex">Ir al buscador →</a>
+        </div>
+
+        <div id="verif-invalid" class="hidden">
+          <span class="label">— Error</span>
+          <h1 class="mt-3 font-display text-display-lg leading-tight text-magenta">
+            Enlace inválido o caducado.
+          </h1>
+          <p class="mt-6 text-lede text-ink/80">
+            El enlace de verificación no es válido o ya se usó. Crea una alerta
+            nueva o, si ya la creaste, busca el email "verifica tu alerta" en
+            tu bandeja (o spam).
+          </p>
+          <a href="/subvenciones/crear-alerta" class="btn mt-10 inline-flex">
+            Crear nueva alerta →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const API_BASE =
+    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+  const PUBLIC_BASE = window.location.origin;
+
+  const url = new URL(window.location.href);
+  const status = url.searchParams.get('status');
+  const manageToken = url.searchParams.get('manage');
+
+  if (status === 'ok' && manageToken) {
+    document.getElementById('verif-ok')!.classList.remove('hidden');
+    const manageUrl = `${PUBLIC_BASE}/subvenciones/mi-alerta?t=${manageToken}`;
+    document.getElementById('manage-link')!.textContent = manageUrl;
+
+    document.getElementById('copy-link')!.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(manageUrl);
+        showAction('Copiado al portapapeles.');
+      } catch {
+        showAction('No se pudo copiar. Selecciona el texto y copia manualmente.');
+      }
+    });
+
+    document.getElementById('delete-watch')!.addEventListener('click', async () => {
+      if (!confirm('¿Borrar esta alerta? No podrás recuperarla.')) return;
+      try {
+        const res = await fetch(
+          `${API_BASE}/api/public/subsidy-watch/${encodeURIComponent(manageToken)}`,
+          { method: 'DELETE' },
+        );
+        if (res.ok) {
+          showAction('Alerta borrada. Adiós 👋');
+          (document.getElementById('delete-watch') as HTMLButtonElement).disabled = true;
+        } else {
+          showAction('No se pudo borrar (¿ya estaba borrada?).');
+        }
+      } catch {
+        showAction('Error de red al borrar.');
+      }
+    });
+  } else {
+    document.getElementById('verif-invalid')!.classList.remove('hidden');
+  }
+
+  function showAction(msg: string) {
+    const el = document.getElementById('action-result')!;
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 4000);
+  }
+</script>

@@ -1,0 +1,75 @@
+---
+// Tarjeta de convocatoria para listados (/subvenciones, /categoria/*, /territorio/*).
+// Densidad alta, jerarquía clara, tono Startidea (sin clickbait).
+import {
+  fmtAmount,
+  fmtDate,
+  daysToDeadline,
+  finalidadLabel,
+  territorioLabel,
+  type SubsidyListItem,
+} from '@/lib/subsidies-api';
+
+interface Props {
+  item: SubsidyListItem;
+}
+const { item } = Astro.props;
+
+const href = `/subvenciones/${item.slug ?? item.source_url}`;
+const days = daysToDeadline(item.deadline);
+const isUrgent = days !== null && days >= 0 && days <= 14;
+const isClosed = days !== null && days < 0;
+const finalidad = item.finalidades?.[0];
+const territorio =
+  item.geo_level === 'AUTONOMICA' && item.ccaa
+    ? territorioLabel(item.ccaa)
+    : item.geo_level === 'LOCAL' && item.municipality
+      ? item.municipality.replace(/-/g, ' ')
+      : item.geo_level === 'PROVINCIAL' && item.province
+        ? item.province.replace(/-/g, ' ')
+        : item.geo_level === 'ESTATAL'
+          ? 'Nacional'
+          : 'Europa';
+---
+
+<article class="group border-b border-ink/10 py-6 transition-colors hover:bg-paper-warm/30">
+  <a href={href} class="block focus:outline-none">
+    <!-- Meta superior: territorio + finalidad + estado plazo -->
+    <div class="flex flex-wrap items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-ink-mute">
+      <span>{territorio}</span>
+      {finalidad && <><span aria-hidden="true">·</span><span>{finalidadLabel(finalidad)}</span></>}
+      {isUrgent && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span class="text-magenta">⚠ Cierra en {days} días</span>
+        </>
+      )}
+      {isClosed && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span class="text-ink-mute">Plazo cerrado</span>
+        </>
+      )}
+    </div>
+
+    <!-- Título -->
+    <h3 class="mt-2 font-display text-2xl leading-tight text-ink group-hover:text-magenta md:text-3xl">
+      {item.title}
+    </h3>
+
+    <!-- Organismo -->
+    {item.organization && (
+      <p class="mt-2 text-sm italic text-ink/65">{item.organization}</p>
+    )}
+
+    <!-- Pie: datos clave en mono -->
+    <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/65">
+      {item.amount_eur && <span>💶 {fmtAmount(item.amount_eur)}</span>}
+      {item.deadline && (
+        <span>📅 Plazo: {fmtDate(item.deadline)}</span>
+      )}
+      {item.published_at && <span>Publicada: {fmtDate(item.published_at)}</span>}
+      <span class="ml-auto text-ink-mute group-hover:text-magenta">Ver ficha →</span>
+    </div>
+  </a>
+</article>

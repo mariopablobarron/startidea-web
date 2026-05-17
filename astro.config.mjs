@@ -66,7 +66,9 @@ export default defineConfig({
         !page.includes('/admin/') &&
         !page.includes('/api/') &&
         !page.includes('/404') &&
-        !page.includes('/recursos/gracias'),
+        !page.includes('/recursos/gracias') &&
+        !page.includes('/subvenciones/mi-alerta') &&
+        !page.includes('/subvenciones/verificacion'),
     }),
   ],
 });

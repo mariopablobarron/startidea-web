@@ -1,0 +1,257 @@
+---
+// /subvenciones/crear-alerta — Form sin login para crear SubsidyWatch público.
+//
+// Form simple de 5 campos. Acepta prerellenado por query string desde las
+// landings de categoría/territorio. Tras submit, POST a la API HUB y
+// muestra estado inline (sin redirigir) para mantener UX limpia.
+
+import Base from '@/layouts/Base.astro';
+import {
+  FINALIDADES,
+  BENEFICIARIOS,
+  TERRITORIOS_PUBLIC,
+} from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Crear alerta', url: `${SITE_URL}/subvenciones/crear-alerta` },
+  ]),
+];
+---
+
+<Base
+  title="Crear alerta de subvenciones gratis · Startidea"
+  description="Crea una alerta gratis. Te avisamos por email cuando aparezca una convocatoria que encaje con lo que buscas. Sin cuenta, sin spam, sin créditos."
+  ogSlug="page/subvenciones"
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/subvenciones" class="hover:text-magenta">← Buscador</a>
+      </nav>
+      <span class="label mt-4">— Alerta gratis</span>
+      <h1 class="mt-3 font-display text-display-xl leading-[0.96] text-ink">
+        Te avisamos cuando<br />
+        <em class="italic text-magenta">encaje algo</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">
+        Dinos qué buscas. Te avisamos por email cuando aparezca una
+        convocatoria que encaje. Gratis. Sin crear cuenta. Sin spam.
+      </p>
+      <p class="mt-3 max-w-measure font-mono text-xs text-ink-mute">
+        Anti-spam: te enviaremos un email de verificación antes de activarla.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <form id="watch-form" class="mx-auto max-w-2xl space-y-5" novalidate>
+        <div>
+          <label for="name" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Nombre de tu organización o de la búsqueda *
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            maxlength="200"
+            placeholder="Ej: 'Fundación Down Granada' o 'Proyecto cultura barrio'"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Tu email *
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="tu@email.com"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          />
+        </div>
+
+        <div>
+          <label for="keywords" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Palabras clave que buscas (separadas por coma) *
+          </label>
+          <input
+            id="keywords"
+            name="keywords"
+            type="text"
+            required
+            maxlength="500"
+            placeholder="Ej: 'mujer rural, igualdad, inclusión'"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          />
+          <p class="mt-2 font-mono text-[11px] text-ink-mute">
+            Cuantas más palabras (sinónimos incluidos), mejor.
+          </p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label for="territory" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Territorio
+            </label>
+            <select
+              id="territory"
+              name="territory"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+            >
+              <option value="nacional">Toda España (incl. estatales)</option>
+              <option value="andalucia">Andalucía</option>
+              <option value="granada">Granada (provincia)</option>
+              {TERRITORIOS_PUBLIC.filter((t) => t.slug !== 'andalucia').map((t) => (
+                <option value={t.slug}>{t.label}</option>
+              ))}
+              <option value="europa">Europa</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="beneficiary_types" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Tipo de organización
+            </label>
+            <select
+              id="beneficiary_types"
+              name="beneficiary_types"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+            >
+              <option value="">Cualquiera</option>
+              {BENEFICIARIOS.map((b) => (
+                <option value={b.slug}>{b.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="finalidades" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Áreas de interés (opcional)
+          </label>
+          <select
+            id="finalidades"
+            name="finalidades"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          >
+            <option value="">Cualquier área</option>
+            {FINALIDADES.map((f) => (
+              <option value={f.slug}>{f.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div class="border-t border-ink/15 pt-5">
+          <button type="submit" id="watch-submit" class="btn">
+            Crear alerta gratis →
+          </button>
+          <p class="mt-3 font-mono text-[11px] text-ink-mute">
+            Al pulsar aceptas recibir el email de verificación y los avisos posteriores.
+            Puedes darte de baja en cualquier momento desde el propio email.
+          </p>
+        </div>
+
+        <div id="watch-result" class="hidden" role="alert"></div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const API_BASE =
+    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+
+  // Prerelleno desde query string
+  const url = new URL(window.location.href);
+  const fillIf = (id: string, qsKey: string) => {
+    const v = url.searchParams.get(qsKey);
+    if (v) {
+      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      if (el) el.value = v;
+    }
+  };
+  fillIf('territory', 'territorio');
+  fillIf('finalidades', 'finalidad');
+  fillIf('beneficiary_types', 'beneficiary');
+
+  const form = document.getElementById('watch-form') as HTMLFormElement;
+  const btn = document.getElementById('watch-submit') as HTMLButtonElement;
+  const resultEl = document.getElementById('watch-result')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultEl.classList.add('hidden');
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Creando…';
+
+    const fd = new FormData(form);
+    const body = {
+      name: String(fd.get('name') ?? '').trim(),
+      email: String(fd.get('email') ?? '').trim(),
+      keywords: String(fd.get('keywords') ?? '').trim(),
+      territory: String(fd.get('territory') ?? 'nacional'),
+      beneficiary_types: String(fd.get('beneficiary_types') ?? ''),
+      finalidades: String(fd.get('finalidades') ?? ''),
+    };
+
+    if (!body.name || !body.email || !body.keywords) {
+      showResult('error', 'Faltan campos obligatorios.');
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/public/subsidy-watch`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        showResult('error', j.error ?? `Error ${res.status}`);
+      } else {
+        form.style.display = 'none';
+        showResult(
+          'ok',
+          `<strong>Alerta creada.</strong><br/>
+           Te hemos enviado un email a <code>${escapeHtml(body.email)}</code>.<br/>
+           Abre el enlace para activarla. Si no llega en 5 minutos, revisa spam.`,
+        );
+      }
+    } catch (err) {
+      showResult('error', 'Error de red. Intenta de nuevo.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
+
+  function showResult(kind: 'ok' | 'error', html: string) {
+    resultEl.className =
+      kind === 'ok'
+        ? 'mt-5 border-l-2 border-magenta bg-paper-warm/50 p-4 text-sm text-ink'
+        : 'mt-5 border-l-2 border-magenta bg-paper-warm/50 p-4 text-sm text-magenta';
+    resultEl.innerHTML = html;
+    resultEl.classList.remove('hidden');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"]/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!,
+    );
+  }
+</script>

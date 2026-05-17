@@ -1,0 +1,535 @@
+---
+// /subvenciones — Buscador público de convocatorias.
+//
+// Carga server-side las primeras 20 (top recent abiertas) para que la
+// página renderice contenido aunque el visitante no tenga JS. Los filtros
+// y la paginación funcionan client-side con fetch a la API HUB.
+//
+// SEO: index/follow. JSON-LD WebSite + BreadcrumbList.
+// Diferenciación vs Fandit: nicho tercer sector + ADN editorial Startidea.
+
+import Base from '@/layouts/Base.astro';
+import SubsidyCard from '@/components/SubsidyCard.astro';
+import {
+  fetchSubsidies,
+  FINALIDADES,
+  TERRITORIOS_PUBLIC,
+  BENEFICIARIOS,
+  INSTRUMENTOS,
+} from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const initial = await fetchSubsidies({
+  status: 'abierto',
+  pageSize: 20,
+  sort: 'recent',
+});
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Startidea · Buscador de subvenciones',
+    url: `${SITE_URL}/subvenciones`,
+    description:
+      'Buscador editorial de subvenciones y ayudas públicas en España, filtrado para tercer sector, instituciones y empresas con propósito.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/subvenciones?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+];
+---
+
+<Base
+  title="Buscador de subvenciones · Startidea"
+  description="Buscador editorial de subvenciones y ayudas públicas en España. Filtrado para tercer sector, instituciones y empresas con propósito. Sin créditos, sin paywall."
+  ogSlug="page/subvenciones"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20 lg:py-24">
+    <div class="container-x">
+      <span class="label">— Subvenciones</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Filtramos el BOE<br />
+        <em class="italic text-magenta">para ti</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Buscador editorial de subvenciones y ayudas públicas en España.
+        Conectado a la Base de Datos Nacional de Subvenciones (BDNS):
+        estatal, autonómicas, diputaciones, ayuntamientos y universidades.
+        Filtrado y leído desde el ADN del tercer sector.
+      </p>
+      <p class="mt-4 max-w-measure font-mono text-xs text-ink-mute">
+        Sin créditos. Sin paywall. Sin clickbait. Una alerta gratis si quieres
+        que te avisemos cuando aparezca lo tuyo →
+        <a href="/subvenciones/crear-alerta" class="text-magenta hover:underline">
+          crear alerta
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Buscador -->
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x">
+      <form id="subv-search" class="grid gap-3 md:grid-cols-[1fr_auto]">
+        <input
+          type="search"
+          name="q"
+          placeholder="Busca por palabra clave: cultura, infancia, mujer rural, igualdad…"
+          autocomplete="off"
+          class="border border-ink bg-paper px-5 py-3.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+        />
+        <button type="submit" class="btn">Buscar →</button>
+      </form>
+
+      <!-- Filtros rápidos: chips -->
+      <div class="mt-6 grid gap-6 md:grid-cols-[200px_1fr]">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            — Filtros
+          </p>
+          <details class="mt-3 group">
+            <summary class="cursor-pointer text-sm font-medium text-ink">
+              Territorio
+            </summary>
+            <div class="mt-2 flex flex-wrap gap-1.5" data-filter-group="ccaa">
+              {TERRITORIOS_PUBLIC.map((t) => (
+                <button
+                  type="button"
+                  data-filter-value={t.slug}
+                  class="rounded-full border border-ink/25 px-2.5 py-1 text-[11px] text-ink/75 hover:border-magenta hover:text-magenta"
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </details>
+          <details class="mt-3 group">
+            <summary class="cursor-pointer text-sm font-medium text-ink">
+              Para quién
+            </summary>
+            <div class="mt-2 flex flex-wrap gap-1.5" data-filter-group="beneficiary">
+              {BENEFICIARIOS.map((b) => (
+                <button
+                  type="button"
+                  data-filter-value={b.slug}
+                  class="rounded-full border border-ink/25 px-2.5 py-1 text-[11px] text-ink/75 hover:border-magenta hover:text-magenta"
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </details>
+          <details class="mt-3 group">
+            <summary class="cursor-pointer text-sm font-medium text-ink">
+              Para qué
+            </summary>
+            <div class="mt-2 flex flex-wrap gap-1.5" data-filter-group="finalidad">
+              {FINALIDADES.map((f) => (
+                <button
+                  type="button"
+                  data-filter-value={f.slug}
+                  class="rounded-full border border-ink/25 px-2.5 py-1 text-[11px] text-ink/75 hover:border-magenta hover:text-magenta"
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </details>
+          <details class="mt-3 group">
+            <summary class="cursor-pointer text-sm font-medium text-ink">
+              Tipo de ayuda
+            </summary>
+            <div class="mt-2 flex flex-wrap gap-1.5" data-filter-group="instrument">
+              {INSTRUMENTOS.map((i) => (
+                <button
+                  type="button"
+                  data-filter-value={i.slug}
+                  class="rounded-full border border-ink/25 px-2.5 py-1 text-[11px] text-ink/75 hover:border-magenta hover:text-magenta"
+                >
+                  {i.label}
+                </button>
+              ))}
+            </div>
+          </details>
+          <button
+            type="button"
+            id="subv-clear"
+            class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+
+        <!-- Resultados -->
+        <div>
+          <div class="flex items-baseline justify-between border-b border-ink/15 pb-3">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              <span id="subv-count">{initial.total.toLocaleString('es-ES')}</span>
+              {' '}convocatorias abiertas
+            </p>
+            <select
+              id="subv-sort"
+              class="border border-ink/25 bg-paper px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-ink"
+            >
+              <option value="recent">Más recientes</option>
+              <option value="deadline">Próximas a cerrar</option>
+              <option value="amount">Mayor dotación</option>
+            </select>
+          </div>
+
+          <div id="subv-results">
+            {initial.items.length === 0 ? (
+              <p class="py-16 text-center text-ink-mute">
+                Sin datos por ahora. Vuelve cuando el primer sync haya corrido.
+              </p>
+            ) : (
+              initial.items.map((item) => <SubsidyCard item={item} />)
+            )}
+          </div>
+
+          <div class="mt-8 flex items-center justify-between">
+            <button
+              type="button"
+              id="subv-prev"
+              class="border border-ink/25 px-4 py-2 font-mono text-xs uppercase tracking-widest text-ink hover:border-magenta hover:text-magenta disabled:opacity-30"
+              disabled
+            >
+              ← Anteriores
+            </button>
+            <span id="subv-page-info" class="font-mono text-[11px] text-ink-mute">
+              Página 1 de {Math.max(1, initial.totalPages)}
+            </span>
+            <button
+              type="button"
+              id="subv-next"
+              class="border border-ink/25 px-4 py-2 font-mono text-xs uppercase tracking-widest text-ink hover:border-magenta hover:text-magenta disabled:opacity-30"
+              disabled={initial.totalPages <= 1}
+            >
+              Siguientes →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA crear alerta -->
+  <section class="bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="border-y border-ink/15 py-12 text-center md:py-16">
+        <span class="label">— Alerta</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+          Que la próxima<br />
+          <em class="italic text-magenta">te encuentre a ti</em>.
+        </h2>
+        <p class="mx-auto mt-6 max-w-measure text-lede text-ink/75">
+          Crea una alerta con lo que buscas (palabras, territorio, audiencia).
+          Te avisamos por email cuando aparezca algo que encaje.
+          Gratis. Sin crear cuenta. Sin spam.
+        </p>
+        <a href="/subvenciones/crear-alerta" class="btn mt-8 inline-flex">
+          Crear alerta gratis →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diferenciación honesta -->
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-4">
+          <span class="label">— Por qué Startidea</span>
+        </div>
+        <div class="col-span-12 lg:col-span-7 lg:col-start-6">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            No somos un<br />
+            <em class="italic text-magenta">marketplace</em>.
+          </h2>
+          <div class="prose prose-startidea mt-6 max-w-measure text-ink/80">
+            <p>
+              Otros buscadores indexan 47.000 convocatorias y te dejan a solas
+              con una caja de filtros. Si gestionas cien expedientes al año,
+              ese es tu sitio.
+            </p>
+            <p>
+              Esto es para ti si tienes <strong>una</strong> organización,
+              <strong>un</strong> proyecto que sacar adelante, y necesitas que
+              alguien que entiende de inclusión, infancia, cultura o mujer
+              rural te diga qué subvención encaja —y por qué.
+            </p>
+            <p>
+              Buscamos. Te avisamos. Si necesitas que la redactemos contigo,
+              <a href="/contacto" class="text-magenta hover:underline">
+                hablamos
+              </a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Buscador client-side. Mantiene estado en query string para
+  // compartibles y back/forward del navegador.
+
+  const API_BASE =
+    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+
+  interface Item {
+    id: number;
+    slug: string | null;
+    source_url: string;
+    title: string;
+    organization: string | null;
+    deadline: string | null;
+    amount_eur: number | null;
+    published_at: string | null;
+    geo_level: string | null;
+    ccaa: string | null;
+    province: string | null;
+    municipality: string | null;
+    beneficiary_types: string[];
+    finalidades: string[];
+  }
+
+  const state = {
+    q: '',
+    ccaa: null as string | null,
+    beneficiary: null as string | null,
+    finalidad: null as string | null,
+    instrument: null as string | null,
+    page: 0,
+    pageSize: 20,
+    sort: 'recent',
+    total: 0,
+    totalPages: 0,
+  };
+
+  // Init desde query string
+  const url = new URL(window.location.href);
+  for (const key of ['q', 'ccaa', 'beneficiary', 'finalidad', 'instrument', 'sort'] as const) {
+    const v = url.searchParams.get(key);
+    if (v) (state as any)[key] = v;
+  }
+  const p = url.searchParams.get('page');
+  if (p) state.page = Math.max(0, Number(p));
+
+  function fmtAmount(eur: number | null): string {
+    if (!eur) return '—';
+    if (eur >= 1_000_000)
+      return `${(eur / 1_000_000).toLocaleString('es-ES', { maximumFractionDigits: 1 })} M€`;
+    if (eur >= 1_000) return `${(eur / 1_000).toLocaleString('es-ES')} K€`;
+    return `${eur.toLocaleString('es-ES')} €`;
+  }
+
+  function fmtDate(s: string | null): string {
+    if (!s) return '—';
+    const d = new Date(s);
+    if (Number.isNaN(d.getTime())) return s;
+    return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function territorioLabel(it: Item): string {
+    if (it.geo_level === 'ESTATAL') return 'Nacional';
+    if (it.geo_level === 'EUROPA') return 'Europa';
+    if (it.geo_level === 'AUTONOMICA' && it.ccaa)
+      return it.ccaa.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    if (it.geo_level === 'PROVINCIAL' && it.province)
+      return it.province.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    if (it.geo_level === 'LOCAL' && it.municipality)
+      return it.municipality.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    return '—';
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!,
+    );
+  }
+
+  function renderCard(it: Item): string {
+    const days = it.deadline
+      ? Math.ceil((new Date(it.deadline).getTime() - Date.now()) / 86_400_000)
+      : null;
+    const urgent = days !== null && days >= 0 && days <= 14;
+    const closed = days !== null && days < 0;
+    const finalidad = it.finalidades[0] ?? '';
+    const territorio = territorioLabel(it);
+    const href = `/subvenciones/${it.slug ?? it.source_url}`;
+    return `
+      <article class="group border-b border-ink/10 py-6 transition-colors hover:bg-paper-warm/30">
+        <a href="${href}" class="block focus:outline-none">
+          <div class="flex flex-wrap items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-ink-mute">
+            <span>${escapeHtml(territorio)}</span>
+            ${finalidad ? `<span aria-hidden="true">·</span><span>${escapeHtml(finalidad)}</span>` : ''}
+            ${urgent ? `<span aria-hidden="true">·</span><span class="text-magenta">⚠ Cierra en ${days} días</span>` : ''}
+            ${closed ? `<span aria-hidden="true">·</span><span class="text-ink-mute">Plazo cerrado</span>` : ''}
+          </div>
+          <h3 class="mt-2 font-display text-2xl leading-tight text-ink group-hover:text-magenta md:text-3xl">
+            ${escapeHtml(it.title)}
+          </h3>
+          ${it.organization ? `<p class="mt-2 text-sm italic text-ink/65">${escapeHtml(it.organization)}</p>` : ''}
+          <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/65">
+            ${it.amount_eur ? `<span>💶 ${fmtAmount(it.amount_eur)}</span>` : ''}
+            ${it.deadline ? `<span>📅 Plazo: ${fmtDate(it.deadline)}</span>` : ''}
+            ${it.published_at ? `<span>Publicada: ${fmtDate(it.published_at)}</span>` : ''}
+            <span class="ml-auto text-ink-mute group-hover:text-magenta">Ver ficha →</span>
+          </div>
+        </a>
+      </article>`;
+  }
+
+  async function loadResults() {
+    const qs = new URLSearchParams({
+      status: 'abierto',
+      pageSize: String(state.pageSize),
+      page: String(state.page),
+      sort: state.sort,
+    });
+    if (state.q) qs.set('q', state.q);
+    if (state.ccaa) qs.set('ccaa', state.ccaa);
+    if (state.beneficiary) qs.set('beneficiary', state.beneficiary);
+    if (state.finalidad) qs.set('finalidad', state.finalidad);
+    if (state.instrument) qs.set('instrument', state.instrument);
+
+    // Si CCAA es nacional/europa, usar geo_level en su lugar
+    if (state.ccaa === 'nacional') {
+      qs.delete('ccaa');
+      qs.set('geo', 'ESTATAL');
+    }
+    if (state.ccaa === 'europa') {
+      qs.delete('ccaa');
+      qs.set('geo', 'EUROPA');
+    }
+
+    const resultsEl = document.getElementById('subv-results')!;
+    const countEl = document.getElementById('subv-count')!;
+    const pageInfoEl = document.getElementById('subv-page-info')!;
+    const prevBtn = document.getElementById('subv-prev') as HTMLButtonElement;
+    const nextBtn = document.getElementById('subv-next') as HTMLButtonElement;
+
+    resultsEl.style.opacity = '0.5';
+    try {
+      const res = await fetch(`${API_BASE}/api/public/subsidies?${qs}`);
+      const j = await res.json();
+      state.total = j.total ?? 0;
+      state.totalPages = j.totalPages ?? 0;
+      countEl.textContent = state.total.toLocaleString('es-ES');
+      pageInfoEl.textContent = `Página ${state.page + 1} de ${Math.max(1, state.totalPages)}`;
+      prevBtn.disabled = state.page === 0;
+      nextBtn.disabled = state.page >= state.totalPages - 1;
+
+      if (!j.items || j.items.length === 0) {
+        resultsEl.innerHTML = `
+          <p class="py-16 text-center text-ink-mute">
+            Sin resultados para esa combinación de filtros. Prueba a relajar alguno.
+          </p>`;
+      } else {
+        resultsEl.innerHTML = j.items.map(renderCard).join('');
+      }
+
+      // Sync URL
+      const newUrl = new URL(window.location.href);
+      newUrl.search = '';
+      for (const [k, v] of qs) if (k !== 'status' && k !== 'pageSize') newUrl.searchParams.set(k, v);
+      window.history.replaceState({}, '', newUrl.toString());
+    } catch (err) {
+      resultsEl.innerHTML = `
+        <p class="py-16 text-center text-magenta">
+          ⚠ Error cargando resultados. Refresca la página o inténtalo más tarde.
+        </p>`;
+    } finally {
+      resultsEl.style.opacity = '1';
+    }
+  }
+
+  function refreshChipStates() {
+    document.querySelectorAll('[data-filter-group]').forEach((group) => {
+      const groupName = (group as HTMLElement).dataset.filterGroup!;
+      const active = (state as any)[groupName];
+      group.querySelectorAll('button').forEach((btn) => {
+        const value = (btn as HTMLElement).dataset.filterValue;
+        const isActive = value === active;
+        btn.classList.toggle('!bg-ink', isActive);
+        btn.classList.toggle('!text-paper', isActive);
+        btn.classList.toggle('!border-ink', isActive);
+      });
+    });
+  }
+
+  // Wire up
+  const form = document.getElementById('subv-search') as HTMLFormElement;
+  const qInput = form.querySelector('input[name="q"]') as HTMLInputElement;
+  qInput.value = state.q;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    state.q = qInput.value.trim();
+    state.page = 0;
+    void loadResults();
+  });
+
+  document.querySelectorAll('[data-filter-group]').forEach((group) => {
+    const groupName = (group as HTMLElement).dataset.filterGroup!;
+    group.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const value = (btn as HTMLElement).dataset.filterValue!;
+        (state as any)[groupName] = (state as any)[groupName] === value ? null : value;
+        state.page = 0;
+        refreshChipStates();
+        void loadResults();
+      });
+    });
+  });
+
+  document.getElementById('subv-clear')!.addEventListener('click', () => {
+    state.q = '';
+    state.ccaa = null;
+    state.beneficiary = null;
+    state.finalidad = null;
+    state.instrument = null;
+    state.page = 0;
+    qInput.value = '';
+    refreshChipStates();
+    void loadResults();
+  });
+
+  document.getElementById('subv-sort')!.addEventListener('change', (e) => {
+    state.sort = (e.target as HTMLSelectElement).value;
+    state.page = 0;
+    void loadResults();
+  });
+
+  document.getElementById('subv-prev')!.addEventListener('click', () => {
+    if (state.page > 0) {
+      state.page -= 1;
+      void loadResults();
+    }
+  });
+  document.getElementById('subv-next')!.addEventListener('click', () => {
+    if (state.page < state.totalPages - 1) {
+      state.page += 1;
+      void loadResults();
+    }
+  });
+
+  // Si hay filtros en URL al cargar, recargar (la página servida tiene
+  // top recent sin filtros). Si no, mantenemos el contenido del servidor.
+  if (state.q || state.ccaa || state.beneficiary || state.finalidad || state.instrument || state.page > 0 || state.sort !== 'recent') {
+    refreshChipStates();
+    void loadResults();
+  } else {
+    refreshChipStates();
+  }
+</script>
