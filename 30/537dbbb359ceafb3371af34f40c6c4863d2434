@@ -1,0 +1,23 @@
+src/data/casos.ts
+  s_fc84abf46d9a4c::t_c87933dd9e1996 404-422
+  s_fc84abf46d9a4c::t_873ed791f6272b 282-299
+  s_fc84abf46d9a4c::t_89859428193d92 348-364
+  s_fc84abf46d9a4c::t_ff36fdf445d2de 226-243
+  s_fc84abf46d9a4c::t_5e4532c540e376 466-484
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "30537dbbb359ceafb3371af34f40c6c4863d2434",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
