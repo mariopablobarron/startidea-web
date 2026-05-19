@@ -1,0 +1,48 @@
+---
+// Tabs de navegación dentro del hub de Subvenciones.
+//
+// Se inserta en /subvenciones, /subvenciones/mapa y /subvenciones/crear-alerta
+// para que el usuario pueda saltar entre las 3 vistas sin perder contexto.
+//
+// Uso:
+//   <SubvencionesTabs active="lista" />
+//   <SubvencionesTabs active="mapa" />
+//   <SubvencionesTabs active="alerta" />
+
+interface Props {
+  active: 'lista' | 'mapa' | 'alerta';
+}
+
+const { active } = Astro.props;
+
+const tabs: Array<{ id: Props['active']; label: string; href: string }> = [
+  { id: 'lista', label: 'Lista', href: '/subvenciones' },
+  { id: 'mapa', label: 'Mapa por CCAA', href: '/subvenciones/mapa' },
+  { id: 'alerta', label: 'Crear alerta', href: '/subvenciones/crear-alerta' },
+];
+---
+
+<nav class="border-b border-ink/15" aria-label="Vistas del buscador de subvenciones">
+  <ol class="container-x -mb-px flex flex-wrap gap-px overflow-x-auto bg-ink/15">
+    {tabs.map((t) => {
+      const isActive = t.id === active;
+      return (
+        <li class="bg-paper">
+          <a
+            href={t.href}
+            aria-current={isActive ? 'page' : undefined}
+            class:list={[
+              'inline-flex items-center gap-2 border-b-2 px-5 py-4 font-mono text-[11px] uppercase tracking-widest transition-colors',
+              isActive
+                ? 'border-magenta text-magenta'
+                : 'border-transparent text-ink-mute hover:text-magenta',
+            ]}
+          >
+            {t.label}
+            {isActive && <span aria-hidden="true" class="text-magenta">·</span>}
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+</nav>

@@ -10,6 +10,7 @@
 
 import Base from '@/layouts/Base.astro';
 import SubsidyCard from '@/components/SubsidyCard.astro';
+import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
 import {
   fetchSubsidies,
   FINALIDADES,
@@ -75,6 +76,9 @@ const jsonLd = [
       </p>
     </div>
   </section>
+
+  <!-- Tabs -->
+  <SubvencionesTabs active="lista" />
 
   <!-- Buscador -->
   <section class="bg-paper-warm py-12 md:py-16">

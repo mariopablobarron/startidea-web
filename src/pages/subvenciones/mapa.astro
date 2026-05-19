@@ -1,12 +1,21 @@
 ---
+// /subvenciones/mapa — Vista mapa por CCAA del buscador de subvenciones.
+//
+// Hermana de /subvenciones (vista lista). Mismo dataset, distinta forma de
+// explorar. Conectada por tabs (componente SubvencionesTabs).
+//
+// Click en una CCAA del mapa filtra el listado interno + ofrece un link
+// directo al buscador completo con ese filtro pre-aplicado.
+
 import Base from '@/layouts/Base.astro';
+import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
 import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
-    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
-    { name: 'Mapa de subvenciones', url: `${SITE_URL}/laboratorio/mapa-subvenciones` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Mapa por CCAA', url: `${SITE_URL}/subvenciones/mapa` },
   ]),
 ];
 
@@ -86,17 +95,11 @@ const totalCCAA = ccaaPoints.reduce((s, c) => s + c.count, 0);
 const totalEstatal = stats?.by_geo?.ESTATAL ?? 0;
 const totalEuropa = stats?.by_geo?.EUROPA ?? 0;
 
-// Top finalidades y beneficiarios para filtros
+// Top finalidades para chips
 const topFinalidades = stats
   ? Object.entries(stats.by_finalidad)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8)
-  : [];
-
-const topBeneficiarios = stats
-  ? Object.entries(stats.by_beneficiary)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6)
   : [];
 
 // ─── Escala de tamaño (radio mínimo / máximo del nodo) ─────────
@@ -115,7 +118,6 @@ function safeIsoToLabel(iso: string | null): string | null {
   if (!iso) return null;
   let d = new Date(iso);
   if (d.getTime() < 1e12) {
-    // Era segundos, no ms — multiplicar
     d = new Date(d.getTime() * 1000);
   }
   if (Number.isNaN(d.getTime())) return null;
@@ -130,21 +132,21 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 ---
 
 <Base
-  title="Mapa de subvenciones — Startidea Lab"
-  description="Visualización en tiempo real de las convocatorias públicas abiertas en España, organizadas por comunidad autónoma. Datos del BDNS (Base de Datos Nacional de Subvenciones) actualizados a diario. Sin login, sin filtros opacos: la radiografía completa del dinero público disponible para asociaciones, fundaciones, empresas y ayuntamientos."
-  ogSlug="page/laboratorio-mapa-subvenciones"
+  title="Mapa de subvenciones por CCAA · Startidea"
+  description="Las convocatorias públicas abiertas en España ahora mismo, agrupadas por comunidad autónoma. Datos del BDNS (Base de Datos Nacional de Subvenciones) actualizados a diario. Pulsa una CCAA y mira qué hay sobre la mesa para tu organización."
+  ogSlug="page/subvenciones-mapa"
   jsonLd={jsonLd}
 >
   <!-- Hero -->
-  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20 lg:py-24">
     <div class="container-x">
-      <span class="label">— Laboratorio · Datos abiertos</span>
+      <span class="label">— Subvenciones · Vista mapa</span>
       <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        El dinero público.<br/>
-        <em class="italic text-magenta">A la vista.</em>
+        Las ayudas abiertas,<br/>
+        <em class="italic text-magenta">por territorio</em>.
       </h1>
       <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
-        Cada día se publican convocatorias en el BDNS (Base de Datos Nacional de Subvenciones). Startidea las recopila, las normaliza y las dibuja en un mapa. Sin login, sin filtros opacos. Si tu organización busca financiación pública, esto es lo que hay sobre la mesa ahora mismo en España.
+        Mapa interactivo de las convocatorias abiertas en España ahora mismo, agrupadas por comunidad autónoma. Cada nodo es una CCAA; su tamaño, proporcional al número de subvenciones vigentes. Pulsa una para ver las últimas y filtrar el buscador.
       </p>
       {lastUpdatedLabel && (
         <p class="reveal mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
@@ -153,6 +155,9 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
       )}
     </div>
   </section>
+
+  <!-- Tabs -->
+  <SubvencionesTabs active="mapa" />
 
   <!-- Métricas globales -->
   <section class="bg-paper-warm py-12 md:py-16">
@@ -200,7 +205,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
             Pulsa una <em class="italic text-magenta">CCAA</em>.
           </h2>
           <p class="mt-3 text-sm text-ink/75">
-            El tamaño de cada nodo es proporcional al número de convocatorias abiertas en esa comunidad. Pasa el ratón para ver el dato exacto. Pulsa para filtrar el listado.
+            El tamaño de cada nodo es proporcional al número de convocatorias abiertas en esa comunidad. Pulsa para filtrar el listado de abajo, y luego salta al buscador completo si quieres explorar a fondo.
           </p>
 
           <!-- Leyenda escala -->
@@ -258,7 +263,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
                 <rect x="390" y="535" width="40" height="30" stroke-dasharray="2 4" />
               </g>
 
-              <!-- Conectores sutiles entre CCAA y label -->
+              <!-- Nodos CCAA -->
               <g id="mapa-nodes">
                 {ccaaPoints.map((c) => (
                   <g
@@ -348,7 +353,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     </div>
   </section>
 
-  <!-- Listado dinámico -->
+  <!-- Listado dinámico + jump al buscador completo -->
   <section class="bg-paper-warm py-16 md:py-24">
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
@@ -358,11 +363,21 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
             Últimas <em class="italic text-magenta">convocatorias</em>.
           </h2>
           <p class="mt-3 text-sm text-ink/75">
-            Filtra por comunidad autónoma o finalidad y aparecen las últimas convocatorias publicadas que matchean. Cada una enlaza al boletín oficial donde se publicó.
+            Filtra por comunidad autónoma o finalidad y aparecen las últimas convocatorias publicadas que matchean. Cada ficha enlaza al detalle completo.
           </p>
           <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute" id="lista-meta">
             Cargando convocatorias…
           </p>
+
+          <!-- Jump al buscador con filtro activo -->
+          <a
+            id="lista-jump"
+            href="/subvenciones"
+            class="mt-6 inline-flex items-center gap-2 border-2 border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-paper transition-colors hover:bg-magenta hover:border-magenta"
+          >
+            <span id="lista-jump-label">Ir al buscador completo</span>
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
         <div class="col-span-12 lg:col-span-9">
@@ -370,16 +385,12 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
             id="lista-convocatorias"
             class="border-y border-ink/15 divide-y divide-ink/15"
           >
-            <!-- Items renderizados por JS -->
             <li class="py-8 text-sm text-ink/60">Cargando convocatorias desde el BDNS…</li>
           </ol>
 
           <div class="mt-8 flex items-center justify-between gap-4">
-            <a
-              href="/subvenciones"
-              class="btn-text text-sm"
-            >
-              Ver buscador completo <span aria-hidden="true">→</span>
+            <a href="/subvenciones/crear-alerta" class="btn-text text-sm">
+              Crear alerta gratis <span aria-hidden="true">→</span>
             </a>
             <button
               id="lista-mas"
@@ -462,6 +473,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
       </div>
     </div>
   </section>
+</Base>
 
 <style>
   /* Animaciones específicas del mapa */
@@ -483,12 +495,12 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 
   .mapa-node:hover .mapa-label,
   .mapa-node.active .mapa-label {
-    color: rgb(230 53 107); /* magenta */
+    color: rgb(230 53 107);
     font-weight: 600;
   }
 
   .mapa-node.active .mapa-dot {
-    stroke: rgb(20 20 20); /* ink */
+    stroke: rgb(20 20 20);
     stroke-width: 2;
   }
 
@@ -497,7 +509,6 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     50% { transform: scale(1.15); opacity: 0.4; }
   }
 
-  /* Respetar reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     .mapa-node:hover .mapa-halo,
     .mapa-node.active .mapa-halo {
@@ -505,7 +516,6 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     }
   }
 
-  /* Filter chips activos */
   .filter-chip.active {
     background-color: rgb(20 20 20);
     color: rgb(247 246 244);
@@ -514,23 +524,22 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 </style>
 
 <script>
-  // ─── Estado de filtros ────────────────────────────────────────
   type State = {
     ccaa: string;
+    ccaaLabel: string;
     finalidad: string;
     page: number;
   };
-  const state: State = { ccaa: '', finalidad: '', page: 0 };
+  const state: State = { ccaa: '', ccaaLabel: '', finalidad: '', page: 0 };
 
   const HUB_URL = 'https://hub.startidea.tech';
   const PAGE_SIZE = 10;
 
-  // ─── Helpers DOM ──────────────────────────────────────────────
   const $ = (sel: string) => document.querySelector(sel) as HTMLElement | null;
   const $$ = (sel: string) => Array.from(document.querySelectorAll(sel)) as HTMLElement[];
 
   // ─── Mapa: click en nodo CCAA ─────────────────────────────────
-  function setActiveNode(slug: string) {
+  function setActiveNode(slug: string, label: string) {
     $$('.mapa-node').forEach((n) => n.classList.remove('active'));
     if (slug) {
       const node = document.querySelector(`.mapa-node[data-ccaa="${slug}"]`);
@@ -541,7 +550,6 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     if (sel && lbl) {
       if (slug) {
         const node = document.querySelector(`.mapa-node[data-ccaa="${slug}"]`);
-        const label = node?.getAttribute('data-label') || slug;
         const count = node?.getAttribute('data-count') || '0';
         lbl.textContent = `${label} · ${count}`;
         sel.classList.remove('hidden');
@@ -549,13 +557,40 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
         sel.classList.add('hidden');
       }
     }
+    updateJumpLink();
+  }
+
+  // ─── Actualiza el link "Ir al buscador completo" según filtros ─
+  function updateJumpLink() {
+    const jump = $('#lista-jump') as HTMLAnchorElement | null;
+    const jumpLabel = $('#lista-jump-label');
+    if (!jump || !jumpLabel) return;
+    const qs = new URLSearchParams();
+    if (state.ccaa) qs.set('ccaa', state.ccaa);
+    if (state.finalidad) qs.set('finalidad', state.finalidad);
+    const query = qs.toString();
+    jump.href = query ? `/subvenciones?${query}` : '/subvenciones';
+    if (state.ccaa && state.ccaaLabel) {
+      jumpLabel.textContent = `Ver todo ${state.ccaaLabel} en el buscador`;
+    } else if (state.finalidad) {
+      jumpLabel.textContent = `Ver todo en el buscador`;
+    } else {
+      jumpLabel.textContent = `Ir al buscador completo`;
+    }
   }
 
   $$('.mapa-node').forEach((node) => {
     node.addEventListener('click', () => {
       const slug = node.getAttribute('data-ccaa') || '';
-      state.ccaa = state.ccaa === slug ? '' : slug;
-      setActiveNode(state.ccaa);
+      const label = node.getAttribute('data-label') || slug;
+      if (state.ccaa === slug) {
+        state.ccaa = '';
+        state.ccaaLabel = '';
+      } else {
+        state.ccaa = slug;
+        state.ccaaLabel = label;
+      }
+      setActiveNode(state.ccaa, state.ccaaLabel);
       state.page = 0;
       fetchList();
     });
@@ -564,7 +599,8 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
   $('#mapa-clear')?.addEventListener('click', (e) => {
     e.stopPropagation();
     state.ccaa = '';
-    setActiveNode('');
+    state.ccaaLabel = '';
+    setActiveNode('', '');
     state.page = 0;
     fetchList();
   });
@@ -577,6 +613,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
       $$('.filter-chip').forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
       state.page = 0;
+      updateJumpLink();
       fetchList();
     });
   });
@@ -670,7 +707,9 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 
       if (meta) {
         const showing = (state.page + 1) * PAGE_SIZE;
-        meta.textContent = `Mostrando ${Math.min(showing, data.total)} de ${data.total.toLocaleString('es-ES')}${state.ccaa ? ' en ' + state.ccaa : ''}${state.finalidad ? ' · ' + state.finalidad : ''}`;
+        const ccaaSuffix = state.ccaaLabel ? ' en ' + state.ccaaLabel : '';
+        const finalidadSuffix = state.finalidad ? ' · ' + state.finalidad.replace(/-/g, ' ') : '';
+        meta.textContent = `Mostrando ${Math.min(showing, data.total)} de ${data.total.toLocaleString('es-ES')}${ccaaSuffix}${finalidadSuffix}`;
       }
 
       const masBtn = $('#lista-mas') as HTMLButtonElement | null;
@@ -697,7 +736,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     fetchList(true);
   });
 
-  // Primera carga
+  // Primera carga + init estado del jump link
+  updateJumpLink();
   fetchList();
 </script>
-</Base>

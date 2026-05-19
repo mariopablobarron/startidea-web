@@ -47,6 +47,11 @@ export default defineConfig({
     '/casos/relevos-vida':                                '/casos',
     '/casos/relevos-vida/':                               '/casos',
 
+    // Mapa de subvenciones migrado de /laboratorio/ a /subvenciones/
+    // (era experimento, ahora vista hermana del buscador)
+    '/laboratorio/mapa-subvenciones':                     '/subvenciones/mapa',
+    '/laboratorio/mapa-subvenciones/':                    '/subvenciones/mapa',
+
     // Posts antiguos del blog WP que aún ranquean en GSC
     '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas',
     '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones/': '/notas',
