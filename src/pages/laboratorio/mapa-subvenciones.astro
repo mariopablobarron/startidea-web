@@ -1,0 +1,691 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'Mapa de subvenciones', url: `${SITE_URL}/laboratorio/mapa-subvenciones` },
+  ]),
+];
+
+const HUB_URL = import.meta.env.PUBLIC_HUB_URL || 'https://hub.startidea.tech';
+
+// ─── SSR fetch de stats (con fallback silencioso) ──────────────
+type Stats = {
+  ok: boolean;
+  total: number;
+  last_updated: string | null;
+  by_ccaa: Record<string, number>;
+  by_geo: Record<string, number>;
+  by_finalidad: Record<string, number>;
+  by_beneficiary: Record<string, number>;
+  by_funding: Record<string, number>;
+  amount_buckets: Record<string, number>;
+};
+
+let stats: Stats | null = null;
+try {
+  const ctl = new AbortController();
+  setTimeout(() => ctl.abort(), 4000);
+  const r = await fetch(`${HUB_URL}/api/public/subsidies/stats`, {
+    signal: ctl.signal,
+    headers: { Accept: 'application/json' },
+  });
+  if (r.ok) {
+    const data = await r.json();
+    if (data?.ok) stats = data as Stats;
+  }
+} catch {
+  // Si el endpoint todavía no está desplegado o falla, la página carga
+  // sin datos en SSR y el cliente reintentará el fetch.
+}
+
+// ─── Comunidades autónomas con coordenadas SVG ─────────────────
+// viewBox 0 0 1000 620. Coordenadas pensadas para que la silueta de
+// CCAA "se reconozca" sin necesidad de paths cartográficos.
+const ccaaList: Array<{ slug: string; label: string; x: number; y: number; alt?: string[] }> = [
+  { slug: 'galicia', label: 'Galicia', x: 130, y: 140 },
+  { slug: 'asturias', label: 'Asturias', x: 250, y: 125 },
+  { slug: 'cantabria', label: 'Cantabria', x: 340, y: 135 },
+  { slug: 'euskadi', label: 'País Vasco', x: 415, y: 150, alt: ['pais-vasco', 'paisvasco'] },
+  { slug: 'navarra', label: 'Navarra', x: 475, y: 175 },
+  { slug: 'la-rioja', label: 'La Rioja', x: 410, y: 210, alt: ['rioja'] },
+  { slug: 'aragon', label: 'Aragón', x: 550, y: 240 },
+  { slug: 'catalunya', label: 'Cataluña', x: 720, y: 215, alt: ['cataluna', 'cataluña'] },
+  { slug: 'castilla-y-leon', label: 'Castilla y León', x: 290, y: 240 },
+  { slug: 'madrid', label: 'Madrid', x: 390, y: 290 },
+  { slug: 'castilla-la-mancha', label: 'Castilla-La Mancha', x: 440, y: 340 },
+  { slug: 'extremadura', label: 'Extremadura', x: 240, y: 360 },
+  { slug: 'comunidad-valenciana', label: 'C. Valenciana', x: 615, y: 340, alt: ['valencia', 'c-valenciana'] },
+  { slug: 'murcia', label: 'Murcia', x: 580, y: 415 },
+  { slug: 'andalucia', label: 'Andalucía', x: 360, y: 450 },
+  { slug: 'illes-balears', label: 'Baleares', x: 830, y: 360, alt: ['baleares', 'islas-baleares'] },
+  { slug: 'canarias', label: 'Canarias', x: 130, y: 530, alt: ['islas-canarias'] },
+  { slug: 'ceuta', label: 'Ceuta', x: 330, y: 555 },
+  { slug: 'melilla', label: 'Melilla', x: 410, y: 555 },
+];
+
+// Resolver count para una CCAA (mirando slug principal + alternativos)
+function countFor(slugs: string[]): number {
+  if (!stats) return 0;
+  for (const s of slugs) {
+    if (stats.by_ccaa[s] !== undefined) return stats.by_ccaa[s];
+  }
+  return 0;
+}
+
+const ccaaPoints = ccaaList.map((c) => ({
+  ...c,
+  count: countFor([c.slug, ...(c.alt || [])]),
+}));
+
+// Total para CCAA (no incluye ESTATAL ni EUROPA — son sin ccaa)
+const totalCCAA = ccaaPoints.reduce((s, c) => s + c.count, 0);
+const totalEstatal = stats?.by_geo?.ESTATAL ?? 0;
+const totalEuropa = stats?.by_geo?.EUROPA ?? 0;
+
+// Top finalidades y beneficiarios para filtros
+const topFinalidades = stats
+  ? Object.entries(stats.by_finalidad)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+  : [];
+
+const topBeneficiarios = stats
+  ? Object.entries(stats.by_beneficiary)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+  : [];
+
+// ─── Escala de tamaño (radio mínimo / máximo del nodo) ─────────
+const maxCount = Math.max(1, ...ccaaPoints.map((c) => c.count));
+function radiusFor(count: number): number {
+  if (count === 0) return 8;
+  // raíz cuadrada para que la escala no sea brutal entre Andalucía y Ceuta
+  const norm = Math.sqrt(count / maxCount);
+  return 8 + norm * 32; // entre 8 y 40px
+}
+
+const lastUpdatedLabel = stats?.last_updated
+  ? new Date(stats.last_updated).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    })
+  : null;
+---
+
+<Base
+  title="Mapa de subvenciones — Startidea Lab"
+  description="Visualización en tiempo real de las convocatorias públicas abiertas en España, organizadas por comunidad autónoma. Datos del BDNS (Base de Datos Nacional de Subvenciones) actualizados a diario. Sin login, sin filtros opacos: la radiografía completa del dinero público disponible para asociaciones, fundaciones, empresas y ayuntamientos."
+  ogSlug="page/laboratorio-mapa-subvenciones"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Laboratorio · Datos abiertos</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        El dinero público.<br/>
+        <em class="italic text-magenta">A la vista.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Cada día se publican convocatorias en el BDNS (Base de Datos Nacional de Subvenciones). Startidea las recopila, las normaliza y las dibuja en un mapa. Sin login, sin filtros opacos. Si tu organización busca financiación pública, esto es lo que hay sobre la mesa ahora mismo en España.
+      </p>
+      {lastUpdatedLabel && (
+        <p class="reveal mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          Última actualización · {lastUpdatedLabel} · Datos del BDNS
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- Métricas globales -->
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x">
+      <ol class="reveal-stagger grid gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-4">
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="label">— Total abierto</p>
+          <p class="mt-2 font-display text-4xl font-extrabold text-ink md:text-5xl" data-stat="total">
+            {stats?.total?.toLocaleString('es-ES') ?? '—'}
+          </p>
+          <p class="mt-1 text-sm text-ink/70">convocatorias vigentes</p>
+        </li>
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="label">— Autonómicas</p>
+          <p class="mt-2 font-display text-4xl font-extrabold text-magenta md:text-5xl" data-stat="ccaa">
+            {totalCCAA.toLocaleString('es-ES')}
+          </p>
+          <p class="mt-1 text-sm text-ink/70">en las 19 CCAA</p>
+        </li>
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="label">— Estatales</p>
+          <p class="mt-2 font-display text-4xl font-extrabold text-ink md:text-5xl" data-stat="estatal">
+            {totalEstatal.toLocaleString('es-ES')}
+          </p>
+          <p class="mt-1 text-sm text-ink/70">ministerios y agencias</p>
+        </li>
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="label">— Europeas</p>
+          <p class="mt-2 font-display text-4xl font-extrabold text-ink md:text-5xl" data-stat="europa">
+            {totalEuropa.toLocaleString('es-ES')}
+          </p>
+          <p class="mt-1 text-sm text-ink/70">UE y Next Generation</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Mapa interactivo -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Mapa por comunidad autónoma</span>
+          <h2 class="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
+            Pulsa una <em class="italic text-magenta">CCAA</em>.
+          </h2>
+          <p class="mt-3 text-sm text-ink/75">
+            El tamaño de cada nodo es proporcional al número de convocatorias abiertas en esa comunidad. Pasa el ratón para ver el dato exacto. Pulsa para filtrar el listado.
+          </p>
+
+          <!-- Leyenda escala -->
+          <div class="mt-8 border-t border-ink/15 pt-6">
+            <p class="label">— Escala</p>
+            <div class="mt-3 flex items-end gap-3">
+              <div class="flex flex-col items-center">
+                <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+                  <circle cx="14" cy="14" r="6" fill="currentColor" class="text-magenta opacity-50" />
+                </svg>
+                <span class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">poco</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+                  <circle cx="20" cy="20" r="12" fill="currentColor" class="text-magenta opacity-65" />
+                </svg>
+                <span class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">medio</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="60" height="60" viewBox="0 0 60 60" aria-hidden="true">
+                  <circle cx="30" cy="30" r="20" fill="currentColor" class="text-magenta opacity-80" />
+                </svg>
+                <span class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">mucho</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-9">
+          <div
+            id="mapa-wrap"
+            class="relative overflow-hidden border-2 border-ink/15 bg-paper-warm"
+            data-parallax="0.05"
+          >
+            <!-- SVG España estilizada -->
+            <svg
+              id="mapa-espana"
+              viewBox="0 0 1000 620"
+              role="img"
+              aria-label="Mapa de España con número de convocatorias abiertas por comunidad autónoma"
+              class="block h-auto w-full"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <!-- Líneas finas que sugieren contorno (estilo editorial, no cartografía) -->
+              <g stroke="currentColor" class="text-ink/8" stroke-width="1" fill="none">
+                <!-- Outline simplificado peninsular -->
+                <path d="M 80 130 Q 130 120 200 130 Q 280 125 360 140 Q 440 145 520 145 Q 600 160 680 175 Q 750 195 780 230 Q 800 280 770 330 Q 720 370 660 400 Q 580 430 480 460 Q 380 480 280 470 Q 200 450 140 410 Q 95 360 80 290 Q 75 210 80 130 Z" stroke-dasharray="2 4" stroke-width="0.8" />
+                <!-- Baleares -->
+                <ellipse cx="830" cy="360" rx="40" ry="18" stroke-dasharray="2 4" />
+                <!-- Canarias (caja) -->
+                <rect x="60" y="490" width="180" height="90" stroke-dasharray="2 4" />
+                <text x="68" y="586" class="font-mono fill-current text-ink/30" style="font-size:9px; letter-spacing:0.15em;">CANARIAS</text>
+                <!-- Ceuta y Melilla (cuadritos) -->
+                <rect x="310" y="535" width="40" height="30" stroke-dasharray="2 4" />
+                <rect x="390" y="535" width="40" height="30" stroke-dasharray="2 4" />
+              </g>
+
+              <!-- Conectores sutiles entre CCAA y label -->
+              <g id="mapa-nodes">
+                {ccaaPoints.map((c) => (
+                  <g
+                    class="mapa-node group cursor-pointer"
+                    data-ccaa={c.slug}
+                    data-label={c.label}
+                    data-count={c.count}
+                    transform={`translate(${c.x}, ${c.y})`}
+                  >
+                    <!-- Halo animado (visible al hover) -->
+                    <circle
+                      r={radiusFor(c.count) + 8}
+                      class="mapa-halo fill-magenta opacity-0 transition-opacity duration-300"
+                    />
+                    <!-- Punto principal -->
+                    <circle
+                      r={radiusFor(c.count)}
+                      class="mapa-dot fill-magenta transition-all duration-300"
+                      style={`opacity: ${c.count === 0 ? 0.15 : 0.4 + (c.count / maxCount) * 0.5};`}
+                    />
+                    <!-- Punto pequeño central (anclaje visual) -->
+                    <circle
+                      r="2.5"
+                      class="fill-ink"
+                    />
+                    <!-- Label CCAA -->
+                    <text
+                      y={radiusFor(c.count) + 14}
+                      text-anchor="middle"
+                      class="mapa-label font-mono fill-current pointer-events-none text-ink/75 transition-colors duration-300"
+                      style="font-size:10px; letter-spacing:0.05em;"
+                    >
+                      {c.label}
+                    </text>
+                    <!-- Cifra (visible al hover) -->
+                    <text
+                      y={-radiusFor(c.count) - 6}
+                      text-anchor="middle"
+                      class="mapa-count font-display fill-current pointer-events-none text-magenta opacity-0 transition-opacity duration-300"
+                      style="font-size:14px; font-weight:800;"
+                    >
+                      {c.count}
+                    </text>
+                  </g>
+                ))}
+              </g>
+            </svg>
+
+            <!-- Selected indicator -->
+            <div
+              id="mapa-selected"
+              class="absolute right-4 top-4 hidden border-2 border-ink bg-paper px-3 py-2 text-xs font-mono uppercase tracking-widest text-ink"
+            >
+              <span id="mapa-selected-label">—</span>
+              <button id="mapa-clear" class="ml-3 text-magenta hover:underline" type="button">
+                Limpiar ×
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtros adicionales -->
+          {topFinalidades.length > 0 && (
+            <div class="mt-6 border-t border-ink/15 pt-5">
+              <p class="label">— Filtrar por finalidad</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  data-filter-finalidad=""
+                  class="filter-chip active font-mono text-[11px] uppercase tracking-widest border-2 border-ink bg-ink text-paper px-3 py-1.5 hover:bg-magenta hover:border-magenta transition-colors"
+                >
+                  Todas
+                </button>
+                {topFinalidades.map(([slug, count]) => (
+                  <button
+                    type="button"
+                    data-filter-finalidad={slug}
+                    class="filter-chip font-mono text-[11px] uppercase tracking-widest border-2 border-ink/30 bg-paper text-ink px-3 py-1.5 hover:border-magenta hover:text-magenta transition-colors"
+                  >
+                    {slug.replace(/-/g, ' ')} <span class="opacity-60">· {count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Listado dinámico -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Listado en vivo</span>
+          <h2 class="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
+            Últimas <em class="italic text-magenta">convocatorias</em>.
+          </h2>
+          <p class="mt-3 text-sm text-ink/75">
+            Filtra por comunidad autónoma o finalidad y aparecen las últimas convocatorias publicadas que matchean. Cada una enlaza al boletín oficial donde se publicó.
+          </p>
+          <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute" id="lista-meta">
+            Cargando convocatorias…
+          </p>
+        </div>
+
+        <div class="col-span-12 lg:col-span-9">
+          <ol
+            id="lista-convocatorias"
+            class="border-y border-ink/15 divide-y divide-ink/15"
+          >
+            <!-- Items renderizados por JS -->
+            <li class="py-8 text-sm text-ink/60">Cargando convocatorias desde el BDNS…</li>
+          </ol>
+
+          <div class="mt-8 flex items-center justify-between gap-4">
+            <a
+              href="/subvenciones"
+              class="btn-text text-sm"
+            >
+              Ver buscador completo <span aria-hidden="true">→</span>
+            </a>
+            <button
+              id="lista-mas"
+              type="button"
+              class="btn-ghost !py-2 text-sm"
+            >
+              Cargar más <span aria-hidden="true">↓</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona (transparencia editorial) -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo funciona</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            De boletín oficial<br/>a <em class="italic text-magenta">mapa interactivo</em>.
+          </h2>
+
+          <ol class="reveal-stagger mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">01</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">Lectura diaria del BDNS</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  Cada noche un cron consulta la API oficial del BDNS (la base de datos del Ministerio de Hacienda donde se publican obligatoriamente todas las subvenciones del país). Las convocatorias nuevas entran al sistema; las cerradas se marcan como tales sin borrarse.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">02</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">Normalización y enriquecimiento</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  Los campos llegan en formato bruto: comunidad como código, finalidad como etiqueta libre, importes a veces vacíos. Startidea normaliza los slugs (andalucia, cultura, asociacion…) y los enriquece para que se puedan filtrar y agrupar sin ambigüedad.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-8">
+              <div class="col-span-12 lg:col-span-2">
+                <span class="font-mono text-ink-mute">03</span>
+              </div>
+              <div class="col-span-12 lg:col-span-10">
+                <h3 class="font-display text-2xl text-ink">API pública y este mapa</h3>
+                <p class="mt-3 max-w-measure text-ink/80">
+                  Las convocatorias se exponen vía API pública. Este mapa consume esa API en tiempo real. Cualquiera puede usar el mismo endpoint para hacer su propia visualización o integración. La transparencia incluye al código.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x text-center">
+      <span class="label">— Aplicar a tu organización</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Si <em class="italic text-magenta">algo aquí</em> encaja con tu causa, hablamos.
+      </h2>
+      <p class="mt-6 mx-auto max-w-measure text-ink/80">
+        Startidea ayuda a organizaciones del tercer sector y empresas con propósito a identificar, preparar y presentar candidaturas a subvenciones que realmente les encajan. Empieza con un diagnóstico de fundraising y vemos qué convocatorias merecen tu tiempo.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+        <a href="/subvenciones" class="btn-ghost">Ver buscador completo</a>
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* Animaciones específicas del mapa */
+  .mapa-node:hover .mapa-halo,
+  .mapa-node.active .mapa-halo {
+    opacity: 0.25;
+    animation: mapa-pulse 1.6s ease-in-out infinite;
+  }
+
+  .mapa-node:hover .mapa-dot,
+  .mapa-node.active .mapa-dot {
+    opacity: 1 !important;
+  }
+
+  .mapa-node:hover .mapa-count,
+  .mapa-node.active .mapa-count {
+    opacity: 1;
+  }
+
+  .mapa-node:hover .mapa-label,
+  .mapa-node.active .mapa-label {
+    color: rgb(230 53 107); /* magenta */
+    font-weight: 600;
+  }
+
+  .mapa-node.active .mapa-dot {
+    stroke: rgb(20 20 20); /* ink */
+    stroke-width: 2;
+  }
+
+  @keyframes mapa-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(1.15); opacity: 0.4; }
+  }
+
+  /* Respetar reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .mapa-node:hover .mapa-halo,
+    .mapa-node.active .mapa-halo {
+      animation: none;
+    }
+  }
+
+  /* Filter chips activos */
+  .filter-chip.active {
+    background-color: rgb(20 20 20);
+    color: rgb(247 246 244);
+    border-color: rgb(20 20 20);
+  }
+</style>
+
+<script>
+  // ─── Estado de filtros ────────────────────────────────────────
+  type State = {
+    ccaa: string;
+    finalidad: string;
+    page: number;
+  };
+  const state: State = { ccaa: '', finalidad: '', page: 0 };
+
+  const HUB_URL = 'https://hub.startidea.tech';
+  const PAGE_SIZE = 10;
+
+  // ─── Helpers DOM ──────────────────────────────────────────────
+  const $ = (sel: string) => document.querySelector(sel) as HTMLElement | null;
+  const $$ = (sel: string) => Array.from(document.querySelectorAll(sel)) as HTMLElement[];
+
+  // ─── Mapa: click en nodo CCAA ─────────────────────────────────
+  function setActiveNode(slug: string) {
+    $$('.mapa-node').forEach((n) => n.classList.remove('active'));
+    if (slug) {
+      const node = document.querySelector(`.mapa-node[data-ccaa="${slug}"]`);
+      node?.classList.add('active');
+    }
+    const sel = $('#mapa-selected');
+    const lbl = $('#mapa-selected-label');
+    if (sel && lbl) {
+      if (slug) {
+        const node = document.querySelector(`.mapa-node[data-ccaa="${slug}"]`);
+        const label = node?.getAttribute('data-label') || slug;
+        const count = node?.getAttribute('data-count') || '0';
+        lbl.textContent = `${label} · ${count}`;
+        sel.classList.remove('hidden');
+      } else {
+        sel.classList.add('hidden');
+      }
+    }
+  }
+
+  $$('.mapa-node').forEach((node) => {
+    node.addEventListener('click', () => {
+      const slug = node.getAttribute('data-ccaa') || '';
+      state.ccaa = state.ccaa === slug ? '' : slug;
+      setActiveNode(state.ccaa);
+      state.page = 0;
+      fetchList();
+    });
+  });
+
+  $('#mapa-clear')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.ccaa = '';
+    setActiveNode('');
+    state.page = 0;
+    fetchList();
+  });
+
+  // ─── Filtros finalidad ────────────────────────────────────────
+  $$('.filter-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const slug = chip.getAttribute('data-filter-finalidad') || '';
+      state.finalidad = slug;
+      $$('.filter-chip').forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.page = 0;
+      fetchList();
+    });
+  });
+
+  // ─── Fetch del listado ────────────────────────────────────────
+  async function fetchList(append = false) {
+    const lista = $('#lista-convocatorias');
+    const meta = $('#lista-meta');
+    if (!lista) return;
+
+    if (!append) {
+      lista.innerHTML = `<li class="py-8 text-sm text-ink/60">Cargando convocatorias…</li>`;
+    }
+
+    const params = new URLSearchParams({
+      status: 'abierto',
+      pageSize: String(PAGE_SIZE),
+      page: String(state.page),
+      sort: 'recent',
+    });
+    if (state.ccaa) params.set('ccaa', state.ccaa);
+    if (state.finalidad) params.set('finalidad', state.finalidad);
+
+    try {
+      const r = await fetch(`${HUB_URL}/api/public/subsidies?${params.toString()}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      if (!data?.ok) throw new Error('Respuesta inválida');
+
+      const items = data.items as Array<{
+        id: number;
+        slug: string;
+        title: string;
+        organization: string;
+        amount_eur: number | null;
+        deadline: string | null;
+        published_at: string | null;
+        ccaa: string | null;
+        geo_level: string | null;
+        finalidades: string[];
+        source_url: string;
+      }>;
+
+      if (items.length === 0 && !append) {
+        lista.innerHTML = `<li class="py-12 text-center text-ink/60">No hay convocatorias abiertas con los filtros seleccionados.</li>`;
+        if (meta) meta.textContent = `0 resultados`;
+        return;
+      }
+
+      const html = items
+        .map((it) => {
+          const importe = it.amount_eur
+            ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(it.amount_eur)
+            : 'Importe no publicado';
+          const pub = it.published_at
+            ? new Date(it.published_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+            : '';
+          const geo = it.geo_level
+            ? it.geo_level.charAt(0) + it.geo_level.slice(1).toLowerCase()
+            : '';
+          const finalidadesShort = (it.finalidades || []).slice(0, 3).join(' · ');
+          return `
+            <li class="py-7 group">
+              <div class="grid grid-cols-12 gap-x-6 gap-y-3">
+                <div class="col-span-12 lg:col-span-2">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">${pub}</p>
+                  ${geo ? `<p class="font-mono text-[10px] uppercase tracking-widest text-magenta mt-1">${geo}</p>` : ''}
+                </div>
+                <div class="col-span-12 lg:col-span-7">
+                  <h3 class="font-display text-lg leading-snug text-ink group-hover:text-magenta transition-colors">
+                    <a href="/subvenciones/${it.slug || it.id}" class="hover:underline">${escapeHtml(it.title)}</a>
+                  </h3>
+                  <p class="mt-2 text-sm text-ink/70">${escapeHtml(it.organization || '')}</p>
+                  ${finalidadesShort ? `<p class="mt-2 font-mono text-[10px] uppercase tracking-widest text-ink-mute">${escapeHtml(finalidadesShort)}</p>` : ''}
+                </div>
+                <div class="col-span-12 lg:col-span-3 lg:text-right">
+                  <p class="font-display text-xl font-bold text-ink">${importe}</p>
+                  ${it.deadline ? `<p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">Plazo · ${escapeHtml(it.deadline)}</p>` : ''}
+                </div>
+              </div>
+            </li>
+          `;
+        })
+        .join('');
+
+      if (append) {
+        lista.insertAdjacentHTML('beforeend', html);
+      } else {
+        lista.innerHTML = html;
+      }
+
+      if (meta) {
+        const showing = (state.page + 1) * PAGE_SIZE;
+        meta.textContent = `Mostrando ${Math.min(showing, data.total)} de ${data.total.toLocaleString('es-ES')}${state.ccaa ? ' en ' + state.ccaa : ''}${state.finalidad ? ' · ' + state.finalidad : ''}`;
+      }
+
+      const masBtn = $('#lista-mas') as HTMLButtonElement | null;
+      if (masBtn) {
+        masBtn.disabled = state.page + 1 >= data.totalPages;
+        masBtn.style.opacity = masBtn.disabled ? '0.4' : '1';
+      }
+    } catch (e) {
+      lista.innerHTML = `<li class="py-12 text-center text-ink/60">No se pudo conectar con el BDNS. Inténtalo en unos minutos.</li>`;
+      if (meta) meta.textContent = 'Error de conexión';
+    }
+  }
+
+  function escapeHtml(s: string): string {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  $('#lista-mas')?.addEventListener('click', () => {
+    state.page += 1;
+    fetchList(true);
+  });
+
+  // Primera carga
+  fetchList();
+</script>
+</Base>
