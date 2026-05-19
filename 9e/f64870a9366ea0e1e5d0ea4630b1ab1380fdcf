@@ -1,0 +1,21 @@
+src/content/notas/como-crear-alianzas-estrategicas-entre-ongs.md
+  s_fc84abf46d9a4c::t_6abf3358ea2cfa 1-94
+src/content/notas/como-hacer-fundraising-efectivo-fundacion.md
+  s_fc84abf46d9a4c::t_b8788c247c7618 1-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "9ef64870a9366ea0e1e5d0ea4630b1ab1380fdcf",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
