@@ -1,0 +1,26 @@
+src/layouts/Base.astro
+  s_fc84abf46d9a4c::t_ccea56709f0979 115-185
+src/pages/casos/[slug].astro
+  s_fc84abf46d9a4c::t_3715e8d191c919 247
+  s_fc84abf46d9a4c::t_f0bcec2ed4939d 148
+  s_fc84abf46d9a4c::t_8829b1896a94dd 203
+  s_fc84abf46d9a4c::t_1e08cad1b131c0 249
+src/styles/global.css
+  s_fc84abf46d9a4c::t_df6b6d22dc6874 257-271,274-278,282,285-317,320-337,340-357,360,362-365,369,373-378
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "5e91c236c8ef355c306ee188a8088fac5d4ee817",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
