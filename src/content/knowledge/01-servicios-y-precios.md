@@ -42,7 +42,7 @@ Todos los precios son **"desde X €"** orientativos. El precio formal se cierra
 - Estudio de podcast (hora) — desde **35 €/h**
 
 ## Merchandising
-Catálogo gestionado en `merchandising.startidea.es`. Bronze Partner de FYVAR desde 2016. Pedidos: pedidos@startidea.es.
+Catálogo gestionado en `merchandising.hubstartidea.es`. Bronze Partner de FYVAR desde 2016. Pedidos: pedidos@startidea.es.
 
 ## Reglas para responder sobre precios
 - Si te preguntan "¿cuánto cuesta X?", da el "desde X €" + recuerda que el precio formal se cierra tras un diagnóstico de 30 minutos gratuito.

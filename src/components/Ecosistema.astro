@@ -46,10 +46,11 @@ const propiedades = [
   {
     num: '06',
     nombre: 'Merchandising',
-    tag: 'Productos con propósito',
-    body: 'Más de 500 productos personalizables: textil orgánico, RPET, ecología-ética. Serigrafía, bordado, grabado láser.',
-    url: 'merchandising.startidea.es',
-    href: 'https://merchandising.startidea.es',
+    tag: '+2.400 productos · Precio al instante',
+    body: 'Catálogo B2B online: configura cantidad y marcaje (serigrafía, bordado, láser, DTF) y ves el total exacto al momento. Producción en Centros Especiales de Empleo y talleres locales. Pago directo con tarjeta.',
+    url: 'merchandising.hubstartidea.es',
+    href: 'https://merchandising.hubstartidea.es',
+    badge: 'Online ahora',
   },
   {
     num: '07',
@@ -128,7 +129,20 @@ const propiedades = [
 
       <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {propiedades.map((p) => (
-          <a href={p.href} target="_blank" rel="noopener" class="reveal group card-edit !pt-10">
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noopener"
+            class:list={[
+              'reveal group card-edit !pt-10 relative',
+              p.badge && 'ring-1 ring-magenta/40',
+            ]}
+          >
+            {p.badge && (
+              <span class="absolute -top-2 right-4 rounded-full bg-magenta px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-sm">
+                {p.badge}
+              </span>
+            )}
             <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
               <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
               <span class="label text-right">{p.tag}</span>

@@ -23,7 +23,7 @@ No. Una idea aproximada del reto basta. Si tienes un brief o una RFP, mejor — 
 Sí, pero solo con empresas con propósito real. Hay un filtro editorial al que no se renuncia: si la empresa pide ayuda para "verde-lavar" su comunicación, se le dice que no.
 
 ## ¿Tenéis catálogo de merchandising?
-Sí, en merchandising.startidea.es. Bronze Partner de FYVAR desde 2016. Pedidos a pedidos@startidea.es.
+Sí, en merchandising.hubstartidea.es. Bronze Partner de FYVAR desde 2016. Pedidos a pedidos@startidea.es.
 
 ## ¿Tenéis espacio físico?
 Sí, el Hub Startidea en pleno centro de Granada (C/ Conde Cifuentes, 33). Coworking, salas de formación, estudio de podcast y despachos privados.
