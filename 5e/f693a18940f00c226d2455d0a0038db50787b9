@@ -1,0 +1,27 @@
+docs/video-institucional-90s/00-briefing.md
+  s_fc84abf46d9a4c::t_c7cf37ac03ea07 1-118
+docs/video-institucional-90s/02-script-voz-en-off.md
+  s_fc84abf46d9a4c::t_ca2ab76910abea 1-116
+docs/video-institucional-90s/01-storyboard.md
+  s_fc84abf46d9a4c::t_ea9710c2a5d9d4 1-166
+docs/video-institucional-90s/04-checklist-tecnico.md
+  s_fc84abf46d9a4c::t_7ebddb4b9b6df2 1-148
+docs/video-institucional-90s/03-lista-tomas.md
+  s_fc84abf46d9a4c::t_dd6302ee7d3d1a 1-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "5ef693a18940f00c226d2455d0a0038db50787b9",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
