@@ -1,0 +1,29 @@
+src/lib/jsonld.ts
+  s_fc84abf46d9a4c::t_dc41eaee402d9e 17-24,32-35,37-38,42,44-49,63-164
+src/content/notas/como-medir-impacto-social-organizacion.md
+  s_fc84abf46d9a4c::t_e65aecd23eb207 1-99
+public/llms.txt
+  s_fc84abf46d9a4c::t_24dc6b3488eb09 1-84
+src/pages/que-hacemos.astro
+  s_fc84abf46d9a4c::t_5e0053b7b4f684 1-283
+public/ai.txt
+  s_fc84abf46d9a4c::t_e2698864f4659b 1-22
+src/components/Nav.astro
+  s_fc84abf46d9a4c::t_2bcf33134275ed 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "e4f7924a02925b644ea7f0517472544cac5dc1da",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
