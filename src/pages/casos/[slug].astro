@@ -188,28 +188,168 @@ const jsonLd = [
       </div>
     </section>
 
-    <!-- Métrica destacada -->
+    <!-- Métricas destacadas — soporta el campo nuevo `metrics` (array de
+         hasta 3) y mantiene retrocompatibilidad con `metric` (legacy, 1). -->
     <section class="bg-ink py-20 text-paper md:py-28">
       <div class="container-x">
         <div class="grid grid-cols-12 gap-x-8">
           <div class="col-span-12 lg:col-span-3">
-            <span class="label !text-paper/60">— Cifra destacada</span>
+            <span class="label !text-paper/60">
+              {caso.metrics && caso.metrics.length > 1 ? '— Cifras destacadas' : '— Cifra destacada'}
+            </span>
           </div>
           <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
-            <p class="font-display text-display-xl leading-[0.92] text-magenta">
-              {caso.metric.value}
-            </p>
-            <p class="mt-6 max-w-measure text-lede text-paper/85">
-              {caso.metric.label}.
-            </p>
+            {caso.metrics && caso.metrics.length > 0 ? (
+              <ul class={`grid gap-y-12 ${caso.metrics.length === 1 ? '' : caso.metrics.length === 2 ? 'md:grid-cols-2 gap-x-10' : 'md:grid-cols-3 gap-x-8'}`}>
+                {caso.metrics.map((m) => (
+                  <li>
+                    <p class="font-display text-7xl leading-[0.92] text-magenta md:text-display-lg">
+                      {m.value}
+                    </p>
+                    <p class="mt-5 text-lede text-paper/85">
+                      {m.label}.
+                    </p>
+                    {m.source && (
+                      <p class="mt-3 font-mono text-[10px] uppercase tracking-widest text-paper/40">
+                        Fuente: {m.source}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <>
+                <p class="font-display text-display-xl leading-[0.92] text-magenta">
+                  {caso.metric.value}
+                </p>
+                <p class="mt-6 max-w-measure text-lede text-paper/85">
+                  {caso.metric.label}.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Testimonio -->
-    {caso.testimonial && (
+    <!-- Timeline opcional: hitos del proyecto. Solo se renderiza si el
+         caso declara `timeline`. Permite escanear el proceso en 6-8s. -->
+    {caso.timeline && caso.timeline.length > 0 && (
       <section class="bg-paper py-20 md:py-28">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— Línea de tiempo</span>
+              <p class="mt-3 max-w-xs font-mono text-[11px] tracking-wide text-ink-mute">
+                {caso.timeline.length} hitos · {caso.duration} total
+              </p>
+            </div>
+            <ol class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+              {caso.timeline.map((h, i) => (
+                <li class="reveal grid grid-cols-12 gap-x-6 border-t border-ink/10 py-6 first:border-t-0 first:pt-0">
+                  <div class="col-span-12 md:col-span-3">
+                    <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">
+                      {String(i + 1).padStart(2, '0')} · {h.when}
+                    </span>
+                  </div>
+                  <div class="col-span-12 mt-2 md:col-span-9 md:mt-0">
+                    <p class="font-display text-xl leading-snug text-ink md:text-2xl">
+                      {h.title}
+                    </p>
+                    {h.detail && (
+                      <p class="mt-2 max-w-measure text-ink/75">
+                        {h.detail}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Equipo opcional: Startidea + cliente. Da contexto humano y
+         refuerza la naturaleza colaborativa del proyecto. -->
+    {caso.team && caso.team.length > 0 && (
+      <section class="bg-paper-warm py-20 md:py-28">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— Equipo del proyecto</span>
+            </div>
+            <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+              <div class="grid gap-x-10 gap-y-8 md:grid-cols-2">
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                    — Lado Startidea
+                  </p>
+                  <ul class="mt-4 space-y-3">
+                    {caso.team.filter((m) => m.side === 'startidea').map((m) => (
+                      <li class="border-t border-ink/10 pt-3">
+                        <p class="font-display text-lg text-ink">{m.name}</p>
+                        <p class="font-mono text-[11px] uppercase tracking-wide text-ink-mute">{m.role}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                    — Lado {caso.cliente}
+                  </p>
+                  <ul class="mt-4 space-y-3">
+                    {caso.team.filter((m) => m.side === 'cliente').map((m) => (
+                      <li class="border-t border-magenta/30 pt-3">
+                        <p class="font-display text-lg text-ink">{m.name}</p>
+                        <p class="font-mono text-[11px] uppercase tracking-wide text-ink-mute">{m.role}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Prensa opcional: cobertura mediática del proyecto. Refuerza
+         autoridad GEO + SEO (los LLMs ponderan las menciones cruzadas). -->
+    {caso.press && caso.press.length > 0 && (
+      <section class="bg-paper py-20 md:py-28">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— Repercusión</span>
+            </div>
+            <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+              <ul class="space-y-6">
+                {caso.press.map((p) => (
+                  <li class="border-t border-ink/10 pt-4">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">
+                      {p.source}{p.date && ` · ${p.date}`}
+                    </p>
+                    <blockquote class="mt-2 font-display text-xl italic leading-snug text-ink md:text-2xl">
+                      «{p.title}»
+                    </blockquote>
+                    {p.url && (
+                      <a href={p.url} target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wide text-ink-mute hover:text-magenta">
+                        Leer original ↗
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Testimonio — soporta foto opcional del testimoniante. -->
+    {caso.testimonial && (
+      <section class="bg-paper-warm py-20 md:py-28">
         <div class="container-x">
           <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
             <div class="col-span-12 lg:col-span-3">
@@ -217,12 +357,25 @@ const jsonLd = [
             </div>
             <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
               <blockquote class="font-display text-display-md italic leading-[1.1] text-ink md:text-display-lg">
-                "{caso.testimonial.quote}"
+                «{caso.testimonial.quote}»
               </blockquote>
-              <footer class="mt-8 flex items-baseline gap-3 font-mono text-xs uppercase tracking-widest text-ink-mute">
-                <span class="font-sans text-base font-medium text-ink not-italic">{caso.testimonial.author}</span>
-                <span aria-hidden="true">·</span>
-                <span>{caso.testimonial.role}</span>
+              <footer class="mt-8 flex items-center gap-4">
+                {caso.testimonial.photoSrc && (
+                  <img
+                    src={caso.testimonial.photoSrc}
+                    alt={`Foto de ${caso.testimonial.author}`}
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-14 w-14 flex-shrink-0 rounded-full border border-ink/15 object-cover"
+                  />
+                )}
+                <div class="flex flex-wrap items-baseline gap-3 font-mono text-xs uppercase tracking-widest text-ink-mute">
+                  <span class="font-sans text-base font-medium text-ink not-italic">{caso.testimonial.author}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{caso.testimonial.role}</span>
+                </div>
               </footer>
             </div>
           </div>

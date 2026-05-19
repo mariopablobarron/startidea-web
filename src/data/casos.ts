@@ -1,3 +1,43 @@
+/** Una métrica con valor + etiqueta + opcionalmente fuente verificable. */
+export interface CasoMetric {
+  value: string;
+  label: string;
+  /** Fuente del dato (ej. "Auditoría externa OnTech 2024"). Si está,
+   *  se renderiza como nota al pie de la métrica. */
+  source?: string;
+}
+
+/** Un hito de la línea de tiempo del proyecto. */
+export interface CasoMilestone {
+  /** Ej. "Mes 1", "Sesión 3", "Lanzamiento", "T+90 días post-launch". */
+  when: string;
+  /** Título corto del hito. */
+  title: string;
+  /** Detalle de qué ocurrió. */
+  detail?: string;
+}
+
+/** Mención de prensa o repercusión externa del proyecto. */
+export interface CasoPressMention {
+  /** Nombre del medio o entidad. */
+  source: string;
+  /** Titular o cita del medio. */
+  title: string;
+  /** URL original si está pública. */
+  url?: string;
+  /** Fecha (ej. "abril 2024"). */
+  date?: string;
+}
+
+/** Miembro del equipo que participó en el proyecto (Startidea + cliente). */
+export interface CasoTeamMember {
+  name: string;
+  /** Rol en el proyecto, ej. "Dirección creativa", "Programación", "Validación accesibilidad". */
+  role: string;
+  /** "startidea" | "cliente" para distinguir lado. */
+  side: 'startidea' | 'cliente';
+}
+
 export interface Caso {
   slug: string;
   num: string;
@@ -11,7 +51,10 @@ export interface Caso {
   duration: string;
   title: string;
   body: string;
+  /** @deprecated Usar `metrics` (array de 1-3). Mantenido por retrocompatibilidad. */
   metric: { value: string; label: string };
+  /** Hasta 3 métricas destacadas. Si vacío, se usa `metric` (legacy). */
+  metrics?: CasoMetric[];
   externalUrl?: string; // si tiene web pública propia
   // Detalle
   context: string;
@@ -19,7 +62,19 @@ export interface Caso {
   approach: string[];
   deliverables: string[];
   result: string[];
-  testimonial?: { quote: string; author: string; role: string };
+  testimonial?: {
+    quote: string;
+    author: string;
+    role: string;
+    /** Path relativo a /public si hay foto del testimoniante. */
+    photoSrc?: string;
+  };
+  /** Línea de tiempo opcional con 3-6 hitos del proyecto. */
+  timeline?: CasoMilestone[];
+  /** Equipo opcional (Startidea + cliente). Da contexto humano al proyecto. */
+  team?: CasoTeamMember[];
+  /** Repercusión mediática opcional. Si hay, refuerza autoridad GEO. */
+  press?: CasoPressMention[];
   next?: string; // slug del siguiente caso
   prev?: string; // slug del anterior
 }
@@ -67,6 +122,68 @@ export const casos: Caso[] = [
       author: 'Equipo de Comunicación',
       role: 'Down Granada',
     },
+    // ─── Enriquecimientos (Sprint case-studies-v2) ─────────────────
+    metrics: [
+      {
+        value: 'AA',
+        label: 'cumplimiento WCAG 2.1',
+        source: 'Auditoría externa accesibilidad · 2024',
+      },
+      {
+        value: '<1.2s',
+        label: 'tiempo de carga en móvil 4G',
+        source: 'PageSpeed Insights percentil 90',
+      },
+      {
+        value: '−38%',
+        label: 'llamadas con preguntas básicas tras el lanzamiento',
+        source: 'Comparativa 6 meses pre vs 6 meses post',
+      },
+    ],
+    timeline: [
+      {
+        when: 'Semana 1-2',
+        title: 'Mapeo de audiencias',
+        detail:
+          'Sesiones con dirección y equipo de programas. Recorridos reales de familias, voluntariado y empresas.',
+      },
+      {
+        when: 'Semana 3-5',
+        title: 'Arquitectura de información',
+        detail:
+          'Validación con familias usuarias antes de tocar diseño. Test de comprensión en lenguaje fácil.',
+      },
+      {
+        when: 'Semana 6-12',
+        title: 'Diseño + desarrollo',
+        detail:
+          'Sistema de componentes accesible desde cero. Astro + Tailwind. Contraste AA, navegación por teclado, lectores de pantalla.',
+      },
+      {
+        when: 'Semana 13-14',
+        title: 'Auditoría WCAG 2.1 AA',
+        detail:
+          'Validación por tercera parte independiente. Ajustes finales sobre el informe.',
+      },
+      {
+        when: 'Semana 15-16',
+        title: 'Lanzamiento + capacitación',
+        detail:
+          'Migración limpia, capacitación al equipo de comunicación, documentación técnica.',
+      },
+      {
+        when: 'T+6 meses',
+        title: 'Revisión post-lanzamiento',
+        detail:
+          'Métricas medidas con criterio. Equipo interno actualiza programas y noticias sin tocar código.',
+      },
+    ],
+    team: [
+      { name: 'Mario Pablo Sánchez Barrón', role: 'Dirección de proyecto', side: 'startidea' },
+      { name: 'Equipo Startidea', role: 'Diseño y desarrollo', side: 'startidea' },
+      { name: 'Equipo de Comunicación Down Granada', role: 'Validación editorial', side: 'cliente' },
+      { name: 'Dirección Down Granada', role: 'Aprobación estratégica', side: 'cliente' },
+    ],
     prev: 'acogimiento-familiar-granada',
     next: 'granada-social-5',
   },
