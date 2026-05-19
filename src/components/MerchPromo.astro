@@ -1,0 +1,76 @@
+---
+// Banda promocional editorial para TodoMerchandising — propiedad comercial
+// online del ecosistema Startidea. Se inserta entre secciones de la home
+// para dar visibilidad sin romper el tono del resto (innovación social).
+//
+// Patrón visual: fondo paper-warm con borde superior/inferior magenta
+// sutil, layout 12 col estilo editorial, número grande, copy a la izquierda
+// + CTA prominente a la derecha.
+---
+
+<section
+  id="merch-promo"
+  class="relative border-y border-magenta/30 bg-paper-warm py-16 md:py-20"
+>
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 items-end">
+      <!-- Etiqueta + número -->
+      <div class="col-span-12 lg:col-span-3">
+        <span class="label text-magenta">— Nuevo · Online ahora</span>
+        <div class="mt-4 num-edit text-7xl text-magenta md:text-8xl">06</div>
+      </div>
+
+      <!-- Copy + datos -->
+      <div class="col-span-12 mt-8 lg:col-span-6 lg:mt-0">
+        <h2 class="font-display text-display-md leading-[0.96] text-ink md:text-display-lg">
+          Tu merchandising,
+          <em class="italic text-magenta">con precio al instante.</em>
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-ink/80">
+          Catálogo B2B de <strong>+2.400 productos personalizables</strong>: configura
+          cantidad, técnica de marcaje y posiciones, y verás el total exacto al momento.
+          Producción en Centros Especiales de Empleo y talleres locales. Sin formularios,
+          sin esperar 24 horas.
+        </p>
+
+        <!-- Datos rápidos para credibilidad -->
+        <ul class="mt-8 grid grid-cols-3 gap-x-6 border-t border-ink/15 pt-6 lg:gap-x-8">
+          <li>
+            <div class="font-display text-3xl font-semibold text-ink md:text-4xl">+2.400</div>
+            <div class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">Productos</div>
+          </li>
+          <li>
+            <div class="font-display text-3xl font-semibold text-magenta md:text-4xl">Instantáneo</div>
+            <div class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">Precio</div>
+          </li>
+          <li>
+            <div class="font-display text-3xl font-semibold text-ink md:text-4xl">100%</div>
+            <div class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">CEE + local</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CTA prominente -->
+      <div class="col-span-12 mt-10 lg:col-span-3 lg:mt-0">
+        <a
+          href="https://merchandising.hubstartidea.es"
+          target="_blank"
+          rel="noopener"
+          class="btn w-full !justify-center !py-4 !text-base lg:!text-lg"
+        >
+          Entrar al catálogo
+          <span aria-hidden="true">↗</span>
+        </a>
+        <p class="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+          merchandising.hubstartidea.es
+        </p>
+        <a
+          href="/merchandising"
+          class="mt-3 block text-center text-sm text-ink/70 hover:text-magenta underline-offset-4 hover:underline"
+        >
+          O conoce más antes →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

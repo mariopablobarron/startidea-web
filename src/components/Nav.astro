@@ -11,12 +11,14 @@ const links = [
   { label: 'Notas', href: '/notas' },
 ];
 
-// Líneas editoriales / propiedades de Startidea — no incluimos aquí
-// Merchandising porque rompe la línea de innovación social (es catálogo
-// de productos). Si en el futuro lo queremos visibilizar, va en un menú
-// secundario propio o en la home como sección comercial separada.
+// Líneas editoriales / propiedades de Startidea.
+// Merchandising se añadió al dropdown 2026-05-19 porque ya es producto B2B
+// maduro online con tráfico real; meterlo en Propiedades (junto a Hub y
+// Granada Social) lo visibiliza sin meterlo en el nav principal que mantiene
+// la línea editorial de innovación social.
 const propiedades = [
   { label: 'Hub Startidea', href: 'https://hubstartidea.es', tag: 'Coworking · Estudio' },
+  { label: 'TodoMerchandising', href: 'https://merchandising.hubstartidea.es', tag: 'Catálogo B2B online · Online ahora', highlight: true },
   { label: 'Granada Social', href: 'https://granadasocial.org', tag: 'Medio sociocultural' },
 ];
 ---
@@ -50,7 +52,7 @@ const propiedades = [
           <div class="invisible absolute right-0 top-full z-10 mt-3 w-72 border border-ink bg-paper opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
             <ul class="divide-y divide-ink/10">
               {propiedades.map((p) => (
-                <li>
+                <li class:list={[p.highlight && 'bg-magenta/5']}>
                   <a href={p.href} target="_blank" rel="noopener" class="block px-5 py-4 transition-colors hover:bg-paper-warm">
                     <p class="font-display text-lg leading-tight text-ink">
                       {p.label}
@@ -102,7 +104,7 @@ const propiedades = [
         <span class="label">— Nuestras propiedades</span>
         <ul class="mt-2 divide-y divide-ink/10 border-y border-ink/10">
           {propiedades.map((p) => (
-            <li>
+            <li class:list={[p.highlight && 'bg-magenta/5 px-2 -mx-2']}>
               <a
                 href={p.href}
                 target="_blank"

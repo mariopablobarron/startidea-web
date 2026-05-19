@@ -20,6 +20,7 @@ import LogosBanner from '@/components/LogosBanner.astro';
 import MetricasHero from '@/components/MetricasHero.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
 import Ecosistema from '@/components/Ecosistema.astro';
+import MerchPromo from '@/components/MerchPromo.astro';
 import ComoTrabajamos from '@/components/ComoTrabajamos.astro';
 import HanConfiado from '@/components/HanConfiado.astro';
 import Casos from '@/components/Casos.astro';
@@ -49,6 +50,13 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
 
   <!-- 3. Qué — servicios + método -->
   <Ecosistema />
+
+  <!-- 3.5 Promo TodoMerchandising — único producto B2B online del ecosistema.
+       Insertado justo después de Ecosistema porque el visitante acaba de
+       leer "una de las 4 propiedades es Merchandising" y aquí lo aterrizamos
+       con CTA directo al catálogo. -->
+  <MerchPromo />
+
   <ComoTrabajamos />
 
   <!-- 4. Prueba social — quién ha confiado + casos -->
