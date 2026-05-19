@@ -1,0 +1,23 @@
+src/pages/casos/[slug].astro
+  s_fc84abf46d9a4c::t_af4fa258a83bb7 191-192,197-199,202-229,235-237,239-348
+  s_fc84abf46d9a4c::t_a7f2107c9cb14a 350-352,360,362-378
+src/data/casos.ts
+  s_fc84abf46d9a4c::t_ba5711af24e449 1-40,54,56-57,65-77
+  s_fc84abf46d9a4c::t_0453a4b2ab9f69 125-186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "4de6ce97bd4795f49108b56cd69d03dfbf8fb52b",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
