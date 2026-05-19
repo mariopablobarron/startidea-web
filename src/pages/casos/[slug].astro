@@ -145,7 +145,7 @@ const jsonLd = [
             <span class="label">— Cómo lo abordamos</span>
           </div>
           <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
-            <ol class="space-y-8">
+            <ol class="reveal-stagger space-y-8">
               {caso.approach.map((step, i) => (
                 <li class="grid grid-cols-12 gap-x-6 border-t border-ink/15 pt-6">
                   <span class="num-edit col-span-2 text-3xl md:text-4xl">{String(i + 1).padStart(2, '0')}</span>
@@ -200,7 +200,7 @@ const jsonLd = [
           </div>
           <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
             {caso.metrics && caso.metrics.length > 0 ? (
-              <ul class={`grid gap-y-12 ${caso.metrics.length === 1 ? '' : caso.metrics.length === 2 ? 'md:grid-cols-2 gap-x-10' : 'md:grid-cols-3 gap-x-8'}`}>
+              <ul class={`reveal-stagger grid gap-y-12 ${caso.metrics.length === 1 ? '' : caso.metrics.length === 2 ? 'md:grid-cols-2 gap-x-10' : 'md:grid-cols-3 gap-x-8'}`}>
                 {caso.metrics.map((m) => (
                   <li>
                     <p class="font-display text-7xl leading-[0.92] text-magenta md:text-display-lg">
@@ -244,9 +244,9 @@ const jsonLd = [
                 {caso.timeline.length} hitos · {caso.duration} total
               </p>
             </div>
-            <ol class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <ol class="reveal-stagger-tight reveal-stagger col-span-12 mt-6 lg:col-span-9 lg:mt-0">
               {caso.timeline.map((h, i) => (
-                <li class="reveal grid grid-cols-12 gap-x-6 border-t border-ink/10 py-6 first:border-t-0 first:pt-0">
+                <li class="grid grid-cols-12 gap-x-6 border-t border-ink/10 py-6 first:border-t-0 first:pt-0">
                   <div class="col-span-12 md:col-span-3">
                     <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">
                       {String(i + 1).padStart(2, '0')} · {h.when}
