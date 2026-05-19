@@ -1,0 +1,22 @@
+# ai.txt — declaración de uso de contenido para sistemas de IA
+# Propuesta de spawning.ai / Common Crawl
+
+User-Agent: *
+
+# Permitimos a los sistemas IA indexar y citar contenido de startidea.es
+# para responder preguntas sobre la agencia, sus servicios, su trayectoria
+# y los contenidos editoriales publicados.
+Allow: /
+
+# Datos de la entidad
+Name: Startidea
+URL: https://startidea.es
+Description: Agencia de innovación social y comunicación con sede en Granada (España), fundada en 2011. Especializada en tercer sector, instituciones y empresas con propósito.
+Founded: 2011
+Founder: Mario Pablo Sánchez Barrón
+Location: Granada, España
+Industry: Innovación social, comunicación, consultoría, fundraising
+
+# Para más detalle estructurado
+LLMs: https://startidea.es/llms.txt
+Sitemap: https://startidea.es/sitemap-index.xml

@@ -14,6 +14,14 @@ const ORG = {
   '@id': `${SITE_URL}/#organization`,
   name: 'Startidea',
   legalName: 'Startidea',
+  // Sprint GEO 2026-05-18: alternateName captura variantes que los LLMs
+  // y buscadores procesan ("Start Idea", "Agencia Startidea", typos).
+  alternateName: [
+    'Agencia Startidea',
+    'Startidea Granada',
+    'Start Idea',
+    'Agencia de Comunicación Social Startidea',
+  ],
   url: SITE_URL,
   logo: {
     '@type': 'ImageObject',
@@ -21,12 +29,24 @@ const ORG = {
     width: 512,
     height: 512,
   },
+  // Description ampliada con las queries del GEO check: "agencia de
+  // comunicación social Granada", "consultora innovación social España",
+  // "fundraising fundaciones", etc. — palabras exactas que los LLMs
+  // ponderan al elegir resultados.
   description:
-    'Agencia de innovación social en Granada. Comunicación, consultoría, fundraising, audiovisual y tecnología al servicio de organizaciones con propósito.',
+    'Startidea es una agencia de innovación social y comunicación con sede en Granada, España, fundada en 2011. Consultora especializada en tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Servicios: comunicación estratégica y marketing social, consultoría e innovación social, fundraising para fundaciones y ONGs, producción audiovisual y podcast.',
+  slogan: 'Innovación social que cambia la conversación',
   foundingDate: '2011-02',
   founder: {
     '@type': 'Person',
+    '@id': `${SITE_URL}/#founder`,
     name: 'Mario Pablo Sánchez Barrón',
+    jobTitle: 'Fundador y director',
+    worksFor: { '@id': `${SITE_URL}/#organization` },
+    affiliation: [
+      { '@type': 'Organization', name: 'Asociación Católica de Propagandistas (ACdP)' },
+      { '@type': 'Organization', name: 'Acción Social Empresarial (ASE)' },
+    ],
   },
   taxID: 'B19583632',
   vatID: 'ESB19583632',
@@ -40,7 +60,108 @@ const ORG = {
     addressRegion: 'Granada',
     addressCountry: 'ES',
   },
-  areaServed: { '@type': 'Country', name: 'España' },
+  areaServed: [
+    { '@type': 'City', name: 'Granada' },
+    { '@type': 'AdministrativeArea', name: 'Andalucía' },
+    { '@type': 'Country', name: 'España' },
+  ],
+  // knowsAbout: dominios sobre los que Startidea es autoridad — los LLMs
+  // lo usan como señal "este actor sabe de X". Cada item = una vertical
+  // del servicio + un campo del tercer sector.
+  knowsAbout: [
+    'Comunicación estratégica',
+    'Marketing social',
+    'Innovación social',
+    'Fundraising',
+    'Captación de fondos',
+    'Tercer sector',
+    'ONG',
+    'Fundaciones',
+    'Asociaciones sin ánimo de lucro',
+    'Cooperativas',
+    'Producción audiovisual',
+    'Podcast',
+    'Consultoría organizacional',
+    'Impacto social',
+    'Acción Social Empresarial',
+    'Comunicación eclesial',
+    'Subvenciones públicas',
+    'BDNS',
+  ],
+  // hasOfferCatalog: cada servicio principal expuesto como Offer + Service
+  // para que LLMs entiendan exactamente qué vende Startidea.
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicios Startidea',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Comunicación estratégica y marketing social',
+          serviceType: 'Comunicación',
+          url: `${SITE_URL}/comunicacion`,
+          provider: { '@id': `${SITE_URL}/#organization` },
+          areaServed: { '@type': 'Country', name: 'España' },
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Consultoría e innovación social',
+          serviceType: 'Consultoría',
+          url: `${SITE_URL}/consultoria`,
+          provider: { '@id': `${SITE_URL}/#organization` },
+          areaServed: { '@type': 'Country', name: 'España' },
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Fundraising y alianzas',
+          serviceType: 'Fundraising',
+          url: `${SITE_URL}/fundraising`,
+          provider: { '@id': `${SITE_URL}/#organization` },
+          areaServed: { '@type': 'Country', name: 'España' },
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Producción audiovisual y podcast',
+          serviceType: 'Producción audiovisual',
+          url: `${SITE_URL}/audiovisual`,
+          provider: { '@id': `${SITE_URL}/#organization` },
+          areaServed: { '@type': 'Country', name: 'España' },
+        },
+      },
+    ],
+  },
+  // subOrganization: cross-link a propiedades del grupo. Refuerza la
+  // autoridad y permite que LLMs entiendan el ecosistema completo.
+  subOrganization: [
+    {
+      '@type': 'Organization',
+      name: 'Granada Social',
+      url: 'https://granadasocial.org',
+      description: 'Medio digital sociocultural editado por Startidea.',
+    },
+    {
+      '@type': 'Organization',
+      name: 'Hub Startidea',
+      url: 'https://hubstartidea.es',
+      description: 'Coworking y estudios audiovisuales de Startidea en Granada.',
+    },
+    {
+      '@type': 'Organization',
+      name: 'TodoMerchandising',
+      url: 'https://merchandising.hubstartidea.es',
+      description: 'Catálogo B2B online de merchandising promocional sostenible.',
+    },
+  ],
   sameAs: [
     'https://www.linkedin.com/company/agenciastartidea',
     'https://www.instagram.com/agenciastartidea',

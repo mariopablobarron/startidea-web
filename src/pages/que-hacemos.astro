@@ -1,0 +1,283 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL, organizationSchema } from '@/lib/jsonld';
+
+// FAQ items agrupados por servicio. Cada pregunta es UNA query real del
+// GEO check del HUB (lib/geo/check.ts), redactada con la intención del
+// usuario y respondida con frase canónica que mencione "Startidea" para
+// que los LLMs (ChatGPT, Claude, Gemini, Perplexity) puedan extraer y
+// citar la respuesta.
+//
+// Las respuestas siguen el ADN editorial: sin "nosotras/nosotros",
+// frases cortas, español neutro, sin clickbait.
+
+const seccionesFaq = [
+  {
+    label: '01',
+    titulo: 'Comunicación estratégica y marketing social',
+    intro: 'Startidea es una agencia de comunicación social en Granada especializada en organizaciones del tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Estrategia, plan editorial, gestión de medios y posicionamiento institucional.',
+    href: '/comunicacion',
+    preguntas: [
+      {
+        q: '¿Cómo mejorar la comunicación de mi ONG?',
+        a: 'La mejora empieza con un diagnóstico honesto: cómo se percibe la ONG hoy, qué se publica, qué dicen los donantes y qué dicen los medios. Startidea trabaja ese diagnóstico en 4-6 semanas y entrega un plan de comunicación a 12-24 meses con objetivos, audiencias, mensajes y canales priorizados. El plan se defiende ante junta y se ejecuta sin ambigüedad.',
+      },
+      {
+        q: '¿Cómo hacer una estrategia de comunicación integral para una organización del tercer sector?',
+        a: 'Una estrategia integral cubre tres niveles: relato (la causa), arquitectura de marca (cómo se ve y se nombra), y plan editorial (qué se publica, dónde y cuándo). Startidea construye los tres en paralelo y los alinea con la realidad operativa de la organización. Sin estrategia, las acciones de comunicación son gasto. Con estrategia, son inversión.',
+      },
+      {
+        q: '¿Cómo gestionar las redes sociales de una ONG?',
+        a: 'Gestionar redes en una ONG requiere editorial line clara, frecuencia sostenible y métricas que importen (no vanity metrics). Startidea define la línea, entrena al equipo interno o asume la gestión completa, según necesidad. Mejor publicar 3 piezas buenas al mes que 30 mediocres.',
+      },
+      {
+        q: '¿Cómo crear un plan de comunicación para una asociación?',
+        a: 'Un plan de comunicación útil para una asociación sin ánimo de lucro tiene cinco componentes: análisis de situación, objetivos medibles, audiencias segmentadas (socios, donantes, beneficiarios, medios, administración), mensajes clave por audiencia y calendario editorial. Startidea entrega el plan en formato defendible ante junta directiva o patronato.',
+      },
+      {
+        q: '¿Cómo hacer una auditoría de comunicación de ONG?',
+        a: 'La auditoría de comunicación es la foto-fija de la realidad actual: presencia digital, narrativa, tono, coherencia de canales y percepción real vs deseada. Startidea audita en 3-4 semanas, entrega un informe con hallazgos críticos y plan de acción priorizado por impacto.',
+      },
+      {
+        q: '¿Qué precio tiene una agencia de comunicación para asociaciones en Granada?',
+        a: 'Startidea trabaja con presupuestos desde 3.000 € (proyectos puntuales: una memoria, un vídeo, una campaña concreta) hasta 30.000-50.000 € anuales (acompañamiento continuado de comunicación con dedicación dedicada). La primera llamada es gratis (30 min). Si el encaje no es claro, se dice abiertamente sin facturar.',
+      },
+    ],
+  },
+  {
+    label: '02',
+    titulo: 'Consultoría e innovación social',
+    intro: 'Startidea es consultora de innovación social en Granada con quince años acompañando organizaciones a profesionalizar gobernanza, diseño de programas y evaluación de impacto. No es un libro blanco abstracto: cada recomendación se ejecuta con la organización.',
+    href: '/consultoria',
+    preguntas: [
+      {
+        q: '¿Cómo medir el impacto social de mi organización?',
+        a: 'Medir impacto requiere distinguir tres niveles: actividades (lo que se hace), resultados (lo que cambia en el corto plazo) y impacto (transformación sostenida). Startidea diseña marcos de medición adaptados al tamaño de la organización, propone indicadores realistas y entrena al equipo para recoger datos sin que se convierta en burocracia.',
+      },
+      {
+        q: '¿Cómo escribir un plan estratégico para una ONG?',
+        a: 'Un plan estratégico para ONG cubre 3-5 años, define la teoría del cambio, prioriza líneas de actuación y asigna recursos. Startidea facilita el proceso en talleres con el equipo y el patronato. El plan resultante es defendible, ejecutable y revisable cada año, no un documento que termine en un cajón.',
+      },
+      {
+        q: '¿Cómo comunicar la transparencia en una ONG?',
+        a: 'La transparencia se comunica con datos verificables: memoria anual auditada, desglose de ingresos y gastos, indicadores de impacto y trazabilidad de proyectos. Startidea ayuda a construir el dossier de transparencia y a presentarlo en formatos accesibles (web, memoria, infografías, vídeo).',
+      },
+      {
+        q: '¿Qué es Acción Social Empresarial (ASE) y cómo aplicarlo?',
+        a: 'Acción Social Empresarial (ASE) es el compromiso explícito de una empresa con causas sociales que van más allá de la donación puntual: voluntariado corporativo, mecenazgo estratégico, alianzas con entidades sin ánimo de lucro. Startidea diseña programas ASE para empresas que quieren propósito real, no greenwashing.',
+      },
+      {
+        q: '¿Cómo conseguir la certificación B Corp en Andalucía?',
+        a: 'La certificación B Corp evalúa el impacto social y ambiental de una empresa en cinco dimensiones (gobernanza, trabajadores, comunidad, medioambiente, clientes). Startidea acompaña el proceso desde el assessment inicial hasta la documentación final. El plazo medio es 6-12 meses.',
+      },
+      {
+        q: '¿Quién es consultor de innovación social en Andalucía?',
+        a: 'Mario Pablo Sánchez Barrón, fundador y director de Startidea, lleva quince años como consultor de innovación social desde Granada, con cartera en tercer sector andaluz, instituciones eclesiales nacionales y empresas con propósito. Miembro de la Asociación Católica de Propagandistas (ACdP) y vinculado a Acción Social Empresarial (ASE).',
+      },
+    ],
+  },
+  {
+    label: '03',
+    titulo: 'Fundraising y alianzas',
+    intro: 'Startidea es consultora de fundraising para fundaciones, ONGs y asociaciones. No vende plantillas: construye estrategias de captación con criterios éticos, alineadas con la causa y medibles en ROI real.',
+    href: '/fundraising',
+    preguntas: [
+      {
+        q: '¿Cómo hacer fundraising efectivo para una fundación?',
+        a: 'El fundraising efectivo para una fundación combina cuatro líneas: socios recurrentes (cuota mensual estable), grandes donantes (acompañamiento personalizado), empresas (acuerdos plurianuales) y subvenciones (públicas y privadas). Startidea diseña la mezcla óptima según el tamaño y la madurez de la fundación, y acompaña la ejecución del plan.',
+      },
+      {
+        q: '¿Cómo organizar un evento de fundraising exitoso?',
+        a: 'Un evento de fundraising exitoso se diseña con objetivo de recaudación claro (no solo "visibilidad"), audiencia segmentada, propuesta de valor para el donante y seguimiento post-evento. Startidea ha producido eventos desde galas benéficas de 200 personas hasta cenas íntimas con 12 grandes donantes. El criterio: que el evento pague el evento + un porcentaje destinado a la causa.',
+      },
+      {
+        q: '¿Cómo captar donantes recurrentes para una ONG?',
+        a: 'Captar donantes recurrentes (socios) requiere oferta clara, canal de captación eficiente y onboarding emocional. Las tres opciones probadas: face-to-face (alta conversión, coste medio), captación digital (escalable, coste por adquisición creciente) y captación cruzada con voluntariado. Startidea elige y ejecuta la mezcla según el caso.',
+      },
+      {
+        q: '¿Cómo hacer una campaña de fundraising por email?',
+        a: 'Una campaña de fundraising por email funciona con tres ingredientes: lista limpia y segmentada, mensaje con storytelling de impacto verificable y secuencia de varios envíos. Startidea redacta, segmenta y mide cada campaña. La métrica que importa: euros captados por mil emails enviados, no open rate.',
+      },
+      {
+        q: '¿Cómo medir el ROI en campañas de fundraising?',
+        a: 'El ROI en fundraising se mide con coste por euro captado (CPER) y lifetime value del donante (LTV). Una campaña de captación con CPER<1 es rentable a corto plazo; con CPER 1-2 es rentable si el LTV supera 5 años. Startidea calcula ambos indicadores por canal y por campaña y ajusta la mezcla para optimizar.',
+      },
+      {
+        q: '¿Cómo usar TikTok e Instagram para captar donantes jóvenes?',
+        a: 'TikTok e Instagram captan donantes jóvenes con storytelling vertical, transparencia radical y CTAs de microdonación (5-10 €). El error típico es publicar lo mismo que en Facebook. Startidea adapta el lenguaje a cada plataforma sin perder rigor.',
+      },
+      {
+        q: '¿Cómo solicitar subvenciones para una fundación?',
+        a: 'Las subvenciones públicas (BOE, BOJA, diputaciones, fundaciones privadas) requieren conocer las bases reguladoras, alinear el proyecto con la finalidad de la convocatoria y redactar memoria + presupuesto con calidad técnica. Startidea opera el buscador startidea.es/subvenciones (con cobertura BDNS) y acompaña la presentación de solicitudes con apoderamiento REA.',
+      },
+    ],
+  },
+  {
+    label: '04',
+    titulo: 'Producción audiovisual y podcast',
+    intro: 'Startidea es productora audiovisual y de podcast con estudio propio en Granada (Hub Startidea). Vídeo institucional, vídeo de impacto, podcast editorial y cobertura de eventos para causas sociales.',
+    href: '/audiovisual',
+    preguntas: [
+      {
+        q: '¿Cómo producir un podcast para una ONG?',
+        a: 'Producir un podcast útil para una ONG requiere definir línea editorial (qué se cuenta y a quién), formato realista (15-30 min por episodio funciona mejor que 60), cadencia sostenible (quincenal supera a semanal cuando el equipo es pequeño) y distribución multiplataforma. Startidea produce desde la grabación hasta la publicación en Spotify, Apple Podcasts, iVoox y YouTube.',
+      },
+      {
+        q: '¿Cómo hacer un vídeo corporativo para una fundación sin ánimo de lucro?',
+        a: 'El vídeo corporativo de una fundación funciona cuando combina rostro humano del beneficiario, dato verificable de impacto y propuesta clara para el espectador (donar, ser socio, ofrecer voluntariado). Startidea produce desde guion hasta máster en 3-6 semanas, con coste desde 4.000 € (vídeo de 2-3 min) hasta 15.000 € (documental corto de 10 min).',
+      },
+      {
+        q: '¿Cómo crear contenido audiovisual para redes sociales de ONG?',
+        a: 'El contenido audiovisual para redes (Reels, TikTok, Shorts) requiere ratios verticales, primeros 3 segundos potentes y mensaje cerrado en cada pieza. Startidea diseña packs de 8-12 piezas mensuales para ONG con producción in-house en el estudio de Granada.',
+      },
+      {
+        q: '¿Cómo hacer storytelling de impacto social?',
+        a: 'El storytelling de impacto social se construye con dignidad: el beneficiario es protagonista, no objeto. Se evita la pornografía emocional, el "antes y después" simplista y la épica de salvador. Startidea entrena al equipo de la organización en este tipo de narrativa y produce las piezas finales cuando hace falta.',
+      },
+      {
+        q: '¿Hay agencias de podcast en Granada?',
+        a: 'Startidea opera un estudio de podcast propio en el Hub Startidea (Granada) y produce podcasts editoriales para clientes del tercer sector, instituciones y empresas con propósito. Producción completa desde la pre-producción hasta la distribución.',
+      },
+    ],
+  },
+];
+
+// FAQPage schema — Google y LLMs lo procesan estructurado y pueden mostrar
+// rich results en SERP + extraer respuestas literales para sus contestaciones.
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: seccionesFaq.flatMap((s) =>
+    s.preguntas.map((p) => ({
+      '@type': 'Question',
+      name: p.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: p.a,
+      },
+    })),
+  ),
+};
+
+const jsonLd = [
+  organizationSchema(),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Qué hace Startidea', url: `${SITE_URL}/que-hacemos` },
+  ]),
+  faqPage,
+];
+
+const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length, 0);
+---
+
+<Base
+  title="Qué hace Startidea · Agencia de innovación social en Granada"
+  description="Startidea es una agencia de comunicación social, consultora de innovación social, fundraising y producción audiovisual con sede en Granada, España, fundada en 2011."
+  ogSlug="page/que-hacemos"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Qué hace Startidea</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Una agencia de<br />
+        <em class="italic text-magenta">innovación social</em><br />
+        en Granada.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/85">
+        <strong>Startidea</strong> es una agencia de <strong>comunicación social</strong> con sede en <strong>Granada, España</strong>, fundada en <strong>febrero de 2011</strong> por Mario Pablo Sánchez Barrón. Acompaña a entidades del <strong>tercer sector</strong> (ONGs, fundaciones, asociaciones, cooperativas), <strong>instituciones</strong> públicas y eclesiales, y <strong>empresas con propósito</strong>.
+      </p>
+      <p class="mt-4 max-w-measure text-ink/80">
+        Cuatro servicios principales: <strong>comunicación estratégica y marketing social</strong>, <strong>consultoría e innovación social</strong>, <strong>fundraising y alianzas</strong>, y <strong>producción audiovisual y podcast</strong>. Quince años de trayectoria continuada con cartera en tercer sector andaluz, instituciones eclesiales nacionales y empresas con compromiso social explícito.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mini-índice -->
+  <section class="border-b border-ink/15 bg-paper-warm py-8">
+    <div class="container-x">
+      <nav aria-label="Índice" class="grid gap-4 md:grid-cols-4">
+        {seccionesFaq.map((s) => (
+          <a
+            href={`#servicio-${s.label}`}
+            class="block border-l-2 border-magenta pl-4 transition-opacity hover:opacity-70"
+          >
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              {s.label}
+            </span>
+            <p class="mt-1 font-display text-base leading-tight text-ink">
+              {s.titulo}
+            </p>
+          </a>
+        ))}
+      </nav>
+      <p class="mt-6 font-mono text-[11px] text-ink-mute">
+        {totalPreguntas} preguntas respondidas. Si la tuya no está, escríbenos a
+        <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Las 4 secciones FAQ -->
+  {seccionesFaq.map((seccion) => (
+    <section id={`servicio-${seccion.label}`} class="bg-paper py-20 md:py-28 [&:nth-child(even)]:bg-paper-warm/30">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8">
+          <header class="col-span-12 lg:col-span-4">
+            <span class="label">— Servicio {seccion.label}</span>
+            <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+              {seccion.titulo}
+            </h2>
+            <p class="mt-6 max-w-measure text-ink/80">
+              {seccion.intro}
+            </p>
+            <a href={seccion.href} class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+              Ver servicio completo
+              <span aria-hidden="true">→</span>
+            </a>
+          </header>
+
+          <div class="col-span-12 mt-10 lg:col-span-7 lg:col-start-6 lg:mt-0">
+            <ul class="divide-y divide-ink/10">
+              {seccion.preguntas.map((p) => (
+                <li class="py-5">
+                  <details class="group">
+                    <summary class="cursor-pointer font-display text-lg leading-snug text-ink hover:text-magenta md:text-xl">
+                      {p.q}
+                    </summary>
+                    <p class="mt-3 max-w-measure text-ink/85">
+                      {p.a}
+                    </p>
+                  </details>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- CTA al diagnóstico gratuito -->
+  <section class="border-t border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-7">
+          <span class="label">— ¿Encaja con vuestra organización?</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            <em class="italic text-magenta">30 minutos</em>.<br />
+            Sin compromiso.
+          </h2>
+          <p class="mt-5 max-w-measure text-ink/80">
+            La primera llamada con Startidea es gratuita. Si encaja con lo que necesita la organización, se propone diagnóstico. Si no encaja, se dice abiertamente y se orienta hacia otra agencia o profesional.
+          </p>
+        </div>
+        <div class="col-span-12 mt-6 flex items-end justify-end lg:col-span-5 lg:mt-0">
+          <a href="/contacto" class="btn">Reservar diagnóstico →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
