@@ -1,0 +1,31 @@
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_575724a9da3d77 80-82
+  s_fc84abf46d9a4c::t_f364d3d00be51e 13
+src/pages/subvenciones/crear-alerta.astro
+  s_fc84abf46d9a4c::t_957f8365e416d3 34,49-50
+  s_fc84abf46d9a4c::t_be3a7e4a64537b 9
+astro.config.mjs
+  s_fc84abf46d9a4c::t_5df2a2781725f0 50-54
+src/components/SubvencionesTabs.astro
+  s_fc84abf46d9a4c::t_2c396bc69e495f 1-48
+src/pages/subvenciones/mapa.astro
+  s_fc84abf46d9a4c::t_eb465ff660de8f 1-742
+src/pages/laboratorio/index.astro
+  s_fc84abf46d9a4c::t_7a73e09c845756 29-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "6ca14ced8e967a836f7b379d93be3515d67c4984",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
