@@ -58,13 +58,13 @@ const ccaaList: Array<{ slug: string; label: string; x: number; y: number; alt?:
   { slug: 'madrid', label: 'Madrid', x: 390, y: 290 },
   { slug: 'castilla-la-mancha', label: 'Castilla-La Mancha', x: 440, y: 340 },
   { slug: 'extremadura', label: 'Extremadura', x: 240, y: 360 },
-  { slug: 'comunidad-valenciana', label: 'C. Valenciana', x: 615, y: 340, alt: ['valencia', 'c-valenciana'] },
+  { slug: 'comunitat-valenciana', label: 'C. Valenciana', x: 615, y: 340, alt: ['comunidad-valenciana', 'valencia', 'c-valenciana'] },
   { slug: 'murcia', label: 'Murcia', x: 580, y: 415 },
   { slug: 'andalucia', label: 'Andalucía', x: 360, y: 450 },
   { slug: 'illes-balears', label: 'Baleares', x: 830, y: 360, alt: ['baleares', 'islas-baleares'] },
   { slug: 'canarias', label: 'Canarias', x: 130, y: 530, alt: ['islas-canarias'] },
-  { slug: 'ceuta', label: 'Ceuta', x: 330, y: 555 },
-  { slug: 'melilla', label: 'Melilla', x: 410, y: 555 },
+  { slug: 'ciudad-autonoma-de-ceuta', label: 'Ceuta', x: 330, y: 555, alt: ['ceuta'] },
+  { slug: 'ciudad-autonoma-de-melilla', label: 'Melilla', x: 410, y: 555, alt: ['melilla'] },
 ];
 
 // Resolver count para una CCAA (mirando slug principal + alternativos)
@@ -108,13 +108,25 @@ function radiusFor(count: number): number {
   return 8 + norm * 32; // entre 8 y 40px
 }
 
-const lastUpdatedLabel = stats?.last_updated
-  ? new Date(stats.last_updated).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    })
-  : null;
+// detected_at del HUB viene en segundos pero el endpoint lo interpreta
+// como ms. Si la fecha es pre-2001 (timestamp ms < 10^12) asumimos
+// segundos y multiplicamos por 1000.
+function safeIsoToLabel(iso: string | null): string | null {
+  if (!iso) return null;
+  let d = new Date(iso);
+  if (d.getTime() < 1e12) {
+    // Era segundos, no ms — multiplicar
+    d = new Date(d.getTime() * 1000);
+  }
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 ---
 
 <Base
