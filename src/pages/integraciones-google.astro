@@ -1,0 +1,233 @@
+---
+// /integraciones-google — Documentación del uso de las APIs de Google
+// (GA4 + Search Console) por parte de Startidea como aplicación OAuth.
+//
+// Esta página existe específicamente para satisfacer el requisito de
+// Google OAuth Verification: "homepage debe explicar el propósito de la
+// solicitud y el nombre debe coincidir con el de la pantalla de consent".
+// Está enlazada desde el footer y desde la pantalla de consent.
+
+import Base from "@/layouts/Base.astro";
+import { breadcrumbList, SITE_URL } from "@/lib/jsonld";
+
+const jsonLd = [
+  breadcrumbList([
+    { name: "Inicio", url: `${SITE_URL}/` },
+    { name: "Integraciones Google", url: `${SITE_URL}/integraciones-google` },
+  ]),
+];
+---
+
+<Base
+  title="Integraciones con Google Analytics y Search Console — Startidea"
+  description="Cómo Startidea, agencia de comunicación social en Granada, utiliza las APIs de Google Analytics 4 y Google Search Console para sus clientes. Datos accedidos, finalidad, almacenamiento y derechos."
+  ogSlug="page/integraciones-google"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20 lg:py-24">
+    <div class="container-x">
+      <span class="label">— Integraciones · Google</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Startidea conecta con<br />
+        <em class="italic text-magenta">Google Analytics y Search Console</em>.
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Startidea es una agencia de comunicación social con sede en Granada (España), fundada en febrero de 2011 por Mario Pablo Sánchez Barrón. Una de sus líneas de trabajo es diseñar, mantener y posicionar las webs de organizaciones del tercer sector, instituciones y empresas con propósito. Para hacer ese seguimiento de forma honesta, Startidea se conecta —como aplicación OAuth— a Google Analytics 4 y Google Search Console de las propiedades que los propios clientes le autorizan a consultar.
+      </p>
+      <p class="reveal mt-6 max-w-measure text-ink/75">
+        Esta página explica con detalle qué datos se acceden, para qué, cómo se almacenan y qué derechos tienes si tu organización es cliente de Startidea o si te has encontrado con la pantalla de consentimiento de Google y quieres saber más antes de aceptar.
+      </p>
+    </div>
+  </section>
+
+  <!-- Para qué se usa -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Finalidad</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Para qué <em class="italic text-magenta">se conecta</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-ink/80">
+            Startidea utiliza las APIs oficiales de Google únicamente para tareas internas de medición y posicionamiento web de las propiedades que el cliente autoriza expresamente:
+          </p>
+
+          <ul class="mt-8 space-y-5 border-y border-ink/15 py-6">
+            <li class="grid grid-cols-12 gap-x-6">
+              <span class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-3">Google Analytics 4</span>
+              <span class="col-span-12 text-ink/85 lg:col-span-9 lg:mt-0">
+                Lectura de los informes de tráfico de las propiedades GA4 que el cliente comparte (sesiones, usuarios únicos, páginas vistas, fuentes de tráfico, eventos personalizados). Sirve para producir el informe SEO mensual que Startidea entrega a cada cliente y para detectar caídas de tráfico, contenidos a optimizar o nuevas oportunidades editoriales.
+              </span>
+            </li>
+            <li class="grid grid-cols-12 gap-x-6">
+              <span class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-3">Search Console</span>
+              <span class="col-span-12 text-ink/85 lg:col-span-9 lg:mt-0">
+                Lectura de impresiones, clics, CTR y posición media de las consultas que reciben las propiedades web del cliente en Google Search. Identifica páginas que rinden por debajo de su potencial, errores de rastreo y oportunidades de contenido nuevo basadas en intención de búsqueda real.
+              </span>
+            </li>
+          </ul>
+
+          <p class="mt-8 max-w-measure text-ink/80">
+            Startidea <strong>no</strong> escribe ni modifica nada en las propiedades Google del cliente, no envía eventos, no publica anuncios, no accede a cuentas personales, no lee correos, no comparte datos con terceros para marketing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos accedidos -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Datos accedidos</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Permisos <em class="italic text-magenta">solicitados</em>.
+          </h2>
+
+          <dl class="mt-10 divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-6 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">
+                analytics.readonly
+              </dt>
+              <dd class="col-span-12 mt-2 text-ink/80 lg:col-span-8 lg:mt-0">
+                Acceso de <em>solo lectura</em> a los informes y configuración de las propiedades de Google Analytics 4 que el usuario seleccione durante el flujo de consentimiento. Sin permisos de escritura. Sin acceso a Universal Analytics (deprecado).
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-6 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">
+                webmasters.readonly
+              </dt>
+              <dd class="col-span-12 mt-2 text-ink/80 lg:col-span-8 lg:mt-0">
+                Acceso de <em>solo lectura</em> a las propiedades de Google Search Console verificadas por el usuario: estadísticas de búsqueda, sitemap y problemas de cobertura.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-6 py-6">
+              <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">
+                userinfo.email + openid
+              </dt>
+              <dd class="col-span-12 mt-2 text-ink/80 lg:col-span-8 lg:mt-0">
+                Email de la cuenta Google con la que se autoriza la conexión. Se usa exclusivamente para identificar al usuario administrador dentro del panel de Startidea. No se utiliza para envíos de marketing ni se comparte.
+              </dd>
+            </div>
+          </dl>
+
+          <p class="mt-8 max-w-measure text-ink/80">
+            El usuario puede revisar y revocar estos permisos en cualquier momento desde <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener" class="text-magenta hover:underline">myaccount.google.com/permissions</a>, sin tener que contactar a Startidea.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Almacenamiento y seguridad -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Almacenamiento</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cómo se <em class="italic text-magenta">almacenan</em>.
+          </h2>
+
+          <ol class="reveal-stagger mt-10 divide-y divide-ink/15 border-y border-ink/15">
+            <li class="grid grid-cols-12 gap-x-8 py-7">
+              <span class="col-span-12 font-mono text-ink-mute lg:col-span-1">01</span>
+              <div class="col-span-12 lg:col-span-11">
+                <h3 class="font-display text-xl text-ink">Tokens cifrados en servidor propio</h3>
+                <p class="mt-2 max-w-measure text-ink/80">
+                  Los refresh tokens y access tokens devueltos por Google viven cifrados en una base de datos relacional alojada en servidores propios de Startidea en la Unión Europea (Hostinger VPS, datacenter ES). No se exponen al cliente del navegador ni viajan fuera del backend.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-7">
+              <span class="col-span-12 font-mono text-ink-mute lg:col-span-1">02</span>
+              <div class="col-span-12 lg:col-span-11">
+                <h3 class="font-display text-xl text-ink">Datos derivados como snapshots agregados</h3>
+                <p class="mt-2 max-w-measure text-ink/80">
+                  Los datos descargados desde GA4 y Search Console se guardan como agregados diarios (visitas por página, posición por consulta, etc.) — no como eventos de usuario individuales. Estos agregados se utilizan únicamente dentro del panel admin de Startidea, accesible solo por el equipo de Startidea.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-7">
+              <span class="col-span-12 font-mono text-ink-mute lg:col-span-1">03</span>
+              <div class="col-span-12 lg:col-span-11">
+                <h3 class="font-display text-xl text-ink">Sin compartir con terceros</h3>
+                <p class="mt-2 max-w-measure text-ink/80">
+                  Los datos accedidos vía las APIs de Google nunca se venden, ceden ni utilizan para entrenar modelos de inteligencia artificial. Se procesan exclusivamente para producir los informes que Startidea entrega a cada cliente como parte del contrato de servicios.
+                </p>
+              </div>
+            </li>
+            <li class="grid grid-cols-12 gap-x-8 py-7">
+              <span class="col-span-12 font-mono text-ink-mute lg:col-span-1">04</span>
+              <div class="col-span-12 lg:col-span-11">
+                <h3 class="font-display text-xl text-ink">Eliminación a petición</h3>
+                <p class="mt-2 max-w-measure text-ink/80">
+                  Cualquier cliente puede solicitar la eliminación inmediata de sus tokens y datos derivados escribiendo a <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>. La supresión se realiza en un plazo máximo de 7 días naturales, incluyendo copias de seguridad rotatorias.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Política y contacto -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Más información</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cumplimiento <em class="italic text-magenta">y contacto</em>.
+          </h2>
+
+          <p class="mt-6 max-w-measure text-ink/80">
+            El uso que Startidea hace de la información recibida desde las APIs de Google se ajusta a la <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener" class="text-magenta hover:underline">Política de Datos de Usuario de las APIs de Google</a>, incluyendo los requisitos de uso limitado para los datos clasificados como Sensitive/Restricted.
+          </p>
+
+          <div class="mt-10 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-3">
+            <div class="bg-paper p-6">
+              <p class="label">— Política de privacidad</p>
+              <p class="mt-3 text-sm text-ink/80">
+                Detalles completos sobre tratamiento de datos personales, base legal y derechos del interesado.
+              </p>
+              <a href="/privacidad" class="mt-4 inline-block text-magenta hover:underline">/privacidad →</a>
+            </div>
+            <div class="bg-paper p-6">
+              <p class="label">— Aviso legal</p>
+              <p class="mt-3 text-sm text-ink/80">
+                Datos identificativos del responsable, condiciones de uso del sitio.
+              </p>
+              <a href="/aviso-legal" class="mt-4 inline-block text-magenta hover:underline">/aviso-legal →</a>
+            </div>
+            <div class="bg-paper p-6">
+              <p class="label">— Revocar acceso</p>
+              <p class="mt-3 text-sm text-ink/80">
+                Desde la consola Google del usuario, en cualquier momento.
+              </p>
+              <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener" class="mt-4 inline-block text-magenta hover:underline">myaccount.google.com →</a>
+            </div>
+          </div>
+
+          <div class="mt-10 border-l-2 border-magenta bg-paper p-5 text-sm text-ink/80">
+            <p>
+              <strong>Responsable del tratamiento</strong>: Mario Pablo Sánchez Barrón (Startidea), CIF B19583632, C/ Conde Cifuentes 33, 18005 Granada, España. Contacto: <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
