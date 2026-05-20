@@ -1,0 +1,39 @@
+src/components/AdminBar.astro
+  s_fc84abf46d9a4c::t_ef2f6c843e0717 51-59
+  s_fc84abf46d9a4c::t_5dced1228bbbaa 125-131
+  s_fc84abf46d9a4c::t_cc317f3023ddf3 172-173
+src/pages/admin/leads/[id]/notes.ts
+  s_fc84abf46d9a4c::t_e7d248c26c048f 1-23
+src/lib/hub-admin.ts
+  s_fc84abf46d9a4c::t_4dbc96f80a39e9 1-138
+src/pages/admin/leads/[id].astro
+  s_fc84abf46d9a4c::t_31ccf6ebcc3293 1-236
+src/pages/diagnostico/nuevo.astro
+  s_fc84abf46d9a4c::t_72fba7c9883eb7 2-19,23-25,29,34,41-43,48-50,54-60,75-84,87-90,93-108,110-116,118-121,124-131,133-136,139-146,148-151,161-162,164-169,172-181,185-195,198-275,284-285,287-290,294-308,312-328,332-346,348-363,366-372,374-377,380,382,387-402,404-405,410-435,439-454,457,459-510,513-516,519-520,524,526-594,596-606,608-680,682-689,691-698
+src/pages/presupuesto/index.astro
+  s_fc84abf46d9a4c::t_3fe77319a38f2e 1-76
+src/pages/presupuesto/nuevo.astro
+  s_fc84abf46d9a4c::t_68c3341d7794ac 1-320
+src/pages/api/admin/bar-data.ts
+  s_fc84abf46d9a4c::t_11bffad6736138 13-14,49-53,55-65,71-72
+src/pages/admin/leads/index.astro
+  s_fc84abf46d9a4c::t_7022a7d4951033 1-223
+src/pages/admin/leads/[id]/status.ts
+  s_fc84abf46d9a4c::t_50be337958fcd4 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "1bdaa0d91f7a7ea343eed7524a11fb33a7ce2998",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
