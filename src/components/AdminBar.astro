@@ -1,0 +1,168 @@
+---
+// AdminBar — Barra superior solo visible si la cookie de admin es válida.
+//
+// Se renderiza en SSR (server-only) leyendo Astro.cookies. Si no hay sesión,
+// el componente devuelve nada y no añade markup ni JS.
+//
+// El contexto editorial (qué editar) se calcula a partir del path actual:
+//   /              → KPIs + accesos rápidos al HUB
+//   /notas/<slug>  → botón "Editar nota" en HUB
+//   /casos/<slug>  → botón "Editar caso" (todavía no hay admin de casos)
+//   /subvenciones* → link al admin de subvenciones del HUB
+//   /diagnostico   → link a leads del diagnóstico
+
+import { isAdminLoggedIn } from "@/lib/admin-session";
+
+const isAdmin = isAdminLoggedIn(Astro.cookies);
+
+if (!isAdmin) {
+  // No renderiza nada para usuarios anónimos
+}
+
+const currentPath = Astro.url.pathname;
+
+let contextLabel = "Home";
+let editLabel: string | null = null;
+let editUrl: string | null = null;
+
+if (currentPath.startsWith("/notas/")) {
+  const slug = currentPath.replace("/notas/", "").replace(/\/$/, "");
+  if (slug && slug !== "") {
+    contextLabel = `Nota · ${slug}`;
+    editLabel = "Editar en HUB";
+    editUrl = `https://hub.startidea.tech/startidea/admin/notas/${slug}`;
+  } else {
+    contextLabel = "Listado de notas";
+    editUrl = `https://hub.startidea.tech/startidea/admin/notas`;
+    editLabel = "Gestionar en HUB";
+  }
+} else if (currentPath.startsWith("/casos/")) {
+  const slug = currentPath.replace("/casos/", "").replace(/\/$/, "");
+  contextLabel = slug && slug !== "" ? `Caso · ${slug}` : "Listado de casos";
+  editLabel = "Gestionar contenido";
+  editUrl = `https://hub.startidea.tech/startidea/admin/notas`;
+} else if (currentPath.startsWith("/subvenciones")) {
+  contextLabel = "Subvenciones";
+  editLabel = "Admin subvenciones";
+  editUrl = `https://hub.startidea.tech/startidea/admin/subsidies`;
+} else if (currentPath.startsWith("/diagnostico")) {
+  contextLabel = "Diagnóstico";
+  editLabel = "Ver leads";
+  editUrl = `https://hub.startidea.tech/startidea/admin/sales`;
+} else if (currentPath.startsWith("/laboratorio")) {
+  contextLabel = "Laboratorio";
+} else if (currentPath === "/") {
+  contextLabel = "Home";
+} else {
+  contextLabel = currentPath;
+}
+
+const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
+---
+
+{isAdmin && (
+  <>
+    <div
+      id="admin-bar"
+      class="fixed left-0 right-0 top-0 z-[100] flex h-[38px] items-center gap-3 border-b border-magenta bg-ink px-4 text-paper font-mono text-[10px] uppercase tracking-widest sm:gap-4 sm:px-5 sm:text-[11px]"
+      role="region"
+      aria-label="Barra de administrador"
+    >
+      <!-- Marca + contexto -->
+      <a
+        href={HUB_DASHBOARD}
+        target="_blank"
+        rel="noopener"
+        class="flex shrink-0 items-center gap-2 hover:text-magenta"
+      >
+        <span class="text-magenta">●</span>
+        <span class="opacity-90">Startidea Admin</span>
+      </a>
+
+      <span class="hidden opacity-30 sm:inline">/</span>
+
+      <span
+        id="admin-context"
+        class="hidden truncate text-paper/70 sm:inline"
+        title={contextLabel}
+      >
+        {contextLabel}
+      </span>
+
+      {editUrl && (
+        <a
+          href={editUrl}
+          target="_blank"
+          rel="noopener"
+          class="hidden shrink-0 text-magenta hover:underline md:inline"
+        >
+          {editLabel} ↗
+        </a>
+      )}
+
+      <!-- Spacer -->
+      <span class="flex-1"></span>
+
+      <!-- KPIs ligeros -->
+      <span
+        id="admin-kpis"
+        class="hidden text-paper/55 lg:inline"
+        aria-live="polite"
+      >
+        cargando…
+      </span>
+
+      <!-- Quick links -->
+      <a
+        href={`${HUB_DASHBOARD}/admin/subsidies`}
+        target="_blank"
+        rel="noopener"
+        class="shrink-0 hover:text-magenta"
+        title="Admin subvenciones (HUB)"
+      >
+        HUB ↗
+      </a>
+
+      <a
+        href="/admin/logout"
+        class="shrink-0 hover:text-magenta"
+        title="Cerrar sesión admin"
+      >
+        Salir
+      </a>
+    </div>
+
+    <style is:global>
+      /* Empuja todo el contenido y los headers sticky 38px hacia abajo. */
+      body { padding-top: 38px; }
+      body header.sticky { top: 38px !important; }
+      html { scroll-padding-top: 118px !important; } /* 38 + 80 del nav */
+    </style>
+
+    <script>
+      // Carga KPIs ligeros en background. Si falla, la barra sigue siendo útil.
+      (async () => {
+        try {
+          const r = await fetch("/api/admin/bar-data", { credentials: "same-origin" });
+          if (!r.ok) {
+            const el = document.getElementById("admin-kpis");
+            if (el) el.textContent = "kpis: —";
+            return;
+          }
+          const data = await r.json();
+          const el = document.getElementById("admin-kpis");
+          if (!el) return;
+          const parts: string[] = [];
+          if (data.subsidies_total != null)
+            parts.push(`Subv ${data.subsidies_total.toLocaleString("es-ES")}`);
+          if (data.matches_new != null) parts.push(`Match ${data.matches_new}`);
+          if (data.leads_today != null) parts.push(`Lead ${data.leads_today}`);
+          el.textContent = parts.length ? parts.join(" · ") : "kpis: —";
+        } catch {
+          const el = document.getElementById("admin-kpis");
+          if (el) el.textContent = "kpis: —";
+        }
+      })();
+    </script>
+  </>
+)}

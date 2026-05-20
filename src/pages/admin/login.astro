@@ -1,0 +1,88 @@
+---
+// /admin/login — Punto de entrada del admin overlay de startidea.es.
+//
+// Pegas el ADMIN_TOKEN (el mismo del .env del container, también usado
+// por los endpoints /api/admin/*) y te setea cookie HTTP-only de 30 días.
+// Después, AdminBar aparece arriba en todas las páginas.
+
+import Base from "@/layouts/Base.astro";
+import { setAdminSession, isAdminLoggedIn } from "@/lib/admin-session";
+
+export const prerender = false;
+
+let error: string | null = null;
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const token = String(data.get("token") ?? "").trim();
+  if (!token) {
+    error = "Token vacío";
+  } else if (!setAdminSession(Astro.cookies, token)) {
+    error = "Token inválido";
+  } else {
+    const next = String(data.get("next") ?? "/") || "/";
+    return Astro.redirect(next.startsWith("/") ? next : "/");
+  }
+} else if (isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect("/");
+}
+
+const nextParam = Astro.url.searchParams.get("next") ?? "/";
+---
+
+<Base
+  title="Admin · Startidea"
+  description="Acceso al panel admin de Startidea."
+  ogSlug="page/admin-login"
+>
+  <section class="bg-paper py-24 md:py-32">
+    <div class="container-x">
+      <div class="mx-auto max-w-md">
+        <span class="label">— Admin</span>
+        <h1 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Acceso<br />
+          <em class="italic text-magenta">restringido</em>.
+        </h1>
+        <p class="mt-6 text-ink/75">
+          Esta página solo está pensada para administradores de Startidea.
+          Si no eres Mario, <a href="/contacto" class="text-magenta hover:underline">contacta primero</a>.
+        </p>
+
+        <form method="POST" class="mt-10 space-y-5" autocomplete="off">
+          <input type="hidden" name="next" value={nextParam} />
+          <div>
+            <label
+              for="token"
+              class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute"
+            >
+              ADMIN_TOKEN
+            </label>
+            <input
+              id="token"
+              type="password"
+              name="token"
+              required
+              autofocus
+              class="mt-2 block w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+              placeholder="••••••••••••••••••••"
+            />
+          </div>
+          <button type="submit" class="btn w-full">
+            Entrar al panel <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        {error && (
+          <p class="mt-4 border-l-2 border-magenta pl-3 text-sm text-magenta">
+            {error}
+          </p>
+        )}
+
+        <p class="mt-10 border-t border-ink/15 pt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          El token vive en el .env del container.<br />
+          La cookie es HTTP-only y dura 30 días.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

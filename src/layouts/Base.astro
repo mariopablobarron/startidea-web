@@ -25,6 +25,7 @@ import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
 import JsonLd from '@/components/JsonLd.astro';
+import AdminBar from '@/components/AdminBar.astro';
 
 interface Props {
   title?: string;
@@ -100,6 +101,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="3535ee03-30aa-4c5c-a74e-4650ed465c21"></script>
   </head>
   <body class="overflow-x-hidden pb-[72px] xl:pb-0">
+    <AdminBar />
     <Splash />
     <Nav />
     <main>
