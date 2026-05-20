@@ -1,0 +1,30 @@
+src/pages/admin/login.astro
+  s_fc84abf46d9a4c::t_b8f98edcbb53ab 1-88
+src/pages/api/admin/bar-data.ts
+  s_fc84abf46d9a4c::t_29c36b7d3b4282 1-82
+src/lib/admin-session.ts
+  s_fc84abf46d9a4c::t_ab5a05e5af1240 1-63
+src/layouts/Base.astro
+  s_fc84abf46d9a4c::t_9777a19be5f80b 104
+  s_fc84abf46d9a4c::t_ec9a36e952c58c 28
+src/components/AdminBar.astro
+  s_fc84abf46d9a4c::t_de9b71072fe0e9 1-168
+src/pages/admin/logout.ts
+  s_fc84abf46d9a4c::t_6a5c2436317708 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "5c584b4d07dcc268164fa97681178eddf27b83b4",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
