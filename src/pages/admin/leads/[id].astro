@@ -1,0 +1,236 @@
+---
+// /admin/leads/[id] — Detalle de un Diagnosis o Presupuesto.
+
+import Base from "@/layouts/Base.astro";
+import { isAdminLoggedIn } from "@/lib/admin-session";
+import { getDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/admin/leads");
+
+const hubConfigured = isHubAdminConfigured();
+const res = hubConfigured ? await getDiagnosis(id) : null;
+const item = res?.item ?? null;
+
+const audienceLabels: Record<string, string> = {
+  empresa: "Empresa",
+  institucion: "Institución",
+  "entidad-social": "Entidad social",
+  emprendedor: "Emprendedor/a",
+  "tercer-sector": "Entidad social",
+};
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  try {
+    return new Date(iso).toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function row(label: string, value: unknown): { label: string; value: string } | null {
+  if (value === null || value === undefined || value === "") return null;
+  const str = typeof value === "boolean" ? (value ? "Sí" : "No") : String(value);
+  return { label, value: str };
+}
+
+const STATUS_OPTIONS = ["NEW", "REVIEWED", "CONTACTED", "MEETING", "WON", "LOST"];
+---
+
+<Base
+  title={item ? `${item.name} — Lead · Admin` : "Lead no encontrado"}
+  description="Detalle de lead capturado por el wizard de diagnóstico o presupuesto."
+  ogSlug="page/admin-lead-detail"
+  noindex={true}
+>
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/admin/leads" class="hover:text-magenta">← Volver al listado</a>
+      </p>
+
+      {!hubConfigured && (
+        <div class="mt-8 border-l-2 border-magenta bg-paper-warm p-5 text-sm text-ink/80">
+          Falta configurar <code class="font-mono">HUB_ADMIN_SECRET</code> en el .env del container.
+        </div>
+      )}
+
+      {hubConfigured && !item && (
+        <div class="mt-8 border-l-2 border-magenta bg-paper-warm p-5 text-sm text-magenta">
+          No se pudo cargar el lead <code class="font-mono">{id}</code>.
+        </div>
+      )}
+
+      {item && (
+        <>
+          <span class="label mt-6 inline-block">
+            — {item.kind === "presupuesto" ? "Presupuesto" : "Diagnóstico"} · {audienceLabels[item.audience] ?? item.audience}
+            {item.subType && <span> · {item.subType.replace(/-/g, " ")}</span>}
+          </span>
+          <h1 class="mt-4 font-display text-display-md leading-tight text-ink">
+            {item.name}<br />
+            <em class="italic text-magenta">{item.organizationName}</em>
+          </h1>
+
+          <!-- Status + acciones -->
+          <div class="mt-8 flex flex-wrap items-center gap-3 border-y border-ink/15 py-5">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Estado</span>
+            <form
+              method="POST"
+              action={`/admin/leads/${item.id}/status`}
+              class="flex items-center gap-3"
+            >
+              <select
+                name="status"
+                class="border border-ink/20 bg-paper px-3 py-2 font-mono text-xs uppercase tracking-widest text-ink"
+              >
+                {STATUS_OPTIONS.map((s) => (
+                  <option value={s} selected={item.status === s}>{s}</option>
+                ))}
+              </select>
+              <button type="submit" class="btn-ghost !py-2 text-xs">Guardar</button>
+            </form>
+            <span class="ml-auto font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Capturado · {formatDate(item.createdAt)}
+            </span>
+          </div>
+
+          <!-- Bloques de datos -->
+          <div class="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
+            <div class="space-y-10">
+              <!-- Reto -->
+              <div>
+                <span class="label">— El reto</span>
+                <p class="mt-3 whitespace-pre-wrap font-display text-lg leading-snug text-ink">
+                  {item.challenge}
+                </p>
+                {item.triedBefore && (
+                  <div class="mt-6">
+                    <span class="label">— Lo que probaron antes</span>
+                    <p class="mt-2 whitespace-pre-wrap text-ink/80">{item.triedBefore}</p>
+                  </div>
+                )}
+              </div>
+
+              <!-- Respuestas adicionales (answers JSON) -->
+              {item.answers && Object.keys(item.answers).length > 0 && (
+                <div>
+                  <span class="label">— Respuestas adicionales</span>
+                  <dl class="mt-3 divide-y divide-ink/15 border-y border-ink/15">
+                    {Object.entries(item.answers).map(([k, v]) => (
+                      <div class="grid grid-cols-12 gap-x-6 py-3">
+                        <dt class="col-span-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                          {k.replace(/_/g, " ")}
+                        </dt>
+                        <dd class="col-span-8 text-sm text-ink">
+                          {Array.isArray(v)
+                            ? v.join(", ")
+                            : typeof v === "object"
+                              ? JSON.stringify(v)
+                              : String(v)}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              )}
+
+              <!-- Notas internas -->
+              <div>
+                <span class="label">— Notas internas (solo admin)</span>
+                <form
+                  method="POST"
+                  action={`/admin/leads/${item.id}/notes`}
+                  class="mt-3 space-y-3"
+                >
+                  <textarea
+                    name="internalNotes"
+                    rows="5"
+                    maxlength="4000"
+                    class="w-full border border-ink/20 bg-paper px-4 py-3 text-sm text-ink focus:border-magenta focus:outline-none"
+                    placeholder="Contexto de la llamada, próximos pasos, presupuesto detallado…"
+                  >{item.internalNotes ?? ""}</textarea>
+                  <button type="submit" class="btn-ghost !py-2 text-sm">
+                    Guardar notas
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Lateral: contacto + meta -->
+            <aside class="space-y-8">
+              <div>
+                <span class="label">— Contacto</span>
+                <dl class="mt-3 divide-y divide-ink/15 border-y border-ink/15">
+                  {[
+                    row("Email", item.email),
+                    row("Teléfono", item.phone),
+                    row("Rol", item.role),
+                    row("Web", item.website),
+                  ].filter((x): x is { label: string; value: string } => x !== null).map((r) => (
+                    <div class="py-3 text-sm">
+                      <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{r.label}</dt>
+                      <dd class="mt-1 break-words text-ink">{r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div>
+                <span class="label">— Proyecto</span>
+                <dl class="mt-3 divide-y divide-ink/15 border-y border-ink/15">
+                  {[
+                    row("Etapa", item.stage),
+                    row("Presupuesto", item.budgetRange),
+                    row("Plazo", item.timeframe),
+                    row("Equipo", item.teamSize),
+                    row("ASE activo", item.asePresent),
+                    row("Misión", item.mission),
+                    row("Mezcla financiación", item.fundingMix),
+                    row("Tipo institución", item.institutionType),
+                    row("Fuente", item.source),
+                  ].filter((x): x is { label: string; value: string } => x !== null).map((r) => (
+                    <div class="py-3 text-sm">
+                      <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{r.label}</dt>
+                      <dd class="mt-1 break-words text-ink">{r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div>
+                <span class="label">— Trazabilidad</span>
+                <dl class="mt-3 divide-y divide-ink/15 border-y border-ink/15">
+                  {[
+                    row("Capturado", formatDate(item.createdAt)),
+                    row("Actualizado", formatDate(item.updatedAt)),
+                    row("IP", item.ip),
+                    row("User-Agent", item.userAgent ? item.userAgent.slice(0, 60) + "…" : null),
+                  ].filter((x): x is { label: string; value: string } => x !== null).map((r) => (
+                    <div class="py-3 text-xs">
+                      <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{r.label}</dt>
+                      <dd class="mt-1 break-words text-ink/75">{r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </aside>
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

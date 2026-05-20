@@ -1,40 +1,63 @@
 ---
-import Base from '@/layouts/Base.astro';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+// /diagnostico/nuevo — Wizard adaptativo de captura.
+//
+// 5 pasos. Cada paso muestra solo los inputs que aplican al perfil que
+// el usuario ha elegido en el paso 1 (audience) y en el paso 2 (subType).
+//
+// Categorías (audience):
+//   - empresa            → PYME / Gran empresa / Startup / Autónomo
+//   - institucion        → Eclesial / Pública / Educativa / Sanitaria
+//   - entidad-social     → Asociación / Fundación / Cooperativa social /
+//                          ONG / Red
+//   - emprendedor        → Idea / MVP / Validación / Escalado
+//
+// Backend: POST a /api/diagnosticos/intake del HUB con kind="diagnostico"
+// + answers JSON con campos extra (mission, fundingMix, ASE, equipo,
+// financiación inicial…).
+
+import Base from "@/layouts/Base.astro";
+import { breadcrumbList, SITE_URL } from "@/lib/jsonld";
 
 const jsonLd = [
   breadcrumbList([
-    { name: 'Inicio', url: `${SITE_URL}/` },
-    { name: 'Diagnóstico', url: `${SITE_URL}/diagnostico` },
-    { name: 'Nuevo', url: `${SITE_URL}/diagnostico/nuevo` },
+    { name: "Inicio", url: `${SITE_URL}/` },
+    { name: "Diagnóstico", url: `${SITE_URL}/diagnostico` },
+    { name: "Nuevo", url: `${SITE_URL}/diagnostico/nuevo` },
   ]),
 ];
 
-// Endpoint hub para recibir el form (CORS habilitado al receiver)
-const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
+const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 ---
 
 <Base
   title="Nuevo diagnóstico — Startidea"
-  description="Cuestionario de 3 minutos para que Startidea prepare un briefing antes de la primera reunión."
+  description="Cuestionario adaptativo de 5 pasos. Startidea recibe tu briefing y prepara el primer análisis antes de hablar."
   ogSlug="page/diagnostico-nuevo"
   noindex={true}
   jsonLd={jsonLd}
 >
   <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
     <div class="container-x">
-      <span class="label">— Diagnóstico · paso <span data-step-label>1</span> de 3</span>
+      <span class="label">
+        — Diagnóstico · paso <span data-step-label>1</span> de 5
+      </span>
       <h1 class="mt-4 font-display text-display-lg leading-[0.98] text-ink">
         Cuéntanos tu <em class="italic text-magenta">reto</em>.
       </h1>
       <p class="mt-6 max-w-measure text-ink/80">
-        Tres pasos. Tres minutos. Sin coste. Cuando termines, Startidea recibe tu cuestionario y prepara un briefing antes de llamarte.
+        Cinco pasos. Las preguntas se adaptan a tu perfil. Sin coste. Cuando
+        termines, Startidea recibe el cuestionario y prepara el briefing
+        antes de llamarte.
       </p>
 
       <!-- Progress bar -->
-      <div class="mt-8 flex items-center gap-2 max-w-md" aria-hidden="true">
-        <div class="h-1 flex-1 bg-ink/15 overflow-hidden">
-          <div data-progress class="h-full bg-magenta transition-all duration-300" style="width: 33%"></div>
+      <div class="mt-8 flex max-w-md items-center gap-2" aria-hidden="true">
+        <div class="h-1 flex-1 overflow-hidden bg-ink/15">
+          <div
+            data-progress
+            class="h-full bg-magenta transition-all duration-300"
+            style="width: 20%"
+          ></div>
         </div>
       </div>
     </div>
@@ -49,74 +72,83 @@ const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
         novalidate
       >
         <!-- honeypot anti-bot -->
-        <input type="text" name="honeypot" tabindex="-1" autocomplete="off" class="absolute -left-[9999px]" aria-hidden="true" />
+        <input
+          type="text"
+          name="honeypot"
+          tabindex="-1"
+          autocomplete="off"
+          class="absolute -left-[9999px]"
+          aria-hidden="true"
+        />
 
-        <!-- ============ PASO 1: CONTEXTO ============ -->
+        <!-- ============ PASO 1: AUDIENCE ============ -->
         <fieldset data-step="1" class="space-y-8">
           <div>
-            <h2 class="font-display text-2xl text-ink">Quién eres</h2>
-            <p class="mt-2 text-sm text-ink-mute">Lo básico para poder llamarte.</p>
+            <h2 class="font-display text-2xl text-ink">¿Quién eres?</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Esto adapta las preguntas siguientes a tu realidad.
+            </p>
           </div>
 
-          <div class="space-y-2">
-            <label for="name" class="block text-sm font-medium text-ink">Tu nombre</label>
-            <input type="text" id="name" name="name" required minlength="2" maxlength="100"
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-          </div>
-
-          <div class="space-y-2">
-            <label for="email" class="block text-sm font-medium text-ink">Tu email</label>
-            <input type="email" id="email" name="email" required maxlength="200"
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-          </div>
-
-          <div class="space-y-2">
-            <label for="organizationName" class="block text-sm font-medium text-ink">Organización</label>
-            <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
-              placeholder="Nombre completo o razón social"
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-          </div>
-
-          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div class="space-y-2">
-              <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
-              <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-            <div class="space-y-2">
-              <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
-              <input type="tel" id="phone" name="phone" maxlength="40"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <label for="website" class="block text-sm font-medium text-ink">Web de la organización (opcional)</label>
-            <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-          </div>
-
-          <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">¿Qué tipo de organización eres?</span>
-            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
-              <input type="radio" name="audience" value="tercer-sector" required class="mt-1" />
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <label class="group flex cursor-pointer items-start gap-3 border border-ink/20 p-5 transition-colors hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input
+                type="radio"
+                name="audience"
+                value="empresa"
+                required
+                class="mt-1"
+              />
               <span>
-                <span class="block font-medium text-ink">Tercer sector</span>
-                <span class="block text-sm text-ink-mute">ONG, fundación, asociación, cooperativa social.</span>
+                <span class="block font-display text-lg text-ink">Empresa</span>
+                <span class="mt-1 block text-sm text-ink-mute">
+                  PYME, gran empresa, startup, autónomo/a con propósito.
+                </span>
               </span>
             </label>
-            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
-              <input type="radio" name="audience" value="institucion" class="mt-1" />
+
+            <label class="group flex cursor-pointer items-start gap-3 border border-ink/20 p-5 transition-colors hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input
+                type="radio"
+                name="audience"
+                value="institucion"
+                class="mt-1"
+              />
               <span>
-                <span class="block font-medium text-ink">Institución</span>
-                <span class="block text-sm text-ink-mute">Eclesial, pública, educativa, sanitaria.</span>
+                <span class="block font-display text-lg text-ink">Institución</span>
+                <span class="mt-1 block text-sm text-ink-mute">
+                  Eclesial, pública, educativa, sanitaria.
+                </span>
               </span>
             </label>
-            <label class="flex items-start gap-3 cursor-pointer p-4 border border-ink/20 hover:border-magenta/60">
-              <input type="radio" name="audience" value="empresa" class="mt-1" />
+
+            <label class="group flex cursor-pointer items-start gap-3 border border-ink/20 p-5 transition-colors hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input
+                type="radio"
+                name="audience"
+                value="entidad-social"
+                class="mt-1"
+              />
               <span>
-                <span class="block font-medium text-ink">Empresa con propósito</span>
-                <span class="block text-sm text-ink-mute">Empresa con programa ASE o vocación de impacto.</span>
+                <span class="block font-display text-lg text-ink">Entidad social</span>
+                <span class="mt-1 block text-sm text-ink-mute">
+                  Asociación, fundación, cooperativa social, ONG, red.
+                </span>
+              </span>
+            </label>
+
+            <label class="group flex cursor-pointer items-start gap-3 border border-ink/20 p-5 transition-colors hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input
+                type="radio"
+                name="audience"
+                value="emprendedor"
+                class="mt-1"
+              />
+              <span>
+                <span class="block font-display text-lg text-ink">Emprendedor/a</span>
+                <span class="mt-1 block text-sm text-ink-mute">
+                  Persona con una idea o proyecto en marcha (no constituido aún o solo/a).
+                </span>
               </span>
             </label>
           </div>
@@ -126,48 +158,121 @@ const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
           </div>
         </fieldset>
 
-        <!-- ============ PASO 2: RETO ============ -->
-        <fieldset data-step="2" class="space-y-8 hidden">
+        <!-- ============ PASO 2: SUB-TIPO + CONTACTO ============ -->
+        <fieldset data-step="2" class="hidden space-y-8">
           <div>
-            <h2 class="font-display text-2xl text-ink">El reto</h2>
-            <p class="mt-2 text-sm text-ink-mute">Sé concreto. No hace falta que esté redactado bonito.</p>
+            <h2 class="font-display text-2xl text-ink">
+              ¿Más concretamente?
+            </h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Si no encaja exactamente, elige lo más parecido.
+            </p>
           </div>
 
-          <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">¿En qué etapa estáis?</span>
-            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
-                <input type="radio" name="stage" value="idea" required />
-                <span class="text-sm">Idea en formación</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
-                <input type="radio" name="stage" value="lanzamiento" />
-                <span class="text-sm">Lanzamiento reciente</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
-                <input type="radio" name="stage" value="consolidado" />
-                <span class="text-sm">Proyecto consolidado</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer p-3 border border-ink/20 hover:border-magenta/60">
-                <input type="radio" name="stage" value="replanteamiento" />
-                <span class="text-sm">Replanteamiento estratégico</span>
-              </label>
+          <!-- Sub-tipos: empresa -->
+          <div data-subtype-for="empresa" class="hidden space-y-3">
+            <span class="block text-sm font-medium text-ink">Tipo de empresa</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {["pyme", "gran-empresa", "startup", "autonomo"].map((v) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="subType" value={v} class="sr-only" />
+                  <span>{v === "pyme" ? "PYME" : v === "gran-empresa" ? "Gran empresa" : v === "startup" ? "Startup" : "Autónomo/a"}</span>
+                </label>
+              ))}
             </div>
           </div>
 
-          <div class="space-y-2">
-            <label for="challenge" class="block text-sm font-medium text-ink">¿Qué reto quieres resolver?</label>
-            <textarea id="challenge" name="challenge" required minlength="20" maxlength="2000" rows="6"
-              placeholder="Ej: Necesitamos profesionalizar la comunicación externa. Tenemos 1.200 socios pero la captación nueva está estancada hace dos años."
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
-            <p class="text-xs text-ink-mute"><span data-count-challenge>0</span> / 2000</p>
+          <!-- Sub-tipos: institucion -->
+          <div data-subtype-for="institucion" class="hidden space-y-3">
+            <span class="block text-sm font-medium text-ink">Tipo de institución</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {["eclesial", "publica", "educativa", "sanitaria"].map((v) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="subType" value={v} class="sr-only" />
+                  <span>{v === "publica" ? "Pública" : v.charAt(0).toUpperCase() + v.slice(1)}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
-          <div class="space-y-2">
-            <label for="triedBefore" class="block text-sm font-medium text-ink">¿Qué habéis probado antes? (opcional)</label>
-            <textarea id="triedBefore" name="triedBefore" maxlength="1500" rows="3"
-              placeholder="Lo que habéis intentado y por qué no terminó de funcionar."
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
+          <!-- Sub-tipos: entidad-social -->
+          <div data-subtype-for="entidad-social" class="hidden space-y-3">
+            <span class="block text-sm font-medium text-ink">Tipo de entidad</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+              {["asociacion", "fundacion", "cooperativa-social", "ong", "red"].map((v) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="subType" value={v} class="sr-only" />
+                  <span>{v === "ong" ? "ONG" : v === "cooperativa-social" ? "Cooperativa social" : v === "red" ? "Red / Federación" : v.charAt(0).toUpperCase() + v.slice(1)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Sub-tipos: emprendedor -->
+          <div data-subtype-for="emprendedor" class="hidden space-y-3">
+            <span class="block text-sm font-medium text-ink">¿En qué momento estás?</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {[
+                ["idea", "Solo una idea"],
+                ["mvp", "MVP en marcha"],
+                ["validacion", "Validando con primeros clientes"],
+                ["escalado", "Escalando"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="subType" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Contacto básico (común) -->
+          <div class="space-y-5 border-t border-ink/15 pt-8">
+            <div>
+              <h3 class="font-display text-lg text-ink">Tu contacto</h3>
+              <p class="mt-1 text-sm text-ink-mute">Para poder llamarte.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre</label>
+              <input type="text" id="name" name="name" required minlength="2" maxlength="100"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-medium text-ink">Tu email</label>
+              <input type="email" id="email" name="email" required maxlength="200"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="organizationName" class="block text-sm font-medium text-ink">
+                <span data-org-label-default>Organización</span>
+                <span data-org-label-emprendedor class="hidden">Nombre del proyecto (si lo tiene)</span>
+              </label>
+              <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
+                placeholder="Nombre o razón social"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
+                <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
+                <input type="tel" id="phone" name="phone" maxlength="40"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label for="website" class="block text-sm font-medium text-ink">Web (opcional)</label>
+              <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
           </div>
 
           <div class="flex justify-between pt-4">
@@ -176,258 +281,418 @@ const INTAKE_URL = 'https://hub.startidea.tech/api/diagnosticos/intake';
           </div>
         </fieldset>
 
-        <!-- ============ PASO 3: RECURSOS + ESPECÍFICOS ============ -->
-        <fieldset data-step="3" class="space-y-8 hidden">
+        <!-- ============ PASO 3: SERVICIO + ETAPA ============ -->
+        <fieldset data-step="3" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">¿Qué buscas?</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Puedes marcar varios servicios.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Servicios que te interesan</span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {[
+                ["comunicacion", "Comunicación / identidad"],
+                ["web", "Diseño y desarrollo web"],
+                ["audiovisual", "Audiovisual / podcast"],
+                ["fundraising", "Fundraising / subvenciones"],
+                ["consultoria", "Consultoría / estrategia"],
+                ["otro", "Otro"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="checkbox" name="services" value={v} class="accent-magenta" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3 border-t border-ink/15 pt-6">
+            <span class="block text-sm font-medium text-ink">
+              <span data-stage-label-default>¿En qué etapa estáis?</span>
+              <span data-stage-label-emprendedor class="hidden">¿En qué momento estás?</span>
+            </span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {[
+                ["idea", "Idea en formación"],
+                ["lanzamiento", "Lanzamiento reciente"],
+                ["consolidado", "Proyecto consolidado"],
+                ["replanteamiento", "Replanteamiento estratégico"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="radio" name="stage" value={v} required />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 4: RETO + PREGUNTAS ADAPTATIVAS ============ -->
+        <fieldset data-step="4" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">El reto concreto</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Sé directo. No hace falta que esté redactado bonito.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="challenge" class="block text-sm font-medium text-ink">
+              ¿Qué reto quieres resolver?
+            </label>
+            <textarea id="challenge" name="challenge" required minlength="20" maxlength="2000" rows="6"
+              placeholder="Ej: Necesitamos profesionalizar la comunicación externa. Tenemos 1.200 socios pero la captación nueva está estancada hace dos años."
+              class="w-full resize-y border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none"></textarea>
+            <p class="text-xs text-ink-mute"><span data-count-challenge>0</span> / 2000</p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="triedBefore" class="block text-sm font-medium text-ink">
+              ¿Qué habéis probado antes? <span class="text-ink-mute">(opcional)</span>
+            </label>
+            <textarea id="triedBefore" name="triedBefore" maxlength="1500" rows="3"
+              placeholder="Lo que habéis intentado y por qué no terminó de funcionar."
+              class="w-full resize-y border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none"></textarea>
+          </div>
+
+          <!-- Preguntas adaptativas — solo aparecen si el audience lo justifica -->
+
+          <div data-extra-for="entidad-social" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu entidad</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="mission" class="block text-sm font-medium text-ink">Misión en una frase</label>
+              <input type="text" id="mission" name="mission" maxlength="200"
+                placeholder="ej. acompañamos a familias acogedoras en Granada"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="fundingMix" class="block text-sm font-medium text-ink">Mezcla actual de financiación</label>
+              <input type="text" id="fundingMix" name="fundingMix" maxlength="200"
+                placeholder="ej. 60% subvenciones públicas, 30% socios, 10% empresas"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-extra-for="empresa" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu empresa</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Tenéis programa ASE o de propósito activo?</span>
+              <div class="grid grid-cols-3 gap-2">
+                {[["si","Sí"],["no","No"],["explorando","Lo estamos explorando"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="asePresent" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="teamSize" class="block text-sm font-medium text-ink">Tamaño del equipo (opcional)</label>
+              <input type="text" id="teamSize" name="teamSize" maxlength="40" placeholder="ej. 25 personas"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-extra-for="emprendedor" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu proyecto</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="emp_team" class="block text-sm font-medium text-ink">¿Lo haces solo/a o en equipo?</label>
+              <input type="text" id="emp_team" name="emp_team" maxlength="120"
+                placeholder="ej. somos 2 cofundadoras + 1 freelance"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Tienes financiación o ingresos?</span>
+              <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+                {[
+                  ["ninguna","Aún no"],
+                  ["propia","Solo capital propio"],
+                  ["clientes","Primeros clientes"],
+                  ["inversor","Inversión externa"],
+                ].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="emp_funding" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div data-extra-for="institucion" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu institución</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Existe comité o área de comunicación interna?</span>
+              <div class="grid grid-cols-3 gap-2">
+                {[["si","Sí"],["informal","Informal"],["no","No"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="inst_committee" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 5: RECURSOS + PLAZO + FUENTE ============ -->
+        <fieldset data-step="5" class="hidden space-y-8">
           <div>
             <h2 class="font-display text-2xl text-ink">Recursos y plazo</h2>
-            <p class="mt-2 text-sm text-ink-mute">Estimaciones aproximadas. No hace falta precisión.</p>
+            <p class="mt-2 text-sm text-ink-mute">
+              Estimaciones aproximadas. Sin compromiso.
+            </p>
           </div>
 
           <div class="space-y-3">
             <span class="block text-sm font-medium text-ink">Presupuesto orientativo</span>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="budgetRange" value="<1k" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">&lt;1.000€</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="budgetRange" value="1k-5k" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">1k - 5k</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="budgetRange" value="5k-15k" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">5k - 15k</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="budgetRange" value="15k+" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">15k+</span>
-              </label>
+              {[
+                ["<1k","< 1.000 €"],
+                ["1k-5k","1k - 5k"],
+                ["5k-15k","5k - 15k"],
+                ["15k+","15k +"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="budgetRange" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
             </div>
           </div>
 
           <div class="space-y-3">
             <span class="block text-sm font-medium text-ink">Plazo en mente</span>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="timeframe" value="asap" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">Cuanto antes</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="timeframe" value="1-3m" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">1 - 3 meses</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="timeframe" value="3-6m" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">3 - 6 meses</span>
-              </label>
-              <label class="flex items-center justify-center cursor-pointer p-3 border border-ink/20 hover:border-magenta/60 text-sm">
-                <input type="radio" name="timeframe" value="6m+" class="sr-only peer" />
-                <span class="peer-checked:font-bold peer-checked:text-magenta">6m+</span>
-              </label>
+              {[
+                ["asap","Cuanto antes"],
+                ["1-3m","1 - 3 meses"],
+                ["3-6m","3 - 6 meses"],
+                ["6m+","6 meses +"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="timeframe" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
             </div>
           </div>
 
           <div class="space-y-2">
-            <label for="teamSize" class="block text-sm font-medium text-ink">Equipo dedicado al proyecto (opcional)</label>
-            <input type="text" id="teamSize" name="teamSize" maxlength="100" placeholder="ej: 2 personas part-time"
+            <label for="source" class="block text-sm font-medium text-ink">¿Cómo nos has conocido? (opcional)</label>
+            <input type="text" id="source" name="source" maxlength="200"
+              placeholder="Google, recomendación, evento, etc."
               class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
           </div>
 
-          <!-- Campos condicionales según audience -->
-          <div data-audience-block="tercer-sector" class="space-y-6 hidden">
-            <div class="space-y-2">
-              <label for="mission" class="block text-sm font-medium text-ink">Misión de la organización (opcional)</label>
-              <textarea id="mission" name="mission" maxlength="500" rows="2"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none resize-y"></textarea>
-            </div>
-            <div class="space-y-2">
-              <label for="fundingMix" class="block text-sm font-medium text-ink">Mix de financiación principal (opcional)</label>
-              <input type="text" id="fundingMix" name="fundingMix" maxlength="200"
-                placeholder="ej: 60% subvenciones, 30% cuotas socios, 10% servicios"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-          </div>
-
-          <div data-audience-block="institucion" class="space-y-6 hidden">
-            <div class="space-y-2">
-              <label for="institutionType" class="block text-sm font-medium text-ink">Tipo de institución</label>
-              <input type="text" id="institutionType" name="institutionType" maxlength="150"
-                placeholder="ej: diócesis, congregación, universidad, ayuntamiento"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-          </div>
-
-          <div data-audience-block="empresa" class="space-y-3 hidden">
-            <span class="block text-sm font-medium text-ink">¿Ya tenéis un programa ASE (Acción Social Empresarial)?</span>
-            <div class="flex gap-4">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="asePresent" value="true" />
-                <span class="text-sm">Sí, ya tenemos</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="asePresent" value="false" />
-                <span class="text-sm">No, queremos empezar</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <label for="source" class="block text-sm font-medium text-ink">¿Cómo conociste Startidea? (opcional)</label>
-            <select id="source" name="source"
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none">
-              <option value="">Selecciona…</option>
-              <option value="recomendacion">Recomendación de alguien</option>
-              <option value="google">Google</option>
-              <option value="linkedin">LinkedIn</option>
-              <option value="evento">Evento o ponencia</option>
-              <option value="granadasocial">Granada Social</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
-
-          <div data-error class="hidden rounded border border-red-300 bg-red-50 p-4 text-sm text-red-800"></div>
-
-          <div class="flex justify-between items-center pt-4">
+          <div class="flex justify-between pt-4">
             <button type="button" data-prev class="btn-ghost">← Atrás</button>
-            <button type="submit" data-submit class="btn">Enviar diagnóstico →</button>
+            <button type="submit" class="btn">Enviar diagnóstico →</button>
           </div>
-
-          <p class="text-xs text-ink-mute">
-            Al enviar aceptas que Startidea trate tus datos para responderte. No se usarán para otra cosa. Política de privacidad en <a href="/aviso-legal" class="underline">aviso legal</a>.
-          </p>
         </fieldset>
 
-        <!-- Estado loading/global -->
-        <div data-loading class="hidden text-center py-8">
-          <p class="text-ink/80">Enviando diagnóstico…</p>
-        </div>
+        <!-- Estado de envío -->
+        <div data-status class="hidden border-l-2 border-magenta bg-paper-warm p-4 text-sm"></div>
       </form>
     </div>
   </section>
-
-  <script is:inline>
-    (function () {
-      const form = document.getElementById('diag-form');
-      if (!form) return;
-      const intakeUrl = form.dataset.intakeUrl;
-      const steps = form.querySelectorAll('[data-step]');
-      const progress = document.querySelector('[data-progress]');
-      const stepLabel = document.querySelector('[data-step-label]');
-      const errorBox = form.querySelector('[data-error]');
-      const loadingBox = form.querySelector('[data-loading]');
-      const challengeCount = document.querySelector('[data-count-challenge]');
-      const challengeEl = form.querySelector('[name="challenge"]');
-      let current = 1;
-
-      function show(step) {
-        steps.forEach(s => {
-          s.classList.toggle('hidden', Number(s.dataset.step) !== step);
-        });
-        if (progress) progress.style.width = ((step / 3) * 100) + '%';
-        if (stepLabel) stepLabel.textContent = String(step);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        current = step;
-      }
-
-      function validateStep(step) {
-        const fs = form.querySelector('[data-step="' + step + '"]');
-        if (!fs) return true;
-        const requireds = fs.querySelectorAll('[required]');
-        for (const el of requireds) {
-          if (el.type === 'radio') {
-            const group = fs.querySelectorAll('[name="' + el.name + '"]:checked');
-            if (group.length === 0) {
-              alert('Falta: ' + (el.closest('div')?.querySelector('span.block.text-sm')?.textContent ?? el.name));
-              return false;
-            }
-          } else if (!el.value || (el.minLength && el.value.length < el.minLength)) {
-            el.focus();
-            alert('Falta o demasiado corto: ' + (el.previousElementSibling?.textContent ?? el.name));
-            return false;
-          } else if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)) {
-            el.focus();
-            alert('Email inválido');
-            return false;
-          }
-        }
-        return true;
-      }
-
-      // Listeners de navegación
-      form.querySelectorAll('[data-next]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (!validateStep(current)) return;
-          // Mostrar bloque de audience-block correcto al ir a paso 3
-          if (current === 1) {
-            const audience = form.querySelector('[name="audience"]:checked')?.value;
-            form.querySelectorAll('[data-audience-block]').forEach(b => {
-              b.classList.toggle('hidden', b.dataset.audienceBlock !== audience);
-            });
-          }
-          show(current + 1);
-        });
-      });
-
-      form.querySelectorAll('[data-prev]').forEach(btn => {
-        btn.addEventListener('click', () => show(current - 1));
-      });
-
-      // Contador de caracteres del reto
-      if (challengeEl && challengeCount) {
-        challengeEl.addEventListener('input', () => {
-          challengeCount.textContent = String(challengeEl.value.length);
-        });
-      }
-
-      // Submit
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!validateStep(3)) return;
-
-        const formData = new FormData(form);
-        const payload = {};
-        for (const [k, v] of formData.entries()) {
-          if (typeof v === 'string' && v.trim() !== '') {
-            payload[k] = k === 'asePresent' ? v === 'true' : v.trim();
-          }
-        }
-
-        errorBox?.classList.add('hidden');
-        loadingBox?.classList.remove('hidden');
-        form.querySelector('[data-step="3"]')?.classList.add('hidden');
-
-        try {
-          const res = await fetch(intakeUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok || !data.ok) {
-            throw new Error(data.error || ('HTTP ' + res.status));
-          }
-          // GA4: conversión diagnóstico completado
-          if (typeof window.stTrack === 'function') {
-            window.stTrack('generate_lead', {
-              method: 'diagnostico_form',
-              lead_source: 'diagnostico',
-              page_path: '/diagnostico/nuevo',
-              value: 1,
-              currency: 'EUR',
-            });
-          }
-          window.location.href = '/diagnostico/gracias';
-        } catch (err) {
-          loadingBox?.classList.add('hidden');
-          form.querySelector('[data-step="3"]')?.classList.remove('hidden');
-          if (errorBox) {
-            errorBox.textContent = 'No se pudo enviar el diagnóstico (' + (err.message || 'error') + '). Inténtalo de nuevo o escríbenos a hola@startidea.es.';
-            errorBox.classList.remove('hidden');
-          }
-        }
-      });
-
-      show(1);
-    })();
-  </script>
 </Base>
+
+<script>
+  // ─── Wizard adaptativo ──────────────────────────────────────────
+  const form = document.getElementById("diag-form") as HTMLFormElement | null;
+  if (!form) throw new Error("form missing");
+
+  const intakeUrl = form.dataset.intakeUrl!;
+  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
+  const stepLabel = document.querySelector("[data-step-label]") as HTMLElement | null;
+  const progress = document.querySelector("[data-progress]") as HTMLElement | null;
+  const statusBox = form.querySelector("[data-status]") as HTMLElement | null;
+  const challengeCounter = form.querySelector("[data-count-challenge]") as HTMLElement | null;
+  const challenge = form.querySelector<HTMLTextAreaElement>("[name='challenge']");
+
+  let current = 0;
+  const total = steps.length;
+
+  function setStep(i: number) {
+    current = Math.max(0, Math.min(total - 1, i));
+    steps.forEach((s, idx) => s.classList.toggle("hidden", idx !== current));
+    if (stepLabel) stepLabel.textContent = String(current + 1);
+    if (progress) progress.style.width = `${((current + 1) / total) * 100}%`;
+    refreshAdaptive();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function getAudience(): string {
+    return (form.querySelector<HTMLInputElement>("[name='audience']:checked")?.value) ?? "";
+  }
+
+  function refreshAdaptive() {
+    const audience = getAudience();
+    // Sub-tipo correcto visible
+    form.querySelectorAll<HTMLElement>("[data-subtype-for]").forEach((el) => {
+      el.classList.toggle("hidden", el.dataset.subtypeFor !== audience);
+    });
+    // Preguntas extra correctas visibles
+    form.querySelectorAll<HTMLElement>("[data-extra-for]").forEach((el) => {
+      el.classList.toggle("hidden", el.dataset.extraFor !== audience);
+    });
+    // Etiquetas que cambian para emprendedor
+    const isEmp = audience === "emprendedor";
+    form
+      .querySelectorAll<HTMLElement>("[data-org-label-default]")
+      .forEach((el) => el.classList.toggle("hidden", isEmp));
+    form
+      .querySelectorAll<HTMLElement>("[data-org-label-emprendedor]")
+      .forEach((el) => el.classList.toggle("hidden", !isEmp));
+    form
+      .querySelectorAll<HTMLElement>("[data-stage-label-default]")
+      .forEach((el) => el.classList.toggle("hidden", isEmp));
+    form
+      .querySelectorAll<HTMLElement>("[data-stage-label-emprendedor]")
+      .forEach((el) => el.classList.toggle("hidden", !isEmp));
+  }
+
+  function validateStep(): string | null {
+    const fs = steps[current];
+    const required = Array.from(fs.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[required]")).filter(
+      (el) => !el.closest(".hidden"),
+    );
+    for (const el of required) {
+      if (el instanceof HTMLInputElement && el.type === "radio") {
+        const groupName = el.name;
+        const anyChecked = form.querySelector(`input[name='${groupName}']:checked`);
+        if (!anyChecked) return `Falta elegir: ${groupName}`;
+      } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
+        return `Falta o no es válido: ${el.name || el.id}`;
+      } else if ((el as HTMLInputElement).minLength && el.value.length < (el as HTMLInputElement).minLength) {
+        return `Muy corto: ${el.name || el.id}`;
+      }
+    }
+    return null;
+  }
+
+  form.addEventListener("click", (e) => {
+    const t = e.target as HTMLElement;
+    if (t.matches("[data-next]")) {
+      const err = validateStep();
+      if (err) {
+        showStatus(err, true);
+        return;
+      }
+      hideStatus();
+      setStep(current + 1);
+    } else if (t.matches("[data-prev]")) {
+      hideStatus();
+      setStep(current - 1);
+    }
+  });
+
+  // Cambio de audience refresca el wizard
+  form.addEventListener("change", (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.name === "audience") refreshAdaptive();
+    if (t.name === "challenge" && challengeCounter) {
+      challengeCounter.textContent = String(t.value.length);
+    }
+  });
+  challenge?.addEventListener("input", () => {
+    if (challengeCounter) challengeCounter.textContent = String(challenge.value.length);
+  });
+
+  function showStatus(msg: string, isError = false) {
+    if (!statusBox) return;
+    statusBox.textContent = msg;
+    statusBox.className = `border-l-2 p-4 text-sm ${isError ? "border-magenta bg-paper-warm text-magenta" : "border-ink/30 bg-paper-warm text-ink"}`;
+    statusBox.classList.remove("hidden");
+  }
+  function hideStatus() {
+    statusBox?.classList.add("hidden");
+  }
+
+  // ─── Submit ─────────────────────────────────────────────────────
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const err = validateStep();
+    if (err) {
+      showStatus(err, true);
+      return;
+    }
+    showStatus("Enviando…", false);
+    const fd = new FormData(form);
+    const data: Record<string, unknown> = { kind: "diagnostico" };
+    // Campos planos
+    [
+      "name", "email", "phone", "organizationName", "role", "website",
+      "audience", "subType", "stage", "challenge", "triedBefore",
+      "budgetRange", "timeframe", "source", "honeypot",
+    ].forEach((k) => {
+      const v = fd.get(k);
+      if (typeof v === "string" && v) data[k] = v;
+    });
+    // services multi-select
+    const services = fd.getAll("services").map(String).filter(Boolean);
+    // Campos extra → answers bag
+    const answers: Record<string, unknown> = {};
+    if (services.length) answers.services = services;
+    ["mission", "fundingMix", "teamSize", "emp_team", "emp_funding", "inst_committee"].forEach((k) => {
+      const v = fd.get(k);
+      if (typeof v === "string" && v) answers[k] = v;
+    });
+    const ase = fd.get("asePresent");
+    if (typeof ase === "string" && ase) {
+      // Backend espera boolean (true|null) en asePresent; "explorando" lo movemos a answers
+      if (ase === "si") data.asePresent = true;
+      else if (ase === "no") data.asePresent = false;
+      else answers.asePresentRaw = ase;
+    }
+    if (Object.keys(answers).length) data.answers = answers;
+
+    try {
+      const r = await fetch(intakeUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await r.json().catch(() => null);
+      if (r.ok && json?.ok) {
+        window.location.href = "/diagnostico/gracias";
+      } else {
+        showStatus(
+          `No se pudo enviar (${json?.error ?? r.status}). Inténtalo en unos minutos.`,
+          true,
+        );
+      }
+    } catch {
+      showStatus("Error de red. Inténtalo en unos minutos.", true);
+    }
+  });
+
+  // Init
+  setStep(0);
+</script>

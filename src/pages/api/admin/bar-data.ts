@@ -10,7 +10,8 @@
 // Las llamadas al HUB usan ADMIN_TOKEN del container, nunca expuesto al cliente.
 
 import type { APIRoute } from "astro";
-import { isAdminLoggedIn, getAdminToken } from "@/lib/admin-session";
+import { isAdminLoggedIn } from "@/lib/admin-session";
+import { listDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
 
 export const prerender = false;
 
@@ -45,32 +46,30 @@ export const GET: APIRoute = async ({ cookies }) => {
     });
   }
 
-  const token = getAdminToken();
-  const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+  // Subvenciones públicas: ligero, no requiere auth
+  const statsPublic = await fetchWithTimeout<{
+    ok: boolean;
+    total: number;
+  }>(`${HUB_URL}/api/public/subsidies/stats`);
 
-  const [statsPublic, matches, leads] = await Promise.all([
-    fetchWithTimeout<{
-      ok: boolean;
-      total: number;
-      by_geo?: Record<string, number>;
-    }>(`${HUB_URL}/api/public/subsidies/stats`),
-    fetchWithTimeout<{ ok: boolean; total: number }>(
-      `${HUB_URL}/api/admin/subsidies/matches?since_days=7`,
-      { headers: authHeader },
-    ),
-    fetchWithTimeout<{ ok: boolean; total: number }>(
-      `${HUB_URL}/api/admin/leads?since=today`,
-      { headers: authHeader },
-    ),
-  ]);
+  // Leads: solo si HUB_ADMIN_SECRET está configurado
+  let leadsLast7 = null;
+  let leadsNew = null;
+  if (isHubAdminConfigured()) {
+    const [last7, neueva] = await Promise.all([
+      listDiagnosis({ sinceDays: 7, pageSize: 1 }),
+      listDiagnosis({ status: "NEW", pageSize: 1 }),
+    ]);
+    leadsLast7 = last7?.total ?? null;
+    leadsNew = neueva?.total ?? null;
+  }
 
   return new Response(
     JSON.stringify({
       ok: true,
       subsidies_total: statsPublic?.total ?? null,
-      matches_new: matches?.total ?? null,
-      leads_today: leads?.total ?? null,
-      visits_today: null, // pendiente sync seo.db local
+      leads_7d: leadsLast7,
+      leads_new: leadsNew,
     }),
     {
       headers: {

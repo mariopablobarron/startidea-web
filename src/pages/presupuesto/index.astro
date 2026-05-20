@@ -1,0 +1,76 @@
+---
+import Base from "@/layouts/Base.astro";
+import { breadcrumbList, SITE_URL } from "@/lib/jsonld";
+
+const jsonLd = [
+  breadcrumbList([
+    { name: "Inicio", url: `${SITE_URL}/` },
+    { name: "Presupuesto", url: `${SITE_URL}/presupuesto` },
+  ]),
+];
+---
+
+<Base
+  title="Pedir presupuesto — Startidea · Granada"
+  description="Si ya sabes lo que necesitas, cuéntanoslo en 3 minutos y te enviamos un rango orientativo + propuesta de reunión. Sin coste, sin compromiso."
+  ogSlug="page/presupuesto"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Presupuesto</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Sabes qué quieres.<br />
+        <em class="italic text-magenta">Te damos una cifra.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Si ya tienes claro el proyecto y solo necesitas un orden de magnitud, este es el camino corto. Tres minutos. Te enviamos un rango orientativo + propuesta de llamada de 30 minutos para validarlo.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/presupuesto/nuevo" class="btn">Pedir presupuesto →</a>
+        <a href="/diagnostico" class="btn-ghost">Mejor primero un diagnóstico</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diferencia con diagnóstico -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cuándo</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Presupuesto o <em class="italic text-magenta">diagnóstico</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-ink/75">
+            Dos puertas. Ambas gratis. Ambas terminan en una llamada de 30 min con el equipo.
+          </p>
+
+          <dl class="reveal-stagger mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-4">Pedir presupuesto</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-8 lg:mt-0">
+                Tres minutos. Tres preguntas. Una cifra orientativa. Para cuando ya sabes que quieres una web, un vídeo, una campaña concreta. Funciona mejor si la conversación ya está madura por dentro.
+              </dd>
+            </div>
+            <div class="grid grid-cols-12 gap-x-8 py-8">
+              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-4">Hacer diagnóstico</dt>
+              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-8 lg:mt-0">
+                Cinco-ocho minutos. Profundo. Adaptado a tu tipo de organización. Termina en un briefing pre-reunión que Startidea estudia antes de hablar contigo. Funciona mejor si todavía no tienes claro qué necesitas exactamente.
+              </dd>
+            </div>
+          </dl>
+
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a href="/presupuesto/nuevo" class="btn">Pedir presupuesto →</a>
+            <a href="/diagnostico/nuevo" class="btn-ghost">Empezar diagnóstico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

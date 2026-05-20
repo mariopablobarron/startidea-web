@@ -1,0 +1,223 @@
+---
+// /admin/leads — Listado de diagnósticos y presupuestos.
+//
+// Auth: cookie startidea_admin (la del overlay). Sin cookie → redirect a login.
+// Datos: SSR fetch a /api/admin/diagnosis del HUB con HUB_ADMIN_SECRET.
+
+import Base from "@/layouts/Base.astro";
+import { isAdminLoggedIn } from "@/lib/admin-session";
+import { listDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent("/admin/leads")}`);
+}
+
+const u = Astro.url;
+const kind = u.searchParams.get("kind") ?? "";
+const audience = u.searchParams.get("audience") ?? "";
+const status = u.searchParams.get("status") ?? "";
+const q = u.searchParams.get("q") ?? "";
+const page = Math.max(0, Number(u.searchParams.get("page") ?? 0));
+const PAGE_SIZE = 20;
+
+const hubConfigured = isHubAdminConfigured();
+const data = hubConfigured
+  ? await listDiagnosis({
+      kind: kind || undefined,
+      audience: audience || undefined,
+      status: status || undefined,
+      q: q || undefined,
+      page,
+      pageSize: PAGE_SIZE,
+      sort: "recent",
+    })
+  : null;
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+const audienceLabels: Record<string, string> = {
+  empresa: "Empresa",
+  institucion: "Institución",
+  "entidad-social": "Entidad social",
+  emprendedor: "Emprendedor/a",
+  "tercer-sector": "Entidad social",
+};
+
+const statusColors: Record<string, string> = {
+  NEW: "bg-magenta text-paper",
+  REVIEWED: "bg-ink/10 text-ink",
+  CONTACTED: "bg-ink/20 text-ink",
+  MEETING: "bg-ink text-paper",
+  WON: "bg-green-700 text-paper",
+  LOST: "bg-ink/5 text-ink-mute",
+};
+
+function buildHref(overrides: Record<string, string | number | undefined>): string {
+  const params = new URLSearchParams();
+  const merged = { kind, audience, status, q, page, ...overrides };
+  for (const [k, v] of Object.entries(merged)) {
+    if (v !== "" && v !== undefined && v !== null && v !== 0) {
+      params.set(k, String(v));
+    }
+  }
+  const s = params.toString();
+  return s ? `/admin/leads?${s}` : "/admin/leads";
+}
+---
+
+<Base
+  title="Leads · Admin · Startidea"
+  description="Listado de diagnósticos y presupuestos"
+  ogSlug="page/admin-leads"
+  noindex={true}
+>
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <span class="label">— Admin · Leads</span>
+      <h1 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Diagnósticos y <em class="italic text-magenta">presupuestos</em>.
+      </h1>
+      {data && (
+        <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          {data.total.toLocaleString("es-ES")} resultados · página {page + 1} de {Math.max(1, data.totalPages)}
+        </p>
+      )}
+
+      {!hubConfigured && (
+        <div class="mt-8 border-l-2 border-magenta bg-paper-warm p-5 text-sm text-ink/80">
+          <p class="font-medium text-magenta">Falta configurar <code class="font-mono">HUB_ADMIN_SECRET</code></p>
+          <p class="mt-2">
+            Añádelo al <code class="font-mono">.env</code> del container <code class="font-mono">startidea-web</code> con el mismo valor que <code class="font-mono">ADMIN_SECRET</code> del HUB:
+          </p>
+          <pre class="mt-3 overflow-x-auto bg-ink/5 p-3 font-mono text-xs">ssh root@72.61.195.108 \
+  'docker exec hub-app printenv ADMIN_SECRET | xargs -I{} \
+   sh -c "echo HUB_ADMIN_SECRET={} &gt;&gt; /docker/startidea-web-traefik/.env"'</pre>
+        </div>
+      )}
+
+      {hubConfigured && !data && (
+        <div class="mt-8 border-l-2 border-magenta bg-paper-warm p-5 text-sm text-magenta">
+          No se pudo conectar con el HUB. Verifica que <code class="font-mono">HUB_ADMIN_SECRET</code> coincide con <code class="font-mono">ADMIN_SECRET</code> del container hub-app.
+        </div>
+      )}
+
+      <!-- Filtros -->
+      <form method="GET" action="/admin/leads" class="mt-10 grid gap-4 md:grid-cols-[1fr_auto_auto_auto_auto]">
+        <input
+          type="search"
+          name="q"
+          value={q}
+          placeholder="Buscar nombre, email, organización, reto…"
+          class="border border-ink/20 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none"
+        />
+        <select name="kind" class="border border-ink/20 bg-paper px-3 py-3 font-mono text-xs uppercase tracking-widest text-ink">
+          <option value="">Tipo: todos</option>
+          <option value="diagnostico" selected={kind === "diagnostico"}>Diagnóstico</option>
+          <option value="presupuesto" selected={kind === "presupuesto"}>Presupuesto</option>
+        </select>
+        <select name="audience" class="border border-ink/20 bg-paper px-3 py-3 font-mono text-xs uppercase tracking-widest text-ink">
+          <option value="">Audiencia: todas</option>
+          <option value="empresa" selected={audience === "empresa"}>Empresa</option>
+          <option value="institucion" selected={audience === "institucion"}>Institución</option>
+          <option value="entidad-social" selected={audience === "entidad-social"}>Entidad social</option>
+          <option value="emprendedor" selected={audience === "emprendedor"}>Emprendedor/a</option>
+        </select>
+        <select name="status" class="border border-ink/20 bg-paper px-3 py-3 font-mono text-xs uppercase tracking-widest text-ink">
+          <option value="">Estado: todos</option>
+          {["NEW", "REVIEWED", "CONTACTED", "MEETING", "WON", "LOST"].map((s) => (
+            <option value={s} selected={status === s}>{s}</option>
+          ))}
+        </select>
+        <button type="submit" class="btn">Filtrar</button>
+      </form>
+
+      {data && data.items.length > 0 && (
+        <ol class="mt-10 divide-y divide-ink/15 border-y border-ink/15">
+          {data.items.map((it) => (
+            <li class="py-6">
+              <a href={`/admin/leads/${it.id}`} class="block group">
+                <div class="grid grid-cols-12 gap-x-6 gap-y-3">
+                  <div class="col-span-12 lg:col-span-2">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                      {formatDate(it.createdAt)}
+                    </p>
+                    <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-magenta">
+                      {it.kind === "presupuesto" ? "Presup." : "Diagnost."}
+                    </p>
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-6">
+                    <h2 class="font-display text-lg text-ink group-hover:text-magenta">
+                      {it.name} · {it.organizationName}
+                    </h2>
+                    <p class="mt-1 text-sm text-ink/70">
+                      {audienceLabels[it.audience] ?? it.audience}
+                      {it.subType && <span class="text-ink-mute"> · {it.subType.replace(/-/g, " ")}</span>}
+                    </p>
+                    <p class="mt-2 line-clamp-2 text-sm text-ink/65">{it.challenge}</p>
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-2 lg:text-right">
+                    {it.budgetRange && (
+                      <p class="font-display text-base text-ink">{it.budgetRange}</p>
+                    )}
+                    {it.timeframe && (
+                      <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                        {it.timeframe}
+                      </p>
+                    )}
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-2 lg:text-right">
+                    <span class={`inline-block px-2 py-1 font-mono text-[10px] uppercase tracking-widest ${statusColors[it.status] ?? "bg-ink/10 text-ink"}`}>
+                      {it.status}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      {data && data.items.length === 0 && (
+        <p class="mt-12 border-y border-ink/15 py-16 text-center text-ink-mute">
+          No hay resultados con esos filtros.
+        </p>
+      )}
+
+      {data && data.totalPages > 1 && (
+        <div class="mt-10 flex items-center justify-between">
+          <a
+            href={buildHref({ page: Math.max(0, page - 1) })}
+            class={`btn-ghost !py-2 text-sm ${page === 0 ? "pointer-events-none opacity-30" : ""}`}
+          >
+            ← Anteriores
+          </a>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+            Página {page + 1} de {data.totalPages}
+          </span>
+          <a
+            href={buildHref({ page: page + 1 })}
+            class={`btn-ghost !py-2 text-sm ${page + 1 >= data.totalPages ? "pointer-events-none opacity-30" : ""}`}
+          >
+            Siguientes →
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

@@ -48,7 +48,15 @@ if (currentPath.startsWith("/notas/")) {
 } else if (currentPath.startsWith("/diagnostico")) {
   contextLabel = "Diagnóstico";
   editLabel = "Ver leads";
-  editUrl = `https://hub.startidea.tech/startidea/admin/sales`;
+  editUrl = `/admin/leads?kind=diagnostico`;
+} else if (currentPath.startsWith("/presupuesto")) {
+  contextLabel = "Presupuesto";
+  editLabel = "Ver leads";
+  editUrl = `/admin/leads?kind=presupuesto`;
+} else if (currentPath.startsWith("/admin/leads")) {
+  contextLabel = "Admin · Leads";
+} else if (currentPath.startsWith("/admin")) {
+  contextLabel = "Admin";
 } else if (currentPath.startsWith("/laboratorio")) {
   contextLabel = "Laboratorio";
 } else if (currentPath === "/") {
@@ -114,6 +122,14 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
 
       <!-- Quick links -->
       <a
+        href="/admin/leads"
+        class="shrink-0 hover:text-magenta"
+        title="Leads capturados (diagnóstico + presupuesto)"
+      >
+        Leads
+      </a>
+
+      <a
         href={`${HUB_DASHBOARD}/admin/subsidies`}
         target="_blank"
         rel="noopener"
@@ -153,10 +169,10 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
           const el = document.getElementById("admin-kpis");
           if (!el) return;
           const parts: string[] = [];
+          if (data.leads_new != null) parts.push(`Nuevos ${data.leads_new}`);
+          if (data.leads_7d != null) parts.push(`Leads 7d ${data.leads_7d}`);
           if (data.subsidies_total != null)
             parts.push(`Subv ${data.subsidies_total.toLocaleString("es-ES")}`);
-          if (data.matches_new != null) parts.push(`Match ${data.matches_new}`);
-          if (data.leads_today != null) parts.push(`Lead ${data.leads_today}`);
           el.textContent = parts.length ? parts.join(" · ") : "kpis: —";
         } catch {
           const el = document.getElementById("admin-kpis");
