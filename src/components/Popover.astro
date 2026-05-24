@@ -1,0 +1,181 @@
+---
+// Popover.astro — Mini-card que aparece al hover/focus sobre un trigger.
+//
+// Vanilla, sin librería externa. Funciona así:
+//   - Desktop: aparece al hover sobre el wrapper + al focus (teclado)
+//   - Mobile: aparece al tap (focusable con tabindex=0)
+//   - Cierra al click fuera o al perder focus
+//   - Position: por defecto debajo del trigger, con flecha apuntando arriba.
+//     Override con prop `placement` (top|bottom|right|left).
+//
+// Uso:
+//   <Popover placement="top">
+//     <span slot="trigger">Texto disparador</span>
+//     <div slot="content">
+//       <p>Contenido del popover</p>
+//     </div>
+//   </Popover>
+//
+// Accesibilidad: el trigger es un <span tabindex=0> con role=button y
+// aria-describedby al popover. La tecla Esc cierra (manejada por el JS
+// global de abajo, scope a esta página).
+
+interface Props {
+  placement?: "top" | "bottom" | "left" | "right";
+  /** Ancho máximo del popover en px (default 320) */
+  maxWidth?: number;
+  /** Clases extra para el wrapper */
+  className?: string;
+}
+
+const { placement = "bottom", maxWidth = 320, className = "" } = Astro.props;
+
+// IDs únicos para a11y (Astro.url + random no funciona en build, uso un
+// random simple: el chance de colisión es despreciable para popovers
+// efímeros y dentro de la misma página)
+const id = `pop-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<span
+  class:list={["startidea-popover-wrap relative inline-block", className]}
+  data-placement={placement}
+>
+  <span
+    class="startidea-popover-trigger inline-block cursor-help"
+    tabindex="0"
+    role="button"
+    aria-describedby={id}
+    aria-expanded="false"
+  >
+    <slot name="trigger" />
+  </span>
+  <span
+    id={id}
+    role="tooltip"
+    class="startidea-popover-card invisible absolute z-50 block opacity-0 transition-opacity duration-150"
+    style={`max-width: ${maxWidth}px;`}
+  >
+    <span class="block border border-ink/20 bg-paper p-4 text-left shadow-[0_8px_32px_-8px_rgba(0,0,0,0.18)]">
+      <slot name="content" />
+    </span>
+  </span>
+</span>
+
+<style is:global>
+  /* ─── Posicionamiento por placement ─────────────────────────── */
+  .startidea-popover-wrap[data-placement="bottom"] .startidea-popover-card {
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    min-width: 220px;
+  }
+  .startidea-popover-wrap[data-placement="top"] .startidea-popover-card {
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    min-width: 220px;
+  }
+  .startidea-popover-wrap[data-placement="right"] .startidea-popover-card {
+    top: 50%;
+    left: calc(100% + 8px);
+    transform: translateY(-50%) translateX(4px);
+    min-width: 220px;
+  }
+  .startidea-popover-wrap[data-placement="left"] .startidea-popover-card {
+    top: 50%;
+    right: calc(100% + 8px);
+    transform: translateY(-50%) translateX(-4px);
+    min-width: 220px;
+  }
+
+  /* ─── Visibilidad al hover + focus ──────────────────────────── */
+  .startidea-popover-wrap:hover .startidea-popover-card,
+  .startidea-popover-wrap:focus-within .startidea-popover-card,
+  .startidea-popover-wrap.is-open .startidea-popover-card {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(var(--pop-x, -50%), 0);
+  }
+  .startidea-popover-wrap[data-placement="right"]:hover .startidea-popover-card,
+  .startidea-popover-wrap[data-placement="right"]:focus-within .startidea-popover-card,
+  .startidea-popover-wrap[data-placement="right"].is-open .startidea-popover-card {
+    transform: translateY(-50%);
+  }
+  .startidea-popover-wrap[data-placement="left"]:hover .startidea-popover-card,
+  .startidea-popover-wrap[data-placement="left"]:focus-within .startidea-popover-card,
+  .startidea-popover-wrap[data-placement="left"].is-open .startidea-popover-card {
+    transform: translateY(-50%);
+  }
+
+  /* ─── Mantener click en el contenido sin perder focus ──────── */
+  .startidea-popover-card a,
+  .startidea-popover-card button {
+    pointer-events: auto;
+  }
+
+  /* ─── Reducir motion ────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .startidea-popover-card {
+      transition: none;
+    }
+  }
+
+  /* ─── Mobile: el popover ocupa hasta 90vw ───────────────────── */
+  @media (max-width: 640px) {
+    .startidea-popover-card {
+      max-width: 90vw !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  // Cierra cualquier popover al pulsar Esc o al hacer tap fuera (mobile).
+  // Idempotente: se carga una vez por página aunque haya muchos popovers.
+  (() => {
+    if (window.__startideaPopoverInit) return;
+    window.__startideaPopoverInit = true;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      document.querySelectorAll(".startidea-popover-wrap.is-open").forEach((el) => {
+        el.classList.remove("is-open");
+        const trig = el.querySelector(".startidea-popover-trigger");
+        if (trig) trig.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // Mobile/touch: tap en el trigger toggle la clase is-open.
+    // En desktop el :hover ya lo maneja CSS — esto solo cubre touch.
+    document.addEventListener("click", (e) => {
+      const trig = e.target?.closest?.(".startidea-popover-trigger");
+      if (trig) {
+        // Si el popover está dentro de un <a>, evitamos que el tap navegue.
+        const wrap = trig.closest(".startidea-popover-wrap");
+        if (wrap?.closest("a")) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (!wrap) return;
+        // Cerrar los demás abiertos
+        document.querySelectorAll(".startidea-popover-wrap.is-open").forEach((other) => {
+          if (other !== wrap) {
+            other.classList.remove("is-open");
+            const ot = other.querySelector(".startidea-popover-trigger");
+            if (ot) ot.setAttribute("aria-expanded", "false");
+          }
+        });
+        const open = wrap.classList.toggle("is-open");
+        trig.setAttribute("aria-expanded", String(open));
+        return;
+      }
+      // Click fuera: cerrar todos
+      if (!e.target?.closest?.(".startidea-popover-card")) {
+        document.querySelectorAll(".startidea-popover-wrap.is-open").forEach((el) => {
+          el.classList.remove("is-open");
+          const t = el.querySelector(".startidea-popover-trigger");
+          if (t) t.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+  })();
+</script>

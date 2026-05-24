@@ -322,6 +322,30 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
                 Limpiar ×
               </button>
             </div>
+
+            <!-- Popover compartido para nodos CCAA (posicionado por JS) -->
+            <div
+              id="mapa-popover"
+              role="tooltip"
+              class="pointer-events-none invisible absolute z-30 w-[220px] border border-ink/20 bg-paper p-3 text-xs opacity-0 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.18)] transition-opacity duration-150"
+              style="left: 0; top: 0;"
+            >
+              <p id="mapa-popover-label" class="font-display text-base font-bold leading-tight text-ink">—</p>
+              <p id="mapa-popover-meta" class="mt-1 font-mono text-[10px] uppercase tracking-widest text-magenta">—</p>
+              <div class="mt-3 space-y-1.5 border-t border-ink/15 pt-2">
+                <p class="flex items-baseline justify-between gap-2">
+                  <span class="text-ink-mute">Convocatorias abiertas</span>
+                  <span id="mapa-popover-count" class="font-display text-base font-bold text-ink">0</span>
+                </p>
+                <p class="flex items-baseline justify-between gap-2">
+                  <span class="text-ink-mute">% del total CCAA</span>
+                  <span id="mapa-popover-pct" class="font-mono text-magenta">—</span>
+                </p>
+              </div>
+              <p class="mt-3 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                Click para filtrar lista ↓
+              </p>
+            </div>
           </div>
 
           <!-- Filtros adicionales -->
@@ -593,7 +617,64 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
       setActiveNode(state.ccaa, state.ccaaLabel);
       state.page = 0;
       fetchList();
+      hidePopover();
     });
+  });
+
+  // ─── Popover hover sobre nodos CCAA ──────────────────────────
+  // Calcula el total CCAA una vez para %.
+  const totalCCAA = $$('.mapa-node').reduce((sum, n) => {
+    return sum + Number(n.getAttribute('data-count') || '0');
+  }, 0);
+
+  const pop = $('#mapa-popover');
+  const popLabel = $('#mapa-popover-label');
+  const popMeta = $('#mapa-popover-meta');
+  const popCount = $('#mapa-popover-count');
+  const popPct = $('#mapa-popover-pct');
+  const mapaWrap = $('#mapa-wrap');
+
+  function showPopover(node: Element) {
+    if (!pop || !mapaWrap || !popLabel || !popMeta || !popCount || !popPct) return;
+    const slug = node.getAttribute('data-ccaa') || '';
+    const label = node.getAttribute('data-label') || slug;
+    const count = Number(node.getAttribute('data-count') || '0');
+    const pct = totalCCAA > 0 ? Math.round((count / totalCCAA) * 1000) / 10 : 0;
+    popLabel.textContent = label;
+    popMeta.textContent = count === 0 ? 'sin convocatorias abiertas' : 'CCAA · datos BDNS';
+    popCount.textContent = count.toLocaleString('es-ES');
+    popPct.textContent = count === 0 ? '—' : `${pct}%`;
+
+    // Posicionar el popover relativo a #mapa-wrap basándose en el
+    // bounding rect del nodo SVG (que ya está en coords de pantalla).
+    const nodeRect = (node as SVGGraphicsElement).getBoundingClientRect();
+    const wrapRect = mapaWrap.getBoundingClientRect();
+    const popWidth = 220; // matches w-[220px] del HTML
+    let left = nodeRect.left - wrapRect.left + nodeRect.width / 2 - popWidth / 2;
+    let top = nodeRect.top - wrapRect.top + nodeRect.height + 12;
+    // Clamp horizontal (no salir del wrap)
+    left = Math.max(8, Math.min(left, wrapRect.width - popWidth - 8));
+    // Si está cerca del borde inferior, colocar encima
+    if (top + 160 > wrapRect.height) {
+      top = nodeRect.top - wrapRect.top - 160 - 8;
+    }
+    pop.style.left = `${left}px`;
+    pop.style.top = `${Math.max(8, top)}px`;
+    pop.classList.remove('invisible', 'opacity-0');
+    pop.classList.add('visible', 'opacity-100');
+  }
+
+  function hidePopover() {
+    if (!pop) return;
+    pop.classList.add('invisible', 'opacity-0');
+    pop.classList.remove('visible', 'opacity-100');
+  }
+
+  $$('.mapa-node').forEach((node) => {
+    node.addEventListener('mouseenter', () => showPopover(node));
+    node.addEventListener('focus', () => showPopover(node));
+    node.addEventListener('mouseleave', hidePopover);
+    node.addEventListener('blur', hidePopover);
   });
 
   $('#mapa-clear')?.addEventListener('click', (e) => {
