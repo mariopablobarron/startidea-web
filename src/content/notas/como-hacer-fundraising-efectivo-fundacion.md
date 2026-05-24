@@ -4,7 +4,18 @@ description: 'El fundraising real no es buscar al mecenas providencial. Es const
 pubDate: 2026-05-20
 audience: 'Tercer sector'
 tags: ['fundraising', 'captación de fondos', 'fundaciones', 'tercer sector', 'estrategia']
-draft: true
+draft: false
+faqs:
+  - question: '¿Qué es el fundraising para una fundación?'
+    answer: 'Es la actividad estructurada de obtener financiación de fuentes diversificadas para sostener la misión de la fundación a largo plazo. No es buscar al donante providencial ni rellenar formularios de subvención: es construir y mantener una mezcla de ingresos (socios recurrentes, grandes donantes, empresas, convocatorias, eventos) que aguante años malos sin poner en riesgo los programas.'
+  - question: '¿Cuál es la regla del 30/30/30 en fundraising?'
+    answer: 'Una mezcla saludable para fundaciones medianas reparte aproximadamente un 30% en socios recurrentes (base estable), 30% en grandes donantes y empresas (entradas grandes pero menos predecibles), 30% en convocatorias públicas y privadas (proyectos finalistas), y un 10% restante en eventos y actividades propias. Ninguna fuente debe superar el 50% sin un plan de equilibrio explícito.'
+  - question: '¿Cómo conseguir socios recurrentes para una fundación?'
+    answer: 'Los socios recurrentes no se captan con campañas masivas sino con un sistema continuo de captación de bajo ticket y alto compromiso. Las palancas que funcionan: presencia en eventos físicos donde la causa se vive, recomendación entre socios existentes (cada socio activo trae 1.3 nuevos al año si se le pide bien), cuotas pequeñas con domiciliación bancaria, comunicación regular del impacto real (no del relato).'
+  - question: '¿Cuándo conviene contratar una agencia de fundraising?'
+    answer: 'Cuando la fundación tiene una sola fuente que supone más del 50% de los ingresos y reconoce abiertamente el riesgo, cuando el patronato decide profesionalizar el área pero no quiere contratar a tiempo completo todavía, o cuando ya hay un programa de captación que ha tocado techo y necesita una mirada externa para identificar el siguiente nivel. No conviene si la organización todavía no tiene claro qué causa abandera ni qué resultados produce.'
+  - question: '¿Cómo dejar de depender de un solo donante o de una sola subvención?'
+    answer: 'En tres pasos: primero, cuantificar la dependencia exacta (qué porcentaje aporta esa fuente y qué pasaría si desapareciera). Segundo, identificar la siguiente fuente más viable según el tipo de fundación (suele ser empresas si la fundación tiene programa visible, grandes donantes si tiene patronato con red, socios si tiene base social activa). Tercero, asignar a una persona del equipo (no a la dirección) el crecimiento de esa segunda fuente con métrica trimestral y reporte al patronato.'
 ---
 Casi todas las fundaciones que llaman a Startidea para hablar de fundraising vienen con la misma realidad operativa: la financiación depende demasiado de una sola fuente. A veces es un patrono individual que aporta el 60% del presupuesto. A veces son dos convocatorias públicas que renuevan ejercicio tras ejercicio y que un día no van a renovar. A veces es una empresa amiga del fundador que sostiene la organización desde la primera año. Y todos lo saben — pero nadie ha movido la estructura porque el sustituto no aparece.
 

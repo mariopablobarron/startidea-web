@@ -14,6 +14,17 @@ const notas = defineCollection({
     draft: z.boolean().default(false),
     author: z.string().default('Mario Pablo Sánchez Barrón'),
     authorRole: z.string().default('Fundador · Startidea'),
+    // FAQs opcionales. Si se definen, /notas/[slug] genera JSON-LD
+    // FAQPage adicional → activa Featured Snippets en Google + sube CTR.
+    faqs: z
+      .array(
+        z.object({
+          question: z.string().min(5).max(200),
+          answer: z.string().min(20).max(800),
+        }),
+      )
+      .max(8)
+      .optional(),
   }),
 });
 

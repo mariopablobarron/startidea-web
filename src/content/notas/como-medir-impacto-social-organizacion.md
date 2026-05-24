@@ -4,7 +4,18 @@ description: 'Medir impacto en el tercer sector se ha convertido en un tema sobr
 pubDate: 2026-05-19
 audience: 'Tercer sector'
 tags: ['impacto social', 'medición', 'tercer sector', 'consultoría', 'evaluación']
-draft: true
+draft: false
+faqs:
+  - question: '¿Qué es el impacto social de una organización?'
+    answer: 'Es el cambio sostenido que tu organización produce en las personas o el problema que aborda, más allá de las actividades ejecutadas. Una formación impartida es un output; que las personas que la recibieron consigan empleo seis meses después es impacto. Los tres niveles que conviene no confundir son actividades (qué se hace), resultados (qué cambia a corto plazo) e impacto (qué transformación se sostiene).'
+  - question: '¿Cómo se mide el impacto social en una fundación pequeña?'
+    answer: 'Con 3-5 indicadores claros, no con 50. Eligen un indicador por línea de programa, una métrica de transformación a 12 meses y una pregunta cualitativa que se hace a una muestra anual de personas atendidas. Si la fundación es pequeña, el sistema debe ocupar menos de 4 horas mensuales de recogida y análisis; si no, la medición se convierte en un departamento que la organización no puede sostener.'
+  - question: '¿Qué indicadores funcionan en organizaciones del tercer sector?'
+    answer: 'Los que se relacionan directamente con la teoría del cambio propia, no los que copies de otra entidad. Indicadores útiles típicos: porcentaje de personas atendidas que mejoran en la dimensión clave del programa, tasa de retorno a 12 meses, índice de derivación cualificada a otros recursos, satisfacción declarada en encuesta de cierre.'
+  - question: '¿Diferencia entre output, outcome e impacto?'
+    answer: 'Output es lo que la organización hace (talleres impartidos, personas atendidas, plazas ofrecidas). Outcome es el cambio inmediato en la persona o entorno (mejora en habilidades, contratación tras la formación, derivación a un recurso). Impacto es la transformación sostenida y atribuible a la intervención más allá de lo que hubiera ocurrido sin ella. Confundir output con impacto es el error más extendido en las memorias anuales del tercer sector.'
+  - question: '¿Cuándo conviene pedir ayuda externa para medir impacto?'
+    answer: 'Cuando la organización lleva más de seis meses intentando armar el sistema interno y no avanza, cuando un funder grande exige una evaluación externa formal, o cuando el patronato quiere una mirada honesta antes de tomar una decisión estratégica como cerrar un programa o reorientar fondos. El resto del tiempo, casi siempre conviene mantener el sistema internalizado y simple.'
 ---
 Hay una pregunta que aparece en casi todas las primeras llamadas con organizaciones del tercer sector que llaman a Startidea: cómo medir el impacto social. Y casi siempre llega disfrazada de otra. Un patronato pide "modernizar la memoria anual". Una directora dice "necesitamos comunicar mejor lo que hacemos". Un grupo de socios pregunta "para qué sirve lo que financiamos". En el fondo, son la misma pregunta: cómo demostrar que el dinero, el tiempo y las personas que pasan por la organización producen algo que merece la pena. Esto es medir impacto.
 

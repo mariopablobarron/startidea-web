@@ -4,7 +4,18 @@ description: 'La mayoría de las alianzas entre organizaciones del tercer sector
 pubDate: 2026-05-21
 audience: 'Tercer sector'
 tags: ['alianzas', 'colaboración', 'ONG', 'tercer sector', 'estrategia']
-draft: true
+draft: false
+faqs:
+  - question: '¿Qué es una alianza estratégica entre ONGs?'
+    answer: 'Es un acuerdo formalizado entre dos o más organizaciones del tercer sector para abordar conjuntamente un proyecto, una causa o un territorio que ninguna podría abordar sola con la misma eficacia. La diferencia entre alianza estratégica y mera colaboración puntual es que la primera implica reasignar recursos, compartir métricas comunes y rendir cuentas al otro lado durante un período definido.'
+  - question: '¿Qué condiciones tiene que cumplir una alianza para que funcione?'
+    answer: 'Cuatro condiciones reales: (1) asimetría reconocida, ambas organizaciones admiten qué aporta cada una sin pretender ser iguales; (2) un proyecto concreto y limitado en el tiempo, no un marco genérico de colaboración; (3) una persona responsable identificada en cada lado, no la organización como entidad abstracta; (4) una métrica común acordada antes de empezar, no inventada a mitad de camino. Sin las cuatro, la alianza muere al año sin producir nada.'
+  - question: '¿Cómo se firma un acuerdo de colaboración entre dos ONGs?'
+    answer: 'Con un documento corto (1-2 páginas) que recoja: el problema común que se aborda, qué aporta cada parte en horas y recursos, qué decisiones se toman por consenso y cuáles por mayoría, quién es la persona responsable por cada lado, cómo y cuándo se mide el resultado, y la cláusula de salida (cómo se cierra la alianza si una parte ya no puede sostenerla). Los acuerdos largos suelen ser señal de que las partes desconfían y la alianza no va a funcionar.'
+  - question: '¿Cuándo una alianza es la respuesta equivocada?'
+    answer: 'Cuando una de las dos organizaciones quiere usar a la otra como vehículo para acceder a un funder que de otra forma no le tocaría. Cuando la asimetría es tan grande que la organización pequeña se va a quemar antes de un año. Cuando ninguna de las dos puede dedicar a una persona responsable a tiempo parcial. Y cuando el problema podría resolverlo una sola organización con un poco más de esfuerzo: aliarse por aliarse cuesta más de lo que rinde.'
+  - question: '¿Cómo medir si una alianza entre organizaciones funciona?'
+    answer: 'Con la métrica común que se acordó antes de empezar, y revisión trimestral con dos preguntas: ¿estamos consiguiendo lo que dijimos? ¿la otra parte está cumpliendo lo que aportaba? Si la respuesta a cualquiera es no durante dos trimestres seguidos, conviene reabrir el acuerdo o cerrarlo con honestidad. Continuar una alianza muerta por inercia desgasta a ambas organizaciones más que cerrarla.'
 ---
 Las alianzas estratégicas entre organizaciones del tercer sector se anuncian habitualmente con la misma escenografía. Una rueda de prensa con dos o tres logos en la pared, dos directores firmando un documento, un cóctel de presentación con prensa local invitada. A los seis meses, la alianza ha producido un comunicado conjunto. Al año, las dos organizaciones siguen operando exactamente como antes y la alianza es una nota al pie en la memoria anual.
 

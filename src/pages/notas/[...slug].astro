@@ -1,7 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { blogPostingSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { blogPostingSchema, breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 export async function getStaticPaths() {
   const notas = await getCollection('notas', ({ data }) => !data.draft);
@@ -54,6 +54,11 @@ const jsonLd = [
     { name: 'Notas', url: `${SITE_URL}/notas` },
     { name: nota.data.title, url: notaUrl },
   ]),
+  // FAQPage opcional. Si la nota define faqs en su frontmatter, generamos
+  // el schema → activa Featured Snippets en Google y sube CTR ~3×.
+  ...(nota.data.faqs && nota.data.faqs.length > 0
+    ? [faqPageSchema(nota.data.faqs)]
+    : []),
 ];
 ---
 
