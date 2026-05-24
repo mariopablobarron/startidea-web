@@ -1,0 +1,37 @@
+src/content/notas/como-crear-alianzas-estrategicas-entre-ongs.md
+  s_fc84abf46d9a4c::t_53b2a3ead407ff 8-18
+  s_fc84abf46d9a4c::t_93d66b118e2c2e 7
+src/pages/notas/[...slug].astro
+  s_fc84abf46d9a4c::t_659fddece3fdb9 57-61
+  s_fc84abf46d9a4c::t_40bbab640c9136 4
+src/content/notas/social-media-tercer-sector-granada.md
+  s_fc84abf46d9a4c::t_55306b0c5de4b9 1-89
+src/content/notas/como-hacer-fundraising-efectivo-fundacion.md
+  s_fc84abf46d9a4c::t_2c931e5fa82ee9 8-18
+  s_fc84abf46d9a4c::t_93d66b118e2c2e 7
+src/pages/contacto.astro
+  s_fc84abf46d9a4c::t_68e2fe54d27e79 35-36
+src/content/config.ts
+  s_fc84abf46d9a4c::t_fc138edbd2bb95 17-27
+src/content/notas/como-medir-impacto-social-organizacion.md
+  s_fc84abf46d9a4c::t_dbc1e55eecfba0 8-18
+  s_fc84abf46d9a4c::t_93d66b118e2c2e 7
+src/content/notas/como-producir-podcast-tercer-sector.md
+  s_fc84abf46d9a4c::t_b1d1f1fcb89434 1-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "f2d3fddbff1c247af6a116f510200ecc0515a08c",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
