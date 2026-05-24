@@ -1,0 +1,29 @@
+src/components/Popover.astro
+  s_fc84abf46d9a4c::t_ea51b17ec3d3d8 1-151,153,158-181
+  s_fc84abf46d9a4c::t_9cd81e9628ebb6 152,154-157
+src/components/Casos.astro
+  s_fc84abf46d9a4c::t_b77284154df39b 3,18,24-99,102-113,115-126
+src/pages/subvenciones/mapa.astro
+  s_fc84abf46d9a4c::t_eb465ff660de8f 678-679
+  s_fc84abf46d9a4c::t_b87aada4834b1c 325-348
+  s_fc84abf46d9a4c::t_39ef2862bf8189 620,624-677
+src/components/LogosBanner.astro
+  s_fc84abf46d9a4c::t_97632caabb355b 69-85
+  s_fc84abf46d9a4c::t_8213eec0e5c60b 3-7,10-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "5e2a99bfae2c62efbec025033ae3e1d8a4746351",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
