@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { sendOwnerLeadEmail } from '@/lib/email-resend';
 
 export const prerender = false;
 
@@ -89,6 +90,22 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   } catch {
     return new Response(JSON.stringify({ ok: false, error: 'network' }), { status: 502 });
   }
+
+  // Email a Mario (no-bloqueante, ya recibió Telegram).
+  sendOwnerLeadEmail({
+    subject: `Nuevo mensaje de ${name} — Contacto startidea.es`,
+    leadName: name,
+    leadEmail: email,
+    bodyHtml: `
+      <p style="font-size:13px;color:#666;margin:0 0 8px 0">Nuevo mensaje desde <code>${escape(path)}</code></p>
+      <p style="margin:0 0 4px 0"><strong>${escape(name)}</strong></p>
+      <p style="margin:0 0 16px 0;color:#666">${escape(email)}</p>
+      <div style="border-left:3px solid #E6356B;padding:8px 16px;background:#fff;margin:8px 0">
+        <p style="margin:0;white-space:pre-wrap">${escape(message)}</p>
+      </div>
+      <p style="font-size:12px;color:#888;margin-top:16px">Consentimiento RGPD: ${consent ? 'sí' : 'no'}</p>
+    `,
+  }).catch((err) => console.error('[contacto] email fail:', err));
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };

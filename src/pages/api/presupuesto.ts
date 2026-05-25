@@ -5,6 +5,7 @@
 
 import type { APIRoute } from 'astro';
 import { calcularPresupuesto } from '@/data/servicios';
+import { sendOwnerLeadEmail } from '@/lib/email-resend';
 
 export const prerender = false;
 
@@ -156,6 +157,30 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     diagnostico,
     serviciosNombres: calc.lineas.map((l) => l.replace(/\s*\(desde [^)]*\)/, '')),
   }).catch((err) => console.error('[presupuesto] email fail:', err));
+
+  // Email a Mario con el briefing completo (no-bloqueante).
+  sendOwnerLeadEmail({
+    subject: `Nuevo briefing presupuesto — ${name}`,
+    leadName: name,
+    leadEmail: email,
+    bodyHtml: `
+      <p style="margin:0 0 4px 0"><strong>${escapeHtml(name)}</strong></p>
+      <p style="margin:0 0 16px 0;color:#666">${escapeHtml(email)}</p>
+      <p style="font-size:12px;color:#888;margin:0 0 4px 0;text-transform:uppercase;letter-spacing:0.08em">Briefing</p>
+      <ul style="margin:4px 0 16px 0;padding-left:18px">
+        <li>Tipología: ${escapeHtml(tipologia)}</li>
+        <li>Reto: ${escapeHtml(reto)}</li>
+        <li>Urgencia: ${escapeHtml(urgencia)}</li>
+        <li>Presupuesto orientativo: ${escapeHtml(presupuestoRango)}</li>
+      </ul>
+      ${contexto ? `<p style="font-size:12px;color:#888;margin:0 0 4px 0;text-transform:uppercase;letter-spacing:0.08em">Contexto</p><div style="border-left:3px solid #E6356B;padding:8px 16px;background:#fff;margin:0 0 16px 0;white-space:pre-wrap">${escapeHtml(contexto)}</div>` : ''}
+      <p style="font-size:12px;color:#888;margin:0 0 4px 0;text-transform:uppercase;letter-spacing:0.08em">Diagnóstico autogenerado</p>
+      <p style="margin:4px 0 16px 0;font-style:italic;color:#444">${escapeHtml(diagnostico)}</p>
+      <p style="font-size:12px;color:#888;margin:0 0 4px 0;text-transform:uppercase;letter-spacing:0.08em">Servicios marcados (${serviciosIds.length})</p>
+      <pre style="margin:4px 0 16px 0;font-family:Inter,Arial,sans-serif;white-space:pre-wrap;color:#444;font-size:13px">${escapeHtml(calc.lineas.join('\n') || '(ninguno)')}</pre>
+      <p style="margin:0;font-size:14px"><strong>Estimación interna:</strong> ${escapeHtml(calc.resumen)}</p>
+    `,
+  }).catch((err) => console.error('[presupuesto] owner email fail:', err));
 
   // Devolver al cliente solo el diagnóstico (texto cualitativo, sin números)
   return new Response(

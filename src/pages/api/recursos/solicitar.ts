@@ -10,6 +10,7 @@
  * público (no protegido por DRM) — el lead magnet es aspiracional.
  */
 import type { APIRoute } from 'astro';
+import { sendOwnerLeadEmail } from '@/lib/email-resend';
 
 export const prerender = false;
 
@@ -117,6 +118,21 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   lines.push(`<b>Newsletter:</b> ${newsletter ? 'sí' : 'no'}`);
 
   await notifyTelegram(lines.join('\n'));
+
+  // Email a Mario (no-bloqueante).
+  sendOwnerLeadEmail({
+    subject: `Lead magnet — ${recurso.titulo} (${name})`,
+    leadName: name,
+    leadEmail: email,
+    bodyHtml: `
+      <p style="margin:0 0 4px 0"><strong>${escapeHtml(name)}</strong></p>
+      <p style="margin:0 0 16px 0;color:#666">${escapeHtml(email)}</p>
+      <p style="font-size:12px;color:#888;margin:0 0 4px 0;text-transform:uppercase;letter-spacing:0.08em">Recurso solicitado</p>
+      <p style="margin:4px 0 16px 0;font-weight:600">${escapeHtml(recurso.titulo)}</p>
+      ${organization ? `<p style="margin:0 0 4px 0;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.08em">Organización</p><p style="margin:4px 0 16px 0">${escapeHtml(organization)}</p>` : ''}
+      <p style="font-size:12px;color:#888;margin:0">Newsletter: ${newsletter ? 'sí' : 'no'}</p>
+    `,
+  }).catch((err) => console.error('[recursos] owner email fail:', err));
 
   // Suscripción opcional al newsletter
   if (newsletter) {
