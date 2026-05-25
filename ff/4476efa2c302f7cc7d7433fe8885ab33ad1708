@@ -1,0 +1,19 @@
+src/content/notas/convocatoria-2026-agenda-2030-ong.md
+  s_fc84abf46d9a4c::t_b895aa0700f7f9 1-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "ff4476efa2c302f7cc7d7433fe8885ab33ad1708",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
