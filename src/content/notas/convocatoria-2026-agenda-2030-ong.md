@@ -15,7 +15,7 @@ faqs:
   - question: '¿Cómo se tramita una subvención con certificado digital?'
     answer: 'Se accede a la sede electrónica oficial del organismo convocante con el certificado digital de representante de persona jurídica (no vale el certificado personal del director), se rellenan los formularios online, se adjunta la documentación firmada digitalmente (memoria del proyecto, presupuesto detallado, certificados de estar al corriente, estatutos), se firma la solicitud completa con AutoFirma y se obtiene un justificante con código CSV. Todo el proceso debe completarse antes del cierre del plazo — la sede electrónica suele saturarse las últimas horas.'
   - question: '¿Cuánto cuesta que Startidea tramite la subvención?'
-    answer: 'Startidea ofrece dos modalidades: tramitación puntual (preparación de toda la documentación + presentación electrónica con certificado digital + acompañamiento hasta la resolución) con precio cerrado dependiente del tamaño del proyecto, o acompañamiento integral en fundraising (identificación continua de convocatorias compatibles + tramitación de las que correspondan + memoria económica anual) en formato de iguala mensual. Para el caso concreto de la Convocatoria 2026 Agenda 2030, una primera llamada de 30 minutos sin coste permite valorar encaje y presupuestar.'
+    answer: 'Startidea ofrece dos modalidades: tramitación puntual (preparación de toda la documentación + presentación electrónica con certificado digital + acompañamiento hasta la resolución) con precio cerrado dependiente del tamaño del proyecto, o acompañamiento integral en fundraising (identificación continua de convocatorias compatibles + tramitación de las que correspondan + memoria económica anual) en formato de iguala mensual. Para el caso concreto de la Convocatoria 2026 Agenda 2030, Startidea tiene un sprint operativo de 2 semanas: del primer día de decisión al expediente presentado con justificante CSV. Una llamada de 30 minutos sin coste permite valorar encaje y cerrar presupuesto.'
 ---
 
 A las organizaciones del tercer sector que llaman a Startidea les pasa casi siempre lo mismo: las ayudas con sentido aparecen cuando ya no hay tiempo de prepararlas bien. La **Convocatoria 2026 para la Agenda 2030** es exactamente uno de esos casos. Cierra el **20 de junio de 2026** —de forma improrrogable— y es de las pocas líneas que financian a fondo perdido proyectos piloto reales: sostenibilidad, innovación social, comunicación con propósito y redes de alianzas multiactor.
@@ -63,9 +63,9 @@ La convocatoria cubre los costes directamente vinculados al proyecto subvenciona
 
 ## Plazo improrrogable: 20 de junio
 
-Aquí está el problema operativo real. Una convocatoria de este tipo se prepara bien en **6-8 semanas** si la organización ya tiene memoria escrita y presupuesto definido. En **3-4 semanas** si parte de cero y trabaja a fondo. Por debajo de eso, el riesgo de presentar un expediente débil que se cae en la valoración técnica es alto.
+Hoy es 25 de mayo. Quedan **menos de cuatro semanas** hasta el cierre, pero el calendario realista es más corto: la sede electrónica colapsa los dos últimos días y conviene presentar con el expediente cerrado en torno al **15 de junio** como muy tarde para tener margen ante cualquier requerimiento de subsanación temprana o problema técnico.
 
-Si estás leyendo esto entre el 25 de mayo y el 5 de junio, vas a tiempo si arrancas YA con todos los recursos disponibles. A partir del 10 de junio, presentarse es posible pero las probabilidades de hacerlo bien bajan rápido.
+Eso deja **dos semanas hábiles netas** para preparar un expediente competitivo. Es viable —Startidea lo ha hecho varias veces a este ritmo— pero exige decisión rápida, foco operativo y reparto de tareas claro desde el primer día. Si la conversación interna sobre presentarse va a tardar más de tres o cuatro días, lo más probable es que esta convocatoria deje de ser opción.
 
 ## Cómo se tramita: certificado digital y AutoFirma
 
@@ -99,40 +99,40 @@ La sede electrónica está pensada para una carga distribuida. Cuando 1.500 enti
 
 La solución no es técnica, es operativa: **presentar con margen**. La diferencia entre presentar el 18 de junio y el 20 a las 23:50 es la diferencia entre un proyecto aprobado y un proyecto descartado por tema técnico.
 
-## Cómo lo hace Startidea
+## Cómo lo hace Startidea — calendario de 2 semanas
 
-Startidea acompaña a organizaciones del tercer sector en el ciclo completo de la convocatoria:
+Startidea ha preparado un sprint operativo específico para esta convocatoria, diseñado para que un expediente competitivo esté presentado el **15 de junio** dejando 5 días de margen ante cualquier imprevisto técnico o requerimiento administrativo.
 
-### Fase 1 — Diagnóstico de encaje (1 semana)
+### Día 1-2 — Diagnóstico de encaje + decisión
 
-Antes de redactar nada, Startidea estudia si la convocatoria realmente encaja con lo que la organización quiere hacer en los próximos 18 meses. Hay convocatorias que parecen buenas en el titular pero acaban siendo un proyecto que la organización no quería hacer hecho por compromiso con el financiador. Si no encaja, lo decimos —y buscamos la siguiente que sí—.
+Antes de tocar memoria, Startidea estudia si la convocatoria realmente encaja con lo que la organización quiere hacer en los próximos 18 meses y qué línea (sostenibilidad, innovación social, comunicación, alianzas) maximiza probabilidades de aprobación. Si no encaja con sinceridad, lo decimos en esta llamada y la organización ahorra dos semanas de esfuerzo.
 
-### Fase 2 — Construcción del proyecto (3-4 semanas)
+### Día 3-9 — Construcción del proyecto (sprint intensivo)
 
-Trabajo conjunto con el equipo directivo para definir:
+Trabajo en bloques con el equipo directivo de la entidad para definir:
 
-- Problema concreto que aborda
-- Hipótesis de transformación
-- Actividades concretas y calendario realista
-- Equipo asignado y aliados nombrados
-- Métricas de resultado verificables
-- Presupuesto detallado por partidas elegibles
+- Problema concreto que aborda y por qué este proyecto, este año
+- Hipótesis de transformación, no de actividad
+- Actividades concretas con calendario realista de ejecución
+- Equipo asignado y aliados nombrados con compromiso escrito
+- Métricas de resultado verificables y proporcionales al presupuesto
+- Presupuesto detallado por partidas elegibles según las bases
 
-Esta es la fase que más impacto tiene en la valoración técnica. Una memoria mal estructurada con un proyecto bueno suele perder ante una memoria bien estructurada con un proyecto mediocre.
+Esta es la fase decisiva. Una memoria bien estructurada con un proyecto medio suele superar en valoración técnica a una memoria desordenada con un proyecto bueno. Startidea aporta plantillas validadas, criterios de elegibilidad ya digeridos y revisión cruzada de un segundo redactor.
 
-### Fase 3 — Documentación administrativa (1 semana)
+### Día 10-12 — Documentación administrativa en paralelo
 
-Recopilación y preparación de toda la documentación complementaria: certificados, estatutos actualizados, cuentas anuales, declaraciones responsables firmadas digitalmente, anexos por línea de proyecto.
+Mientras se cierra la memoria, Startidea recopila y prepara la documentación complementaria: certificados de estar al corriente con Hacienda y Seguridad Social, estatutos vigentes con sello del registro, cuentas anuales, declaraciones responsables firmadas digitalmente y anexos específicos de la línea de proyecto elegida.
 
-### Fase 4 — Presentación electrónica (1-2 días)
+### Día 13-14 — Presentación electrónica + justificante CSV
 
-Startidea presenta el expediente completo con el certificado digital de representante de la entidad —cedido temporalmente y con uso supervisado y trazable—. Genera y conserva el justificante con código CSV, lo envía al cliente, y queda como interlocutor para cualquier requerimiento administrativo posterior.
+Startidea presenta el expediente completo con el certificado digital de representante de la entidad —cedido temporalmente y con uso supervisado y trazable—. Genera y conserva el justificante con código CSV, lo envía al cliente con copia al patronato si procede, y queda como interlocutor para cualquier requerimiento administrativo posterior.
 
-Si la convocatoria entra en fase de subsanación (Ministerio pide aclaración o documentación adicional, plazo típico 10 días), Startidea gestiona la respuesta con la misma trazabilidad.
+Si la convocatoria entra en fase de subsanación (la administración pide aclaración o documentación adicional, plazo típico 10 días), Startidea gestiona la respuesta sin coste adicional para tramitaciones puntuales.
 
-### Fase 5 — Acompañamiento post-resolución
+### Post-resolución
 
-Si el proyecto es aprobado, Startidea acompaña en la estructura de justificación trimestral exigida por la convocatoria. Si es denegado, prepara la documentación de recurso si la valoración técnica lo justifica, y archiva la memoria para revisión y reaplicación en convocatorias futuras.
+Si el proyecto es aprobado, Startidea puede acompañar en la estructura de justificación trimestral que exige la convocatoria (cuotas separadas según alcance). Si es denegado, prepara la documentación de recurso cuando la valoración técnica lo justifica y archiva la memoria para revisión y reaplicación en la próxima edición o en convocatorias complementarias.
 
 ## Modalidades de trabajo
 
@@ -141,4 +141,6 @@ Si el proyecto es aprobado, Startidea acompaña en la estructura de justificaci�
 
 ---
 
-Si tu organización está considerando presentarse a la **Convocatoria 2026 para la Agenda 2030**, lo más operativo es no esperar. [Reserva 30 minutos con Startidea](/contacto) y en esa llamada repasamos: si tu proyecto encaja con las líneas elegibles, qué documentación ya tienes y qué te falta, y si tiene sentido que Startidea presente el expediente por ti antes del 20 de junio. Sin coste, sin compromiso.
+Si tu organización está considerando presentarse a la **Convocatoria 2026 para la Agenda 2030**, lo más operativo es no esperar. El sprint de 2 semanas empieza el día que decidimos juntos que tu proyecto encaja — si arrancamos esta semana, el expediente entra antes del 15 de junio con margen ante imprevistos.
+
+[Reserva 30 minutos con Startidea](/contacto) y en esa llamada repasamos: si tu proyecto encaja con las líneas elegibles, qué documentación ya tienes y qué te falta, y cerramos el alcance + presupuesto de la tramitación. Sin coste, sin compromiso. Si arrancamos, empezamos al día siguiente.
