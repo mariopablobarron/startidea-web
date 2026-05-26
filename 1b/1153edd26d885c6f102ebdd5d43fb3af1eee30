@@ -1,0 +1,22 @@
+src/lib/jsonld.ts
+  s_fc84abf46d9a4c::t_f25f98650a0b4f 326-386
+src/pages/financiacion-empresas.astro
+  s_fc84abf46d9a4c::t_23ef912c78346e 11
+  s_fc84abf46d9a4c::t_10a192d35ab8b4 42-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "1b1153edd26d885c6f102ebdd5d43fb3af1eee30",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
