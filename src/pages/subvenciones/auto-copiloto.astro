@@ -1,0 +1,364 @@
+---
+// /subvenciones/auto-copiloto
+//
+// Registro en el Copiloto Autónomo de Subvenciones.
+// La organización guarda su perfil una vez; el sistema detecta convocatorias
+// que encajan y genera la documentación automáticamente.
+
+import Base from '@/layouts/Base.astro';
+import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
+import { FINALIDADES, TERRITORIOS_PUBLIC } from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Copiloto Autónomo', url: `${SITE_URL}/subvenciones/auto-copiloto` },
+  ]),
+];
+---
+
+<Base
+  title="Copiloto Autónomo de Subvenciones · Startidea"
+  description="Registra tu organización una vez. Cada vez que aparezca una convocatoria que encaje, Startidea genera automáticamente la documentación preliminar y te la manda por email. Sin que tengas que hacer nada."
+  ogSlug="page/subvenciones"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <span class="label">— Copiloto Autónomo · Sin intervención</span>
+      <h1 class="mt-3 font-display text-display-xl leading-[0.96] text-ink">
+        Registra tu org.<br />
+        <em class="italic text-magenta">Nosotros vigilamos</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">
+        Dinos cómo es tu organización. Cada vez que el BDNS publique una convocatoria
+        que encaje, generamos automáticamente la documentación preliminar y te la
+        enviamos por email. Tú solo revisas, completas los campos marcados y presentas.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cómo funciona (3 pasos) -->
+  <section class="bg-paper-warm border-b border-ink/15 py-12">
+    <div class="container-x">
+      <ol class="grid gap-px border border-ink/15 bg-ink/10 md:grid-cols-3">
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="font-mono text-3xl font-bold text-magenta">01</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-ink">Registra tu perfil</h3>
+          <p class="mt-2 text-sm text-ink/75">
+            Nos dices qué hace tu organización, qué tipo de convocatorias te interesan
+            y en qué territorio. Una sola vez.
+          </p>
+        </li>
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="font-mono text-3xl font-bold text-magenta">02</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-ink">Detectamos el encaje</h3>
+          <p class="mt-2 text-sm text-ink/75">
+            Cada día comparamos las convocatorias nuevas del BDNS con tu perfil.
+            Cuando encaja, el Copiloto entra en acción.
+          </p>
+        </li>
+        <li class="bg-paper-warm p-6 md:p-8">
+          <p class="font-mono text-3xl font-bold text-magenta">03</p>
+          <h3 class="mt-3 font-display text-lg font-bold text-ink">Recibes los documentos</h3>
+          <p class="mt-2 text-sm text-ink/75">
+            Memoria técnica, presupuesto, checklist y guía de presentación generados
+            automáticamente. Tú los revisas y presentas con tu certificado digital.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <SubvencionesTabs active="copiloto" />
+
+  <!-- Formulario -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <form id="copiloto-form" class="mx-auto max-w-2xl space-y-6" novalidate>
+
+        <!-- Datos org -->
+        <div class="border-b border-ink/15 pb-6">
+          <h2 class="font-display text-xl font-bold text-ink">Tu organización</h2>
+          <p class="mt-1 text-sm text-ink/60">Estos datos irán en todos los documentos generados.</p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="org_nombre" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Nombre de la organización *
+            </label>
+            <input id="org_nombre" name="org_nombre" type="text" required maxlength="200"
+              placeholder="Asociación Ejemplo Granada"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          </div>
+          <div>
+            <label for="org_cif" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              CIF
+            </label>
+            <input id="org_cif" name="org_cif" type="text" maxlength="20"
+              placeholder="G12345678"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          </div>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="org_tipo" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Tipo de organización *
+            </label>
+            <select id="org_tipo" name="org_tipo" required
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40">
+              <option value="">Selecciona...</option>
+              <option value="asociacion">Asociación</option>
+              <option value="fundacion">Fundación</option>
+              <option value="cooperativa">Cooperativa / Empresa social</option>
+              <option value="empresa">Empresa con propósito</option>
+              <option value="otro">Otro tipo de entidad</option>
+            </select>
+          </div>
+          <div>
+            <label for="ccaa" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              CCAA principal
+            </label>
+            <select id="ccaa" name="ccaa"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40">
+              <option value="">Sin especificar</option>
+              {TERRITORIOS_PUBLIC.map((t) => (
+                <option value={t.slug}>{t.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="representante" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Nombre del representante legal *
+          </label>
+          <input id="representante" name="representante" type="text" required maxlength="150"
+            placeholder="Nombre y apellidos"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+        </div>
+
+        <div>
+          <label for="org_descripcion" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Descripción de actividades * <span class="normal-case">(para el Copiloto)</span>
+          </label>
+          <textarea id="org_descripcion" name="org_descripcion" required minlength="40" maxlength="800" rows="4"
+            placeholder="Describe brevemente qué hace tu organización, a quién beneficia, en qué áreas actúa y qué proyectos suele desarrollar. Cuanto más detallado, mejor serán los documentos generados."
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+          ></textarea>
+          <p class="mt-1 font-mono text-[11px] text-ink-mute">
+            Esta descripción es la base del prompt de IA. Mínimo 40 caracteres.
+          </p>
+        </div>
+
+        <!-- Filtros de convocatorias -->
+        <div class="border-t border-ink/15 pt-6">
+          <h2 class="font-display text-xl font-bold text-ink">Qué convocatorias te interesan</h2>
+          <p class="mt-1 text-sm text-ink/60">Opcional — sin filtros recibirás todas las nuevas que detectemos.</p>
+        </div>
+
+        <div>
+          <label for="keywords" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+            Palabras clave (separadas por coma)
+          </label>
+          <input id="keywords" name="keywords" type="text" maxlength="300"
+            placeholder="mujer rural, igualdad, inclusión, tercer sector"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="finalidad" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Área principal de interés
+            </label>
+            <select id="finalidad" name="finalidad"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40">
+              <option value="">Cualquier área</option>
+              {FINALIDADES.map((f) => (
+                <option value={f.slug}>{f.label}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="importe_min" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Importe mínimo (€)
+            </label>
+            <input id="importe_min" name="importe_min" type="number" min="0" step="1000"
+              placeholder="0"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          </div>
+        </div>
+
+        <!-- Contacto -->
+        <div class="border-t border-ink/15 pt-6">
+          <h2 class="font-display text-xl font-bold text-ink">Dónde enviamos los documentos</h2>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="email" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Email *
+            </label>
+            <input id="email" name="email" type="email" required autocomplete="email"
+              placeholder="tu@email.com"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          </div>
+          <div>
+            <label for="telefono" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Teléfono (opcional)
+            </label>
+            <input id="telefono" name="telefono" type="tel"
+              placeholder="600 000 000"
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="border-t border-ink/15 pt-5">
+          <button type="submit" id="copiloto-submit" class="btn">
+            Activar Copiloto Autónomo →
+          </button>
+          <p class="mt-3 font-mono text-[11px] text-ink-mute">
+            Te enviaremos un email de confirmación. Sin confirmación, el Copiloto no se activa.
+            Puedes pausarlo o cancelarlo en cualquier momento desde el propio email.
+          </p>
+        </div>
+
+        <div id="copiloto-result" class="hidden" role="alert"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Aviso de límites realistas -->
+  <section class="bg-paper-warm py-12">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl border-t border-ink/15 pt-8">
+        <h2 class="font-display text-xl font-bold text-ink">Lo que el Copiloto no puede hacer (todavía)</h2>
+        <ul class="mt-4 space-y-3 text-sm text-ink/75">
+          <li class="flex gap-3">
+            <span class="text-magenta font-bold shrink-0">—</span>
+            <span><strong>Firmar por ti.</strong> La firma digital (certificado electrónico) debe hacerla el representante legal desde su equipo. Es un requisito legal insalvable.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-magenta font-bold shrink-0">—</span>
+            <span><strong>Inventar datos del proyecto.</strong> Los campos marcados con [COMPLETAR] necesitan información real que solo tú tienes: presupuesto concreto, número exacto de beneficiarios, equipo humano.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-magenta font-bold shrink-0">—</span>
+            <span><strong>Garantizar el éxito.</strong> Los documentos son un punto de partida de calidad, no una garantía de aprobación. Cada convocatoria tiene sus propios criterios de valoración.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const API_BASE = 'https://startidea.es';
+
+  const form = document.getElementById('copiloto-form') as HTMLFormElement;
+  const btn = document.getElementById('copiloto-submit') as HTMLButtonElement;
+  const resultEl = document.getElementById('copiloto-result')!;
+
+  // Prerelleno desde query string
+  const qs = new URL(window.location.href).searchParams;
+  const fillIf = (id: string, key: string) => {
+    const v = qs.get(key);
+    if (v) {
+      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      if (el) el.value = v;
+    }
+  };
+  fillIf('ccaa', 'ccaa');
+  fillIf('finalidad', 'finalidad');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultEl.classList.add('hidden');
+    btn.disabled = true;
+    const orig = btn.textContent;
+    btn.textContent = 'Registrando…';
+
+    const fd = new FormData(form);
+    const finalidad = String(fd.get('finalidad') ?? '').trim();
+    const territorios = [];
+    const ccaa = String(fd.get('ccaa') ?? '').trim();
+    if (ccaa) territorios.push(ccaa);
+    else territorios.push('nacional');
+
+    const body = {
+      email: String(fd.get('email') ?? '').trim(),
+      org_nombre: String(fd.get('org_nombre') ?? '').trim(),
+      org_cif: String(fd.get('org_cif') ?? '').trim(),
+      org_tipo: String(fd.get('org_tipo') ?? '').trim(),
+      org_descripcion: String(fd.get('org_descripcion') ?? '').trim(),
+      representante: String(fd.get('representante') ?? '').trim(),
+      telefono: String(fd.get('telefono') ?? '').trim(),
+      ccaa,
+      keywords: String(fd.get('keywords') ?? '').trim(),
+      finalidades: finalidad ? [finalidad] : [],
+      territorios,
+      importe_min: Number(fd.get('importe_min') ?? 0) || 0,
+      auto_generar: true,
+    };
+
+    if (!body.email || !body.org_nombre || !body.org_tipo || !body.org_descripcion || !body.representante) {
+      showResult('error', 'Faltan campos obligatorios (nombre, tipo, descripción, representante, email).');
+      btn.disabled = false;
+      btn.textContent = orig;
+      return;
+    }
+    if (body.org_descripcion.length < 40) {
+      showResult('error', 'La descripción de actividades es demasiado corta.');
+      btn.disabled = false;
+      btn.textContent = orig;
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auto-copiloto/register`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const j = await res.json();
+      if (!res.ok || !j.ok) {
+        showResult('error', j.error ?? `Error ${res.status}`);
+      } else {
+        form.style.display = 'none';
+        showResult(
+          'ok',
+          `<strong>¡Registrado!</strong><br/>
+           Te hemos enviado un email de confirmación a <code>${escHtml(body.email)}</code>.<br/>
+           Abre el enlace para activar el Copiloto. Si no llega en 5 minutos, revisa la carpeta de spam.`,
+        );
+      }
+    } catch {
+      showResult('error', 'Error de red. Inténtalo de nuevo.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = orig;
+    }
+  });
+
+  function showResult(kind: 'ok' | 'error', html: string) {
+    resultEl.className = kind === 'ok'
+      ? 'mt-5 border-l-2 border-magenta bg-paper-warm/50 p-4 text-sm text-ink'
+      : 'mt-5 border-l-2 border-magenta bg-paper-warm/50 p-4 text-sm text-magenta';
+    resultEl.innerHTML = html;
+    resultEl.classList.remove('hidden');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function escHtml(s: string): string {
+    return s.replace(/[&<>"]/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!,
+    );
+  }
+</script>
