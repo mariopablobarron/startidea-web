@@ -1,0 +1,22 @@
+src/pages/laboratorio/index.astro
+  s_fcdc72bdc20948::t_699c1763749b3a 14-21
+  s_fcdc72bdc20948::t_cc1a2418e5b95e 80-85,90-96
+src/components/Ecosistema.astro
+  s_fcdc72bdc20948::t_abbbecef18e3c4 71-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "e02a64a1abf0498a18c762c822e04511044fafc5",
+  "prompts": {},
+  "sessions": {
+    "s_fcdc72bdc20948": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2ad80cb9-08ab-4474-9c04-3c38a502365e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
