@@ -179,6 +179,14 @@ const ORG = {
       url: 'https://empleo.startidea.es',
       description: 'Bolsa de empleo online para cualquier sector en España. Conecta empresas, entidades y organizaciones con candidatos.',
     },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Hub Startidea Tech',
+      url: 'https://hub.startidea.tech',
+      description: 'Plataforma tecnológica del ecosistema Startidea: gestión de clientes, proyectos, leads, analítica SEO y herramientas de operaciones internas.',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+    },
   ],
   sameAs: [
     'https://www.linkedin.com/company/agenciastartidea',
