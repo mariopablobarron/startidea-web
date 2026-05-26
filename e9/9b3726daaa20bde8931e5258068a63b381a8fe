@@ -1,0 +1,19 @@
+src/content/notas/newsletter-segmentacion-ong-tercer-sector.md
+  s_fc84abf46d9a4c::t_bfefdd84b7cd69 1-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "e99b3726daaa20bde8931e5258068a63b381a8fe",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
