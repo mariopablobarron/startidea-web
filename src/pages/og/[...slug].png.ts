@@ -144,6 +144,78 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'del diagnóstico',
       subtitle: 'Caso real anonimizado: federación regional de discapacidad con 86% de dependencia pública. Mezcla de ingresos, palancas y recomendaciones.',
     },
+
+    // ─── Landings añadidas 2026-05-26 ─────────────────────────────────
+    'page/financiacion-empresas': {
+      kind: 'page',
+      eyebrow: '— Financiación pública',
+      title: 'Toda la financiación pública. Filtrada para ti.',
+      accent: 'Filtrada para ti',
+      subtitle: '1.900+ convocatorias en vivo de BDNS, CDTI, IDAE, ENISA y Andalucía TRADE. Si una encaja, Startidea presenta el expediente por ti con certificado digital.',
+    },
+    'page/que-hacemos': {
+      kind: 'page',
+      eyebrow: '— Qué hace Startidea',
+      title: 'Cinco servicios. Una mirada.',
+      accent: 'Una mirada',
+      subtitle: 'Comunicación · Consultoría · Fundraising · Audiovisual · Financiación pública. Trabajados juntos por un equipo con quince años desde Granada.',
+    },
+    'page/subvenciones': {
+      kind: 'page',
+      eyebrow: '— Buscador de subvenciones',
+      title: 'Filtramos el BOE. Para ti.',
+      accent: 'Para ti',
+      subtitle: 'Convocatorias del BDNS más Andalucía TRADE e IDAE. Sin paywall, sin créditos, sin clickbait. Filtrado desde el ADN del tercer sector.',
+    },
+    'page/subvenciones-mapa': {
+      kind: 'page',
+      eyebrow: '— Mapa de subvenciones · BDNS',
+      title: 'Las ayudas abiertas, por territorio.',
+      accent: 'por territorio',
+      subtitle: 'Mapa interactivo en vivo de las convocatorias abiertas en España agrupadas por CCAA. Datos del BDNS actualizados a diario.',
+    },
+    'page/diagnostico': {
+      kind: 'page',
+      eyebrow: '— Diagnóstico inicial',
+      title: 'Tres minutos. Un briefing claro.',
+      accent: 'Un briefing claro',
+      subtitle: 'Antes de hablar, cuéntanos qué necesitas resolver. Startidea recibe el cuestionario, prepara un primer análisis y llega a la reunión con preguntas que importan.',
+    },
+    'page/diagnostico-nuevo': {
+      kind: 'page',
+      eyebrow: '— Diagnóstico · cinco pasos',
+      title: 'Tu reto, en cinco preguntas.',
+      accent: 'en cinco preguntas',
+      subtitle: 'Wizard adaptativo según tu tipo de organización. Empresa, institución, entidad social o emprendedor — las preguntas se ajustan al perfil.',
+    },
+    'page/diagnostico-gracias': {
+      kind: 'page',
+      eyebrow: '— Recibido',
+      title: 'Gracias. Te llamamos pronto.',
+      accent: 'Te llamamos pronto',
+      subtitle: 'El equipo de Startidea lo lee, prepara una primera lectura y te contacta en las próximas 48 horas laborales.',
+    },
+    'page/presupuesto-nuevo': {
+      kind: 'page',
+      eyebrow: '— Pedir presupuesto · 3 pasos',
+      title: 'Tres preguntas. Una cifra.',
+      accent: 'Una cifra',
+      subtitle: 'Si ya sabes lo que necesitas, te respondemos con rango orientativo y propuesta de llamada de 30 min en 48 horas laborales.',
+    },
+    'page/laboratorio': {
+      kind: 'page',
+      eyebrow: '— Startidea Lab',
+      title: 'El método. A la vista.',
+      accent: 'A la vista',
+      subtitle: 'Experimentos abiertos y métodos aplicados. Hyperframes (vídeo con código), diagnósticos de fundraising y herramientas que estamos probando con clientes reales.',
+    },
+    'page/integraciones-google': {
+      kind: 'page',
+      eyebrow: '— Integraciones · Google',
+      title: 'Startidea conecta con GA4 y Search Console.',
+      accent: 'GA4 y Search Console',
+      subtitle: 'Acceso solo de lectura a las propiedades que cada cliente autoriza. Datos para producir informes SEO internos, no se comparten con terceros y se eliminan a petición.',
+    },
   };
 
   // Subpáginas de /para-quien (una OG por audiencia)
