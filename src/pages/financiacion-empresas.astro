@@ -1,0 +1,344 @@
+---
+// /financiacion-empresas — Landing maestra del servicio fundraising para
+// empresas con propósito, startups y entidades sociales.
+//
+// Hub editorial que mapea las 5 fuentes principales de financiación
+// pública española (BDNS + Andalucía TRADE + IDAE + ENISA + CDTI) y
+// enlaza al buscador unificado /subvenciones + las notas editoriales
+// dedicadas a cada fuente.
+
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿Cuáles son las principales fuentes de financiación pública para empresas en España?',
+    answer: 'Las cinco fuentes más relevantes para empresas con propósito, startups y entidades sociales son: BDNS (Base de Datos Nacional de Subvenciones, agrega convocatorias estatales y autonómicas a fondo perdido), CDTI (Centro para el Desarrollo Tecnológico Industrial, créditos blandos con tramo no reembolsable para I+D+i), IDAE (programas estatales de transición energética como MOVES, PREE, Renoval), ENISA (préstamos participativos para startups y PYMES sin diluir capital) y Andalucía TRADE (misiones comerciales y apoyo a internacionalización para empresas andaluzas).',
+  },
+  {
+    question: '¿Cuál es la diferencia entre una subvención y un préstamo participativo?',
+    answer: 'Una subvención es dinero a fondo perdido que no se devuelve si el proyecto se ejecuta y justifica correctamente — son las ayudas BDNS, NEOTEC de CDTI o muchas líneas IDAE. Un préstamo participativo (ENISA, parte del CDTI) se devuelve pero con condiciones más favorables que un banco: interés vinculado a resultados, carencia larga, plazo de devolución hasta 9 años, y se contabiliza como patrimonio neto. Las subvenciones son más competitivas; los préstamos participativos tienen aprobación más probable si la empresa demuestra capacidad de devolución.',
+  },
+  {
+    question: '¿Qué papel juega Startidea en la presentación de estas ayudas?',
+    answer: 'Startidea acompaña el ciclo completo: diagnóstico de encaje (qué fuente conviene en cada caso), construcción del expediente con el lenguaje específico de cada organismo, preparación de la documentación administrativa, presentación electrónica con certificado digital de representante, gestión de subsanaciones, y acompañamiento en la justificación post-resolución. El alcance se cierra antes de empezar con dos modalidades: tramitación puntual de una convocatoria o iguala anual de fundraising integral.',
+  },
+  {
+    question: '¿Cuánto cuesta presentar una solicitud de subvención con Startidea?',
+    answer: 'Depende del tipo: una tramitación puntual de una convocatoria estándar (Agenda 2030, IDAE simple, una autonómica) se cierra entre 1.500 y 4.500 € según complejidad. Un expediente NEOTEC o PID del CDTI con memoria técnica profunda: entre 4.000 y 9.000 €. Una iguala anual de fundraising integral (identificación continua + tramitación de las que correspondan + memoria económica anual) parte de 800 € al mes. Toda primera llamada de 30 minutos es sin coste para valorar encaje y cerrar presupuesto.',
+  },
+  {
+    question: '¿Qué es el certificado digital de representante y por qué importa?',
+    answer: 'Es el certificado expedido por la FNMT a nombre de una persona jurídica (empresa, asociación, fundación) que permite firmar trámites electrónicos en nombre de la entidad. Distinto del certificado personal del director (que no sirve). Es obligatorio para presentar prácticamente cualquier solicitud de subvención por sede electrónica. Startidea cuenta con flujo seguro de cesión temporal con uso supervisado y trazable: la entidad cede el certificado solo durante la presentación, recibe el justificante con código CSV y recupera el certificado al cierre del expediente.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Financiación empresas', url: `${SITE_URL}/financiacion-empresas` },
+  ]),
+  faqPageSchema(faqs),
+];
+
+const fuentes = [
+  {
+    nombre: 'BDNS',
+    nombreCompleto: 'Base de Datos Nacional de Subvenciones',
+    que: 'Subvenciones a fondo perdido del Estado, Comunidades Autónomas, Diputaciones y Ayuntamientos. Es la base oficial obligatoria del Ministerio de Hacienda donde se publican todas las ayudas dinerarias del sector público español.',
+    paraQuien: 'Asociaciones, fundaciones, ONGs, cooperativas sociales, ayuntamientos. Algunas líneas también empresas.',
+    cuando: 'Cuando tu organización busca financiación a fondo perdido para un proyecto concreto y existe una convocatoria abierta que encaja con su misión.',
+    enBuscador: '/subvenciones',
+    total: '1.870+ convocatorias abiertas',
+  },
+  {
+    nombre: 'CDTI',
+    nombreCompleto: 'Centro para el Desarrollo Tecnológico Industrial',
+    que: 'Subvenciones y créditos blandos con tramo no reembolsable para proyectos de I+D+i. NEOTEC (startups jóvenes), PID (proyectos de I+D), Línea Directa de Innovación (innovación incremental pyme), Cervera (transferencia con centros tecnológicos).',
+    paraQuien: 'Startups tecnológicas, PYMES innovadoras, empresas con departamento I+D.',
+    cuando: 'Cuando el proyecto tiene componente técnico real (no comercial) y la empresa puede demostrar capacidad de ejecución y devolución del tramo no subvencionado.',
+    enBuscador: null,
+    nota: '/notas/cdti-ayudas-innovacion-empresas',
+    total: 'Convocatorias permanentes según línea',
+  },
+  {
+    nombre: 'IDAE',
+    nombreCompleto: 'Instituto para la Diversificación y Ahorro de la Energía',
+    que: 'Programas estatales de transición energética: MOVES (vehículos eléctricos), PREE (rehabilitación de edificios), Renoval (renovación), Eolmar (eólica marina), almacenamiento energético. Mayoría son Next Generation EU.',
+    paraQuien: 'Empresas, ayuntamientos, particulares y entidades del sector terciario que ejecuten proyectos de eficiencia energética o renovables.',
+    cuando: 'Cuando hay una inversión real en infraestructura energética: parque de vehículos eléctricos, rehabilitación de oficinas, instalación de renovables, almacenamiento, eficiencia industrial.',
+    enBuscador: '/subvenciones?finalidad=energia',
+    total: '58 programas activos + cerrados',
+  },
+  {
+    nombre: 'ENISA',
+    nombreCompleto: 'Empresa Nacional de Innovación',
+    que: 'Préstamos participativos para startups y PYMES. Tres líneas: Jóvenes Emprendedores (25-75K€), Emprendedores (25-300K€), Crecimiento (25K-1.5M€). Sin diluir capital, con carencia larga y devolución vinculada a resultados.',
+    paraQuien: 'Startups en sus primeros 24 meses (JE y Emp.) o PYMES consolidadas con proyecto de expansión (Crecimiento).',
+    cuando: 'Cuando la empresa quiere crecer pero no quiere diluir capital con una ronda de inversión, y puede demostrar capacidad de devolución a 5-9 años.',
+    enBuscador: null,
+    nota: '/notas/financiacion-startup-enisa-prestamos-participativos',
+    total: 'Producto permanente',
+  },
+  {
+    nombre: 'Andalucía TRADE',
+    nombreCompleto: 'Agencia Andaluza de Promoción Exterior',
+    que: 'Misiones comerciales internacionales, ferias internacionales financiadas parcialmente, talleres de logística y comercio exterior, consultas empresariales sobre ODS. Apoyo a la internacionalización de empresas andaluzas.',
+    paraQuien: 'PYMES, autónomos y grandes empresas con domicilio en Andalucía y voluntad de expansión internacional.',
+    cuando: 'Cuando la empresa quiere abrir mercados nuevos (Suecia, Polonia, Ecuador, Chile, Bélgica…) y necesita la cobertura de una agencia pública para una primera prospección.',
+    enBuscador: '/subvenciones?finalidad=internacionalizacion',
+    total: '8 convocatorias activas',
+  },
+];
+
+const fases = [
+  {
+    numero: '01',
+    titulo: 'Diagnóstico de encaje',
+    descripcion: 'Antes de redactar nada, evaluamos juntos qué fuente encaja con tu proyecto y momento. Hay convocatorias que parecen buenas en el titular pero acaban siendo un proyecto que no querías hacer. Si no encaja con sinceridad, lo decimos.',
+    duracion: '1 sesión · 1 semana',
+  },
+  {
+    numero: '02',
+    titulo: 'Construcción del expediente',
+    descripcion: 'Trabajo conjunto con tu equipo para definir proyecto, hitos, presupuesto, equipo, métricas. Adaptamos el lenguaje al organismo (CDTI ≠ ENISA ≠ Agenda 2030). Revisión cruzada por un segundo redactor antes del envío.',
+    duracion: '2-6 semanas según convocatoria',
+  },
+  {
+    numero: '03',
+    titulo: 'Documentación administrativa',
+    descripcion: 'Recopilación y firma digital de toda la documentación complementaria: estatutos, certificados de estar al corriente, cuentas anuales, declaraciones responsables, anexos específicos.',
+    duracion: '1 semana en paralelo',
+  },
+  {
+    numero: '04',
+    titulo: 'Presentación electrónica + post-resolución',
+    descripcion: 'Presentación con certificado digital de representante (cesión temporal supervisada), justificante CSV, gestión de subsanaciones si las hay y acompañamiento en la justificación trimestral post-aprobación.',
+    duracion: '1-2 días + seguimiento',
+  },
+];
+---
+
+<Base
+  title="Financiación pública para empresas con propósito · Startidea"
+  description="Mapa unificado de las 5 fuentes principales de financiación pública para empresas, startups y entidades sociales en España: BDNS, CDTI, IDAE, ENISA y Andalucía TRADE. Buscador con 1.900+ convocatorias y servicio de tramitación completa con certificado digital."
+  ogSlug="page/financiacion-empresas"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Financiación pública</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Toda la financiación pública.<br />
+        <em class="italic text-magenta">Filtrada para ti.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Startidea agrega <strong>1.900+ convocatorias</strong> en tiempo real de las cinco fuentes públicas más relevantes para empresas con propósito, startups y entidades sociales: BDNS, CDTI, IDAE, ENISA y Andalucía TRADE. Y si una te encaja, la presentamos por ti con certificado digital. Sin promesas vacías ni listados de 50.000 ayudas que nadie revisa.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/subvenciones" class="btn">Buscar convocatorias →</a>
+        <a href="/contacto" class="btn-ghost">Hablar 30 min con Startidea</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Las 5 fuentes -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Las cinco fuentes</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cada fuente <em class="italic text-magenta">para algo distinto</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-ink/75">
+            Sirven a perfiles diferentes y financian cosas diferentes. La pregunta no es "qué subvenciones hay", sino "cuál encaja con tu proyecto y momento".
+          </p>
+
+          <ol class="reveal-stagger mt-12 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-2">
+            {fuentes.map((f) => (
+              <li class="bg-paper p-6 md:p-8">
+                <div class="flex items-baseline justify-between gap-3">
+                  <h3 class="font-display text-2xl font-extrabold text-ink">{f.nombre}</h3>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">{f.total}</span>
+                </div>
+                <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                  {f.nombreCompleto}
+                </p>
+                <p class="mt-4 text-sm leading-relaxed text-ink/85">{f.que}</p>
+                <dl class="mt-5 divide-y divide-ink/10 border-t border-ink/10">
+                  <div class="grid grid-cols-3 gap-x-3 py-2 text-xs">
+                    <dt class="text-ink-mute">Para quién</dt>
+                    <dd class="col-span-2 text-ink/80">{f.paraQuien}</dd>
+                  </div>
+                  <div class="grid grid-cols-3 gap-x-3 py-2 text-xs">
+                    <dt class="text-ink-mute">Cuándo</dt>
+                    <dd class="col-span-2 text-ink/80">{f.cuando}</dd>
+                  </div>
+                </dl>
+                <div class="mt-5 flex flex-wrap gap-3 text-sm">
+                  {f.enBuscador && (
+                    <a href={f.enBuscador} class="btn-text">
+                      Ver en buscador <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                  {f.nota && (
+                    <a href={f.nota} class="btn-text">
+                      Leer guía completa <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo lo abordamos -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo lo abordamos</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cuatro fases.<br />
+            <em class="italic text-magenta">Una entrega real</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-ink/75">
+            La presentación de una solicitud de subvención NO se improvisa la última semana del plazo. Así trabaja Startidea cada expediente.
+          </p>
+
+          <ol class="reveal-stagger mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {fases.map((f) => (
+              <li class="grid grid-cols-12 gap-x-8 py-8">
+                <div class="col-span-12 lg:col-span-2">
+                  <span class="font-mono text-3xl text-ink-mute">{f.numero}</span>
+                </div>
+                <div class="col-span-12 lg:col-span-10">
+                  <h3 class="font-display text-2xl text-ink">{f.titulo}</h3>
+                  <p class="mt-3 max-w-measure text-ink/80">{f.descripcion}</p>
+                  <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta">
+                    {f.duracion}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notas relacionadas -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Guías detalladas</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Para entender <em class="italic text-magenta">cada fuente</em>.
+          </h2>
+
+          <ul class="reveal-stagger mt-12 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-2">
+            <li class="bg-paper p-6">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">— CDTI</p>
+              <h3 class="mt-2 font-display text-xl leading-snug text-ink">
+                <a href="/notas/cdti-ayudas-innovacion-empresas" class="hover:text-magenta">
+                  Ayudas CDTI: NEOTEC, PID, Línea Directa y cuándo conviene cada una
+                </a>
+              </h3>
+              <p class="mt-3 text-sm text-ink/75">
+                Las cuatro líneas más usadas para startups y pymes españolas, con cuantías, plazos y criterios reales de valoración.
+              </p>
+            </li>
+            <li class="bg-paper p-6">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">— ENISA</p>
+              <h3 class="mt-2 font-display text-xl leading-snug text-ink">
+                <a href="/notas/financiacion-startup-enisa-prestamos-participativos" class="hover:text-magenta">
+                  Préstamos ENISA para startups y PYMES: cómo funcionan
+                </a>
+              </h3>
+              <p class="mt-3 text-sm text-ink/75">
+                Las tres líneas (Jóvenes Emprendedores, Emprendedores, Crecimiento), comparación con rondas de inversión, qué pide ENISA.
+              </p>
+            </li>
+            <li class="bg-paper p-6">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">— BDNS · Tercer sector</p>
+              <h3 class="mt-2 font-display text-xl leading-snug text-ink">
+                <a href="/notas/convocatoria-2026-agenda-2030-ong" class="hover:text-magenta">
+                  Convocatoria 2026 Agenda 2030: ayuda fondo perdido para ONGs
+                </a>
+              </h3>
+              <p class="mt-3 text-sm text-ink/75">
+                Una de las convocatorias más relevantes para asociaciones y fundaciones. Sprint de 2 semanas hasta presentación.
+              </p>
+            </li>
+            <li class="bg-paper p-6">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">— Andalucía TRADE</p>
+              <h3 class="mt-2 font-display text-xl leading-snug text-ink">
+                <a href="/subvenciones?finalidad=internacionalizacion" class="hover:text-magenta">
+                  Misiones comerciales internacionales activas
+                </a>
+              </h3>
+              <p class="mt-3 text-sm text-ink/75">
+                Buscador en vivo con las convocatorias TRADE para empresas andaluzas: Bélgica, Polonia, Ecuador, Chile, Suecia.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles para crear FAQPage schema rico -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x text-center">
+      <span class="label">— Tu próximo paso</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Si encaja, <em class="italic text-magenta">presentamos por ti</em>.
+      </h2>
+      <p class="mt-6 mx-auto max-w-measure text-ink/80">
+        Empieza por una llamada de 30 minutos sin coste. Repasamos qué fuente tiene sentido en tu caso, qué documentación ya tienes y qué te falta, y si tiene sentido que Startidea construya y presente el expediente por ti antes del plazo.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href="/contacto" class="btn">Reservar 30 min →</a>
+        <a href="/subvenciones" class="btn-ghost">Ver buscador completo</a>
+      </div>
+    </div>
+  </section>
+</Base>
