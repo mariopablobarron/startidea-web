@@ -6,19 +6,16 @@
 import type { APIRoute } from 'astro';
 import { updateStatus, getExpediente } from '@/lib/expedientes-db';
 import type { ExpedienteStatus } from '@/lib/expedientes-db';
+import { isValidAdminHeader } from '@/lib/admin-session';
 
 export const prerender = false;
 
 const VALID_STATUSES: ExpedienteStatus[] = ['recibido', 'analizando_ia', 'docs_listos', 'entregado', 'presentado', 'rechazado'];
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
-
 export const POST: APIRoute = async ({ request }) => {
-  const adminToken = getEnv('ADMIN_TOKEN');
+  // Auth: el panel envía sha256(ADMIN_TOKEN) como cookie → header x-admin-token
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!adminToken || reqToken !== adminToken) {
+  if (!isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 

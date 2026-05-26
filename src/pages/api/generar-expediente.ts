@@ -19,6 +19,7 @@
 import type { APIRoute } from 'astro';
 import { getExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db';
 import { fetchSubsidyDetail } from '@/lib/subsidies-api';
+import { isValidAdminHeader } from '@/lib/admin-session';
 
 export const prerender = false;
 
@@ -27,10 +28,9 @@ function getEnv(key: string): string {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  // Auth: ADMIN_TOKEN en header X-Admin-Token
-  const adminToken = getEnv('ADMIN_TOKEN');
+  // Auth: el panel envía sha256(ADMIN_TOKEN) como cookie → header x-admin-token
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!adminToken || reqToken !== adminToken) {
+  if (!isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 
