@@ -1,0 +1,37 @@
+src/pages/admin/expedientes/[id].astro
+  s_fc84abf46d9a4c::t_bb898d50432ac5 1-375
+src/pages/api/entregar-expediente.ts
+  s_fc84abf46d9a4c::t_f5d5cb303fd83d 1-165
+src/pages/api/expediente.ts
+  s_fc84abf46d9a4c::t_c47b263d9075b7 12
+  s_fc84abf46d9a4c::t_4489ba37ab8ed8 109-138
+src/lib/expedientes-db.ts
+  s_fc84abf46d9a4c::t_28a3e388116d63 1-192
+src/pages/admin/expedientes/index.astro
+  s_fc84abf46d9a4c::t_bed91b9f969e6d 1-180
+src/pages/api/status-expediente.ts
+  s_fc84abf46d9a4c::t_8859f171b11f84 1-39
+src/pages/subvenciones/[slug].astro
+  s_fc84abf46d9a4c::t_705c5497b87272 319-320,322,324-327,329-332,334-339,341-354
+src/pages/subvenciones/presentar/nuevo.astro
+  s_fc84abf46d9a4c::t_c064ac3b6d0c21 5-10,14,23,27-40,45,48
+  s_fc84abf46d9a4c::t_c0ca14d97425ae 79-81
+src/pages/api/generar-expediente.ts
+  s_fc84abf46d9a4c::t_141c9c692c3068 1-249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "92fcc4700073f7bf54a708ba4c5be0bb35c42128",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
