@@ -1,0 +1,25 @@
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_1d0adf9e6c4b24 615-636,639,641,645
+  s_fc84abf46d9a4c::t_f398f08c5397c4 476
+  s_fc84abf46d9a4c::t_4043422da5accb 393,406-407
+  s_fc84abf46d9a4c::t_1636b34f037faf 523-530,534
+  s_fc84abf46d9a4c::t_d0ca4d41d82381 207,210,212-242
+src/pages/subvenciones/[slug].astro
+  s_fc84abf46d9a4c::t_2a2625d3272091 42-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "4cd57c2844a93763ef7fca1f7c3c1b50db679c09",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
