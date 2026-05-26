@@ -20,6 +20,8 @@ import type { APIRoute } from 'astro';
 import { getExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
+import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/doc-extractor';
+import { join } from 'node:path';
 
 export const prerender = false;
 
@@ -54,14 +56,23 @@ export const POST: APIRoute = async ({ request }) => {
   // Marcar como "analizando"
   updateStatus(id, 'analizando_ia');
 
-  // Construir contexto de convocatoria + ejecutar generación IA
+  // Construir contexto de convocatoria
   const { context: convContext } = await buildConvContext({
     convocatoria_slug: exp.convocatoria_slug,
     convocatoria_title: exp.convocatoria_title,
     convocatoria_url: exp.convocatoria_url,
   });
 
-  const gen = await runAiGeneration(exp, convContext);
+  // Extraer texto de los documentos subidos por el cliente (si existen)
+  const expedientesDir = process.env.EXPEDIENTES_DIR ?? '/data/expedientes';
+  const expedienteDir = join(expedientesDir, `${id}-${exp.org_cif}`);
+  const docsExtraction = await extractDocsFromExpediente(expedienteDir);
+  const docsContext = formatExtractedDocsForPrompt(docsExtraction);
+  if (docsExtraction.docs.length > 0) {
+    console.log(`[generar-expediente] Documentos extraídos: ${docsExtraction.docs.length} ficheros, ${docsExtraction.totalChars} chars`);
+  }
+
+  const gen = await runAiGeneration(exp, convContext, docsContext || undefined);
 
   if (!gen.ok) {
     updateStatus(id, 'recibido');
