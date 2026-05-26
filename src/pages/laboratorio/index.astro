@@ -11,6 +11,15 @@ const jsonLd = [
 
 const ramas = [
   {
+    titulo: 'Aceleradora Startidea',
+    subtitulo: 'Networking founders × inversores × mentores',
+    descripcion: 'Plataforma freemium de matching entre emprendedores, inversores y mentores. Construida sobre HumHub + Next.js: discover con scoring, chat en tiempo real, push smart, planes Pro/Investor. En producción con comunidad real.',
+    href: 'https://app.aceleradora.hubstartidea.es',
+    icono: '🚀',
+    estado: 'LIVE · app.aceleradora.hubstartidea.es',
+    external: true,
+  },
+  {
     titulo: 'HyperFrames',
     subtitulo: 'Video editorial con código',
     descripcion: 'Composiciones HTML animadas que se renderizan a MP4. Útil para hero web, memoria anual, redes e intros de evento. Coherente, editable y rápido de iterar.',
@@ -68,13 +77,23 @@ const ramas = [
               <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">{r.estado}</span>
             </div>
             <h2 class="mt-5 font-display text-2xl leading-tight text-ink md:text-3xl">
-              <a href={r.href} class="hover:text-magenta">{r.titulo}</a>
+              <a
+                href={r.href}
+                class="hover:text-magenta"
+                target={r.external ? '_blank' : undefined}
+                rel={r.external ? 'noopener' : undefined}
+              >{r.titulo}</a>
             </h2>
             <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute">{r.subtitulo}</p>
             <p class="mt-4 text-sm leading-relaxed text-ink/80">{r.descripcion}</p>
             <div class="mt-6">
-              <a href={r.href} class="btn-ghost !py-2 text-sm">
-                Explorar <span aria-hidden="true">→</span>
+              <a
+                href={r.href}
+                class="btn-ghost !py-2 text-sm"
+                target={r.external ? '_blank' : undefined}
+                rel={r.external ? 'noopener' : undefined}
+              >
+                {r.external ? 'Visitar' : 'Explorar'} <span aria-hidden="true">{r.external ? '↗' : '→'}</span>
               </a>
             </div>
           </li>
