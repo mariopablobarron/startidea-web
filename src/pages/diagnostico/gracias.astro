@@ -1,39 +1,138 @@
 ---
+// /diagnostico/gracias — Página de confirmación post-formulario.
+//
+// Sirve a dos wizards:
+//   - /diagnostico/nuevo  → llega sin query (kind=diagnostico por defecto)
+//   - /presupuesto/nuevo  → llega con ?kind=presupuesto
+//
+// El mensaje + CTAs se ajustan según kind vía JS (página estática para
+// mantener perf — no requiere SSR).
+
 import Base from '@/layouts/Base.astro';
 ---
 
 <Base
-  title="Diagnóstico recibido — Startidea"
-  description="Gracias por enviar tu diagnóstico. Startidea revisará tus respuestas y te contactará en breve."
+  title="Recibido — Startidea"
+  description="Gracias por enviar tu formulario. Startidea revisará tus respuestas y te contactará en las próximas 48 horas laborales."
   ogSlug="page/diagnostico-gracias"
   noindex={true}
 >
   <section class="border-b border-ink/15 bg-paper py-20 md:py-28 lg:py-32">
     <div class="container-x">
-      <span class="label">— Recibido</span>
+      <span class="label" id="kind-label">— Recibido</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
         Gracias.<br/>
-        <em class="italic text-magenta">Te llamamos pronto.</em>
+        <em class="italic text-magenta" id="kind-headline">Te llamamos pronto.</em>
       </h1>
-      <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Startidea ha recibido tu diagnóstico. El equipo lo lee, prepara una primera lectura y Mario te contacta en las próximas 48 horas laborales para concretar la llamada.
+      <p class="mt-8 max-w-measure text-lede text-ink/80" id="kind-intro">
+        Startidea ha recibido tu diagnóstico. El equipo lo lee, prepara una primera lectura y te contacta en las próximas <strong>48 horas laborales</strong> para concretar la llamada.
       </p>
 
-      <div class="mt-12 max-w-measure border-t border-ink/15 pt-8 text-sm text-ink/80 space-y-4">
-        <p>
-          <strong class="text-ink">Mientras tanto</strong> — si quieres acelerar, puedes reservar hueco directamente en el calendario:
-        </p>
-        <div class="flex flex-wrap gap-3">
-          <a href="/contacto" class="btn">Reservar llamada de 30min →</a>
-          <a href="/notas" class="btn-ghost">Leer las notas del blog</a>
-        </div>
-      </div>
+      <!-- Trust signals: 3 micro-datos verificables -->
+      <ul class="mt-10 grid max-w-2xl grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+        <li class="bg-paper p-4">
+          <p class="font-display text-2xl font-extrabold text-ink">15 años</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">de práctica desde Granada</p>
+        </li>
+        <li class="bg-paper p-4">
+          <p class="font-display text-2xl font-extrabold text-ink">48h</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">respuesta laboral garantizada</p>
+        </li>
+        <li class="bg-paper p-4">
+          <p class="font-display text-2xl font-extrabold text-magenta">0€</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">primera llamada sin coste</p>
+        </li>
+      </ul>
+    </div>
+  </section>
 
-      <div class="mt-12 max-w-measure border-t border-ink/15 pt-8 text-sm text-ink-mute">
-        <p>
-          ¿Necesitas modificar algo de lo que enviaste? Escríbenos a <a href="mailto:hola@startidea.es" class="link-underline text-ink">hola@startidea.es</a>.
-        </p>
-      </div>
+  <!-- 4 acciones útiles post-conversión -->
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <span class="label">— Mientras llega tu respuesta</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Cuatro cosas <em class="italic text-magenta">útiles ahora</em>.
+      </h2>
+
+      <ol class="mt-12 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-2">
+        <li class="bg-paper p-6 md:p-8">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">01 · Buscar ayudas</span>
+          <h3 class="mt-3 font-display text-xl text-ink">Mira si hay una convocatoria abierta para ti</h3>
+          <p class="mt-3 text-sm text-ink/75">
+            Buscador unificado con 1.900+ convocatorias en vivo (BDNS + CDTI + IDAE + Andalucía TRADE). Filtra por finalidad, beneficiario o CCAA y descubre qué hay sobre la mesa esta semana.
+          </p>
+          <a href="/subvenciones" class="btn-text mt-4 text-sm">
+            Buscar convocatorias <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="bg-paper p-6 md:p-8">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">02 · Leer casos reales</span>
+          <h3 class="mt-3 font-display text-xl text-ink">Cómo trabajamos con organizaciones como la tuya</h3>
+          <p class="mt-3 text-sm text-ink/75">
+            Casos publicados con autorización: Down Granada, Aldaima, Proyecto Hombre, Tres Mil Millones de Latidos. Cada caso con métricas, timeline y testimonio del cliente.
+          </p>
+          <a href="/casos" class="btn-text mt-4 text-sm">
+            Ver casos <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="bg-paper p-6 md:p-8">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">03 · Leer las notas</span>
+          <h3 class="mt-3 font-display text-xl text-ink">Lo que se piensa cuando se piensa Startidea</h3>
+          <p class="mt-3 text-sm text-ink/75">
+            Notas editoriales sobre fundraising, comunicación, impacto social y financiación pública. Sin clickbait. Pensadas para directoras y patronatos del tercer sector.
+          </p>
+          <a href="/notas" class="btn-text mt-4 text-sm">
+            Leer notas <span aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="bg-paper p-6 md:p-8">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">04 · Acelerar</span>
+          <h3 class="mt-3 font-display text-xl text-ink">¿Necesitas hablar antes de 48 horas?</h3>
+          <p class="mt-3 text-sm text-ink/75">
+            Si tu caso es urgente (plazo de convocatoria que cierra esta semana, decisión de patronato inminente), escribe directamente y aceleramos la respuesta.
+          </p>
+          <a href="mailto:hola@startidea.es?subject=Urgente%20-%20diagn%C3%B3stico%20recibido" class="btn-text mt-4 text-sm">
+            Escribir directamente <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Pie informativo -->
+  <section class="bg-paper py-10 md:py-12">
+    <div class="container-x">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        ¿Necesitas modificar algo de lo que enviaste?
+        <a href="mailto:hola@startidea.es" class="text-ink hover:text-magenta">hola@startidea.es</a>
+      </p>
     </div>
   </section>
 </Base>
+
+<script>
+  // Adapta el mensaje superior según kind (diagnostico|presupuesto).
+  // /presupuesto/nuevo redirige a /diagnostico/gracias?kind=presupuesto.
+  const params = new URLSearchParams(window.location.search);
+  const kind = params.get('kind') ?? 'diagnostico';
+  const label = document.getElementById('kind-label');
+  const headline = document.getElementById('kind-headline');
+  const intro = document.getElementById('kind-intro');
+
+  if (kind === 'presupuesto') {
+    if (label) label.textContent = '— Briefing recibido';
+    if (headline) headline.textContent = 'Te enviamos cifras pronto.';
+    if (intro) {
+      intro.innerHTML =
+        'Startidea ha recibido tu briefing. El equipo lo analiza, calcula alcance y presupuesto, y te responde con una propuesta clara en las próximas <strong>48 horas laborales</strong>.';
+    }
+    document.title = 'Presupuesto recibido — Startidea';
+  }
+
+  // Tracking analítico (Umami + GA4 via stTrack)
+  type W = Window & { stTrack?: (e: string, p?: Record<string, unknown>) => void };
+  const w = window as W;
+  if (typeof w.stTrack === 'function') {
+    w.stTrack('form_submit', { form_type: kind });
+  }
+</script>
