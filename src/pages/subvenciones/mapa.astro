@@ -105,10 +105,10 @@ const topFinalidades = stats
 // ─── Escala de tamaño (radio mínimo / máximo del nodo) ─────────
 const maxCount = Math.max(1, ...ccaaPoints.map((c) => c.count));
 function radiusFor(count: number): number {
-  if (count === 0) return 8;
+  if (count === 0) return 9;
   // raíz cuadrada para que la escala no sea brutal entre Andalucía y Ceuta
   const norm = Math.sqrt(count / maxCount);
-  return 8 + norm * 32; // entre 8 y 40px
+  return 9 + norm * 21; // 9–30px (reducido para evitar solapamiento entre CCAA)
 }
 
 // detected_at del HUB viene en segundos pero el endpoint lo interpreta
@@ -265,7 +265,11 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 
               <!-- Nodos CCAA -->
               <g id="mapa-nodes">
-                {ccaaPoints.map((c) => (
+                {ccaaPoints.map((c) => {
+                  const r = radiusFor(c.count);
+                  const fillOp = c.count === 0 ? 0 : +(0.18 + (c.count / maxCount) * 0.55).toFixed(2);
+                  const ringOp = +(c.count === 0 ? 0.32 : 0.42 + (c.count / maxCount) * 0.32).toFixed(2);
+                  return (
                   <g
                     class="mapa-node group cursor-pointer"
                     data-ccaa={c.slug}
@@ -273,42 +277,31 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
                     data-count={c.count}
                     transform={`translate(${c.x}, ${c.y})`}
                   >
-                    <!-- Halo animado (visible al hover) -->
-                    <circle
-                      r={radiusFor(c.count) + 8}
-                      class="mapa-halo fill-magenta opacity-0 transition-opacity duration-300"
-                    />
-                    <!-- Punto principal -->
-                    <circle
-                      r={radiusFor(c.count)}
-                      class="mapa-dot fill-magenta transition-all duration-300"
-                      style={`opacity: ${c.count === 0 ? 0.15 : 0.4 + (c.count / maxCount) * 0.5};`}
-                    />
-                    <!-- Punto pequeño central (anclaje visual) -->
-                    <circle
-                      r="2.5"
-                      class="fill-ink"
-                    />
-                    <!-- Label CCAA -->
+                    <!-- Halo animado (hover/active) -->
+                    <circle r={r + 12} class="mapa-halo opacity-0 transition-opacity duration-300" style="fill:#e6356b;" />
+                    <!-- Anillo base siempre visible (da definición incluso sin datos) -->
+                    <circle r={r} class="mapa-ring" fill="none" stroke="#e6356b" stroke-width="1.5" style={`opacity:${ringOp};`} />
+                    <!-- Relleno proporcional al count -->
+                    <circle r={r} class="mapa-dot transition-all duration-300" style={`fill:#e6356b;opacity:${fillOp};`} />
+                    <!-- Punto central (anclaje visual) -->
+                    <circle r="3" class="mapa-center" style="fill:#e6356b;opacity:0.8;" />
+                    <!-- Etiqueta CCAA -->
                     <text
-                      y={radiusFor(c.count) + 14}
+                      y={r + 13}
                       text-anchor="middle"
-                      class="mapa-label font-mono fill-current pointer-events-none text-ink/75 transition-colors duration-300"
-                      style="font-size:10px; letter-spacing:0.05em;"
-                    >
-                      {c.label}
-                    </text>
-                    <!-- Cifra (visible al hover) -->
+                      class="mapa-label pointer-events-none transition-all duration-300"
+                      style="font-size:9px;letter-spacing:0.05em;fill:rgba(61,61,64,0.68);font-family:ui-monospace,'JetBrains Mono',monospace;"
+                    >{c.label}</text>
+                    <!-- Cifra (hover/active) -->
                     <text
-                      y={-radiusFor(c.count) - 6}
+                      y={-r - 7}
                       text-anchor="middle"
-                      class="mapa-count font-display fill-current pointer-events-none text-magenta opacity-0 transition-opacity duration-300"
-                      style="font-size:14px; font-weight:800;"
-                    >
-                      {c.count}
-                    </text>
+                      class="mapa-count pointer-events-none opacity-0 transition-opacity duration-300"
+                      style="font-size:13px;font-weight:800;fill:#e6356b;font-family:'Montserrat Variable',Montserrat,sans-serif;"
+                    >{c.count > 0 ? c.count.toLocaleString('es-ES') : '—'}</text>
                   </g>
-                ))}
+                  );
+                })}
               </g>
             </svg>
 
@@ -503,13 +496,20 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
   /* Animaciones específicas del mapa */
   .mapa-node:hover .mapa-halo,
   .mapa-node.active .mapa-halo {
-    opacity: 0.25;
+    opacity: 0.14;
     animation: mapa-pulse 1.6s ease-in-out infinite;
   }
 
+  /* Anillo: brilla en hover/active */
+  .mapa-node:hover .mapa-ring,
+  .mapa-node.active .mapa-ring {
+    opacity: 0.85 !important;
+  }
+
+  /* Fill: visible en hover aunque count=0 */
   .mapa-node:hover .mapa-dot,
   .mapa-node.active .mapa-dot {
-    opacity: 1 !important;
+    opacity: 0.65 !important;
   }
 
   .mapa-node:hover .mapa-count,
@@ -519,18 +519,24 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 
   .mapa-node:hover .mapa-label,
   .mapa-node.active .mapa-label {
-    color: rgb(230 53 107);
+    fill: #e6356b !important;
     font-weight: 600;
   }
 
-  .mapa-node.active .mapa-dot {
-    stroke: rgb(20 20 20);
-    stroke-width: 2;
+  /* Nodo activo (seleccionado): anillo con trazo oscuro */
+  .mapa-node.active .mapa-ring {
+    stroke: #3d3d40 !important;
+    stroke-width: 2.5 !important;
+    opacity: 1 !important;
+  }
+
+  .mapa-node.active .mapa-center {
+    opacity: 1 !important;
   }
 
   @keyframes mapa-pulse {
-    0%, 100% { transform: scale(1); opacity: 0.25; }
-    50% { transform: scale(1.15); opacity: 0.4; }
+    0%, 100% { transform: scale(1); opacity: 0.14; }
+    50% { transform: scale(1.18); opacity: 0.28; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -817,7 +823,94 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     fetchList(true);
   });
 
+  // ─── Actualizar nodos del mapa con datos frescos del cliente ────
+  // Sirve para corregir el mapa cuando el SSR no pudo contactar el HUB.
+  async function refreshMapNodes() {
+    try {
+      const ctl = new AbortController();
+      setTimeout(() => ctl.abort(), 6000);
+      const res = await fetch(`${HUB_URL}/api/public/subsidies/stats`, { signal: ctl.signal });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data?.ok || !data.by_ccaa) return;
+
+      const byCcaa: Record<string, number> = data.by_ccaa;
+      const allCounts = Object.values(byCcaa).filter((v): v is number => typeof v === 'number');
+      if (!allCounts.length) return;
+      const maxC = Math.max(1, ...allCounts);
+
+      // Mismos alts que en el frontmatter SSR
+      const altMap: Record<string, string[]> = {
+        'euskadi':                   ['pais-vasco', 'paisvasco'],
+        'la-rioja':                  ['rioja'],
+        'catalunya':                 ['cataluna', 'cataluña'],
+        'comunitat-valenciana':      ['comunidad-valenciana', 'valencia', 'c-valenciana'],
+        'illes-balears':             ['baleares', 'islas-baleares'],
+        'canarias':                  ['islas-canarias'],
+        'ciudad-autonoma-de-ceuta':  ['ceuta'],
+        'ciudad-autonoma-de-melilla':['melilla'],
+      };
+
+      function rf(count: number): number {
+        if (count === 0) return 9;
+        return 9 + Math.sqrt(count / maxC) * 21;
+      }
+
+      $$('.mapa-node').forEach((node) => {
+        const slug = node.getAttribute('data-ccaa') || '';
+        const alts = altMap[slug] || [];
+        let count = byCcaa[slug] ?? 0;
+        for (const alt of alts) {
+          if (byCcaa[alt] !== undefined) { count = byCcaa[alt]; break; }
+        }
+
+        const prevCount = Number(node.getAttribute('data-count') || 0);
+        if (count === prevCount) return; // sin cambios para este nodo
+
+        node.setAttribute('data-count', String(count));
+
+        const newR = rf(count);
+        const fillOp = count === 0 ? 0 : +(0.18 + (count / maxC) * 0.55).toFixed(2);
+        const ringOp = +(count === 0 ? 0.32 : 0.42 + (count / maxC) * 0.32).toFixed(2);
+
+        // Orden de los circles: [0] halo, [1] ring, [2] dot, [3] center
+        const circles = Array.from(node.querySelectorAll('circle')) as SVGCircleElement[];
+        if (circles[0]) circles[0].setAttribute('r', String(newR + 12));
+        if (circles[1]) { circles[1].setAttribute('r', String(newR)); circles[1].style.opacity = String(ringOp); }
+        if (circles[2]) { circles[2].setAttribute('r', String(newR)); circles[2].style.opacity = String(fillOp); }
+
+        // Textos: [0] label, [1] count
+        const texts = Array.from(node.querySelectorAll('text')) as SVGTextElement[];
+        if (texts[0]) texts[0].setAttribute('y', String(newR + 13));
+        if (texts[1]) {
+          texts[1].setAttribute('y', String(-newR - 7));
+          texts[1].textContent = count > 0 ? count.toLocaleString('es-ES') : '—';
+        }
+      });
+
+      // Actualizar también los totales en las métricas del header
+      if (data.total) {
+        const el = document.querySelector('[data-stat="total"]');
+        if (el) el.textContent = data.total.toLocaleString('es-ES');
+      }
+      const ccaaSumEl = document.querySelector('[data-stat="ccaa"]');
+      if (ccaaSumEl) {
+        const ccaaSum = allCounts.reduce((s, v) => s + v, 0);
+        ccaaSumEl.textContent = ccaaSum.toLocaleString('es-ES');
+      }
+      if (data.by_geo) {
+        const estatalEl = document.querySelector('[data-stat="estatal"]');
+        if (estatalEl && data.by_geo.ESTATAL != null) estatalEl.textContent = data.by_geo.ESTATAL.toLocaleString('es-ES');
+        const europaEl = document.querySelector('[data-stat="europa"]');
+        if (europaEl && data.by_geo.EUROPA != null) europaEl.textContent = data.by_geo.EUROPA.toLocaleString('es-ES');
+      }
+    } catch {
+      // HUB no disponible — el SSR ya sirvió los datos o no hay nada que hacer
+    }
+  }
+
   // Primera carga + init estado del jump link
   updateJumpLink();
   fetchList();
+  refreshMapNodes(); // refresca nodos si el SSR no tuvo datos del HUB
 </script>
