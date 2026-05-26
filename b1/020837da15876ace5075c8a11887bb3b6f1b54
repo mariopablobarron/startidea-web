@@ -1,0 +1,40 @@
+src/pages/contrato/[token].astro
+  s_fc84abf46d9a4c::t_a9e320a5c83bfc 1-320
+src/pages/admin/factura/[facturaNum].astro
+  s_fc84abf46d9a4c::t_ed93436d428d10 1-62
+src/pages/api/generar-factura.ts
+  s_fc84abf46d9a4c::t_765c85ebf8b31e 1-77
+src/lib/contrato-generator.ts
+  s_fc84abf46d9a4c::t_89bf82e1842d62 1-300
+src/pages/admin/expedientes/[id].astro
+  s_fc84abf46d9a4c::t_a331880a1c5189 89-123
+  s_fc84abf46d9a4c::t_2b9fc0787bb874 333-394
+  s_fc84abf46d9a4c::t_e9ad46a4719765 588-668
+src/pages/api/aceptar-contrato.ts
+  s_fc84abf46d9a4c::t_09373dfdf9150b 1-72
+src/lib/expedientes-db.ts
+  s_fc84abf46d9a4c::t_e00ff3a51c6c09 158-166
+  s_fc84abf46d9a4c::t_ab5ec35218163a 52-60
+  s_fc84abf46d9a4c::t_0cc30f0158ce2b 250-307
+  s_fc84abf46d9a4c::t_f7469ba6bf0d1b 112-118,124-127,131-132,138-144,148-151
+src/pages/api/enviar-contrato.ts
+  s_fc84abf46d9a4c::t_d36d94b90edddf 1-94
+src/lib/factura-generator.ts
+  s_fc84abf46d9a4c::t_0dfe850714c77c 1-235
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b1020837da15876ace5075c8a11887bb3b6f1b54",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
