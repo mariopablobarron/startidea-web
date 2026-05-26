@@ -53,10 +53,10 @@ Ejemplos útiles:
   - Pendiente: implementar por sede (Junta de Andalucía, BDNS/infosubvenciones.es, OEPM...)
   - Requiere container separado con Playwright (NO meter en imagen principal)
 
-- S7 (editorial): 2-3 notas adicionales sobre financiación y comunicación
-  - "Cómo calcular el ROI de contratar tramitación de subvenciones"
-  - "Fundraising individual para asociaciones pequeñas"
-  - "Cómo medir el impacto de una campaña de email en ESFL"
+- ~~S7 (editorial): 2-3 notas adicionales~~ ✅ DONE (2026-05-26)
+  - roi-tramitar-subvenciones-agencia.md
+  - fundraising-individual-asociaciones-pequenas.md
+  - medir-resultados-email-marketing-esfl.md
 
 ## Datos sensibles
 
