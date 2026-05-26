@@ -1,0 +1,29 @@
+src/pages/audiovisual.astro
+  s_fc84abf46d9a4c::t_54f5b57d859ec9 4
+  s_fc84abf46d9a4c::t_30aa44b716a555 30-33
+src/pages/comunicacion.astro
+  s_fc84abf46d9a4c::t_fcce27db3f5f6e 4
+  s_fc84abf46d9a4c::t_7143a16e2eb963 30-33
+src/pages/consultoria.astro
+  s_fc84abf46d9a4c::t_7acb838c960cad 4
+  s_fc84abf46d9a4c::t_272adcc5423540 30-33
+src/pages/fundraising.astro
+  s_fc84abf46d9a4c::t_4054f5acf76730 4
+  s_fc84abf46d9a4c::t_a12fbc0c2b99a3 30-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "38fc7275219a355006764c88fc30f1b391e3095f",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
