@@ -1,0 +1,22 @@
+src/components/SubsidyCard.astro
+  s_fc84abf46d9a4c::t_40c7abe0de931a 37,41-50
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_5981921fdc8bea 568-670
+  s_fc84abf46d9a4c::t_8924e551a0fc22 83-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "87d7a129a69c8b98bf586e1f858fd08d4d5cfc26",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
