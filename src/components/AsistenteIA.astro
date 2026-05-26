@@ -8,7 +8,7 @@
 <button
   type="button"
   id="ai-chip"
-  class="fixed bottom-6 right-6 z-40 hidden md:inline-flex items-center gap-2 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
+  class="fixed bottom-6 right-6 z-50 hidden md:inline-flex items-center gap-2 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"
@@ -132,6 +132,7 @@
 
     var history = [];
     var isStreaming = false;
+    var welcomed = false;
 
     var trackedOpen = false;
     function setOpen(open) {
@@ -139,7 +140,7 @@
       panel.classList.toggle('hidden', !open);
       [chip, chipMobile].forEach(function (b) { b && b.setAttribute('aria-expanded', String(open)); });
       if (open) {
-        if (history.length === 0) saludarInicio();
+        if (!welcomed) saludarInicio();
         if (!trackedOpen) {
           trackedOpen = true;
           window.stTrack && window.stTrack('chat_open', { page_path: location.pathname });
@@ -166,6 +167,7 @@
     }
 
     function saludarInicio() {
+      welcomed = true;
       appendBubble('assistant', 'Hola, soy el asistente de Startidea. Puedo orientarte sobre servicios, precios orientativos, casos publicados y cómo arrancar un diagnóstico. ¿Qué te trae por aquí?');
     }
 
