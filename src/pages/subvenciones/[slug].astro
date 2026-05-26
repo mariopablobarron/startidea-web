@@ -39,6 +39,24 @@ export async function getStaticPaths() {
     }
     if (res.totalPages && page + 1 >= res.totalPages) break;
   }
+
+  // Incluir también las cerradas recientes (convocatorias añadidas manualmente
+  // con interés editorial, ej. OEPM, CDTI, ENISA). Hard-cap bajo: solo la
+  // primera página para no inflar el build.
+  try {
+    const cerradas = await fetchSubsidies({
+      status: 'cerrado',
+      pageSize: 50,
+      page: 0,
+      sort: 'recent',
+    });
+    for (const item of cerradas.items) {
+      if (item.slug) slugs.add(item.slug);
+    }
+  } catch {
+    // no bloquear el build si falla
+  }
+
   return [...slugs].map((slug) => ({ params: { slug } }));
 }
 

@@ -204,19 +204,42 @@ const jsonLd = [
 
         <!-- Resultados -->
         <div>
-          <div class="flex items-baseline justify-between border-b border-ink/15 pb-3">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/15 pb-3">
             <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
               <span id="subv-count">{initial.total.toLocaleString('es-ES')}</span>
-              {' '}convocatorias abiertas
+              {' '}<span id="subv-status-label">convocatorias abiertas</span>
             </p>
-            <select
-              id="subv-sort"
-              class="border border-ink/25 bg-paper px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-ink"
-            >
-              <option value="recent">Más recientes</option>
-              <option value="deadline">Próximas a cerrar</option>
-              <option value="amount">Mayor dotación</option>
-            </select>
+            <div class="flex items-center gap-3">
+              <!-- Toggle abiertas/cerradas -->
+              <div class="flex items-center rounded-full border border-ink/20 p-0.5">
+                <button
+                  type="button"
+                  id="subv-toggle-abierto"
+                  data-status="abierto"
+                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors bg-ink text-paper"
+                  aria-pressed="true"
+                >
+                  Abiertas
+                </button>
+                <button
+                  type="button"
+                  id="subv-toggle-cerrado"
+                  data-status="cerrado"
+                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors text-ink/60 hover:text-ink"
+                  aria-pressed="false"
+                >
+                  Cerradas
+                </button>
+              </div>
+              <select
+                id="subv-sort"
+                class="border border-ink/25 bg-paper px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-ink"
+              >
+                <option value="recent">Más recientes</option>
+                <option value="deadline">Por plazo</option>
+                <option value="amount">Mayor dotación</option>
+              </select>
+            </div>
           </div>
 
           <div id="subv-results">
@@ -367,6 +390,7 @@ const jsonLd = [
     page: 0,
     pageSize: 20,
     sort: 'recent',
+    statusFilter: 'abierto' as 'abierto' | 'cerrado',
     total: 0,
     totalPages: 0,
   };
@@ -379,6 +403,8 @@ const jsonLd = [
   }
   const p = url.searchParams.get('page');
   if (p) state.page = Math.max(0, Number(p));
+  const sv = url.searchParams.get('status');
+  if (sv === 'cerrado') state.statusFilter = 'cerrado';
 
   function fmtAmount(eur: number | null): string {
     if (!eur) return '—';
@@ -447,7 +473,7 @@ const jsonLd = [
 
   async function loadResults() {
     const qs = new URLSearchParams({
-      status: 'abierto',
+      status: state.statusFilter,
       pageSize: String(state.pageSize),
       page: String(state.page),
       sort: state.sort,
@@ -494,10 +520,18 @@ const jsonLd = [
         resultsEl.innerHTML = j.items.map(renderCard).join('');
       }
 
+      // Sync label contador
+      const statusLabelEl = document.getElementById('subv-status-label');
+      if (statusLabelEl) {
+        statusLabelEl.textContent = state.statusFilter === 'cerrado'
+          ? 'convocatorias cerradas'
+          : 'convocatorias abiertas';
+      }
+
       // Sync URL
       const newUrl = new URL(window.location.href);
       newUrl.search = '';
-      for (const [k, v] of qs) if (k !== 'status' && k !== 'pageSize') newUrl.searchParams.set(k, v);
+      for (const [k, v] of qs) if (k !== 'pageSize') newUrl.searchParams.set(k, v);
       window.history.replaceState({}, '', newUrl.toString());
     } catch (err) {
       resultsEl.innerHTML = `
@@ -578,13 +612,37 @@ const jsonLd = [
     }
   });
 
+  // Toggle abiertas/cerradas
+  function refreshStatusToggle() {
+    document.querySelectorAll<HTMLButtonElement>('.subv-status-btn').forEach((btn) => {
+      const isActive = btn.dataset.status === state.statusFilter;
+      btn.setAttribute('aria-pressed', String(isActive));
+      btn.classList.toggle('bg-ink', isActive);
+      btn.classList.toggle('text-paper', isActive);
+      btn.classList.toggle('text-ink/60', !isActive);
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.subv-status-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const newStatus = btn.dataset.status as 'abierto' | 'cerrado';
+      if (newStatus === state.statusFilter) return;
+      state.statusFilter = newStatus;
+      state.page = 0;
+      refreshStatusToggle();
+      void loadResults();
+    });
+  });
+
   // Si hay filtros en URL al cargar, recargar (la página servida tiene
   // top recent sin filtros). Si no, mantenemos el contenido del servidor.
-  if (state.q || state.ccaa || state.beneficiary || state.finalidad || state.instrument || state.page > 0 || state.sort !== 'recent') {
+  if (state.q || state.ccaa || state.beneficiary || state.finalidad || state.instrument || state.page > 0 || state.sort !== 'recent' || state.statusFilter !== 'abierto') {
     refreshChipStates();
+    refreshStatusToggle();
     void loadResults();
   } else {
     refreshChipStates();
+    refreshStatusToggle();
   }
 
   // ─── Banner contextual ────────────────────────────────────────
