@@ -1,0 +1,23 @@
+src/pages/google-ad-grants.astro
+  s_fc84abf46d9a4c::t_d5c5bf83e1185d 1-360
+src/components/OtrosServicios.astro
+  s_fc84abf46d9a4c::t_84320f82153b9b 15-18
+src/pages/fundraising.astro
+  s_fc84abf46d9a4c::t_0e3d34e28013c1 329-348
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "3d63cf54feb1ac829bb36293876c89890bfabc3d",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
