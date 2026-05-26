@@ -1,0 +1,25 @@
+src/pages/subvenciones/presentar/nuevo.astro
+  s_fc84abf46d9a4c::t_1accfe80a791ac 1-627
+src/pages/subvenciones/presentar/gracias.astro
+  s_fc84abf46d9a4c::t_080e98303bb7bd 1-32
+src/pages/subvenciones/presentar/index.astro
+  s_fc84abf46d9a4c::t_d446761196f9c6 1-237
+src/pages/api/expediente.ts
+  s_fc84abf46d9a4c::t_e957285097aa34 1-211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "cf1755b1b0cfa1b8cc1bf532f97d0dd1f66ad4c3",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
