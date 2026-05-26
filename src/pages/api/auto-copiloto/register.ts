@@ -76,6 +76,12 @@ export const POST: APIRoute = async ({ request, url }) => {
     importe_min: Number(body.importe_min ?? 0) || 0,
     importe_max: body.importe_max ? Number(body.importe_max) : null,
     auto_generar: body.auto_generar !== false,
+    // Campos de contexto extra para mejorar la generación IA
+    anos_activos: Number(body.anos_activos ?? 0) || 0,
+    beneficiarios_anuales: Number(body.beneficiarios_anuales ?? 0) || 0,
+    presupuesto_anual: String(body.presupuesto_anual ?? '').trim(),
+    proyectos_anteriores: String(body.proyectos_anteriores ?? '').trim(),
+    logros_principales: String(body.logros_principales ?? '').trim(),
   });
 
   // Email de confirmación

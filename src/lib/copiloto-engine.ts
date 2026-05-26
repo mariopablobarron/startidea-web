@@ -15,6 +15,45 @@ function getEnv(key: string): string {
   return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
 }
 
+// ─── Extracción de baremo/criterios de valoración ─────────────────────────────
+
+/**
+ * Intenta extraer el baremo de puntuación de las bases.
+ * Busca secciones con "criterios de valoración", "puntos", "puntuación máxima", etc.
+ * Si las encuentra, devuelve un bloque formateado para incluir en el prompt.
+ */
+function extractBaremo(basesText: string): string {
+  const lines = basesText.split('\n');
+  const baremoLines: string[] = [];
+  let inBaremo = false;
+
+  const baremoHeaders = [
+    'criterios de valoraci', 'criterios de selecci', 'baremo',
+    'puntuaci', 'valoraci', 'criterios de concesi',
+  ];
+  const stopHeaders = [
+    'documentaci', 'presentaci', 'plazo', 'justificaci',
+    'obligaci', 'reintegro',
+  ];
+
+  for (const line of lines) {
+    const lower = line.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if (!inBaremo && baremoHeaders.some((h) => lower.includes(h))) {
+      inBaremo = true;
+    }
+    if (inBaremo) {
+      if (stopHeaders.some((h) => lower.includes(h)) && baremoLines.length > 3) {
+        break;
+      }
+      baremoLines.push(line);
+      if (baremoLines.length >= 40) break; // max 40 líneas de baremo
+    }
+  }
+
+  if (baremoLines.length < 2) return '';
+  return `\nCRITERIOS DE VALORACIÓN (BAREMO):\n${baremoLines.join('\n')}`;
+}
+
 // ─── Contexto de la convocatoria ─────────────────────────────────────────────
 
 /**
@@ -43,7 +82,10 @@ export async function buildConvContext(opts: {
             : '',
           conv.description ? `\nDESCRIPCIÓN BASES:\n${conv.description}` : '',
           conv.bases_text
-            ? `\nCONTENIDO BASES:\n${conv.bases_text.slice(0, 3000)}`
+            ? `\nCONTENIDO BASES:\n${conv.bases_text.slice(0, 6000)}`
+            : '',
+          conv.bases_text
+            ? extractBaremo(conv.bases_text)
             : '',
           conv.startidea_summary
             ? `\nRESUMEN EDITORIAL:\n${conv.startidea_summary}`
@@ -114,7 +156,7 @@ export async function runAiGeneration(
     return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', error: 'no_openrouter_key' };
   }
 
-  const sistemaPrompt = `Eres un experto redactor de solicitudes de subvenciones públicas en España, con 15 años de experiencia en tercer sector, PYME, innovación social y propiedad industrial. Tu especialidad es adaptar proyectos reales a las exigencias formales de cada convocatoria.
+  const sistemaPrompt = `Eres un experto redactor de solicitudes de subvenciones públicas en España, con 15 años de experiencia en tercer sector, PYME, innovación social y propiedad industrial. Tu especialidad es adaptar proyectos reales a las exigencias formales de cada convocatoria y maximizar la puntuación en el baremo de valoración.
 
 Normas de redacción:
 - Usa lenguaje formal, claro y directo, sin jerga vacía
@@ -122,7 +164,9 @@ Normas de redacción:
 - No inventes datos que no estén en el expediente
 - Si falta información clave, márcala con [COMPLETAR: qué se necesita aquí]
 - Formatea cada sección en Markdown limpio y bien estructurado
-- Usa cifras y hechos concretos siempre que sea posible`;
+- Usa cifras y hechos concretos siempre que sea posible
+- Si el contexto incluye una sección CRITERIOS DE VALORACIÓN (BAREMO), estructura la memoria y el presupuesto para puntuar máximo en cada criterio — menciona explícitamente cómo el proyecto aborda cada criterio de valoración
+- Si hay criterios con puntuación máxima, ordena la memoria priorizando los criterios de mayor peso`;
 
   const userPrompt = `${convContext}
 
@@ -195,7 +239,7 @@ Sé muy concreto y usa lenguaje que entienda alguien sin experiencia técnica.`;
       },
       body: JSON.stringify({
         model: 'anthropic/claude-haiku-4-5',
-        max_tokens: 4000,
+        max_tokens: 7000,
         messages: [
           { role: 'system', content: sistemaPrompt },
           { role: 'user', content: userPrompt },

@@ -219,6 +219,67 @@ const jsonLd = [
           </div>
         </div>
 
+        <!-- Contexto adicional (opcional) — mejora la calidad de los documentos generados -->
+        <details class="border border-ink/15 group">
+          <summary class="flex cursor-pointer items-center justify-between px-5 py-4 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-ink">
+            <span>Contexto adicional <span class="normal-case text-magenta font-bold">(mejora mucho los documentos)</span></span>
+            <span class="ml-2 transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div class="space-y-5 border-t border-ink/10 px-5 pb-6 pt-5">
+            <p class="text-sm text-ink/60">
+              Datos opcionales que la IA usará como contexto para generar documentos más precisos y adaptados.
+              No son obligatorios, pero cuantos más proporciones, mejores serán las memorias técnicas.
+            </p>
+
+            <div class="grid gap-5 sm:grid-cols-3">
+              <div>
+                <label for="anos_activos" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                  Años en activo
+                </label>
+                <input id="anos_activos" name="anos_activos" type="number" min="0" max="200"
+                  placeholder="14"
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+              <div>
+                <label for="beneficiarios_anuales" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                  Beneficiarios/año
+                </label>
+                <input id="beneficiarios_anuales" name="beneficiarios_anuales" type="number" min="0"
+                  placeholder="500"
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+              <div>
+                <label for="presupuesto_anual" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                  Presupuesto anual (aprox.)
+                </label>
+                <input id="presupuesto_anual" name="presupuesto_anual" type="text" maxlength="50"
+                  placeholder="50.000–100.000 €"
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              </div>
+            </div>
+
+            <div>
+              <label for="proyectos_anteriores" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                Proyectos anteriores financiados con subvenciones (1-3 ejemplos)
+              </label>
+              <textarea id="proyectos_anteriores" name="proyectos_anteriores" rows="3" maxlength="600"
+                placeholder="Ej: Programa de empleo juvenil (Junta de Andalucía 2023, 30.000€). Proyecto de inclusión digital (IRPF 2022, 18.000€)."
+                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="logros_principales" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+                Logros e indicadores de impacto destacados
+              </label>
+              <textarea id="logros_principales" name="logros_principales" rows="2" maxlength="400"
+                placeholder="Ej: 95% de inserción laboral en nuestros programas, 3 premios nacionales, presencia en 12 municipios."
+                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+              ></textarea>
+            </div>
+          </div>
+        </details>
+
         <!-- Submit -->
         <div class="border-t border-ink/15 pt-5">
           <button type="submit" id="copiloto-submit" class="btn">
@@ -306,6 +367,12 @@ const jsonLd = [
       territorios,
       importe_min: Number(fd.get('importe_min') ?? 0) || 0,
       auto_generar: true,
+      // Campos de contexto extra (opcionales)
+      anos_activos: Number(fd.get('anos_activos') ?? 0) || 0,
+      beneficiarios_anuales: Number(fd.get('beneficiarios_anuales') ?? 0) || 0,
+      presupuesto_anual: String(fd.get('presupuesto_anual') ?? '').trim(),
+      proyectos_anteriores: String(fd.get('proyectos_anteriores') ?? '').trim(),
+      logros_principales: String(fd.get('logros_principales') ?? '').trim(),
     };
 
     if (!body.email || !body.org_nombre || !body.org_tipo || !body.org_descripcion || !body.representante) {

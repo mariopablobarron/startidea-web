@@ -30,6 +30,11 @@ import {
   markLastRun,
   type AutoCopilotoProfile,
 } from '@/lib/auto-copiloto-db';
+
+// Normaliza un string eliminando acentos y pasando a minúsculas
+function normalize(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
 import { insertExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db';
 import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
 import { sendEmail } from '@/lib/email-resend';
@@ -51,9 +56,13 @@ function esc(s: string): string {
   );
 }
 
-// ─── Matching: ¿encaja esta convocatoria con este perfil? ────────────────────
+// ─── Scoring: ¿encaja esta convocatoria con este perfil? (0 = no encaja) ─────
+//
+// Retorna un score de relevancia 0-100. Score 0 = descartado (no cumple filtros duros).
+// Score > 0 = encaja; cuanto mayor, más relevante. Se usan para priorizar las mejores
+// convocatorias cuando hay más de MAX_PER_PROFILE matches.
 
-function convMatchesProfile(
+function convScoreForProfile(
   conv: {
     slug: string;
     title: string;
@@ -64,52 +73,75 @@ function convMatchesProfile(
     amount_eur: number | null;
   },
   profile: AutoCopilotoProfile,
-): boolean {
-  // Territorio
+): number {
+  let score = 0;
+
+  // ── Filtros DUROS (descarte si no se cumplen) ──────────────────────────────
+
+  // Territorio (filtro duro)
   const territorios: string[] = JSON.parse(profile.territorios || '["nacional"]');
   if (territorios.length > 0 && !territorios.includes('nacional')) {
-    const convCcaa = conv.ccaa?.toLowerCase() ?? '';
-    const convGeo = conv.geo_level?.toLowerCase() ?? '';
+    const convCcaa = normalize(conv.ccaa ?? '');
+    const convGeo = normalize(conv.geo_level ?? '');
     const matchTerritorio = territorios.some(
-      (t) =>
-        convCcaa.includes(t) ||
-        t === convGeo ||
-        (t === 'europa' && convGeo === 'europa'),
+      (t) => convCcaa.includes(normalize(t)) || normalize(t) === convGeo || (normalize(t) === 'europa' && convGeo === 'europa'),
     );
-    if (!matchTerritorio) return false;
+    if (!matchTerritorio) return 0;
   }
 
-  // Importe mínimo
-  if (profile.importe_min > 0 && conv.amount_eur !== null) {
-    if (conv.amount_eur < profile.importe_min) return false;
-  }
+  // Importe (filtros duros)
+  if (profile.importe_min > 0 && conv.amount_eur !== null && conv.amount_eur < profile.importe_min) return 0;
+  if (profile.importe_max && conv.amount_eur !== null && conv.amount_eur > profile.importe_max) return 0;
 
-  // Importe máximo
-  if (profile.importe_max && conv.amount_eur !== null) {
-    if (conv.amount_eur > profile.importe_max) return false;
-  }
-
-  // Finalidades
+  // Finalidades (filtro duro si el perfil las tiene definidas)
   const finalidades: string[] = JSON.parse(profile.finalidades || '[]');
   if (finalidades.length > 0) {
     const hasFinalidad = finalidades.some((f) => conv.finalidades.includes(f));
-    if (!hasFinalidad) return false;
+    if (!hasFinalidad) return 0;
   }
 
-  // Keywords (búsqueda en título y organismo)
+  // Keywords (filtro duro si el perfil las tiene definidas)
   if (profile.keywords) {
-    const kws = profile.keywords
-      .split(',')
-      .map((k) => k.trim().toLowerCase())
-      .filter(Boolean);
+    const kws = profile.keywords.split(',').map((k) => normalize(k.trim())).filter(Boolean);
     if (kws.length > 0) {
-      const haystack = (conv.title + ' ' + conv.organization).toLowerCase();
+      const haystack = normalize(conv.title + ' ' + conv.organization);
       const hasKeyword = kws.some((k) => haystack.includes(k));
-      if (!hasKeyword) return false;
+      if (!hasKeyword) return 0;
     }
   }
 
-  return true;
+  // ── Scoring de relevancia (positivo si pasó los filtros duros) ─────────────
+
+  score += 10; // base: pasó todos los filtros
+
+  // Territorio exacto (CCAA del perfil == CCAA de la conv) → +20
+  if (profile.ccaa && conv.ccaa && normalize(conv.ccaa).includes(normalize(profile.ccaa))) {
+    score += 20;
+  }
+  // Convocatoria nacional (accesible para todos) → +10
+  if (conv.geo_level === 'nacional' || conv.geo_level === null) {
+    score += 10;
+  }
+  // Keyword en título (más relevante que en organismo) → +15 por keyword
+  if (profile.keywords) {
+    const kws = profile.keywords.split(',').map((k) => normalize(k.trim())).filter(Boolean);
+    const titleNorm = normalize(conv.title);
+    for (const k of kws) {
+      if (titleNorm.includes(k)) score += 15;
+    }
+  }
+  // Finalidad match → +15
+  if (finalidades.length > 0 && finalidades.some((f) => conv.finalidades.includes(f))) {
+    score += 15;
+  }
+  // Importe dentro del rango preferido del perfil → +10
+  if (conv.amount_eur !== null) {
+    const min = profile.importe_min || 0;
+    const max = profile.importe_max || Infinity;
+    if (conv.amount_eur >= min && conv.amount_eur <= max) score += 10;
+  }
+
+  return Math.min(score, 100);
 }
 
 // ─── Email de entrega automática ─────────────────────────────────────────────
@@ -244,6 +276,43 @@ async function sendAutoCopilotoEmail(opts: {
   });
 }
 
+// ─── Descripción enriquecida del proyecto para el prompt IA ─────────────────
+
+/**
+ * Construye un bloque de descripción del proyecto mucho más rico que la simple
+ * org_descripcion, usando todos los campos de contexto disponibles en el perfil.
+ * Cuantos más datos tenga el perfil, mejores documentos genera la IA.
+ */
+function buildRichDescription(profile: AutoCopilotoProfile, convTitle: string): string {
+  const parts: string[] = [];
+
+  parts.push(profile.org_descripcion);
+
+  if (profile.anos_activos > 0) {
+    parts.push(`La organización lleva ${profile.anos_activos} años activa.`);
+  }
+  if (profile.beneficiarios_anuales > 0) {
+    parts.push(`Atiende directamente a ${profile.beneficiarios_anuales.toLocaleString('es-ES')} beneficiarios al año.`);
+  }
+  if (profile.presupuesto_anual) {
+    parts.push(`Presupuesto anual aproximado: ${profile.presupuesto_anual}.`);
+  }
+  if (profile.proyectos_anteriores) {
+    parts.push(`\nProyectos anteriores financiados con subvenciones:\n${profile.proyectos_anteriores}`);
+  }
+  if (profile.logros_principales) {
+    parts.push(`\nLogros e indicadores de impacto destacados:\n${profile.logros_principales}`);
+  }
+
+  parts.push(
+    `\n[Este expediente fue generado automáticamente por el Copiloto de Startidea al detectar\n` +
+    `la convocatoria "${convTitle}". Los campos específicos del proyecto deben completarse\n` +
+    `antes de la presentación.]`,
+  );
+
+  return parts.filter(Boolean).join('\n\n');
+}
+
 // ─── Endpoint principal ───────────────────────────────────────────────────────
 
 export const POST: APIRoute = async ({ request }) => {
@@ -310,8 +379,11 @@ export const POST: APIRoute = async ({ request }) => {
   // 3. Procesar cada perfil
   for (const profile of profiles) {
     const matching = recentConvs
-      .filter((c) => !isAlreadyProcessed(profile.id, c.slug) && convMatchesProfile(c, profile))
-      .slice(0, MAX_PER_PROFILE);
+      .map((c) => ({ conv: c, score: convScoreForProfile(c, profile) }))
+      .filter(({ conv, score }) => score > 0 && !isAlreadyProcessed(profile.id, conv.slug))
+      .sort((a, b) => b.score - a.score)   // mejores primero
+      .slice(0, MAX_PER_PROFILE)
+      .map(({ conv }) => conv);
 
     for (const conv of matching) {
       try {
@@ -319,12 +391,8 @@ export const POST: APIRoute = async ({ request }) => {
         const expId = `AC-${Date.now().toString(36).toUpperCase()}-${randomUUID().slice(0, 4).toUpperCase()}`;
         const now = Math.floor(Date.now() / 1000);
 
-        // descripcion_proyecto genérica basada en el perfil de la org
-        const descripcionAuto = `${profile.org_descripcion}
-
-[Este expediente fue generado automáticamente por el Copiloto de Startidea al detectar
-la convocatoria "${conv.title}". Los campos específicos del proyecto deben completarse
-antes de la presentación.]`;
+        // Descripción enriquecida con todos los datos disponibles del perfil
+        const descripcionAuto = buildRichDescription(profile, conv.title);
 
         insertExpediente({
           id: expId,
@@ -422,6 +490,7 @@ antes de la presentación.]`;
           convocatoria_title: conv.title,
           expediente_id: expId,
           sent: emailSent,
+          deadline: conv.deadline ?? null,
         });
 
         results.push({ profile: profile.org_nombre, conv: conv.title, status: 'ok' });

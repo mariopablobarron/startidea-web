@@ -1,0 +1,330 @@
+---
+/**
+ * /subvenciones/mi-copiloto?t=TOKEN
+ *
+ * Panel de gestión del Copiloto Autónomo para la organización.
+ * No requiere login — el manage_token actúa como bearer seguro.
+ * Muestra estado, historial de convocatorias detectadas y opciones de pausa/cancelación.
+ */
+
+import Base from '@/layouts/Base.astro';
+import { getProfileByManageToken, getLogByProfile } from '@/lib/auto-copiloto-db';
+
+export const prerender = false;
+
+const token = Astro.url.searchParams.get('t') ?? '';
+const profile = token ? getProfileByManageToken(token) : null;
+const logEntries = profile ? getLogByProfile(profile.id, 30) : [];
+
+function esc(s: string): string {
+  return s.replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!,
+  );
+}
+
+function formatDate(ts: number | null): string {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+const statusLabel = profile?.active
+  ? (profile.confirmed ? 'Activo' : 'Pendiente de confirmación')
+  : 'Pausado';
+
+const statusColor = profile?.active
+  ? (profile.confirmed ? 'text-green-600' : 'text-yellow-600')
+  : 'text-ink/40';
+
+const TIPO_LABELS: Record<string, string> = {
+  asociacion: 'Asociación',
+  fundacion: 'Fundación',
+  cooperativa: 'Cooperativa',
+  empresa: 'Empresa',
+  otro: 'Otro',
+};
+
+let finalidadesArr: string[] = [];
+try { finalidadesArr = JSON.parse(profile?.finalidades ?? '[]'); } catch {}
+let territoriosArr: string[] = [];
+try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } catch {}
+---
+
+<Base
+  title={profile ? `Copiloto de ${profile.org_nombre} — Startidea` : 'Mi Copiloto — Startidea'}
+  description="Gestiona tu Copiloto Autónomo de Subvenciones: pausa, reactiva o cancela las alertas."
+  ogSlug="page/subvenciones"
+  noindex={true}
+>
+  <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+    <div class="container-x">
+      <nav class="mb-4 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+        <a href="/subvenciones" class="hover:text-magenta">← Buscador de subvenciones</a>
+        {' · '}
+        <a href="/subvenciones/auto-copiloto" class="hover:text-magenta">Copiloto Autónomo</a>
+      </nav>
+      <span class="label">— Mi Copiloto</span>
+      {profile ? (
+        <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+          {esc(profile.org_nombre)}
+        </h1>
+      ) : (
+        <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+          Copiloto Autónomo
+        </h1>
+      )}
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl space-y-8">
+
+        {!profile ? (
+          <!-- Token inválido o ausente -->
+          <div class="border border-red-200 bg-red-50 p-6">
+            <p class="font-mono text-xs uppercase tracking-widest text-red-500 mb-2">Enlace no válido</p>
+            <p class="text-sm text-ink/70">
+              Este enlace de gestión no es válido o ha expirado.
+              Si tienes el Copiloto activo, revisa el email de confirmación que te enviamos al registrarte.
+            </p>
+            <a href="/subvenciones/auto-copiloto" class="mt-4 inline-block font-mono text-xs uppercase tracking-wider text-magenta hover:underline">
+              Registrarse de nuevo →
+            </a>
+          </div>
+        ) : (
+          <>
+            <!-- Estado -->
+            <div class="border border-ink/15 bg-paper p-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">Estado del Copiloto</p>
+                  <p class={`text-lg font-bold ${statusColor}`}>{statusLabel}</p>
+                  {profile.last_run_at && (
+                    <p class="mt-1 text-xs text-ink/40">Último ciclo: {formatDate(profile.last_run_at)}</p>
+                  )}
+                </div>
+                <div class="flex flex-col gap-2">
+                  {profile.active && profile.confirmed && (
+                    <button
+                      id="btn-pause"
+                      data-token={token}
+                      class="border border-ink/20 px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors"
+                    >
+                      Pausar
+                    </button>
+                  )}
+                  {!profile.active && (
+                    <button
+                      id="btn-resume"
+                      data-token={token}
+                      class="border border-magenta px-4 py-2 font-mono text-xs uppercase tracking-wider text-magenta hover:bg-magenta hover:text-paper transition-colors"
+                    >
+                      Reactivar
+                    </button>
+                  )}
+                  <button
+                    id="btn-cancel"
+                    data-token={token}
+                    class="border border-red-200 px-4 py-2 font-mono text-xs uppercase tracking-wider text-red-400 hover:border-red-400 hover:text-red-600 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ficha del perfil -->
+            <div class="border border-ink/15 p-6 space-y-4">
+              <h2 class="font-mono text-xs uppercase tracking-widest text-ink/40">Perfil registrado</h2>
+              <dl class="grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Organización</dt>
+                  <dd class="mt-0.5 text-ink font-medium">{esc(profile.org_nombre)}</dd>
+                </div>
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Tipo</dt>
+                  <dd class="mt-0.5 text-ink">{TIPO_LABELS[profile.org_tipo] ?? profile.org_tipo}</dd>
+                </div>
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Email</dt>
+                  <dd class="mt-0.5 text-ink">{esc(profile.email)}</dd>
+                </div>
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Representante</dt>
+                  <dd class="mt-0.5 text-ink">{esc(profile.representante)}</dd>
+                </div>
+                {profile.ccaa && (
+                  <div>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Comunidad Autónoma</dt>
+                    <dd class="mt-0.5 text-ink capitalize">{esc(profile.ccaa)}</dd>
+                  </div>
+                )}
+                {territoriosArr.length > 0 && (
+                  <div>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Territorios de búsqueda</dt>
+                    <dd class="mt-0.5 text-ink capitalize">{territoriosArr.join(', ')}</dd>
+                  </div>
+                )}
+                {profile.keywords && (
+                  <div class="sm:col-span-2">
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Palabras clave</dt>
+                    <dd class="mt-0.5 text-ink">{esc(profile.keywords)}</dd>
+                  </div>
+                )}
+                {profile.importe_min > 0 && (
+                  <div>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Importe mínimo</dt>
+                    <dd class="mt-0.5 text-ink">{profile.importe_min.toLocaleString('es-ES')} €</dd>
+                  </div>
+                )}
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Registrado</dt>
+                  <dd class="mt-0.5 text-ink">{formatDate(profile.created_at)}</dd>
+                </div>
+              </dl>
+              <p class="mt-4 text-xs text-ink/40 border-t border-ink/10 pt-4">
+                ¿Necesitas actualizar los datos del perfil?{' '}
+                <a href={`mailto:hola@startidea.es?subject=Actualizar perfil Copiloto ${esc(profile.org_nombre)}`} class="text-magenta hover:underline">
+                  Escríbenos →
+                </a>
+              </p>
+            </div>
+
+            <!-- Historial de convocatorias detectadas -->
+            {logEntries.length > 0 ? (
+              <div class="border border-ink/15 p-6">
+                <h2 class="font-mono text-xs uppercase tracking-widest text-ink/40 mb-4">
+                  Convocatorias detectadas ({logEntries.length})
+                </h2>
+                <div class="divide-y divide-ink/10">
+                  {logEntries.map((entry) => (
+                    <div class="py-3 flex items-start gap-3">
+                      <span class="mt-0.5 shrink-0 text-base" aria-hidden="true">
+                        {entry.error ? '❌' : entry.sent ? '✅' : '⚠️'}
+                      </span>
+                      <div class="min-w-0">
+                        <p class="text-sm text-ink font-medium truncate">{esc(entry.convocatoria_title)}</p>
+                        <p class="text-xs text-ink/40 mt-0.5">
+                          {formatDate(entry.created_at)}
+                          {entry.expediente_id && (
+                            <> · <code class="font-mono">{esc(entry.expediente_id)}</code></>
+                          )}
+                          {entry.error && (
+                            <span class="text-red-400"> · Error: {esc(entry.error)}</span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div class="border border-ink/10 bg-paper-warm p-6 text-center">
+                <p class="font-mono text-xs uppercase tracking-widest text-ink/30 mb-2">Sin convocatorias aún</p>
+                <p class="text-sm text-ink/50">
+                  El Copiloto revisa nuevas convocatorias cada día a las 07:30h.
+                  En cuanto detecte algo que encaje con tu perfil, te lo enviaremos por email.
+                </p>
+              </div>
+            )}
+
+            <!-- Aviso cancelación -->
+            <div id="cancel-confirm" class="hidden border border-red-200 bg-red-50 p-5 text-sm text-red-800">
+              <p class="font-medium mb-2">¿Confirmas la cancelación del Copiloto?</p>
+              <p class="text-red-600 mb-4">
+                Se desactivará el Copiloto de <strong>{esc(profile.org_nombre)}</strong>.
+                Puedes reactivarlo en cualquier momento desde este mismo enlace.
+              </p>
+              <div class="flex gap-3">
+                <button id="btn-cancel-confirm" data-token={token} class="bg-red-600 px-4 py-2 font-mono text-xs uppercase tracking-wider text-white hover:bg-red-700">
+                  Sí, cancelar
+                </button>
+                <button id="btn-cancel-abort" class="border border-red-300 px-4 py-2 font-mono text-xs uppercase tracking-wider text-red-600 hover:border-red-500">
+                  No, mantener
+                </button>
+              </div>
+            </div>
+
+            <!-- Feedback de acción -->
+            <div id="action-feedback" class="hidden border p-4 text-sm"></div>
+          </>
+        )}
+
+        <!-- Ayuda -->
+        <div class="border-t border-ink/10 pt-6">
+          <p class="text-xs text-ink/40">
+            ¿Tienes dudas o quieres cambiar el perfil?{' '}
+            <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>
+            {' · '}
+            <a href="/subvenciones" class="text-ink/50 hover:text-magenta">Ver buscador →</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const token = new URLSearchParams(window.location.search).get('t') ?? '';
+
+  async function doAction(action: string) {
+    const res = await fetch('/api/auto-copiloto/manage', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token, action }),
+    });
+    return res.json();
+  }
+
+  function showFeedback(msg: string, isError = false) {
+    const el = document.getElementById('action-feedback')!;
+    el.className = `border p-4 text-sm ${isError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'}`;
+    el.textContent = msg;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Pausar
+  document.getElementById('btn-pause')?.addEventListener('click', async () => {
+    const r = await doAction('pause');
+    if (r.ok) {
+      showFeedback('Copiloto pausado. No recibirás nuevas alertas hasta que lo reactives.');
+      (document.getElementById('btn-pause') as HTMLButtonElement).disabled = true;
+    } else {
+      showFeedback('No se pudo pausar. Intenta de nuevo o escríbenos a hola@startidea.es.', true);
+    }
+  });
+
+  // Reactivar
+  document.getElementById('btn-resume')?.addEventListener('click', async () => {
+    const r = await doAction('resume');
+    if (r.ok) {
+      showFeedback('¡Copiloto reactivado! Volverás a recibir alertas a partir del próximo ciclo diario.');
+      (document.getElementById('btn-resume') as HTMLButtonElement).disabled = true;
+    } else {
+      showFeedback('No se pudo reactivar. Intenta de nuevo o escríbenos a hola@startidea.es.', true);
+    }
+  });
+
+  // Cancelar — primer clic muestra confirmación
+  document.getElementById('btn-cancel')?.addEventListener('click', () => {
+    document.getElementById('cancel-confirm')?.classList.remove('hidden');
+    document.getElementById('cancel-confirm')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  document.getElementById('btn-cancel-abort')?.addEventListener('click', () => {
+    document.getElementById('cancel-confirm')?.classList.add('hidden');
+  });
+
+  document.getElementById('btn-cancel-confirm')?.addEventListener('click', async () => {
+    const r = await doAction('cancel');
+    if (r.ok) {
+      document.getElementById('cancel-confirm')?.classList.add('hidden');
+      showFeedback('Copiloto cancelado. Si cambias de opinión, usa este mismo enlace para reactivarlo.');
+    } else {
+      showFeedback('No se pudo cancelar. Escríbenos a hola@startidea.es.', true);
+    }
+  });
+</script>
