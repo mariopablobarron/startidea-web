@@ -6,7 +6,7 @@ Web institucional de **Startidea** (agencia de innovación social en Granada, fu
 
 - **Astro 5** + `@astrojs/node` (SSR standalone)
 - **TypeScript** + **Tailwind 3**
-- **Content Collections** (`src/content/notas/`, `src/content/diagnosticos/`, `src/content/knowledge/`)
+- **Content Collections** (`src/content/notas/`, `src/content/diagnosticos/`, `src/content/knowledge/`, `src/content/cursos/`)
 - **Better-sqlite3** + **googleapis** para conector SEO (GA4 + Search Console)
 - **OpenRouter** (Claude Haiku 4.5) para chat IA y agentes SEO
 
@@ -44,9 +44,19 @@ Ejemplos útiles:
 
 ## Pendientes/sprints conocidos
 
-- S3: 3 notas editoriales más (agencia pequeña vs grande, cómo elegir agencia, método del diagnóstico)
-- S4: newsletter segmentation + Google AdGrants landing
-- S5: Startidea Lab Cursos
+- ~~S3: 3 notas editoriales más (agencia pequeña vs grande, cómo elegir agencia, método del diagnóstico)~~ ✅ DONE
+- ~~S4: newsletter segmentation + Google AdGrants landing~~ ✅ DONE (2026-05-26)
+- ~~S5: Startidea Lab Cursos~~ ✅ DONE (2026-05-26) — 3 cursos publicados
+
+- S6: Copiloto de Subvenciones — Fase 2 (Playwright sede electrónica)
+  - Admin panel placeholder en `/admin/expedientes/[id]` → sección "Fase 2 — Automatización sede electrónica"
+  - Pendiente: implementar por sede (Junta de Andalucía, BDNS/infosubvenciones.es, OEPM...)
+  - Requiere container separado con Playwright (NO meter en imagen principal)
+
+- S7 (editorial): 2-3 notas adicionales sobre financiación y comunicación
+  - "Cómo calcular el ROI de contratar tramitación de subvenciones"
+  - "Fundraising individual para asociaciones pequeñas"
+  - "Cómo medir el impacto de una campaña de email en ESFL"
 
 ## Datos sensibles
 
