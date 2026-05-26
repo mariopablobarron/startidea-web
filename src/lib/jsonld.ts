@@ -173,7 +173,7 @@ const ORG = {
       '@type': 'Organization',
       name: 'Startidea Empleo',
       url: 'https://empleo.startidea.es',
-      description: 'Bolsa de empleo especializada en el tercer sector y la economía social en España. Conecta organizaciones con profesionales del impacto social.',
+      description: 'Bolsa de empleo online para cualquier sector en España. Conecta empresas, entidades y organizaciones con candidatos.',
     },
   ],
   sameAs: [
