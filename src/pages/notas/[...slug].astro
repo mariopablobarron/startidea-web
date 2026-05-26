@@ -2,6 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { blogPostingSchema, breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 
 export async function getStaticPaths() {
   const notas = await getCollection('notas', ({ data }) => !data.draft);
@@ -145,6 +146,11 @@ const jsonLd = [
           </div>
         </div>
       </section>
+    )}
+
+    <!-- Notas relacionadas de la misma categoría -->
+    {nota.data.category && (
+      <NotasRelacionadas category={nota.data.category} exclude={nota.slug} />
     )}
 
     <!-- CTA final + suscripción -->

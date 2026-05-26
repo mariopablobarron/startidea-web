@@ -1,0 +1,97 @@
+---
+/**
+ * NotasRelacionadas.astro
+ * Muestra hasta 3 notas de la misma categoría.
+ * Se usa en landings de servicio y al final de cada nota individual.
+ *
+ * Props:
+ *   category  — categoría a mostrar ('Comunicación' | 'Financiación' | 'Estrategia' | 'Agencia')
+ *   exclude   — slug a excluir (cuando se usa dentro de una nota para no mostrarse a sí misma)
+ *   limit     — número máximo de notas a mostrar (default 3)
+ */
+import { getCollection } from 'astro:content';
+
+interface Props {
+  category: 'Comunicación' | 'Financiación' | 'Estrategia' | 'Agencia';
+  exclude?: string;
+  limit?: number;
+}
+
+const { category, exclude, limit = 3 } = Astro.props;
+
+const allNotas = await getCollection('notas', ({ data }) => !data.draft && data.category === category);
+allNotas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const notas = allNotas
+  .filter((n) => n.slug !== exclude)
+  .slice(0, limit);
+
+const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'short' });
+
+// Etiquetas de categoría → URL del filtro
+const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
+---
+
+{notas.length >= 1 && (
+  <section class="border-t border-ink/15 bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="mb-8 flex items-end justify-between border-t border-ink/15 pt-8">
+        <div>
+          <span class="label">— Notas · {category}</span>
+          <h2 class="mt-2 font-display text-2xl leading-tight text-ink md:text-3xl">
+            Más sobre <em class="italic text-magenta">{category.toLowerCase()}</em>.
+          </h2>
+        </div>
+        <a
+          href={catUrl}
+          class="hidden shrink-0 font-mono text-[11px] uppercase tracking-widest text-ink/50 underline-offset-4 hover:text-magenta hover:underline sm:block"
+        >
+          Ver todas →
+        </a>
+      </div>
+
+      <ol class="divide-y divide-ink/15 border-y border-ink/15">
+        {notas.map((nota) => {
+          const words = nota.body.trim().split(/\s+/).length;
+          const min = Math.max(1, Math.round(words / 200));
+          return (
+            <li>
+              <a
+                href={`/notas/${nota.slug}`}
+                class="group grid grid-cols-12 gap-x-8 gap-y-3 py-7 transition-colors hover:bg-paper"
+              >
+                <div class="col-span-12 lg:col-span-2">
+                  <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                    {fmt.format(nota.data.pubDate)}
+                  </p>
+                </div>
+                <div class="col-span-12 lg:col-span-8">
+                  <h3 class="font-display text-lg leading-snug text-ink transition-colors group-hover:text-magenta md:text-xl">
+                    {nota.data.title}
+                  </h3>
+                  <p class="mt-1.5 text-sm text-ink/65 line-clamp-2">
+                    {nota.data.description}
+                  </p>
+                </div>
+                <div class="col-span-12 lg:col-span-2 lg:text-right">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                    ~{min} min
+                  </span>
+                  <p class="mt-1 font-mono text-xs text-ink/50 transition-colors group-hover:text-magenta">
+                    Leer →
+                  </p>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+
+      <div class="mt-6 sm:hidden">
+        <a href={catUrl} class="btn-ghost w-full text-center text-sm">
+          Ver todas las notas de {category} →
+        </a>
+      </div>
+    </div>
+  </section>
+)}

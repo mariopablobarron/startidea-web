@@ -9,6 +9,7 @@
 
 import Base from '@/layouts/Base.astro';
 import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 
 const faqs = [
   {
@@ -386,4 +387,6 @@ const fases = [
       </div>
     </div>
   </section>
+
+  <NotasRelacionadas category="Financiación" />
 </Base>

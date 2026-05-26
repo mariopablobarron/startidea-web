@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
@@ -325,5 +326,6 @@ const proceso = [
     </div>
   </section>
 
+  <NotasRelacionadas category="Financiación" />
   <OtrosServicios current="fundraising" />
 </Base>
