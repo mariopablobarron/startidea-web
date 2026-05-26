@@ -1,0 +1,33 @@
+src/pages/comunicacion.astro
+  s_fc84abf46d9a4c::t_c5df736f338124 4,302
+src/pages/audiovisual.astro
+  s_fc84abf46d9a4c::t_c5df736f338124 4,304
+src/pages/financiacion-empresas.astro
+  s_fc84abf46d9a4c::t_23fe700dcfadad 12
+  s_fc84abf46d9a4c::t_619cbed6f509b5 390-391
+src/pages/consultoria.astro
+  s_fc84abf46d9a4c::t_c5df736f338124 4,279
+src/pages/fundraising.astro
+  s_fc84abf46d9a4c::t_c5df736f338124 4,329
+src/components/NotasRelacionadas.astro
+  s_fc84abf46d9a4c::t_420352d8eb5cf7 1-97
+src/pages/notas/[...slug].astro
+  s_fc84abf46d9a4c::t_857ebf391306b1 151-155
+  s_fc84abf46d9a4c::t_2dfd11dc5151ed 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "2251ed29841430a79ee0e4b45cf33ca3fc349645",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
