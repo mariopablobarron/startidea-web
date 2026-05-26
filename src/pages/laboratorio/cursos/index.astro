@@ -1,0 +1,198 @@
+---
+/**
+ * /laboratorio/cursos — Catálogo de formaciones de Startidea.
+ *
+ * Lista todos los cursos publicados (draft: false) ordenados por estado:
+ * abiertos primero, después próximos, después a-demanda, después agotados.
+ */
+
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const allCursos = await getCollection('cursos', (c) => !c.data.draft);
+
+const ORDER = { abierto: 0, proximo: 1, 'a-demanda': 2, agotado: 3 };
+const cursos = allCursos.sort(
+  (a, b) => ORDER[a.data.estado] - ORDER[b.data.estado],
+);
+
+const ESTADO_LABEL: Record<string, string> = {
+  abierto: 'Inscripción abierta',
+  proximo: 'Próximamente',
+  'a-demanda': 'Bajo demanda',
+  agotado: 'Sin plazas',
+};
+const ESTADO_COLOR: Record<string, string> = {
+  abierto: 'text-green-700 bg-green-50 border-green-200',
+  proximo: 'text-magenta bg-magenta/8 border-magenta/20',
+  'a-demanda': 'text-ink/70 bg-ink/5 border-ink/15',
+  agotado: 'text-ink/40 bg-ink/5 border-ink/10',
+};
+
+const FORMATO_ICON: Record<string, string> = {
+  online: '💻',
+  presencial: '📍',
+  hibrido: '🔄',
+};
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'Cursos y formaciones', url: `${SITE_URL}/laboratorio/cursos` },
+  ]),
+];
+---
+
+<Base
+  title="Cursos y formaciones · Startidea Lab"
+  description="Talleres, masterclasses y cursos de Startidea para responsables de comunicación, financiación y estrategia en el tercer sector. Formato presencial en Granada y online bajo demanda."
+  ogSlug="page/laboratorio"
+  jsonLd={jsonLd}
+>
+  <!-- Breadcrumb -->
+  <section class="border-b border-ink/10 bg-paper-warm py-3">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/" class="hover:text-magenta">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/laboratorio" class="hover:text-magenta">Laboratorio</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-ink/65">Cursos</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Startidea Lab · Formaciones</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Método Startidea.<br />
+        <em class="italic text-magenta">Formación directa.</em>
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/75">
+        Talleres y masterclasses basados en lo que Startidea hace con clientes reales.
+        Sin teoría que no hayamos probado. Para responsables de comunicación, gestión
+        y financiación de entidades del tercer sector que quieren resultados aplicables
+        desde el primer día.
+      </p>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section class="bg-paper py-16 md:py-20">
+    <div class="container-x">
+      {cursos.length === 0 ? (
+        <div class="border border-ink/15 bg-paper-warm p-12 text-center">
+          <p class="font-display text-2xl text-ink">Próximas formaciones en preparación.</p>
+          <p class="mt-3 text-ink/60">
+            Déjanos tu email y te avisamos en cuanto se abra la inscripción.
+          </p>
+          <a href="/contacto" class="btn mt-6 inline-flex">Avísame cuando haya cursos →</a>
+        </div>
+      ) : (
+        <ol class="space-y-6">
+          {cursos.map((curso) => {
+            const fmt = curso.data.formato;
+            const est = curso.data.estado;
+            return (
+              <li class:list={['border border-ink/15 bg-paper-warm/40 transition-colors hover:border-ink/30', est === 'agotado' && 'opacity-60']}>
+                <a href={`/laboratorio/cursos/${curso.slug}`} class="block p-6 md:p-8">
+                  <div class="flex flex-wrap items-start justify-between gap-4">
+                    <div class="flex-1">
+                      <!-- Estado + formato -->
+                      <div class="flex flex-wrap items-center gap-2 text-[10px]">
+                        <span class:list={['rounded-full border px-2.5 py-0.5 font-mono uppercase tracking-widest', ESTADO_COLOR[est]]}>
+                          {ESTADO_LABEL[est]}
+                        </span>
+                        <span class="font-mono uppercase tracking-widest text-ink/50">
+                          {FORMATO_ICON[fmt]} {fmt}
+                        </span>
+                        <span class="font-mono uppercase tracking-widest text-ink/50">
+                          {curso.data.modalidad}
+                        </span>
+                      </div>
+
+                      <h2 class="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
+                        {curso.data.title}
+                      </h2>
+                      <p class="mt-2 max-w-measure text-sm text-ink/65 leading-relaxed">
+                        {curso.data.description}
+                      </p>
+
+                      <!-- Meta row -->
+                      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink/55 font-mono">
+                        <span>⏱ {curso.data.duracion}</span>
+                        {curso.data.proxima_edicion && (
+                          <span>
+                            📅 {curso.data.proxima_edicion.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          </span>
+                        )}
+                        <span>👥 {curso.data.audience}</span>
+                      </div>
+                    </div>
+
+                    <!-- Precio -->
+                    <div class="shrink-0 text-right">
+                      <p class="font-display text-3xl text-ink">{curso.data.precio} <span class="text-base font-sans">€</span></p>
+                      {curso.data.precio_esfl && (
+                        <p class="text-xs text-ink/50 mt-0.5">
+                          {curso.data.precio_esfl} € ESFL
+                        </p>
+                      )}
+                      <p class="mt-3 font-mono text-[10px] uppercase tracking-widest text-magenta">
+                        Ver programa →
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </div>
+  </section>
+
+  <!-- Grupo cerrado -->
+  <section class="border-y border-ink/10 bg-paper-warm/30 py-12 md:py-16">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 items-center">
+        <div class="col-span-12 lg:col-span-8">
+          <span class="label">— Formación in-company</span>
+          <h2 class="mt-3 font-display text-display-sm leading-tight text-ink">
+            ¿Quieres una formación a medida para tu equipo?
+          </h2>
+          <p class="mt-4 text-ink/70">
+            Si sois un grupo de 6 o más personas de la misma organización, diseñamos
+            la formación completamente adaptada a vuestro contexto, materiales y casos reales.
+            Sin templates genéricos: el contenido refleja vuestra realidad.
+          </p>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-4 lg:mt-0 lg:text-right">
+          <a href="/contacto" class="btn inline-flex">Consultar grupo cerrado →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-ink py-14 md:py-20 text-paper">
+    <div class="container-x text-center">
+      <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— Lista de aviso</span>
+      <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
+        ¿Te avisamos cuando<br />
+        <em class="italic text-magenta">abra la inscripción</em>?
+      </h2>
+      <p class="mt-5 mx-auto max-w-prose text-paper/70">
+        Las plazas son limitadas y se comunican primero a la lista de alumni y contactos.
+        Déjanos tu email y serás de los primeros en saberlo.
+      </p>
+      <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta mt-8 inline-flex px-8 py-4 text-base">
+        Apuntarme a la lista →
+      </a>
+    </div>
+  </section>
+</Base>
