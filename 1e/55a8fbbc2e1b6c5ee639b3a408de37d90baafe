@@ -1,0 +1,22 @@
+src/pages/subvenciones/mapa.astro
+  s_fc84abf46d9a4c::t_5d26153114b8b0 268-272,280-288,290,292-295,297,299-301,303-304
+  s_fc84abf46d9a4c::t_07e50d797e01cc 108,111
+  s_fc84abf46d9a4c::t_310561bf4e6b0a 826-911,915
+  s_fc84abf46d9a4c::t_a15e0a185fc19d 499,503-509,512,522,526-534,538-539
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "1e55a8fbbc2e1b6c5ee639b3a408de37d90baafe",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
