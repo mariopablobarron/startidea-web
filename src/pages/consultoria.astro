@@ -1,7 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
-import { serviceSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
@@ -27,6 +27,10 @@ const faqs = [
 ];
 
 const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Consultoría e innovación social', url: `${SITE_URL}/consultoria` },
+  ]),
   faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
   serviceSchema({
     name: 'Consultoría e innovación social',
