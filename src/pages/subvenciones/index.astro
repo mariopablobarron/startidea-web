@@ -80,6 +80,35 @@ const jsonLd = [
   <!-- Tabs -->
   <SubvencionesTabs active="lista" />
 
+  <!-- Banner contextual: aparece cuando el visitante filtra por algo concreto
+       y propone el servicio Startidea más relevante para ese filtro.
+       Hidratado por el script de abajo según query params. -->
+  <section
+    id="subv-banner"
+    class="hidden border-b border-ink/15 bg-ink py-5 text-paper"
+    aria-live="polite"
+  >
+    <div class="container-x">
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-start gap-3">
+          <span aria-hidden="true" class="text-magenta">●</span>
+          <p class="text-sm leading-relaxed" id="subv-banner-text">
+            <!-- relleno por JS -->
+          </p>
+        </div>
+        <div class="flex shrink-0 gap-3">
+          <a
+            id="subv-banner-cta"
+            href="/contacto"
+            class="border border-paper bg-paper px-4 py-2 text-xs font-medium text-ink transition-colors hover:bg-magenta hover:border-magenta hover:text-paper"
+          >
+            Hablar 30 min →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Buscador -->
   <section class="bg-paper-warm py-12 md:py-16">
     <div class="container-x">
@@ -536,4 +565,107 @@ const jsonLd = [
   } else {
     refreshChipStates();
   }
+
+  // ─── Banner contextual ────────────────────────────────────────
+  // Cuando el visitante filtra por algo concreto (internacionalización,
+  // energía, fundraising, CCAA Andalucía…), mostramos un banner que
+  // propone el servicio Startidea más relevante. Sin filtros → oculto.
+  type BannerVariant = {
+    text: string;
+    ctaText: string;
+    ctaHref: string;
+  };
+  const BANNERS: Record<string, BannerVariant> = {
+    'finalidad:internacionalizacion': {
+      text: 'Filtras por internacionalización. Startidea acompaña la presentación de misiones Andalucía TRADE con cesión segura del certificado digital.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=andalucia-trade',
+    },
+    'finalidad:energia': {
+      text: 'Filtras por energía. Startidea tramita programas IDAE (MOVES, PREE, Renoval) con expediente preparado en 2-4 semanas.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=idae',
+    },
+    'finalidad:i+d+i': {
+      text: 'Filtras por I+D+i. Startidea construye memorias CDTI (NEOTEC, PID, Línea Directa) con el lenguaje y formato que CDTI valora.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=cdti',
+    },
+    'finalidad:servicios-sociales': {
+      text: 'Filtras por servicios sociales. Startidea presenta expedientes BDNS para asociaciones, fundaciones y ONGs del tercer sector.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=tercer-sector',
+    },
+    'finalidad:cultura': {
+      text: 'Filtras por cultura. Startidea prepara expedientes para convocatorias culturales de Ministerio de Cultura, CCAA y diputaciones.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=cultura',
+    },
+    'finalidad:fomento-empleo': {
+      text: 'Filtras por fomento de empleo. Líneas dirigidas a autónomos y pymes — Startidea acompaña la solicitud y la justificación posterior.',
+      ctaText: 'Pedir info →',
+      ctaHref: '/contacto?asunto=empleo',
+    },
+    'ccaa:andalucia': {
+      text: 'Convocatorias andaluzas (BDNS + Andalucía TRADE). Startidea tiene sede en Granada y conoce los organismos andaluces de primera mano.',
+      ctaText: 'Hablar 30 min →',
+      ctaHref: '/contacto?asunto=andalucia',
+    },
+    'beneficiary:asociacion': {
+      text: 'Convocatorias para asociaciones. Startidea presenta cada año decenas de expedientes para entidades del tercer sector.',
+      ctaText: 'Hablar 30 min →',
+      ctaHref: '/contacto?asunto=asociacion',
+    },
+    'beneficiary:fundacion': {
+      text: 'Convocatorias para fundaciones. Startidea prepara memorias técnicas + económicas con criterios reales de valoración.',
+      ctaText: 'Hablar 30 min →',
+      ctaHref: '/contacto?asunto=fundacion',
+    },
+    'beneficiary:pyme': {
+      text: 'Convocatorias para PYMES. Startidea cubre CDTI, IDAE, ENISA y BDNS — primera llamada gratis para identificar la línea que mejor encaja.',
+      ctaText: 'Hablar 30 min →',
+      ctaHref: '/contacto?asunto=pyme',
+    },
+  };
+
+  function pickBanner(): BannerVariant | null {
+    // Prioridad: finalidad > beneficiary > ccaa (más específico primero)
+    if (state.finalidad) {
+      const key = `finalidad:${state.finalidad}`;
+      if (BANNERS[key]) return BANNERS[key];
+    }
+    if (state.beneficiary) {
+      const key = `beneficiary:${state.beneficiary}`;
+      if (BANNERS[key]) return BANNERS[key];
+    }
+    if (state.ccaa) {
+      const key = `ccaa:${state.ccaa}`;
+      if (BANNERS[key]) return BANNERS[key];
+    }
+    return null;
+  }
+
+  function refreshBanner() {
+    const wrap = document.getElementById('subv-banner');
+    const text = document.getElementById('subv-banner-text');
+    const cta = document.getElementById('subv-banner-cta') as HTMLAnchorElement | null;
+    if (!wrap || !text || !cta) return;
+    const b = pickBanner();
+    if (!b) {
+      wrap.classList.add('hidden');
+      return;
+    }
+    text.textContent = b.text;
+    cta.textContent = b.ctaText;
+    cta.href = b.ctaHref;
+    wrap.classList.remove('hidden');
+  }
+
+  // Refresca el banner cada vez que cambia state (filtros aplicados)
+  const origLoadResults = loadResults;
+  loadResults = async (...args: Parameters<typeof origLoadResults>) => {
+    await origLoadResults(...args);
+    refreshBanner();
+  };
+  refreshBanner(); // primer render al cargar la página
 </script>
