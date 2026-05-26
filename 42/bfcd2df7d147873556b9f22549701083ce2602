@@ -1,0 +1,19 @@
+src/pages/diagnostico/gracias.astro
+  s_fc84abf46d9a4c::t_d1b6fbc473c6d9 2-10,15-16,22,25,27-28,31-108,112-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "42bfcd2df7d147873556b9f22549701083ce2602",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
