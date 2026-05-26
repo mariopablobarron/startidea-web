@@ -1,0 +1,26 @@
+src/pages/api/generar-expediente.ts
+  s_fc84abf46d9a4c::t_0a1ae82b1d2814 88-106
+  s_fc84abf46d9a4c::t_a0093efe916e9a 23
+src/pages/admin/expedientes/[id].astro
+  s_fc84abf46d9a4c::t_1ba4e9ff9d277e 46-51
+  s_fc84abf46d9a4c::t_563fb599b61af1 261-316
+  s_fc84abf46d9a4c::t_d3f0b8bf013604 14
+src/lib/sedes-map.ts
+  s_fc84abf46d9a4c::t_33624af4271b22 1-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "48f82fecc261e28f0cbb4ac11981f89a7247819b",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
