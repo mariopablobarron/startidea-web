@@ -1,0 +1,20 @@
+src/content/notas/copiloto-subvenciones-ia-startidea.md
+  s_fc84abf46d9a4c::t_d80e58ed27109e 10-20
+  s_fc84abf46d9a4c::t_e55ed4c5e2bd6a 1-9,21-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "350319faf860b09bbe3f3cb1e5a4837575717232",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
