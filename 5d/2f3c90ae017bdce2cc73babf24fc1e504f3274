@@ -1,0 +1,58 @@
+src/pages/notas.astro
+  s_fc84abf46d9a4c::t_f2b959e3a1416a 9-21,26,38,40-59,63-227,229,257,299,302-352
+src/content/notas/como-conseguir-subvenciones-ong.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/como-medir-impacto-social-organizacion.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/social-media-tercer-sector-granada.md
+  s_fc84abf46d9a4c::t_dfd1e3a3911387 5
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/memoria-anual-que-se-lee.md
+  s_fc84abf46d9a4c::t_dfd1e3a3911387 5
+src/content/notas/plan-comunicacion-ong.md
+  s_fc84abf46d9a4c::t_dfd1e3a3911387 5
+  s_fc84abf46d9a4c::t_9907740e3563ac 67
+src/content/notas/agencia-pequena-vs-grande.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/convocatoria-2026-agenda-2030-ong.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/fundraising-asociaciones-captacion-fondos.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/greenwashing-vs-proposito.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/metodo-diagnostico-startidea.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/como-hacer-fundraising-efectivo-fundacion.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/config.ts
+  s_fc84abf46d9a4c::t_6bf1f8b21e957a 11
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/rehacer-startidea-en-doce-horas.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+src/content/notas/como-producir-podcast-tercer-sector.md
+  s_fc84abf46d9a4c::t_dfd1e3a3911387 5
+src/content/notas/como-crear-alianzas-estrategicas-entre-ongs.md
+  s_fc84abf46d9a4c::t_472561c8595e5f 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "5d2f3c90ae017bdce2cc73babf24fc1e504f3274",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
