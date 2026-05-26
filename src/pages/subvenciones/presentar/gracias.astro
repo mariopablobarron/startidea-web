@@ -1,0 +1,32 @@
+---
+import Base from '@/layouts/Base.astro';
+import { SITE_URL } from '@/lib/jsonld';
+---
+
+<Base
+  title="Expediente recibido — Startidea"
+  description="Hemos recibido tu expediente. En 24h recibirás el diagnóstico de encaje y el presupuesto."
+  ogSlug="page/subvenciones-presentar"
+>
+  <section class="flex min-h-[60vh] flex-col items-center justify-center border-b border-ink/15 bg-paper py-20 text-center">
+    <div class="container-x max-w-xl">
+      <span class="label">— Recibido</span>
+      <h1 class="mt-4 font-display text-display-lg leading-tight text-ink">
+        Expediente recibido.<br />
+        <em class="italic text-magenta">En 24h tienes el diagnóstico.</em>
+      </h1>
+      <p class="mt-6 text-ink/70">
+        Hemos recibido todos los datos. El equipo de Startidea revisará el encaje con la convocatoria y te enviará un diagnóstico y el presupuesto exacto en un máximo de 24 horas hábiles.
+      </p>
+      <p class="mt-4 text-sm text-ink/50">
+        Si tienes documentos adicionales que quieras añadir, envíalos a{' '}
+        <a href="mailto:hola@startidea.es" class="underline hover:text-magenta">hola@startidea.es</a>{' '}
+        indicando el nombre de tu entidad.
+      </p>
+      <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <a href="/subvenciones" class="btn">Ver otras convocatorias →</a>
+        <a href="/" class="btn-ghost">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</Base>

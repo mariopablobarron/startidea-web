@@ -1,0 +1,627 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Financiación', url: `${SITE_URL}/financiacion-empresas` },
+    { name: 'Presentar subvención', url: `${SITE_URL}/subvenciones/presentar` },
+    { name: 'Nuevo expediente', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+  ]),
+];
+---
+
+<Base
+  title="Nuevo expediente de subvención — Startidea"
+  description="Rellena el formulario con los datos de tu entidad y la convocatoria. En 24h recibes el diagnóstico de encaje y el presupuesto."
+  ogSlug="page/subvenciones-presentar"
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-14">
+    <div class="container-x">
+      <span class="label">— Nuevo expediente</span>
+      <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+        Cuéntanos la convocatoria.
+      </h1>
+      <p class="mt-3 max-w-measure text-ink/70">
+        Completar este formulario lleva unos 10 minutos. En 24h te enviamos el diagnóstico de encaje y el presupuesto exacto.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl">
+
+        <!-- Indicador de pasos -->
+        <div id="step-indicator" class="mb-10 flex items-center gap-0">
+          {[
+            { n: 1, label: 'La entidad' },
+            { n: 2, label: 'Convocatoria' },
+            { n: 3, label: 'Documentos' },
+            { n: 4, label: 'Confirmar' },
+          ].map((s, i) => (
+            <>
+              <div class="flex flex-col items-center" data-step-dot={s.n}>
+                <div class="flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/40 transition-colors" data-dot-circle>
+                  {s.n}
+                </div>
+                <span class="mt-1 hidden font-mono text-[10px] uppercase tracking-wider text-ink/40 sm:block" data-dot-label>{s.label}</span>
+              </div>
+              {i < 3 && <div class="h-px flex-1 bg-ink/15" />}
+            </>
+          ))}
+        </div>
+
+        <!-- Formulario -->
+        <form id="expediente-form" novalidate>
+          <!-- PASO 1: La entidad -->
+          <fieldset id="step-1" class="step-panel space-y-6">
+            <legend class="font-display text-2xl text-ink">Tu entidad</legend>
+            <p class="text-sm text-ink/60">Los datos del organismo que va a presentarse a la subvención.</p>
+
+            <div class="space-y-1">
+              <label for="orgName" class="label">Nombre de la organización <span class="text-magenta">*</span></label>
+              <input
+                type="text"
+                id="orgName"
+                name="orgName"
+                required
+                maxlength="200"
+                placeholder="Fundación Ejemplo"
+                class="form-input w-full"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="cif" class="label">CIF / NIF <span class="text-magenta">*</span></label>
+                <input
+                  type="text"
+                  id="cif"
+                  name="cif"
+                  required
+                  maxlength="20"
+                  placeholder="G12345678"
+                  class="form-input w-full"
+                />
+              </div>
+              <div class="space-y-1">
+                <label for="orgType" class="label">Tipo de entidad <span class="text-magenta">*</span></label>
+                <select id="orgType" name="orgType" required class="form-input w-full">
+                  <option value="">Selecciona…</option>
+                  <option value="fundacion">Fundación</option>
+                  <option value="asociacion">Asociación</option>
+                  <option value="cooperativa">Cooperativa</option>
+                  <option value="empresa">Empresa</option>
+                  <option value="entidad-publica">Entidad pública</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label for="representante" class="label">Representante legal <span class="text-magenta">*</span></label>
+              <input
+                type="text"
+                id="representante"
+                name="representante"
+                required
+                maxlength="120"
+                placeholder="Nombre y apellidos"
+                class="form-input w-full"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label for="email" class="label">Email de contacto <span class="text-magenta">*</span></label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  maxlength="120"
+                  placeholder="tu@entidad.org"
+                  class="form-input w-full"
+                />
+              </div>
+              <div class="space-y-1">
+                <label for="telefono" class="label">Teléfono</label>
+                <input
+                  type="tel"
+                  id="telefono"
+                  name="telefono"
+                  maxlength="20"
+                  placeholder="600 000 000"
+                  class="form-input w-full"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label for="provincia" class="label">Provincia / Comunidad Autónoma <span class="text-magenta">*</span></label>
+              <input
+                type="text"
+                id="provincia"
+                name="provincia"
+                required
+                maxlength="80"
+                placeholder="Granada, Andalucía"
+                class="form-input w-full"
+              />
+            </div>
+          </fieldset>
+
+          <!-- PASO 2: La convocatoria -->
+          <fieldset id="step-2" class="step-panel hidden space-y-6">
+            <legend class="font-display text-2xl text-ink">La convocatoria</legend>
+            <p class="text-sm text-ink/60">Qué subvención quieres pedir y qué estado tiene el proyecto.</p>
+
+            <div class="space-y-2">
+              <p class="label">¿Tienes ya identificada la convocatoria? <span class="text-magenta">*</span></p>
+              <div class="flex gap-6">
+                <label class="flex cursor-pointer items-center gap-2">
+                  <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta" />
+                  <span class="text-sm text-ink">Sí, tengo la URL o referencia BDNS</span>
+                </label>
+                <label class="flex cursor-pointer items-center gap-2">
+                  <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta" />
+                  <span class="text-sm text-ink">No, necesito identificarla</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Si tiene convocatoria -->
+            <div id="has-convocatoria" class="space-y-4" style="display:none">
+              <div class="space-y-1">
+                <label for="convocatoriaUrl" class="label">URL de la convocatoria o referencia BDNS</label>
+                <input
+                  type="url"
+                  id="convocatoriaUrl"
+                  name="convocatoriaUrl"
+                  maxlength="500"
+                  placeholder="https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/..."
+                  class="form-input w-full"
+                />
+              </div>
+              <div class="space-y-1">
+                <label for="convocatoriaNombre" class="label">Nombre de la convocatoria</label>
+                <input
+                  type="text"
+                  id="convocatoriaNombre"
+                  name="convocatoriaNombre"
+                  maxlength="300"
+                  placeholder="Subvenciones para proyectos de acción social Junta de Andalucía"
+                  class="form-input w-full"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label for="plazo" class="label">Fecha límite de presentación</label>
+                  <input
+                    type="date"
+                    id="plazo"
+                    name="plazo"
+                    class="form-input w-full"
+                  />
+                </div>
+                <div class="space-y-1">
+                  <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
+                  <input
+                    type="text"
+                    id="importeSolicitado"
+                    name="importeSolicitado"
+                    maxlength="30"
+                    placeholder="15.000 €"
+                    class="form-input w-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Si no tiene convocatoria -->
+            <div id="no-convocatoria" class="space-y-4" style="display:none">
+              <div class="space-y-1">
+                <label for="necesidadDesc" class="label">Describe brevemente el proyecto o la necesidad de financiación</label>
+                <textarea
+                  id="necesidadDesc"
+                  name="necesidadDesc"
+                  rows="4"
+                  maxlength="1000"
+                  placeholder="Ej: Queremos financiar un programa de inserción laboral para jóvenes en riesgo de exclusión en Granada. Buscamos entre 20.000 y 50.000€ para el próximo año."
+                  class="form-input w-full resize-none"
+                ></textarea>
+              </div>
+              <div class="space-y-1">
+                <label for="importeEstimado" class="label">Importe estimado que necesitas</label>
+                <input
+                  type="text"
+                  id="importeEstimado"
+                  name="importeEstimado"
+                  maxlength="30"
+                  placeholder="30.000 €"
+                  class="form-input w-full"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label for="descripcionProyecto" class="label">Descripción del proyecto a financiar <span class="text-magenta">*</span></label>
+              <textarea
+                id="descripcionProyecto"
+                name="descripcionProyecto"
+                rows="5"
+                required
+                maxlength="2000"
+                placeholder="Qué vas a hacer, con quién, en qué plazo y qué resultados esperas. Cuantos más detalles, mejor diagnóstico."
+                class="form-input w-full resize-none"
+              ></textarea>
+              <p class="text-xs text-ink/40">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
+            </div>
+
+            <div class="space-y-2">
+              <p class="label">¿Tiene la entidad experiencia previa en subvenciones?</p>
+              <div class="flex flex-wrap gap-4">
+                {['Nunca hemos pedido', 'Alguna vez', 'Tenemos varias concedidas', 'Somos veteranos'].map(v => (
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input type="radio" name="experiencia" value={v} class="accent-magenta" />
+                    <span class="text-sm text-ink">{v}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <p class="label">¿Queréis que Startidea actúe como representante (apoderamiento)?</p>
+              <div class="flex gap-6">
+                <label class="flex cursor-pointer items-center gap-2">
+                  <input type="radio" name="apoderamiento" value="si" class="accent-magenta" />
+                  <span class="text-sm text-ink">Sí, quiero delegar completamente</span>
+                </label>
+                <label class="flex cursor-pointer items-center gap-2">
+                  <input type="radio" name="apoderamiento" value="no" class="accent-magenta" />
+                  <span class="text-sm text-ink">No, yo firmo con mi certificado</span>
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- PASO 3: Documentos -->
+          <fieldset id="step-3" class="step-panel hidden space-y-6">
+            <legend class="font-display text-2xl text-ink">Documentos disponibles</legend>
+            <p class="text-sm text-ink/60">
+              Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
+            </p>
+
+            <div class="space-y-4">
+              {[
+                { id: 'doc-memoria', name: 'docMemoria', label: 'Memoria técnica del proyecto', hint: 'Descripción del proyecto, metodología, equipo, indicadores de resultado.' },
+                { id: 'doc-presupuesto', name: 'docPresupuesto', label: 'Presupuesto del proyecto', hint: 'Desglose de gastos: personal, materiales, subcontratación, gastos indirectos.' },
+                { id: 'doc-hacienda', name: 'docHacienda', label: 'Certificado AEAT (Hacienda)', hint: 'Al corriente de pago con la Agencia Tributaria. Válido 6 meses.' },
+                { id: 'doc-ss', name: 'docSS', label: 'Certificado TGSS (Seguridad Social)', hint: 'Al corriente de pago con la Seguridad Social. Válido 6 meses.' },
+                { id: 'doc-estatutos', name: 'docEstatutos', label: 'Estatutos de la entidad', hint: 'Con sello de inscripción en el registro correspondiente.' },
+                { id: 'doc-otros', name: 'docOtros', label: 'Otros documentos', hint: 'Cualquier documentación relevante para la convocatoria.', multiple: true },
+              ].map(doc => (
+                <div class="border border-ink/10 p-4">
+                  <label for={doc.id} class="block cursor-pointer">
+                    <p class="font-mono text-sm text-ink">{doc.label}</p>
+                    <p class="mt-0.5 text-xs text-ink/50">{doc.hint}</p>
+                    <div class="mt-3 flex items-center gap-3">
+                      <span class="border border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-paper-warm">
+                        Seleccionar archivo
+                      </span>
+                      <span class="text-xs text-ink/40" id={`${doc.id}-name`}>Sin archivo seleccionado</span>
+                    </div>
+                  </label>
+                  <input
+                    type="file"
+                    id={doc.id}
+                    name={doc.name}
+                    multiple={doc.multiple}
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods"
+                    class="sr-only"
+                    data-file-label={`${doc.id}-name`}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div class="rounded border border-ink/10 bg-paper-warm p-4 font-mono text-[11px] uppercase tracking-wider text-ink/50">
+              Formatos admitidos: PDF, Word (.doc/.docx), Excel (.xls/.xlsx), OpenDocument. Tamaño máximo por archivo: 20 MB.
+            </div>
+          </fieldset>
+
+          <!-- PASO 4: Confirmar -->
+          <fieldset id="step-4" class="step-panel hidden space-y-6">
+            <legend class="font-display text-2xl text-ink">Confirmar y enviar</legend>
+            <p class="text-sm text-ink/60">Revisa el resumen y confirma el envío.</p>
+
+            <!-- Resumen -->
+            <div id="resumen" class="space-y-3 border border-ink/15 bg-paper-warm p-5">
+              <h3 class="font-mono text-xs uppercase tracking-wider text-ink/50">Resumen del expediente</h3>
+              <dl class="space-y-2 text-sm">
+                <div class="flex gap-2">
+                  <dt class="w-32 shrink-0 text-ink/50">Entidad</dt>
+                  <dd id="resumen-entidad" class="text-ink"></dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="w-32 shrink-0 text-ink/50">CIF</dt>
+                  <dd id="resumen-cif" class="text-ink"></dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="w-32 shrink-0 text-ink/50">Email</dt>
+                  <dd id="resumen-email" class="text-ink"></dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="w-32 shrink-0 text-ink/50">Convocatoria</dt>
+                  <dd id="resumen-convocatoria" class="text-ink"></dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="w-32 shrink-0 text-ink/50">Documentos</dt>
+                  <dd id="resumen-docs" class="text-ink"></dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="space-y-1">
+              <label for="comentarios" class="label">Comentarios adicionales (opcional)</label>
+              <textarea
+                id="comentarios"
+                name="comentarios"
+                rows="3"
+                maxlength="800"
+                placeholder="Cualquier cosa que sea relevante y que no hayas podido explicar antes."
+                class="form-input w-full resize-none"
+              ></textarea>
+            </div>
+
+            <div class="space-y-1">
+              <label for="como-conocio" class="label">¿Cómo has conocido este servicio?</label>
+              <select id="como-conocio" name="comoConocio" class="form-input w-full">
+                <option value="">Selecciona…</option>
+                <option value="buscador">Buscador (Google, etc.)</option>
+                <option value="recomendacion">Recomendación de alguien</option>
+                <option value="buscador-subvenciones">Buscador de subvenciones de Startidea</option>
+                <option value="redes">Redes sociales</option>
+                <option value="nota">Una nota o artículo</option>
+                <option value="ya-cliente">Ya soy cliente de Startidea</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <!-- Campo honeypot anti-spam -->
+            <input type="text" name="website" class="sr-only" tabindex="-1" autocomplete="off" />
+
+            <div class="flex items-start gap-3">
+              <input type="checkbox" id="rgpd" name="rgpd" required class="mt-0.5 accent-magenta" />
+              <label for="rgpd" class="text-sm text-ink/70">
+                Acepto que Startidea use mis datos para gestionar este expediente y me contacte con el diagnóstico y el presupuesto, de acuerdo con la{' '}
+                <a href="/privacidad" class="underline hover:text-magenta">política de privacidad</a>.
+              </label>
+            </div>
+
+            <!-- Estado del envío -->
+            <div id="form-error" class="hidden border border-red-300 bg-red-50 p-4 text-sm text-red-700"></div>
+          </fieldset>
+
+          <!-- Botones de navegación -->
+          <div class="mt-10 flex items-center justify-between border-t border-ink/10 pt-6">
+            <button
+              type="button"
+              id="btn-prev"
+              class="btn-ghost hidden"
+              aria-label="Paso anterior"
+            >
+              ← Atrás
+            </button>
+            <button
+              type="button"
+              id="btn-next"
+              class="btn ml-auto"
+            >
+              Siguiente →
+            </button>
+            <button
+              type="submit"
+              id="btn-submit"
+              class="btn ml-auto hidden"
+            >
+              Enviar expediente →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .form-input {
+    @apply border border-ink/20 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink focus:ring-1 focus:ring-ink;
+  }
+  .form-input:invalid:not(:placeholder-shown) {
+    @apply border-red-400;
+  }
+</style>
+
+<script>
+  const TOTAL_STEPS = 4;
+  let currentStep = 1;
+
+  const form = document.getElementById('expediente-form') as HTMLFormElement;
+  const btnPrev = document.getElementById('btn-prev') as HTMLButtonElement;
+  const btnNext = document.getElementById('btn-next') as HTMLButtonElement;
+  const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement;
+
+  function getPanel(n: number) {
+    return document.getElementById(`step-${n}`) as HTMLElement;
+  }
+
+  function getDotCircle(n: number) {
+    const dot = document.querySelector(`[data-step-dot="${n}"] [data-dot-circle]`) as HTMLElement;
+    return dot;
+  }
+
+  function updateUI() {
+    // Paneles
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      getPanel(i)?.classList.toggle('hidden', i !== currentStep);
+    }
+
+    // Dots
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      const dot = getDotCircle(i);
+      if (!dot) continue;
+      if (i < currentStep) {
+        dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-ink bg-ink font-mono text-sm text-paper transition-colors';
+        dot.textContent = '✓';
+      } else if (i === currentStep) {
+        dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-magenta bg-magenta font-mono text-sm text-paper transition-colors';
+        dot.textContent = String(i);
+      } else {
+        dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/40 transition-colors';
+        dot.textContent = String(i);
+      }
+    }
+
+    // Botones
+    btnPrev.classList.toggle('hidden', currentStep === 1);
+    btnNext.classList.toggle('hidden', currentStep === TOTAL_STEPS);
+    btnSubmit.classList.toggle('hidden', currentStep !== TOTAL_STEPS);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validateStep(n: number): boolean {
+    const panel = getPanel(n);
+    const required = panel.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]');
+    let valid = true;
+    for (const el of required) {
+      if (!el.value.trim()) {
+        el.focus();
+        el.classList.add('border-red-400');
+        valid = false;
+        break;
+      } else {
+        el.classList.remove('border-red-400');
+      }
+    }
+    // Validar radios requeridos en paso 2
+    if (n === 2) {
+      const radioTiene = form.querySelector<HTMLInputElement>('input[name="tieneConvocatoria"]:checked');
+      if (!radioTiene) {
+        valid = false;
+        const group = form.querySelector('[name="tieneConvocatoria"]')?.closest('.space-y-2');
+        group?.classList.add('ring-1', 'ring-red-400', 'ring-offset-2');
+      }
+    }
+    return valid;
+  }
+
+  function updateResumen() {
+    const orgName = (form.querySelector('#orgName') as HTMLInputElement).value;
+    const cif = (form.querySelector('#cif') as HTMLInputElement).value;
+    const email = (form.querySelector('#email') as HTMLInputElement).value;
+    const convoUrl = (form.querySelector('#convocatoriaUrl') as HTMLInputElement).value;
+    const convoNombre = (form.querySelector('#convocatoriaNombre') as HTMLInputElement).value;
+    const necesidad = (form.querySelector('#necesidadDesc') as HTMLTextAreaElement).value;
+    const fileInputs = form.querySelectorAll<HTMLInputElement>('input[type="file"]');
+
+    const docs: string[] = [];
+    fileInputs.forEach(fi => {
+      if (fi.files && fi.files.length > 0) {
+        docs.push(`${fi.files.length} archivo(s) en ${fi.name}`);
+      }
+    });
+
+    (document.getElementById('resumen-entidad') as HTMLElement).textContent = orgName || '—';
+    (document.getElementById('resumen-cif') as HTMLElement).textContent = cif || '—';
+    (document.getElementById('resumen-email') as HTMLElement).textContent = email || '—';
+    (document.getElementById('resumen-convocatoria') as HTMLElement).textContent = convoNombre || convoUrl || necesidad.slice(0, 80) || '—';
+    (document.getElementById('resumen-docs') as HTMLElement).textContent = docs.length ? docs.join(', ') : 'Ninguno (se puede completar más adelante)';
+  }
+
+  btnNext.addEventListener('click', () => {
+    if (!validateStep(currentStep)) return;
+    if (currentStep === TOTAL_STEPS - 1) updateResumen();
+    currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
+    updateUI();
+  });
+
+  btnPrev.addEventListener('click', () => {
+    currentStep = Math.max(currentStep - 1, 1);
+    updateUI();
+  });
+
+  // Toggle convocatoria sections
+  form.querySelectorAll('input[name="tieneConvocatoria"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const val = (form.querySelector('input[name="tieneConvocatoria"]:checked') as HTMLInputElement)?.value;
+      (document.getElementById('has-convocatoria') as HTMLElement).style.display = val === 'si' ? 'block' : 'none';
+      (document.getElementById('no-convocatoria') as HTMLElement).style.display = val === 'no' ? 'block' : 'none';
+    });
+  });
+
+  // Contador de caracteres descripción
+  const descArea = document.getElementById('descripcionProyecto') as HTMLTextAreaElement;
+  const charsLeft = document.getElementById('chars-left') as HTMLElement;
+  descArea?.addEventListener('input', () => {
+    charsLeft.textContent = String(2000 - descArea.value.length);
+  });
+
+  // File input labels
+  document.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach(input => {
+    input.addEventListener('change', () => {
+      const labelId = input.dataset.fileLabel;
+      if (!labelId) return;
+      const label = document.getElementById(labelId);
+      if (!label) return;
+      if (input.files && input.files.length > 0) {
+        const names = Array.from(input.files).map(f => f.name).join(', ');
+        label.textContent = names.length > 50 ? names.slice(0, 47) + '…' : names;
+        label.classList.add('text-ink');
+        label.classList.remove('text-ink/40');
+      } else {
+        label.textContent = 'Sin archivo seleccionado';
+        label.classList.remove('text-ink');
+        label.classList.add('text-ink/40');
+      }
+    });
+  });
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validateStep(TOTAL_STEPS)) return;
+
+    const errDiv = document.getElementById('form-error') as HTMLElement;
+    errDiv.classList.add('hidden');
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Enviando…';
+
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch('/api/expediente', { method: 'POST', body: data });
+      const json = await res.json();
+      if (json.ok) {
+        window.location.href = '/subvenciones/presentar/gracias';
+      } else {
+        errDiv.textContent = 'Ha habido un error al enviar el formulario. Escríbenos a hola@startidea.es directamente.';
+        errDiv.classList.remove('hidden');
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Enviar expediente →';
+      }
+    } catch {
+      errDiv.textContent = 'Error de conexión. Comprueba tu internet e inténtalo de nuevo.';
+      errDiv.classList.remove('hidden');
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Enviar expediente →';
+    }
+  });
+
+  // Init
+  updateUI();
+</script>
