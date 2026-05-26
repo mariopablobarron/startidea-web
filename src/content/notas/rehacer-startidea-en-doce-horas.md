@@ -5,6 +5,17 @@ pubDate: 2026-04-28
 audience: 'Empresas con propósito'
 tags: ['producto', 'tecnología', 'startidea', 'caso']
 draft: false
+faqs:
+  - question: '¿Qué tecnología usa la web de Startidea y por qué se eligió?'
+    answer: 'Astro 5 con SSR en Node.js, desplegado en un VPS propio con Coolify y Traefik. Se eligió por tres razones: rendimiento (HTML estático para el 95% de páginas, sin JavaScript innecesario), control total de infraestructura sin dependencia de plataformas SaaS caras, y posibilidad de integrar agentes IA propios para SEO y analítica. WordPress se descartó por su overhead de mantenimiento y deuda técnica acumulada.'
+  - question: '¿En cuánto tiempo se puede migrar una web de WordPress a Astro?'
+    answer: 'Depende del tamaño y la complejidad. La web de Startidea tenía unos 40 contenidos relevantes y se migró en 12 horas de trabajo continuo. Una organización con 200+ posts y plugins complejos puede necesitar 2-4 semanas. Lo que más tiempo consume no es la migración técnica sino las decisiones de arquitectura: qué se mantiene, qué se elimina, cómo se reorganiza la navegación.'
+  - question: '¿Por qué una agencia de comunicación social construye y gestiona su propia infraestructura técnica?'
+    answer: 'Porque la tecnología es parte del servicio que ofrecemos. Si no entendemos cómo funciona un VPS, un contenedor Docker o un pipeline de despliegue, no podemos acompañar bien a clientes que necesitan tomar decisiones técnicas. Y porque el coste de infraestructura propia (un VPS de 20€/mes) es muy inferior al de plataformas SaaS equivalentes. Es congruencia con lo que defendemos.'
+  - question: '¿Qué es Coolify y para qué se usa en Startidea?'
+    answer: 'Coolify es una plataforma de despliegue self-hosted (alternativa a Heroku o Vercel) que permite gestionar contenedores Docker con interfaz visual, certificados SSL automáticos y despliegue continuo desde GitHub. En Startidea gestiona la web institucional, el HUB de datos y varios microservicios. El coste es solo el del VPS subyacente.'
+  - question: '¿Puede Startidea replicar este tipo de migración para clientes?'
+    answer: 'Sí, para organizaciones que tienen web corporativa en WordPress y quieren mejorar rendimiento, reducir costes de mantenimiento o recuperar control de su infraestructura. No es un servicio estándar de catálogo: cada caso tiene un diagnóstico previo para valorar si la ganancia justifica el esfuerzo de migración. Contáctanos en hola@startidea.es si tu situación se parece a la que describe esta nota.'
 ---
 
 Esta web que estás leyendo es nueva. La anterior llevaba años en WordPress y, como tantas webs de tantas agencias del sector, **había envejecido sin que la mirásemos**. La nueva la hemos construido en doce horas. No por presumir de velocidad, sino para contarlo: porque lo que aplicamos en casa es exactamente lo que defendemos para nuestros clientes.

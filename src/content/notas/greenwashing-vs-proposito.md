@@ -5,6 +5,17 @@ pubDate: 2026-06-09
 audience: 'Empresas con propósito'
 tags: ['ESG', 'partnerships', 'greenwashing', 'empresas']
 draft: false
+faqs:
+  - question: '¿Qué es el greenwashing en una alianza entre empresa y ONG?'
+    answer: 'Es cuando la empresa usa la asociación con una entidad social para mejorar su imagen sin que haya un compromiso real: sin aportación significativa, sin cambio de prácticas internas, sin accountability de resultados. Se distingue del propósito real en que desaparece cuando deja de ser conveniente para la empresa.'
+  - question: '¿Cómo puede una ONG o fundación detectar si una propuesta de alianza empresarial es real o postureo?'
+    answer: 'Cuatro señales de alerta: la propuesta viene solo del departamento de comunicación o RSC, no de dirección; no hay cifra concreta de aportación ni en dinero ni en tiempo; la empresa pide visibilidad inmediata antes de acordar compromisos; el contrato no incluye cláusula de resultados ni mecanismo de revisión anual.'
+  - question: '¿Qué cláusulas debe tener un contrato de alianza ESG para que sea sólido?'
+    answer: 'Cuatro son imprescindibles: quién pone qué (dinero, tiempo, visibilidad, acceso) a cambio de qué; cómo se mide el impacto y quién lo audita; qué pasa si una de las partes incumple (salida con o sin penalización, gestión de reputación); y la cláusula de valores o incompatibilidad que permite disolver si alguna parte hace algo que contradice los principios del acuerdo.'
+  - question: '¿Puede una empresa con propósito real colaborar con el tercer sector sin acusaciones de greenwashing?'
+    answer: 'Sí, si la alianza está bien construida. Los elementos que la blindan: la aportación es proporcional al negocio de la empresa (no simbólica), hay cambios internos que acompañan la alianza (no solo comunicación externa), la entidad social tiene autonomía para hablar de la alianza con honestidad, y los resultados se publican aunque no sean perfectos.'
+  - question: '¿Cuánto debe aportar una empresa en una alianza con una ONG para que sea considerada significativa?'
+    answer: 'No hay una cifra universal, pero la referencia más útil es proporcional: si la empresa tiene 10M€ de facturación, una alianza de 10.000€ anuales es simbólica; una de 80-150K€ empieza a tener impacto real. La Fundación Lealtad y otros observatorios del sector recomiendan que las alianzas corporativas representen al menos el 0,5-1% del EBITDA de la empresa para ser tomadas en serio.'
 ---
 
 Llevamos años en la posición incómoda de explicarle a fundaciones y ONGs que **no toda alianza con una empresa es buena**, y a empresas que **no toda alianza con una ONG es buena prensa**. Las dos partes pierden el tiempo cuando el partnership se diseña desde el departamento de comunicación en lugar de desde el departamento legal.

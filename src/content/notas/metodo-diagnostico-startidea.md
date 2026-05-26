@@ -5,6 +5,17 @@ pubDate: 2026-05-13
 audience: 'Tercer sector'
 tags: ['método', 'diagnóstico', 'Startidea', 'consultoría', 'estrategia']
 draft: false
+faqs:
+  - question: '¿En qué consiste el diagnóstico previo de Startidea?'
+    answer: 'Es una fase breve (1-2 semanas) antes de cualquier propuesta económica. Incluye una llamada de 30-60 minutos con la dirección o el equipo responsable, revisión de materiales existentes (web, memorias, planes anteriores) y un documento de tres a cinco páginas con lectura de situación, opciones posibles y recomendación de alcance. No tiene coste si el proyecto finalmente no avanza.'
+  - question: '¿Por qué Startidea no envía presupuesto directo sin diagnóstico previo?'
+    answer: 'Porque un presupuesto sin diagnóstico es una estimación ciega. El alcance real de un proyecto de comunicación o consultoría depende de factores que no se ven en el briefing inicial: el estado de la identidad, la capacidad de decisión del equipo, los plazos reales, los activos ya disponibles. Presupuestar sin verlos produce propuestas que luego no encajan.'
+  - question: '¿Cuánto cuesta el diagnóstico de Startidea?'
+    answer: 'La primera llamada de 30 minutos es sin coste. Si el diagnóstico requiere más de una sesión o implica revisión profunda de materiales, se propone un encargo mínimo. En proyectos de más de 10.000€ el diagnóstico suele estar incluido en la primera fase. En proyectos menores puede ser un servicio independiente de 300-800€.'
+  - question: '¿Qué pasa si después del diagnóstico Startidea dice que no puede ayudar?'
+    answer: 'Ocurre. Si el diagnóstico revela que el proyecto no encaja con el perfil de Startidea, que el presupuesto no es viable o que hay otro proveedor más adecuado, lo decimos con claridad. En ese caso compartimos la lectura de situación igualmente y, si es posible, recomendamos otras opciones. Esa honestidad es parte del método.'
+  - question: '¿Cuánto tiempo tarda Startidea en responder a una solicitud de diagnóstico?'
+    answer: 'El equipo confirma en menos de 48 horas laborales si el proyecto encaja con la agenda actual. La llamada de diagnóstico se agenda normalmente en la semana siguiente. Si hay urgencia (plazo de convocatoria inminente, reunión de patronato en días), se puede acelerar escribiendo directamente a hola@startidea.es con el asunto «Urgente».'
 ---
 Si pides un presupuesto a Startidea, no llegará en 24 horas con cifra cerrada. Llegará una propuesta de diagnóstico breve, y solo después de eso una propuesta de trabajo con cifra. No es burocracia ni filtro comercial: es el método. Esta nota explica por qué funciona así, qué supone para el cliente y cuándo no encaja.
 

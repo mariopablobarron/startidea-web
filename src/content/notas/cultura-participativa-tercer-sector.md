@@ -5,6 +5,17 @@ pubDate: 2026-05-05
 audience: 'Tercer sector'
 tags: ['cultura organizacional', 'participación', 'tercer sector', 'gestión', 'estrategia']
 draft: false
+faqs:
+  - question: '¿Qué es la cultura participativa en una organización social?'
+    answer: 'Es el conjunto de prácticas y estructuras por las cuales las personas que forman la organización (equipo remunerado, voluntariado, personas atendidas) tienen voz real en las decisiones que les afectan. No es democracia directa ni asambleísmo: es estructura con canales de aportación, retorno de lo que se hizo con esa aportación, y responsabilidad clara de quién decide qué.'
+  - question: '¿Por qué las organizaciones del tercer sector necesitan cultura participativa más que una empresa convencional?'
+    answer: 'Porque su modelo de captación de personas (voluntariado, equipo comprometido con la misión, beneficiarios implicados) funciona solo si hay coherencia entre la misión que se anuncia y la forma en que se gobierna internamente. Una ONG que predica participación ciudadana pero toma todas las decisiones en un despacho pierde credibilidad interna antes que externa.'
+  - question: '¿Cómo se empieza a construir cultura participativa en una organización pequeña?'
+    answer: 'Con tres cambios concretos: reuniones donde se recoge información antes de tomar decisiones (no después), un canal estable para que el equipo y el voluntariado puedan hacer propuestas con respuesta garantizada, y una rendición de cuentas interna regular (trimestral) donde la dirección explica qué se hizo con las propuestas recibidas. Es más proceso que tecnología.'
+  - question: '¿Cuáles son los principales errores al implementar cultura participativa?'
+    answer: 'Cuatro son los más frecuentes: confundir participación con consulta (se pregunta pero la decisión ya estaba tomada), no cerrar el loop (se pide opinión y nunca se comunica qué pasó con ella), participación solo para lo agradable (nunca para decisiones difíciles como presupuesto o despidos), y creer que participación equivale a consenso (a veces alguien decide, y eso también es legítimo).'
+  - question: '¿Cómo afecta la cultura participativa a la retención de voluntariado y equipo?'
+    answer: 'De forma directa y medible. Estudios del sector (PNVD, Volunteering Matters) muestran consistentemente que el sentido de agencia — la sensación de que mi aportación importa — es el predictor más fuerte de continuidad en el voluntariado, por encima del reconocimiento económico o social. En el equipo remunerado, el efecto es similar: la participación reduce la intención de rotación más que el salario en organizaciones de misión.'
 ---
 Cuando una organización social dice que es «participativa», a menudo significa que hace reuniones. Cultura participativa es algo distinto: es cuando las decisiones se toman con quienes las van a ejecutar, cuando el voluntario sabe por qué existe la organización, cuando la persona atendida tiene voz en cómo se diseña el servicio. No es democracia directa ni anarquía. Es estructura con permeabilidad.
 

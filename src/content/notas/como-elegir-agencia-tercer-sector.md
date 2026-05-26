@@ -5,6 +5,17 @@ pubDate: 2026-05-13
 audience: 'Tercer sector'
 tags: ['agencia', 'contratación', 'tercer sector', 'comunicación', 'diagnóstico']
 draft: false
+faqs:
+  - question: '¿Qué preguntas hay que hacerle a una agencia antes de contratarla?'
+    answer: 'Hay cuatro que no deberían faltar: ¿con quién trabajaremos día a día?, ¿tenéis experiencia específica en tercer sector?, ¿podéis mostrar un caso concreto con métricas reales?, ¿cómo gestionáis los cambios de proyecto? Las respuestas revelan más que el portfolio.'
+  - question: '¿Qué diferencia a una agencia especializada en tercer sector de una generalista?'
+    answer: 'Una agencia especializada entiende el lenguaje de las memorias anuales, los ritmos de patronato, la lógica de la justificación de subvenciones y la sensibilidad de los proyectos de impacto. Una generalista lo aprende sobre la marcha con tu presupuesto. Para proyectos estratégicos rara vez compensa.'
+  - question: '¿Cómo sé si el presupuesto de una agencia es razonable para mi organización?'
+    answer: 'El precio no es lo que importa, sino el alcance que cubre. Pide siempre desglose: qué incluye, qué no incluye, cuántas revisiones están contempladas, qué pasa si el proyecto crece. Una propuesta barata con alcance opaco suele ser más cara que una propuesta cara con alcance bien definido.'
+  - question: '¿Cuánto tiempo debería durar el proceso de selección de agencia?'
+    answer: 'Entre tres y seis semanas si se hace bien: brief interno (1-2 semanas), invitación a 2-3 agencias, presentaciones y dudas (1 semana) y decisión con contrato (1 semana). Alargar el proceso más de dos meses indica que el brief interno no estaba cerrado.'
+  - question: '¿Es mejor una agencia local o puede ser de otra ciudad?'
+    answer: 'Para comunicación estratégica y contenidos la localización importa menos que el encaje sectorial. Para producción audiovisual, eventos o relaciones con medios locales, la presencia física sí tiene valor. En Startidea trabajamos desde Granada con clientes en toda España: lo que importa es la metodología y el contacto directo.'
 ---
 Cada año, miles de organizaciones sociales en España contratan agencia de comunicación. La mayoría vive después la misma frustración: el plan que prometieron no se ejecutó, el equipo cambió tres veces, los entregables fueron correctos pero genéricos, y al final del año no hay nada que la organización pueda usar el siguiente. Esta nota intenta ayudarte a no repetir ese patrón.
 

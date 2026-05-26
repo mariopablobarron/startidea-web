@@ -5,6 +5,17 @@ pubDate: 2026-05-13
 audience: 'Tercer sector'
 tags: ['agencia', 'elección de partner', 'comunicación', 'tercer sector', 'estrategia']
 draft: false
+faqs:
+  - question: '¿Cuándo conviene contratar una agencia grande para un proyecto social?'
+    answer: 'Cuando el proyecto requiere producción simultánea en varias lenguas o países, cuando hay un contrato marco con requisito de cifra de negocio mínima, o cuando la organización necesita la cobertura de marca de un nombre conocido para justificar la decisión ante un patronato. En esos casos la escala compensa el coste.'
+  - question: '¿Cuándo encaja mejor una agencia pequeña o boutique?'
+    answer: 'Cuando importa saber con quién hablarás cada semana, cuando el proyecto requiere comprensión profunda del sector (tercer sector, institucional, eclesial), cuando el presupuesto no permite pagar la estructura de una red grande, o cuando la agilidad y la iteración rápida son más valiosas que la consistencia de proceso.'
+  - question: '¿El tamaño de la agencia afecta a la calidad del trabajo?'
+    answer: 'No directamente. La calidad depende del equipo concreto, no del tamaño de la empresa. En agencias grandes el riesgo es que el equipo senior que ganó el pitch no sea el que ejecuta. En agencias pequeñas el riesgo es la dependencia de una o dos personas clave. Hay que preguntar explícitamente quién trabajará en el proyecto.'
+  - question: '¿Cómo influye el presupuesto disponible en la elección entre agencia grande y pequeña?'
+    answer: 'Presupuestos inferiores a 30.000€ anuales rara vez dan acceso real a una agencia grande: el proyecto queda en niveles junior. Con ese rango, una agencia boutique especializada suele ofrecer más contacto directo con perfiles senior. Por encima de 80-100K€ tiene sentido evaluar ambas opciones.'
+  - question: '¿Puede una organización del tercer sector trabajar con varias agencias a la vez?'
+    answer: 'Puede, pero no siempre es eficiente. Lo más habitual es una agencia principal (estrategia + contenidos) y proveedores satélite para producción puntual (fotografía, vídeo, imprenta). Tener dos agencias con solapamiento de alcance genera duplicación de coordinación y conflictos de criterio — hay que definir bien los perímetros antes de firmar.'
 ---
 Quien busca agencia de comunicación para un proyecto social suele tener que elegir entre dos perfiles muy distintos. Por un lado, agencias grandes con oficinas en varias ciudades, decenas de personas y catálogos de servicios anchos. Por otro, estudios pequeños o agencias-boutique de cinco a quince personas, con un equipo concreto y un foco claro. La pregunta no es cuál es mejor: es cuál encaja con tu organización ahora.
 

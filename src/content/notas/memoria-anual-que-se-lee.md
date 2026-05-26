@@ -5,6 +5,17 @@ pubDate: 2026-05-12
 audience: 'Tercer sector'
 tags: ['memorias', 'reporting', 'tercer sector', 'comunicación']
 draft: false
+faqs:
+  - question: '¿Cuánto debe medir una memoria anual de una ONG o fundación?'
+    answer: 'No existe un mínimo obligatorio, pero la experiencia marca que las memorias de 20-40 páginas tienen más probabilidad de leerse que las de 80+. El criterio no es la extensión sino la densidad útil: cada página debe tener una razón para existir. Una memoria de 24 páginas bien construida justifica más que una de 100 páginas que reproduce actas.'
+  - question: '¿Qué secciones no pueden faltar en una memoria anual del tercer sector?'
+    answer: 'Cinco son imprescindibles: carta de la dirección (breve, con una posición editorial real), cifras del año (beneficiarios, inversión, fuentes de financiación), avance de proyectos con indicadores de impacto, cuentas simplificadas con explicación narrativa, y horizonte del año siguiente con compromisos concretos. Todo lo demás es opcional.'
+  - question: '¿Quién debe escribir la memoria anual: el equipo interno o una agencia externa?'
+    answer: 'La mejor opción es una colaboración: el equipo interno aporta los datos, el contexto y la voz institucional; la agencia externa aporta estructura editorial, criterio de qué incluir y qué cortar, y capacidad de producción (diseño, maquetación, revisión). Una memoria escrita solo por el equipo interno suele ser densa; una escrita solo por agencia sin los datos reales, vacía.'
+  - question: '¿Cuándo hay que empezar a preparar la memoria anual?'
+    answer: 'Cuatro meses antes de la fecha de publicación objetivo. Si se publica en junio (cierre del ejercicio de enero a diciembre), hay que empezar en febrero: recoger datos en febrero-marzo, redactar en marzo-abril, diseñar en abril-mayo, validar y publicar en junio. Empezar en mayo para publicar en junio produce memorias de urgencia que se nota.'
+  - question: '¿Debe estar disponible la memoria en formato digital o basta con el PDF?'
+    answer: 'En 2025-2026, el PDF sigue siendo el estándar esperado por patronatos, donantes institucionales y organismos públicos. Pero complementarlo con una versión web (o al menos una landing resumen con los datos clave) mejora enormemente la difusión y el SEO de la organización. No son formatos excluyentes.'
 ---
 
 Cada primavera, miles de organizaciones del tercer sector publican su memoria anual. La mayoría se descargan dos veces: una por el equipo que la imprimió y otra por la persona que la guardó "por si acaso". Es una pena, porque en esas memorias suele estar el trabajo más sólido del año — proyectos terminados, datos limpios, decisiones explicables. Pero el formato termina enterrándolo.
