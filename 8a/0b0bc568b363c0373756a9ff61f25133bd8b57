@@ -1,0 +1,19 @@
+src/pages/financiacion-empresas.astro
+  s_fc84abf46d9a4c::t_e71452d9704c24 1-344
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "8a0b0bc568b363c0373756a9ff61f25133bd8b57",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
