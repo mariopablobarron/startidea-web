@@ -161,6 +161,20 @@ const ORG = {
       url: 'https://merchandising.hubstartidea.es',
       description: 'Catálogo B2B online de merchandising promocional sostenible.',
     },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Raíz y Acción',
+      url: 'https://raizyaccion.hubstartidea.es',
+      description: 'Plataforma de acompañamiento y coaching personal con inteligencia artificial: check-ins de estado emocional, gestión de acciones y objetivos, eneagrama y mentor virtual. Desarrollada por Startidea.',
+      applicationCategory: 'HealthApplication',
+      operatingSystem: 'Web',
+    },
+    {
+      '@type': 'Organization',
+      name: 'Startidea Empleo',
+      url: 'https://empleo.startidea.es',
+      description: 'Bolsa de empleo especializada en el tercer sector y la economía social en España. Conecta organizaciones con profesionales del impacto social.',
+    },
   ],
   sameAs: [
     'https://www.linkedin.com/company/agenciastartidea',
