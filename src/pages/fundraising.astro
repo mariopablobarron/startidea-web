@@ -1,6 +1,24 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  serviceSchema({
+    name: 'Fundraising y alianzas estratégicas',
+    description:
+      'Diseño y ejecución de estrategia de captación de fondos para entidades del tercer sector e instituciones: socios individuales, grandes donantes, alianzas empresariales, subvenciones públicas y financiación europea. Incluye CRM, mensajería y rendición de cuentas.',
+    serviceType: 'Fundraising',
+    url: `${SITE_URL}/fundraising`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Institución eclesial'],
+    offers: [
+      { name: 'Estrategia de captación', description: 'Mapa de fuentes posibles (socios, grandes donantes, empresas, públicas, europeas), priorización y roadmap.' },
+      { name: 'Captación de socios y donantes', description: 'Campañas, formularios, CRM y secuencia de fidelización.' },
+      { name: 'Alianzas con empresas', description: 'Identificación, propuestas a medida y gestión de la relación con departamentos RSC.' },
+      { name: 'Tramitación de subvenciones', description: 'Identificación + redacción + presentación con certificado digital + justificación.', url: `${SITE_URL}/financiacion-empresas` },
+    ],
+  }),
+];
 
 const pilares = [
   {
@@ -106,6 +124,7 @@ const proceso = [
 ---
 
 <Base
+  jsonLd={jsonLd}
   title="Fundraising y Alianzas Estratégicas — Startidea"
   description="Diversificación de ingresos, plan de fundraising a 12 meses, materiales de captación y mapeo de aliados. Para entidades sociales, fundaciones y proyectos con propósito que quieren dejar de depender de una sola fuente."
   ogSlug="page/fundraising"

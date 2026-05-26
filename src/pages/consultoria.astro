@@ -1,6 +1,24 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  serviceSchema({
+    name: 'Consultoría e innovación social',
+    description:
+      'Acompañamiento estratégico para organizaciones del tercer sector, instituciones y empresas con propósito que necesitan repensar modelo, gobernanza, impacto o transición digital. Diagnóstico, plan de acción y acompañamiento continuo.',
+    serviceType: 'Consultoría organizacional',
+    url: `${SITE_URL}/consultoria`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Diagnóstico organizacional', description: 'Análisis 360° del modelo, gobernanza, finanzas, comunicación e impacto.' },
+      { name: 'Plan estratégico plurianual', description: 'Definición de visión, líneas estratégicas, métricas y plan de acción a 3 años.' },
+      { name: 'Teoría del cambio e impacto', description: 'Construcción de teoría del cambio, indicadores y sistema de medición de impacto.' },
+      { name: 'Transformación digital sin humo', description: 'Mapa de procesos, selección de herramientas y formación de equipos.' },
+    ],
+  }),
+];
 
 const pilares = [
   {
@@ -84,6 +102,7 @@ const proceso = [
 ---
 
 <Base
+  jsonLd={jsonLd}
   title="Consultoría e Innovación Social — Startidea"
   description="Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido."
   ogSlug="page/consultoria"

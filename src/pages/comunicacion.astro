@@ -1,6 +1,24 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  serviceSchema({
+    name: 'Comunicación estratégica y marketing social',
+    description:
+      'Servicio de comunicación estratégica y marketing social para entidades del tercer sector, instituciones y empresas con propósito. Incluye estrategia, contenidos editoriales, identidad visual, gestión de medios y campañas de captación.',
+    serviceType: 'Comunicación estratégica',
+    url: `${SITE_URL}/comunicacion`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Estrategia de comunicación', description: 'Diagnóstico, audiencias, narrativa, plan editorial y KPIs.' },
+      { name: 'Contenidos editoriales', description: 'Notas, reportajes, memoria anual, newsletters y guiones.' },
+      { name: 'Identidad y marca', description: 'Naming, logotipo, sistema visual y manual de marca.' },
+      { name: 'Campañas de captación', description: 'Campañas para socios, donantes y voluntariado con medición.' },
+    ],
+  }),
+];
 
 const pilares = [
   {
@@ -115,6 +133,7 @@ const proceso = [
   title="Comunicación Estratégica y Marketing Social — Startidea"
   description="Ayudamos a organizaciones, entidades sociales y empresas con propósito a comunicar mejor lo que hacen, por qué lo hacen y para qué sirve."
   ogSlug="page/comunicacion"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

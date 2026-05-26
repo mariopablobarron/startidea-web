@@ -1,6 +1,24 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  serviceSchema({
+    name: 'Producción audiovisual y podcast',
+    description:
+      'Producción de vídeo, spots, cápsulas, documentales y podcast para entidades sociales, instituciones y empresas con propósito. Desde el guion hasta la distribución. Estudio propio en Granada (Hub Startidea).',
+    serviceType: 'Producción audiovisual',
+    url: `${SITE_URL}/audiovisual`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Vídeo corporativo e institucional', description: 'Spot de presentación, vídeo de impacto, memoria anual en vídeo y cápsulas para RRSS.' },
+      { name: 'Documental y reportaje social', description: 'Formato largo (15-50 min) para contar historias de transformación con profundidad editorial.' },
+      { name: 'Podcast', description: 'Producción integral de podcast: concepto, guion, grabación en estudio, edición, distribución en Spotify y Apple Podcasts.' },
+      { name: 'Fotografía y retrato editorial', description: 'Sesiones para memoria anual, perfil de equipo, campaña de comunicación y prensa.' },
+    ],
+  }),
+];
 
 const pilares = [
   {
@@ -110,6 +128,7 @@ const proceso = [
 ---
 
 <Base
+  jsonLd={jsonLd}
   title="Producción Audiovisual y Podcast — Startidea"
   description="Convertimos ideas, conocimientos y causas en contenidos audiovisuales y podcasts de calidad, pensados para construir marca, comunidad y reputación."
   ogSlug="page/audiovisual"
