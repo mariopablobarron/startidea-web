@@ -87,6 +87,10 @@ const ORG = {
     'Comunicación eclesial',
     'Subvenciones públicas',
     'BDNS',
+    'Empleo',
+    'Bolsa de empleo',
+    'Coaching personal',
+    'Acompañamiento personal con inteligencia artificial',
   ],
   // hasOfferCatalog: cada servicio principal expuesto como Offer + Service
   // para que LLMs entiendan exactamente qué vende Startidea.
