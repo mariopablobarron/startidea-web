@@ -10,6 +10,7 @@ import type { APIRoute } from 'astro';
 import { getExpediente, updateStatus } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
 import { isValidAdminHeader } from '@/lib/admin-session';
+import { detectSede } from '@/lib/sedes-map';
 
 export const prerender = false;
 
@@ -57,6 +58,16 @@ export const POST: APIRoute = async ({ request }) => {
   const convName = exp.convocatoria_title ?? 'la convocatoria seleccionada';
   const primerNombre = exp.representante.split(' ')[0];
 
+  // Detectar sede para incluir el enlace directo en el email
+  const sede = detectSede({
+    convocatoriaUrl: exp.convocatoria_url,
+    convocatoriaTitle: exp.convocatoria_title,
+  });
+
+  const sedeLineHtml = sede
+    ? `<li>Accede directamente a la sede: <a href="${esc(sede.urlTramite ?? sede.url)}" style="color:#e6356b" target="_blank">${esc(sede.nombre)} ↗</a>${sede.autofirmaRequired ? ' (necesitas Autofirma)' : ''}</li>`
+    : `<li>Accede a la sede electrónica del organismo convocante con tu certificado digital</li>`;
+
   const html = `
 <!DOCTYPE html>
 <html lang="es">
@@ -77,12 +88,14 @@ export const POST: APIRoute = async ({ request }) => {
   </p>
 
   <div style="border-left:3px solid #e6356b;padding:12px 20px;background:#fff7f8;margin:24px 0;font-size:14px;color:#333">
-    <strong>Próximos pasos:</strong><br>
-    1. Revisa y completa los documentos<br>
-    2. Sigue la guía de presentación (al final de este email)<br>
-    3. Reúne los documentos del checklist<br>
-    4. Presenta en la sede electrónica con tu certificado digital<br>
-    5. Cuéntanos cuando lo hayas presentado → <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
+    <strong>Próximos pasos:</strong>
+    <ol style="margin:8px 0;padding-left:20px;line-height:1.8">
+      <li>Revisa y completa los documentos (busca los campos <strong>[COMPLETAR]</strong>)</li>
+      <li>Reúne los documentos del checklist</li>
+      ${sedeLineHtml}
+      <li>Sigue la guía de presentación paso a paso (sección al final de este email)</li>
+      <li>Cuéntanos cuando lo hayas presentado → <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></li>
+    </ol>
   </div>
 
   <!-- MEMORIA TÉCNICA -->
