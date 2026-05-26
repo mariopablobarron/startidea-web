@@ -8,59 +8,40 @@ export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'standalone' }),
   prefetch: true,
-  // Redirecciones 301 desde URLs del WordPress antiguo
+  // Redirecciones 301 desde URLs del WordPress antiguo.
+  // Solo una versión por URL: Astro 5 con trailingSlash:'ignore' (default)
+  // normaliza ambas variantes (con y sin /) desde una sola entrada.
+  // Duplicar con "/" causaba colisiones de ruta en el router.
   redirects: {
     '/quienessomos':                                      '/sobre',
-    '/quienessomos/':                                     '/sobre',
     '/servicios':                                         '/',
-    '/servicios/':                                        '/',
     '/portfolio':                                         '/casos',
-    '/portfolio/':                                        '/casos',
     '/portfolio_':                                        '/casos',
-    '/portfolio_/':                                       '/casos',
     '/portfolio-marketing-social':                        '/casos',
-    '/portfolio-marketing-social/':                       '/casos',
     '/portfolio-audiovisual-y-podcast':                   '/casos',
-    '/portfolio-audiovisual-y-podcast/':                  '/casos',
     '/blog':                                              '/notas',
-    '/blog/':                                             '/notas',
     '/politicacookies':                                   '/cookies',
-    '/politicacookies/':                                  '/cookies',
     '/politicaprivacidad':                                '/privacidad',
-    '/politicaprivacidad/':                               '/privacidad',
     '/comunicacion-estrategica-y-marketing-social-startidea':  '/comunicacion',
-    '/comunicacion-estrategica-y-marketing-social-startidea/': '/comunicacion',
     '/produccion-audiovisual-y-podcast-startidea':        '/audiovisual',
-    '/produccion-audiovisual-y-podcast-startidea/':       '/audiovisual',
     '/produccion-audiovisual-y-podcast':                  '/audiovisual',
-    '/produccion-audiovisual-y-podcast/':                 '/audiovisual',
     '/consultoria-e-innovacion-social':                   '/consultoria',
-    '/consultoria-e-innovacion-social/':                  '/consultoria',
     '/fundraising-alianzas':                              '/fundraising',
-    '/fundraising-alianzas/':                             '/fundraising',
     '/hub-startidea-espacios-y-comunidad':                '/hub',
-    '/hub-startidea-espacios-y-comunidad/':               '/hub',
 
     // Redirecciones desde slugs antiguos de casos
     '/casos/valientes':                                   '/casos/acogimiento-familiar-granada',
-    '/casos/valientes/':                                  '/casos/acogimiento-familiar-granada',
     '/casos/relevos-vida':                                '/casos',
-    '/casos/relevos-vida/':                               '/casos',
 
     // Mapa de subvenciones migrado de /laboratorio/ a /subvenciones/
-    // (era experimento, ahora vista hermana del buscador)
     '/laboratorio/mapa-subvenciones':                     '/subvenciones/mapa',
-    '/laboratorio/mapa-subvenciones/':                    '/subvenciones/mapa',
 
     // Posts antiguos del blog WP que aún ranquean en GSC
     '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas',
-    '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones/': '/notas',
-    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':  '/notas',
-    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado/': '/notas',
+    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':                   '/notas',
 
-    // Categorías de WP — redirigir todas a /notas
+    // Categorías de WP — redirigir a /notas
     '/category/news':                                     '/notas',
-    '/category/news/':                                    '/notas',
   },
   integrations: [
     tailwind({
