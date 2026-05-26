@@ -71,19 +71,25 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  const { memoria, presupuesto, checklist, guia } = gen;
+  const { memoria, presupuesto, checklist, guia, elegibilidad, datosFaltantes } = gen;
 
-  // Guardar en BD
-  saveAiOutput(id, { memoria, presupuesto, checklist, guia });
+  // Guardar en BD (incluye análisis de elegibilidad)
+  saveAiOutput(id, {
+    memoria, presupuesto, checklist, guia,
+    elegibilidad: elegibilidad?.raw,
+    datosFaltantes,
+  });
 
   // Notificar a Mario por Telegram
   const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
   const tgChat = getEnv('TELEGRAM_CHAT_ID');
   if (tgToken && tgChat) {
+    const elegIcon = elegibilidad?.bloqueante ? '🔴 BLOQUEANTE' : elegibilidad ? `🟢 ${elegibilidad.score}/100` : '❓';
     const tgText = `✅ <b>Documentos generados</b>\n\n` +
       `<b>Expediente:</b> <code>${id}</code>\n` +
       `<b>Entidad:</b> ${exp.org_nombre}\n` +
-      `<b>Convocatoria:</b> ${exp.convocatoria_title || 'Sin identificar'}\n\n` +
+      `<b>Convocatoria:</b> ${exp.convocatoria_title || 'Sin identificar'}\n` +
+      `<b>Elegibilidad:</b> ${elegIcon}\n\n` +
       `Memoria: ${memoria ? '✅' : '❌'} | Presupuesto: ${presupuesto ? '✅' : '❌'} | Checklist: ${checklist ? '✅' : '❌'} | Guía: ${guia ? '✅' : '❌'}\n\n` +
       `Panel: https://startidea.es/admin/expedientes/${id}`;
     fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {

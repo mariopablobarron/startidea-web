@@ -36,7 +36,7 @@ function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 import { insertExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db';
-import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
+import { buildConvContext, runAiGeneration, parseEligibility } from '@/lib/copiloto-engine';
 import { sendEmail } from '@/lib/email-resend';
 import { detectSede } from '@/lib/sedes-map';
 
@@ -144,7 +144,7 @@ function convScoreForProfile(
   return Math.min(score, 100);
 }
 
-// ─── Email de entrega automática ─────────────────────────────────────────────
+// ─── Emails de entrega ───────────────────────────────────────────────────────
 
 function mdToHtml(md: string): string {
   return md
@@ -154,6 +154,105 @@ function mdToHtml(md: string): string {
     .replace(/(<li[^>]*>.*<\/li>\n?)+/gs, '<ul style="padding-left:20px;margin:8px 0">$&</ul>')
     .replace(/\n\n/g, '</p><p style="margin:8px 0">')
     .replace(/^(?!<[hul])(.+)$/gm, '<p style="margin:6px 0">$1</p>');
+}
+
+/** Convierte las líneas REQ: del bloque elegibilidad en HTML con semáforo visual */
+function eligibilityChecksToHtml(checks: string[]): string {
+  if (!checks.length) return '';
+  const rows = checks.map((c) => {
+    const color = c.startsWith('✅') ? '#16a34a'
+      : c.startsWith('❌') ? '#dc2626'
+      : c.startsWith('⚠️') ? '#d97706'
+      : '#6b7280';
+    return `<tr>
+      <td style="padding:5px 8px;font-size:13px;color:${color};font-weight:bold;white-space:nowrap">${c.split(' — ')[0]}</td>
+      <td style="padding:5px 8px;font-size:13px;color:#555">${esc(c.split(' — ').slice(1).join(' — '))}</td>
+    </tr>`;
+  }).join('');
+  return `<table style="width:100%;border-collapse:collapse;margin:8px 0">${rows}</table>`;
+}
+
+/**
+ * Email cuando la org NO cumple requisitos (BLOQUEANTE: SI).
+ * Explica qué requisito falla y qué datos faltan para verificar el resto.
+ */
+async function sendEligibilityAlertEmail(opts: {
+  to: string;
+  org_nombre: string;
+  representante: string;
+  convocatoria_title: string;
+  convocatoria_url: string | null;
+  expediente_id: string;
+  checks: string[];
+  resumen: string;
+  datosFaltantes: string;
+  manage_token: string;
+}): Promise<boolean> {
+  const primerNombre = opts.representante.split(' ')[0];
+  const manageUrl = `https://startidea.es/subvenciones/mi-copiloto?t=${opts.manage_token}`;
+  const faltantesHtml = opts.datosFaltantes && opts.datosFaltantes !== 'Ninguno'
+    ? `<div style="background:#fffbeb;border:1px solid #fbbf24;padding:16px 20px;margin:20px 0">
+        <p style="font-size:13px;font-weight:700;color:#92400e;margin:0 0 8px">Para completar el análisis necesitamos saber:</p>
+        ${opts.datosFaltantes.split('\n').filter(l => l.startsWith('- ')).map(l =>
+          `<p style="font-size:13px;color:#78350f;margin:3px 0">${esc(l)}</p>`
+        ).join('')}
+        <p style="font-size:12px;color:#92400e;margin:8px 0 0">
+          Actualiza tu perfil respondiendo a este email o en
+          <a href="${manageUrl}" style="color:#e6356b">Mi Copiloto →</a>
+        </p>
+      </div>`
+    : '';
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#f9fafb;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;padding:32px 24px">
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">
+    — Startidea · Copiloto Autónomo
+  </p>
+  <h1 style="font-size:22px;font-weight:700;line-height:1.2;margin:0 0 16px">
+    Esta convocatoria probablemente no aplica para ${esc(opts.org_nombre)}.
+  </h1>
+  <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 16px">
+    El Copiloto detectó <strong>${esc(opts.convocatoria_title)}</strong>, pero al analizar
+    los requisitos de las bases encontramos que hay al menos un criterio de elegibilidad
+    que <strong>tu organización no cumple</strong> (o no tenemos datos para confirmarlo).
+  </p>
+  ${opts.resumen ? `<div style="background:#fff5f5;border-left:3px solid #dc2626;padding:12px 20px;margin:0 0 20px;font-size:14px;color:#333">${esc(opts.resumen)}</div>` : ''}
+
+  <div style="background:#fff;border:1px solid #e0ddd8;padding:20px;margin:20px 0">
+    <p style="font-size:13px;font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin:0 0 12px">Análisis de requisitos</p>
+    ${eligibilityChecksToHtml(opts.checks)}
+  </div>
+
+  ${faltantesHtml}
+
+  <div style="background:#f0f9ff;border:1px solid #bae6fd;padding:16px 20px;margin:20px 0;font-size:14px;color:#0369a1">
+    <strong>¿Qué puedes hacer?</strong>
+    <ul style="margin:8px 0;padding-left:20px;line-height:1.8">
+      <li>Si crees que hay un error en el análisis, responde a este email — lo revisamos.</li>
+      <li>Si la convocatoria es de interés pero falta un requisito concreto, podemos explorar si hay convocatorias similares que sí apliquen.</li>
+    </ul>
+    <a href="mailto:hola@startidea.es?subject=Revisar análisis: ${esc(opts.convocatoria_title)}" style="color:#e6356b;font-size:13px">Contactar con Startidea →</a>
+  </div>
+
+  <hr style="border:none;border-top:1px solid #e0ddd8;margin:28px 0">
+  <p style="font-size:12px;color:#bbb">
+    Alerta del Copiloto Autónomo · Expediente <code>${esc(opts.expediente_id)}</code> ·
+    <a href="${manageUrl}" style="color:#bbb">Gestionar Copiloto →</a>
+  </p>
+  <p style="font-size:12px;color:#bbb">Startidea · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada</p>
+</div>
+</body>
+</html>`;
+
+  return sendEmail({
+    to: opts.to,
+    subject: `[Alerta Copiloto] Posible incompatibilidad: ${opts.convocatoria_title}`,
+    html,
+    replyTo: 'hola@startidea.es',
+  });
 }
 
 async function sendAutoCopilotoEmail(opts: {
@@ -167,6 +266,10 @@ async function sendAutoCopilotoEmail(opts: {
   ai_presupuesto: string;
   ai_checklist: string;
   ai_guia: string;
+  eligibilityChecks: string[];
+  eligibilityResumen: string;
+  eligibilityScore: number;
+  datosFaltantes: string;
   manage_token: string;
 }): Promise<boolean> {
   const primerNombre = opts.representante.split(' ')[0];
@@ -181,8 +284,30 @@ async function sendAutoCopilotoEmail(opts: {
     ? `<li>Accede a la sede: <a href="${esc(sede.urlTramite ?? sede.url)}" style="color:#e6356b" target="_blank">${esc(sede.nombre)} ↗</a>${sede.autofirmaRequired ? ' (necesitas Autofirma)' : ''}</li>`
     : `<li>Accede a la sede electrónica del organismo con tu certificado digital</li>`;
 
-  const html = `
-<!DOCTYPE html>
+  // Semáforo de elegibilidad para el email de documentos
+  const scoreColor = opts.eligibilityScore >= 70 ? '#16a34a' : opts.eligibilityScore >= 45 ? '#d97706' : '#dc2626';
+  const eligibilityBadge = opts.eligibilityChecks.length > 0 ? `
+  <div style="background:#fff;border:1px solid #e0ddd8;padding:20px 24px;margin:24px 0">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <p style="font-size:13px;font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin:0">
+        🔍 Análisis de elegibilidad
+      </p>
+      <span style="font-family:monospace;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreColor}15;padding:2px 8px;border-radius:2px">
+        ${opts.eligibilityScore}/100
+      </span>
+    </div>
+    ${eligibilityChecksToHtml(opts.eligibilityChecks)}
+    ${opts.eligibilityResumen ? `<p style="font-size:13px;color:#555;margin:8px 0 0;font-style:italic">${esc(opts.eligibilityResumen)}</p>` : ''}
+    ${opts.datosFaltantes && opts.datosFaltantes !== 'Ninguno' ? `
+    <div style="border-top:1px solid #f0ece4;margin-top:12px;padding-top:12px">
+      <p style="font-size:12px;color:#888;margin:0 0 6px;font-weight:bold">Para confirmar elegibilidad falta saber:</p>
+      ${opts.datosFaltantes.split('\n').filter((l: string) => l.startsWith('- ')).map((l: string) =>
+        `<p style="font-size:12px;color:#666;margin:2px 0">${esc(l)}</p>`
+      ).join('')}
+    </div>` : ''}
+  </div>` : '';
+
+  const html = `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Documentos Copiloto — Startidea</title></head>
 <body style="font-family:Georgia,serif;color:#1f1f22;background:#f9fafb;margin:0;padding:0">
@@ -206,6 +331,8 @@ async function sendAutoCopilotoEmail(opts: {
     <code style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${esc(opts.expediente_id)}</code>).
     Revísala, completa los campos marcados con <strong>[COMPLETAR]</strong> y preséntala.
   </p>
+
+  ${eligibilityBadge}
 
   <div style="background:#fff7f8;border-left:3px solid #e6356b;padding:12px 20px;margin:24px 0;font-size:14px;color:#333">
     <strong>Para presentarla:</strong>
@@ -457,29 +584,58 @@ export const POST: APIRoute = async ({ request }) => {
           continue;
         }
 
-        // 3c. Guardar output
+        const eleg = gen.elegibilidad;
+        const bloqueante = eleg?.bloqueante ?? false;
+
+        // 3c. Guardar output (incluyendo elegibilidad y datos faltantes)
         saveAiOutput(expId, {
           memoria: gen.memoria,
           presupuesto: gen.presupuesto,
           checklist: gen.checklist,
           guia: gen.guia,
+          elegibilidad: eleg?.raw,
+          datosFaltantes: gen.datosFaltantes,
         });
         updateStatus(expId, 'docs_listos');
 
-        // 3d. Enviar email al cliente
-        const emailSent = await sendAutoCopilotoEmail({
-          to: profile.email,
-          org_nombre: profile.org_nombre,
-          representante: profile.representante,
-          convocatoria_title: conv.title,
-          convocatoria_url: conv.source_url ?? null,
-          expediente_id: expId,
-          ai_memoria: gen.memoria,
-          ai_presupuesto: gen.presupuesto,
-          ai_checklist: gen.checklist,
-          ai_guia: gen.guia,
-          manage_token: profile.manage_token,
-        });
+        // 3d. Enviar email — bifurcar según elegibilidad
+        let emailSent = false;
+
+        if (bloqueante) {
+          // La org NO cumple un requisito bloqueante → email de alerta, sin docs
+          emailSent = await sendEligibilityAlertEmail({
+            to: profile.email,
+            org_nombre: profile.org_nombre,
+            representante: profile.representante,
+            convocatoria_title: conv.title,
+            convocatoria_url: conv.source_url ?? null,
+            expediente_id: expId,
+            checks: eleg?.checks.map(c => c.texto) ?? [],
+            resumen: eleg?.resumen ?? '',
+            datosFaltantes: gen.datosFaltantes,
+            manage_token: profile.manage_token,
+          });
+          console.log(`[auto-copiloto] BLOQUEANTE para ${profile.org_nombre} en ${conv.title} — email de alerta enviado`);
+        } else {
+          // Elegible (o dudoso) → enviar documentos + semáforo
+          emailSent = await sendAutoCopilotoEmail({
+            to: profile.email,
+            org_nombre: profile.org_nombre,
+            representante: profile.representante,
+            convocatoria_title: conv.title,
+            convocatoria_url: conv.source_url ?? null,
+            expediente_id: expId,
+            ai_memoria: gen.memoria,
+            ai_presupuesto: gen.presupuesto,
+            ai_checklist: gen.checklist,
+            ai_guia: gen.guia,
+            eligibilityChecks: eleg?.checks.map(c => c.texto) ?? [],
+            eligibilityResumen: eleg?.resumen ?? '',
+            eligibilityScore: eleg?.score ?? 50,
+            datosFaltantes: gen.datosFaltantes,
+            manage_token: profile.manage_token,
+          });
+        }
 
         if (emailSent) updateStatus(expId, 'entregado');
 
@@ -493,7 +649,12 @@ export const POST: APIRoute = async ({ request }) => {
           deadline: conv.deadline ?? null,
         });
 
-        results.push({ profile: profile.org_nombre, conv: conv.title, status: 'ok' });
+        results.push({
+          profile: profile.org_nombre,
+          conv: conv.title,
+          status: 'ok',
+          detail: bloqueante ? `elegibilidad_bloqueante (score=${eleg?.score})` : `elegibilidad_ok (score=${eleg?.score})`,
+        });
       } catch (err) {
         const detail = err instanceof Error ? err.message : String(err);
         console.error('[auto-copiloto/trigger] Error processing:', profile.org_nombre, conv.slug, detail);

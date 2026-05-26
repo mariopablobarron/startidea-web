@@ -47,6 +47,8 @@ export interface Expediente {
   ai_checklist: string | null;
   ai_guia: string | null;
   ai_notas: string | null;
+  ai_elegibilidad: string | null;    // resultado del check de requisitos
+  ai_datos_faltantes: string | null; // preguntas que la IA no puede responder sin más datos
   created_at: number;
   updated_at: number;
   ai_at: number | null;
@@ -96,6 +98,8 @@ function getDb(): Database.Database {
       ai_checklist        TEXT,
       ai_guia             TEXT,
       ai_notas            TEXT,
+      ai_elegibilidad     TEXT,
+      ai_datos_faltantes  TEXT,
       created_at          INTEGER NOT NULL,
       updated_at          INTEGER NOT NULL,
       ai_at               INTEGER,
@@ -105,13 +109,20 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_exp_created ON expedientes (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_exp_email ON expedientes (email);
   `);
+  // Migraciones seguras — columnas añadidas tras despliegue inicial
+  for (const sql of [
+    `ALTER TABLE expedientes ADD COLUMN ai_elegibilidad TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN ai_datos_faltantes TEXT`,
+  ]) {
+    try { _db.exec(sql); } catch { /* columna ya existe */ }
+  }
   return _db;
 }
 
 // ─── Escritura ────────────────────────────────────────────────────────────────
 
 export function insertExpediente(
-  data: Omit<Expediente, 'status' | 'ai_memoria' | 'ai_presupuesto' | 'ai_checklist' | 'ai_guia' | 'ai_notas' | 'ai_at' | 'delivered_at'>,
+  data: Omit<Expediente, 'status' | 'ai_memoria' | 'ai_presupuesto' | 'ai_checklist' | 'ai_guia' | 'ai_notas' | 'ai_elegibilidad' | 'ai_datos_faltantes' | 'ai_at' | 'delivered_at'>,
 ): void {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
@@ -142,7 +153,15 @@ export function updateStatus(id: string, status: ExpedienteStatus): void {
 
 export function saveAiOutput(
   id: string,
-  output: { memoria: string; presupuesto: string; checklist: string; guia: string; notas?: string },
+  output: {
+    memoria: string;
+    presupuesto: string;
+    checklist: string;
+    guia: string;
+    notas?: string;
+    elegibilidad?: string;
+    datosFaltantes?: string;
+  },
 ): void {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
@@ -150,10 +169,19 @@ export function saveAiOutput(
     UPDATE expedientes
     SET ai_memoria = @memoria, ai_presupuesto = @presupuesto,
         ai_checklist = @checklist, ai_guia = @guia,
-        ai_notas = @notas, ai_at = @now, updated_at = @now,
+        ai_notas = @notas, ai_elegibilidad = @elegibilidad,
+        ai_datos_faltantes = @datosFaltantes,
+        ai_at = @now, updated_at = @now,
         status = 'docs_listos'
     WHERE id = @id
-  `).run({ id, ...output, notas: output.notas ?? null, now });
+  `).run({
+    id,
+    ...output,
+    notas: output.notas ?? null,
+    elegibilidad: output.elegibilidad ?? null,
+    datosFaltantes: output.datosFaltantes ?? null,
+    now,
+  });
 }
 
 // ─── Lectura ──────────────────────────────────────────────────────────────────

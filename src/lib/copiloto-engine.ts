@@ -121,6 +121,51 @@ export async function buildConvContext(opts: {
   return { context, organismo };
 }
 
+// ─── Elegibilidad ────────────────────────────────────────────────────────────
+
+export interface EligibilityCheck {
+  emoji: '✅' | '❌' | '⚠️' | '❓';
+  texto: string; // nombre del requisito y evaluación en una línea
+}
+
+export interface EligibilityResult {
+  score: number;           // 0-100
+  bloqueante: boolean;     // hay al menos un ❌ con peso decisivo
+  checks: EligibilityCheck[];
+  resumen: string;
+  raw: string;             // bloque completo para guardar en BD
+}
+
+/**
+ * Parsea el bloque ===ELEGIBILIDAD=== generado por el modelo.
+ * Formato esperado:
+ *   SCORE: 75
+ *   BLOQUEANTE: NO
+ *   REQ: ✅ Tipo de entidad — La conv admite fundaciones. El perfil es fundación.
+ *   REQ: ❌ Empleados mínimos — La conv exige 5. No hay datos en el perfil.
+ *   RESUMEN: ...
+ */
+export function parseEligibility(block: string): EligibilityResult {
+  const scoreMatch = block.match(/^SCORE:\s*(\d+)/im);
+  const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1]))) : 50;
+  const bloqueante = /^BLOQUEANTE:\s*SI/im.test(block);
+
+  const checks: EligibilityCheck[] = [];
+  for (const m of block.matchAll(/^REQ:\s*(.+)$/gm)) {
+    const line = m[1].trim();
+    let emoji: EligibilityCheck['emoji'] = '❓';
+    if (line.startsWith('✅')) emoji = '✅';
+    else if (line.startsWith('❌')) emoji = '❌';
+    else if (line.startsWith('⚠️')) emoji = '⚠️';
+    checks.push({ emoji, texto: line });
+  }
+
+  const resumenMatch = block.match(/^RESUMEN:\s*(.+)$/im);
+  const resumen = resumenMatch ? resumenMatch[1].trim() : '';
+
+  return { score, bloqueante, checks, resumen, raw: block };
+}
+
 // ─── Generación IA ───────────────────────────────────────────────────────────
 
 export interface GenerationResult {
@@ -129,6 +174,8 @@ export interface GenerationResult {
   presupuesto: string;
   checklist: string;
   guia: string;
+  elegibilidad: EligibilityResult | null;
+  datosFaltantes: string;   // preguntas que la IA no puede responder sin más datos del perfil
   error?: string;
 }
 
@@ -153,20 +200,29 @@ export async function runAiGeneration(
 ): Promise<GenerationResult> {
   const openrouterKey = getEnv('OPENROUTER_API_KEY');
   if (!openrouterKey) {
-    return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', error: 'no_openrouter_key' };
+    return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', elegibilidad: null, datosFaltantes: '', error: 'no_openrouter_key' };
   }
 
-  const sistemaPrompt = `Eres un experto redactor de solicitudes de subvenciones públicas en España, con 15 años de experiencia en tercer sector, PYME, innovación social y propiedad industrial. Tu especialidad es adaptar proyectos reales a las exigencias formales de cada convocatoria y maximizar la puntuación en el baremo de valoración.
+  const sistemaPrompt = `Eres un experto en subvenciones públicas en España con 15 años de experiencia en tercer sector, PYME, innovación social y propiedad industrial. Tienes dos roles en cada solicitud:
 
-Normas de redacción:
-- Usa lenguaje formal, claro y directo, sin jerga vacía
-- Adapta el tono y vocabulario al tipo de convocatoria y entidad solicitante
-- No inventes datos que no estén en el expediente
-- Si falta información clave, márcala con [COMPLETAR: qué se necesita aquí]
-- Formatea cada sección en Markdown limpio y bien estructurado
-- Usa cifras y hechos concretos siempre que sea posible
-- Si el contexto incluye una sección CRITERIOS DE VALORACIÓN (BAREMO), estructura la memoria y el presupuesto para puntuar máximo en cada criterio — menciona explícitamente cómo el proyecto aborda cada criterio de valoración
-- Si hay criterios con puntuación máxima, ordena la memoria priorizando los criterios de mayor peso`;
+ROL 1 — ANALISTA DE ELEGIBILIDAD:
+Antes de redactar nada, verificas si la organización solicitante cumple los requisitos de la convocatoria.
+- Extraes los requisitos de los beneficiarios de las bases (tipo de entidad, antigüedad, territorio, sector, empleados, volumen económico, etc.)
+- Evalúas cada requisito contra los datos del perfil de la organización
+- Marcas con ✅ (cumple), ❌ (no cumple), ⚠️ (probable/condicionado), ❓ (no hay datos suficientes)
+- Identificas qué datos faltan en el perfil para confirmar elegibilidad
+- Das un score de elegibilidad de 0 a 100 y determinas si hay algún requisito bloqueante (❌ claro)
+
+ROL 2 — REDACTOR DE SOLICITUDES:
+Solo si la organización es elegible (o probablemente elegible), redactas los documentos.
+- Adapta el tono, vocabulario y estructura al tipo de convocatoria y entidad
+- No inventes datos — si falta info clave, márcala con [COMPLETAR: descripción]
+- Formatea en Markdown limpio y bien estructurado
+- Usa cifras y hechos concretos
+- Si hay CRITERIOS DE VALORACIÓN (BAREMO), optimiza la memoria para puntuar máximo en cada criterio
+- Ordena la memoria priorizando los criterios de mayor peso
+
+INSTRUCCIÓN CRÍTICA DE FORMATO: Responde SOLO con los bloques marcados, sin texto introductorio ni explicaciones fuera de ellos.`;
 
   const userPrompt = `${convContext}
 
@@ -187,9 +243,23 @@ ${exp.comentarios ? `OBSERVACIONES ADICIONALES DEL SOLICITANTE:\n${exp.comentari
 
 ---
 
-Genera los siguientes 4 documentos separados por los marcadores exactos indicados:
+Genera los siguientes bloques separados por los marcadores EXACTOS. No añadas texto fuera de los marcadores.
+
+===ELEGIBILIDAD===
+Analiza si la organización cumple los requisitos de la convocatoria.
+Formato estricto (una línea por campo):
+SCORE: [0-100]
+BLOQUEANTE: [SI/NO]
+REQ: [✅/❌/⚠️/❓] [Nombre del requisito] — [Evaluación en 1 frase, qué dice la conv y qué tiene el perfil]
+(repite REQ: para cada requisito que identifiques en las bases — tipos de entidad admitidos, antigüedad mínima, territorio, sectores CNAE, empleados mínimos, volumen económico, inscripciones registrales, certificados requeridos, etc.)
+RESUMEN: [1-2 frases de conclusión sobre la elegibilidad]
+
+===DATOS_FALTANTES===
+Lista de preguntas concretas que no puedes responder sobre elegibilidad porque el perfil no tiene esos datos. Solo preguntas necesarias para confirmar elegibilidad — no sobre el proyecto. Si no falta nada relevante, escribe: Ninguno.
+Formato: una pregunta por línea, empezando con "- "
 
 ===MEMORIA_TECNICA===
+[SOLO si BLOQUEANTE: NO en el bloque anterior — si BLOQUEANTE: SI, escribe aquí "[NO PROCEDE: ver análisis de elegibilidad]"]
 Redacta una memoria técnica completa (600-900 palabras) estructurada así:
 1. **Presentación de la entidad solicitante** — quién es, trayectoria, legitimidad
 2. **Descripción del proyecto** — en qué consiste, qué problema resuelve
@@ -251,39 +321,53 @@ Sé muy concreto y usa lenguaje que entienda alguien sin experiencia técnica.`;
     if (!res.ok) {
       const errText = await res.text();
       console.error('[copiloto-engine] OpenRouter error:', res.status, errText);
-      return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', error: `openrouter_${res.status}` };
+      return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', elegibilidad: null, datosFaltantes: '', error: `openrouter_${res.status}` };
     }
 
     const json = await res.json();
     rawOutput = json.choices?.[0]?.message?.content ?? '';
   } catch (err) {
     console.error('[copiloto-engine] Fetch error:', err);
-    return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', error: 'network_error' };
+    return { ok: false, memoria: '', presupuesto: '', checklist: '', guia: '', elegibilidad: null, datosFaltantes: '', error: 'network_error' };
   }
 
-  // Parsear los 4 bloques
+  // Parsear todos los bloques (ahora son 6)
+  const ALL_MARKERS = [
+    '===ELEGIBILIDAD===',
+    '===DATOS_FALTANTES===',
+    '===MEMORIA_TECNICA===',
+    '===PRESUPUESTO===',
+    '===CHECKLIST===',
+    '===GUIA_PRESENTACION===',
+  ];
+
   function extractBlock(raw: string, marker: string): string {
     const start = raw.indexOf(`===${marker}===`);
     if (start === -1) return '';
     const afterMarker = raw.indexOf('\n', start) + 1;
-    const markers = [
-      '===MEMORIA_TECNICA===',
-      '===PRESUPUESTO===',
-      '===CHECKLIST===',
-      '===GUIA_PRESENTACION===',
-    ];
     let end = raw.length;
-    for (const m of markers) {
+    for (const m of ALL_MARKERS) {
+      if (m === `===${marker}===`) continue;
       const pos = raw.indexOf(m, afterMarker);
       if (pos !== -1 && pos < end) end = pos;
     }
     return raw.slice(afterMarker, end).trim();
   }
 
-  const memoria = extractBlock(rawOutput, 'MEMORIA_TECNICA') || rawOutput;
+  const elegibilidadRaw = extractBlock(rawOutput, 'ELEGIBILIDAD');
+  const datosFaltantes = extractBlock(rawOutput, 'DATOS_FALTANTES');
+  const memoriaRaw = extractBlock(rawOutput, 'MEMORIA_TECNICA') || rawOutput;
   const presupuesto = extractBlock(rawOutput, 'PRESUPUESTO');
   const checklist = extractBlock(rawOutput, 'CHECKLIST');
   const guia = extractBlock(rawOutput, 'GUIA_PRESENTACION');
 
-  return { ok: true, memoria, presupuesto, checklist, guia };
+  // Parsear la elegibilidad
+  const elegibilidad = elegibilidadRaw ? parseEligibility(elegibilidadRaw) : null;
+
+  // Si el modelo marcó NO PROCEDE en la memoria, los documentos están vacíos intencionalmente
+  const memoria = memoriaRaw.includes('[NO PROCEDE') ? '' : memoriaRaw;
+
+  console.log(`[copiloto-engine] Elegibilidad: score=${elegibilidad?.score ?? '?'} bloqueante=${elegibilidad?.bloqueante ?? '?'}`);
+
+  return { ok: true, memoria, presupuesto, checklist, guia, elegibilidad, datosFaltantes };
 }
