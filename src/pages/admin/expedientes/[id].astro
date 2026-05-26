@@ -86,6 +86,41 @@ const sedeDetectada = detectSede({
         <!-- Col izquierda: datos del expediente -->
         <div class="space-y-5 lg:col-span-1">
 
+          <!-- Contrato de comisión a éxito -->
+          <div class:list={[
+            'border p-5',
+            exp.contrato_at ? 'border-green-300 bg-green-50/40' : exp.contrato_sent_at ? 'border-yellow-300 bg-yellow-50/40' : 'border-ink/15 bg-paper',
+          ]}>
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Contrato de servicios</h2>
+            {exp.contrato_at ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-green-700">✅ Aceptado por el cliente</p>
+                <p class="text-xs text-ink/50">{fmtDate(exp.contrato_at)}</p>
+                {exp.contrato_ip && <p class="font-mono text-[10px] text-ink/40">IP: {exp.contrato_ip}</p>}
+              </div>
+            ) : exp.contrato_sent_at ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-yellow-700">⏳ Enviado, pendiente de firma</p>
+                <p class="text-xs text-ink/50">Enviado: {fmtDate(exp.contrato_sent_at)}</p>
+                <a href={`https://startidea.es/contrato/${exp.contrato_token}`} target="_blank"
+                   class="font-mono text-[10px] text-magenta hover:underline break-all block">
+                  Ver enlace del contrato ↗
+                </a>
+              </div>
+            ) : (
+              <p class="text-sm text-ink/50 mb-3">Sin contrato enviado todavía.</p>
+            )}
+            <button
+              id="btn-enviar-contrato"
+              type="button"
+              class="mt-3 w-full border border-ink/25 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-ink hover:border-magenta hover:text-magenta transition-colors text-center"
+              data-id={exp.id}
+            >
+              {exp.contrato_sent_at ? '↻ Reenviar contrato' : '📝 Enviar contrato al cliente'}
+            </button>
+            <p id="contrato-msg" class="mt-2 hidden text-xs"></p>
+          </div>
+
           <!-- Datos de la entidad -->
           <div class="border border-ink/15 bg-paper p-5">
             <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Entidad solicitante</h2>
@@ -295,6 +330,68 @@ const sedeDetectada = detectSede({
             </div>
           )}
 
+          <!-- Resolución y factura -->
+          <div class:list={[
+            'border p-5',
+            exp.factura_num ? 'border-emerald-300 bg-emerald-50/40' : exp.importe_concedido ? 'border-blue-200 bg-blue-50/40' : 'border-ink/15 bg-paper',
+          ]}>
+            <h2 class="font-display text-lg text-ink mb-1">
+              {exp.factura_num ? '🧾 Factura generada' : '💶 Resolución y factura'}
+            </h2>
+            <p class="text-sm text-ink/60 mb-4">
+              {exp.factura_num
+                ? `Factura ${exp.factura_num} · Importe concedido: ${exp.importe_concedido ?? '—'}`
+                : 'Cuando se resuelva la subvención, introduce el importe concedido y genera la factura.'}
+            </p>
+
+            {!exp.factura_num && (
+              <div class="space-y-3">
+                <div>
+                  <label class="font-mono text-[10px] uppercase tracking-widest text-ink/50 block mb-1">
+                    Importe concedido (€, sin IVA)
+                  </label>
+                  <input
+                    id="input-importe"
+                    type="text"
+                    placeholder="ej. 15000"
+                    value={exp.importe_concedido ?? ''}
+                    class="w-full border border-ink/25 bg-white px-3 py-2 font-mono text-sm text-ink focus:border-magenta focus:outline-none"
+                  />
+                </div>
+                <button
+                  id="btn-generar-factura"
+                  type="button"
+                  class="w-full btn text-sm"
+                  data-id={exp.id}
+                >
+                  Generar factura →
+                </button>
+                <p id="factura-msg" class="hidden text-xs"></p>
+              </div>
+            )}
+
+            {exp.factura_num && (
+              <div class="flex gap-3 flex-wrap">
+                <a
+                  href={`/admin/factura/${exp.factura_num}`}
+                  target="_blank"
+                  class="btn text-sm"
+                >
+                  Ver factura ↗
+                </a>
+                <button
+                  id="btn-generar-factura"
+                  type="button"
+                  class="btn-ghost text-sm"
+                  data-id={exp.id}
+                >
+                  Regenerar
+                </button>
+                <p id="factura-msg" class="hidden text-xs w-full"></p>
+              </div>
+            )}
+          </div>
+
           <!-- Documentos generados -->
           {exp.ai_memoria && (
             <div class="space-y-4">
@@ -487,5 +584,86 @@ const sedeDetectada = detectSede({
         setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
       });
     });
+  });
+
+  // Enviar contrato al cliente
+  document.getElementById('btn-enviar-contrato')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const msg = document.getElementById('contrato-msg')!;
+    if (!confirm(`¿Enviar el contrato de comisión a éxito al cliente (${id})?`)) return;
+    btn.disabled = true;
+    btn.textContent = '⏳ Enviando...';
+    msg.classList.add('hidden');
+    try {
+      const res = await fetch('/api/enviar-contrato', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      msg.classList.remove('hidden');
+      if (j.ok) {
+        msg.textContent = '✅ Contrato enviado al cliente por email.';
+        msg.style.color = '#16a34a';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        msg.textContent = `❌ ${j.error ?? 'Error desconocido'}`;
+        msg.style.color = '#dc2626';
+        btn.disabled = false;
+        btn.textContent = '📝 Enviar contrato al cliente';
+      }
+    } catch {
+      msg.classList.remove('hidden');
+      msg.textContent = '❌ Error de red.';
+      msg.style.color = '#dc2626';
+      btn.disabled = false;
+      btn.textContent = '📝 Enviar contrato al cliente';
+    }
+  });
+
+  // Generar factura
+  document.getElementById('btn-generar-factura')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const msg = document.getElementById('factura-msg')!;
+    const importeInput = document.getElementById('input-importe') as HTMLInputElement | null;
+    const importe = importeInput?.value.trim() ?? '';
+    if (!importe) {
+      alert('Introduce el importe concedido antes de generar la factura.');
+      importeInput?.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = '⏳ Generando...';
+    msg.classList.add('hidden');
+    try {
+      const res = await fetch('/api/generar-factura', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id, importeConcedido: importe }),
+      });
+      const j = await res.json();
+      msg.classList.remove('hidden');
+      if (j.ok) {
+        msg.textContent = `✅ Factura ${j.facturaNum} generada. Abriendo...`;
+        msg.style.color = '#16a34a';
+        setTimeout(() => {
+          window.open(`/admin/factura/${j.facturaNum}`, '_blank');
+          window.location.reload();
+        }, 1000);
+      } else {
+        msg.textContent = `❌ ${j.error === 'importe_required' ? 'El importe es obligatorio.' : j.error === 'importe_invalid' ? 'El importe no es válido.' : j.error ?? 'Error'}`;
+        msg.style.color = '#dc2626';
+        btn.disabled = false;
+        btn.textContent = 'Generar factura →';
+      }
+    } catch {
+      msg.classList.remove('hidden');
+      msg.textContent = '❌ Error de red.';
+      msg.style.color = '#dc2626';
+      btn.disabled = false;
+      btn.textContent = 'Generar factura →';
+    }
   });
 </script>

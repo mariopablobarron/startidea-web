@@ -49,6 +49,15 @@ export interface Expediente {
   ai_notas: string | null;
   ai_elegibilidad: string | null;    // resultado del check de requisitos
   ai_datos_faltantes: string | null; // preguntas que la IA no puede responder sin más datos
+  // Contrato de comisión a éxito
+  contrato_token: string | null;     // token único para enlace de aceptación
+  contrato_at: number | null;        // timestamp de aceptación por el cliente
+  contrato_ip: string | null;        // IP desde la que se aceptó
+  contrato_sent_at: number | null;   // timestamp de envío del contrato
+  // Resolución y factura
+  importe_concedido: string | null;  // importe efectivamente concedido por la Admin.
+  factura_num: string | null;        // número de factura (FAC-YYYY-NNN)
+  factura_at: number | null;         // timestamp de generación de la factura
   created_at: number;
   updated_at: number;
   ai_at: number | null;
@@ -100,29 +109,61 @@ function getDb(): Database.Database {
       ai_notas            TEXT,
       ai_elegibilidad     TEXT,
       ai_datos_faltantes  TEXT,
+      contrato_token      TEXT,
+      contrato_at         INTEGER,
+      contrato_ip         TEXT,
+      contrato_sent_at    INTEGER,
+      importe_concedido   TEXT,
+      factura_num         TEXT,
+      factura_at          INTEGER,
       created_at          INTEGER NOT NULL,
       updated_at          INTEGER NOT NULL,
       ai_at               INTEGER,
       delivered_at        INTEGER
     );
+    CREATE TABLE IF NOT EXISTS factura_counter (
+      year    INTEGER PRIMARY KEY,
+      last_n  INTEGER NOT NULL DEFAULT 0
+    );
     CREATE INDEX IF NOT EXISTS idx_exp_status ON expedientes (status);
     CREATE INDEX IF NOT EXISTS idx_exp_created ON expedientes (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_exp_email ON expedientes (email);
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_exp_contrato_token ON expedientes (contrato_token)
+      WHERE contrato_token IS NOT NULL;
   `);
   // Migraciones seguras — columnas añadidas tras despliegue inicial
   for (const sql of [
     `ALTER TABLE expedientes ADD COLUMN ai_elegibilidad TEXT`,
     `ALTER TABLE expedientes ADD COLUMN ai_datos_faltantes TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN contrato_token TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN contrato_at INTEGER`,
+    `ALTER TABLE expedientes ADD COLUMN contrato_ip TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN contrato_sent_at INTEGER`,
+    `ALTER TABLE expedientes ADD COLUMN importe_concedido TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN factura_num TEXT`,
+    `ALTER TABLE expedientes ADD COLUMN factura_at INTEGER`,
   ]) {
     try { _db.exec(sql); } catch { /* columna ya existe */ }
   }
+  // Tabla de contador de facturas (puede ya existir)
+  try {
+    _db.exec(`CREATE TABLE IF NOT EXISTS factura_counter (year INTEGER PRIMARY KEY, last_n INTEGER NOT NULL DEFAULT 0)`);
+  } catch { /* ya existe */ }
   return _db;
 }
 
 // ─── Escritura ────────────────────────────────────────────────────────────────
 
 export function insertExpediente(
-  data: Omit<Expediente, 'status' | 'ai_memoria' | 'ai_presupuesto' | 'ai_checklist' | 'ai_guia' | 'ai_notas' | 'ai_elegibilidad' | 'ai_datos_faltantes' | 'ai_at' | 'delivered_at'>,
+  data: Omit<
+    Expediente,
+    | 'status'
+    | 'ai_memoria' | 'ai_presupuesto' | 'ai_checklist' | 'ai_guia'
+    | 'ai_notas' | 'ai_elegibilidad' | 'ai_datos_faltantes' | 'ai_at'
+    | 'delivered_at'
+    | 'contrato_token' | 'contrato_at' | 'contrato_ip' | 'contrato_sent_at'
+    | 'importe_concedido' | 'factura_num' | 'factura_at'
+  >,
 ): void {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
@@ -204,6 +245,64 @@ export function listExpedientes(opts: {
     `SELECT * FROM expedientes ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
   ).all(...params, opts.limit ?? 50, opts.offset ?? 0) as Expediente[];
   return { items, total };
+}
+
+// ─── Contrato ────────────────────────────────────────────────────────────────
+
+export function setContratoToken(id: string, token: string): void {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(`UPDATE expedientes SET contrato_token = @token, contrato_sent_at = @now, updated_at = @now WHERE id = @id`)
+    .run({ id, token, now });
+}
+
+export function getExpedienteByContratoToken(token: string): Expediente | null {
+  const db = getDb();
+  return db.prepare('SELECT * FROM expedientes WHERE contrato_token = ?').get(token) as Expediente | null;
+}
+
+export function markContratoAceptado(id: string, ip: string): void {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(`UPDATE expedientes SET contrato_at = @now, contrato_ip = @ip, updated_at = @now WHERE id = @id`)
+    .run({ id, ip, now });
+}
+
+// ─── Factura ──────────────────────────────────────────────────────────────────
+
+/**
+ * Genera un número de factura secuencial del año en curso.
+ * Formato: FAC-YYYY-NNN (ej: FAC-2026-001)
+ * Transacción atómica para evitar duplicados bajo concurrencia.
+ */
+export function nextFacturaNum(): string {
+  const db = getDb();
+  const year = new Date().getFullYear();
+  const result = db.transaction(() => {
+    db.prepare(`INSERT INTO factura_counter (year, last_n) VALUES (?, 1)
+      ON CONFLICT(year) DO UPDATE SET last_n = last_n + 1`).run(year);
+    const row = db.prepare('SELECT last_n FROM factura_counter WHERE year = ?').get(year) as { last_n: number };
+    return row.last_n;
+  })();
+  return `FAC-${year}-${String(result).padStart(3, '0')}`;
+}
+
+export function saveFactura(id: string, facturaNum: string, importeConcedido: string): void {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(`
+    UPDATE expedientes
+    SET factura_num = @facturaNum, factura_at = @now,
+        importe_concedido = @importeConcedido, updated_at = @now
+    WHERE id = @id
+  `).run({ id, facturaNum, importeConcedido, now });
+}
+
+export function setImporteConcedido(id: string, importe: string): void {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(`UPDATE expedientes SET importe_concedido = @importe, updated_at = @now WHERE id = @id`)
+    .run({ id, importe, now });
 }
 
 // ─── Estadísticas ─────────────────────────────────────────────────────────────
