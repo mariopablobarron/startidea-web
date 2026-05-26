@@ -12,6 +12,7 @@ import Base from '@/layouts/Base.astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
 import { getExpediente } from '@/lib/expedientes-db';
 import { detectSede } from '@/lib/sedes-map';
+import { parseEligibility } from '@/lib/copiloto-engine';
 
 export const prerender = false;
 
@@ -43,6 +44,14 @@ function fmtDate(ts: number | null): string {
 }
 
 const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
+
+// Parsear elegibilidad guardada en BD
+const eligibilidad = exp.ai_elegibilidad ? parseEligibility(exp.ai_elegibilidad) : null;
+const eligColor = eligibilidad
+  ? eligibilidad.bloqueante ? '#dc2626'
+    : eligibilidad.score >= 70 ? '#16a34a'
+    : '#d97706'
+  : '#9ca3af';
 
 // Detectar sede electrónica del expediente
 const sedeDetectada = detectSede({
@@ -169,6 +178,63 @@ const sedeDetectada = detectSede({
               </div>
             )}
           </div>
+
+          <!-- Análisis de elegibilidad (si ya se generó) -->
+          {eligibilidad && (
+            <div class:list={[
+              'border p-5 space-y-3',
+              eligibilidad.bloqueante ? 'border-red-300 bg-red-50/50' : 'border-ink/15 bg-paper',
+            ]}>
+              <div class="flex items-center justify-between gap-3">
+                <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                  🔍 Análisis de elegibilidad
+                </h2>
+                <div class="flex items-center gap-3">
+                  {eligibilidad.bloqueante && (
+                    <span class="font-mono text-xs font-bold text-red-700 uppercase tracking-wider">
+                      ⛔ Bloqueante
+                    </span>
+                  )}
+                  <span class="font-mono text-sm font-bold" style={`color:${eligColor}`}>
+                    {eligibilidad.score}/100
+                  </span>
+                </div>
+              </div>
+
+              {eligibilidad.resumen && (
+                <p class="text-sm text-ink/70 italic">{eligibilidad.resumen}</p>
+              )}
+
+              <table class="w-full text-xs">
+                {eligibilidad.checks.map((c) => {
+                  const color = c.emoji === '✅' ? '#16a34a'
+                    : c.emoji === '❌' ? '#dc2626'
+                    : c.emoji === '⚠️' ? '#d97706'
+                    : '#9ca3af';
+                  const parts = c.texto.split(' — ');
+                  return (
+                    <tr class="border-b border-ink/5">
+                      <td class="py-1.5 pr-2 font-mono font-bold" style={`color:${color};white-space:nowrap`}>
+                        {parts[0]}
+                      </td>
+                      <td class="py-1.5 text-ink/60">{parts.slice(1).join(' — ')}</td>
+                    </tr>
+                  );
+                })}
+              </table>
+
+              {exp.ai_datos_faltantes && exp.ai_datos_faltantes !== 'Ninguno' && (
+                <details class="border border-yellow-200 bg-yellow-50/50 p-3">
+                  <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-yellow-700">
+                    ⚠ Datos faltantes para confirmar elegibilidad
+                  </summary>
+                  <div class="mt-2 whitespace-pre-wrap text-xs text-yellow-800">
+                    {exp.ai_datos_faltantes}
+                  </div>
+                </details>
+              )}
+            </div>
+          )}
 
           <!-- Acción principal: Generar con IA -->
           <div class:list={[
