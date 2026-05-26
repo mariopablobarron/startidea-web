@@ -1,0 +1,29 @@
+src/pages/laboratorio/index.astro
+  s_fc84abf46d9a4c::t_4666b643f36e37 39-45
+src/pages/laboratorio/cursos/[slug].astro
+  s_fc84abf46d9a4c::t_c0a488f4b3da3a 1-257
+src/content/cursos/subvenciones-como-presentar-solicitud.md
+  s_fc84abf46d9a4c::t_382f6313fa9003 1-75
+src/pages/laboratorio/cursos/index.astro
+  s_fc84abf46d9a4c::t_8a4b59db7bf4e6 1-198
+src/content/cursos/comunicacion-estrategica-tercer-sector.md
+  s_fc84abf46d9a4c::t_52a6d7618e125a 1-73
+src/content/config.ts
+  s_fc84abf46d9a4c::t_25360a0c4bc9aa 76-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "a8c1c436f2179b27a8d37540879a1f8edb3b53c7",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
