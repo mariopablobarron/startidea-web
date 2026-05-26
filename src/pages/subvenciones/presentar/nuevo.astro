@@ -284,6 +284,63 @@ const jsonLd = [
               <p class="text-xs text-ink/40">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
             </div>
 
+            <details class="border border-ink/10">
+              <summary class="cursor-pointer select-none px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink/60 hover:bg-paper-warm">
+                + Datos de impacto de la organización
+                <span class="text-magenta">(mejora mucho los documentos generados)</span>
+              </summary>
+              <div class="space-y-4 border-t border-ink/10 p-4">
+                <p class="text-xs text-ink/50">La IA usa estos datos para cuantificar la memoria técnica. Rellena solo lo que sepas, no es obligatorio.</p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label for="beneficiariosAnuales" class="label">Personas atendidas al año</label>
+                    <input
+                      type="number"
+                      id="beneficiariosAnuales"
+                      name="beneficiariosAnuales"
+                      min="0"
+                      max="9999999"
+                      class="form-input w-full"
+                      placeholder="340"
+                    />
+                  </div>
+                  <div class="space-y-1">
+                    <label for="presupuestoAnual" class="label">Presupuesto anual (aprox.)</label>
+                    <input
+                      type="text"
+                      id="presupuestoAnual"
+                      name="presupuestoAnual"
+                      maxlength="40"
+                      class="form-input w-full"
+                      placeholder="120.000 €"
+                    />
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <label for="logrosDestacados" class="label">Logros e indicadores destacados</label>
+                  <textarea
+                    id="logrosDestacados"
+                    name="logrosDestacados"
+                    rows="3"
+                    maxlength="500"
+                    class="form-input w-full resize-none"
+                    placeholder="Ej: 340 jóvenes formados en 2023 (75% insertados laboralmente). 18 pisos tutelados activos. Premio X al mejor proyecto social 2022…"
+                  ></textarea>
+                </div>
+                <div class="space-y-1">
+                  <label for="subvencionesAnteriores" class="label">Subvenciones recibidas anteriormente (referencias)</label>
+                  <textarea
+                    id="subvencionesAnteriores"
+                    name="subvencionesAnteriores"
+                    rows="3"
+                    maxlength="500"
+                    class="form-input w-full resize-none"
+                    placeholder="Ej: Junta de Andalucía 2022: 45.000€ programa empleo. Diputación Granada 2023: 15.000€ atención domiciliaria…"
+                  ></textarea>
+                </div>
+              </div>
+            </details>
+
             <div class="space-y-2">
               <p class="label">¿Tiene la entidad experiencia previa en subvenciones?</p>
               <div class="flex flex-wrap gap-4">
@@ -318,18 +375,74 @@ const jsonLd = [
               Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
             </p>
 
+            <!-- Banner IA lee documentos -->
+            <div class="border border-magenta/30 bg-magenta/5 p-4">
+              <p class="font-mono text-xs uppercase tracking-widest text-magenta">⚡ La IA lee estos archivos</p>
+              <p class="mt-1.5 text-sm text-ink/70">
+                Si subes tu <strong>memoria de actividades del año anterior</strong> o tus <strong>estatutos</strong>,
+                la IA los analiza y personaliza los documentos generados con información real de tu organización.
+                El resultado es significativamente mejor que sin documentos.
+              </p>
+            </div>
+
             <div class="space-y-4">
               {[
-                { id: 'doc-memoria', name: 'docMemoria', label: 'Memoria técnica del proyecto', hint: 'Descripción del proyecto, metodología, equipo, indicadores de resultado.' },
-                { id: 'doc-presupuesto', name: 'docPresupuesto', label: 'Presupuesto del proyecto', hint: 'Desglose de gastos: personal, materiales, subcontratación, gastos indirectos.' },
-                { id: 'doc-hacienda', name: 'docHacienda', label: 'Certificado AEAT (Hacienda)', hint: 'Al corriente de pago con la Agencia Tributaria. Válido 6 meses.' },
-                { id: 'doc-ss', name: 'docSS', label: 'Certificado TGSS (Seguridad Social)', hint: 'Al corriente de pago con la Seguridad Social. Válido 6 meses.' },
-                { id: 'doc-estatutos', name: 'docEstatutos', label: 'Estatutos de la entidad', hint: 'Con sello de inscripción en el registro correspondiente.' },
-                { id: 'doc-otros', name: 'docOtros', label: 'Otros documentos', hint: 'Cualquier documentación relevante para la convocatoria.', multiple: true },
+                {
+                  id: 'doc-memoria-anual',
+                  name: 'docMemoriaAnual',
+                  label: '⭐ Memoria de actividades del año anterior',
+                  hint: 'El documento más valioso para la IA. Extrae tu historial, indicadores de impacto, beneficiarios y proyectos.',
+                  badge: 'MÁS ÚTIL PARA LA IA',
+                },
+                {
+                  id: 'doc-estatutos',
+                  name: 'docEstatutos',
+                  label: '⭐ Estatutos de la entidad',
+                  hint: 'La IA los usa para verificar que el objeto social encaja con la convocatoria y para redactar la presentación. Con sello de inscripción.',
+                  badge: 'MUY ÚTIL PARA LA IA',
+                },
+                {
+                  id: 'doc-memoria',
+                  name: 'docMemoria',
+                  label: 'Borrador de memoria técnica del proyecto',
+                  hint: 'Si tienes un borrador, la IA lo mejora y adapta a la convocatoria. Si no tienes, lo genera desde cero.',
+                },
+                {
+                  id: 'doc-presupuesto',
+                  name: 'docPresupuesto',
+                  label: 'Presupuesto estimado del proyecto',
+                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), la IA lo reformatea según las partidas que pide la convocatoria.',
+                },
+                {
+                  id: 'doc-hacienda',
+                  name: 'docHacienda',
+                  label: 'Certificado AEAT (Hacienda)',
+                  hint: 'Al corriente de obligaciones tributarias. Válido 6 meses desde la fecha de emisión.',
+                },
+                {
+                  id: 'doc-ss',
+                  name: 'docSS',
+                  label: 'Certificado TGSS (Seguridad Social)',
+                  hint: 'Al corriente de pagos a la Seguridad Social. Válido 6 meses. Si no lo tienes aún, se puede solicitar justo antes de presentar.',
+                },
+                {
+                  id: 'doc-otros',
+                  name: 'docOtros',
+                  label: 'Otros documentos relevantes',
+                  hint: 'Actas, informes de auditoría, premios, publicaciones… Cualquier documento que acredite la trayectoria o capacidad técnica.',
+                  multiple: true,
+                },
               ].map(doc => (
-                <div class="border border-ink/10 p-4">
+                <div class:list={['border p-4', doc.badge ? 'border-magenta/30 bg-magenta/3' : 'border-ink/10']}>
                   <label for={doc.id} class="block cursor-pointer">
-                    <p class="font-mono text-sm text-ink">{doc.label}</p>
+                    <div class="flex items-start justify-between gap-3">
+                      <p class="font-mono text-sm text-ink">{doc.label}</p>
+                      {doc.badge && (
+                        <span class="shrink-0 font-mono text-[9px] uppercase tracking-widest text-magenta">
+                          {doc.badge}
+                        </span>
+                      )}
+                    </div>
                     <p class="mt-0.5 text-xs text-ink/50">{doc.hint}</p>
                     <div class="mt-3 flex items-center gap-3">
                       <span class="border border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-paper-warm">
@@ -343,7 +456,7 @@ const jsonLd = [
                     id={doc.id}
                     name={doc.name}
                     multiple={doc.multiple}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods,.txt"
                     class="sr-only"
                     data-file-label={`${doc.id}-name`}
                   />
@@ -351,8 +464,8 @@ const jsonLd = [
               ))}
             </div>
 
-            <div class="rounded border border-ink/10 bg-paper-warm p-4 font-mono text-[11px] uppercase tracking-wider text-ink/50">
-              Formatos admitidos: PDF, Word (.doc/.docx), Excel (.xls/.xlsx), OpenDocument. Tamaño máximo por archivo: 20 MB.
+            <div class="border border-ink/10 bg-paper-warm p-3 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+              Formatos: PDF, Word (.doc/.docx), Excel (.xls/.xlsx), OpenDocument, TXT · Máx. 20 MB por archivo
             </div>
           </fieldset>
 
@@ -623,6 +736,28 @@ const jsonLd = [
     errDiv.classList.add('hidden');
     btnSubmit.disabled = true;
     btnSubmit.textContent = 'Enviando…';
+
+    // Combinar datos de impacto de la organización en el campo comentarios
+    // para que el motor IA los reciba como contexto estructurado
+    const benef = (form.querySelector('#beneficiariosAnuales') as HTMLInputElement)?.value?.trim();
+    const ppto = (form.querySelector('#presupuestoAnual') as HTMLInputElement)?.value?.trim();
+    const logros = (form.querySelector('#logrosDestacados') as HTMLTextAreaElement)?.value?.trim();
+    const subvPrev = (form.querySelector('#subvencionesAnteriores') as HTMLTextAreaElement)?.value?.trim();
+    const comentariosEl = form.querySelector('#comentarios') as HTMLTextAreaElement;
+
+    const ctxLines: string[] = [];
+    if (benef) ctxLines.push(`Personas atendidas al año: ${benef}`);
+    if (ppto) ctxLines.push(`Presupuesto anual: ${ppto}`);
+    if (logros) ctxLines.push(`Logros e indicadores:\n${logros}`);
+    if (subvPrev) ctxLines.push(`Subvenciones anteriores:\n${subvPrev}`);
+
+    if (ctxLines.length > 0) {
+      const ctxBlock = `[Datos de la organización]\n${ctxLines.join('\n')}`;
+      const existingComments = comentariosEl.value.trim();
+      comentariosEl.value = existingComments
+        ? `${ctxBlock}\n---\nComentarios: ${existingComments}`
+        : ctxBlock;
+    }
 
     const data = new FormData(form);
 

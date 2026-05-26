@@ -47,12 +47,13 @@ export interface ExtractionResult {
 // ─── Etiquetas legibles por campo ─────────────────────────────────────────────
 
 const FIELD_LABELS: Record<string, string> = {
-  docMemoria:     'Memoria / descripción de actividades',
-  docPresupuesto: 'Presupuesto existente',
-  docHacienda:    'Certificado AEAT',
-  docSS:          'Certificado Seguridad Social',
-  docEstatutos:   'Estatutos de la organización',
-  docOtros:       'Documentación adicional',
+  docMemoriaAnual: 'Memoria de actividades anual',
+  docEstatutos:    'Estatutos de la organización',
+  docMemoria:      'Borrador de memoria técnica del proyecto',
+  docPresupuesto:  'Presupuesto existente',
+  docOtros:        'Documentación adicional',
+  docHacienda:     'Certificado AEAT',
+  docSS:           'Certificado Seguridad Social',
 };
 
 // ─── Extractores por tipo ─────────────────────────────────────────────────────
@@ -114,7 +115,7 @@ export async function extractDocsFromExpediente(expedienteDir: string): Promise<
   }
 
   // Filtrar solo archivos con extensiones procesables y orden de prioridad
-  const PRIORITY_ORDER = ['docMemoria', 'docEstatutos', 'docPresupuesto', 'docOtros', 'docHacienda', 'docSS'];
+  const PRIORITY_ORDER = ['docMemoriaAnual', 'docEstatutos', 'docMemoria', 'docPresupuesto', 'docOtros', 'docHacienda', 'docSS'];
   const processable = files
     .filter((f) => {
       const ext = extname(f).toLowerCase();

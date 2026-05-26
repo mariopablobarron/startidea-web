@@ -82,7 +82,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const expedienteDir = join(EXPEDIENTES_DIR, `${expedienteId}-${cif}`);
 
   // Guardar archivos
-  const fileFields = ['docMemoria', 'docPresupuesto', 'docHacienda', 'docSS', 'docEstatutos', 'docOtros'];
+  const fileFields = ['docMemoriaAnual', 'docMemoria', 'docPresupuesto', 'docHacienda', 'docSS', 'docEstatutos', 'docOtros'];
   const savedFiles: string[] = [];
 
   try {
