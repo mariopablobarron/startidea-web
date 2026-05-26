@@ -1,0 +1,375 @@
+---
+/**
+ * /admin/expedientes/[id] — Detalle de expediente + acciones del Copiloto.
+ *
+ * Acciones disponibles:
+ *   1. Generar documentos con IA (→ POST /api/generar-expediente)
+ *   2. Cambiar estado manualmente
+ *   3. Enviar documentos al cliente (→ POST /api/entregar-expediente)
+ *   4. Ver/copiar cada documento generado
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getExpediente } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const { id } = Astro.params;
+const exp = id ? getExpediente(id) : null;
+
+if (!exp) {
+  return Astro.redirect('/admin/expedientes?notfound=1');
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  recibido:      '📥 Recibido',
+  analizando_ia: '🤖 Analizando IA...',
+  docs_listos:   '📄 Documentos listos',
+  entregado:     '📬 Entregado al cliente',
+  presentado:    '✅ Presentado',
+  rechazado:     '❌ Rechazado',
+};
+
+function fmtDate(ts: number | null): string {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+
+const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
+---
+
+<Base title={`Expediente ${exp.id} · Admin · Startidea`} description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <a href="/admin/expedientes" class="font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">← Expedientes</a>
+          <h1 class="mt-2 font-display text-3xl text-ink">
+            Expediente <span class="text-magenta font-mono">{exp.id}</span>
+          </h1>
+          <p class="mt-1 text-sm text-ink/60">
+            Recibido: {fmtDate(exp.created_at)}
+            {exp.convocatoria_title && ` · ${exp.convocatoria_title}`}
+          </p>
+        </div>
+        <span class="shrink-0 border px-3 py-1.5 font-mono text-sm text-ink/70 border-ink/20">
+          {STATUS_LABELS[exp.status] ?? exp.status}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Col izquierda: datos del expediente -->
+        <div class="space-y-5 lg:col-span-1">
+
+          <!-- Datos de la entidad -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Entidad solicitante</h2>
+            <dl class="space-y-2 text-sm">
+              <div><dt class="text-ink/50">Nombre</dt><dd class="font-medium text-ink">{exp.org_nombre}</dd></div>
+              <div><dt class="text-ink/50">CIF</dt><dd class="font-mono text-ink">{exp.org_cif}</dd></div>
+              <div><dt class="text-ink/50">Tipo</dt><dd class="text-ink">{exp.org_tipo || '—'}</dd></div>
+              <div><dt class="text-ink/50">Representante</dt><dd class="text-ink">{exp.representante}</dd></div>
+              <div><dt class="text-ink/50">Email</dt>
+                <dd><a href={`mailto:${exp.email}`} class="text-magenta hover:underline">{exp.email}</a></dd>
+              </div>
+              {exp.telefono && <div><dt class="text-ink/50">Teléfono</dt><dd class="text-ink">{exp.telefono}</dd></div>}
+              <div><dt class="text-ink/50">Provincia</dt><dd class="text-ink">{exp.provincia}</dd></div>
+              <div><dt class="text-ink/50">Apoderamiento REA</dt>
+                <dd class:list={['font-medium', exp.apoderamiento ? 'text-green-700' : 'text-ink/40']}>
+                  {exp.apoderamiento ? '✅ Solicitado' : 'No'}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <!-- Convocatoria -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Convocatoria</h2>
+            {exp.convocatoria_slug ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-ink">{exp.convocatoria_title ?? exp.convocatoria_slug}</p>
+                <a href={`/subvenciones/${exp.convocatoria_slug}`} target="_blank"
+                   class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+                  Ver ficha →
+                </a>
+              </div>
+            ) : exp.convocatoria_url ? (
+              <div class="text-sm">
+                <p class="text-ink">{exp.convocatoria_title || 'Sin identificar en el portal'}</p>
+                <a href={exp.convocatoria_url} target="_blank" class="text-xs text-magenta hover:underline break-all">
+                  {exp.convocatoria_url}
+                </a>
+              </div>
+            ) : (
+              <p class="text-sm text-ink/40 italic">Sin convocatoria identificada</p>
+            )}
+            {exp.importe_solicitado && (
+              <p class="mt-2 text-sm"><span class="text-ink/50">Importe solicitado:</span> <strong class="text-ink">{exp.importe_solicitado}</strong></p>
+            )}
+          </div>
+
+          <!-- Documentos adjuntos -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Documentos adjuntos ({docs.length})</h2>
+            {docs.length === 0 ? (
+              <p class="text-sm text-ink/40 italic">Ninguno</p>
+            ) : (
+              <ul class="space-y-1 text-xs text-ink/70">
+                {docs.map((d) => <li class="font-mono">· {d}</li>)}
+              </ul>
+            )}
+          </div>
+
+          <!-- Cambiar estado -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Cambiar estado</h2>
+            <div id="status-actions" class="flex flex-wrap gap-2">
+              {(['recibido', 'docs_listos', 'entregado', 'presentado', 'rechazado'] as const).map((s) => (
+                <button
+                  type="button"
+                  class="status-change-btn border border-ink/25 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-colors hover:border-magenta hover:text-magenta"
+                  data-status={s}
+                  data-id={exp.id}
+                >
+                  {s.replace('_', ' ')}
+                </button>
+              ))}
+            </div>
+            <p id="status-msg" class="mt-2 hidden text-xs text-green-700"></p>
+          </div>
+        </div>
+
+        <!-- Col derecha: proyecto + documentos generados -->
+        <div class="space-y-5 lg:col-span-2">
+
+          <!-- Descripción del proyecto -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Descripción del proyecto</h2>
+            <p class="whitespace-pre-wrap text-sm leading-relaxed text-ink">{exp.descripcion_proyecto}</p>
+            {exp.comentarios && (
+              <div class="mt-4 border-t border-ink/10 pt-4">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1">Comentarios adicionales</p>
+                <p class="text-sm text-ink/70">{exp.comentarios}</p>
+              </div>
+            )}
+          </div>
+
+          <!-- Acción principal: Generar con IA -->
+          <div class:list={[
+            'border-2 p-5',
+            exp.status === 'docs_listos' || exp.status === 'entregado'
+              ? 'border-green-300 bg-green-50'
+              : 'border-magenta/30 bg-paper',
+          ]}>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="font-display text-lg text-ink">
+                  {exp.ai_memoria ? '✅ Documentos generados' : '🤖 Generar documentos con IA'}
+                </h2>
+                <p class="mt-1 text-sm text-ink/60">
+                  {exp.ai_memoria
+                    ? `Generados el ${fmtDate(exp.ai_at)} · Memoria, presupuesto, checklist y guía listos.`
+                    : 'El agente leerá las bases de la convocatoria y los datos del proyecto para generar los 4 documentos.'}
+                </p>
+              </div>
+              <button
+                id="btn-generar"
+                type="button"
+                class="shrink-0 btn text-sm"
+                data-id={exp.id}
+              >
+                {exp.ai_memoria ? 'Regenerar' : 'Generar →'}
+              </button>
+            </div>
+            <div id="generar-status" class="mt-3 hidden">
+              <div class="flex items-center gap-2 text-sm text-yellow-800">
+                <span class="animate-spin">⏳</span>
+                <span>Analizando convocatoria y generando documentos... (puede tardar 30-60 seg)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acción: Entregar al cliente -->
+          {exp.ai_memoria && (
+            <div class="border border-ink/15 bg-paper p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="font-display text-lg text-ink">📬 Entregar al cliente</h2>
+                  <p class="mt-1 text-sm text-ink/60">
+                    Envía los documentos por email a <strong>{exp.email}</strong> con instrucciones de presentación.
+                    {exp.delivered_at && ` Ya entregado el ${fmtDate(exp.delivered_at)}.`}
+                  </p>
+                </div>
+                <button
+                  id="btn-entregar"
+                  type="button"
+                  class="shrink-0 btn-ghost text-sm"
+                  data-id={exp.id}
+                >
+                  {exp.delivered_at ? 'Reenviar' : 'Entregar →'}
+                </button>
+              </div>
+              <p id="entregar-status" class="mt-2 hidden text-sm"></p>
+            </div>
+          )}
+
+          <!-- Documentos generados -->
+          {exp.ai_memoria && (
+            <div class="space-y-4">
+              {([
+                ['📄 Memoria técnica', exp.ai_memoria],
+                ['💶 Presupuesto', exp.ai_presupuesto],
+                ['📋 Checklist', exp.ai_checklist],
+                ['🗺️ Guía de presentación', exp.ai_guia],
+              ] as [string, string | null][]).filter(([, content]) => content).map(([title, content]) => (
+                <details class="border border-ink/15 bg-paper">
+                  <summary class="cursor-pointer border-b border-ink/10 px-5 py-3 font-display text-base text-ink hover:bg-paper-warm/30">
+                    {title}
+                  </summary>
+                  <div class="relative p-5">
+                    <button
+                      class="copy-btn absolute right-4 top-4 border border-ink/20 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-ink/50 hover:border-magenta hover:text-magenta"
+                      data-content={content!}
+                    >
+                      Copiar
+                    </button>
+                    <div class="prose prose-sm max-w-none text-ink/80 whitespace-pre-wrap font-mono text-xs leading-relaxed overflow-auto max-h-96">
+                      {content}
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
+          )}
+
+          <!-- Fase 2: Playwright -->
+          <div class="border border-dashed border-ink/25 bg-paper/50 p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">⚗️ Fase 2 — Automatización sede electrónica</h2>
+            <p class="text-sm text-ink/50">
+              El agente Playwright puede navegar la sede electrónica, rellenar el formulario y
+              dejar la solicitud lista para que el cliente solo tenga que firmar con Autofirma.
+              Disponible cuando se identifique la sede y se configure el acceso.
+            </p>
+            {exp.convocatoria_slug && (
+              <p class="mt-2 font-mono text-xs text-ink/40">
+                Sede detectada para: <strong class="text-ink/60">{exp.convocatoria_slug}</strong>
+                <span class="ml-2 text-yellow-600">[Mappings en construcción]</span>
+              </p>
+            )}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script>
+  const ADMIN_TOKEN = document.cookie
+    .split('; ')
+    .find((r) => r.startsWith('startidea_admin='))
+    ?.split('=')[1] ?? '';
+
+  // Generar con IA
+  document.getElementById('btn-generar')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const statusEl = document.getElementById('generar-status')!;
+    btn.disabled = true;
+    statusEl.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/generar-expediente', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      if (j.ok) {
+        statusEl.innerHTML = '✅ Documentos generados. Recargando...';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        statusEl.innerHTML = `❌ Error: ${j.error ?? 'desconocido'}`;
+        btn.disabled = false;
+      }
+    } catch {
+      statusEl.innerHTML = '❌ Error de red. Inténtalo de nuevo.';
+      btn.disabled = false;
+    }
+  });
+
+  // Entregar al cliente
+  document.getElementById('btn-entregar')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const statusEl = document.getElementById('entregar-status')!;
+    btn.disabled = true;
+    statusEl.textContent = '⏳ Enviando email al cliente...';
+    statusEl.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/entregar-expediente', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      statusEl.textContent = j.ok ? '✅ Email enviado al cliente.' : `❌ ${j.error}`;
+      if (j.ok) setTimeout(() => window.location.reload(), 2000);
+      else btn.disabled = false;
+    } catch {
+      statusEl.textContent = '❌ Error de red.';
+      btn.disabled = false;
+    }
+  });
+
+  // Cambiar estado
+  document.querySelectorAll<HTMLButtonElement>('.status-change-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const { id, status } = btn.dataset;
+      if (!id || !status) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/status-expediente', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+          body: JSON.stringify({ id, status }),
+        });
+        const j = await res.json();
+        const msg = document.getElementById('status-msg')!;
+        msg.textContent = j.ok ? `✅ Estado cambiado a "${status}"` : `❌ ${j.error}`;
+        msg.classList.remove('hidden');
+        if (j.ok) setTimeout(() => window.location.reload(), 1200);
+        else btn.disabled = false;
+      } catch {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  // Copiar documentos
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(btn.dataset.content ?? '').then(() => {
+        btn.textContent = '✅ Copiado';
+        setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+      });
+    });
+  });
+</script>

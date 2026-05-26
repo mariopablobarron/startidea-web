@@ -9,6 +9,7 @@
 
 import type { APIRoute } from 'astro';
 import { sendEmail } from '@/lib/email-resend';
+import { insertExpediente } from '@/lib/expedientes-db';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -103,6 +104,36 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   } catch (err) {
     console.error('[expediente] Error guardando archivos:', err);
     // No bloqueamos el flujo — los archivos son opcionales en Fase 0
+  }
+
+  // Guardar en SQLite
+  const convocatoriaSlug = clean(formData.get('convocatoriaSlug'), 200) || null;
+  try {
+    insertExpediente({
+      id: expedienteId,
+      convocatoria_slug: convocatoriaSlug,
+      convocatoria_title: convocatoriaNombre || null,
+      convocatoria_url: convocatoriaUrl || null,
+      org_nombre: orgName,
+      org_cif: cif,
+      org_tipo: orgType,
+      representante,
+      email,
+      telefono,
+      provincia,
+      descripcion_proyecto: descripcionProyecto,
+      importe_solicitado: importeSolicitado || importeEstimado,
+      experiencia,
+      apoderamiento: apoderamiento === 'si' ? 1 : 0,
+      comentarios,
+      como_conocio: comoConocio,
+      docs_adjuntos: JSON.stringify(savedFiles),
+      ip: clientAddress || '',
+      created_at: Math.floor(Date.now() / 1000),
+      updated_at: Math.floor(Date.now() / 1000),
+    });
+  } catch (err) {
+    console.error('[expediente] SQLite insert error:', err);
   }
 
   // Construir mensaje Telegram
