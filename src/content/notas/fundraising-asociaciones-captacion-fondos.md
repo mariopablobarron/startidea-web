@@ -3,6 +3,7 @@ title: 'Fundraising para asociaciones: cómo captar fondos sin depender de una s
 description: 'Guía práctica de captación de fondos para asociaciones y entidades del tercer sector. Fuentes, estrategias, errores frecuentes y por qué diversificar importa más que encontrar la subvención perfecta.'
 pubDate: 2026-05-26
 audience: 'Tercer sector'
+category: 'Financiación'
 tags: ['fundraising', 'captación de fondos', 'asociaciones', 'ONG', 'subvenciones', 'socios']
 draft: false
 faqs:

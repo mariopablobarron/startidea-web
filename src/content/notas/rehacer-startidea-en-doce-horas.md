@@ -3,6 +3,7 @@ title: 'Hemos rehecho startidea.es en doce horas. Aquí está el método.'
 description: 'WordPress fuera, Astro 5 + Node + un VPS infrautilizado dentro. Cero coste extra, código abierto y un agente trabajando 24/7. Notas de campo de una migración real.'
 pubDate: 2026-04-28
 audience: 'Empresas con propósito'
+category: 'Agencia'
 tags: ['producto', 'tecnología', 'startidea', 'caso']
 draft: false
 faqs:

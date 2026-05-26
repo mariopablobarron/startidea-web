@@ -3,6 +3,7 @@ title: 'Greenwashing vs propósito: la diferencia se mide en el contrato con el 
 description: 'Cómo distinguir, sin recurrir al espíritu de la marca, si una alianza ESG entre una empresa y una entidad social es real o postureo. Cuatro cláusulas que lo decantan.'
 pubDate: 2026-06-09
 audience: 'Empresas con propósito'
+category: 'Estrategia'
 tags: ['ESG', 'partnerships', 'greenwashing', 'empresas']
 draft: false
 faqs:

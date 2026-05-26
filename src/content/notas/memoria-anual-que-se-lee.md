@@ -2,6 +2,7 @@
 title: 'Cómo escribir una memoria anual que la gente lea hasta el final'
 description: 'Cinco decisiones editoriales que diferencian una memoria que se publica de una memoria que se lee. Aplicables a fundaciones, ONGs y entidades del tercer sector.'
 pubDate: 2026-05-12
+category: 'Comunicación'
 audience: 'Tercer sector'
 tags: ['memorias', 'reporting', 'tercer sector', 'comunicación']
 draft: false

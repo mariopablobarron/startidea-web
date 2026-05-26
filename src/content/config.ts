@@ -8,6 +8,7 @@ const notas = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     audience: z.enum(['Tercer sector', 'Instituciones', 'Empresas con propósito', 'Todas']).default('Todas'),
+    category: z.enum(['Comunicación', 'Financiación', 'Estrategia', 'Agencia']).optional(),
     tags: z.array(z.string()).default([]),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
