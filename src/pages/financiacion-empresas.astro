@@ -8,7 +8,7 @@
 // dedicadas a cada fuente.
 
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
@@ -39,6 +39,49 @@ const jsonLd = [
     { name: 'Financiación empresas', url: `${SITE_URL}/financiacion-empresas` },
   ]),
   faqPageSchema(faqs),
+  serviceSchema({
+    name: 'Financiación pública y tramitación de subvenciones',
+    description:
+      'Servicio integral de identificación, construcción y presentación de expedientes de financiación pública para empresas con propósito, startups y entidades sociales en España. Cubre las cinco fuentes principales (BDNS, CDTI, IDAE, ENISA, Andalucía TRADE) y la presentación electrónica con certificado digital de representante.',
+    serviceType: 'Consultoría en financiación pública',
+    url: `${SITE_URL}/financiacion-empresas`,
+    audience: [
+      'Empresa',
+      'PYME',
+      'Startup',
+      'ONG',
+      'Fundación',
+      'Asociación',
+      'Cooperativa',
+      'Ayuntamiento',
+    ],
+    offers: [
+      {
+        name: 'Tramitación puntual de convocatoria',
+        description:
+          'Construcción y presentación de una convocatoria concreta (Agenda 2030, IDAE, autonómica) con certificado digital y gestión de subsanaciones.',
+        url: `${SITE_URL}/contacto`,
+      },
+      {
+        name: 'Expediente CDTI con memoria técnica',
+        description:
+          'NEOTEC, PID o Línea Directa de Innovación con memoria técnica profunda, justificación económica y plan de explotación.',
+        url: `${SITE_URL}/notas/cdti-ayudas-innovacion-empresas`,
+      },
+      {
+        name: 'Iguala anual de fundraising integral',
+        description:
+          'Identificación continua de convocatorias, tramitación de las que correspondan, memoria económica anual y seguimiento de subvenciones aprobadas.',
+        url: `${SITE_URL}/contacto`,
+      },
+      {
+        name: 'Diagnóstico de encaje sin coste',
+        description:
+          'Primera llamada de 30 minutos para evaluar qué fuente conviene en cada caso y si tiene sentido construir el expediente.',
+        url: `${SITE_URL}/contacto`,
+      },
+    ],
+  }),
 ];
 
 const fuentes = [

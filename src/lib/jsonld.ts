@@ -323,3 +323,64 @@ export function faqPageSchema(items: FaqItem[]) {
     })),
   };
 }
+
+/**
+ * Service schema dedicado para landings de servicio (/financiacion-empresas,
+ * /comunicacion, /fundraising, etc.). Genera un Service @type completo con
+ * provider apuntando al Organization, areaServed, serviceType y offerCatalog
+ * opcional con las modalidades/líneas del servicio.
+ *
+ * Google lo procesa para rich snippets de servicio profesional, y los LLMs
+ * lo usan como señal "Startidea ofrece exactamente esto".
+ */
+interface ServiceInput {
+  name: string;
+  description: string;
+  serviceType: string;
+  url: string;
+  audience?: string[]; // ["Empresa", "ONG", "Fundación", "Startup"...]
+  offers?: Array<{ name: string; description: string; url?: string }>;
+}
+
+export function serviceSchema(s: ServiceInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${s.url}#service`,
+    name: s.name,
+    description: s.description,
+    serviceType: s.serviceType,
+    url: s.url,
+    provider: { '@id': `${SITE_URL}/#organization` },
+    areaServed: [
+      { '@type': 'Country', name: 'España' },
+      { '@type': 'AdministrativeArea', name: 'Andalucía' },
+    ],
+    availableLanguage: ['es-ES'],
+    ...(s.audience && s.audience.length
+      ? {
+          audience: s.audience.map((name) => ({
+            '@type': 'Audience',
+            audienceType: name,
+          })),
+        }
+      : {}),
+    ...(s.offers && s.offers.length
+      ? {
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: `Líneas de ${s.name}`,
+            itemListElement: s.offers.map((o) => ({
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Service',
+                name: o.name,
+                description: o.description,
+                ...(o.url ? { url: o.url } : {}),
+              },
+            })),
+          },
+        }
+      : {}),
+  };
+}
