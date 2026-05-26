@@ -20,6 +20,7 @@ import type { APIRoute } from 'astro';
 import { getExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db';
 import { fetchSubsidyDetail } from '@/lib/subsidies-api';
 import { isValidAdminHeader } from '@/lib/admin-session';
+import { detectSede, sedeContextoPrompt } from '@/lib/sedes-map';
 
 export const prerender = false;
 
@@ -82,6 +83,25 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!convContext) {
     convContext = 'CONVOCATORIA: Sin especificar (el solicitante no ha identificado la convocatoria exacta)';
+  }
+
+  // Detectar sede electrónica para mejorar la guía de presentación
+  let convOrganismo: string | null = null;
+  try {
+    if (exp.convocatoria_slug) {
+      const conv = await fetchSubsidyDetail(exp.convocatoria_slug);
+      convOrganismo = conv?.organization ?? null;
+    }
+  } catch { /* no bloqueante */ }
+
+  const sedeDetectada = detectSede({
+    convocatoriaUrl: exp.convocatoria_url,
+    organismo: convOrganismo,
+    convocatoriaTitle: exp.convocatoria_title,
+  });
+
+  if (sedeDetectada) {
+    convContext += sedeContextoPrompt(sedeDetectada);
   }
 
   // Construir el prompt

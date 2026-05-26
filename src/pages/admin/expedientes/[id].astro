@@ -11,6 +11,7 @@
 import Base from '@/layouts/Base.astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
 import { getExpediente } from '@/lib/expedientes-db';
+import { detectSede } from '@/lib/sedes-map';
 
 export const prerender = false;
 
@@ -42,6 +43,12 @@ function fmtDate(ts: number | null): string {
 }
 
 const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
+
+// Detectar sede electrónica del expediente
+const sedeDetectada = detectSede({
+  convocatoriaUrl: exp.convocatoria_url,
+  convocatoriaTitle: exp.convocatoria_title,
+});
 ---
 
 <Base title={`Expediente ${exp.id} · Admin · Startidea`} description="">
@@ -251,19 +258,62 @@ const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
             </div>
           )}
 
-          <!-- Fase 2: Playwright -->
-          <div class="border border-dashed border-ink/25 bg-paper/50 p-5">
-            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">⚗️ Fase 2 — Automatización sede electrónica</h2>
-            <p class="text-sm text-ink/50">
-              El agente Playwright puede navegar la sede electrónica, rellenar el formulario y
-              dejar la solicitud lista para que el cliente solo tenga que firmar con Autofirma.
-              Disponible cuando se identifique la sede y se configure el acceso.
-            </p>
-            {exp.convocatoria_slug && (
-              <p class="mt-2 font-mono text-xs text-ink/40">
-                Sede detectada para: <strong class="text-ink/60">{exp.convocatoria_slug}</strong>
-                <span class="ml-2 text-yellow-600">[Mappings en construcción]</span>
-              </p>
+          <!-- Fase 2: Sede electrónica -->
+          <div class:list={[
+            'border p-5',
+            sedeDetectada ? 'border-blue-200 bg-blue-50/40' : 'border-dashed border-ink/25 bg-paper/50',
+          ]}>
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
+              {sedeDetectada ? '🏛️ Sede electrónica detectada' : '⚗️ Fase 2 — Sede electrónica'}
+            </h2>
+            {sedeDetectada ? (
+              <div class="space-y-3">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="font-display text-base text-ink">{sedeDetectada.nombre}</p>
+                    <p class="mt-1 text-xs text-ink/60">{sedeDetectada.tramiteHint.slice(0, 120)}…</p>
+                  </div>
+                  <a
+                    href={sedeDetectada.urlTramite ?? sedeDetectada.url}
+                    target="_blank"
+                    rel="noopener"
+                    class="shrink-0 border border-blue-300 bg-blue-600 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-white hover:bg-blue-700"
+                  >
+                    Abrir sede ↗
+                  </a>
+                </div>
+                {sedeDetectada.autofirmaRequired && (
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-yellow-700">
+                    ⚠ Requiere Autofirma instalado
+                  </p>
+                )}
+                {sedeDetectada.notasEspeciales && (
+                  <details class="mt-2">
+                    <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-ink/50 hover:text-ink">
+                      Ver notas específicas de esta sede
+                    </summary>
+                    <p class="mt-2 text-xs text-ink/70 leading-relaxed whitespace-pre-line">
+                      {sedeDetectada.notasEspeciales}
+                    </p>
+                  </details>
+                )}
+                <p class="text-[11px] text-ink/40">
+                  La guía de presentación generada por IA ya incluye las instrucciones específicas de esta sede.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p class="text-sm text-ink/50">
+                  No se ha detectado la sede automáticamente. La URL de la convocatoria o el nombre del organismo
+                  no coincide con ninguna sede conocida. La guía generada usará instrucciones genéricas.
+                </p>
+                {(exp.convocatoria_url || exp.convocatoria_title) && (
+                  <div class="mt-3 space-y-1 font-mono text-xs text-ink/40">
+                    {exp.convocatoria_url && <p>URL: {exp.convocatoria_url}</p>}
+                    {exp.convocatoria_title && <p>Organismo: {exp.convocatoria_title}</p>}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
