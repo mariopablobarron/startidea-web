@@ -1,0 +1,19 @@
+src/content/notas/fundraising-asociaciones-captacion-fondos.md
+  s_fc84abf46d9a4c::t_2bbd61417e45c4 1-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "81ce0cdd05122414b9b142dc72ecc673dbb211ac",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
