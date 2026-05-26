@@ -1,9 +1,33 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
-import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿Qué incluye el servicio de comunicación estratégica de Startidea?',
+    answer: 'Diagnóstico de la situación actual (auditoría de mensajes, audiencias, canales), definición de narrativa y posicionamiento, plan editorial con calendario, producción de contenidos (notas, reportajes, newsletters, memorias), gestión de relación con medios y evaluación con métricas acordadas. El alcance se cierra en la primera propuesta según el perfil y el momento de la organización.',
+  },
+  {
+    question: '¿Puede Startidea trabajar con una institución eclesial o religiosa?',
+    answer: 'Sí. Startidea tiene experiencia consolidada con instituciones eclesiales (diócesis, congregaciones, movimientos laicales) y comprende su lenguaje institucional, sus estructuras de gobierno y sus audiencias específicas. No tratamos la comunicación eclesial como una variante de la comunicación corporativa: es un ámbito con su propia lógica y sus propios códigos.',
+  },
+  {
+    question: '¿Cuánto tiempo tarda en verse resultados de una estrategia de comunicación?',
+    answer: 'Depende del punto de partida y del objetivo. En reputación institucional (posicionamiento en medios, reconocimiento del sector) los resultados visibles llegan en 6-12 meses. En captación (socios, donantes, voluntariado) se pueden ver primeros indicadores en 3-6 meses si hay una campaña activa. En visibilidad digital (tráfico, keywords) los efectos SEO se miden en 4-9 meses. Prometemos métricas reales, no plazos imposibles.',
+  },
+  {
+    question: '¿Trabaja Startidea con organizaciones de toda España o solo de Granada?',
+    answer: 'Con toda España. Startidea tiene sede en Granada pero trabaja con organizaciones en Madrid, Sevilla, Barcelona, Bilbao y otras ciudades. La mayoría del trabajo se hace en remoto con sesiones presenciales puntuales cuando el proyecto lo requiere. Para producción audiovisual o eventos, la logística se planifica según localización.',
+  },
+  {
+    question: '¿Es posible contratar solo la producción de contenidos sin estrategia?',
+    answer: 'No es recomendable, pero sí es posible si la organización ya tiene estrategia definida y lo que necesita es ejecución. En ese caso Startidea hace una sesión de revisión de 2 horas para validar que la estrategia existente es sólida antes de ponerse a producir. Producir contenidos sin una estrategia clara es uno de los errores más frecuentes y más caros del sector.',
+  },
+];
 
 const jsonLd = [
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
   serviceSchema({
     name: 'Comunicación estratégica y marketing social',
     description:
@@ -241,6 +265,30 @@ const proceso = [
               <span aria-hidden="true">→</span>
             </a>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </div>

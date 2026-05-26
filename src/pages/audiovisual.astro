@@ -1,9 +1,33 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
-import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿Qué tipo de vídeos produce Startidea para entidades sociales?',
+    answer: 'Spots institucionales (1-3 min para web o redes), vídeos de impacto para campañas de captación, cápsulas cortas para RRSS (30-90 seg), documentales o reportajes de fondo (15-50 min para congresos, memorias o plataformas), vídeos de formación interna y testimonios de personas beneficiarias. El estudio propio en Granada permite producción completa sin externalizar la parte técnica.',
+  },
+  {
+    question: '¿Startidea puede producir un podcast desde cero para una ONG o institución?',
+    answer: 'Sí. El servicio integral de podcast incluye: definición del concepto editorial (para qué audiencia, con qué frecuencia, con qué formato), guion o estructura de episodios, grabación en estudio en Granada o en remoto, edición y mezcla de audio, diseño de imagen del programa y distribución en Spotify, Apple Podcasts, Google Podcasts y otras plataformas. También formamos al equipo interno si la organización quiere producirlo autónomamente después.',
+  },
+  {
+    question: '¿Cuánto cuesta producir un vídeo institucional?',
+    answer: 'Una cápsula de 2-3 minutos con grabación en un día y edición estándar: entre 1.800 y 3.500€. Un spot de campaña con guion, actores o testimonios y postproducción: entre 3.500 y 7.000€. Un documental o reportaje de fondo de 20-40 min con varias jornadas de grabación: desde 8.000€. El precio depende de días de rodaje, localizaciones, presencia de actores, complejidad de edición y uso posterior (si es para broadcast, los derechos cambian).',
+  },
+  {
+    question: '¿Es necesario tener guion previo o Startidea lo elabora?',
+    answer: 'Startidea elabora el guion en todos los proyectos de producción, salvo que el cliente tenga uno aprobado y solo necesite producción técnica. El guion es parte del servicio: sin él, la producción técnica no tiene dirección. Para documentales o testimonios, se trabaja con guion de preguntas y estructura narrativa, no con texto cerrado que los entrevistados leen.',
+  },
+  {
+    question: '¿Puede Startidea producir en ciudades fuera de Granada?',
+    answer: 'Sí. Rodamos en toda España con un equipo técnico portátil. Para proyectos fuera de Granada, los desplazamientos y alojamiento se presupuestan aparte. Para producciones en Madrid, Sevilla o Barcelona hay colaboradores locales de confianza con los que trabajamos habitualmente, lo que reduce costes logísticos en proyectos que requieren varios días en la misma ciudad.',
+  },
+];
 
 const jsonLd = [
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
   serviceSchema({
     name: 'Producción audiovisual y podcast',
     description:
@@ -243,6 +267,30 @@ const proceso = [
               <span aria-hidden="true">→</span>
             </a>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </div>

@@ -1,9 +1,33 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
-import { serviceSchema, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿Qué es el fundraising y qué tiene que ver con la comunicación?',
+    answer: 'Fundraising es la captación activa de recursos para una organización sin ánimo de lucro: socios, donantes individuales, grandes donantes, alianzas con empresas, subvenciones públicas y fondos europeos. La comunicación no es una herramienta de fundraising: es su base. Una entidad que no sabe contar lo que hace, no consigue donantes ni socios. Por eso en Startidea los dos servicios siempre se conectan.',
+  },
+  {
+    question: '¿Cuánto tiempo tarda en verse un resultado tangible en captación de socios?',
+    answer: 'Una campaña de captación de socios bien ejecutada con inversión publicitaria puede generar primeros socios en 4-6 semanas. Una estrategia de largo plazo (identidad, narrativa, canales, campañas recurrentes) tarda 6-12 meses en alcanzar velocidad de crucero. Lo inmediato es posible con campañas; lo sostenible requiere estrategia. Prometemos lo segundo, no solo lo primero.',
+  },
+  {
+    question: '¿Puede Startidea gestionar la relación con donantes y empresas colaboradoras?',
+    answer: 'Sí, en el marco de una iguala de fundraising. El alcance incluye: identificación de empresas alineadas con la misión, elaboración de propuestas personalizadas, seguimiento de la relación, informes de rendición de cuentas y renovación anual. No es un servicio de captación en frío masivo: es gestión de relaciones de calidad con potencial de largo plazo.',
+  },
+  {
+    question: '¿Qué papel tiene Startidea en la presentación de subvenciones públicas?',
+    answer: 'Identificación de convocatorias relevantes (BDNS, Agenda 2030, IDAE, fondos autonómicos), redacción del expediente con el lenguaje del organismo, preparación de documentación administrativa y presentación electrónica con certificado digital de representante. El proceso completo, desde diagnóstico de encaje hasta el justificante de presentación con CSV.',
+  },
+  {
+    question: '¿Cuánto cuesta un servicio de fundraising integral con Startidea?',
+    answer: 'Una iguala anual de fundraising integral (identificación continua, tramitación de subvenciones que correspondan, gestión de relación con empresas, campañas de socios) parte de 800€ al mes. Proyectos puntuales (una campaña de captación, un expediente de subvención, una propuesta de alianza) tienen precio cerrado según alcance. La primera llamada de 30 minutos es sin coste.',
+  },
+];
 
 const jsonLd = [
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
   serviceSchema({
     name: 'Fundraising y alianzas estratégicas',
     description:
@@ -268,6 +292,30 @@ const proceso = [
               <span aria-hidden="true">→</span>
             </a>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </div>
