@@ -1,0 +1,38 @@
+src/content/notas/memoria-anual-que-se-lee.md
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+  s_fc84abf46d9a4c::t_71ea5dac6c9d42 8
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_fc84abf46d9a4c::t_cde1ff9268bdb8 8
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+src/content/notas/rehacer-startidea-en-doce-horas.md
+  s_fc84abf46d9a4c::t_f02f533494526d 8
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+  s_fc84abf46d9a4c::t_8b3108eaabc444 8
+src/content/notas/agencia-pequena-vs-grande.md
+  s_fc84abf46d9a4c::t_1f57fdf8edaa92 8
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+src/content/notas/metodo-diagnostico-startidea.md
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+  s_fc84abf46d9a4c::t_5bf0191758b3c4 8
+src/content/notas/greenwashing-vs-proposito.md
+  s_fc84abf46d9a4c::t_49a29abb5a328c 9-18
+  s_fc84abf46d9a4c::t_32c96ceaa65a77 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "f6ec2f3a55a250f90c3de60e298c5ab6721b99d6",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
