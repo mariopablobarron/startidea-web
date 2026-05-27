@@ -63,6 +63,24 @@ export function clearAdminSession(cookies: AstroCookies): void {
 }
 
 /**
+ * Establece la sesión admin directamente, sin necesitar el token como input.
+ * Usar SOLO cuando la identidad ya ha sido verificada por otro mecanismo
+ * externo y de confianza (e.g. Google OAuth con email verificado).
+ */
+export function setAdminSessionDirect(cookies: AstroCookies): boolean {
+  const token = getAdminToken();
+  if (!token) return false;
+  cookies.set(COOKIE_NAME, tokenHash(token), {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: COOKIE_MAX_AGE,
+  });
+  return true;
+}
+
+/**
  * Valida el header x-admin-token enviado por el panel admin.
  *
  * El panel lee la cookie `startidea_admin` (que contiene sha256 del token)
