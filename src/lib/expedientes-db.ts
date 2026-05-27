@@ -195,6 +195,17 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_exp_msg ON expediente_messages (exp_id, created_at);
   `);
+  // Tabla CRM — siempre inicializada en la misma apertura de BD
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS crm_notes (
+      id         TEXT PRIMARY KEY,
+      email      TEXT NOT NULL,
+      text       TEXT NOT NULL,
+      author     TEXT NOT NULL DEFAULT 'admin',
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
+  `);
   return _db;
 }
 
@@ -609,32 +620,8 @@ export function deletePortalSession(token: string): void {
 }
 
 // ─── CRM ─────────────────────────────────────────────────────────────────────
-
-/** Inicializa (o migra) las tablas CRM en la BD compartida. */
-function ensureCrmTables(db: Database.Database): void {
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS crm_notes (
-      id         TEXT PRIMARY KEY,
-      email      TEXT NOT NULL,
-      text       TEXT NOT NULL,
-      author     TEXT NOT NULL DEFAULT 'admin',
-      created_at INTEGER NOT NULL
-    );
-    CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
-  `);
-  // Llamar desde getDb() tras la inicialización principal
-}
-
-// Inicializar CRM tras la primera llamada a getDb()
-let _crmInitialized = false;
-function getDbWithCrm(): Database.Database {
-  const db = getDb();
-  if (!_crmInitialized) {
-    ensureCrmTables(db);
-    _crmInitialized = true;
-  }
-  return db;
-}
+// La tabla `crm_notes` se crea en getDb() junto al resto del schema,
+// así que todas las funciones CRM pueden usar getDb() directamente.
 
 export interface CrmNote {
   id: string;
@@ -750,7 +737,7 @@ export function listCRMContacts(opts?: {
   offset?: number;
   q?: string;
 }): { items: CRMContact[]; total: number } {
-  const db = getDbWithCrm();
+  const db = getDb();
   const limit  = opts?.limit  ?? 50;
   const offset = opts?.offset ?? 0;
   const q      = opts?.q?.trim().toLowerCase() ?? '';
@@ -773,24 +760,23 @@ export function listCRMContacts(opts?: {
 }
 
 export function getCRMContactFull(email: string): CRMContact | null {
-  const db = getDbWithCrm();
+  const db = getDb();
   return (db.prepare(
     `${CRM_BASE_SQL} SELECT * FROM base WHERE base.email = LOWER(@email)`,
   ).get({ email }) as CRMContact | null);
 }
 
 export function getCrmNotes(email: string): CrmNote[] {
-  const db = getDbWithCrm();
+  const db = getDb();
   return db.prepare(
     `SELECT * FROM crm_notes WHERE LOWER(email) = LOWER(?) ORDER BY created_at DESC`,
   ).all(email) as CrmNote[];
 }
 
 export function addCrmNote(email: string, text: string, author = 'admin'): CrmNote {
-  const db  = getDbWithCrm();
+  const db  = getDb();
   const now = Math.floor(Date.now() / 1000);
-  const hex = Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-  const id  = `NOTE-${hex.toUpperCase()}`;
+  const id  = `NOTE-${randomBytes(10).toString('hex').toUpperCase()}`;
   db.prepare(
     `INSERT INTO crm_notes (id, email, text, author, created_at) VALUES (@id, LOWER(@email), @text, @author, @created_at)`,
   ).run({ id, email, text: text.trim(), author, created_at: now });
@@ -798,13 +784,13 @@ export function addCrmNote(email: string, text: string, author = 'admin'): CrmNo
 }
 
 export function deleteCrmNote(id: string): boolean {
-  const db = getDbWithCrm();
+  const db = getDb();
   const info = db.prepare(`DELETE FROM crm_notes WHERE id = ?`).run(id);
   return info.changes > 0;
 }
 
 export function statsCRMContacts(): number {
-  const db = getDbWithCrm();
+  const db = getDb();
   const sql = `
     SELECT COUNT(*) AS n FROM (
       SELECT LOWER(email) AS email FROM portal_users

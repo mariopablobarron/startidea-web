@@ -566,8 +566,10 @@ function fmtEur(n: number) {
 </Base>
 
 <script define:vars={{ contactEmail: contact.email }}>
-  const adminToken = document.cookie.split('; ')
-    .find(r => r.startsWith('startidea_admin='))?.split('=')[1] ?? '';
+  const _cookieRaw = document.cookie.split('; ')
+    .find(r => r.startsWith('startidea_admin='))
+    ?.slice('startidea_admin='.length) ?? '';
+  const adminToken = _cookieRaw ? (() => { try { return decodeURIComponent(_cookieRaw); } catch { return _cookieRaw; } })() : '';
 
   const textarea  = /** @type {HTMLTextAreaElement} */ (document.getElementById('note-text'));
   const submitBtn = /** @type {HTMLButtonElement}   */ (document.getElementById('note-submit'));
