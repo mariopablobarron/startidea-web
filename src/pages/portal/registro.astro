@@ -1,8 +1,8 @@
 ---
 /**
  * /portal/registro — Alta de nuevo usuario en el portal de clientes.
- * No requiere autenticación previa.
- * Tras el registro envía un magic link al email indicado.
+ * Formulario en 2 pasos + honeypot anti-spam + consent RGPD.
+ * Tras el envío redirige a /portal/enviado.
  */
 import { getPortalSessionEmail } from '@/lib/expedientes-db';
 
@@ -68,48 +68,119 @@ const COMO_CONOCIO = [
   <title>Registro en el portal · Startidea</title>
   <meta name="robots" content="noindex, nofollow">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Georgia, serif;
       background: #faf8f5;
       color: #1f1f22;
       min-height: 100vh;
-      padding: 40px 20px 80px;
     }
-    .wrap { max-width: 560px; margin: 0 auto; }
-    .logo {
+
+    /* ── Topbar ─────────────────────────────────────── */
+    .topbar {
+      background: #1f1f22;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
       font-family: monospace;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #888;
-      margin-bottom: 32px;
+      color: #fff;
+      text-decoration: none;
     }
-    .logo span { color: #e6356b; font-weight: 700; }
-    .logo a { color: #888; text-decoration: none; }
-    .logo a:hover { color: #e6356b; }
-    h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-    .sub { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 32px; }
+    .topbar-logo span { color: #e6356b; font-weight: 700; }
+    .topbar-back {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-decoration: none;
+    }
+    .topbar-back:hover { color: #e6356b; }
 
+    /* ── Progress bar ───────────────────────────────── */
+    .progress-wrap {
+      max-width: 560px;
+      margin: 32px auto 0;
+      padding: 0 20px;
+    }
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 6px;
+    }
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.25s;
+    }
+    .step-dot.done   { background: #e6356b; color: #fff; }
+    .step-dot.active { background: #1f1f22; color: #fff; }
+    .step-dot.todo   { background: #e0ddd8; color: #999; }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #e0ddd8;
+      transition: background 0.25s;
+    }
+    .step-line.done { background: #e6356b; }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-label {
+      font-family: monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      text-align: center;
+      width: 28px;
+    }
+    .progress-label.active { color: #1f1f22; }
+    .progress-label.done   { color: #e6356b; }
+
+    /* ── Form card ──────────────────────────────────── */
+    .wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
     .form-card {
       background: #fff;
       border: 1px solid #e0ddd8;
-      padding: 32px;
+      padding: 28px 28px;
+    }
+    .step-header {
+      margin-bottom: 24px;
+    }
+    .step-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .step-header p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
     }
 
-    .section-title {
-      font-family: monospace;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #888;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #f0ece4;
-    }
-
-    .field { margin-bottom: 18px; }
-    .field + .section-title { margin-top: 28px; }
+    /* ── Fields ─────────────────────────────────────── */
+    .field { margin-bottom: 16px; }
     label {
       display: block;
       font-family: monospace;
@@ -134,207 +205,383 @@ const COMO_CONOCIO = [
       outline: none;
       appearance: none;
       -webkit-appearance: none;
+      transition: border-color 0.15s;
     }
     input:focus, select:focus { border-color: #e6356b; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-    .checkbox-wrap {
+    /* ── Honeypot — nunca visible para humanos ───────── */
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+      pointer-events: none;
+      tab-index: -1;
+    }
+
+    /* ── Consent ────────────────────────────────────── */
+    .consent-wrap {
       display: flex;
       align-items: flex-start;
       gap: 10px;
       margin-bottom: 24px;
       font-size: 13px;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.6;
     }
-    .checkbox-wrap input { flex-shrink: 0; margin-top: 3px; width: 16px; height: 16px; cursor: pointer; }
-    .checkbox-wrap a { color: #e6356b; text-decoration: none; }
-
-    button[type="submit"] {
-      width: 100%;
-      background: #e6356b;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      font-family: monospace;
+    .consent-wrap input[type="checkbox"] {
+      flex-shrink: 0;
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      accent-color: #e6356b;
+    }
+    .consent-wrap a { color: #e6356b; text-decoration: none; }
+    .consent-wrap label {
+      font-family: Georgia, serif;
       font-size: 13px;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #555;
+      cursor: pointer;
+    }
+
+    /* ── Navigation ─────────────────────────────────── */
+    .form-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .btn-next, .btn-back, .btn-submit {
+      flex: 1;
+      padding: 13px;
+      border: none;
+      font-family: monospace;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
     }
-    button:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-next, .btn-submit {
+      background: #e6356b;
+      color: #fff;
+    }
+    .btn-next:hover, .btn-submit:hover { background: #c92d5a; }
+    .btn-next:disabled, .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-back {
+      background: transparent;
+      color: #666;
+      border: 1px solid #ccc;
+    }
+    .btn-back:hover { background: #f5f5f5; }
 
+    /* ── Messages ───────────────────────────────────── */
     .msg {
-      padding: 14px 16px;
+      padding: 12px 14px;
       font-size: 14px;
       border: 1px solid;
-      margin-top: 16px;
+      margin-top: 12px;
       display: none;
       line-height: 1.5;
     }
-    .msg.ok  { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
-    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; }
-    .msg.show { display: block; }
+    .msg.ok  { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; display: block; }
+    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; display: block; }
 
+    /* ── Login link ─────────────────────────────────── */
     .login-link {
-      margin-top: 20px;
+      margin-top: 18px;
       text-align: center;
       font-size: 13px;
       color: #888;
     }
     .login-link a { color: #e6356b; text-decoration: none; }
 
-    @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } .form-card { padding: 20px; } }
+    @media (max-width: 480px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .form-card { padding: 20px 16px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="logo">
-      <a href="/portal">← Portal</a>
-      &nbsp;·&nbsp; <span>Startidea</span> · Registro
+
+  <div class="topbar">
+    <a href="/" class="topbar-logo">— <span>Startidea</span></a>
+    <a href="/portal" class="topbar-back">← Portal</a>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-steps">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step-dot todo" id="dot-2">2</div>
     </div>
+    <div class="progress-labels">
+      <span class="progress-label active" id="lbl-1">Contacto</span>
+      <span class="progress-label todo"   id="lbl-2">Organización</span>
+    </div>
+  </div>
 
-    <h1>Crea tu cuenta</h1>
-    <p class="sub">
-      Regístrate para acceder al portal de clientes de Startidea, donde podrás gestionar
-      subvenciones y otros servicios de forma centralizada. Es gratis y no necesitas contraseña.
-    </p>
-
+  <div class="wrap">
     <div class="form-card">
-      <form id="form-registro">
+      <form id="form-registro" novalidate>
 
-        <div class="section-title">Datos de contacto</div>
-
-        <div class="field">
-          <label for="nombre">Nombre y apellidos <span class="req">*</span></label>
-          <input type="text" id="nombre" name="nombre" required
-            placeholder="Carmen García López" autocomplete="name">
+        <!-- Honeypot anti-spam — los bots lo rellenan, los humanos no lo ven -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp-website">No rellenar</label>
+          <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off">
         </div>
 
-        <div class="field">
-          <label for="email">Email de contacto <span class="req">*</span></label>
-          <input type="email" id="email" name="email" required
-            value={emailParam}
-            placeholder="carmen@organizacion.es" autocomplete="email">
-        </div>
-
-        <div class="field">
-          <label for="telefono">Teléfono</label>
-          <input type="tel" id="telefono" name="telefono"
-            placeholder="600 000 000" autocomplete="tel">
-        </div>
-
-        <div class="section-title">Datos de la organización</div>
-
-        <div class="field">
-          <label for="orgNombre">Nombre de la organización <span class="req">*</span></label>
-          <input type="text" id="orgNombre" name="orgNombre" required
-            placeholder="Asociación Ejemplo Granada" autocomplete="organization">
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label for="orgCif">CIF / NIF</label>
-            <input type="text" id="orgCif" name="orgCif"
-              placeholder="G12345678">
+        <!-- ── Paso 1: Datos de contacto ────────────── -->
+        <div id="step-1">
+          <div class="step-header">
+            <h2>Tus datos de contacto</h2>
+            <p>Paso 1 de 2 — solo tardas un minuto</p>
           </div>
+
           <div class="field">
-            <label for="orgTipo">Tipo de entidad <span class="req">*</span></label>
-            <select id="orgTipo" name="orgTipo" required>
+            <label for="nombre">Nombre y apellidos <span class="req">*</span></label>
+            <input type="text" id="nombre" name="nombre"
+              placeholder="Carmen García López" autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label for="email">Email de contacto <span class="req">*</span></label>
+            <input type="email" id="email" name="email"
+              value={emailParam}
+              placeholder="carmen@organizacion.es" autocomplete="email">
+          </div>
+
+          <div class="field">
+            <label for="telefono">Teléfono <span style="color:#aaa;font-weight:400">(opcional)</span></label>
+            <input type="tel" id="telefono" name="telefono"
+              placeholder="600 000 000" autocomplete="tel">
+          </div>
+
+          <div class="form-nav">
+            <button type="button" class="btn-next" id="btn-next-1">
+              Continuar →
+            </button>
+          </div>
+          <div id="msg-1" class="msg"></div>
+        </div>
+
+        <!-- ── Paso 2: Organización + consent ───────── -->
+        <div id="step-2" style="display:none">
+          <div class="step-header">
+            <h2>Tu organización</h2>
+            <p>Paso 2 de 2 — información sobre tu entidad</p>
+          </div>
+
+          <div class="field">
+            <label for="orgNombre">Nombre de la organización <span class="req">*</span></label>
+            <input type="text" id="orgNombre" name="orgNombre"
+              placeholder="Asociación Ejemplo Granada" autocomplete="organization">
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="orgCif">CIF / NIF <span style="color:#aaa;font-weight:400">(opcional)</span></label>
+              <input type="text" id="orgCif" name="orgCif" placeholder="G12345678">
+            </div>
+            <div class="field">
+              <label for="orgTipo">Tipo de entidad <span class="req">*</span></label>
+              <select id="orgTipo" name="orgTipo">
+                <option value="">Selecciona...</option>
+                {ORG_TIPOS.map((t) => <option value={t}>{t}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="provincia">Provincia <span style="color:#aaa;font-weight:400">(opcional)</span></label>
+            <select id="provincia" name="provincia">
               <option value="">Selecciona...</option>
-              {ORG_TIPOS.map((t) => <option value={t}>{t}</option>)}
+              {PROVINCIAS.map((p) => <option value={p}>{p}</option>)}
             </select>
           </div>
+
+          <div class="field">
+            <label for="comoConocio">¿Cómo conociste Startidea? <span style="color:#aaa;font-weight:400">(opcional)</span></label>
+            <select id="comoConocio" name="comoConocio">
+              <option value="">Selecciona...</option>
+              {COMO_CONOCIO.map((c) => <option value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div class="consent-wrap">
+            <input type="checkbox" id="acepta-privacidad">
+            <label for="acepta-privacidad">
+              He leído y acepto la
+              <a href="/aviso-legal" target="_blank">Política de privacidad</a>
+              y el tratamiento de mis datos para la prestación de los servicios de Startidea Consulting, S.L.
+            </label>
+          </div>
+
+          <div class="form-nav">
+            <button type="button" class="btn-back" id="btn-back-2">← Volver</button>
+            <button type="submit" class="btn-submit" id="btn-submit">Crear cuenta →</button>
+          </div>
+          <div id="msg-2" class="msg"></div>
         </div>
 
-        <div class="field">
-          <label for="provincia">Provincia</label>
-          <select id="provincia" name="provincia">
-            <option value="">Selecciona...</option>
-            {PROVINCIAS.map((p) => <option value={p}>{p}</option>)}
-          </select>
-        </div>
-
-        <div class="section-title">¿Cómo nos conociste?</div>
-
-        <div class="field">
-          <label for="comoConocio">Fuente</label>
-          <select id="comoConocio" name="comoConocio">
-            <option value="">Selecciona...</option>
-            {COMO_CONOCIO.map((c) => <option value={c}>{c}</option>)}
-          </select>
-        </div>
-
-        <div class="checkbox-wrap">
-          <input type="checkbox" id="acepta-privacidad" required>
-          <label for="acepta-privacidad" style="font-family:Georgia;font-size:13px;text-transform:none;letter-spacing:0;color:#555">
-            He leído y acepto la
-            <a href="/aviso-legal" target="_blank">Política de privacidad</a>
-            y el tratamiento de mis datos para la prestación de los servicios de Startidea.
-          </label>
-        </div>
-
-        <button type="submit" id="btn-submit">Crear cuenta y acceder →</button>
-        <div id="msg" class="msg"></div>
       </form>
 
       <p class="login-link">
         ¿Ya tienes cuenta? <a href="/portal">Accede con tu email →</a>
       </p>
     </div>
-
   </div>
 
   <script>
-    document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('btn-submit') as HTMLButtonElement;
-      const msg = document.getElementById('msg')!;
-      const get = (id: string) => (document.getElementById(id) as HTMLInputElement).value.trim();
+    // ── Estado del wizard ──────────────────────────────
+    let currentStep = 1;
 
-      btn.disabled = true;
+    function updateProgress(step: number) {
+      const dot1  = document.getElementById('dot-1')!;
+      const dot2  = document.getElementById('dot-2')!;
+      const line1 = document.getElementById('line-1')!;
+      const lbl1  = document.getElementById('lbl-1')!;
+      const lbl2  = document.getElementById('lbl-2')!;
+
+      if (step === 1) {
+        dot1.className  = 'step-dot active';
+        dot2.className  = 'step-dot todo';
+        line1.className = 'step-line';
+        lbl1.className  = 'progress-label active';
+        lbl2.className  = 'progress-label todo';
+      } else {
+        dot1.className  = 'step-dot done';
+        dot1.textContent = '✓';
+        dot2.className  = 'step-dot active';
+        line1.className = 'step-line done';
+        lbl1.className  = 'progress-label done';
+        lbl2.className  = 'progress-label active';
+      }
+    }
+
+    function showStep(n: number) {
+      document.getElementById('step-1')!.style.display = n === 1 ? '' : 'none';
+      document.getElementById('step-2')!.style.display = n === 2 ? '' : 'none';
+      currentStep = n;
+      updateProgress(n);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function getVal(id: string): string {
+      return (document.getElementById(id) as HTMLInputElement | HTMLSelectElement).value.trim();
+    }
+
+    // ── Paso 1 → 2: validar antes de avanzar ──────────
+    document.getElementById('btn-next-1')!.addEventListener('click', () => {
+      const nombre = getVal('nombre');
+      const email  = getVal('email');
+      const msg1   = document.getElementById('msg-1')!;
+
+      if (!nombre) {
+        msg1.textContent = 'El nombre es obligatorio.';
+        msg1.className   = 'msg err';
+        return;
+      }
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        msg1.textContent = 'Introduce un email válido.';
+        msg1.className   = 'msg err';
+        return;
+      }
+      msg1.className = 'msg';
+      showStep(2);
+    });
+
+    // ── Paso 2 → 1: volver ────────────────────────────
+    document.getElementById('btn-back-2')!.addEventListener('click', () => showStep(1));
+
+    // ── Submit ─────────────────────────────────────────
+    document.getElementById('form-registro')!.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Honeypot: si el campo oculto tiene valor → ignorar silenciosamente
+      const hp = (document.getElementById('hp-website') as HTMLInputElement).value;
+      if (hp) {
+        window.location.href = '/portal/enviado';
+        return;
+      }
+
+      const orgNombre = getVal('orgNombre');
+      const orgTipo   = getVal('orgTipo');
+      const acepta    = (document.getElementById('acepta-privacidad') as HTMLInputElement).checked;
+      const msg2      = document.getElementById('msg-2')!;
+      const btn       = document.getElementById('btn-submit') as HTMLButtonElement;
+
+      if (!orgNombre) {
+        msg2.textContent = 'El nombre de la organización es obligatorio.';
+        msg2.className   = 'msg err';
+        return;
+      }
+      if (!orgTipo) {
+        msg2.textContent = 'Selecciona el tipo de entidad.';
+        msg2.className   = 'msg err';
+        return;
+      }
+      if (!acepta) {
+        msg2.textContent = 'Debes aceptar la Política de privacidad para continuar.';
+        msg2.className   = 'msg err';
+        return;
+      }
+
+      btn.disabled    = true;
       btn.textContent = '⏳ Creando cuenta...';
-      msg.className = 'msg';
+      msg2.className  = 'msg';
 
       try {
         const res = await fetch('/api/portal-registro', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            email:       get('email'),
-            nombre:      get('nombre'),
-            orgNombre:   get('orgNombre'),
-            orgCif:      get('orgCif'),
-            orgTipo:     get('orgTipo'),
-            telefono:    get('telefono'),
-            provincia:   get('provincia'),
-            comoConocio: get('comoConocio'),
+          body:    JSON.stringify({
+            email:       getVal('email'),
+            nombre:      getVal('nombre'),
+            orgNombre:   getVal('orgNombre'),
+            orgCif:      getVal('orgCif'),
+            orgTipo:     getVal('orgTipo'),
+            telefono:    getVal('telefono'),
+            provincia:   getVal('provincia'),
+            comoConocio: getVal('comoConocio'),
+            consentAt:   Math.floor(Date.now() / 1000),
           }),
         });
         const j = await res.json();
+
         if (j.ok) {
-          msg.innerHTML = '✅ <strong>Cuenta creada.</strong> Te hemos enviado un enlace de acceso al email indicado. Revisa también la carpeta de spam.';
-          msg.className = 'msg ok show';
-          btn.textContent = '✅ Enlace enviado';
+          // Guardar email en sessionStorage para el botón "Reenviar" de /portal/enviado
+          sessionStorage.setItem('portal_reg_email', getVal('email'));
+          window.location.href = '/portal/enviado';
         } else {
           const errs: Record<string, string> = {
             email_invalid:  'El email no es válido.',
             nombre_required:'El nombre es obligatorio.',
             org_required:   'El nombre de la organización es obligatorio.',
+            org_tipo_required: 'Selecciona el tipo de entidad.',
           };
-          msg.textContent = errs[j.error] ?? 'Algo fue mal. Inténtalo de nuevo.';
-          msg.className = 'msg err show';
-          btn.disabled = false;
-          btn.textContent = 'Crear cuenta y acceder →';
+          msg2.textContent = errs[j.error] ?? 'Algo fue mal. Inténtalo de nuevo.';
+          msg2.className   = 'msg err';
+          btn.disabled     = false;
+          btn.textContent  = 'Crear cuenta →';
         }
       } catch {
-        msg.textContent = 'Error de red. Inténtalo de nuevo.';
-        msg.className = 'msg err show';
-        btn.disabled = false;
-        btn.textContent = 'Crear cuenta y acceder →';
+        msg2.textContent = 'Error de red. Inténtalo de nuevo.';
+        msg2.className   = 'msg err';
+        btn.disabled     = false;
+        btn.textContent  = 'Crear cuenta →';
       }
     });
   </script>
+
 </body>
 </html>

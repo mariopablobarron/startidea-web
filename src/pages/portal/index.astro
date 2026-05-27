@@ -14,8 +14,6 @@ if (session) {
   const email = getPortalSessionEmail(session);
   if (email) return Astro.redirect('/portal/dashboard');
 }
-
-const mensaje = Astro.url.searchParams.get('m');
 ---
 
 <!DOCTYPE html>
@@ -26,54 +24,153 @@ const mensaje = Astro.url.searchParams.get('m');
   <title>Portal de clientes · Startidea</title>
   <meta name="robots" content="noindex, nofollow">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Georgia, serif;
       background: #faf8f5;
       color: #1f1f22;
       min-height: 100vh;
+    }
+
+    /* ── Topbar ─────────────────────────────────────── */
+    .topbar {
+      background: #1f1f22;
+      padding: 14px 24px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      justify-content: space-between;
     }
-    .card {
-      width: 100%;
-      max-width: 420px;
-      background: #fff;
-      border: 1px solid #e0ddd8;
-      padding: 40px 36px;
-    }
-    .logo {
+    .topbar-logo {
       font-family: monospace;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #888;
-      margin-bottom: 28px;
+      color: #fff;
+      text-decoration: none;
     }
-    .logo span { color: #e6356b; font-weight: 700; }
-    h1 {
-      font-size: 22px;
+    .topbar-logo span { color: #e6356b; font-weight: 700; }
+    .topbar-link {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-decoration: none;
+    }
+    .topbar-link:hover { color: #e6356b; }
+
+    /* ── Hero ───────────────────────────────────────── */
+    .hero {
+      background: #1f1f22;
+      color: #fff;
+      padding: 56px 24px 48px;
+      text-align: center;
+    }
+    .hero-label {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e6356b;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 4vw, 38px);
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1.15;
+      max-width: 640px;
+      margin: 0 auto 14px;
+    }
+    .hero p {
+      font-size: 16px;
+      color: #aaa;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Benefits strip ─────────────────────────────── */
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #fff;
+      border-bottom: 1px solid #e0ddd8;
+    }
+    .benefit {
+      padding: 24px 20px;
+      border-right: 1px solid #e0ddd8;
+    }
+    .benefit:last-child { border-right: none; }
+    .benefit-icon {
+      font-size: 22px;
       margin-bottom: 8px;
     }
-    p.sub {
+    .benefit h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #1f1f22;
+    }
+    .benefit p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* ── Main content: dual columns ─────────────────── */
+    .main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 640px) {
+      .main { grid-template-columns: 1fr; }
+      .benefits { grid-template-columns: 1fr; }
+      .benefit { border-right: none; border-bottom: 1px solid #e0ddd8; }
+      .benefit:last-child { border-bottom: none; }
+    }
+
+    /* ── Card base ───────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid #e0ddd8;
+      padding: 28px 24px;
+    }
+    .card-title {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #888;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f0ece4;
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .card .sub {
       font-size: 14px;
       color: #666;
       line-height: 1.6;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
-    label {
+
+    /* ── Login form ─────────────────────────────────── */
+    label.field-label {
       display: block;
       font-family: monospace;
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: #888;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     input[type="email"] {
       width: 100%;
@@ -83,11 +180,11 @@ const mensaje = Astro.url.searchParams.get('m');
       font-size: 15px;
       color: #1f1f22;
       outline: none;
-      margin-bottom: 16px;
       transition: border-color 0.15s;
     }
     input[type="email"]:focus { border-color: #e6356b; }
-    button[type="submit"] {
+    .btn-primary {
+      display: block;
       width: 100%;
       background: #e6356b;
       color: #fff;
@@ -99,110 +196,192 @@ const mensaje = Astro.url.searchParams.get('m');
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
+      margin-top: 12px;
+      text-align: center;
+      text-decoration: none;
     }
-    button:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: #1f1f22;
+      border: 2px solid #1f1f22;
+      padding: 11px 12px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-secondary:hover { background: #1f1f22; color: #fff; }
+
     .msg {
-      margin-top: 16px;
-      padding: 12px 14px;
-      font-size: 14px;
+      margin-top: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
       border: 1px solid;
       display: none;
+      line-height: 1.5;
     }
-    .msg.ok { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
-    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; }
+    .msg.ok  { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; display: block; }
+    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; display: block; }
     .msg.show { display: block; }
-    .aviso {
-      margin-top: 24px;
+
+    /* ── Register card extras ────────────────────────── */
+    .register-features {
+      list-style: none;
+      margin: 16px 0 20px;
+    }
+    .register-features li {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .register-features li::before {
+      content: "✓";
+      color: #e6356b;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .register-note {
       font-size: 12px;
       color: #aaa;
-      line-height: 1.6;
+      margin-top: 12px;
+      line-height: 1.5;
     }
-    .aviso a { color: #e6356b; text-decoration: none; }
-    .pie {
-      margin-top: 32px;
+
+    /* ── Footer ─────────────────────────────────────── */
+    .foot {
+      text-align: center;
       font-family: monospace;
       font-size: 10px;
       color: #ccc;
-      text-align: center;
+      padding: 0 24px 32px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo">— <span>Startidea</span> · Portal clientes</div>
 
-    <h1>Accede a tus expedientes</h1>
-    <p class="sub">
-      Introduce el email con el que enviaste tu solicitud y recibirás un enlace de acceso.
-      Sin contraseña.
-    </p>
-
-    {mensaje === 'ok' && (
-      <div class="msg ok show">
-        ✅ Enlace enviado. Revisa tu bandeja de entrada (y la carpeta de spam por si acaso).
-      </div>
-    )}
-    {mensaje === 'err' && (
-      <div class="msg err show">
-        ❌ Algo fue mal. Inténtalo de nuevo o escríbenos a <a href="mailto:hola@startidea.es">hola@startidea.es</a>
-      </div>
-    )}
-
-    {!mensaje && (
-      <form id="form-acceso">
-        <label for="email">Tu email</label>
-        <input type="email" id="email" name="email" placeholder="tu@organizacion.es" required autocomplete="email">
-        <button type="submit" id="btn-submit">Enviar enlace de acceso</button>
-        <div id="msg" class="msg"></div>
-      </form>
-    )}
-
-    <p class="aviso">
-      ¿Es la primera vez que accedes?
-      <a href="/portal/registro">Crea tu cuenta gratis →</a>
-    </p>
+  <div class="topbar">
+    <a href="/" class="topbar-logo">— <span>Startidea</span></a>
+    <a href="/contacto" class="topbar-link">¿Dudas? Escríbenos →</a>
   </div>
 
-  <div class="pie">Startidea Consulting, S.L. · CIF B19583632 · Granada</div>
+  <div class="hero">
+    <p class="hero-label">Portal de clientes</p>
+    <h1>Gestiona tus proyectos con Startidea desde un solo sitio</h1>
+    <p>Subvenciones, diagnósticos, formación y más — todo centralizado, sin contraseña.</p>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-icon">🎯</div>
+      <h3>Copiloto de Subvenciones</h3>
+      <p>Seguimiento en tiempo real de tus expedientes, contratos y resoluciones.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">📋</div>
+      <h3>Diagnóstico y consultoría</h3>
+      <p>Accede a los informes y propuestas de tu organización en cualquier momento.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">🔒</div>
+      <h3>Sin contraseñas</h3>
+      <p>Acceso por enlace directo a tu email. Rápido, seguro y sin complicaciones.</p>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Columna izquierda: ya tengo cuenta -->
+    <div class="card">
+      <div class="card-title">Acceso</div>
+      <h2>Ya tengo cuenta</h2>
+      <p class="sub">Introduce tu email y te enviamos un enlace de acceso directo. Sin contraseña.</p>
+
+      <form id="form-acceso">
+        <label class="field-label" for="email">Tu email</label>
+        <input type="email" id="email" name="email"
+          placeholder="tu@organizacion.es" required autocomplete="email">
+        <button type="submit" class="btn-primary" id="btn-submit">
+          Enviar enlace de acceso
+        </button>
+        <div id="msg" class="msg"></div>
+      </form>
+    </div>
+
+    <!-- Columna derecha: primera visita -->
+    <div class="card">
+      <div class="card-title">Registro gratuito</div>
+      <h2>Primera visita</h2>
+      <p class="sub">Crea tu cuenta en menos de 2 minutos y accede a todos los servicios de Startidea.</p>
+
+      <ul class="register-features">
+        <li>Seguimiento de expedientes de subvenciones</li>
+        <li>Firma electrónica del contrato de servicios</li>
+        <li>Documentos generados siempre disponibles</li>
+        <li>Notificaciones de resoluciones y plazos</li>
+      </ul>
+
+      <a href="/portal/registro" class="btn-secondary">Crear cuenta gratis →</a>
+
+      <p class="register-note">
+        Es gratuito y no requiere contraseña. Solo tu email y datos básicos de tu organización.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="foot">Startidea Consulting, S.L. · CIF B19583632 · Granada</div>
 
   <script>
     document.getElementById('form-acceso')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('btn-submit') as HTMLButtonElement;
-      const msg = document.getElementById('msg')!;
+      const btn   = document.getElementById('btn-submit') as HTMLButtonElement;
+      const msg   = document.getElementById('msg')!;
       const email = (document.getElementById('email') as HTMLInputElement).value.trim();
-      btn.disabled = true;
+
+      btn.disabled    = true;
       btn.textContent = '⏳ Enviando...';
-      msg.className = 'msg';
+      msg.className   = 'msg';
 
       try {
         const res = await fetch('/api/portal-acceso', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email }),
+          body:    JSON.stringify({ email }),
         });
         const j = await res.json();
+
         if (j.ok) {
-          msg.textContent = '✅ Enlace enviado. Revisa tu bandeja de entrada (y spam por si acaso).';
-          msg.className = 'msg ok show';
+          msg.textContent = '✅ Enlace enviado. Revisa tu bandeja de entrada (y la carpeta de spam).';
+          msg.className   = 'msg ok';
           btn.textContent = '✅ Enlace enviado';
         } else if (j.needsRegistration) {
-          // Email no registrado → redirigir al registro con el email pre-rellenado
-          const em = (document.getElementById('email') as HTMLInputElement).value.trim();
-          window.location.href = `/portal/registro?email=${encodeURIComponent(em)}`;
+          window.location.href = `/portal/registro?email=${encodeURIComponent(email)}`;
         } else {
           msg.textContent = 'Algo fue mal. Inténtalo de nuevo.';
-          msg.className = 'msg err show';
-          btn.disabled = false;
+          msg.className   = 'msg err';
+          btn.disabled    = false;
           btn.textContent = 'Enviar enlace de acceso';
         }
       } catch {
         msg.textContent = 'Error de red. Inténtalo de nuevo.';
-        msg.className = 'msg err show';
-        btn.disabled = false;
+        msg.className   = 'msg err';
+        btn.disabled    = false;
         btn.textContent = 'Enviar enlace de acceso';
       }
     });
   </script>
+
 </body>
 </html>

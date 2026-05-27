@@ -142,6 +142,8 @@ function getDb(): Database.Database {
     `ALTER TABLE expedientes ADD COLUMN importe_concedido TEXT`,
     `ALTER TABLE expedientes ADD COLUMN factura_num TEXT`,
     `ALTER TABLE expedientes ADD COLUMN factura_at INTEGER`,
+    // portal_users — campo añadido en fase 2
+    `ALTER TABLE portal_users ADD COLUMN consent_at INTEGER`,
   ]) {
     try { _db.exec(sql); } catch { /* columna ya existe */ }
   }
@@ -173,6 +175,7 @@ function getDb(): Database.Database {
       telefono     TEXT NOT NULL DEFAULT '',
       provincia    TEXT NOT NULL DEFAULT '',
       como_conocio TEXT NOT NULL DEFAULT '',
+      consent_at   INTEGER,
       created_at   INTEGER NOT NULL,
       updated_at   INTEGER NOT NULL
     );
@@ -429,6 +432,7 @@ export interface PortalUser {
   telefono:     string;
   provincia:    string;
   como_conocio: string;
+  consent_at:   number | null;
   created_at:   number;
   updated_at:   number;
 }
@@ -450,9 +454,9 @@ export function createPortalUser(
   const id  = `USR-${new Date().getFullYear()}-${hex}`;
   db.prepare(`
     INSERT OR REPLACE INTO portal_users
-      (id, email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, created_at, updated_at)
+      (id, email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, consent_at, created_at, updated_at)
     VALUES
-      (@id, LOWER(@email), @nombre, @org_nombre, @org_cif, @org_tipo, @telefono, @provincia, @como_conocio, @created_at, @updated_at)
+      (@id, LOWER(@email), @nombre, @org_nombre, @org_cif, @org_tipo, @telefono, @provincia, @como_conocio, @consent_at, @created_at, @updated_at)
   `).run({ ...data, email: data.email.toLowerCase(), id, created_at: now, updated_at: now });
 }
 
