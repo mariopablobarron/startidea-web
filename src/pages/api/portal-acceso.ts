@@ -6,7 +6,7 @@
  */
 import type { APIRoute } from 'astro';
 import {
-  getExpedientesByEmail,
+  emailHasPortalAccess,
   createMagicToken,
 } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
@@ -32,10 +32,10 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ ok: false, error: 'email_invalid' }), { status: 400 });
   }
 
-  const expedientes = getExpedientesByEmail(email);
-  if (expedientes.length === 0) {
-    // Por seguridad respondemos OK aunque no exista (evitar enumeración de emails)
-    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  const access = emailHasPortalAccess(email);
+  if (!access.registered && !access.hasExpedientes) {
+    // Email desconocido — redirigir al registro (no revelar si el email existe o no en logs)
+    return new Response(JSON.stringify({ ok: false, needsRegistration: true }), { status: 200 });
   }
 
   const token = createMagicToken(email);

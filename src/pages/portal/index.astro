@@ -158,8 +158,8 @@ const mensaje = Astro.url.searchParams.get('m');
     )}
 
     <p class="aviso">
-      ¿No tienes expediente todavía?
-      <a href="/subvenciones/presentar/nuevo">Solicita el Copiloto de Subvenciones →</a>
+      ¿Es la primera vez que accedes?
+      <a href="/portal/registro">Crea tu cuenta gratis →</a>
     </p>
   </div>
 
@@ -186,6 +186,10 @@ const mensaje = Astro.url.searchParams.get('m');
           msg.textContent = '✅ Enlace enviado. Revisa tu bandeja de entrada (y spam por si acaso).';
           msg.className = 'msg ok show';
           btn.textContent = '✅ Enlace enviado';
+        } else if (j.needsRegistration) {
+          // Email no registrado → redirigir al registro con el email pre-rellenado
+          const em = (document.getElementById('email') as HTMLInputElement).value.trim();
+          window.location.href = `/portal/registro?email=${encodeURIComponent(em)}`;
         } else {
           msg.textContent = 'Algo fue mal. Inténtalo de nuevo.';
           msg.className = 'msg err show';

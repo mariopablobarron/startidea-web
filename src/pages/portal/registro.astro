@@ -1,0 +1,340 @@
+---
+/**
+ * /portal/registro — Alta de nuevo usuario en el portal de clientes.
+ * No requiere autenticación previa.
+ * Tras el registro envía un magic link al email indicado.
+ */
+import { getPortalSessionEmail } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+// Si ya hay sesión activa → dashboard
+const COOKIE = 'startidea_portal';
+const session = Astro.cookies.get(COOKIE)?.value;
+if (session && getPortalSessionEmail(session)) {
+  return Astro.redirect('/portal/dashboard');
+}
+
+// Email pre-rellenado si viene de la pantalla de login
+const emailParam = Astro.url.searchParams.get('email') ?? '';
+
+const ORG_TIPOS = [
+  'Asociación',
+  'Fundación',
+  'Cooperativa',
+  'Empresa social / B Corp',
+  'PYME',
+  'Autónomo/a',
+  'Entidad religiosa',
+  'Administración pública',
+  'Otra',
+];
+
+const PROVINCIAS = [
+  'Almería','Cádiz','Córdoba','Granada','Huelva','Jaén','Málaga','Sevilla',
+  'Albacete','Ciudad Real','Cuenca','Guadalajara','Toledo',
+  'Ávila','Burgos','León','Palencia','Salamanca','Segovia','Soria','Valladolid','Zamora',
+  'Barcelona','Girona','Lleida','Tarragona',
+  'Alicante','Castellón','Valencia',
+  'Badajoz','Cáceres',
+  'A Coruña','Lugo','Ourense','Pontevedra',
+  'Madrid',
+  'Murcia',
+  'Navarra',
+  'Álava','Guipúzcoa','Vizcaya',
+  'La Rioja',
+  'Asturias','Cantabria',
+  'Huesca','Teruel','Zaragoza',
+  'Baleares','Las Palmas','Santa Cruz de Tenerife',
+  'Ceuta','Melilla',
+  'Otra',
+];
+
+const COMO_CONOCIO = [
+  'Google / búsqueda web',
+  'Redes sociales',
+  'Referencia de otra entidad',
+  'Colaborador o consultor',
+  'Evento o jornada',
+  'Otra forma',
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Registro en el portal · Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: #faf8f5;
+      color: #1f1f22;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; }
+    .logo {
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 32px;
+    }
+    .logo span { color: #e6356b; font-weight: 700; }
+    .logo a { color: #888; text-decoration: none; }
+    .logo a:hover { color: #e6356b; }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    .sub { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 32px; }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid #e0ddd8;
+      padding: 32px;
+    }
+
+    .section-title {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0ece4;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field + .section-title { margin-top: 28px; }
+    label {
+      display: block;
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    label .req { color: #e6356b; margin-left: 2px; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      border: 1px solid #d0ccc5;
+      padding: 10px 12px;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      color: #1f1f22;
+      background: #fff;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus { border-color: #e6356b; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .checkbox-wrap input { flex-shrink: 0; margin-top: 3px; width: 16px; height: 16px; cursor: pointer; }
+    .checkbox-wrap a { color: #e6356b; text-decoration: none; }
+
+    button[type="submit"] {
+      width: 100%;
+      background: #e6356b;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+
+    .msg {
+      padding: 14px 16px;
+      font-size: 14px;
+      border: 1px solid;
+      margin-top: 16px;
+      display: none;
+      line-height: 1.5;
+    }
+    .msg.ok  { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; }
+    .msg.show { display: block; }
+
+    .login-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+    }
+    .login-link a { color: #e6356b; text-decoration: none; }
+
+    @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } .form-card { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <a href="/portal">← Portal</a>
+      &nbsp;·&nbsp; <span>Startidea</span> · Registro
+    </div>
+
+    <h1>Crea tu cuenta</h1>
+    <p class="sub">
+      Regístrate para acceder al portal de clientes de Startidea, donde podrás gestionar
+      subvenciones y otros servicios de forma centralizada. Es gratis y no necesitas contraseña.
+    </p>
+
+    <div class="form-card">
+      <form id="form-registro">
+
+        <div class="section-title">Datos de contacto</div>
+
+        <div class="field">
+          <label for="nombre">Nombre y apellidos <span class="req">*</span></label>
+          <input type="text" id="nombre" name="nombre" required
+            placeholder="Carmen García López" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="email">Email de contacto <span class="req">*</span></label>
+          <input type="email" id="email" name="email" required
+            value={emailParam}
+            placeholder="carmen@organizacion.es" autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono"
+            placeholder="600 000 000" autocomplete="tel">
+        </div>
+
+        <div class="section-title">Datos de la organización</div>
+
+        <div class="field">
+          <label for="orgNombre">Nombre de la organización <span class="req">*</span></label>
+          <input type="text" id="orgNombre" name="orgNombre" required
+            placeholder="Asociación Ejemplo Granada" autocomplete="organization">
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="orgCif">CIF / NIF</label>
+            <input type="text" id="orgCif" name="orgCif"
+              placeholder="G12345678">
+          </div>
+          <div class="field">
+            <label for="orgTipo">Tipo de entidad <span class="req">*</span></label>
+            <select id="orgTipo" name="orgTipo" required>
+              <option value="">Selecciona...</option>
+              {ORG_TIPOS.map((t) => <option value={t}>{t}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="provincia">Provincia</label>
+          <select id="provincia" name="provincia">
+            <option value="">Selecciona...</option>
+            {PROVINCIAS.map((p) => <option value={p}>{p}</option>)}
+          </select>
+        </div>
+
+        <div class="section-title">¿Cómo nos conociste?</div>
+
+        <div class="field">
+          <label for="comoConocio">Fuente</label>
+          <select id="comoConocio" name="comoConocio">
+            <option value="">Selecciona...</option>
+            {COMO_CONOCIO.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </div>
+
+        <div class="checkbox-wrap">
+          <input type="checkbox" id="acepta-privacidad" required>
+          <label for="acepta-privacidad" style="font-family:Georgia;font-size:13px;text-transform:none;letter-spacing:0;color:#555">
+            He leído y acepto la
+            <a href="/aviso-legal" target="_blank">Política de privacidad</a>
+            y el tratamiento de mis datos para la prestación de los servicios de Startidea.
+          </label>
+        </div>
+
+        <button type="submit" id="btn-submit">Crear cuenta y acceder →</button>
+        <div id="msg" class="msg"></div>
+      </form>
+
+      <p class="login-link">
+        ¿Ya tienes cuenta? <a href="/portal">Accede con tu email →</a>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit') as HTMLButtonElement;
+      const msg = document.getElementById('msg')!;
+      const get = (id: string) => (document.getElementById(id) as HTMLInputElement).value.trim();
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Creando cuenta...';
+      msg.className = 'msg';
+
+      try {
+        const res = await fetch('/api/portal-registro', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            email:       get('email'),
+            nombre:      get('nombre'),
+            orgNombre:   get('orgNombre'),
+            orgCif:      get('orgCif'),
+            orgTipo:     get('orgTipo'),
+            telefono:    get('telefono'),
+            provincia:   get('provincia'),
+            comoConocio: get('comoConocio'),
+          }),
+        });
+        const j = await res.json();
+        if (j.ok) {
+          msg.innerHTML = '✅ <strong>Cuenta creada.</strong> Te hemos enviado un enlace de acceso al email indicado. Revisa también la carpeta de spam.';
+          msg.className = 'msg ok show';
+          btn.textContent = '✅ Enlace enviado';
+        } else {
+          const errs: Record<string, string> = {
+            email_invalid:  'El email no es válido.',
+            nombre_required:'El nombre es obligatorio.',
+            org_required:   'El nombre de la organización es obligatorio.',
+          };
+          msg.textContent = errs[j.error] ?? 'Algo fue mal. Inténtalo de nuevo.';
+          msg.className = 'msg err show';
+          btn.disabled = false;
+          btn.textContent = 'Crear cuenta y acceder →';
+        }
+      } catch {
+        msg.textContent = 'Error de red. Inténtalo de nuevo.';
+        msg.className = 'msg err show';
+        btn.disabled = false;
+        btn.textContent = 'Crear cuenta y acceder →';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -163,8 +163,22 @@ function getDb(): Database.Database {
       expires_at INTEGER NOT NULL,
       created_at INTEGER NOT NULL
     );
-    CREATE INDEX IF NOT EXISTS idx_portal_magic_email ON portal_magic_tokens (email);
+    CREATE TABLE IF NOT EXISTS portal_users (
+      id           TEXT PRIMARY KEY,
+      email        TEXT UNIQUE NOT NULL,
+      nombre       TEXT NOT NULL,
+      org_nombre   TEXT NOT NULL,
+      org_cif      TEXT NOT NULL DEFAULT '',
+      org_tipo     TEXT NOT NULL DEFAULT '',
+      telefono     TEXT NOT NULL DEFAULT '',
+      provincia    TEXT NOT NULL DEFAULT '',
+      como_conocio TEXT NOT NULL DEFAULT '',
+      created_at   INTEGER NOT NULL,
+      updated_at   INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_portal_magic_email  ON portal_magic_tokens (email);
     CREATE INDEX IF NOT EXISTS idx_portal_session_email ON portal_sessions (email);
+    CREATE INDEX IF NOT EXISTS idx_portal_users_email  ON portal_users (email);
   `);
   return _db;
 }
@@ -401,6 +415,76 @@ export function getExpedientesByEmail(email: string): Expediente[] {
   return db.prepare(
     `SELECT * FROM expedientes WHERE LOWER(email) = LOWER(?) ORDER BY created_at DESC`,
   ).all(email) as Expediente[];
+}
+
+// ─── Portal de clientes — Usuarios registrados ───────────────────────────────
+
+export interface PortalUser {
+  id:           string;
+  email:        string;
+  nombre:       string;
+  org_nombre:   string;
+  org_cif:      string;
+  org_tipo:     string;
+  telefono:     string;
+  provincia:    string;
+  como_conocio: string;
+  created_at:   number;
+  updated_at:   number;
+}
+
+export function getPortalUser(email: string): PortalUser | null {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM portal_users WHERE LOWER(email) = LOWER(?)`,
+  ).get(email) as PortalUser | null;
+}
+
+export function createPortalUser(
+  data: Omit<PortalUser, 'id' | 'created_at' | 'updated_at'>,
+): void {
+  const db  = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  // ID corto: USR-YYYY-XXXXXX (6 hex chars)
+  const hex = Array.from({ length: 6 }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
+  const id  = `USR-${new Date().getFullYear()}-${hex}`;
+  db.prepare(`
+    INSERT OR REPLACE INTO portal_users
+      (id, email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, created_at, updated_at)
+    VALUES
+      (@id, LOWER(@email), @nombre, @org_nombre, @org_cif, @org_tipo, @telefono, @provincia, @como_conocio, @created_at, @updated_at)
+  `).run({ ...data, email: data.email.toLowerCase(), id, created_at: now, updated_at: now });
+}
+
+export function updatePortalUser(
+  email: string,
+  data: Partial<Pick<PortalUser, 'nombre' | 'org_nombre' | 'org_cif' | 'org_tipo' | 'telefono' | 'provincia'>>,
+): void {
+  const db  = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const sets = Object.keys(data).map((k) => `${k} = @${k}`).join(', ');
+  if (!sets) return;
+  db.prepare(`UPDATE portal_users SET ${sets}, updated_at = @updated_at WHERE LOWER(email) = LOWER(@email)`)
+    .run({ ...data, email, updated_at: now });
+}
+
+export function listPortalUsers(limit = 100): PortalUser[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM portal_users ORDER BY created_at DESC LIMIT ?`,
+  ).all(limit) as PortalUser[];
+}
+
+export function statsPortalUsers(): number {
+  const db = getDb();
+  return (db.prepare(`SELECT COUNT(*) as n FROM portal_users`).get() as { n: number }).n;
+}
+
+/** Indica si el email tiene acceso al portal (usuario registrado O con expediente) */
+export function emailHasPortalAccess(email: string): { registered: boolean; hasExpedientes: boolean } {
+  const user = getPortalUser(email);
+  const exps = getExpedientesByEmail(email);
+  return { registered: !!user, hasExpedientes: exps.length > 0 };
 }
 
 // ─── Portal de clientes — Auth magic-link ────────────────────────────────────
