@@ -206,6 +206,19 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
   `);
+  // Tabla de logs de consultas al widget de eligibilidad — sin PII (sin CIF, sin descripción)
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS eligibilidad_log (
+      id           INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at   INTEGER NOT NULL DEFAULT (unixepoch()),
+      tipo_entidad TEXT NOT NULL DEFAULT '',
+      beneficiario TEXT NOT NULL DEFAULT '',  -- privada|local|institucional|persona|empresa|desconocido
+      lineas       TEXT NOT NULL DEFAULT '[]', -- JSON array de IDs aplicables
+      n_lineas     INTEGER NOT NULL DEFAULT 0,
+      aplica       INTEGER NOT NULL DEFAULT 0  -- 1=sí aplica, 0=no
+    );
+    CREATE INDEX IF NOT EXISTS idx_eleg_log_date ON eligibilidad_log (created_at DESC);
+  `);
   return _db;
 }
 
@@ -799,4 +812,138 @@ export function statsCRMContacts(): number {
     )
   `;
   return (db.prepare(sql).get() as { n: number }).n;
+}
+
+// ─── Widget eligibilidad — logging anónimo ────────────────────────────────────
+
+/**
+ * Registra una consulta al widget de elegibilidad BOJA.
+ * No almacena CIF, descripción ni IP. Solo el tipo de entidad detectado
+ * y las líneas que aplican.
+ */
+export function logEligibilidad(data: {
+  tipo_entidad: string;
+  beneficiario: string;
+  lineas: string[];  // array de IDs como ['L10','L11']
+  aplica: boolean;
+}): void {
+  try {
+    const db = getDb();
+    db.prepare(`
+      INSERT INTO eligibilidad_log (tipo_entidad, beneficiario, lineas, n_lineas, aplica)
+      VALUES (@tipo_entidad, @beneficiario, @lineas, @n_lineas, @aplica)
+    `).run({
+      tipo_entidad: data.tipo_entidad.slice(0, 120),
+      beneficiario: data.beneficiario,
+      lineas: JSON.stringify(data.lineas),
+      n_lineas: data.lineas.length,
+      aplica: data.aplica ? 1 : 0,
+    });
+  } catch { /* non-blocking — nunca romper la respuesta al usuario */ }
+}
+
+export interface EligibilidadStats {
+  total: number;
+  aplica: number;
+  noAplica: number;
+  porBeneficiario: { beneficiario: string; n: number }[];
+  porLinea: { linea: string; n: number }[];
+  porDia: { dia: string; n: number }[];   // últimos 30 días
+}
+
+export function statsEligibilidad(): EligibilidadStats {
+  const db = getDb();
+  const total  = (db.prepare(`SELECT COUNT(*) AS n FROM eligibilidad_log`).get() as { n: number }).n;
+  const aplica = (db.prepare(`SELECT COUNT(*) AS n FROM eligibilidad_log WHERE aplica = 1`).get() as { n: number }).n;
+
+  const porBeneficiario = db.prepare(`
+    SELECT beneficiario, COUNT(*) AS n
+    FROM eligibilidad_log
+    GROUP BY beneficiario
+    ORDER BY n DESC
+  `).all() as { beneficiario: string; n: number }[];
+
+  // Explode JSON array de líneas para contar por línea
+  // SQLite no tiene json_each en todas las versiones, hacemos conteo manual
+  const allRows = db.prepare(
+    `SELECT lineas FROM eligibilidad_log WHERE aplica = 1 AND lineas != '[]'`,
+  ).all() as { lineas: string }[];
+  const lineaCount: Record<string, number> = {};
+  for (const row of allRows) {
+    try {
+      const ids = JSON.parse(row.lineas) as string[];
+      for (const id of ids) lineaCount[id] = (lineaCount[id] ?? 0) + 1;
+    } catch { /* skip */ }
+  }
+  const porLinea = Object.entries(lineaCount)
+    .map(([linea, n]) => ({ linea, n }))
+    .sort((a, b) => b.n - a.n);
+
+  const porDia = db.prepare(`
+    SELECT date(created_at, 'unixepoch') AS dia, COUNT(*) AS n
+    FROM eligibilidad_log
+    WHERE created_at >= unixepoch('now', '-30 days')
+    GROUP BY dia
+    ORDER BY dia ASC
+  `).all() as { dia: string; n: number }[];
+
+  return { total, aplica, noAplica: total - aplica, porBeneficiario, porLinea, porDia };
+}
+
+// ─── Estadísticas de convocatorias ───────────────────────────────────────────
+
+export interface ConvStats {
+  convocatoria_slug: string;
+  convocatoria_title: string;
+  n_expedientes: number;
+  n_presentados: number;
+  n_entregados: number;
+  n_recibidos: number;
+  n_rechazados: number;
+  first_at: number;
+  last_at: number;
+}
+
+/** Expedientes agrupados por convocatoria */
+export function statsExpedientesByConv(): ConvStats[] {
+  const db = getDb();
+  return db.prepare(`
+    SELECT
+      COALESCE(convocatoria_slug, '') AS convocatoria_slug,
+      COALESCE(convocatoria_title, convocatoria_slug, '(sin convocatoria)') AS convocatoria_title,
+      COUNT(*) AS n_expedientes,
+      SUM(CASE WHEN status = 'presentado'  THEN 1 ELSE 0 END) AS n_presentados,
+      SUM(CASE WHEN status = 'entregado'   THEN 1 ELSE 0 END) AS n_entregados,
+      SUM(CASE WHEN status = 'recibido' OR status = 'analizando_ia' OR status = 'docs_listos' THEN 1 ELSE 0 END) AS n_recibidos,
+      SUM(CASE WHEN status = 'rechazado'   THEN 1 ELSE 0 END) AS n_rechazados,
+      MIN(created_at) AS first_at,
+      MAX(created_at) AS last_at
+    FROM expedientes
+    GROUP BY convocatoria_slug
+    ORDER BY n_expedientes DESC
+  `).all() as ConvStats[];
+}
+
+export interface CopilotoConvStats {
+  convocatoria_slug: string;
+  convocatoria_title: string;
+  n_profiles: number;
+  n_sent: number;
+  n_error: number;
+}
+
+/** Generaciones del copiloto autónomo agrupadas por convocatoria */
+export function statsCopilotoByConv(): CopilotoConvStats[] {
+  const db = getDb();
+  return db.prepare(`
+    SELECT
+      convocatoria_slug,
+      COALESCE(convocatoria_title, convocatoria_slug) AS convocatoria_title,
+      COUNT(*) AS n_profiles,
+      SUM(sent) AS n_sent,
+      SUM(CASE WHEN error IS NOT NULL THEN 1 ELSE 0 END) AS n_error
+    FROM auto_copiloto_log
+    GROUP BY convocatoria_slug
+    ORDER BY n_profiles DESC
+  `).all() as CopilotoConvStats[];
 }

@@ -8,6 +8,7 @@
  * Response : { ok, aplica, tipo_entidad, lineas, mensaje, aviso?, entityFromCIF? }
  */
 import type { APIRoute } from 'astro';
+import { logEligibilidad } from '../../lib/expedientes-db';
 
 const OR_KEY   = import.meta.env.OPENROUTER_API_KEY ?? '';
 const MODEL    = 'anthropic/claude-haiku-4-5';
@@ -162,6 +163,18 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (!jsonMatch) throw new Error('No JSON in AI response');
 
     const result = JSON.parse(jsonMatch[0]);
+
+    // Logging anónimo — sin CIF ni descripción, solo tipo detectado + líneas aplicables
+    try {
+      logEligibilidad({
+        tipo_entidad: result.tipo_entidad ?? (entityFromCIF?.tipo ?? ''),
+        beneficiario: entityFromCIF?.beneficiario ?? '',
+        lineas: Array.isArray(result.lineas)
+          ? result.lineas.map((l: { id: string }) => l.id).filter(Boolean)
+          : [],
+        aplica: Boolean(result.aplica),
+      });
+    } catch { /* fire-and-forget — nunca romper la respuesta al usuario */ }
 
     return new Response(
       JSON.stringify({ ok: true, entityFromCIF, ...result }),
