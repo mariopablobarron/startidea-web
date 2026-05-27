@@ -62,8 +62,7 @@ async function extractPdf(buffer: Buffer): Promise<string> {
   try {
     // pdf-parse v1 exporta directamente una función (pdf-parse/lib/pdf-parse.js)
     // Usamos createRequire para compatibilidad con ESM de Astro
-    type PdfParseFunc = (buf: Buffer, opts?: { max?: number }) => Promise<{ text: string; numpages: number }>;
-    const pdfParse = _require('pdf-parse') as PdfParseFunc;
+    const pdfParse = _require('pdf-parse') as typeof import('pdf-parse');
     const data = await pdfParse(buffer, { max: 0 });
     return data.text ?? '';
   } catch (err) {

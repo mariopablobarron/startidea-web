@@ -363,6 +363,39 @@ export function getLogByProfile(profile_id: string, limit = 20): AutoCopilotoLog
 }
 
 /**
+ * Lista TODOS los perfiles para el panel admin (activos, pausados, no confirmados).
+ */
+export function listAllProfiles(limit = 200): AutoCopilotoProfile[] {
+  const db = getDb();
+  return db
+    .prepare(`SELECT * FROM auto_copiloto_profiles ORDER BY created_at DESC LIMIT ?`)
+    .all(limit) as AutoCopilotoProfile[];
+}
+
+/**
+ * Estadísticas de perfiles para el panel admin.
+ */
+export function statsProfiles(): {
+  total: number;
+  active: number;
+  confirmed: number;
+  pendingConfirm: number;
+  paused: number;
+} {
+  const db = getDb();
+  const all = db.prepare(`
+    SELECT
+      COUNT(*) AS total,
+      SUM(CASE WHEN active = 1 AND confirmed = 1 THEN 1 ELSE 0 END) AS active,
+      SUM(CASE WHEN confirmed = 1 THEN 1 ELSE 0 END) AS confirmed,
+      SUM(CASE WHEN confirmed = 0 THEN 1 ELSE 0 END) AS pendingConfirm,
+      SUM(CASE WHEN active = 0 AND confirmed = 1 THEN 1 ELSE 0 END) AS paused
+    FROM auto_copiloto_profiles
+  `).get() as { total: number; active: number; confirmed: number; pendingConfirm: number; paused: number };
+  return all;
+}
+
+/**
  * Devuelve el primer perfil (más antiguo) asociado a un email.
  * Incluye perfiles inactivos y no confirmados (para el CRM admin).
  */
