@@ -10,7 +10,7 @@
  * Excepción: Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio.
  */
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 export const prerender = true;
 
@@ -192,6 +192,28 @@ const jsonLd = [
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
     { name: 'BOJA 2026 — Inclusión Social', url: `${SITE_URL}/subvenciones/boja-2026-inclusion-social` },
+  ]),
+  faqPageSchema([
+    {
+      question: '¿Quién puede solicitar las subvenciones BOJA 2026 de Inclusión Social?',
+      answer: 'Depende de la línea: entidades privadas sin ánimo de lucro (asociaciones G, fundaciones G, cooperativas F, entidades religiosas inscritas R), entidades locales (ayuntamientos, diputaciones, mancomunidades P), organismos institucionales (universidades, federaciones Q) y personas físicas para las líneas individuales L1 y L2. La primera letra del CIF identifica el tipo de entidad.',
+    },
+    {
+      question: '¿Cuál es el plazo para presentar las solicitudes del BOJA 2026?',
+      answer: `El plazo general es del 27 de mayo al 16 de junio de 2026 (15 días hábiles). Excepción: la Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio de 2026. Todas las solicitudes se presentan por el Registro Electrónico Único de la Junta de Andalucía.`,
+    },
+    {
+      question: '¿Cuánto cuesta que Startidea tramite la subvención BOJA 2026?',
+      answer: 'El modelo es comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia.',
+    },
+    {
+      question: '¿Qué documentación se necesita para presentarse a las líneas del BOJA 2026?',
+      answer: 'La documentación habitual incluye: estatutos actualizados con sello de inscripción, CIF/NIF en vigor, acreditación del representante legal, certificado AEAT al corriente de obligaciones tributarias, certificado TGSS al corriente de la Seguridad Social, memoria de actividades del último ejercicio y presupuesto del proyecto o programa.',
+    },
+    {
+      question: '¿Puede una entidad presentarse a más de una línea del BOJA 2026 a la vez?',
+      answer: 'Sí, siempre que la entidad sea beneficiaria elegible en cada línea y que los proyectos presentados sean distintos. Por ejemplo, una asociación de acción social puede presentarse simultáneamente a L10 (mantenimiento estructural) y a L11 (programas concretos) si su actividad encaja con ambas convocatorias.',
+    },
   ]),
 ];
 
