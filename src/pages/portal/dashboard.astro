@@ -51,18 +51,19 @@ function calcularComision(importe: string | null): string {
 
 type Step = { key: string; label: string; desc: string };
 const STEPS: Step[] = [
-  { key: 'recibido',      label: 'Solicitud recibida',  desc: 'Tu solicitud ha llegado al equipo de Startidea.' },
-  { key: 'procesando',    label: 'Analizando',           desc: 'La IA está preparando los documentos.' },
-  { key: 'docs_listos',   label: 'Docs preparados',      desc: 'La memoria, presupuesto y checklist están listos.' },
-  { key: 'entregado',     label: 'Documentos enviados',  desc: 'Has recibido los documentos por email.' },
-  { key: 'presentado',    label: 'Presentado',           desc: 'La solicitud fue presentada ante el organismo.' },
+  { key: 'recibido',      label: 'Recibida',        desc: 'Tu solicitud ha llegado al equipo de Startidea.' },
+  { key: 'analizando',    label: 'Analizando',       desc: 'La IA está preparando los documentos.' },
+  { key: 'contrato',      label: 'Contrato',         desc: 'El contrato de servicios está pendiente de firma.' },
+  { key: 'docs_listos',   label: 'Docs listos',      desc: 'La memoria, presupuesto y checklist están listos.' },
+  { key: 'entregado',     label: 'Enviados',         desc: 'Has recibido los documentos por email.' },
+  { key: 'presentado',    label: 'Presentada',       desc: 'La solicitud fue presentada ante el organismo.' },
 ];
 
-function getStepIndex(status: string): number {
+function getStepIndex(status: string, contratoAt: number | null): number {
   if (status === 'analizando_ia') return 1;
-  if (status === 'docs_listos')   return 2;
-  if (status === 'entregado')     return 3;
-  if (status === 'presentado')    return 4;
+  if (status === 'docs_listos')   return contratoAt ? 3 : 2;
+  if (status === 'entregado')     return 4;
+  if (status === 'presentado')    return 5;
   if (status === 'rechazado')     return -1; // estado especial
   return 0; // recibido
 }
@@ -486,9 +487,9 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
             <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:6px">Paso 1 — Disponible</div>
             <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Solicita una subvención</div>
             <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Rellena el formulario con los datos de tu organización y la convocatoria. La IA genera la documentación en 24-48h.</div>
-            <a href="/copiloto-subvenciones" target="_blank"
+            <a href="/subvenciones/presentar/nuevo"
                style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#e6356b;text-decoration:none;font-weight:700">
-              Cómo funciona →
+              Iniciar solicitud →
             </a>
           </div>
           <div style="border:1px solid #e0ddd8;padding:20px;background:#faf8f5">
@@ -521,7 +522,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       </div>
     ) : (
       expedientes.map((exp: Expediente) => {
-        const stepIdx = getStepIndex(exp.status);
+        const stepIdx = getStepIndex(exp.status, exp.contrato_at);
         const rechazado = exp.status === 'rechazado';
         const tieneImporte = !!exp.importe_concedido;
         const comision = calcularComision(exp.importe_concedido);
@@ -739,11 +740,18 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                     <div class="next-step-item"><span class="step-num">3</span><span>Reúne la documentación del checklist adjunto.</span></div>
                   </div>
                 )}
-                {exp.status === 'entregado' && (
+                {exp.status === 'entregado' && exp.apoderamiento === 1 && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>Revisa los documentos recibidos y completa todos los campos [COMPLETAR] con datos reales de tu entidad.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Reúne los documentos del checklist adjunto (estatutos, certificados AEAT/SS, NIF, etc.).</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Startidea presentará el expediente en tu nombre en cuanto confirmes que está todo listo. Te avisaremos cuando esté presentado y te enviaremos el justificante CSV.</span></div>
+                  </div>
+                )}
+                {exp.status === 'entregado' && exp.apoderamiento !== 1 && (
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>Revisa los documentos recibidos por email y completa todos los campos [COMPLETAR] con datos reales.</span></div>
                     <div class="next-step-item"><span class="step-num">2</span><span>Reúne los documentos del checklist (estatutos, certificados AEAT/SS, NIF, etc.).</span></div>
-                    <div class="next-step-item"><span class="step-num">3</span><span>Sigue la guía de presentación paso a paso incluida en el email.</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Sigue la guía de presentación paso a paso incluida en el email para presentar con tu certificado digital.</span></div>
                     <div class="next-step-item"><span class="step-num">4</span><span>Cuando hayas presentado, avísanos → <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></span></div>
                   </div>
                 )}

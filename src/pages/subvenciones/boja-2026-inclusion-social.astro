@@ -302,8 +302,8 @@ function buildLink(linea: Linea) {
             {[
               {
                 n: '01',
-                t: 'Te registras en el portal',
-                d: 'Creas tu cuenta en el portal de clientes de Startidea. Sin contraseña: recibes un enlace de acceso en tu email. El proceso dura menos de 5 minutos.',
+                t: 'Rellenas el formulario',
+                d: 'Completas el formulario con los datos de tu entidad y seleccionas la convocatoria. Al enviar, se crea automáticamente tu acceso al portal de Startidea y recibes un enlace por email — sin contraseña, sin trámite adicional.',
               },
               {
                 n: '02',
@@ -318,7 +318,7 @@ function buildLink(linea: Linea) {
               {
                 n: '04',
                 t: 'Revisáis, aprobáis y se presenta',
-                d: 'Revisáis el expediente completo en el portal. Si habéis otorgado apoderamiento REA, Startidea presenta en vuestro nombre con su propio certificado. Si preferís firmar vosotros, os enviamos las instrucciones y lo hacéis desde vuestra cuenta en menos de 10 minutos. En ningún caso Startidea usa vuestro certificado digital.',
+                d: 'Revisáis el expediente completo en el portal. En el formulario indicáis si queréis que Startidea presente en vuestro nombre (otorgando apoderamiento REA, proceso de 5 minutos) o si preferís firmar vosotros con vuestro certificado (menos de 10 minutos con las instrucciones que os enviamos). En ningún caso Startidea usa vuestro certificado digital.',
               },
             ].map((s) => (
               <li class="grid grid-cols-12 gap-x-4 py-6">
@@ -432,7 +432,7 @@ function buildLink(linea: Linea) {
               { doc: 'Certificado de Hacienda', nota: 'Estar al corriente de obligaciones tributarias. Se obtiene online en minutos.' },
               { doc: 'Certificado de Seguridad Social', nota: 'Estar al corriente de obligaciones con la SS. También se obtiene online.' },
               { doc: 'Memoria de actividades', nota: 'Descripción de los programas y actividades del último ejercicio cerrado.' },
-              { doc: 'Presupuesto del proyecto', nota: 'Estimación de ingresos y gastos del programa para el que se solicita la ayuda. Startidea os ayuda a estructurarlo.' },
+              { doc: 'Presupuesto del proyecto (opcional)', nota: 'Estimación de ingresos y gastos del programa. Si no lo tenéis, Startidea os ayuda a construirlo desde cero.' },
             ].map(({ doc, nota }) => (
               <li class="border border-ink/10 bg-white p-4">
                 <p class="font-medium text-sm text-ink">{doc}</p>

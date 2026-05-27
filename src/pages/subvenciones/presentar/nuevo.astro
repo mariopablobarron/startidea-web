@@ -599,7 +599,7 @@ const jsonLd = [
             <div class="flex items-start gap-3">
               <input type="checkbox" id="rgpd" name="rgpd" required class="mt-0.5 accent-magenta" />
               <label for="rgpd" class="text-sm text-ink/70">
-                Acepto que Startidea use mis datos para gestionar este expediente y me contacte con el diagnóstico y el presupuesto, de acuerdo con la{' '}
+                Acepto que Startidea use mis datos para gestionar este expediente y me contacte con el diagnóstico de encaje. Al enviar se crea automáticamente mi acceso al portal de clientes (sin contraseña). Todo de acuerdo con la{' '}
                 <a href="/privacidad" class="underline hover:text-magenta">política de privacidad</a>.
               </label>
             </div>
@@ -728,7 +728,7 @@ const jsonLd = [
     const email = (form.querySelector('#email') as HTMLInputElement).value;
     const convoUrl = (form.querySelector('#convocatoriaUrl') as HTMLInputElement).value;
     const convoNombre = (form.querySelector('#convocatoriaNombre') as HTMLInputElement).value;
-    const necesidad = (form.querySelector('#necesidadDesc') as HTMLTextAreaElement).value;
+    const necesidad = (form.querySelector('#descripcionProyecto') as HTMLTextAreaElement).value;
     const fileInputs = form.querySelectorAll<HTMLInputElement>('input[type="file"]');
 
     const docs: string[] = [];

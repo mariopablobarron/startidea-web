@@ -66,7 +66,7 @@ const jsonLd = [
           <ol class="reveal-stagger mt-12 divide-y divide-ink/15 border-y border-ink/15">
             {[
               { n: '01', title: 'Rellenas el formulario', desc: 'Datos de tu entidad, la convocatoria a la que quieres presentarte y los documentos que tengas disponibles. 10 minutos.' },
-              { n: '02', title: 'Recibimos y evaluamos', desc: 'En 24h te enviamos un presupuesto y un diagnóstico de encaje: si tiene sentido presentarse, qué puntuación máxima alcanzable tiene el proyecto y qué falta.' },
+              { n: '02', title: 'Analizamos el encaje', desc: 'En 24–48h recibes el diagnóstico de encaje: si tiene sentido presentarse, qué puntuación máxima alcanzable tiene el proyecto y qué documentación hace falta.' },
               { n: '03', title: 'Construimos el expediente', desc: 'Memoria técnica, presupuesto justificado, declaraciones responsables y toda la documentación administrativa. Lo preparamos todo.' },
               { n: '04', title: 'Tú firmas, nosotros tramitamos', desc: 'Cuando el expediente está listo, te avisamos. Solo tienes que introducir tu certificado digital para firmar. Nosotros presentamos y te enviamos el justificante CSV.' },
             ].map((step) => (
@@ -116,53 +116,37 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- Precios orientativos -->
+  <!-- Honorarios: comisión a éxito -->
   <section class="bg-paper-warm py-16 md:py-24">
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
         <div class="col-span-12 lg:col-span-3">
-          <span class="label">— Precio orientativo</span>
+          <span class="label">— Honorarios</span>
         </div>
         <div class="col-span-12 lg:col-span-9">
-          <p class="max-w-measure text-ink/70">
-            El presupuesto exacto depende de la complejidad de la convocatoria y del estado de la documentación. Los rangos habituales son:
-          </p>
-          <div class="reveal-stagger mt-10 divide-y divide-ink/15 border-y border-ink/15">
-            {[
-              {
-                tipo: 'Básica',
-                desc: 'Convocatorias con formulario online simple. Sin memoria técnica extensa. Plazo de preparación: 3–5 días.',
-                precio: 'Desde 150 €',
-                ejemplos: 'Ayudas directas locales, bonificaciones autonómicas simples',
-              },
-              {
-                tipo: 'Estándar',
-                desc: 'Convocatorias con memoria técnica, presupuesto justificado y documentación administrativa. Plazo: 1–2 semanas.',
-                precio: 'Desde 350 €',
-                ejemplos: 'BDNS autonómico, Agenda 2030, fondos municipales con criterios',
-              },
-              {
-                tipo: 'Compleja',
-                desc: 'Fondos europeos, CDTI, ENISA. Alta exigencia documental, justificación de impacto y presupuesto detallado. Plazo: 2–4 semanas.',
-                precio: 'Desde 750 €',
-                ejemplos: 'Erasmus+, FSE+, CDTI Neotec, ENISA Emprendedores',
-              },
-            ].map((tier) => (
-              <div class="grid grid-cols-12 gap-x-8 py-8">
-                <div class="col-span-12 lg:col-span-3">
-                  <p class="font-display text-xl text-ink">{tier.tipo}</p>
-                  <p class="mt-2 font-mono text-sm text-magenta">{tier.precio}</p>
-                </div>
-                <div class="col-span-12 mt-3 lg:col-span-9 lg:mt-0">
-                  <p class="text-ink/80">{tier.desc}</p>
-                  <p class="mt-2 font-mono text-[11px] uppercase tracking-wider text-ink/40">{tier.ejemplos}</p>
-                </div>
-              </div>
-            ))}
+          <div class="border border-ink/15 bg-paper p-8 md:p-10">
+            <p class="font-display text-5xl font-bold text-magenta">12%</p>
+            <p class="mt-1 font-mono text-xs uppercase tracking-widest text-ink/50">Comisión a éxito</p>
+            <p class="mt-5 max-w-measure text-ink/70">
+              Solo se paga el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste: ni honorarios, ni penalización, ni factura.
+            </p>
+            <ul class="reveal-stagger mt-6 space-y-2">
+              {[
+                'Sin pago inicial',
+                'Sin cuota mensual',
+                'Sin permanencia',
+                'Si no se concede, no se cobra',
+              ].map((item) => (
+                <li class="flex items-center gap-2 text-sm text-ink/70">
+                  <span class="font-bold text-magenta">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p class="mt-8 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+              La comisión se factura cuando la Administración notifica la resolución favorable y el importe es firme. Pago por transferencia bancaria en los términos del contrato de servicios.
+            </p>
           </div>
-          <p class="mt-6 font-mono text-[11px] uppercase tracking-wider text-ink/40">
-            El pago se realiza tras la confirmación del encaje y antes de iniciar la redacción. Sin sorpresas.
-          </p>
         </div>
       </div>
     </div>
@@ -188,7 +172,7 @@ const jsonLd = [
               },
               {
                 q: '¿Qué pasa si la subvención no se concede?',
-                a: 'El servicio cubre la tramitación, no el resultado. Presentar bien no garantiza la concesión, pero una presentación mal hecha garantiza el descarte. El diagnóstico previo sirve precisamente para no presentarse cuando el encaje no existe.',
+                a: 'No pagas nada. El servicio funciona estrictamente a comisión de éxito: si la Administración deniega la subvención, Startidea no cobra. Sin facturas, sin penalizaciones. El diagnóstico previo sirve precisamente para no presentarse cuando el encaje no existe.',
               },
               {
                 q: '¿Puede Startidea presentar en mi nombre sin que yo esté?',
@@ -220,7 +204,7 @@ const jsonLd = [
             <em class="italic text-magenta">abierta ahora mismo?</em>
           </h2>
           <p class="mt-4 max-w-prose text-paper/70">
-            Rellena el formulario en 10 minutos. En 24h tienes el diagnóstico y el presupuesto.
+            Rellena el formulario en 10 minutos. En 24–48h tienes el diagnóstico de encaje. Sin coste inicial.
           </p>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row">

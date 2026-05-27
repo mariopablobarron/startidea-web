@@ -5,28 +5,97 @@ import { SITE_URL } from '@/lib/jsonld';
 
 <Base
   title="Expediente recibido — Startidea"
-  description="Hemos recibido tu expediente. En 24h recibirás el diagnóstico de encaje y el presupuesto."
+  description="Hemos recibido tu solicitud. Revisa tu email para acceder al portal de seguimiento."
   ogSlug="page/subvenciones-presentar"
 >
-  <section class="flex min-h-[60vh] flex-col items-center justify-center border-b border-ink/15 bg-paper py-20 text-center">
-    <div class="container-x max-w-xl">
-      <span class="label">— Recibido</span>
-      <h1 class="mt-4 font-display text-display-lg leading-tight text-ink">
-        Expediente recibido.<br />
-        <em class="italic text-magenta">En 24h tienes el diagnóstico.</em>
-      </h1>
-      <p class="mt-6 text-ink/70">
-        Hemos recibido todos los datos. El equipo de Startidea revisará el encaje con la convocatoria y te enviará un diagnóstico y el presupuesto exacto en un máximo de 24 horas hábiles.
-      </p>
-      <p class="mt-4 text-sm text-ink/50">
-        Si tienes documentos adicionales que quieras añadir, envíalos a{' '}
+  <section class="border-b border-ink/15 bg-paper py-20">
+    <div class="container-x max-w-2xl">
+
+      <!-- Confirmación principal -->
+      <div class="mb-10 border-b border-ink/15 pb-10">
+        <span class="label">— Expediente recibido</span>
+        <h1 class="mt-4 font-display text-display-lg leading-tight text-ink">
+          Solicitud enviada.<br />
+          <em class="italic text-magenta">Revisa tu email.</em>
+        </h1>
+        <p class="mt-5 max-w-prose text-ink/70">
+          Hemos recibido todos los datos. Te acabamos de enviar dos emails: el acceso a tu portal de cliente y la confirmación del expediente.
+        </p>
+      </div>
+
+      <!-- Caja de acceso al portal -->
+      <div class="mb-10 border-2 border-ink bg-ink p-6 text-paper">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-3">Paso siguiente — Importante</p>
+        <h2 class="font-display text-xl text-paper mb-3">Accede a tu portal de seguimiento</h2>
+        <p class="text-sm text-paper/75 leading-relaxed mb-5">
+          Acabas de recibir un email con un <strong class="text-paper">enlace de acceso directo</strong> a tu portal de cliente. Sin contraseña: un solo clic y estás dentro. El enlace es válido durante 1 hora.
+        </p>
+        <p class="text-xs text-paper/50 leading-relaxed">
+          Si no lo ves en unos minutos, revisa la carpeta de spam. También puedes solicitar un nuevo acceso en{' '}
+          <a href="/portal" class="text-magenta hover:underline">startidea.es/portal</a>.
+        </p>
+      </div>
+
+      <!-- Qué pasa ahora -->
+      <div class="mb-10">
+        <h2 class="font-display text-xl text-ink mb-6">¿Qué pasa ahora?</h2>
+        <ol class="space-y-0 divide-y divide-ink/10 border-y border-ink/10">
+          {[
+            {
+              n: '01',
+              t: 'Accedes al portal',
+              d: 'Con el enlace que te acabamos de enviar por email. Allí puedes ver el estado del expediente en tiempo real.',
+            },
+            {
+              n: '02',
+              t: 'Analizamos el encaje',
+              d: 'En 24–48h el equipo de Startidea revisa la convocatoria y te envía el diagnóstico de encaje: si tiene sentido presentarse y qué documentación hace falta.',
+            },
+            {
+              n: '03',
+              t: 'La IA genera el expediente',
+              d: 'Memoria técnica, presupuesto justificado y guía de presentación listos y revisados por un consultor.',
+            },
+            {
+              n: '04',
+              t: 'Tú aprobáis y se presenta',
+              d: 'Lo revisáis en el portal. Startidea presenta (con apoderamiento REA) o vosotros con vuestro certificado, según lo que hayáis indicado. Sin coste inicial.',
+            },
+          ].map((step) => (
+            <li class="grid grid-cols-12 gap-x-4 py-5">
+              <span class="col-span-2 font-mono text-sm text-magenta">{step.n}</span>
+              <div class="col-span-10">
+                <p class="font-medium text-ink">{step.t}</p>
+                <p class="mt-1 text-sm text-ink/60 leading-relaxed">{step.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <!-- Honorarios -->
+      <div class="mb-10 border border-ink/10 bg-paper-warm p-5">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Modelo de honorarios</p>
+        <p class="text-sm text-ink/70 leading-relaxed">
+          Comisión a éxito del <strong class="text-ink">12%</strong> sobre el importe concedido por la Administración. Si la subvención no se concede, no hay ningún coste. La factura se emite cuando la resolución favorable es firme.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <a href="/portal" class="btn">
+          Acceder al portal →
+        </a>
+        <a href="/subvenciones" class="btn-ghost">
+          Ver otras convocatorias
+        </a>
+      </div>
+
+      <p class="mt-8 text-sm text-ink/40">
+        ¿Alguna duda? Escríbenos a{' '}
         <a href="mailto:hola@startidea.es" class="underline hover:text-magenta">hola@startidea.es</a>{' '}
         indicando el nombre de tu entidad.
       </p>
-      <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        <a href="/subvenciones" class="btn">Ver otras convocatorias →</a>
-        <a href="/" class="btn-ghost">Volver al inicio</a>
-      </div>
     </div>
   </section>
 </Base>
