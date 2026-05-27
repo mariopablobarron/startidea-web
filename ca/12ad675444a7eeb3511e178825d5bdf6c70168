@@ -1,0 +1,40 @@
+package-lock.json
+  ai_agent 29-31,2076-2083
+src/pages/api/admin/auto-copiloto/campaign.ts
+  s_fc84abf46d9a4c::t_c2f179d0c77470 1-329,339-344,346-353,355-368,370-488
+  s_fc84abf46d9a4c::t_3c009dbc759280 330-338,345,354,369
+src/pages/admin/index.astro
+  s_fc84abf46d9a4c::t_ebcef9b95284ba 314-326
+package.json
+  s_7c22c888a9e7cc::t_986cfa3c513081 31-33
+src/pages/admin/auto-copiloto/index.astro
+  s_fc84abf46d9a4c::t_fa0c4bd79c4186 1-421
+src/lib/auto-copiloto-db.ts
+  s_fc84abf46d9a4c::t_da2660d006c855 366-397
+src/lib/doc-extractor.ts
+  s_7c22c888a9e7cc::t_d05770daeb3b40 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ca12ad675444a7eeb3511e178825d5bdf6c70168",
+  "prompts": {},
+  "sessions": {
+    "s_7c22c888a9e7cc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dad348a2-6574-4bd1-8d63-fa5356a7d3ae",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
