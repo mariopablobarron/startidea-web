@@ -180,95 +180,140 @@ const jsonLd = [
           <!-- PASO 2: La convocatoria -->
           <fieldset id="step-2" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">La convocatoria</legend>
-            <p class="text-sm text-ink/60">Qué subvención quieres pedir y qué estado tiene el proyecto.</p>
+            <p class="text-sm text-ink/60">Qué subvención quieres pedir y qué importe estimáis solicitar.</p>
 
-            <div class="space-y-2">
-              <p class="label">¿Tienes ya identificada la convocatoria? <span class="text-magenta">*</span></p>
-              <div class="flex gap-6">
-                <label class="flex cursor-pointer items-center gap-2">
-                  <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta" />
-                  <span class="text-sm text-ink">Sí, tengo la URL o referencia BDNS</span>
-                </label>
-                <label class="flex cursor-pointer items-center gap-2">
-                  <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta" />
-                  <span class="text-sm text-ink">No, necesito identificarla</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Si tiene convocatoria -->
-            <div id="has-convocatoria" class="space-y-4" style="display:none">
-              <div class="space-y-1">
-                <label for="convocatoriaUrl" class="label">URL de la convocatoria o referencia BDNS</label>
-                <input
-                  type="url"
-                  id="convocatoriaUrl"
-                  name="convocatoriaUrl"
-                  maxlength="500"
-                  placeholder="https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/..."
-                  class="form-input w-full"
-                />
-              </div>
-              <div class="space-y-1">
-                <label for="convocatoriaNombre" class="label">Nombre de la convocatoria</label>
-                <input
-                  type="text"
-                  id="convocatoriaNombre"
-                  name="convocatoriaNombre"
-                  maxlength="300"
-                  placeholder="Subvenciones para proyectos de acción social Junta de Andalucía"
-                  class="form-input w-full"
-                />
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1">
-                  <label for="plazo" class="label">Fecha límite de presentación</label>
-                  <input
-                    type="date"
-                    id="plazo"
-                    name="plazo"
-                    class="form-input w-full"
-                  />
+            {convTitle ? (
+              /* ── Convocatoria ya preseleccionada desde la landing ── */
+              <div>
+                <input type="hidden" name="tieneConvocatoria" value="si" />
+                <div class="flex items-start gap-3 border border-magenta/30 bg-magenta/5 p-4">
+                  <span class="mt-0.5 text-magenta font-bold text-lg leading-none">✓</span>
+                  <div>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">Convocatoria seleccionada</p>
+                    <p class="font-medium text-ink text-sm leading-snug">{convTitle}</p>
+                    <p class="mt-2 text-xs text-ink/50">
+                      ¿No es esta?{' '}
+                      <a href="/subvenciones/presentar/nuevo" class="text-magenta hover:underline">
+                        Empezar sin convocatoria preseleccionada →
+                      </a>
+                    </p>
+                  </div>
                 </div>
-                <div class="space-y-1">
-                  <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
-                  <input
-                    type="text"
-                    id="importeSolicitado"
-                    name="importeSolicitado"
-                    maxlength="30"
-                    placeholder="15.000 €"
-                    class="form-input w-full"
-                  />
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label for="plazo" class="label">Fecha límite de presentación</label>
+                    <input
+                      type="date"
+                      id="plazo"
+                      name="plazo"
+                      class="form-input w-full"
+                    />
+                  </div>
+                  <div class="space-y-1">
+                    <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
+                    <input
+                      type="text"
+                      id="importeSolicitado"
+                      name="importeSolicitado"
+                      maxlength="30"
+                      placeholder="15.000 €"
+                      class="form-input w-full"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              /* ── Flujo estándar: el usuario indica su convocatoria ── */
+              <div class="space-y-4" id="conv-selector">
+                <div class="space-y-2">
+                  <p class="label">¿Tienes ya identificada la convocatoria? <span class="text-magenta">*</span></p>
+                  <div class="flex gap-6">
+                    <label class="flex cursor-pointer items-center gap-2">
+                      <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta" />
+                      <span class="text-sm text-ink">Sí, tengo la URL o referencia BDNS</span>
+                    </label>
+                    <label class="flex cursor-pointer items-center gap-2">
+                      <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta" />
+                      <span class="text-sm text-ink">No, necesito identificarla</span>
+                    </label>
+                  </div>
+                </div>
 
-            <!-- Si no tiene convocatoria -->
-            <div id="no-convocatoria" class="space-y-4" style="display:none">
-              <div class="space-y-1">
-                <label for="necesidadDesc" class="label">Describe brevemente el proyecto o la necesidad de financiación</label>
-                <textarea
-                  id="necesidadDesc"
-                  name="necesidadDesc"
-                  rows="4"
-                  maxlength="1000"
-                  placeholder="Ej: Queremos financiar un programa de inserción laboral para jóvenes en riesgo de exclusión en Granada. Buscamos entre 20.000 y 50.000€ para el próximo año."
-                  class="form-input w-full resize-none"
-                ></textarea>
+                {/* Si tiene convocatoria */}
+                <div id="has-convocatoria" class="space-y-4" style="display:none">
+                  <div class="space-y-1">
+                    <label for="convocatoriaUrl" class="label">URL de la convocatoria o referencia BDNS</label>
+                    <input
+                      type="url"
+                      id="convocatoriaUrl"
+                      name="convocatoriaUrl"
+                      maxlength="500"
+                      placeholder="https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/..."
+                      class="form-input w-full"
+                    />
+                  </div>
+                  <div class="space-y-1">
+                    <label for="convocatoriaNombre" class="label">Nombre de la convocatoria</label>
+                    <input
+                      type="text"
+                      id="convocatoriaNombre"
+                      name="convocatoriaNombre"
+                      maxlength="300"
+                      placeholder="Subvenciones para proyectos de acción social Junta de Andalucía"
+                      class="form-input w-full"
+                    />
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                      <label for="plazo" class="label">Fecha límite de presentación</label>
+                      <input
+                        type="date"
+                        id="plazo"
+                        name="plazo"
+                        class="form-input w-full"
+                      />
+                    </div>
+                    <div class="space-y-1">
+                      <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
+                      <input
+                        type="text"
+                        id="importeSolicitado"
+                        name="importeSolicitado"
+                        maxlength="30"
+                        placeholder="15.000 €"
+                        class="form-input w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Si no tiene convocatoria */}
+                <div id="no-convocatoria" class="space-y-4" style="display:none">
+                  <div class="space-y-1">
+                    <label for="necesidadDesc" class="label">Describe brevemente el proyecto o la necesidad de financiación</label>
+                    <textarea
+                      id="necesidadDesc"
+                      name="necesidadDesc"
+                      rows="4"
+                      maxlength="1000"
+                      placeholder="Ej: Queremos financiar un programa de inserción laboral para jóvenes en riesgo de exclusión en Granada. Buscamos entre 20.000 y 50.000€ para el próximo año."
+                      class="form-input w-full resize-none"
+                    ></textarea>
+                  </div>
+                  <div class="space-y-1">
+                    <label for="importeEstimado" class="label">Importe estimado que necesitas</label>
+                    <input
+                      type="text"
+                      id="importeEstimado"
+                      name="importeEstimado"
+                      maxlength="30"
+                      placeholder="30.000 €"
+                      class="form-input w-full"
+                    />
+                  </div>
+                </div>
               </div>
-              <div class="space-y-1">
-                <label for="importeEstimado" class="label">Importe estimado que necesitas</label>
-                <input
-                  type="text"
-                  id="importeEstimado"
-                  name="importeEstimado"
-                  maxlength="30"
-                  placeholder="30.000 €"
-                  class="form-input w-full"
-                />
-              </div>
-            </div>
+            )}
 
             <div class="space-y-1">
               <label for="descripcionProyecto" class="label">Descripción del proyecto a financiar <span class="text-magenta">*</span></label>
@@ -353,16 +398,23 @@ const jsonLd = [
               </div>
             </div>
 
-            <div class="space-y-2">
-              <p class="label">¿Queréis que Startidea actúe como representante (apoderamiento)?</p>
-              <div class="flex gap-6">
-                <label class="flex cursor-pointer items-center gap-2">
-                  <input type="radio" name="apoderamiento" value="si" class="accent-magenta" />
-                  <span class="text-sm text-ink">Sí, quiero delegar completamente</span>
+            <div class="space-y-3">
+              <p class="label">¿Cómo queréis gestionar la presentación electrónica?</p>
+              <p class="text-xs text-ink/50">En ningún caso Startidea utiliza ni solicita vuestro certificado digital. Siempre permanece bajo vuestro control.</p>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
+                  <input type="radio" name="apoderamiento" value="si" class="accent-magenta mt-0.5 shrink-0" />
+                  <div>
+                    <span class="text-sm font-medium text-ink">Otorgamos apoderamiento a Startidea</span>
+                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea presenta en vuestro nombre usando su propio certificado como representante autorizado. Vosotros solo otorgáis el permiso en la sede electrónica (5 minutos).</p>
+                  </div>
                 </label>
-                <label class="flex cursor-pointer items-center gap-2">
-                  <input type="radio" name="apoderamiento" value="no" class="accent-magenta" />
-                  <span class="text-sm text-ink">No, yo firmo con mi certificado</span>
+                <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
+                  <input type="radio" name="apoderamiento" value="no" class="accent-magenta mt-0.5 shrink-0" />
+                  <div>
+                    <span class="text-sm font-medium text-ink">Preferimos firmar nosotros</span>
+                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara y entrega el expediente completo. Cuando dais el visto bueno, os enviamos las instrucciones para que firmáis y presentéis vosotros con vuestro certificado (menos de 10 minutos).</p>
+                  </div>
                 </label>
               </div>
             </div>
