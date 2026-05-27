@@ -183,6 +183,18 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_portal_session_email ON portal_sessions (email);
     CREATE INDEX IF NOT EXISTS idx_portal_users_email  ON portal_users (email);
   `);
+  // Tabla de mensajes expediente (puede ya existir — migración segura)
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS expediente_messages (
+      id         TEXT PRIMARY KEY,
+      exp_id     TEXT NOT NULL,
+      direction  TEXT NOT NULL DEFAULT 'admin',
+      body       TEXT NOT NULL,
+      leido      INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_exp_msg ON expediente_messages (exp_id, created_at);
+  `);
   return _db;
 }
 
@@ -489,6 +501,59 @@ export function emailHasPortalAccess(email: string): { registered: boolean; hasE
   const user = getPortalUser(email);
   const exps = getExpedientesByEmail(email);
   return { registered: !!user, hasExpedientes: exps.length > 0 };
+}
+
+// ─── Mensajes de expediente ───────────────────────────────────────────────────
+
+export interface ExpedienteMessage {
+  id:         string;
+  exp_id:     string;
+  direction:  'admin' | 'client';
+  body:       string;
+  leido:      number; // 0 | 1
+  created_at: number;
+}
+
+export function addExpedienteMessage(
+  expId: string,
+  direction: 'admin' | 'client',
+  body: string,
+): ExpedienteMessage {
+  const db  = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const hex = Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  const id  = `MSG-${hex.toUpperCase()}`;
+  db.prepare(`
+    INSERT INTO expediente_messages (id, exp_id, direction, body, leido, created_at)
+    VALUES (@id, @exp_id, @direction, @body, 0, @created_at)
+  `).run({ id, exp_id: expId, direction, body, created_at: now });
+  return { id, exp_id: expId, direction, body, leido: 0, created_at: now };
+}
+
+export function getExpedienteMessages(expId: string): ExpedienteMessage[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM expediente_messages WHERE exp_id = ? ORDER BY created_at ASC`,
+  ).all(expId) as ExpedienteMessage[];
+}
+
+export function markMessagesRead(expId: string, direction: 'admin' | 'client'): void {
+  const db = getDb();
+  // Marca como leídos los mensajes enviados en esa dirección (el receptor los ha leído)
+  const readerSide = direction === 'admin' ? 'client' : 'admin';
+  db.prepare(
+    `UPDATE expediente_messages SET leido = 1 WHERE exp_id = ? AND direction = ? AND leido = 0`,
+  ).run(expId, readerSide);
+}
+
+export function countUnreadMessages(expId: string, readerDirection: 'admin' | 'client'): number {
+  const db = getDb();
+  // El admin lee mensajes del cliente y viceversa
+  const senderSide = readerDirection === 'admin' ? 'client' : 'admin';
+  const row = db.prepare(
+    `SELECT COUNT(*) as n FROM expediente_messages WHERE exp_id = ? AND direction = ? AND leido = 0`,
+  ).get(expId, senderSide) as { n: number };
+  return row.n;
 }
 
 // ─── Portal de clientes — Auth magic-link ────────────────────────────────────

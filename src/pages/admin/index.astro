@@ -271,7 +271,7 @@ const STATUS_COLORS: Record<string, string> = {
           <p class="mt-2 text-sm text-ink/60 leading-relaxed">
             Registro, acceso, expedientes y servicios para clientes.
           </p>
-          <div class="mt-4 flex gap-3">
+          <div class="mt-4 flex flex-wrap gap-3">
             <a href="/admin/portal-usuarios"
                class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
               Usuarios →
@@ -279,6 +279,11 @@ const STATUS_COLORS: Record<string, string> = {
             <a href="/portal" target="_blank"
                class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
               Ver portal ↗
+            </a>
+            <a href="/api/admin/backup-db" id="backup-link"
+               class="font-mono text-[11px] uppercase tracking-widest text-ink/30 hover:text-magenta"
+               title="Descarga la base de datos completa">
+              💾 Backup BD →
             </a>
           </div>
         </div>
@@ -342,3 +347,20 @@ const STATUS_COLORS: Record<string, string> = {
     </div>
   </div>
 </Base>
+
+<script>
+  // Backup BD — descarga con autenticación
+  document.getElementById('backup-link')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const token = document.cookie.split('; ').find(r => r.startsWith('startidea_admin='))?.split('=')[1] ?? '';
+    const res = await fetch('/api/admin/backup-db', { headers: { 'x-admin-token': token } });
+    if (!res.ok) { alert('Error al generar el backup. ¿Estás autenticado?'); return; }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `expedientes-${new Date().toISOString().slice(0,10)}.db`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>

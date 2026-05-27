@@ -10,7 +10,7 @@
  */
 import Base from '@/layouts/Base.astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
-import { getExpediente } from '@/lib/expedientes-db';
+import { getExpediente, getExpedienteMessages, markMessagesRead } from '@/lib/expedientes-db';
 import { detectSede } from '@/lib/sedes-map';
 import { parseEligibility } from '@/lib/copiloto-engine';
 
@@ -44,6 +44,10 @@ function fmtDate(ts: number | null): string {
 }
 
 const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
+
+// Mensajes del expediente (marcar como leídos al abrir admin)
+const mensajes = getExpedienteMessages(exp.id);
+markMessagesRead(exp.id, 'admin'); // el admin ha leído los mensajes del cliente
 
 // Parsear elegibilidad guardada en BD
 const eligibilidad = exp.ai_elegibilidad ? parseEligibility(exp.ai_elegibilidad) : null;
@@ -421,6 +425,55 @@ const sedeDetectada = detectSede({
             </div>
           )}
 
+          <!-- Mensajes con el cliente -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-display text-lg text-ink mb-4">💬 Mensajes con el cliente</h2>
+
+            <!-- Hilo de mensajes -->
+            <div class="space-y-3 mb-4 max-h-80 overflow-y-auto" id="msg-thread">
+              {mensajes.length === 0 ? (
+                <p class="text-sm text-ink/40 italic">Sin mensajes aún.</p>
+              ) : mensajes.map((m) => (
+                <div class:list={[
+                  'p-3 text-sm leading-relaxed whitespace-pre-wrap',
+                  m.direction === 'admin'
+                    ? 'bg-magenta/5 border-l-2 border-magenta ml-8'
+                    : 'bg-blue-50 border-l-2 border-blue-300 mr-8',
+                ]}>
+                  <div class="font-mono text-[10px] uppercase tracking-widest mb-1"
+                       class:list={[m.direction === 'admin' ? 'text-magenta' : 'text-blue-500']}>
+                    {m.direction === 'admin' ? 'Tú (Startidea)' : `${exp.representante} (cliente)`}
+                    · {new Date(m.created_at * 1000).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    {m.direction === 'client' && !m.leido && (
+                      <span class="ml-2 bg-blue-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">NUEVO</span>
+                    )}
+                  </div>
+                  <div>{m.body}</div>
+                </div>
+              ))}
+            </div>
+
+            <!-- Enviar mensaje -->
+            <div class="border-t border-ink/10 pt-4 space-y-2">
+              <label class="font-mono text-[10px] uppercase tracking-widest text-ink/50 block">Mensaje al cliente</label>
+              <textarea
+                id="msg-body"
+                rows="3"
+                placeholder="Escribe un mensaje para el cliente..."
+                class="w-full border border-ink/25 bg-white px-3 py-2 text-sm text-ink focus:border-magenta focus:outline-none resize-none"
+              ></textarea>
+              <button
+                id="btn-send-msg"
+                type="button"
+                class="btn text-sm"
+                data-id={exp.id}
+              >
+                Enviar mensaje y notificar →
+              </button>
+              <p id="msg-send-status" class="hidden text-xs"></p>
+            </div>
+          </div>
+
           <!-- Fase 2: Sede electrónica -->
           <div class:list={[
             'border p-5',
@@ -666,4 +719,46 @@ const sedeDetectada = detectSede({
       btn.textContent = 'Generar factura →';
     }
   });
+
+  // Enviar mensaje al cliente
+  document.getElementById('btn-send-msg')?.addEventListener('click', async (e) => {
+    const btn    = e.currentTarget as HTMLButtonElement;
+    const expId  = btn.dataset.id!;
+    const ta     = document.getElementById('msg-body') as HTMLTextAreaElement;
+    const status = document.getElementById('msg-send-status')!;
+    const body   = ta.value.trim();
+    if (!body) { ta.focus(); return; }
+    btn.disabled    = true;
+    btn.textContent = '⏳ Enviando...';
+    status.classList.add('hidden');
+    try {
+      const res = await fetch('/api/admin/mensaje-expediente', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body:    JSON.stringify({ expId, body }),
+      });
+      const j = await res.json();
+      status.classList.remove('hidden');
+      if (j.ok) {
+        status.textContent  = '✅ Mensaje enviado y email notificado al cliente.';
+        status.style.color  = '#16a34a';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        status.textContent  = `❌ ${j.error ?? 'Error'}`;
+        status.style.color  = '#dc2626';
+        btn.disabled        = false;
+        btn.textContent     = 'Enviar mensaje y notificar →';
+      }
+    } catch {
+      status.classList.remove('hidden');
+      status.textContent  = '❌ Error de red.';
+      status.style.color  = '#dc2626';
+      btn.disabled        = false;
+      btn.textContent     = 'Enviar mensaje y notificar →';
+    }
+  });
+
+  // Auto-scroll al final del hilo de mensajes
+  const thread = document.getElementById('msg-thread');
+  if (thread) thread.scrollTop = thread.scrollHeight;
 </script>

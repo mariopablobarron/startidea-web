@@ -13,6 +13,8 @@ import {
   getPortalSessionEmail,
   getExpedientesByEmail,
   getPortalUser,
+  getExpedienteMessages,
+  markMessagesRead,
 } from '@/lib/expedientes-db';
 import type { Expediente, PortalUser } from '@/lib/expedientes-db';
 
@@ -379,7 +381,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:28px">
 
       <!-- Copiloto de Subvenciones -->
-      <a href="/subvenciones/presentar/nuevo" target="_blank"
+      <a href="/copiloto-subvenciones" target="_blank"
          style="background:#fff;border:2px solid #e6356b;padding:20px;text-decoration:none;color:#1f1f22;display:block;transition:box-shadow .15s"
          onmouseover="this.style.boxShadow='0 4px 16px rgba(230,53,107,.15)'"
          onmouseout="this.style.boxShadow='none'">
@@ -470,11 +472,52 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     </h2>
 
     {expedientes.length === 0 ? (
-      <div class="empty">
-        <p>No encontramos expedientes vinculados a este email.</p>
-        <a href="/subvenciones/presentar/nuevo" class="action-link" style="text-decoration:none;display:inline-block">
-          Solicitar el Copiloto →
-        </a>
+      <div style="background:#fff;border:1px solid #e0ddd8;padding:0;overflow:hidden">
+        <!-- Bienvenida onboarding -->
+        <div style="background:#1f1f22;color:#fff;padding:32px 28px">
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#e6356b;margin-bottom:10px">Primeros pasos</div>
+          <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;line-height:1.2">Bienvenido al portal de Startidea</h2>
+          <p style="font-size:14px;color:#aaa;line-height:1.6">Tu cuenta está activa. Aquí podrás gestionar todos tus expedientes de subvenciones y otros servicios.</p>
+        </div>
+        <!-- Pasos de onboarding -->
+        <div style="padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+          <div style="border:2px solid #e6356b;padding:20px">
+            <div style="font-size:24px;margin-bottom:10px">📋</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:6px">Paso 1 — Disponible</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Solicita una subvención</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Rellena el formulario con los datos de tu organización y la convocatoria. La IA genera la documentación en 24-48h.</div>
+            <a href="/copiloto-subvenciones" target="_blank"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#e6356b;text-decoration:none;font-weight:700">
+              Cómo funciona →
+            </a>
+          </div>
+          <div style="border:1px solid #e0ddd8;padding:20px;background:#faf8f5">
+            <div style="font-size:24px;margin-bottom:10px">🎯</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">Paso 2 — Opcional</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Diagnóstico gratuito</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Evaluación express de tu comunicación, captación de fondos o impacto social. Completamente gratuito.</div>
+            <a href="/diagnostico" target="_blank"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#888;text-decoration:none;font-weight:700">
+              Hacer diagnóstico →
+            </a>
+          </div>
+          <div style="border:1px solid #e0ddd8;padding:20px;background:#faf8f5">
+            <div style="font-size:24px;margin-bottom:10px">📞</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">¿Tienes dudas?</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Habla con el equipo</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">El equipo de Startidea está disponible para resolver cualquier pregunta sobre subvenciones o servicios.</div>
+            <a href="mailto:hola@startidea.es"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#888;text-decoration:none;font-weight:700">
+              hola@startidea.es →
+            </a>
+          </div>
+        </div>
+        <div style="padding:0 28px 28px">
+          <a href="/subvenciones/presentar/nuevo"
+             style="display:inline-block;background:#e6356b;color:#fff;text-decoration:none;padding:13px 28px;font-family:monospace;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">
+            Solicitar el Copiloto de Subvenciones →
+          </a>
+        </div>
       </div>
     ) : (
       expedientes.map((exp: Expediente) => {
@@ -602,33 +645,74 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                 </div>
               </div>
 
-              <!-- Documentos generados -->
+              <!-- Documentos generados — links descargables -->
               {exp.ai_memoria && (
                 <div class="docs-section">
-                  <details>
-                    <summary>📄 Memoria técnica</summary>
-                    <pre class="doc-content">{exp.ai_memoria}</pre>
-                  </details>
-                  {exp.ai_presupuesto && (
-                    <details>
-                      <summary>💶 Presupuesto</summary>
-                      <pre class="doc-content">{exp.ai_presupuesto}</pre>
-                    </details>
-                  )}
-                  {exp.ai_checklist && (
-                    <details>
-                      <summary>📋 Checklist de documentación necesaria</summary>
-                      <pre class="doc-content">{exp.ai_checklist}</pre>
-                    </details>
-                  )}
-                  {exp.ai_guia && (
-                    <details>
-                      <summary>🗺️ Guía de presentación paso a paso</summary>
-                      <pre class="doc-content">{exp.ai_guia}</pre>
-                    </details>
-                  )}
+                  <div style="padding:14px 0 0;border-top:1px solid #e0ddd8">
+                    <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
+                      📄 Documentos generados — guarda como PDF desde el navegador
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      {exp.ai_memoria && (
+                        <a href={`/portal/docs/${exp.id}/memoria`} target="_blank"
+                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          📝 Memoria →
+                        </a>
+                      )}
+                      {exp.ai_presupuesto && (
+                        <a href={`/portal/docs/${exp.id}/presupuesto`} target="_blank"
+                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          💶 Presupuesto →
+                        </a>
+                      )}
+                      {exp.ai_checklist && (
+                        <a href={`/portal/docs/${exp.id}/checklist`} target="_blank"
+                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          ✅ Checklist →
+                        </a>
+                      )}
+                      {exp.ai_guia && (
+                        <a href={`/portal/docs/${exp.id}/guia`} target="_blank"
+                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          🗺 Guía →
+                        </a>
+                      )}
+                    </div>
+                    <p style="font-size:11px;color:#aaa;margin-top:8px">
+                      Abre cada documento y usa Ctrl+P (o Cmd+P) → Guardar como PDF para descargarlo.
+                    </p>
+                  </div>
                 </div>
               )}
+
+              <!-- Mensajes del equipo Startidea -->
+              {(() => {
+                const msgs = getExpedienteMessages(exp.id);
+                // Marcar mensajes del admin como leídos al cargar el portal
+                markMessagesRead(exp.id, 'client');
+                if (msgs.length === 0) return null;
+                return (
+                  <div style="margin-top:14px;border-top:1px solid #e0ddd8;padding-top:14px">
+                    <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
+                      💬 Mensajes de Startidea
+                    </div>
+                    <div style="space-y:8px">
+                      {msgs.map((m) => (
+                        <div style={`margin-bottom:10px;padding:12px 14px;font-size:13px;line-height:1.6;border-left:3px solid ${m.direction === 'admin' ? '#e6356b' : '#94a3b8'};background:${m.direction === 'admin' ? '#fff7f8' : '#f8fafc'};white-space:pre-wrap`}>
+                          <div style={`font-family:monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;color:${m.direction === 'admin' ? '#e6356b' : '#64748b'}`}>
+                            {m.direction === 'admin' ? 'Startidea' : 'Tú'} ·{' '}
+                            {new Date(m.created_at * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' } as any)}
+                          </div>
+                          {m.body}
+                        </div>
+                      ))}
+                    </div>
+                    <p style="font-size:12px;color:#aaa;margin-top:4px">
+                      Para responder escríbenos a <a href={`mailto:hola@startidea.es?subject=Expediente ${exp.id}`} style="color:#e6356b">hola@startidea.es</a>
+                    </p>
+                  </div>
+                );
+              })()}
 
               <!-- Próximos pasos según estado -->
               <div class="next-steps">
