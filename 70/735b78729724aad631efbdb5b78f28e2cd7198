@@ -1,0 +1,21 @@
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_fc84abf46d9a4c::t_04d7ed0076362e 1-426
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_81b2d3073d6a3c 80-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "70735b78729724aad631efbdb5b78f28e2cd7198",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
