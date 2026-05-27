@@ -1,0 +1,28 @@
+src/lib/expedientes-db.ts
+  s_fc84abf46d9a4c::t_2af20a580d9733 209-221
+  s_fc84abf46d9a4c::t_e0bad91cbad753 816-949
+src/pages/api/eligibilidad.ts
+  s_fc84abf46d9a4c::t_b87e0d817da3d8 167-178
+  s_fc84abf46d9a4c::t_faffd21f0107f8 11
+src/pages/admin/convocatorias-stats/index.astro
+  s_fc84abf46d9a4c::t_82bef704460b6b 1-7,9-398
+  s_fc84abf46d9a4c::t_049cfd69d0573c 8
+src/pages/admin/index.astro
+  s_fc84abf46d9a4c::t_ec5dbb64256f32 327-339
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "79b9435289cfb574502f4feb60aa7c45a8c2a79b",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
