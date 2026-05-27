@@ -1,0 +1,204 @@
+---
+/**
+ * /portal — Portal de clientes de Startidea.
+ * Acceso por magic link (sin contraseña).
+ * Si ya hay sesión activa, redirige al dashboard.
+ */
+import { getPortalSessionEmail } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+const COOKIE = 'startidea_portal';
+const session = Astro.cookies.get(COOKIE)?.value;
+if (session) {
+  const email = getPortalSessionEmail(session);
+  if (email) return Astro.redirect('/portal/dashboard');
+}
+
+const mensaje = Astro.url.searchParams.get('m');
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portal de clientes · Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: #faf8f5;
+      color: #1f1f22;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border: 1px solid #e0ddd8;
+      padding: 40px 36px;
+    }
+    .logo {
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 28px;
+    }
+    .logo span { color: #e6356b; font-weight: 700; }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    p.sub {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    label {
+      display: block;
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    input[type="email"] {
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      color: #1f1f22;
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.15s;
+    }
+    input[type="email"]:focus { border-color: #e6356b; }
+    button[type="submit"] {
+      width: 100%;
+      background: #e6356b;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .msg {
+      margin-top: 16px;
+      padding: 12px 14px;
+      font-size: 14px;
+      border: 1px solid;
+      display: none;
+    }
+    .msg.ok { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; }
+    .msg.show { display: block; }
+    .aviso {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+    .aviso a { color: #e6356b; text-decoration: none; }
+    .pie {
+      margin-top: 32px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #ccc;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">— <span>Startidea</span> · Portal clientes</div>
+
+    <h1>Accede a tus expedientes</h1>
+    <p class="sub">
+      Introduce el email con el que enviaste tu solicitud y recibirás un enlace de acceso.
+      Sin contraseña.
+    </p>
+
+    {mensaje === 'ok' && (
+      <div class="msg ok show">
+        ✅ Enlace enviado. Revisa tu bandeja de entrada (y la carpeta de spam por si acaso).
+      </div>
+    )}
+    {mensaje === 'err' && (
+      <div class="msg err show">
+        ❌ Algo fue mal. Inténtalo de nuevo o escríbenos a <a href="mailto:hola@startidea.es">hola@startidea.es</a>
+      </div>
+    )}
+
+    {!mensaje && (
+      <form id="form-acceso">
+        <label for="email">Tu email</label>
+        <input type="email" id="email" name="email" placeholder="tu@organizacion.es" required autocomplete="email">
+        <button type="submit" id="btn-submit">Enviar enlace de acceso</button>
+        <div id="msg" class="msg"></div>
+      </form>
+    )}
+
+    <p class="aviso">
+      ¿No tienes expediente todavía?
+      <a href="/subvenciones/presentar/nuevo">Solicita el Copiloto de Subvenciones →</a>
+    </p>
+  </div>
+
+  <div class="pie">Startidea Consulting, S.L. · CIF B19583632 · Granada</div>
+
+  <script>
+    document.getElementById('form-acceso')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit') as HTMLButtonElement;
+      const msg = document.getElementById('msg')!;
+      const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+      btn.disabled = true;
+      btn.textContent = '⏳ Enviando...';
+      msg.className = 'msg';
+
+      try {
+        const res = await fetch('/api/portal-acceso', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const j = await res.json();
+        if (j.ok) {
+          msg.textContent = '✅ Enlace enviado. Revisa tu bandeja de entrada (y spam por si acaso).';
+          msg.className = 'msg ok show';
+          btn.textContent = '✅ Enlace enviado';
+        } else {
+          msg.textContent = 'Algo fue mal. Inténtalo de nuevo.';
+          msg.className = 'msg err show';
+          btn.disabled = false;
+          btn.textContent = 'Enviar enlace de acceso';
+        }
+      } catch {
+        msg.textContent = 'Error de red. Inténtalo de nuevo.';
+        msg.className = 'msg err show';
+        btn.disabled = false;
+        btn.textContent = 'Enviar enlace de acceso';
+      }
+    });
+  </script>
+</body>
+</html>

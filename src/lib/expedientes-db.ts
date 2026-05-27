@@ -149,6 +149,23 @@ function getDb(): Database.Database {
   try {
     _db.exec(`CREATE TABLE IF NOT EXISTS factura_counter (year INTEGER PRIMARY KEY, last_n INTEGER NOT NULL DEFAULT 0)`);
   } catch { /* ya existe */ }
+  // Tablas del portal de clientes
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS portal_magic_tokens (
+      token      TEXT PRIMARY KEY,
+      email      TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS portal_sessions (
+      token      TEXT PRIMARY KEY,
+      email      TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_portal_magic_email ON portal_magic_tokens (email);
+    CREATE INDEX IF NOT EXISTS idx_portal_session_email ON portal_sessions (email);
+  `);
   return _db;
 }
 
@@ -316,4 +333,124 @@ export function statsExpedientes(): Record<ExpedienteStatus | 'total', number> {
   const result: Record<string, number> = { total };
   for (const row of rows) result[row.status] = row.n;
   return result as Record<ExpedienteStatus | 'total', number>;
+}
+
+/** Estadísticas de contratos para el panel admin */
+export function statsContratos(): {
+  sinEnviar: number;
+  enviados: number;
+  aceptados: number;
+} {
+  const db = getDb();
+  const sinEnviar = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes WHERE contrato_token IS NULL AND status NOT IN ('rechazado')`,
+  ).get() as { n: number }).n;
+  const enviados = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes WHERE contrato_token IS NOT NULL AND contrato_at IS NULL`,
+  ).get() as { n: number }).n;
+  const aceptados = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes WHERE contrato_at IS NOT NULL`,
+  ).get() as { n: number }).n;
+  return { sinEnviar, enviados, aceptados };
+}
+
+/** Pipeline económico: importes concedidos y facturación */
+export function statsEconomico(): {
+  facturadoTotal: number;   // sum importe_concedido * 0.12 donde factura generada
+  pipelineTotal: number;    // sum importe_concedido * 0.12 donde no hay factura aún
+  pendienteFacturar: number; // count con importe pero sin factura
+} {
+  const db = getDb();
+  const facturadas = db.prepare(
+    `SELECT importe_concedido FROM expedientes WHERE factura_num IS NOT NULL AND importe_concedido IS NOT NULL`,
+  ).all() as { importe_concedido: string }[];
+  const sinFacturar = db.prepare(
+    `SELECT importe_concedido FROM expedientes WHERE importe_concedido IS NOT NULL AND factura_num IS NULL`,
+  ).all() as { importe_concedido: string }[];
+
+  const parse = (s: string) => {
+    const n = parseFloat(s.replace(/[.,\s€]/g, (c) => (c === ',' ? '.' : '')));
+    return isNaN(n) ? 0 : n;
+  };
+
+  const facturadoTotal = facturadas.reduce((sum, r) => sum + parse(r.importe_concedido) * 0.12, 0);
+  const pipelineTotal  = sinFacturar.reduce((sum, r) => sum + parse(r.importe_concedido) * 0.12, 0);
+  return { facturadoTotal, pipelineTotal, pendienteFacturar: sinFacturar.length };
+}
+
+/** Expedientes recibidos sin procesar (recibido hace más de 24h sin IA) */
+export function getExpedientesRecibidosSinProcesar(): Expediente[] {
+  const db = getDb();
+  const umbral = Math.floor(Date.now() / 1000) - 24 * 3600;
+  return db.prepare(
+    `SELECT * FROM expedientes WHERE status = 'recibido' AND created_at < ? ORDER BY created_at ASC`,
+  ).all(umbral) as Expediente[];
+}
+
+/** Expedientes más recientes (para listado rápido en admin home) */
+export function getExpedientesRecientes(limit = 5): Expediente[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM expedientes ORDER BY created_at DESC LIMIT ?`,
+  ).all(limit) as Expediente[];
+}
+
+/** Expedientes de un email concreto (portal de clientes) */
+export function getExpedientesByEmail(email: string): Expediente[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM expedientes WHERE LOWER(email) = LOWER(?) ORDER BY created_at DESC`,
+  ).all(email) as Expediente[];
+}
+
+// ─── Portal de clientes — Auth magic-link ────────────────────────────────────
+
+import { randomBytes } from 'node:crypto';
+
+export function createMagicToken(email: string): string {
+  const db = getDb();
+  const token = randomBytes(24).toString('hex');
+  const now = Math.floor(Date.now() / 1000);
+  // Limpiar tokens anteriores del mismo email
+  db.prepare(`DELETE FROM portal_magic_tokens WHERE email = LOWER(?)`).run(email);
+  db.prepare(
+    `INSERT INTO portal_magic_tokens (token, email, expires_at, created_at) VALUES (?, LOWER(?), ?, ?)`,
+  ).run(token, email, now + 3600, now); // 1h de validez
+  return token;
+}
+
+export function validateMagicToken(token: string): string | null {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const row = db.prepare(
+    `SELECT email FROM portal_magic_tokens WHERE token = ? AND expires_at > ?`,
+  ).get(token, now) as { email: string } | undefined;
+  if (!row) return null;
+  db.prepare(`DELETE FROM portal_magic_tokens WHERE token = ?`).run(token);
+  return row.email;
+}
+
+export function createPortalSession(email: string): string {
+  const db = getDb();
+  const token = randomBytes(32).toString('hex');
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(
+    `INSERT INTO portal_sessions (token, email, expires_at, created_at) VALUES (?, LOWER(?), ?, ?)`,
+  ).run(token, email, now + 7 * 24 * 3600, now); // 7 días
+  return token;
+}
+
+export function getPortalSessionEmail(token: string): string | null {
+  if (!token) return null;
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const row = db.prepare(
+    `SELECT email FROM portal_sessions WHERE token = ? AND expires_at > ?`,
+  ).get(token, now) as { email: string } | undefined;
+  return row?.email ?? null;
+}
+
+export function deletePortalSession(token: string): void {
+  const db = getDb();
+  db.prepare(`DELETE FROM portal_sessions WHERE token = ?`).run(token);
 }

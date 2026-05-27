@@ -1,0 +1,28 @@
+---
+/**
+ * /portal/link/[token] — Valida el magic token y crea la sesión.
+ * Redirige al dashboard si es válido, al portal si no.
+ */
+import { validateMagicToken, createPortalSession } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+const { token } = Astro.params;
+const email = token ? validateMagicToken(token) : null;
+
+if (!email) {
+  return Astro.redirect('/portal?m=err');
+}
+
+const sessionToken = createPortalSession(email);
+
+Astro.cookies.set('startidea_portal', sessionToken, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'lax',
+  path: '/',
+  maxAge: 7 * 24 * 3600, // 7 días
+});
+
+return Astro.redirect('/portal/dashboard');
+---
