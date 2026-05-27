@@ -16,7 +16,7 @@ faqs:
   - question: '¿Cómo se tramita una subvención con certificado digital?'
     answer: 'Se accede a la sede electrónica oficial del organismo convocante con el certificado digital de representante de persona jurídica (no vale el certificado personal del director), se rellenan los formularios online, se adjunta la documentación firmada digitalmente (memoria del proyecto, presupuesto detallado, certificados de estar al corriente, estatutos), se firma la solicitud completa con AutoFirma y se obtiene un justificante con código CSV. Todo el proceso debe completarse antes del cierre del plazo — la sede electrónica suele saturarse las últimas horas.'
   - question: '¿Cuánto cuesta que Startidea tramite la subvención?'
-    answer: 'Startidea ofrece dos modalidades: tramitación puntual (preparación de toda la documentación + presentación electrónica con certificado digital + acompañamiento hasta la resolución) con precio cerrado dependiente del tamaño del proyecto, o acompañamiento integral en fundraising (identificación continua de convocatorias compatibles + tramitación de las que correspondan + memoria económica anual) en formato de iguala mensual. Para el caso concreto de la Convocatoria 2026 Agenda 2030, Startidea tiene un sprint operativo de 2 semanas: del primer día de decisión al expediente presentado con justificante CSV. Una llamada de 30 minutos sin coste permite valorar encaje y cerrar presupuesto.'
+    answer: 'El servicio funciona a comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia. Para el caso concreto de la Convocatoria 2026 Agenda 2030, el equipo tiene un sprint operativo de 2 semanas: del primer día de decisión al expediente presentado con justificante CSV. El formulario de solicitud está en startidea.es/subvenciones/presentar/nuevo.'
 ---
 
 A las organizaciones del tercer sector que llaman a Startidea les pasa casi siempre lo mismo: las ayudas con sentido aparecen cuando ya no hay tiempo de prepararlas bien. La **Convocatoria 2026 para la Agenda 2030** es exactamente uno de esos casos. Cierra el **20 de junio de 2026** —de forma improrrogable— y es de las pocas líneas que financian a fondo perdido proyectos piloto reales: sostenibilidad, innovación social, comunicación con propósito y redes de alianzas multiactor.
@@ -133,15 +133,15 @@ Si la convocatoria entra en fase de subsanación (la administración pide aclara
 
 ### Post-resolución
 
-Si el proyecto es aprobado, Startidea puede acompañar en la estructura de justificación trimestral que exige la convocatoria (cuotas separadas según alcance). Si es denegado, prepara la documentación de recurso cuando la valoración técnica lo justifica y archiva la memoria para revisión y reaplicación en la próxima edición o en convocatorias complementarias.
+Si el proyecto es aprobado, Startidea puede acompañar en la estructura de justificación trimestral que exige la convocatoria. Si es denegado —y no hay coste porque el modelo es a éxito—, el equipo prepara la documentación de recurso cuando la valoración técnica lo justifica y archiva la memoria para reaplicación.
 
 ## Modalidades de trabajo
 
-- **Tramitación puntual**: una convocatoria, precio cerrado. Para entidades que tienen claro qué proyecto presentar y solo necesitan el acompañamiento técnico-administrativo.
+- **Comisión a éxito**: Startidea cobra el 12% del importe concedido. Si no se aprueba, no hay coste. Para entidades que quieren presentarse sin riesgo económico por adelantado.
 - **Iguala anual de fundraising**: acompañamiento continuo, identificación de convocatorias compatibles a lo largo del año, tramitación de las que se aprueban presentar. Para entidades que quieren profesionalizar el área sin contratar a tiempo completo.
 
 ---
 
 Si tu organización está considerando presentarse a la **Convocatoria 2026 para la Agenda 2030**, lo más operativo es no esperar. El sprint de 2 semanas empieza el día que decidimos juntos que tu proyecto encaja — si arrancamos esta semana, el expediente entra antes del 15 de junio con margen ante imprevistos.
 
-[Reserva 30 minutos con Startidea](/contacto) y en esa llamada repasamos: si tu proyecto encaja con las líneas elegibles, qué documentación ya tienes y qué te falta, y cerramos el alcance + presupuesto de la tramitación. Sin coste, sin compromiso. Si arrancamos, empezamos al día siguiente.
+[Rellena el formulario del Copiloto](/subvenciones/presentar/nuevo) o [contacta directamente](/contacto). En 24–48h el equipo confirma el encaje y qué documentación hace falta. Sin coste inicial, sin compromiso: solo pagas si la subvención se concede.
