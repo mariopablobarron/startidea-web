@@ -199,6 +199,7 @@ function buildLink(linea: Linea) {
   const params = new URLSearchParams({
     title: `Junta de Andalucía — ${linea.titulo} (${linea.id}) · BOJA 2026`,
     slug: linea.slug,
+    hint: linea.desc, // muestra en el paso 2 del formulario qué financia esta línea
   });
   return `/subvenciones/presentar/nuevo?${params.toString()}`;
 }

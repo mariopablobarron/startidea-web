@@ -4,9 +4,10 @@ import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
 
-// Convocatoria pre-seleccionada desde la ficha del buscador
-const convSlug = Astro.url.searchParams.get('slug') ?? '';
+// Convocatoria pre-seleccionada desde la ficha del buscador o landing BOJA
+const convSlug  = Astro.url.searchParams.get('slug')  ?? '';
 const convTitle = Astro.url.searchParams.get('title') ?? '';
+const convHint  = Astro.url.searchParams.get('hint')  ?? ''; // Descripción corta de qué financia
 
 const jsonLd = [
   breadcrumbList([
@@ -42,7 +43,7 @@ const jsonLd = [
     <div class="container-x">
       <span class="label">— Nuevo expediente</span>
       <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
-        {convTitle ? 'Un paso más para solicitar la ayuda.' : 'Cuéntanos la convocatoria.'}
+        {convTitle ? 'Un paso más para solicitar la ayuda.' : 'Arranca el expediente.'}
       </h1>
       <p class="mt-3 max-w-measure text-ink/70">
         Completar este formulario lleva unos 10 minutos. La IA generará automáticamente la memoria técnica, el presupuesto y la guía de presentación adaptados a esta convocatoria.
@@ -177,46 +178,48 @@ const jsonLd = [
             </div>
           </fieldset>
 
-          <!-- PASO 2: La convocatoria -->
+          <!-- PASO 2: La convocatoria y el proyecto -->
           <fieldset id="step-2" class="step-panel hidden space-y-6">
-            <legend class="font-display text-2xl text-ink">La convocatoria</legend>
-            <p class="text-sm text-ink/60">Qué subvención quieres pedir y qué importe estimáis solicitar.</p>
+            <legend class="font-display text-2xl text-ink">La subvención</legend>
+            <p class="text-sm text-ink/60">Cuéntanos a qué subvención queréis presentaros y qué hace vuestra entidad.</p>
 
             {convTitle ? (
               /* ── Convocatoria ya preseleccionada desde la landing ── */
-              <div>
+              <div class="space-y-4">
                 <input type="hidden" name="tieneConvocatoria" value="si" />
+
+                {/* Confirmación de la convocatoria */}
                 <div class="flex items-start gap-3 border border-magenta/30 bg-magenta/5 p-4">
-                  <span class="mt-0.5 text-magenta font-bold text-lg leading-none">✓</span>
-                  <div>
-                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">Convocatoria seleccionada</p>
+                  <span class="mt-0.5 text-magenta font-bold text-lg leading-none shrink-0">✓</span>
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">Subvención seleccionada</p>
                     <p class="font-medium text-ink text-sm leading-snug">{convTitle}</p>
-                    <p class="mt-2 text-xs text-ink/50">
+                    {convHint && (
+                      <p class="mt-2 text-xs text-ink/60 leading-relaxed">{convHint}</p>
+                    )}
+                    <p class="mt-2 text-xs text-ink/40">
                       ¿No es esta?{' '}
                       <a href="/subvenciones/presentar/nuevo" class="text-magenta hover:underline">
-                        Empezar sin convocatoria preseleccionada →
+                        Cambiar →
                       </a>
                     </p>
                   </div>
                 </div>
-                <div class="mt-4 grid grid-cols-2 gap-4">
+
+                {/* Plazo e importe */}
+                <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
-                    <label for="plazo" class="label">Fecha límite de presentación</label>
-                    <input
-                      type="date"
-                      id="plazo"
-                      name="plazo"
-                      class="form-input w-full"
-                    />
+                    <label for="plazo" class="label">Fecha límite</label>
+                    <input type="date" id="plazo" name="plazo" class="form-input w-full" />
                   </div>
                   <div class="space-y-1">
-                    <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
+                    <label for="importeSolicitado" class="label">¿Cuánto queréis solicitar?</label>
                     <input
                       type="text"
                       id="importeSolicitado"
                       name="importeSolicitado"
                       maxlength="30"
-                      placeholder="15.000 €"
+                      placeholder="Ej: 20.000 €"
                       class="form-input w-full"
                     />
                   </div>
@@ -226,15 +229,21 @@ const jsonLd = [
               /* ── Flujo estándar: el usuario indica su convocatoria ── */
               <div class="space-y-4" id="conv-selector">
                 <div class="space-y-2">
-                  <p class="label">¿Tienes ya identificada la convocatoria? <span class="text-magenta">*</span></p>
-                  <div class="flex gap-6">
-                    <label class="flex cursor-pointer items-center gap-2">
-                      <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta" />
-                      <span class="text-sm text-ink">Sí, tengo la URL o referencia BDNS</span>
+                  <p class="label">¿Ya sabéis a qué subvención queréis presentaros? <span class="text-magenta">*</span></p>
+                  <div class="grid gap-3 sm:grid-cols-2">
+                    <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
+                      <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta mt-0.5 shrink-0" />
+                      <div>
+                        <span class="text-sm font-medium text-ink">Sí, ya la tenemos identificada</span>
+                        <p class="mt-0.5 text-xs text-ink/50">Tenemos el nombre o el enlace a la convocatoria.</p>
+                      </div>
                     </label>
-                    <label class="flex cursor-pointer items-center gap-2">
-                      <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta" />
-                      <span class="text-sm text-ink">No, necesito identificarla</span>
+                    <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
+                      <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta mt-0.5 shrink-0" />
+                      <div>
+                        <span class="text-sm font-medium text-ink">No, necesitamos ayuda para encontrarla</span>
+                        <p class="mt-0.5 text-xs text-ink/50">Startidea identifica las convocatorias que mejor encajan con vuestro proyecto.</p>
+                      </div>
                     </label>
                   </div>
                 </div>
@@ -242,45 +251,41 @@ const jsonLd = [
                 {/* Si tiene convocatoria */}
                 <div id="has-convocatoria" class="space-y-4" style="display:none">
                   <div class="space-y-1">
-                    <label for="convocatoriaUrl" class="label">URL de la convocatoria o referencia BDNS</label>
-                    <input
-                      type="url"
-                      id="convocatoriaUrl"
-                      name="convocatoriaUrl"
-                      maxlength="500"
-                      placeholder="https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/..."
-                      class="form-input w-full"
-                    />
-                  </div>
-                  <div class="space-y-1">
-                    <label for="convocatoriaNombre" class="label">Nombre de la convocatoria</label>
+                    <label for="convocatoriaNombre" class="label">Nombre de la subvención <span class="text-magenta">*</span></label>
                     <input
                       type="text"
                       id="convocatoriaNombre"
                       name="convocatoriaNombre"
                       maxlength="300"
-                      placeholder="Subvenciones para proyectos de acción social Junta de Andalucía"
+                      placeholder="Ej: Subvenciones acción social Junta de Andalucía 2026"
                       class="form-input w-full"
                     />
                   </div>
+                  <div class="space-y-1">
+                    <label for="convocatoriaUrl" class="label">Enlace a la convocatoria (si lo tienes)</label>
+                    <input
+                      type="url"
+                      id="convocatoriaUrl"
+                      name="convocatoriaUrl"
+                      maxlength="500"
+                      placeholder="https://www.juntadeandalucia.es/… o enlace del BOE/BOJA"
+                      class="form-input w-full"
+                    />
+                    <p class="text-xs text-ink/40">No es obligatorio. Con el nombre es suficiente para que Startidea localice la convocatoria.</p>
+                  </div>
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
-                      <label for="plazo" class="label">Fecha límite de presentación</label>
-                      <input
-                        type="date"
-                        id="plazo"
-                        name="plazo"
-                        class="form-input w-full"
-                      />
+                      <label for="plazo" class="label">Fecha límite</label>
+                      <input type="date" id="plazo" name="plazo" class="form-input w-full" />
                     </div>
                     <div class="space-y-1">
-                      <label for="importeSolicitado" class="label">Importe a solicitar (estimado)</label>
+                      <label for="importeSolicitado" class="label">¿Cuánto queréis solicitar?</label>
                       <input
                         type="text"
                         id="importeSolicitado"
                         name="importeSolicitado"
                         maxlength="30"
-                        placeholder="15.000 €"
+                        placeholder="Ej: 20.000 €"
                         class="form-input w-full"
                       />
                     </div>
@@ -289,25 +294,17 @@ const jsonLd = [
 
                 {/* Si no tiene convocatoria */}
                 <div id="no-convocatoria" class="space-y-4" style="display:none">
-                  <div class="space-y-1">
-                    <label for="necesidadDesc" class="label">Describe brevemente el proyecto o la necesidad de financiación</label>
-                    <textarea
-                      id="necesidadDesc"
-                      name="necesidadDesc"
-                      rows="4"
-                      maxlength="1000"
-                      placeholder="Ej: Queremos financiar un programa de inserción laboral para jóvenes en riesgo de exclusión en Granada. Buscamos entre 20.000 y 50.000€ para el próximo año."
-                      class="form-input w-full resize-none"
-                    ></textarea>
+                  <div class="border border-ink/10 bg-paper-warm p-4 text-sm text-ink/70">
+                    Sin problema. Con la descripción de vuestro proyecto Startidea identifica las convocatorias más adecuadas y os presenta las opciones en el diagnóstico.
                   </div>
                   <div class="space-y-1">
-                    <label for="importeEstimado" class="label">Importe estimado que necesitas</label>
+                    <label for="importeEstimado" class="label">¿Cuánta financiación necesitáis?</label>
                     <input
                       type="text"
                       id="importeEstimado"
                       name="importeEstimado"
                       maxlength="30"
-                      placeholder="30.000 €"
+                      placeholder="Ej: 30.000 €"
                       class="form-input w-full"
                     />
                   </div>
@@ -315,18 +312,35 @@ const jsonLd = [
               </div>
             )}
 
-            <div class="space-y-1">
-              <label for="descripcionProyecto" class="label">Descripción del proyecto a financiar <span class="text-magenta">*</span></label>
+            {/* Campo de descripción — siempre visible, lenguaje simplificado */}
+            <div class="space-y-2">
+              <label for="descripcionProyecto" class="label">
+                ¿Qué hace vuestra entidad y para qué necesitáis la subvención?
+                <span class="text-magenta">*</span>
+              </label>
+              <p class="text-xs text-ink/50 leading-relaxed">
+                No tiene que ser perfecto — Startidea lo refinará. Con 3-4 frases es suficiente para arrancar.
+              </p>
               <textarea
                 id="descripcionProyecto"
                 name="descripcionProyecto"
                 rows="5"
                 required
                 maxlength="2000"
-                placeholder="Qué vas a hacer, con quién, en qué plazo y qué resultados esperas. Cuantos más detalles, mejor diagnóstico."
+                placeholder="Ej: Somos una asociación de atención a personas mayores en Granada. Llevamos 15 años gestionando el centro de día y el servicio de ayuda a domicilio. Queremos financiar la ampliación del servicio a 20 personas más en 2026, incluyendo personal de atención y material adaptado."
                 class="form-input w-full resize-none"
               ></textarea>
-              <p class="text-xs text-ink/40">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
+              <details class="text-xs">
+                <summary class="cursor-pointer text-ink/40 hover:text-ink/70">¿No sé qué escribir? Ver guía rápida</summary>
+                <div class="mt-2 space-y-1 border border-ink/10 bg-paper-warm p-3 text-ink/60">
+                  <p><strong>Responde estas 3 preguntas:</strong></p>
+                  <p>1. ¿A quién ayuda vuestra entidad y cómo? (colectivo y tipo de servicio)</p>
+                  <p>2. ¿Qué proyecto o programa queréis hacer con la subvención?</p>
+                  <p>3. ¿Cuántas personas se beneficiarán y en qué plazo?</p>
+                  <p class="mt-2 text-ink/40">No hace falta que sea largo. Si luego necesitamos más datos, os los pedimos.</p>
+                </div>
+              </details>
+              <p class="text-xs text-ink/30">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
             </div>
 
             <details class="border border-ink/10">
