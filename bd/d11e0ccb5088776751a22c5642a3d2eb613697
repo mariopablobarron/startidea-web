@@ -1,0 +1,42 @@
+src/pages/admin/index.astro
+  s_fc84abf46d9a4c::t_c83cf9b2f54f01 261-270,272,274-284
+  s_fc84abf46d9a4c::t_6f62eaa0f62f37 12
+  s_fc84abf46d9a4c::t_8c9adaabf71c2b 26,31-36
+src/pages/api/portal-registro.ts
+  s_fc84abf46d9a4c::t_6e4a8a3276491e 1-155
+src/pages/admin/portal-usuarios.astro
+  s_fc84abf46d9a4c::t_6af19011d1614d 1-100
+src/pages/portal/registro.astro
+  s_fc84abf46d9a4c::t_e51437093ccf17 1-340
+src/pages/portal/index.astro
+  s_fc84abf46d9a4c::t_52fa1fb1922601 189-192
+  s_fc84abf46d9a4c::t_f83064ca56cc38 161-162
+src/lib/expedientes-db.ts
+  s_fc84abf46d9a4c::t_fff22f18378133 448-450
+  s_fc84abf46d9a4c::t_1cda261c7b9291 420-447,451-489
+  s_fc84abf46d9a4c::t_0b67b59865a26a 166-179,181
+src/pages/api/portal-acceso.ts
+  s_fc84abf46d9a4c::t_4de43f32532fca 9
+  s_fc84abf46d9a4c::t_389861467e0eb1 35-38
+src/pages/portal/dashboard.astro
+  s_fc84abf46d9a4c::t_b1f8d819415fbb 68
+  s_fc84abf46d9a4c::t_5397ca6420f2bf 12-17
+  s_fc84abf46d9a4c::t_609fc52d7ab40d 368,371-375,378-470
+  s_fc84abf46d9a4c::t_2567201da9f854 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bdd11e0ccb5088776751a22c5642a3d2eb613697",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
