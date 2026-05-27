@@ -361,3 +361,14 @@ export function getLogByProfile(profile_id: string, limit = 20): AutoCopilotoLog
     .prepare(`SELECT * FROM auto_copiloto_log WHERE profile_id = ? ORDER BY created_at DESC LIMIT ?`)
     .all(profile_id, limit) as AutoCopilotoLog[];
 }
+
+/**
+ * Devuelve el primer perfil (más antiguo) asociado a un email.
+ * Incluye perfiles inactivos y no confirmados (para el CRM admin).
+ */
+export function getProfileByEmail(email: string): AutoCopilotoProfile | null {
+  const db = getDb();
+  return db
+    .prepare(`SELECT * FROM auto_copiloto_profiles WHERE LOWER(email) = LOWER(?) ORDER BY created_at ASC LIMIT 1`)
+    .get(email) as AutoCopilotoProfile | null;
+}

@@ -607,3 +607,210 @@ export function deletePortalSession(token: string): void {
   const db = getDb();
   db.prepare(`DELETE FROM portal_sessions WHERE token = ?`).run(token);
 }
+
+// ─── CRM ─────────────────────────────────────────────────────────────────────
+
+/** Inicializa (o migra) las tablas CRM en la BD compartida. */
+function ensureCrmTables(db: Database.Database): void {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS crm_notes (
+      id         TEXT PRIMARY KEY,
+      email      TEXT NOT NULL,
+      text       TEXT NOT NULL,
+      author     TEXT NOT NULL DEFAULT 'admin',
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
+  `);
+  // Llamar desde getDb() tras la inicialización principal
+}
+
+// Inicializar CRM tras la primera llamada a getDb()
+let _crmInitialized = false;
+function getDbWithCrm(): Database.Database {
+  const db = getDb();
+  if (!_crmInitialized) {
+    ensureCrmTables(db);
+    _crmInitialized = true;
+  }
+  return db;
+}
+
+export interface CrmNote {
+  id: string;
+  email: string;
+  text: string;
+  author: string;
+  created_at: number;
+}
+
+/** Vista unificada de contacto para el CRM */
+export interface CRMContact {
+  email: string;
+  nombre: string;
+  org_nombre: string;
+  org_cif: string;
+  org_tipo: string;
+  telefono: string;
+  provincia: string;
+  has_portal: number;       // 0/1
+  expedientes_count: number;
+  expedientes_concedidos: number;
+  has_autocopiloto: number; // 0/1
+  acp_active: number;       // 0/1
+  acp_confirmed: number;    // 0/1
+  last_exp_status: string | null;
+  last_exp_title: string | null;
+  last_activity_at: number;
+  first_seen_at: number;
+  notes_count: number;
+}
+
+const CRM_BASE_SQL = `
+WITH
+  last_exp AS (
+    SELECT *
+    FROM (
+      SELECT
+        LOWER(email) AS email_lower, status, convocatoria_title,
+        org_nombre, org_cif, org_tipo, representante, telefono, provincia,
+        ROW_NUMBER() OVER (PARTITION BY LOWER(email) ORDER BY created_at DESC) AS rn
+      FROM expedientes
+    ) WHERE rn = 1
+  ),
+  exp_agg AS (
+    SELECT
+      LOWER(email) AS email,
+      COUNT(*) AS exp_count,
+      SUM(CASE WHEN importe_concedido IS NOT NULL THEN 1 ELSE 0 END) AS exp_concedidos,
+      MAX(updated_at) AS last_exp_at,
+      MIN(created_at) AS first_exp_at
+    FROM expedientes
+    GROUP BY LOWER(email)
+  ),
+  first_acp AS (
+    SELECT *
+    FROM (
+      SELECT
+        LOWER(email) AS email_lower, id, org_nombre, org_cif, org_tipo,
+        representante, telefono, active, confirmed, created_at,
+        ROW_NUMBER() OVER (PARTITION BY LOWER(email) ORDER BY created_at ASC) AS rn
+      FROM auto_copiloto_profiles
+    ) WHERE rn = 1
+  ),
+  notes_agg AS (
+    SELECT LOWER(email) AS email, COUNT(*) AS notes_count
+    FROM crm_notes
+    GROUP BY LOWER(email)
+  ),
+  all_emails AS (
+    SELECT LOWER(email) AS email FROM portal_users
+    UNION SELECT LOWER(email) AS email FROM expedientes
+    UNION SELECT LOWER(email) AS email FROM auto_copiloto_profiles
+  ),
+  base AS (
+    SELECT
+      ae.email,
+      COALESCE(pu.nombre, le.representante, fa.representante, '') AS nombre,
+      COALESCE(pu.org_nombre, le.org_nombre, fa.org_nombre, '') AS org_nombre,
+      COALESCE(pu.org_cif, le.org_cif, fa.org_cif, '') AS org_cif,
+      COALESCE(pu.org_tipo, le.org_tipo, fa.org_tipo, '') AS org_tipo,
+      COALESCE(pu.telefono, le.telefono, fa.telefono, '') AS telefono,
+      COALESCE(pu.provincia, le.provincia, '') AS provincia,
+      CASE WHEN pu.id IS NOT NULL THEN 1 ELSE 0 END AS has_portal,
+      COALESCE(ea.exp_count, 0) AS expedientes_count,
+      COALESCE(ea.exp_concedidos, 0) AS expedientes_concedidos,
+      CASE WHEN fa.id IS NOT NULL THEN 1 ELSE 0 END AS has_autocopiloto,
+      COALESCE(fa.active, 0) AS acp_active,
+      COALESCE(fa.confirmed, 0) AS acp_confirmed,
+      le.status AS last_exp_status,
+      le.convocatoria_title AS last_exp_title,
+      MAX(
+        COALESCE(pu.updated_at, 0),
+        COALESCE(ea.last_exp_at, 0),
+        COALESCE(fa.created_at, 0)
+      ) AS last_activity_at,
+      MIN(
+        COALESCE(pu.created_at, 9999999999),
+        COALESCE(ea.first_exp_at, 9999999999),
+        COALESCE(fa.created_at, 9999999999)
+      ) AS first_seen_at,
+      COALESCE(na.notes_count, 0) AS notes_count
+    FROM all_emails ae
+    LEFT JOIN portal_users pu ON LOWER(pu.email) = ae.email
+    LEFT JOIN last_exp le ON le.email_lower = ae.email
+    LEFT JOIN exp_agg ea ON ea.email = ae.email
+    LEFT JOIN first_acp fa ON fa.email_lower = ae.email
+    LEFT JOIN notes_agg na ON na.email = ae.email
+  )
+`;
+
+export function listCRMContacts(opts?: {
+  limit?: number;
+  offset?: number;
+  q?: string;
+}): { items: CRMContact[]; total: number } {
+  const db = getDbWithCrm();
+  const limit  = opts?.limit  ?? 50;
+  const offset = opts?.offset ?? 0;
+  const q      = opts?.q?.trim().toLowerCase() ?? '';
+
+  const searchWhere = q
+    ? `WHERE base.email LIKE @q OR LOWER(base.nombre) LIKE @q OR LOWER(base.org_nombre) LIKE @q`
+    : '';
+  const params: Record<string, unknown> = { limit, offset };
+  if (q) params.q = `%${q}%`;
+
+  const total = (db.prepare(
+    `${CRM_BASE_SQL} SELECT COUNT(*) AS n FROM base ${searchWhere}`,
+  ).get(params) as { n: number }).n;
+
+  const items = db.prepare(
+    `${CRM_BASE_SQL} SELECT * FROM base ${searchWhere} ORDER BY last_activity_at DESC LIMIT @limit OFFSET @offset`,
+  ).all(params) as CRMContact[];
+
+  return { items, total };
+}
+
+export function getCRMContactFull(email: string): CRMContact | null {
+  const db = getDbWithCrm();
+  return (db.prepare(
+    `${CRM_BASE_SQL} SELECT * FROM base WHERE base.email = LOWER(@email)`,
+  ).get({ email }) as CRMContact | null);
+}
+
+export function getCrmNotes(email: string): CrmNote[] {
+  const db = getDbWithCrm();
+  return db.prepare(
+    `SELECT * FROM crm_notes WHERE LOWER(email) = LOWER(?) ORDER BY created_at DESC`,
+  ).all(email) as CrmNote[];
+}
+
+export function addCrmNote(email: string, text: string, author = 'admin'): CrmNote {
+  const db  = getDbWithCrm();
+  const now = Math.floor(Date.now() / 1000);
+  const hex = Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  const id  = `NOTE-${hex.toUpperCase()}`;
+  db.prepare(
+    `INSERT INTO crm_notes (id, email, text, author, created_at) VALUES (@id, LOWER(@email), @text, @author, @created_at)`,
+  ).run({ id, email, text: text.trim(), author, created_at: now });
+  return { id, email: email.toLowerCase(), text: text.trim(), author, created_at: now };
+}
+
+export function deleteCrmNote(id: string): boolean {
+  const db = getDbWithCrm();
+  const info = db.prepare(`DELETE FROM crm_notes WHERE id = ?`).run(id);
+  return info.changes > 0;
+}
+
+export function statsCRMContacts(): number {
+  const db = getDbWithCrm();
+  const sql = `
+    SELECT COUNT(*) AS n FROM (
+      SELECT LOWER(email) AS email FROM portal_users
+      UNION SELECT LOWER(email) AS email FROM expedientes
+      UNION SELECT LOWER(email) AS email FROM auto_copiloto_profiles
+    )
+  `;
+  return (db.prepare(sql).get() as { n: number }).n;
+}

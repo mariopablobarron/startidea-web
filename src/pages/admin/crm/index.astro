@@ -1,0 +1,281 @@
+---
+/**
+ * /admin/crm — Panel CRM unificado de Startidea
+ *
+ * Vista agregada de todos los contactos que han interactuado con:
+ *   - Portal de clientes (portal_users)
+ *   - Copiloto de Subvenciones (expedientes)
+ *   - Auto-copiloto (auto_copiloto_profiles)
+ *   - Diagnósticos/leads HUB (async, buscado por email en detalle)
+ *
+ * Auth: cookie startidea_admin
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { listCRMContacts, statsCRMContacts } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin/crm')}`);
+}
+
+const q      = Astro.url.searchParams.get('q') ?? '';
+const page   = Math.max(1, parseInt(Astro.url.searchParams.get('p') ?? '1', 10));
+const limit  = 40;
+const offset = (page - 1) * limit;
+
+let contacts: ReturnType<typeof listCRMContacts> = { items: [], total: 0 };
+let totalAll = 0;
+
+try {
+  contacts = listCRMContacts({ limit, offset, q: q || undefined });
+  totalAll = statsCRMContacts();
+} catch { /* BD vacía */ }
+
+const totalPages = Math.max(1, Math.ceil(contacts.total / limit));
+
+function fmtDate(ts: number): string {
+  if (!ts || ts === 9999999999) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+function relativeTime(ts: number): string {
+  if (!ts) return '—';
+  const diff = Math.floor(Date.now() / 1000) - ts;
+  if (diff < 60)    return 'hace un momento';
+  if (diff < 3600)  return `hace ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
+  if (diff < 7 * 86400) return `hace ${Math.floor(diff / 86400)} d`;
+  return fmtDate(ts);
+}
+
+function orgInitials(nombre: string, org: string): string {
+  const src = org || nombre || '?';
+  const words = src.trim().split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return src.slice(0, 2).toUpperCase();
+}
+
+const EXP_STATUS_LABELS: Record<string, string> = {
+  recibido:      '📥 Recibido',
+  analizando_ia: '⏳ En preparación',
+  docs_listos:   '📄 Docs listos',
+  entregado:     '📬 Entregado',
+  presentado:    '✅ Presentado',
+  rechazado:     '❌ Rechazado',
+};
+
+const EXP_STATUS_COLOR: Record<string, string> = {
+  recibido:      'bg-blue-50 text-blue-700 border-blue-200',
+  analizando_ia: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  docs_listos:   'bg-purple-50 text-purple-700 border-purple-200',
+  entregado:     'bg-green-50 text-green-700 border-green-200',
+  presentado:    'bg-emerald-50 text-emerald-700 border-emerald-200',
+  rechazado:     'bg-red-50 text-red-600 border-red-200',
+};
+
+function paginateUrl(p: number) {
+  const u = new URL(Astro.url);
+  u.searchParams.set('p', String(p));
+  return u.pathname + u.search;
+}
+---
+
+<Base title="CRM · Admin · Startidea" description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+          <h1 class="mt-1 font-display text-4xl text-ink">CRM</h1>
+          <p class="mt-1 text-sm text-ink/50">
+            {totalAll} contacto{totalAll !== 1 ? 's' : ''} totales ·
+            portal_users + expedientes + auto-copiloto
+          </p>
+        </div>
+        <a href="/admin/crm/nuevo"
+           class="inline-block border border-magenta px-5 py-2 font-mono text-[11px] uppercase tracking-widest text-magenta hover:bg-magenta hover:text-white transition-colors">
+          + Contacto manual
+        </a>
+      </div>
+
+      <!-- Buscador -->
+      <form method="get" action="/admin/crm" class="mb-6 flex gap-2">
+        <input
+          type="search"
+          name="q"
+          value={q}
+          placeholder="Buscar por email, nombre u organización..."
+          class="flex-1 border border-ink/20 bg-paper px-4 py-2.5 font-mono text-sm text-ink placeholder:text-ink/30 focus:border-magenta focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="border border-ink/20 bg-paper px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+        >
+          Buscar
+        </button>
+        {q && (
+          <a href="/admin/crm"
+             class="border border-ink/10 bg-paper px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta transition-colors">
+            ✕
+          </a>
+        )}
+      </form>
+
+      <!-- Resultado / info -->
+      {q && (
+        <p class="mb-4 font-mono text-[11px] text-ink/50 uppercase tracking-widest">
+          {contacts.total} resultado{contacts.total !== 1 ? 's' : ''} para «{q}»
+        </p>
+      )}
+
+      <!-- Tabla de contactos -->
+      {contacts.items.length === 0 ? (
+        <div class="border border-ink/10 bg-paper p-12 text-center">
+          <p class="font-display text-xl text-ink/40">
+            {q ? 'Sin resultados para esa búsqueda' : 'Todavía no hay contactos en el CRM'}
+          </p>
+          {!q && (
+            <p class="mt-2 text-sm text-ink/30">
+              Los contactos aparecen automáticamente cuando alguien se registra en el portal,
+              envía un expediente o se da de alta en el auto-copiloto.
+            </p>
+          )}
+        </div>
+      ) : (
+        <div class="border border-ink/15 bg-paper overflow-hidden">
+
+          <!-- Cabecera tabla -->
+          <div class="hidden sm:grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 border-b border-ink/10 bg-paper-warm/50 px-5 py-2">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Contacto</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-40 text-center">Servicios</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-32 text-center">Último estado</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-28 text-center">Actividad</span>
+            <span class="w-6"></span>
+          </div>
+
+          <!-- Filas -->
+          <ul class="divide-y divide-ink/8">
+            {contacts.items.map((c) => {
+              const initials = orgInitials(c.nombre, c.org_nombre);
+              const detailUrl = `/admin/crm/${encodeURIComponent(c.email)}`;
+              const acpChipColor = c.has_autocopiloto
+                ? c.acp_confirmed && c.acp_active
+                  ? 'bg-green-50 text-green-700 border-green-200'
+                  : !c.acp_confirmed
+                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                    : 'bg-gray-50 text-gray-500 border-gray-200'
+                : '';
+              return (
+                <li class="group hover:bg-paper-warm/40 transition-colors">
+                  <a href={detailUrl} class="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto_auto_auto] gap-3 sm:gap-4 items-center px-5 py-4">
+
+                    <!-- Contacto -->
+                    <div class="flex items-center gap-3 min-w-0">
+                      <!-- Avatar initials -->
+                      <div class="shrink-0 w-9 h-9 rounded-full bg-magenta/10 border border-magenta/20 flex items-center justify-center">
+                        <span class="font-mono text-[11px] font-bold text-magenta">{initials}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="font-medium text-ink text-sm truncate">
+                          {c.nombre || c.org_nombre || c.email}
+                        </p>
+                        <p class="text-[11px] text-ink/40 font-mono truncate">{c.email}</p>
+                        {c.org_nombre && c.nombre && (
+                          <p class="text-[11px] text-ink/50 truncate">{c.org_nombre}
+                            {c.org_cif && <span class="text-ink/30"> · {c.org_cif}</span>}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <!-- Chips servicios -->
+                    <div class="flex flex-wrap gap-1.5 sm:w-40 sm:justify-center">
+                      {c.has_portal === 1 && (
+                        <span class="border border-blue-200 bg-blue-50 px-1.5 py-0.5 font-mono text-[9px] text-blue-700">🏠 Portal</span>
+                      )}
+                      {c.expedientes_count > 0 && (
+                        <span class="border border-magenta/30 bg-magenta/5 px-1.5 py-0.5 font-mono text-[9px] text-magenta">
+                          📋 {c.expedientes_count} exp
+                        </span>
+                      )}
+                      {c.expedientes_concedidos > 0 && (
+                        <span class="border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] text-emerald-700">
+                          ✅ {c.expedientes_concedidos} concedido{c.expedientes_concedidos !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                      {c.has_autocopiloto === 1 && (
+                        <span class:list={['border px-1.5 py-0.5 font-mono text-[9px]', acpChipColor]}>
+                          🤖 Auto
+                        </span>
+                      )}
+                      {c.notes_count > 0 && (
+                        <span class="border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-[9px] text-ink/50">
+                          💬 {c.notes_count}
+                        </span>
+                      )}
+                    </div>
+
+                    <!-- Último estado -->
+                    <div class="sm:w-32 sm:text-center">
+                      {c.last_exp_status ? (
+                        <span class:list={[
+                          'inline-block border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide',
+                          EXP_STATUS_COLOR[c.last_exp_status] ?? 'bg-paper border-ink/15 text-ink/50',
+                        ]}>
+                          {EXP_STATUS_LABELS[c.last_exp_status] ?? c.last_exp_status}
+                        </span>
+                      ) : (
+                        <span class="font-mono text-[10px] text-ink/25">—</span>
+                      )}
+                    </div>
+
+                    <!-- Actividad -->
+                    <div class="sm:w-28 sm:text-right">
+                      <span class="font-mono text-[10px] text-ink/40">{relativeTime(c.last_activity_at)}</span>
+                    </div>
+
+                    <!-- Acción -->
+                    <div class="hidden sm:block">
+                      <span class="font-mono text-[10px] uppercase tracking-wider text-ink/25 group-hover:text-magenta transition-colors">→</span>
+                    </div>
+
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      <!-- Paginación -->
+      {totalPages > 1 && (
+        <nav class="mt-6 flex items-center justify-between">
+          <p class="font-mono text-[11px] text-ink/40">
+            Página {page} de {totalPages} · {contacts.total} contactos
+          </p>
+          <div class="flex gap-2">
+            {page > 1 && (
+              <a href={paginateUrl(page - 1)}
+                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors">
+                ← Anterior
+              </a>
+            )}
+            {page < totalPages && (
+              <a href={paginateUrl(page + 1)}
+                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors">
+                Siguiente →
+              </a>
+            )}
+          </div>
+        </nav>
+      )}
+
+    </div>
+  </div>
+</Base>

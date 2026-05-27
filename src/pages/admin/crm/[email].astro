@@ -1,0 +1,648 @@
+---
+/**
+ * /admin/crm/[email] — Ficha de contacto CRM
+ *
+ * Agrega toda la información de un contacto:
+ *   - Datos básicos (portal_users si existe)
+ *   - Expedientes del Copiloto
+ *   - Perfil Auto-copiloto
+ *   - Diagnósticos del HUB (async)
+ *   - Notas CRM internas
+ *
+ * Auth: cookie startidea_admin
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import {
+  getCRMContactFull,
+  getPortalUser,
+  getExpedientesByEmail,
+  getCrmNotes,
+} from '@/lib/expedientes-db';
+import { getProfileByEmail, getLogByProfile } from '@/lib/auto-copiloto-db';
+import {
+  listDiagnosis,
+  isHubAdminConfigured,
+  type DiagnosisListItem,
+} from '@/lib/hub-admin';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const rawEmail = decodeURIComponent(Astro.params.email ?? '');
+if (!rawEmail || !rawEmail.includes('@')) {
+  return Astro.redirect('/admin/crm');
+}
+
+const email = rawEmail.toLowerCase();
+
+// ─── Datos locales ────────────────────────────────────────────────
+const contact     = getCRMContactFull(email);
+const portalUser  = getPortalUser(email);
+const expedientes = getExpedientesByEmail(email);
+const notes       = getCrmNotes(email);
+
+if (!contact) {
+  return Astro.redirect('/admin/crm');
+}
+
+// Auto-copiloto
+const acpProfile = getProfileByEmail(email);
+const acpLog     = acpProfile ? getLogByProfile(acpProfile.id, 30) : [];
+
+// HUB diagnósticos (async, con timeout integrado en hub-admin.ts)
+let hubDiags: DiagnosisListItem[] = [];
+if (isHubAdminConfigured()) {
+  const res = await listDiagnosis({ q: email, pageSize: 20 });
+  hubDiags  = (res?.items ?? []).filter((d) => d.email.toLowerCase() === email);
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────
+function fmtDate(ts: number | null | undefined): string {
+  if (!ts || ts >= 9999999999) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+function fmtDateShort(ts: number | null | undefined): string {
+  if (!ts || ts >= 9999999999) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+const EXP_STATUS_LABELS: Record<string, string> = {
+  recibido:      '📥 Recibido',
+  analizando_ia: '⏳ En preparación',
+  docs_listos:   '📄 Docs listos',
+  entregado:     '📬 Entregado',
+  presentado:    '✅ Presentado',
+  rechazado:     '❌ Rechazado',
+};
+const EXP_STATUS_COLOR: Record<string, string> = {
+  recibido:      'bg-blue-50 text-blue-700 border-blue-200',
+  analizando_ia: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  docs_listos:   'bg-purple-50 text-purple-700 border-purple-200',
+  entregado:     'bg-green-50 text-green-700 border-green-200',
+  presentado:    'bg-emerald-50 text-emerald-700 border-emerald-200',
+  rechazado:     'bg-red-50 text-red-600 border-red-200',
+};
+
+function orgInitials(nombre: string, org: string): string {
+  const src = org || nombre || '?';
+  const words = src.trim().split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return src.slice(0, 2).toUpperCase();
+}
+
+const initials = orgInitials(contact.nombre, contact.org_nombre);
+
+// Pipeline económico
+function parseImporte(s: string | null | undefined): number {
+  if (!s) return 0;
+  const n = parseFloat(s.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+const totalConcedido = expedientes.reduce((sum, e) => sum + parseImporte(e.importe_concedido), 0);
+const totalComision  = totalConcedido * 0.12;
+function fmtEur(n: number) {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+}
+---
+
+<Base title={`CRM · ${contact.org_nombre || contact.nombre || contact.email} · Startidea`} description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Breadcrumb -->
+      <nav class="mb-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink/40">
+        <a href="/admin" class="hover:text-magenta">Admin</a>
+        <span>/</span>
+        <a href="/admin/crm" class="hover:text-magenta">CRM</a>
+        <span>/</span>
+        <span class="text-ink/60 truncate max-w-xs">{contact.email}</span>
+      </nav>
+
+      <!-- Header contacto -->
+      <div class="mb-8 flex flex-wrap items-start gap-5">
+        <!-- Avatar initials -->
+        <div class="w-16 h-16 rounded-full bg-magenta/10 border-2 border-magenta/20 flex items-center justify-center shrink-0">
+          <span class="font-mono text-xl font-bold text-magenta">{initials}</span>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h1 class="font-display text-3xl text-ink leading-tight">
+            {contact.org_nombre || contact.nombre || contact.email}
+          </h1>
+          {contact.org_nombre && contact.nombre && (
+            <p class="mt-0.5 text-sm text-ink/60">{contact.nombre}</p>
+          )}
+          <div class="mt-2 flex flex-wrap gap-4 text-sm text-ink/50">
+            <a href={`mailto:${contact.email}`} class="font-mono hover:text-magenta">{contact.email}</a>
+            {contact.telefono && <span>{contact.telefono}</span>}
+            {contact.provincia && <span>📍 {contact.provincia}</span>}
+          </div>
+          <div class="mt-2 flex flex-wrap gap-2 font-mono text-[11px] text-ink/40">
+            {contact.org_cif  && <span>CIF: {contact.org_cif}</span>}
+            {contact.org_tipo && <span>· {contact.org_tipo}</span>}
+            <span>· Cliente desde {fmtDateShort(contact.first_seen_at)}</span>
+          </div>
+        </div>
+
+        <!-- KPIs rápidos -->
+        <div class="flex flex-wrap gap-3">
+          {expedientes.length > 0 && (
+            <div class="border border-magenta/20 bg-paper px-4 py-3 text-center min-w-[80px]">
+              <p class="font-display text-2xl text-magenta">{expedientes.length}</p>
+              <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40 mt-0.5">Exp.</p>
+            </div>
+          )}
+          {totalConcedido > 0 && (
+            <div class="border border-emerald-200 bg-emerald-50/30 px-4 py-3 text-center">
+              <p class="font-display text-lg text-emerald-700">{fmtEur(totalConcedido)}</p>
+              <p class="font-mono text-[9px] uppercase tracking-widest text-emerald-600 mt-0.5">Concedido</p>
+            </div>
+          )}
+          {totalComision > 0 && (
+            <div class="border border-ink/15 bg-paper px-4 py-3 text-center">
+              <p class="font-display text-lg text-ink">{fmtEur(totalComision)}</p>
+              <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40 mt-0.5">Comisión 12%</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Grid principal -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- ── Columna principal (izquierda) ── -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Expedientes Copiloto -->
+          {expedientes.length > 0 && (
+            <section>
+              <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+                📋 Copiloto de Subvenciones — {expedientes.length} expediente{expedientes.length !== 1 ? 's' : ''}
+              </h2>
+              <div class="border border-ink/15 bg-paper overflow-x-auto">
+                <table class="w-full text-sm">
+                  <tbody class="divide-y divide-ink/8">
+                    {expedientes.map((exp) => {
+                      const bojaMatch = (exp.convocatoria_slug ?? '').match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
+                      const fichaUrl = bojaMatch
+                        ? `/subvenciones/${bojaMatch[1]}-social`
+                        : exp.convocatoria_slug ? `/subvenciones/${exp.convocatoria_slug}` : null;
+                      const importe = parseImporte(exp.importe_concedido);
+                      return (
+                        <tr class="hover:bg-paper-warm/40 transition-colors">
+                          <td class="px-4 py-3 min-w-[120px]">
+                            <a href={`/admin/expedientes/${exp.id}`}
+                               class="font-mono text-xs font-bold text-magenta hover:underline">
+                              {exp.id}
+                            </a>
+                            <p class="text-[11px] text-ink/40 mt-0.5 max-w-[200px] truncate">
+                              {exp.convocatoria_title ?? 'Sin convocatoria'}
+                            </p>
+                          </td>
+                          <td class="px-4 py-3">
+                            <span class:list={[
+                              'inline-block border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide whitespace-nowrap',
+                              EXP_STATUS_COLOR[exp.status] ?? 'bg-paper border-ink/15 text-ink/50',
+                            ]}>
+                              {EXP_STATUS_LABELS[exp.status] ?? exp.status}
+                            </span>
+                            {exp.contrato_at !== null && (
+                              <span class="ml-1.5 border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] text-emerald-700 whitespace-nowrap">
+                                ✍ Firmado
+                              </span>
+                            )}
+                          </td>
+                          <td class="px-4 py-3 text-right whitespace-nowrap">
+                            {importe > 0 ? (
+                              <div>
+                                <p class="font-mono text-[11px] text-emerald-700 font-bold">{fmtEur(importe)}</p>
+                                <p class="font-mono text-[9px] text-ink/30">{fmtEur(importe * 0.12)} fee</p>
+                              </div>
+                            ) : exp.factura_num ? (
+                              <span class="font-mono text-[9px] text-ink/40">{exp.factura_num}</span>
+                            ) : null}
+                          </td>
+                          <td class="px-4 py-3 text-right whitespace-nowrap hidden sm:table-cell">
+                            <p class="font-mono text-[10px] text-ink/30">{fmtDateShort(exp.created_at)}</p>
+                          </td>
+                          <td class="px-4 py-3 text-right">
+                            <a href={`/admin/expedientes/${exp.id}`}
+                               class="font-mono text-[10px] text-ink/30 hover:text-magenta whitespace-nowrap">
+                              Ver →
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+
+          <!-- Auto-copiloto -->
+          {acpProfile && (
+            <section>
+              <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+                🤖 Auto-copiloto
+              </h2>
+              <div class="border border-ink/15 bg-paper p-5 space-y-4">
+                <div class="flex flex-wrap gap-4 text-sm">
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Estado</p>
+                    <span class:list={[
+                      'inline-block border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide',
+                      acpProfile.active && acpProfile.confirmed
+                        ? 'bg-green-50 text-green-700 border-green-200'
+                        : !acpProfile.confirmed
+                          ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                          : 'bg-gray-50 text-gray-500 border-gray-200',
+                    ]}>
+                      {acpProfile.active && acpProfile.confirmed
+                        ? '✅ Activo y confirmado'
+                        : !acpProfile.confirmed
+                          ? '⏳ Pendiente de confirmación'
+                          : '⏸ Pausado'}
+                    </span>
+                  </div>
+                  {acpProfile.ccaa && (
+                    <div>
+                      <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">CCAA</p>
+                      <p class="text-sm text-ink">{acpProfile.ccaa}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Generación</p>
+                    <p class="text-sm text-ink">{acpProfile.auto_generar ? 'Genera + envía docs' : 'Solo notifica'}</p>
+                  </div>
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Alta</p>
+                    <p class="text-sm text-ink">{fmtDateShort(acpProfile.created_at)}</p>
+                  </div>
+                </div>
+
+                {acpProfile.keywords && (
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Keywords</p>
+                    <p class="text-xs text-ink/60">{acpProfile.keywords}</p>
+                  </div>
+                )}
+
+                {acpProfile.org_descripcion && (
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Descripción org.</p>
+                    <p class="text-sm text-ink/70 leading-relaxed">{acpProfile.org_descripcion}</p>
+                  </div>
+                )}
+
+                {acpLog.length > 0 && (
+                  <div>
+                    <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-2">
+                      Convocatorias procesadas — {acpLog.length}
+                    </p>
+                    <ul class="space-y-1.5 max-h-48 overflow-y-auto">
+                      {acpLog.map((log) => (
+                        <li class="flex items-start gap-2.5 text-xs">
+                          <span class:list={[
+                            'mt-1 w-2 h-2 rounded-full shrink-0',
+                            log.sent ? 'bg-green-400' : log.error ? 'bg-red-400' : 'bg-gray-300',
+                          ]} />
+                          <div class="min-w-0">
+                            <p class="font-medium text-ink truncate">{log.convocatoria_title || log.convocatoria_slug}</p>
+                            <p class="font-mono text-[9px] text-ink/30">
+                              {fmtDateShort(log.created_at)}
+                              {log.deadline ? ` · Plazo: ${log.deadline}` : ''}
+                              {log.expediente_id ? ` · ${log.expediente_id}` : ''}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          <!-- HUB Diagnósticos -->
+          {hubDiags.length > 0 && (
+            <section>
+              <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+                🎯 Diagnósticos y leads ({hubDiags.length})
+              </h2>
+              <div class="border border-ink/15 bg-paper divide-y divide-ink/8">
+                {hubDiags.map((d) => (
+                  <div class="px-5 py-4">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap gap-1.5 mb-2">
+                          <span class="border border-ink/15 px-1.5 py-0.5 font-mono text-[9px] uppercase text-ink/50">{d.kind}</span>
+                          <span class:list={[
+                            'border px-1.5 py-0.5 font-mono text-[9px] uppercase',
+                            d.status === 'won'  ? 'border-emerald-200 bg-emerald-50 text-emerald-700' :
+                            d.status === 'lost' ? 'border-red-200 bg-red-50 text-red-600' :
+                            'border-blue-200 bg-blue-50 text-blue-700',
+                          ]}>{d.status}</span>
+                          {d.stage && <span class="border border-ink/10 px-1.5 py-0.5 font-mono text-[9px] text-ink/40">{d.stage}</span>}
+                          {d.budgetRange && <span class="border border-ink/10 px-1.5 py-0.5 font-mono text-[9px] text-ink/40">{d.budgetRange}</span>}
+                        </div>
+                        <p class="font-medium text-ink text-sm leading-snug">{d.challenge}</p>
+                        <p class="font-mono text-[9px] text-ink/30 mt-1.5">
+                          {new Date(d.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                      </div>
+                      <a href={`/admin/leads/${d.id}`}
+                         class="shrink-0 font-mono text-[10px] text-ink/30 hover:text-magenta whitespace-nowrap">
+                        Ver →
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Notas CRM -->
+          <section>
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+              💬 Notas internas ({notes.length})
+            </h2>
+
+            <!-- Formulario nueva nota -->
+            <div class="border border-ink/15 bg-paper p-4 mb-4">
+              <textarea
+                id="note-text"
+                rows="3"
+                placeholder="Añadir nota interna — visible solo para el equipo de Startidea..."
+                class="w-full border border-ink/15 bg-paper-warm px-3 py-2 text-sm text-ink placeholder:text-ink/30 focus:border-magenta focus:outline-none resize-none"
+              ></textarea>
+              <div class="mt-2 flex justify-end">
+                <button
+                  id="note-submit"
+                  class="border border-magenta px-5 py-2 font-mono text-[11px] uppercase tracking-widest text-magenta hover:bg-magenta hover:text-white transition-colors"
+                >
+                  Guardar nota
+                </button>
+              </div>
+            </div>
+
+            <!-- Lista de notas -->
+            <ul id="notes-list" class="space-y-3">
+              {notes.length === 0 ? (
+                <li id="empty-notes">
+                  <p class="text-sm text-ink/30 italic">Sin notas todavía.</p>
+                </li>
+              ) : notes.map((n) => (
+                <li class="group border border-ink/10 bg-paper p-4" data-note-id={n.id}>
+                  <div class="flex items-start justify-between gap-3">
+                    <p class="text-sm text-ink leading-relaxed flex-1 whitespace-pre-wrap">{n.text}</p>
+                    <button
+                      class="note-delete shrink-0 font-mono text-[10px] text-ink/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                      data-note-id={n.id}
+                    >✕</button>
+                  </div>
+                  <p class="mt-2 font-mono text-[9px] text-ink/30">{n.author} · {fmtDate(n.created_at)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+        </div>
+
+        <!-- ── Sidebar (columna derecha) ── -->
+        <div class="space-y-5">
+
+          <!-- Portal -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h3 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">🏠 Portal de clientes</h3>
+            {portalUser ? (
+              <div class="space-y-2 text-sm">
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] text-emerald-700">✅ Registrado</span>
+                  {portalUser.consent_at && (
+                    <span class="border border-blue-100 bg-blue-50 px-2 py-0.5 font-mono text-[9px] text-blue-600">✍ Consentimiento</span>
+                  )}
+                </div>
+                <p class="text-ink/60 text-xs">Registro: {fmtDateShort(portalUser.created_at)}</p>
+                <p class="text-ink/60 text-xs">Últ. acceso: {fmtDateShort(portalUser.updated_at)}</p>
+                {portalUser.como_conocio && (
+                  <p class="text-xs text-ink/40 mt-1">Conoció Startidea por: <em>{portalUser.como_conocio}</em></p>
+                )}
+              </div>
+            ) : (
+              <p class="text-sm text-ink/40 italic">No registrado en el portal.</p>
+            )}
+          </div>
+
+          <!-- Datos de contacto -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h3 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Datos de contacto</h3>
+            <dl class="space-y-2.5">
+              <div>
+                <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Email</dt>
+                <dd><a href={`mailto:${contact.email}`} class="text-sm text-magenta hover:underline">{contact.email}</a></dd>
+              </div>
+              {contact.nombre && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Nombre</dt>
+                  <dd class="text-sm text-ink/80">{contact.nombre}</dd>
+                </div>
+              )}
+              {contact.org_nombre && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Organización</dt>
+                  <dd class="text-sm text-ink/80">{contact.org_nombre}</dd>
+                </div>
+              )}
+              {contact.org_cif && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">CIF</dt>
+                  <dd class="font-mono text-sm text-ink/70">{contact.org_cif}</dd>
+                </div>
+              )}
+              {contact.org_tipo && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Tipo</dt>
+                  <dd class="text-sm text-ink/80">{contact.org_tipo}</dd>
+                </div>
+              )}
+              {contact.telefono && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Teléfono</dt>
+                  <dd><a href={`tel:${contact.telefono}`} class="text-sm text-ink/80 hover:text-magenta">{contact.telefono}</a></dd>
+                </div>
+              )}
+              {contact.provincia && (
+                <div>
+                  <dt class="font-mono text-[9px] uppercase tracking-widest text-ink/30">Provincia</dt>
+                  <dd class="text-sm text-ink/80">{contact.provincia}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          <!-- Resumen de servicios -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h3 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Resumen</h3>
+            <ul class="space-y-2">
+              <li class="flex items-center justify-between text-sm">
+                <span class="text-ink/60">📋 Expedientes</span>
+                <span class="font-mono text-xs text-ink">{expedientes.length}</span>
+              </li>
+              <li class="flex items-center justify-between text-sm">
+                <span class="text-ink/60">✅ Concedidos</span>
+                <span class="font-mono text-xs text-ink">{contact.expedientes_concedidos}</span>
+              </li>
+              <li class="flex items-center justify-between text-sm">
+                <span class="text-ink/60">🤖 Auto-copiloto</span>
+                <span class="font-mono text-xs text-ink">
+                  {acpProfile
+                    ? acpProfile.active && acpProfile.confirmed ? 'Activo' : 'Registrado'
+                    : '—'}
+                </span>
+              </li>
+              <li class="flex items-center justify-between text-sm">
+                <span class="text-ink/60">🎯 Diagnósticos</span>
+                <span class="font-mono text-xs text-ink">{hubDiags.length || '—'}</span>
+              </li>
+            </ul>
+            {totalConcedido > 0 && (
+              <div class="mt-4 pt-4 border-t border-ink/8">
+                <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mb-1">Total concedido</p>
+                <p class="font-display text-xl text-emerald-700">{fmtEur(totalConcedido)}</p>
+                <p class="font-mono text-[10px] text-ink/40">Comisión Startidea: {fmtEur(totalComision)}</p>
+              </div>
+            )}
+          </div>
+
+          <!-- Acciones rápidas -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h3 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Acciones</h3>
+            <ul class="space-y-3">
+              <li>
+                <a href={`mailto:${contact.email}`}
+                   class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+                  ✉ Enviar email →
+                </a>
+              </li>
+              {expedientes.length > 0 && (
+                <li>
+                  <a href={`/admin/expedientes/${expedientes[0].id}`}
+                     class="font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-magenta">
+                    📋 Ver último expediente →
+                  </a>
+                </li>
+              )}
+              <li>
+                <a href={`/subvenciones/presentar/nuevo`}
+                   target="_blank"
+                   class="font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-magenta">
+                  + Nuevo expediente →
+                </a>
+              </li>
+              <li>
+                <a href="/admin/crm"
+                   class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+                  ← Volver al CRM
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script define:vars={{ contactEmail: contact.email }}>
+  const adminToken = document.cookie.split('; ')
+    .find(r => r.startsWith('startidea_admin='))?.split('=')[1] ?? '';
+
+  const textarea  = /** @type {HTMLTextAreaElement} */ (document.getElementById('note-text'));
+  const submitBtn = /** @type {HTMLButtonElement}   */ (document.getElementById('note-submit'));
+  const notesList = document.getElementById('notes-list');
+
+  // ── Añadir nota ─────────────────────────────────────────────────
+  submitBtn?.addEventListener('click', async () => {
+    const text = textarea?.value?.trim();
+    if (!text) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Guardando…';
+
+    try {
+      const res = await fetch('/api/admin/crm-note', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': adminToken,
+        },
+        body: JSON.stringify({ email: contactEmail, text }),
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error ?? 'Error al guardar');
+
+      const note = data.note;
+      const now  = new Date().toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      // Quitar mensaje "Sin notas"
+      const emptyEl = document.getElementById('empty-notes');
+      if (emptyEl) emptyEl.remove();
+
+      const li = document.createElement('li');
+      li.className = 'group border border-ink/10 bg-paper p-4';
+      li.dataset.noteId = note.id;
+      li.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <p class="text-sm text-ink leading-relaxed flex-1 whitespace-pre-wrap">${esc(note.text)}</p>
+          <button class="note-delete shrink-0 font-mono text-[10px] text-ink/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" data-note-id="${note.id}">✕</button>
+        </div>
+        <p class="mt-2 font-mono text-[9px] text-ink/30">admin · ${esc(now)}</p>
+      `;
+      notesList?.prepend(li);
+      if (textarea) textarea.value = '';
+
+      li.querySelector('.note-delete')?.addEventListener('click', () => deleteNote(note.id, li));
+    } catch (err) {
+      alert('Error al guardar la nota: ' + (err?.message ?? err));
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Guardar nota';
+    }
+  });
+
+  // ── Eliminar nota ────────────────────────────────────────────────
+  async function deleteNote(id, liEl) {
+    if (!confirm('¿Eliminar esta nota?')) return;
+    try {
+      const res = await fetch('/api/admin/crm-note', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'x-admin-token': adminToken },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.ok) liEl.remove();
+    } catch { /* ignorar */ }
+  }
+
+  document.querySelectorAll('.note-delete').forEach((btn) => {
+    const id = btn.dataset.noteId;
+    const li = btn.closest('li');
+    if (id && li) btn.addEventListener('click', () => deleteNote(id, li));
+  });
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] ?? c);
+  }
+</script>
