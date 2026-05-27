@@ -52,7 +52,7 @@ function calcularComision(importe: string | null): string {
 type Step = { key: string; label: string; desc: string };
 const STEPS: Step[] = [
   { key: 'recibido',      label: 'Recibida',        desc: 'Tu solicitud ha llegado al equipo de Startidea.' },
-  { key: 'analizando',    label: 'Analizando',       desc: 'La IA está preparando los documentos.' },
+  { key: 'analizando',    label: 'En preparación',   desc: 'El equipo de Startidea está preparando los documentos.' },
   { key: 'contrato',      label: 'Contrato',         desc: 'El contrato de servicios está pendiente de firma.' },
   { key: 'docs_listos',   label: 'Docs listos',      desc: 'La memoria, presupuesto y checklist están listos.' },
   { key: 'entregado',     label: 'Enviados',         desc: 'Has recibido los documentos por email.' },
@@ -389,7 +389,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
         <div style="font-size:28px;margin-bottom:10px">📋</div>
         <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:4px">Disponible</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:4px">Copiloto de Subvenciones</div>
-        <div style="font-size:12px;color:#666;line-height:1.5">IA que genera la memoria, presupuesto y guía de presentación. Comisión a éxito del 12%.</div>
+        <div style="font-size:12px;color:#666;line-height:1.5">El equipo prepara la memoria, presupuesto y guía de presentación. Comisión a éxito del 12%.</div>
         <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#e6356b;font-weight:700">Solicitar →</div>
       </a>
 
@@ -486,7 +486,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
             <div style="font-size:24px;margin-bottom:10px">📋</div>
             <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:6px">Paso 1 — Disponible</div>
             <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Solicita una subvención</div>
-            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Rellena el formulario con los datos de tu organización y la convocatoria. La IA genera la documentación en 24-48h.</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Rellena el formulario con los datos de tu organización y la convocatoria. El equipo prepara la documentación en 24–48h.</div>
             <a href="/subvenciones/presentar/nuevo"
                style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#e6356b;text-decoration:none;font-weight:700">
               Iniciar solicitud →
@@ -543,7 +543,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
               </div>
               <span class={`status-badge status-${exp.status}`}>
                 {exp.status === 'recibido'      && '📥 Recibida'}
-                {exp.status === 'analizando_ia' && '🤖 Analizando'}
+                {exp.status === 'analizando_ia' && '⏳ En preparación'}
                 {exp.status === 'docs_listos'   && '📄 Docs listos'}
                 {exp.status === 'entregado'     && '📬 Docs enviados'}
                 {exp.status === 'presentado'    && '✅ Presentada'}
@@ -721,13 +721,13 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                 {exp.status === 'recibido' && (
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>El equipo de Startidea está revisando tu solicitud y preparando el análisis de elegibilidad.</span></div>
-                    <div class="next-step-item"><span class="step-num">2</span><span>La IA generará la memoria técnica, presupuesto y checklist adaptados a la convocatoria.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>El equipo de Startidea elaborará la memoria técnica, presupuesto y checklist adaptados a la convocatoria.</span></div>
                     <div class="next-step-item"><span class="step-num">3</span><span>Te enviaremos los documentos por email cuando estén listos. Recibirás también el contrato para firmar.</span></div>
                   </div>
                 )}
                 {(exp.status === 'analizando_ia') && (
                   <div>
-                    <div class="next-step-item"><span class="step-num">1</span><span>La IA está generando los documentos ahora mismo. Normalmente tarda menos de 5 minutos.</span></div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>El equipo de Startidea está preparando los documentos. Recibirás un aviso por email en cuanto estén listos.</span></div>
                     <div class="next-step-item"><span class="step-num">2</span><span>Recibirás un email con la memoria, presupuesto y guía de presentación.</span></div>
                   </div>
                 )}

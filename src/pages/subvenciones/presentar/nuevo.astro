@@ -21,7 +21,7 @@ const jsonLd = [
 
 <Base
   title="Nuevo expediente de subvención — Startidea"
-  description="Rellena el formulario con los datos de tu entidad y la convocatoria. En 24h recibes la memoria técnica, el presupuesto y la guía de presentación generados por IA."
+  description="Rellena el formulario con los datos de tu entidad y la convocatoria. En 24–48h el equipo de Startidea te entrega la memoria técnica, el presupuesto y la guía de presentación."
   ogSlug="page/subvenciones-presentar"
   jsonLd={jsonLd}
 >
@@ -46,7 +46,7 @@ const jsonLd = [
         {convTitle ? 'Un paso más para solicitar la ayuda.' : 'Arranca el expediente.'}
       </h1>
       <p class="mt-3 max-w-measure text-ink/70">
-        Completar este formulario lleva unos 10 minutos. La IA generará automáticamente la memoria técnica, el presupuesto y la guía de presentación adaptados a esta convocatoria.
+        Completar este formulario lleva unos 10 minutos. El equipo de Startidea prepara la memoria técnica, el presupuesto y la guía de presentación adaptados a esta convocatoria.
       </p>
     </div>
   </section>
@@ -349,7 +349,7 @@ const jsonLd = [
                 <span class="text-magenta">(mejora mucho los documentos generados)</span>
               </summary>
               <div class="space-y-4 border-t border-ink/10 p-4">
-                <p class="text-xs text-ink/50">La IA usa estos datos para cuantificar la memoria técnica. Rellena solo lo que sepas, no es obligatorio.</p>
+                <p class="text-xs text-ink/50">El equipo usa estos datos para cuantificar la memoria técnica. Rellena solo lo que sepas, no es obligatorio.</p>
                 <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
                     <label for="beneficiariosAnuales" class="label">Personas atendidas al año</label>
@@ -441,12 +441,12 @@ const jsonLd = [
               Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
             </p>
 
-            <!-- Banner IA lee documentos -->
+            <!-- Banner documentos -->
             <div class="border border-magenta/30 bg-magenta/5 p-4">
-              <p class="font-mono text-xs uppercase tracking-widest text-magenta">⚡ La IA lee estos archivos</p>
+              <p class="font-mono text-xs uppercase tracking-widest text-magenta">⚡ Cuanto más, mejor</p>
               <p class="mt-1.5 text-sm text-ink/70">
                 Si subes tu <strong>memoria de actividades del año anterior</strong> o tus <strong>estatutos</strong>,
-                la IA los analiza y personaliza los documentos generados con información real de tu organización.
+                el equipo los usa para personalizar la documentación con información real de tu organización.
                 El resultado es significativamente mejor que sin documentos.
               </p>
             </div>
@@ -457,27 +457,27 @@ const jsonLd = [
                   id: 'doc-memoria-anual',
                   name: 'docMemoriaAnual',
                   label: '⭐ Memoria de actividades del año anterior',
-                  hint: 'El documento más valioso para la IA. Extrae tu historial, indicadores de impacto, beneficiarios y proyectos.',
-                  badge: 'MÁS ÚTIL PARA LA IA',
+                  hint: 'El documento más valioso para el expediente. Permite incluir tu historial, indicadores de impacto, beneficiarios y proyectos.',
+                  badge: 'MUY RECOMENDADO',
                 },
                 {
                   id: 'doc-estatutos',
                   name: 'docEstatutos',
                   label: '⭐ Estatutos de la entidad',
-                  hint: 'La IA los usa para verificar que el objeto social encaja con la convocatoria y para redactar la presentación. Con sello de inscripción.',
-                  badge: 'MUY ÚTIL PARA LA IA',
+                  hint: 'Permite verificar que el objeto social encaja con la convocatoria y documentar la presentación. Con sello de inscripción.',
+                  badge: 'MUY RECOMENDADO',
                 },
                 {
                   id: 'doc-memoria',
                   name: 'docMemoria',
                   label: 'Borrador de memoria técnica del proyecto',
-                  hint: 'Si tienes un borrador, la IA lo mejora y adapta a la convocatoria. Si no tienes, lo genera desde cero.',
+                  hint: 'Si tienes un borrador, el equipo lo mejora y adapta a la convocatoria. Si no tienes, lo elaboramos desde cero.',
                 },
                 {
                   id: 'doc-presupuesto',
                   name: 'docPresupuesto',
                   label: 'Presupuesto estimado del proyecto',
-                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), la IA lo reformatea según las partidas que pide la convocatoria.',
+                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), el equipo lo reformatea según las partidas que pide la convocatoria.',
                 },
                 {
                   id: 'doc-hacienda',
