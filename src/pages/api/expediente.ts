@@ -9,7 +9,12 @@
 
 import type { APIRoute } from 'astro';
 import { sendEmail } from '@/lib/email-resend';
-import { insertExpediente } from '@/lib/expedientes-db';
+import {
+  insertExpediente,
+  getPortalUser,
+  createPortalUser,
+  createMagicToken,
+} from '@/lib/expedientes-db';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -136,6 +141,32 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     console.error('[expediente] SQLite insert error:', err);
   }
 
+  // ── Auto-crear usuario de portal y generar magic link ──────────────────────
+  let portalMagicUrl = 'https://startidea.es/portal';
+  try {
+    const existingUser = getPortalUser(email);
+    if (!existingUser) {
+      // Crear cuenta de portal con los datos del formulario
+      createPortalUser({
+        email,
+        nombre: representante,
+        org_nombre: orgName,
+        org_cif: cif,
+        org_tipo: orgType,
+        telefono,
+        provincia,
+        como_conocio: comoConocio,
+        consent_at: null, // sin checkbox de consentimiento explícito en este formulario
+      });
+    }
+    // Magic link válido 1h para acceso inmediato al portal
+    const magicToken = createMagicToken(email);
+    portalMagicUrl = `https://startidea.es/portal/link/${magicToken}`;
+  } catch (err) {
+    console.error('[expediente] Portal user/magic-token error:', err);
+    // No bloquea — el cliente siempre puede hacer login desde /portal
+  }
+
   // Construir mensaje Telegram
   const convRef = tieneConvocatoria === 'si'
     ? (convocatoriaNombre || convocatoriaUrl || 'URL/referencia no indicada')
@@ -214,25 +245,90 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     `,
   }).catch((err) => console.error('[expediente] Email Mario error:', err));
 
-  // Email de confirmación al cliente (async)
+  // Email de confirmación al cliente — con acceso directo al portal (async)
+  const nombreCorto = esc(representante.split(' ')[0]);
+  const convRefCliente = convocatoriaNombre
+    ? `<strong>${esc(convocatoriaNombre)}</strong>`
+    : convocatoriaUrl
+      ? `<a href="${esc(convocatoriaUrl)}" style="color:#e6356b">${esc(convocatoriaUrl)}</a>`
+      : null;
+
   sendEmail({
     to: email,
     replyTo: 'hola@startidea.es',
-    subject: `Hemos recibido tu expediente [${expedienteId}] — Startidea`,
-    html: `
-      <p>Hola, ${esc(representante.split(' ')[0])},</p>
-      <p>Hemos recibido el expediente de <strong>${esc(orgName)}</strong> (ID: <code>${expedienteId}</code>).</p>
-      <p>En un máximo de <strong>24 horas hábiles</strong> te enviamos:</p>
-      <ul>
-        <li>Diagnóstico de encaje con la convocatoria (si tiene sentido presentarse)</li>
-        <li>Presupuesto exacto del servicio de tramitación</li>
-        <li>Lista de documentación adicional que necesitamos si falta algo</li>
-      </ul>
-      <p>Si quieres añadir documentos mientras tanto, responde a este email o escríbenos a <a href="mailto:hola@startidea.es">hola@startidea.es</a> indicando el ID <strong>${expedienteId}</strong>.</p>
-      <p style="margin-top:24px">Un saludo,<br><strong>Equipo Startidea</strong><br><a href="https://startidea.es">startidea.es</a> · +34 958 045 789</p>
-      <hr style="margin:24px 0;border:none;border-top:1px solid #eee">
-      <p style="font-size:11px;color:#999">Startidea · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada</p>
-    `,
+    subject: `Tu expediente [${expedienteId}] está en marcha — Startidea`,
+    html: `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#f9fafb;margin:0;padding:0">
+<div style="max-width:580px;margin:0 auto;padding:32px 24px">
+
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">
+    — Startidea · Copiloto de Subvenciones
+  </p>
+
+  <h1 style="font-size:22px;font-weight:700;margin:0 0 8px;color:#1f1f22">
+    Hola, ${nombreCorto}. Tu expediente está en marcha.
+  </h1>
+  <p style="font-size:13px;color:#888;margin:0 0 24px">
+    ID: <span style="font-family:monospace;font-weight:700;color:#1f1f22">${expedienteId}</span>
+    &nbsp;·&nbsp; ${esc(orgName)}
+    ${convRefCliente ? `&nbsp;·&nbsp; ${convRefCliente}` : ''}
+  </p>
+
+  <!-- CTA Portal -->
+  <div style="background:#1f1f22;padding:24px;margin:0 0 28px">
+    <p style="font-size:14px;color:#fff;margin:0 0 6px;font-weight:700">
+      Sigue el estado de tu expediente en tiempo real
+    </p>
+    <p style="font-size:13px;color:#aaa;margin:0 0 16px;line-height:1.5">
+      Hemos creado tu acceso al portal de clientes de Startidea. Desde ahí podrás ver el estado del expediente, descargar los documentos cuando estén listos y enviarnos mensajes.
+    </p>
+    <a href="${esc(portalMagicUrl)}"
+       style="display:inline-block;background:#e6356b;color:#fff;text-decoration:none;
+       padding:12px 28px;font-family:monospace;font-size:12px;font-weight:700;
+       letter-spacing:0.06em;text-transform:uppercase">
+      Acceder a mi portal →
+    </a>
+    <p style="font-size:11px;color:#666;margin:12px 0 0">
+      Este enlace es personal y caduca en 1 hora. Para acceder después, usa el email de acceso en
+      <a href="https://startidea.es/portal" style="color:#aaa">startidea.es/portal</a>.
+    </p>
+  </div>
+
+  <!-- Qué pasa ahora -->
+  <h2 style="font-size:15px;font-weight:700;margin:0 0 12px;color:#1f1f22">Qué ocurre ahora</h2>
+  <ol style="margin:0 0 24px;padding-left:20px;font-size:14px;line-height:1.8;color:#444">
+    <li>En un máximo de <strong>24 horas hábiles</strong> Startidea analiza el encaje con la convocatoria y te envía el diagnóstico.</li>
+    <li>Si hay encaje, recibes el presupuesto exacto del servicio y el contrato de comisión a éxito (solo pagas si se concede).</li>
+    <li>Cuando aceptas, el sistema genera automáticamente la memoria técnica, el presupuesto y la guía de presentación.</li>
+    <li>Revisas el expediente en tu portal y se presenta electrónicamente antes del plazo.</li>
+  </ol>
+
+  <!-- Si falta documentación -->
+  <div style="border-left:3px solid #e6356b;padding:12px 16px;background:#fff8f9;margin:0 0 24px">
+    <p style="font-size:13px;color:#444;margin:0">
+      <strong>¿Quieres añadir documentos ya?</strong> Responde a este email adjuntando lo que tengas
+      e indicando el ID <strong style="font-family:monospace">${expedienteId}</strong>.
+      También puedes subirlos desde el portal.
+    </p>
+  </div>
+
+  <p style="font-size:14px;color:#1f1f22;margin:0 0 4px">Un saludo,</p>
+  <p style="font-size:14px;font-weight:700;color:#1f1f22;margin:0 0 4px">Startidea</p>
+  <p style="font-size:13px;color:#888;margin:0">
+    <a href="https://startidea.es" style="color:#888">startidea.es</a>
+    &nbsp;·&nbsp; hola@startidea.es
+    &nbsp;·&nbsp; +34 958 045 789
+  </p>
+
+  <hr style="border:none;border-top:1px solid #eee;margin:24px 0">
+  <p style="font-size:11px;color:#bbb;margin:0">
+    Startidea Consulting, S.L. · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada
+  </p>
+
+</div>
+</body></html>`,
   }).catch((err) => console.error('[expediente] Email cliente error:', err));
 
   return new Response(JSON.stringify({ ok: true, id: expedienteId }), {
