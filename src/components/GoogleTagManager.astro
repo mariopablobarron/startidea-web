@@ -81,20 +81,17 @@ const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
         first.parentNode.insertBefore(s, first);
       }
 
-      // ─── Cargar GTM (opcional, solo si PUBLIC_GTM_ENABLED) ─────────
-      function loadGtm() {
-        if (!gtmId) return;
-        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
-        var first = document.getElementsByTagName('script')[0];
-        first.parentNode.insertBefore(s, first);
-      }
-
       // Cargar siempre (con consent default ya configurado arriba)
       loadGa4();
-      loadGtm();
+      // GTM opcional — solo si PUBLIC_GTM_ENABLED=true en .env
+      if (gtmId) {
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var gs = document.createElement('script');
+        gs.async = true;
+        gs.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
+        var gf = document.getElementsByTagName('script')[0];
+        gf.parentNode.insertBefore(gs, gf);
+      }
 
       // ─── Upgrade a granted cuando el usuario acepta ────────────────
       function grantAll() {

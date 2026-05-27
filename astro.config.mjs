@@ -14,7 +14,7 @@ export default defineConfig({
   // Duplicar con "/" causaba colisiones de ruta en el router.
   redirects: {
     '/quienessomos':                                      '/sobre',
-    '/servicios':                                         '/',
+    '/servicios':                                         '/como-trabajamos',
     '/portfolio':                                         '/casos',
     '/portfolio_':                                        '/casos',
     '/portfolio-marketing-social':                        '/casos',
@@ -48,13 +48,26 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     sitemap({
-      filter: (page) =>
-        !page.includes('/admin/') &&
-        !page.includes('/api/') &&
-        !page.includes('/404') &&
-        !page.includes('/recursos/gracias') &&
-        !page.includes('/subvenciones/mi-alerta') &&
-        !page.includes('/subvenciones/verificacion'),
+      filter: (page) => {
+        // Excluir siempre rutas internas/admin/utilidad
+        if (page.includes('/admin/'))              return false;
+        if (page.includes('/api/'))                return false;
+        if (page.includes('/404'))                 return false;
+        if (page.includes('/recursos/gracias'))    return false;
+        // Páginas de formularios y confirmaciones (noindex)
+        if (page.includes('/diagnostico/'))        return false;
+        if (page.includes('/presupuesto/nuevo'))   return false;
+        // Subvenciones: excluir páginas individuales del scraper BDNS (~2100 URLs)
+        // Solo conservar: index · curated landings (boja-2026-*) · mapa
+        if (page.includes('/subvenciones/')) {
+          if (page.endsWith('/subvenciones/') || page.endsWith('/subvenciones'))
+            return true;  // índice/buscador
+          if (page.includes('/subvenciones/boja-2026'))    return true; // landings curadas
+          if (page.includes('/subvenciones/mapa'))         return true; // mapa interactivo
+          return false; // todo lo demás (BDNS individual, crear-alerta, mi-alerta, mi-copiloto, etc.)
+        }
+        return true;
+      },
     }),
   ],
 });
