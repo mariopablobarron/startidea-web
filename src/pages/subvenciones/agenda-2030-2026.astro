@@ -1,0 +1,324 @@
+---
+/**
+ * /subvenciones/agenda-2030-2026
+ *
+ * Landing curada para la Convocatoria 2026 de Políticas Palanca para el
+ * Cumplimiento de la Agenda 2030 (Dirección General — Ministerio).
+ *
+ * Plazo: 1 mes desde extracto BOE (20 mayo 2026) → 20 junio 2026
+ * Presupuesto sector social: 8.299.970,22 €
+ * Importe por proyecto: 25.000 – 300.000 € · 100% financiable
+ * Pago anticipado sin garantías · Ejecución 12 meses
+ * Tasa de éxito histórica: ≈ 9,2 %
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+export const prerender = true;
+
+const DEADLINE = '20 de junio de 2026';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Agenda 2030 2026', url: `${SITE_URL}/subvenciones/agenda-2030-2026` },
+  ]),
+  faqPageSchema([
+    {
+      q: '¿Quién puede presentarse a la Convocatoria Agenda 2030 2026?',
+      a: 'Entidades sin ánimo de lucro y de economía social con personalidad jurídica propia: asociaciones, fundaciones, ONGs, cooperativas de iniciativa social y mutualidades. También admite universidades. Quedan fuera empresas mercantiles, autónomos, personas físicas y administraciones públicas. Cada entidad puede presentar un único proyecto.',
+    },
+    {
+      q: '¿Cuánto dinero hay y por proyecto cuánto se puede pedir?',
+      a: 'El presupuesto destinado al sector social es de 8.299.970,22 €. Cada proyecto puede solicitar entre 25.000 y 300.000 euros, y la convocatoria cubre hasta el 100% del coste sin necesidad de cofinanciación obligatoria. El pago se realiza de forma anticipada y sin garantías bancarias.',
+    },
+    {
+      q: '¿Por qué la tasa de éxito es tan baja (9,2%)?',
+      a: 'Porque es una convocatoria estratégica, no de trámite. La administración valora memorias técnicas con alineamiento explícito a los ODS, métricas de impacto verificables, hipótesis de transformación clara y proyectos piloto replicables. La mayoría de solicitudes denegadas no son entidades malas: son proyectos mal formulados, presentados con prisa, sin estructura de evaluación o sin demostrar carácter innovador.',
+    },
+    {
+      q: '¿Cuándo cierra el plazo y hasta cuándo se puede contratar a Startidea?',
+      a: 'El plazo cierra el 20 de junio de 2026 de forma improrrogable. Startidea acepta encargos hasta el 6 de junio para garantizar margen operativo de dos semanas. Después de esa fecha, la decisión de presentar o no depende del estado del proyecto en cada entidad concreta.',
+    },
+    {
+      q: '¿Qué cobra Startidea por tramitar esta convocatoria?',
+      a: 'Comisión a éxito del 12% sobre el importe finalmente concedido. Si la subvención no se aprueba, no hay coste para la entidad. Sin pago inicial, sin cuotas, sin permanencia. El análisis previo de viabilidad también es sin coste.',
+    },
+  ]),
+];
+---
+
+<Base
+  title="Convocatoria 2026 Agenda 2030 — 25k–300k € fondo perdido · Startidea"
+  description="Convocatoria estatal abierta: ayudas a fondo perdido para ONGs y entidades sociales alineadas con los ODS. Hasta 300.000 € por proyecto, financiación 100%, pago anticipado sin garantías. Plazo: 20 junio 2026."
+  ogSlug="page/subvenciones"
+  jsonLd={jsonLd}
+>
+
+  <!-- Hero -->
+  <section class="bg-ink text-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+        <span class="font-mono text-[11px] uppercase tracking-widest text-magenta">
+          — Convocatoria estatal abierta · cierre {DEADLINE}
+        </span>
+        <h1 class="mt-4 font-display text-display-xl leading-[1.02] text-paper">
+          Convocatoria 2026<br />
+          <em class="italic text-magenta">Agenda 2030.</em>
+        </h1>
+        <p class="mt-6 text-lede text-paper/80">
+          Una de las subvenciones más interesantes del año para entidades del
+          tercer sector. <strong class="text-paper">Casi nadie se ha enterado</strong> —
+          y de las que se enteran y se presentan, solo recibe la subvención una
+          de cada diez.
+        </p>
+        <p class="mt-3 text-base text-paper/65">
+          No por trámite. Porque la mayoría llega tarde a formular el proyecto.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row gap-3">
+          <a href="/subvenciones/presentar/nuevo?slug=agenda-2030-2026&title=Convocatoria%202026%20Agenda%202030&utm_source=landing&utm_medium=hero&utm_campaign=agenda2030"
+             class="inline-block bg-magenta text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors text-center">
+            Análisis de viabilidad gratis →
+          </a>
+          <a href="#datos"
+             class="inline-block border-2 border-paper text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:border-magenta hover:text-magenta transition-colors text-center">
+            Ver datos clave ↓
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos clave -->
+  <section id="datos" class="bg-paper-warm py-14 md:py-20 border-y border-ink/15">
+    <div class="container-x">
+      <div class="mx-auto max-w-4xl">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">— Datos clave</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink mb-8">
+          Lo que pone la convocatoria.
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45">Presupuesto sector social</p>
+            <p class="font-display text-2xl text-ink mt-1">8.299.970,22 €</p>
+          </div>
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45">Importe por proyecto</p>
+            <p class="font-display text-2xl text-ink mt-1">25.000 – 300.000 €</p>
+          </div>
+          <div class="border-2 border-magenta bg-magenta/5 p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Financiación</p>
+            <p class="font-display text-2xl text-magenta mt-1">Hasta 100%</p>
+          </div>
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45">Pago</p>
+            <p class="font-display text-base text-ink mt-1">Anticipado · sin garantías</p>
+          </div>
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45">Ejecución</p>
+            <p class="font-display text-2xl text-ink mt-1">12 meses</p>
+          </div>
+          <div class="border border-amber-300 bg-amber-50 p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-amber-700">Plazo</p>
+            <p class="font-display text-base text-amber-900 mt-1">{DEADLINE}</p>
+            <p class="font-mono text-[9px] text-amber-700/70 mt-0.5">improrrogable</p>
+          </div>
+        </div>
+
+        <div class="mt-8 border-l-4 border-magenta bg-paper p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">Tasa de éxito histórica</p>
+          <p class="font-display text-3xl text-ink leading-none">≈ 9,2 %</p>
+          <p class="mt-2 text-sm text-ink/65 leading-relaxed">
+            De cada diez entidades que se presentan, solo una recibe la subvención.
+            No es porque la convocatoria sea selectiva por dinero — el presupuesto
+            es generoso. Es porque la convocatoria valora <strong>metodología,
+            innovación, métrica e impacto</strong>. Una memoria mediocre no entra,
+            por mucho que la entidad sea sólida.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué financia -->
+  <section class="bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">— Qué proyectos financia</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink mb-6">
+          Cuatro tipos de proyecto que sí entran.
+        </h2>
+        <p class="text-lede text-ink/70 mb-10">
+          No vale cualquier proyecto. La convocatoria prioriza iniciativas con
+          impacto real y vínculo explícito con los ODS:
+        </p>
+
+        <ol class="space-y-6">
+          <li class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">1.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Acciones de incidencia social o política</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Campañas, estudios, propuestas de cambio normativo o comunicación
+                transformadora que afecten a políticas públicas concretas.
+              </p>
+            </div>
+          </li>
+          <li class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">2.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Proyectos piloto replicables</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Iniciativas concretas con hipótesis de transformación, métrica
+                de impacto verificable y plan explícito de escalado o
+                replicabilidad en otros territorios u organizaciones.
+              </p>
+            </div>
+          </li>
+          <li class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">3.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Metodologías innovadoras en lo social</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Enfoques nuevos para abordar un problema social: tecnología
+                cívica, evaluación basada en evidencia, participación comunitaria,
+                economía circular aplicada al servicio social.
+              </p>
+            </div>
+          </li>
+          <li class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">4.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Trabajo en redes y alianzas (ODS 17)</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Estructuras multiactor que unen tercer sector, instituciones
+                públicas y empresas con propósito para abordar un reto que
+                ninguna organización podría resolver sola.
+              </p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="mt-10 bg-amber-50 border-l-4 border-amber-400 p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-amber-800 mb-1">
+            ⚠ No es una subvención de trámite
+          </p>
+          <p class="text-sm text-amber-900 leading-relaxed">
+            Es una subvención estratégica. Una memoria genérica
+            ("sensibilizar sobre…") queda fuera. Una memoria con proyecto piloto
+            definido, métrica clara y aliados nombrados entra. Aquí improvisar
+            es perder tiempo y, en muchos casos, perder la convocatoria.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sprint 2 semanas -->
+  <section class="bg-paper-warm py-14 md:py-20 border-y border-ink/15">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">— Cómo trabaja Startidea</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink mb-6">
+          Sprint de 2 semanas hasta presentación.
+        </h2>
+        <p class="text-lede text-ink/70 mb-10">
+          Con el plazo abierto del 20 de mayo al 20 de junio hay margen, pero
+          no sobra. Startidea trabaja un sprint operativo intenso. Esto es lo
+          que pasa cada semana:
+        </p>
+
+        <div class="space-y-5">
+
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Día 1-2</p>
+            <h3 class="font-display text-lg text-ink mt-1">Diagnóstico de encaje sin coste</h3>
+            <p class="mt-2 text-sm text-ink/65 leading-relaxed">
+              Antes de tocar nada, una llamada de 30 minutos para decidir si la
+              convocatoria realmente encaja. Si no encaja, te lo decimos en
+              esta llamada y la entidad ahorra dos semanas. Sin coste, sin
+              compromiso.
+            </p>
+          </div>
+
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Día 3-9</p>
+            <h3 class="font-display text-lg text-ink mt-1">Construcción del proyecto</h3>
+            <p class="mt-2 text-sm text-ink/65 leading-relaxed">
+              Sprint intensivo con el equipo directivo. Hipótesis de
+              transformación, métrica de impacto, plan de actividades realista,
+              aliados nombrados, presupuesto por partidas elegibles. Esta es la
+              fase decisiva — una memoria bien estructurada con proyecto medio
+              suele puntuar más que una memoria desordenada con proyecto bueno.
+            </p>
+          </div>
+
+          <div class="border border-ink/15 bg-paper p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Día 10-12</p>
+            <h3 class="font-display text-lg text-ink mt-1">Documentación administrativa</h3>
+            <p class="mt-2 text-sm text-ink/65 leading-relaxed">
+              En paralelo a la memoria: certificados al corriente, estatutos,
+              cuentas anuales, declaraciones responsables, anexos específicos.
+              Todo firmado digitalmente y listo para subir.
+            </p>
+          </div>
+
+          <div class="border-2 border-magenta bg-magenta/5 p-5">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Día 13-14</p>
+            <h3 class="font-display text-lg text-ink mt-1">Presentación + justificante CSV</h3>
+            <p class="mt-2 text-sm text-ink/65 leading-relaxed">
+              Presentación en sede electrónica con certificado de representante.
+              Justificante con código CSV en mano antes del 15 de junio,
+              dejando 5 días de margen ante cualquier imprevisto técnico.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink text-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="font-mono text-[11px] uppercase tracking-widest text-magenta">
+          — Análisis de viabilidad sin coste
+        </span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+          ¿Tu entidad encaja en Agenda 2030?
+        </h2>
+        <p class="mt-5 text-lede text-paper/80">
+          Cuéntanos qué proyecto piloto tenéis en mente. En 24–48h te
+          respondemos con diagnóstico honesto: si tiene encaje real,
+          probabilidad estimada, qué documentación falta. Sin coste, sin
+          compromiso.
+        </p>
+        <p class="mt-3 text-sm text-paper/55">
+          Si después decides presentarte con Startidea, <strong class="text-paper">comisión 12% solo si se concede</strong>.
+          Si no se concede, no hay coste.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/subvenciones/presentar/nuevo?slug=agenda-2030-2026&title=Convocatoria%202026%20Agenda%202030&utm_source=landing&utm_medium=cta-final&utm_campaign=agenda2030"
+             class="bg-magenta text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors">
+            Pedir análisis gratis →
+          </a>
+          <a href="/notas/convocatoria-2026-agenda-2030-ong"
+             class="border-2 border-paper text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:border-magenta hover:text-magenta transition-colors">
+            Leer análisis completo →
+          </a>
+        </div>
+        <p class="mt-6 text-sm text-paper/40">
+          ¿Otra convocatoria? →
+          <a href="/subvenciones/catalogo" class="text-paper/60 hover:text-magenta underline underline-offset-2">
+            Catálogo completo
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</Base>

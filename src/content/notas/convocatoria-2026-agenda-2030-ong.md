@@ -2,6 +2,7 @@
 title: 'Convocatoria 2026 Agenda 2030: ayuda a fondo perdido para ONGs y entidades sociales (cierra el 20 de junio)'
 description: 'La Convocatoria 2026 para la Agenda 2030 financia proyectos piloto de sostenibilidad, innovación social, comunicación y alianzas multiactor para asociaciones, fundaciones, ONGs y entidades de la Economía Social. Plazo improrrogable: 20 de junio de 2026. Esta nota explica los requisitos, los gastos cubiertos y cómo Startidea presenta el expediente con certificado digital por ti.'
 pubDate: 2026-05-25
+updatedDate: 2026-05-28
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['subvenciones', 'agenda 2030', 'ODS', 'tercer sector', 'fondo perdido', 'innovación social']
@@ -22,6 +23,23 @@ faqs:
 A las organizaciones del tercer sector que llaman a Startidea les pasa casi siempre lo mismo: las ayudas con sentido aparecen cuando ya no hay tiempo de prepararlas bien. La **Convocatoria 2026 para la Agenda 2030** es exactamente uno de esos casos. Cierra el **20 de junio de 2026** —de forma improrrogable— y es de las pocas líneas que financian a fondo perdido proyectos piloto reales: sostenibilidad, innovación social, comunicación con propósito y redes de alianzas multiactor.
 
 Esta nota recoge lo que necesitas saber para decidir si presentarte (y si la respuesta es sí, qué papel puede jugar Startidea presentando el expediente por ti).
+
+## Datos clave de la convocatoria 2026
+
+| Dato | Valor |
+|---|---|
+| Organismo | Dirección General de Políticas Palanca para el Cumplimiento de la Agenda 2030 |
+| Presupuesto destinado al sector social | **8.299.970,22 €** |
+| Importe por proyecto | **25.000 € – 300.000 €** |
+| Porcentaje financiable | **Hasta el 100%** del proyecto |
+| Pago | **Anticipado y sin garantías** |
+| Periodo de ejecución | **12 meses** desde la concesión |
+| Plazo presentación | 1 mes desde el extracto BOE (20 mayo) → **20 junio 2026** |
+| Tasa de éxito histórica | **≈ 9,2 %** |
+
+Los números pintan una convocatoria muy interesante: financiación íntegra del proyecto, pago anticipado sin avales bancarios y ejecución de un año entero. Pero la tasa de éxito alrededor del 9% explica por qué hay que tomársela en serio: **de cada diez entidades que presentan, una recibe la subvención**. Las nueve restantes no son entidades malas — la mayoría son proyectos mal formulados, sin métrica de impacto, sin alineamiento explícito con los ODS o presentados con la memoria a medio cocer en las últimas 48h.
+
+Universidades también pueden presentarse, pero el grueso del presupuesto (los 8,3 millones reseñados arriba) va al sector social. La nota se centra en entidades del tercer sector porque es donde Startidea trabaja a diario y donde la métrica de éxito mejora más cuando la formulación está bien hecha.
 
 ## Qué financia esta convocatoria
 
