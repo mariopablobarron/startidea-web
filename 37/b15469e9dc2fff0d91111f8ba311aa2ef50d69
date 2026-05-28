@@ -1,0 +1,25 @@
+src/pages/admin/expedientes/[id].astro
+  s_fc84abf46d9a4c::t_30c80b7efe06ff 563-564,594-595,656-657,692-693,695,737-739
+  s_fc84abf46d9a4c::t_69a9ade494a17c 555
+  s_fc84abf46d9a4c::t_34c32165cc9a1c 65-76
+  s_fc84abf46d9a4c::t_169a3348eb86a3 167-177
+src/pages/subvenciones/mapa.astro
+  s_fc84abf46d9a4c::t_69a9ade494a17c 556
+  s_fc84abf46d9a4c::t_30c80b7efe06ff 568-569,595,802
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "37b15469e9dc2fff0d91111f8ba311aa2ef50d69",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
