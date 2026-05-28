@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { statsExpedientes } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -8,6 +9,11 @@ export const prerender = false;
  * - GET /api/health           → 200 { ok: true, ts, build, checks }
  * - GET /api/health?deep=1    → además comprueba conectividad a OpenRouter
  *                                (timeout 4 s; degraded si falla, no error)
+ *
+ * Siempre comprueba:
+ *  - Configuración OpenRouter (key existe)
+ *  - Configuración Telegram (token + chat existen)
+ *  - SQLite accesible y consulta básica funciona
  *
  * Nunca loguea ni expone secretos. Devuelve siempre JSON, jamás HTML.
  *
@@ -43,6 +49,22 @@ async function checkOpenRouter(): Promise<CheckResult> {
   }
 }
 
+function checkDb(): CheckResult {
+  const t0 = Date.now();
+  try {
+    // Una llamada simple confirma que la BD está accesible y no corrupta.
+    // statsExpedientes() ejecuta un COUNT + GROUP BY que toca la tabla principal.
+    const stats = statsExpedientes();
+    return {
+      ok: typeof stats.total === 'number',
+      latency_ms: Date.now() - t0,
+      detail: `n=${stats.total ?? 0}`,
+    };
+  } catch (e: any) {
+    return { ok: false, latency_ms: Date.now() - t0, detail: e?.message?.slice(0, 100) || 'db_error' };
+  }
+}
+
 export const GET: APIRoute = async ({ url }) => {
   const deep = url.searchParams.get('deep') === '1';
 
@@ -53,6 +75,7 @@ export const GET: APIRoute = async ({ url }) => {
     openrouter_config: {
       ok: Boolean(process.env.OPENROUTER_API_KEY || import.meta.env.OPENROUTER_API_KEY),
     },
+    database: checkDb(),
   };
 
   if (deep) {

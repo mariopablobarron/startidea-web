@@ -17,6 +17,7 @@ import {
   createPortalUser,
   createMagicToken,
 } from '@/lib/expedientes-db';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -55,6 +56,27 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
   const TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? import.meta.env.TELEGRAM_BOT_TOKEN;
   const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? import.meta.env.TELEGRAM_CHAT_ID;
   const EXPEDIENTES_DIR = process.env.EXPEDIENTES_DIR ?? '/tmp/expedientes';
+
+  // ── Rate limit por IP: máx 5 expedientes / hora ───────────────────────────
+  // Cada expediente puede disparar una llamada a OpenRouter (coste real).
+  // Protege contra bots que envíen el wizard en bucle.
+  // Si la IP no se identifica (proxy mal configurado), el rate limiter
+  // automáticamente devuelve ok=true (mejor pasar que bloquear todo).
+  const ip = getClientIp(request) || clientAddress || 'unknown';
+  const rl = rateLimit({ key: ip, bucket: 'expediente', maxHits: 5, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) {
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        error: 'rate_limit',
+        detail: `Has enviado demasiados expedientes en poco tiempo. Vuelve a intentarlo en ${Math.ceil(rl.retryAfter / 60)} min.`,
+      }),
+      {
+        status: 429,
+        headers: { 'retry-after': String(rl.retryAfter), 'content-type': 'application/json' },
+      },
+    );
+  }
 
   let formData: FormData;
   try {
