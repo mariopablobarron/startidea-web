@@ -1,0 +1,57 @@
+src/pages/presupuesto/nuevo.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 233,251
+src/pages/subvenciones/verificacion.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 97,99,101,110,128,132
+src/pages/admin/convocatorias/[slug].astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 464,507
+src/pages/subvenciones/presentar/nuevo.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 1372
+src/pages/admin/convocatorias/index.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 245,271,287
+src/pages/subvenciones/mi-copiloto.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 283
+src/pages/diagnostico/gracias.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 134
+src/components/VoiceAgent.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 222-243
+src/pages/diagnostico/nuevo.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 532,537,552,558,562,568,571,574,577,583
+src/pages/subvenciones/index.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 518-520,605,617,623,629,638,647
+src/pages/portal/enviado.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 223,225
+src/pages/portal/index.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 435
+src/pages/subvenciones/crear-alerta.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 191
+src/pages/subvenciones/catalogo/index.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 260,266
+src/pages/subvenciones/auto-copiloto.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 328
+src/pages/subvenciones/presentar/gracias.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 154-155,157-159,172-173,201
+src/pages/portal/registro.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 449-453,472-473,484,487,504,507,520
+src/pages/laboratorio/fundraising/index.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 165,180,186
+src/pages/notas.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 304-306
+src/pages/subvenciones/mi-alerta.astro
+  s_fc84abf46d9a4c::t_c4adf48c90b0fa 40,76,83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "32a4e9ab40da0b0bbfe0bea5829491e58e3549c4",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
