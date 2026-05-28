@@ -30,5 +30,39 @@ export const onRequest = defineMiddleware(async (context, next) => {
     );
   }
 
+  // Content-Security-Policy — defensa XSS + clickjacking + data exfiltration.
+  //
+  // Trade-offs explícitos:
+  //  - 'unsafe-inline' en script-src: necesario por Astro inline scripts
+  //    (component <script> tags) y por algunos handlers inline en formularios.
+  //    Sin esto, el wizard de subvenciones no funciona.
+  //  - 'unsafe-inline' en style-src: necesario por style props inline de
+  //    Tailwind + style="color:..." en componentes server.
+  //  - img-src https: amplio porque las OG images y posibles referencias a
+  //    imágenes externas (BOJA, gov.es) deben cargar.
+  //  - frame-ancestors 'none': más estricto que el x-frame-options=SAMEORIGIN
+  //    anterior. Bloquea totalmente embeddings en iframes externos.
+  //  - form-action: permite el form de Buttondown para suscripción newsletter.
+  //
+  // Hosts externos legítimos:
+  //  - analytics.hubstartidea.es → Umami analytics (script + beacon)
+  //  - buttondown.email → suscripción newsletter
+  if (!headers.has('content-security-policy')) {
+    const csp = [
+      `default-src 'self'`,
+      `script-src 'self' 'unsafe-inline' https://analytics.hubstartidea.es`,
+      `style-src 'self' 'unsafe-inline'`,
+      `img-src 'self' data: https:`,
+      `font-src 'self' data:`,
+      `connect-src 'self' https://analytics.hubstartidea.es`,
+      `form-action 'self' https://buttondown.email`,
+      `frame-ancestors 'none'`,
+      `base-uri 'self'`,
+      `object-src 'none'`,
+      `upgrade-insecure-requests`,
+    ].join('; ');
+    headers.set('content-security-policy', csp);
+  }
+
   return response;
 });

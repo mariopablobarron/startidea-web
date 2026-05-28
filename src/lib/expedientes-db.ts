@@ -779,6 +779,29 @@ export function getPortalSessionEmail(token: string): string | null {
   return row?.email ?? null;
 }
 
+/**
+ * Limpia tokens expirados de magic links + sesiones de portal.
+ *
+ * Los magic tokens (1h de validez) y las sesiones expiradas (>7d) deberían
+ * eliminarse para mantener la BD ágil. validateMagicToken() elimina el token
+ * tras consumirlo, pero si nunca se consume (usuario abandonó) queda eterno.
+ *
+ * Devuelve cuántos registros se eliminaron de cada tabla.
+ */
+export function cleanupExpiredPortalTokens(): {
+  magic_tokens: number;
+  sessions: number;
+} {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const m = db.prepare(`DELETE FROM portal_magic_tokens WHERE expires_at < ?`).run(now);
+  const s = db.prepare(`DELETE FROM portal_sessions WHERE expires_at < ?`).run(now);
+  return {
+    magic_tokens: m.changes ?? 0,
+    sessions:     s.changes ?? 0,
+  };
+}
+
 export function deletePortalSession(token: string): void {
   const db = getDb();
   db.prepare(`DELETE FROM portal_sessions WHERE token = ?`).run(token);

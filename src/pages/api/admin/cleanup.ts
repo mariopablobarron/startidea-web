@@ -20,6 +20,7 @@ import {
   cleanupUnconfirmedProfiles,
   previewCleanupUnconfirmed,
 } from '@/lib/auto-copiloto-db';
+import { cleanupExpiredPortalTokens } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -62,12 +63,15 @@ export const POST: APIRoute = async ({ request, url }) => {
   const days = Math.max(7, Number(url.searchParams.get('days') ?? 30));
 
   try {
-    const deleted = cleanupUnconfirmedProfiles(days);
+    const profilesDeleted = cleanupUnconfirmedProfiles(days);
+    const tokens = cleanupExpiredPortalTokens();
     return json({
       ok: true,
       deleted: {
-        unconfirmed_profiles: deleted,
-        older_than_days: days,
+        unconfirmed_profiles: profilesDeleted,
+        expired_magic_tokens: tokens.magic_tokens,
+        expired_sessions:     tokens.sessions,
+        older_than_days:      days,
       },
       ts: new Date().toISOString(),
     });
