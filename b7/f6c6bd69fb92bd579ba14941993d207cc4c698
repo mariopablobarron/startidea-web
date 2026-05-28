@@ -1,0 +1,23 @@
+src/pages/merchandising.astro
+  s_fc84abf46d9a4c::t_858474c950b9e7 38
+src/components/Ecosistema.astro
+  s_fc84abf46d9a4c::t_0d028cc0644975 49-50
+src/components/MerchPromo.astro
+  s_fc84abf46d9a4c::t_f2681c8d4fc0ba 30-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b7f6c6bd69fb92bd579ba14941993d207cc4c698",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
