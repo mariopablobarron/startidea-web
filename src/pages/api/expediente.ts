@@ -156,7 +156,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         telefono,
         provincia,
         como_conocio: comoConocio,
-        consent_at: null, // sin checkbox de consentimiento explícito en este formulario
+        consent_at: formData.get('rgpd') === 'on' ? Math.floor(Date.now() / 1000) : null,
       });
     }
     // Magic link válido 1h para acceso inmediato al portal
@@ -170,7 +170,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // Construir mensaje Telegram
   const convRef = tieneConvocatoria === 'si'
     ? (convocatoriaNombre || convocatoriaUrl || 'URL/referencia no indicada')
-    : `SIN IDENTIFICAR — ${necesidadDesc.slice(0, 100)}`;
+    : `SIN IDENTIFICAR — ${descripcionProyecto.slice(0, 100)}`;
 
   const tgText =
     `<b>🗂 Nuevo expediente de subvención</b>\n\n` +

@@ -735,8 +735,11 @@ const jsonLd = [
     const orgName = (form.querySelector('#orgName') as HTMLInputElement).value;
     const cif = (form.querySelector('#cif') as HTMLInputElement).value;
     const email = (form.querySelector('#email') as HTMLInputElement).value;
-    const convoUrl = (form.querySelector('#convocatoriaUrl') as HTMLInputElement).value;
-    const convoNombre = (form.querySelector('#convocatoriaNombre') as HTMLInputElement).value;
+    const convoUrl = (form.querySelector('#convocatoriaUrl') as HTMLInputElement)?.value ?? '';
+    // Cuando la convocatoria viene preseleccionada desde la landing BOJA el campo
+    // tiene id="conv-nombre-hidden"; en el flujo estándar id="convocatoriaNombre".
+    const convoNombre =
+      (form.querySelector('#conv-nombre-hidden, #convocatoriaNombre') as HTMLInputElement)?.value ?? '';
     const necesidad = (form.querySelector('#descripcionProyecto') as HTMLTextAreaElement).value;
     const fileInputs = form.querySelectorAll<HTMLInputElement>('input[type="file"]');
 
