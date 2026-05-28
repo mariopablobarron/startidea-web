@@ -8,6 +8,7 @@
  */
 
 import type { Expediente } from './expedientes-db';
+import { getConvocatoria } from './expedientes-db';
 import { fetchSubsidyDetail } from './subsidies-api';
 import { detectSede, sedeContextoPrompt } from './sedes-map';
 
@@ -69,33 +70,67 @@ export async function buildConvContext(opts: {
   let organismo: string | null = null;
 
   if (opts.convocatoria_slug) {
+    // 1. Intentar primero desde el catálogo local (SQLite propio)
     try {
-      const conv = await fetchSubsidyDetail(opts.convocatoria_slug);
-      if (conv) {
-        organismo = conv.organization ?? null;
+      const localConv = getConvocatoria(opts.convocatoria_slug);
+      if (localConv) {
+        organismo = localConv.organo || null;
         context = [
-          `CONVOCATORIA: ${conv.title}`,
-          conv.organization ? `ORGANISMO: ${conv.organization}` : '',
-          conv.deadline ? `PLAZO: ${conv.deadline}` : '',
-          conv.amount_eur
-            ? `DOTACIÓN MÁXIMA: ${conv.amount_eur.toLocaleString('es-ES')} €`
+          `CONVOCATORIA: ${localConv.tituloFull || localConv.titulo}`,
+          localConv.organo           ? `ORGANISMO: ${localConv.organo}` : '',
+          localConv.deadline         ? `PLAZO: ${localConv.deadline}` : '',
+          localConv.importeRange     ? `DOTACIÓN: ${localConv.importeRange}` : '',
+          localConv.tipoEntidades    ? `BENEFICIARIOS: ${localConv.tipoEntidades}` : '',
+          localConv.financiaResumen?.length
+            ? `\nQUÉ FINANCIA:\n${localConv.financiaResumen.map(b => `- ${b}`).join('\n')}`
             : '',
-          conv.description ? `\nDESCRIPCIÓN BASES:\n${conv.description}` : '',
-          conv.bases_text
-            ? `\nCONTENIDO BASES:\n${conv.bases_text.slice(0, 6000)}`
+          localConv.gastosOk?.length
+            ? `\nGASTOS ELEGIBLES:\n${localConv.gastosOk.map(g => `- ${g}`).join('\n')}`
             : '',
-          conv.bases_text
-            ? extractBaremo(conv.bases_text)
+          localConv.gastosNo?.length
+            ? `\nGASTOS NO ELEGIBLES:\n${localConv.gastosNo.map(g => `- ${g}`).join('\n')}`
             : '',
-          conv.startidea_summary
-            ? `\nRESUMEN EDITORIAL:\n${conv.startidea_summary}`
+          localConv.requisitos?.length
+            ? `\nREQUISITOS:\n${localConv.requisitos.map(r => `- ${r}`).join('\n')}`
             : '',
-        ]
-          .filter(Boolean)
-          .join('\n');
+          localConv.importe          ? `\nDETALLE IMPORTE:\n${localConv.importe}` : '',
+          localConv.nota             ? `\nNOTAS:\n${localConv.nota}` : '',
+        ].filter(Boolean).join('\n');
       }
     } catch (err) {
-      console.warn('[copiloto-engine] No se pudieron obtener datos de convocatoria:', err);
+      console.warn('[copiloto-engine] No se encontró en catálogo local:', err);
+    }
+
+    // 2. Si no hay contexto, intentar desde el HUB externo (BDNS)
+    if (!context) {
+      try {
+        const conv = await fetchSubsidyDetail(opts.convocatoria_slug);
+        if (conv) {
+          organismo = conv.organization ?? null;
+          context = [
+            `CONVOCATORIA: ${conv.title}`,
+            conv.organization ? `ORGANISMO: ${conv.organization}` : '',
+            conv.deadline ? `PLAZO: ${conv.deadline}` : '',
+            conv.amount_eur
+              ? `DOTACIÓN MÁXIMA: ${conv.amount_eur.toLocaleString('es-ES')} €`
+              : '',
+            conv.description ? `\nDESCRIPCIÓN BASES:\n${conv.description}` : '',
+            conv.bases_text
+              ? `\nCONTENIDO BASES:\n${conv.bases_text.slice(0, 6000)}`
+              : '',
+            conv.bases_text
+              ? extractBaremo(conv.bases_text)
+              : '',
+            conv.startidea_summary
+              ? `\nRESUMEN EDITORIAL:\n${conv.startidea_summary}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join('\n');
+        }
+      } catch (err) {
+        console.warn('[copiloto-engine] No se pudieron obtener datos de convocatoria:', err);
+      }
     }
   }
 
