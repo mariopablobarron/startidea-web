@@ -13,7 +13,8 @@
  *  4. Parsea los 4 documentos generados
  *  5. Guarda en SQLite (ai_memoria, ai_presupuesto, ai_checklist, ai_guia)
  *  6. Actualiza status → docs_listos
- *  7. Notifica a Mario por Telegram
+ *  7. Email automático al cliente: "documentos en revisión" + enlace portal
+ *  8. Notifica a Mario por Telegram
  */
 
 import type { APIRoute } from 'astro';
@@ -21,6 +22,7 @@ import { getExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db'
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
 import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/doc-extractor';
+import { sendEmail } from '@/lib/email-resend';
 import { join } from 'node:path';
 
 export const prerender = false;
@@ -90,6 +92,63 @@ export const POST: APIRoute = async ({ request }) => {
     elegibilidad: elegibilidad?.raw,
     datosFaltantes,
   });
+
+  // ── Notificación automática al cliente — "Documentos en revisión" ──────────
+  // Email ligero: no incluye los documentos (eso lo hace entregar-expediente).
+  // Comunica que la IA ha terminado y el equipo los revisa antes de enviarlos.
+  // El enlace lleva al portal donde pueden ver el estado y pedir nuevo acceso.
+  const primerNombre = exp.representante.split(' ')[0];
+  const convName = exp.convocatoria_title ?? 'la convocatoria solicitada';
+  try {
+    await sendEmail({
+      to: exp.email,
+      replyTo: 'hola@startidea.es',
+      subject: `[${id}] Documentos en revisión — Startidea`,
+      html: `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#faf8f5;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;padding:32px 24px">
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">— Startidea · Copiloto de Subvenciones</p>
+  <h1 style="font-size:22px;font-weight:700;line-height:1.3;margin:0 0 16px;color:#1f1f22">
+    Hola, ${primerNombre}. La IA ya ha analizado tu solicitud.
+  </h1>
+  <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 20px">
+    La IA de Startidea ha preparado un borrador de la documentación para
+    <strong>${convName}</strong> (expediente <span style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${id}</span>).
+  </p>
+  <div style="border-left:3px solid #e6356b;padding:12px 20px;background:#fff7f8;margin:20px 0;font-size:14px;color:#333">
+    <strong>¿Qué pasa ahora?</strong>
+    <ol style="margin:8px 0;padding-left:20px;line-height:1.9">
+      <li>El equipo de Startidea revisa y completa los documentos generados.</li>
+      <li>En unas horas recibirás <strong>otro email</strong> con los documentos finales listos para presentar.</li>
+      <li>Cualquier duda mientras tanto: <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></li>
+    </ol>
+  </div>
+  <p style="font-size:14px;color:#555;margin:20px 0">
+    También puedes consultar el estado en tiempo real en tu portal de cliente:
+  </p>
+  <a href="https://startidea.es/portal"
+     style="display:inline-block;background:#e6356b;color:#fff;font-family:monospace;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;padding:12px 24px;margin:4px 0 20px">
+    Acceder al portal →
+  </a>
+  <hr style="border:none;border-top:1px solid #e0ddd8;margin:28px 0">
+  <p style="font-size:13px;color:#888;line-height:1.6">
+    Un saludo,<br>
+    <strong>Equipo Startidea</strong><br>
+    <a href="https://startidea.es" style="color:#e6356b">startidea.es</a>
+  </p>
+  <p style="font-size:11px;color:#bbb;margin-top:24px;border-top:1px solid #e0ddd8;padding-top:16px">
+    Startidea · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada
+  </p>
+</div>
+</body>
+</html>`,
+    });
+  } catch (emailErr) {
+    // No bloqueamos el flujo — Telegram ya avisa a Mario
+    console.error('[generar-expediente] Email cliente error:', emailErr);
+  }
 
   // Notificar a Mario por Telegram
   const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
