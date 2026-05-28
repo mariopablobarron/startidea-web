@@ -1,0 +1,19 @@
+src/components/VoiceAgent.astro
+  s_fc84abf46d9a4c::t_cb16341dd4a5f3 465-474,479,484-487
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7bf86ab3f240ac4834c19207e8ef05aa119a4d61",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
