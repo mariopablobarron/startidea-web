@@ -291,7 +291,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
     const r = await doAction('pause');
     if (r.ok) {
       showFeedback('Copiloto pausado. No recibirás nuevas alertas hasta que lo reactives.');
-      (document.getElementById('btn-pause') as HTMLButtonElement).disabled = true;
+      (document.getElementById('btn-pause')).disabled = true;
     } else {
       showFeedback('No se pudo pausar. Intenta de nuevo o escríbenos a hola@startidea.es.', true);
     }
@@ -302,7 +302,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
     const r = await doAction('resume');
     if (r.ok) {
       showFeedback('¡Copiloto reactivado! Volverás a recibir alertas a partir del próximo ciclo diario.');
-      (document.getElementById('btn-resume') as HTMLButtonElement).disabled = true;
+      (document.getElementById('btn-resume')).disabled = true;
     } else {
       showFeedback('No se pudo reactivar. Intenta de nuevo o escríbenos a hola@startidea.es.', true);
     }

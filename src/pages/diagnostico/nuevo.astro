@@ -525,15 +525,15 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
 <script>
   // ─── Wizard adaptativo ──────────────────────────────────────────
-  const form = document.getElementById("diag-form") as HTMLFormElement | null;
+  const form = document.getElementById("diag-form");
   if (!form) throw new Error("form missing");
 
-  const intakeUrl = form.dataset.intakeUrl!;
+  const intakeUrl = form.dataset.intakeUrl;
   const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
-  const stepLabel = document.querySelector("[data-step-label]") as HTMLElement | null;
-  const progress = document.querySelector("[data-progress]") as HTMLElement | null;
-  const statusBox = form.querySelector("[data-status]") as HTMLElement | null;
-  const challengeCounter = form.querySelector("[data-count-challenge]") as HTMLElement | null;
+  const stepLabel = document.querySelector("[data-step-label]");
+  const progress = document.querySelector("[data-progress]");
+  const statusBox = form.querySelector("[data-status]");
+  const challengeCounter = form.querySelector("[data-count-challenge]");
   const challenge = form.querySelector<HTMLTextAreaElement>("[name='challenge']");
 
   let current = 0;
@@ -590,7 +590,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
         if (!anyChecked) return `Falta elegir: ${groupName}`;
       } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
         return `Falta o no es válido: ${el.name || el.id}`;
-      } else if ((el as HTMLInputElement).minLength && el.value.length < (el as HTMLInputElement).minLength) {
+      } else if ((el).minLength && el.value.length < (el).minLength) {
         return `Muy corto: ${el.name || el.id}`;
       }
     }
@@ -598,7 +598,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   }
 
   form.addEventListener("click", (e) => {
-    const t = e.target as HTMLElement;
+    const t = e.target;
     if (t.matches("[data-next]")) {
       const err = validateStep();
       if (err) {
@@ -615,7 +615,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
   // Cambio de audience refresca el wizard
   form.addEventListener("change", (e) => {
-    const t = e.target as HTMLInputElement;
+    const t = e.target;
     if (t.name === "audience") refreshAdaptive();
     if (t.name === "challenge" && challengeCounter) {
       challengeCounter.textContent = String(t.value.length);

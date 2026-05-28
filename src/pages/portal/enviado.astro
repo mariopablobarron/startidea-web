@@ -221,7 +221,7 @@ export const prerender = false;
     const storedEmail = sessionStorage.getItem('portal_reg_email') ?? '';
 
     document.getElementById('btn-resend')!.addEventListener('click', async () => {
-      const btn = document.getElementById('btn-resend') as HTMLButtonElement;
+      const btn = document.getElementById('btn-resend');
       const msg = document.getElementById('msg-resend')!;
 
       if (!storedEmail) {

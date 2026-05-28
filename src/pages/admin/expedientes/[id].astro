@@ -562,8 +562,8 @@ const sedeDetectada = detectSede({
 
   // Generar con IA
   document.getElementById('btn-generar')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const id = btn.dataset.id!;
+    const btn = e.currentTarget;
+    const id = btn.dataset.id;
     const statusEl = document.getElementById('generar-status')!;
     btn.disabled = true;
     statusEl.classList.remove('hidden');
@@ -593,8 +593,8 @@ const sedeDetectada = detectSede({
 
   // Entregar al cliente
   document.getElementById('btn-entregar')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const id = btn.dataset.id!;
+    const btn = e.currentTarget;
+    const id = btn.dataset.id;
     const statusEl = document.getElementById('entregar-status')!;
     btn.disabled = true;
     statusEl.textContent = '⏳ Enviando email al cliente...';
@@ -655,8 +655,8 @@ const sedeDetectada = detectSede({
 
   // Enviar contrato al cliente
   document.getElementById('btn-enviar-contrato')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const id = btn.dataset.id!;
+    const btn = e.currentTarget;
+    const id = btn.dataset.id;
     const msg = document.getElementById('contrato-msg')!;
     if (!confirm(`¿Enviar el contrato de comisión a éxito al cliente (${id})?`)) return;
     btn.disabled = true;
@@ -691,10 +691,10 @@ const sedeDetectada = detectSede({
 
   // Generar factura
   document.getElementById('btn-generar-factura')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget as HTMLButtonElement;
-    const id = btn.dataset.id!;
+    const btn = e.currentTarget;
+    const id = btn.dataset.id;
     const msg = document.getElementById('factura-msg')!;
-    const importeInput = document.getElementById('input-importe') as HTMLInputElement | null;
+    const importeInput = document.getElementById('input-importe');
     const importe = importeInput?.value.trim() ?? '';
     if (!importe) {
       alert('Introduce el importe concedido antes de generar la factura.');
@@ -736,9 +736,9 @@ const sedeDetectada = detectSede({
 
   // Enviar mensaje al cliente
   document.getElementById('btn-send-msg')?.addEventListener('click', async (e) => {
-    const btn    = e.currentTarget as HTMLButtonElement;
-    const expId  = btn.dataset.id!;
-    const ta     = document.getElementById('msg-body') as HTMLTextAreaElement;
+    const btn    = e.currentTarget;
+    const expId  = btn.dataset.id;
+    const ta     = document.getElementById('msg-body');
     const status = document.getElementById('msg-send-status')!;
     const body   = ta.value.trim();
     if (!body) { ta.focus(); return; }

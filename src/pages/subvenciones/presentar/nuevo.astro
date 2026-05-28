@@ -1327,19 +1327,19 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
   async function runGenerarMemoria() {
     const slug        = (fSlug()?.value ?? '').trim();
     const convNombre  = (fNombre()?.value ?? '').trim();
-    const orgName     = (document.getElementById('orgName') as HTMLInputElement)?.value?.trim() ?? '';
-    const orgType     = (document.getElementById('orgType') as HTMLSelectElement)?.value ?? '';
-    const descripcion = (document.getElementById('descripcionProyecto') as HTMLTextAreaElement)?.value?.trim() ?? '';
-    const beneficiariosAnuales = (document.getElementById('beneficiariosAnuales') as HTMLInputElement)?.value?.trim() ?? '';
-    const presupuestoAnual     = (document.getElementById('presupuestoAnual') as HTMLInputElement)?.value?.trim() ?? '';
-    const logros               = (document.getElementById('logrosDestacados') as HTMLTextAreaElement)?.value?.trim() ?? '';
+    const orgName     = (document.getElementById('orgName'))?.value?.trim() ?? '';
+    const orgType     = (document.getElementById('orgType'))?.value ?? '';
+    const descripcion = (document.getElementById('descripcionProyecto'))?.value?.trim() ?? '';
+    const beneficiariosAnuales = (document.getElementById('beneficiariosAnuales'))?.value?.trim() ?? '';
+    const presupuestoAnual     = (document.getElementById('presupuestoAnual'))?.value?.trim() ?? '';
+    const logros               = (document.getElementById('logrosDestacados'))?.value?.trim() ?? '';
 
     const statusDiv   = document.getElementById('gen-mem-status');
     const statusMsg   = document.getElementById('gen-mem-status-msg');
     const resultDiv   = document.getElementById('gen-mem-result');
-    const textarea    = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
-    const btnGen      = document.getElementById('btn-gen-memoria') as HTMLButtonElement;
-    const btnRegen    = document.getElementById('btn-regen-memoria') as HTMLButtonElement;
+    const textarea    = document.getElementById('gen-mem-textarea');
+    const btnGen      = document.getElementById('btn-gen-memoria');
+    const btnRegen    = document.getElementById('btn-regen-memoria');
 
     if (!descripcion) {
       alert('Describe el proyecto en el paso anterior para poder generar la memoria técnica.');
@@ -1376,7 +1376,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
         if (resultDiv) resultDiv.classList.remove('hidden');
         if (statusDiv) statusDiv.classList.add('hidden');
         // Guardar en campo oculto para que se envíe con el expediente
-        const fMemoria = document.getElementById('f-memoria-wizard') as HTMLInputElement | null;
+        const fMemoria = document.getElementById('f-memoria-wizard');
         if (fMemoria) fMemoria.value = data.memoria;
         // Scroll al resultado
         setTimeout(() => resultDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
@@ -1404,8 +1404,8 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
 
   // Copiar al portapapeles
   document.getElementById('btn-copy-memoria')?.addEventListener('click', async () => {
-    const ta  = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
-    const btn = document.getElementById('btn-copy-memoria') as HTMLButtonElement;
+    const ta  = document.getElementById('gen-mem-textarea');
+    const btn = document.getElementById('btn-copy-memoria');
     if (!ta?.value) return;
     try {
       await navigator.clipboard.writeText(ta.value);
@@ -1420,8 +1420,8 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
 
   // Descargar como .txt
   document.getElementById('btn-download-memoria')?.addEventListener('click', () => {
-    const ta      = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
-    const orgName = (document.getElementById('orgName') as HTMLInputElement)?.value?.trim() ?? 'entidad';
+    const ta      = document.getElementById('gen-mem-textarea');
+    const orgName = (document.getElementById('orgName'))?.value?.trim() ?? 'entidad';
     if (!ta?.value) return;
     const blob = new Blob([ta.value], { type: 'text/plain;charset=utf-8' });
     const url  = URL.createObjectURL(blob);

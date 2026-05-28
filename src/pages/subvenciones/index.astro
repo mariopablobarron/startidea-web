@@ -518,8 +518,8 @@ const jsonLd = [
     const resultsEl = document.getElementById('subv-results')!;
     const countEl = document.getElementById('subv-count')!;
     const pageInfoEl = document.getElementById('subv-page-info')!;
-    const prevBtn = document.getElementById('subv-prev') as HTMLButtonElement;
-    const nextBtn = document.getElementById('subv-next') as HTMLButtonElement;
+    const prevBtn = document.getElementById('subv-prev');
+    const nextBtn = document.getElementById('subv-next');
 
     resultsEl.style.opacity = '0.5';
     try {
@@ -566,10 +566,10 @@ const jsonLd = [
 
   function refreshChipStates() {
     document.querySelectorAll('[data-filter-group]').forEach((group) => {
-      const groupName = (group as HTMLElement).dataset.filterGroup!;
+      const groupName = (group).dataset.filterGroup;
       const active = (state as any)[groupName];
       group.querySelectorAll('button').forEach((btn) => {
-        const value = (btn as HTMLElement).dataset.filterValue;
+        const value = (btn).dataset.filterValue;
         const isActive = value === active;
         btn.classList.toggle('!bg-ink', isActive);
         btn.classList.toggle('!text-paper', isActive);
@@ -579,8 +579,8 @@ const jsonLd = [
   }
 
   // Wire up
-  const form = document.getElementById('subv-search') as HTMLFormElement;
-  const qInput = form.querySelector('input[name="q"]') as HTMLInputElement;
+  const form = document.getElementById('subv-search');
+  const qInput = form.querySelector('input[name="q"]');
   qInput.value = state.q;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -590,10 +590,10 @@ const jsonLd = [
   });
 
   document.querySelectorAll('[data-filter-group]').forEach((group) => {
-    const groupName = (group as HTMLElement).dataset.filterGroup!;
+    const groupName = (group).dataset.filterGroup;
     group.querySelectorAll('button').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const value = (btn as HTMLElement).dataset.filterValue!;
+        const value = (btn).dataset.filterValue;
         (state as any)[groupName] = (state as any)[groupName] === value ? null : value;
         state.page = 0;
         refreshChipStates();
@@ -615,7 +615,7 @@ const jsonLd = [
   });
 
   document.getElementById('subv-sort')!.addEventListener('change', (e) => {
-    state.sort = (e.target as HTMLSelectElement).value;
+    state.sort = (e.target).value;
     state.page = 0;
     void loadResults();
   });
@@ -748,7 +748,7 @@ const jsonLd = [
   function refreshBanner() {
     const wrap = document.getElementById('subv-banner');
     const text = document.getElementById('subv-banner-text');
-    const cta = document.getElementById('subv-banner-cta') as HTMLAnchorElement | null;
+    const cta = document.getElementById('subv-banner-cta');
     if (!wrap || !text || !cta) return;
     const b = pickBanner();
     if (!b) {

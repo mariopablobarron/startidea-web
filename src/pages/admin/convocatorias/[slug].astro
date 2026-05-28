@@ -432,9 +432,9 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
 
 <script>
   const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
-  const form = document.getElementById('conv-form') as HTMLFormElement;
-  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const formMsg = document.getElementById('form-msg') as HTMLElement;
+  const form = document.getElementById('conv-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const formMsg = document.getElementById('form-msg');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -483,8 +483,8 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
   });
 
   // ── Notificar perfiles del Copiloto Autónomo ────────────────────────────
-  const notifyBtn = document.getElementById('btn-notify-profiles') as HTMLButtonElement | null;
-  const notifyStatus = document.getElementById('notify-status') as HTMLElement | null;
+  const notifyBtn = document.getElementById('btn-notify-profiles');
+  const notifyStatus = document.getElementById('notify-status');
 
   notifyBtn?.addEventListener('click', async () => {
     const slug = notifyBtn.dataset.slug ?? '';

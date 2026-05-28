@@ -218,9 +218,9 @@ function fmtDate(ts: number): string {
   const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
 
   // ── Scraper BDNS ──────────────────────────────────────────────────────
-  const btnScraper = document.getElementById('btn-scraper') as HTMLButtonElement | null;
-  const scraperStatus = document.getElementById('scraper-status') as HTMLElement | null;
-  const scraperMsg = document.getElementById('scraper-msg') as HTMLElement | null;
+  const btnScraper = document.getElementById('btn-scraper');
+  const scraperStatus = document.getElementById('scraper-status');
+  const scraperMsg = document.getElementById('scraper-msg');
 
   btnScraper?.addEventListener('click', async () => {
     if (!confirm('¿Ejecutar scraper BDNS ahora? Tardará unos segundos.')) return;

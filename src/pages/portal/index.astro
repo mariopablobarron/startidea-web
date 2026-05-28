@@ -431,9 +431,9 @@ const googleConfigured = !!(
   <script>
     document.getElementById('form-acceso')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn   = document.getElementById('btn-submit') as HTMLButtonElement;
+      const btn   = document.getElementById('btn-submit');
       const msg   = document.getElementById('msg')!;
-      const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+      const email = (document.getElementById('email')).value.trim();
 
       btn.disabled    = true;
       btn.textContent = '⏳ Enviando...';

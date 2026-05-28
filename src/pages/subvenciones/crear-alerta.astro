@@ -178,7 +178,7 @@ const jsonLd = [
   const fillIf = (id: string, qsKey: string) => {
     const v = url.searchParams.get(qsKey);
     if (v) {
-      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      const el = document.getElementById(id);
       if (el) el.value = v;
     }
   };
@@ -186,8 +186,8 @@ const jsonLd = [
   fillIf('finalidades', 'finalidad');
   fillIf('beneficiary_types', 'beneficiary');
 
-  const form = document.getElementById('watch-form') as HTMLFormElement;
-  const btn = document.getElementById('watch-submit') as HTMLButtonElement;
+  const form = document.getElementById('watch-form');
+  const btn = document.getElementById('watch-submit');
   const resultEl = document.getElementById('watch-result')!;
 
   form.addEventListener('submit', async (e) => {

@@ -336,12 +336,12 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
 
   // Pills principales
   pills.forEach((p) => {
-    p.addEventListener('click', () => activateCat(p.dataset.cat!));
+    p.addEventListener('click', () => activateCat(p.dataset.cat));
   });
 
   // Links de sub-categoría dentro de "Todas"
   pillLinks.forEach((p) => {
-    p.addEventListener('click', () => activateCat(p.dataset.cat!));
+    p.addEventListener('click', () => activateCat(p.dataset.cat));
   });
 
   // Leer categoría inicial desde URL (?cat=Financiación)

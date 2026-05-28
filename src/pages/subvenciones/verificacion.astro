@@ -116,7 +116,7 @@ const jsonLd = [
         );
         if (res.ok) {
           showAction('Alerta borrada. Adiós 👋');
-          (document.getElementById('delete-watch') as HTMLButtonElement).disabled = true;
+          (document.getElementById('delete-watch')).disabled = true;
         } else {
           showAction('No se pudo borrar (¿ya estaba borrada?).');
         }

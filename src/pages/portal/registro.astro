@@ -477,7 +477,7 @@ const COMO_CONOCIO = [
     }
 
     function getVal(id: string): string {
-      return (document.getElementById(id) as HTMLInputElement | HTMLSelectElement).value.trim();
+      return (document.getElementById(id)).value.trim();
     }
 
     // ── Paso 1 → 2: validar antes de avanzar ──────────
@@ -508,7 +508,7 @@ const COMO_CONOCIO = [
       e.preventDefault();
 
       // Honeypot: si el campo oculto tiene valor → ignorar silenciosamente
-      const hp = (document.getElementById('hp-website') as HTMLInputElement).value;
+      const hp = (document.getElementById('hp-website')).value;
       if (hp) {
         window.location.href = '/portal/enviado';
         return;
@@ -516,9 +516,9 @@ const COMO_CONOCIO = [
 
       const orgNombre = getVal('orgNombre');
       const orgTipo   = getVal('orgTipo');
-      const acepta    = (document.getElementById('acepta-privacidad') as HTMLInputElement).checked;
+      const acepta    = (document.getElementById('acepta-privacidad')).checked;
       const msg2      = document.getElementById('msg-2')!;
-      const btn       = document.getElementById('btn-submit') as HTMLButtonElement;
+      const btn       = document.getElementById('btn-submit');
 
       if (!orgNombre) {
         msg2.textContent = 'El nombre de la organización es obligatorio.';
