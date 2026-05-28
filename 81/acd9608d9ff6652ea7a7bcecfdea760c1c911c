@@ -1,0 +1,27 @@
+src/pages/api/aceptar-contrato.ts
+  s_fc84abf46d9a4c::t_bbf025d9f7e2f0 195-203,209
+src/pages/subvenciones/catalogo/[slug].astro
+  s_fc84abf46d9a4c::t_7c385c5646a32f 168
+  s_fc84abf46d9a4c::t_3a53674b290af4 295-309,311-312,314,316-329,332-338
+src/content/notas/roi-tramitar-subvenciones-agencia.md
+  s_fc84abf46d9a4c::t_087340a358185c 54,61-62,64-65,67,71
+  s_fc84abf46d9a4c::t_545f8c8021a98c 18
+src/pages/api/expediente.ts
+  s_fc84abf46d9a4c::t_b19c90d9a18977 225-231,233
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "81acd9608d9ff6652ea7a7bcecfdea760c1c911c",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
