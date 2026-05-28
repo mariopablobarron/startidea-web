@@ -446,11 +446,11 @@ const COMO_CONOCIO = [
     let currentStep = 1;
 
     function updateProgress(step: number) {
-      const dot1  = document.getElementById('dot-1')!;
-      const dot2  = document.getElementById('dot-2')!;
-      const line1 = document.getElementById('line-1')!;
-      const lbl1  = document.getElementById('lbl-1')!;
-      const lbl2  = document.getElementById('lbl-2')!;
+      const dot1  = document.getElementById('dot-1');
+      const dot2  = document.getElementById('dot-2');
+      const line1 = document.getElementById('line-1');
+      const lbl1  = document.getElementById('lbl-1');
+      const lbl2  = document.getElementById('lbl-2');
 
       if (step === 1) {
         dot1.className  = 'step-dot active';
@@ -469,8 +469,8 @@ const COMO_CONOCIO = [
     }
 
     function showStep(n: number) {
-      document.getElementById('step-1')!.style.display = n === 1 ? '' : 'none';
-      document.getElementById('step-2')!.style.display = n === 2 ? '' : 'none';
+      document.getElementById('step-1').style.display = n === 1 ? '' : 'none';
+      document.getElementById('step-2').style.display = n === 2 ? '' : 'none';
       currentStep = n;
       updateProgress(n);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -481,10 +481,10 @@ const COMO_CONOCIO = [
     }
 
     // ── Paso 1 → 2: validar antes de avanzar ──────────
-    document.getElementById('btn-next-1')!.addEventListener('click', () => {
+    document.getElementById('btn-next-1').addEventListener('click', () => {
       const nombre = getVal('nombre');
       const email  = getVal('email');
-      const msg1   = document.getElementById('msg-1')!;
+      const msg1   = document.getElementById('msg-1');
 
       if (!nombre) {
         msg1.textContent = 'El nombre es obligatorio.';
@@ -501,10 +501,10 @@ const COMO_CONOCIO = [
     });
 
     // ── Paso 2 → 1: volver ────────────────────────────
-    document.getElementById('btn-back-2')!.addEventListener('click', () => showStep(1));
+    document.getElementById('btn-back-2').addEventListener('click', () => showStep(1));
 
     // ── Submit ─────────────────────────────────────────
-    document.getElementById('form-registro')!.addEventListener('submit', async (e) => {
+    document.getElementById('form-registro').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       // Honeypot: si el campo oculto tiene valor → ignorar silenciosamente
@@ -517,7 +517,7 @@ const COMO_CONOCIO = [
       const orgNombre = getVal('orgNombre');
       const orgTipo   = getVal('orgTipo');
       const acepta    = (document.getElementById('acepta-privacidad')).checked;
-      const msg2      = document.getElementById('msg-2')!;
+      const msg2      = document.getElementById('msg-2');
       const btn       = document.getElementById('btn-submit');
 
       if (!orgNombre) {

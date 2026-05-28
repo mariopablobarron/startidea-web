@@ -162,7 +162,7 @@ const geografias = Array.from(new Set(all.map((d) => d.data.geografia))).sort();
 
 <script>
   const state: Record<string, string> = { sector: '', geografia: '' };
-  const items = document.querySelectorAll<HTMLElement>('.diagnostico-item');
+  const items = document.querySelectorAll('.diagnostico-item');
   const empty = document.getElementById('empty-msg');
 
   function applyFilter() {
@@ -177,13 +177,13 @@ const geografias = Array.from(new Set(all.map((d) => d.data.geografia))).sort();
     if (empty) empty.classList.toggle('hidden', visibles > 0);
   }
 
-  document.querySelectorAll<HTMLButtonElement>('.filter-pill').forEach((btn) => {
+  document.querySelectorAll('.filter-pill').forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter as 'sector' | 'geografia';
       const value = btn.dataset.value || '';
       state[filter] = value;
       document
-        .querySelectorAll<HTMLButtonElement>(`.filter-pill[data-filter="${filter}"]`)
+        .querySelectorAll(`.filter-pill[data-filter="${filter}"]`)
         .forEach((b) => b.classList.toggle('active', (b.dataset.value || '') === value));
       applyFilter();
     });

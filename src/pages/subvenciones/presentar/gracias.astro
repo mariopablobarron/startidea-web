@@ -151,12 +151,12 @@ export const prerender = false;
     // Sin ID → no mostramos el estado en vivo
     document.getElementById('status-live')?.remove();
   } else {
-    const liveBox  = document.getElementById('status-live')!;
-    const label    = document.getElementById('status-label')!;
+    const liveBox  = document.getElementById('status-live');
+    const label    = document.getElementById('status-label');
     const bar      = document.getElementById('status-bar');
-    const spinner  = document.getElementById('status-spinner')!;
-    const doneMsg  = document.getElementById('status-done-msg')!;
-    const idLabel  = document.getElementById('status-id')!;
+    const spinner  = document.getElementById('status-spinner');
+    const doneMsg  = document.getElementById('status-done-msg');
+    const idLabel  = document.getElementById('status-id');
 
     liveBox.classList.remove('hidden');
     idLabel.textContent = `ID: ${expId}`;
@@ -169,8 +169,8 @@ export const prerender = false;
       const steps = document.querySelectorAll('[data-step-key]');
       steps.forEach(el => {
         const key = el.getAttribute('data-step-key') ?? '';
-        const dot = el.querySelector('.step-dot')!;
-        const lbl = el.querySelector('.step-label')!;
+        const dot = el.querySelector('.step-dot');
+        const lbl = el.querySelector('.step-label');
 
         const isActive = key === status;
         const isDone   = PCT[key] <= PCT[status];
@@ -198,9 +198,7 @@ export const prerender = false;
       if (done) return;
       try {
         const res  = await fetch(`/api/expediente-status/${expId}`, { cache: 'no-store' });
-        const data = await res.json() as {
-          ok: boolean; status: string; label: string; done: boolean;
-        };
+        const data = await res.json();
         if (!data.ok) { failCount++; if (failCount > 5) done = true; return; }
         failCount = 0;
 

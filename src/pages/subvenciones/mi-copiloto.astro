@@ -280,7 +280,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
   }
 
   function showFeedback(msg: string, isError = false) {
-    const el = document.getElementById('action-feedback')!;
+    const el = document.getElementById('action-feedback');
     el.className = `border p-4 text-sm ${isError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'}`;
     el.textContent = msg;
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });

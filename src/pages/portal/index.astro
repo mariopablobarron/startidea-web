@@ -432,7 +432,7 @@ const googleConfigured = !!(
     document.getElementById('form-acceso')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn   = document.getElementById('btn-submit');
-      const msg   = document.getElementById('msg')!;
+      const msg   = document.getElementById('msg');
       const email = (document.getElementById('email')).value.trim();
 
       btn.disabled    = true;

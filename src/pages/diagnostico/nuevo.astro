@@ -529,12 +529,12 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   if (!form) throw new Error("form missing");
 
   const intakeUrl = form.dataset.intakeUrl;
-  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
+  const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
   const stepLabel = document.querySelector("[data-step-label]");
   const progress = document.querySelector("[data-progress]");
   const statusBox = form.querySelector("[data-status]");
   const challengeCounter = form.querySelector("[data-count-challenge]");
-  const challenge = form.querySelector<HTMLTextAreaElement>("[name='challenge']");
+  const challenge = form.querySelector("[name='challenge']");
 
   let current = 0;
   const total = steps.length;
@@ -549,38 +549,38 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   }
 
   function getAudience(): string {
-    return (form.querySelector<HTMLInputElement>("[name='audience']:checked")?.value) ?? "";
+    return (form.querySelector("[name='audience']:checked")?.value) ?? "";
   }
 
   function refreshAdaptive() {
     const audience = getAudience();
     // Sub-tipo correcto visible
-    form.querySelectorAll<HTMLElement>("[data-subtype-for]").forEach((el) => {
+    form.querySelectorAll("[data-subtype-for]").forEach((el) => {
       el.classList.toggle("hidden", el.dataset.subtypeFor !== audience);
     });
     // Preguntas extra correctas visibles
-    form.querySelectorAll<HTMLElement>("[data-extra-for]").forEach((el) => {
+    form.querySelectorAll("[data-extra-for]").forEach((el) => {
       el.classList.toggle("hidden", el.dataset.extraFor !== audience);
     });
     // Etiquetas que cambian para emprendedor
     const isEmp = audience === "emprendedor";
     form
-      .querySelectorAll<HTMLElement>("[data-org-label-default]")
+      .querySelectorAll("[data-org-label-default]")
       .forEach((el) => el.classList.toggle("hidden", isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-org-label-emprendedor]")
+      .querySelectorAll("[data-org-label-emprendedor]")
       .forEach((el) => el.classList.toggle("hidden", !isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-stage-label-default]")
+      .querySelectorAll("[data-stage-label-default]")
       .forEach((el) => el.classList.toggle("hidden", isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-stage-label-emprendedor]")
+      .querySelectorAll("[data-stage-label-emprendedor]")
       .forEach((el) => el.classList.toggle("hidden", !isEmp));
   }
 
   function validateStep(): string | null {
     const fs = steps[current];
-    const required = Array.from(fs.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[required]")).filter(
+    const required = Array.from(fs.querySelectorAll("[required]")).filter(
       (el) => !el.closest(".hidden"),
     );
     for (const el of required) {

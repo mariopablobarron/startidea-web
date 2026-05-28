@@ -230,7 +230,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   if (!form) throw new Error("form missing");
 
   const intakeUrl = form.dataset.intakeUrl;
-  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
+  const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
   const stepLabel = document.querySelector("[data-step-label]");
   const progress = document.querySelector("[data-progress]");
   const statusBox = form.querySelector("[data-status]");
@@ -248,7 +248,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
   function validateStep(): string | null {
     const fs = steps[current];
-    const required = Array.from(fs.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[required]"));
+    const required = Array.from(fs.querySelectorAll("[required]"));
     for (const el of required) {
       if (el instanceof HTMLInputElement && el.type === "radio") {
         const groupName = el.name;

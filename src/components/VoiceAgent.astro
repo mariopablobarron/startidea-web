@@ -219,28 +219,28 @@
   };
 
   // ─── DOM refs ───────────────────────────────────────────────────────
-  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
-  const chip = $<HTMLButtonElement>('voice-chip');
-  const chipMobile = $<HTMLButtonElement>('voice-chip-mobile');
-  const panel = $<HTMLDivElement>('voice-panel');
-  const closeBtn = $<HTMLButtonElement>('voice-close');
-  const stopSpeechBtn = $<HTMLButtonElement>('voice-stop-speech');
-  const consentDiv = $<HTMLDivElement>('voice-consent');
-  const consentOk = $<HTMLButtonElement>('voice-consent-ok');
-  const consentNo = $<HTMLButtonElement>('voice-consent-no');
-  const chatDiv = $<HTMLDivElement>('voice-chat');
-  const transcript = $<HTMLDivElement>('voice-transcript');
-  const suggestionsDiv = $<HTMLDivElement>('voice-suggestions');
-  const leadOk = $<HTMLDivElement>('voice-lead-ok');
-  const footer = $<HTMLDivElement>('voice-footer');
-  const talkBtn = $<HTMLButtonElement>('voice-talk');
-  const talkLabel = $<HTMLSpanElement>('voice-talk-label');
-  const textForm = $<HTMLFormElement>('voice-text-form');
-  const textInput = $<HTMLInputElement>('voice-text-input');
-  const textSendBtn = $<HTMLButtonElement>('voice-text-send');
-  const statusEl = $<HTMLParagraphElement>('voice-status');
-  const audio = $<HTMLAudioElement>('voice-audio');
-  const pulse = $<HTMLSpanElement>('voice-pulse');
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id);
+  const chip = $('voice-chip');
+  const chipMobile = $('voice-chip-mobile');
+  const panel = $('voice-panel');
+  const closeBtn = $('voice-close');
+  const stopSpeechBtn = $('voice-stop-speech');
+  const consentDiv = $('voice-consent');
+  const consentOk = $('voice-consent-ok');
+  const consentNo = $('voice-consent-no');
+  const chatDiv = $('voice-chat');
+  const transcript = $('voice-transcript');
+  const suggestionsDiv = $('voice-suggestions');
+  const leadOk = $('voice-lead-ok');
+  const footer = $('voice-footer');
+  const talkBtn = $('voice-talk');
+  const talkLabel = $('voice-talk-label');
+  const textForm = $('voice-text-form');
+  const textInput = $('voice-text-input');
+  const textSendBtn = $('voice-text-send');
+  const statusEl = $('voice-status');
+  const audio = $('voice-audio');
+  const pulse = $('voice-pulse');
 
   // ─── Open / close ───────────────────────────────────────────────────
   // Refs a los chips del AsistenteIA (texto) — los ocultamos cuando el

@@ -1369,7 +1369,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
         }),
       });
 
-      const data = await res.json() as { ok: boolean; memoria?: string; error?: string; message?: string };
+      const data = await res.json();
 
       if (data.ok && data.memoria) {
         if (textarea)  textarea.value = data.memoria;

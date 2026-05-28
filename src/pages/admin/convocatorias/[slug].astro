@@ -461,7 +461,7 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
         },
         body: JSON.stringify(body),
       });
-      const data = await res.json() as { ok: boolean; error?: string };
+      const data = await res.json();
       if (data.ok) {
         formMsg.textContent = '✓ Guardado correctamente';
         formMsg.className = 'font-mono text-[11px] text-emerald-600';
@@ -504,15 +504,7 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
         },
         body: JSON.stringify({ slug }),
       });
-      const data = await res.json() as {
-        ok: boolean;
-        profiles_checked?: number;
-        matched?: number;
-        processed?: number;
-        errors?: number;
-        message?: string;
-        error?: string;
-      };
+      const data = await res.json();
 
       if (notifyStatus) {
         if (data.ok) {

@@ -515,9 +515,9 @@ const jsonLd = [
       qs.set('geo', 'EUROPA');
     }
 
-    const resultsEl = document.getElementById('subv-results')!;
-    const countEl = document.getElementById('subv-count')!;
-    const pageInfoEl = document.getElementById('subv-page-info')!;
+    const resultsEl = document.getElementById('subv-results');
+    const countEl = document.getElementById('subv-count');
+    const pageInfoEl = document.getElementById('subv-page-info');
     const prevBtn = document.getElementById('subv-prev');
     const nextBtn = document.getElementById('subv-next');
 
@@ -602,7 +602,7 @@ const jsonLd = [
     });
   });
 
-  document.getElementById('subv-clear')!.addEventListener('click', () => {
+  document.getElementById('subv-clear').addEventListener('click', () => {
     state.q = '';
     state.ccaa = null;
     state.beneficiary = null;
@@ -614,19 +614,19 @@ const jsonLd = [
     void loadResults();
   });
 
-  document.getElementById('subv-sort')!.addEventListener('change', (e) => {
+  document.getElementById('subv-sort').addEventListener('change', (e) => {
     state.sort = (e.target).value;
     state.page = 0;
     void loadResults();
   });
 
-  document.getElementById('subv-prev')!.addEventListener('click', () => {
+  document.getElementById('subv-prev').addEventListener('click', () => {
     if (state.page > 0) {
       state.page -= 1;
       void loadResults();
     }
   });
-  document.getElementById('subv-next')!.addEventListener('click', () => {
+  document.getElementById('subv-next').addEventListener('click', () => {
     if (state.page < state.totalPages - 1) {
       state.page += 1;
       void loadResults();
@@ -635,7 +635,7 @@ const jsonLd = [
 
   // Toggle abiertas/cerradas
   function refreshStatusToggle() {
-    document.querySelectorAll<HTMLButtonElement>('.subv-status-btn').forEach((btn) => {
+    document.querySelectorAll('.subv-status-btn').forEach((btn) => {
       const isActive = btn.dataset.status === state.statusFilter;
       btn.setAttribute('aria-pressed', String(isActive));
       btn.classList.toggle('bg-ink', isActive);
@@ -644,7 +644,7 @@ const jsonLd = [
     });
   }
 
-  document.querySelectorAll<HTMLButtonElement>('.subv-status-btn').forEach((btn) => {
+  document.querySelectorAll('.subv-status-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const newStatus = btn.dataset.status as 'abierto' | 'cerrado';
       if (newStatus === state.statusFilter) return;

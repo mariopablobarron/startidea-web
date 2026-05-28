@@ -94,11 +94,11 @@ const jsonLd = [
   const manageToken = url.searchParams.get('manage');
 
   if (status === 'ok' && manageToken) {
-    document.getElementById('verif-ok')!.classList.remove('hidden');
+    document.getElementById('verif-ok').classList.remove('hidden');
     const manageUrl = `${PUBLIC_BASE}/subvenciones/mi-alerta?t=${manageToken}`;
-    document.getElementById('manage-link')!.textContent = manageUrl;
+    document.getElementById('manage-link').textContent = manageUrl;
 
-    document.getElementById('copy-link')!.addEventListener('click', async () => {
+    document.getElementById('copy-link').addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(manageUrl);
         showAction('Copiado al portapapeles.');
@@ -107,7 +107,7 @@ const jsonLd = [
       }
     });
 
-    document.getElementById('delete-watch')!.addEventListener('click', async () => {
+    document.getElementById('delete-watch').addEventListener('click', async () => {
       if (!confirm('¿Borrar esta alerta? No podrás recuperarla.')) return;
       try {
         const res = await fetch(
@@ -125,11 +125,11 @@ const jsonLd = [
       }
     });
   } else {
-    document.getElementById('verif-invalid')!.classList.remove('hidden');
+    document.getElementById('verif-invalid').classList.remove('hidden');
   }
 
   function showAction(msg: string) {
-    const el = document.getElementById('action-result')!;
+    const el = document.getElementById('action-result');
     el.textContent = msg;
     el.classList.remove('hidden');
     setTimeout(() => el.classList.add('hidden'), 4000);

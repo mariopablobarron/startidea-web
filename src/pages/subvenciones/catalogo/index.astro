@@ -257,13 +257,13 @@ const jsonLd = [
 
 <script>
   // Filtro client-side por tipo
-  document.querySelectorAll<HTMLButtonElement>('.cat-filter-btn').forEach(btn => {
+  document.querySelectorAll('.cat-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter ?? 'all';
       document.querySelectorAll('.cat-filter-btn').forEach(b =>
         b.classList.toggle('is-active', b.dataset.filter === filter)
       );
-      document.querySelectorAll<HTMLAnchorElement>('.cat-card').forEach(card => {
+      document.querySelectorAll('.cat-card').forEach(card => {
         const tipo = card.dataset.tipo ?? '';
         card.style.display = (filter === 'all' || tipo === filter) ? '' : 'none';
       });

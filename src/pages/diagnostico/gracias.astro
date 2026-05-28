@@ -131,7 +131,7 @@ import Base from '@/layouts/Base.astro';
 
   // Tracking analítico (Umami + GA4 via stTrack)
   type W = Window & { stTrack?: (e: string, p?: Record<string, unknown>) => void };
-  const w = window as W;
+  const w = window;
   if (typeof w.stTrack === 'function') {
     w.stTrack('form_submit', { form_type: kind });
   }
