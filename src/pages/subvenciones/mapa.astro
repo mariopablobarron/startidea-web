@@ -553,7 +553,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
   }
 </style>
 
-<script>
+<script lang="ts">
   type State = {
     ccaa: string;
     ccaaLabel: string;
@@ -565,8 +565,8 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
   const HUB_URL = 'https://hub.startidea.tech';
   const PAGE_SIZE = 10;
 
-  const $ = (sel: string) => document.querySelector(sel);
-  const $$ = (sel: string) => Array.from(document.querySelectorAll(sel))[];
+  const $ = (sel: string) => document.querySelector(sel) as HTMLElement | null;
+  const $$ = (sel: string) => Array.from(document.querySelectorAll(sel)) as HTMLElement[];
 
   // ─── Mapa: click en nodo CCAA ─────────────────────────────────
   function setActiveNode(slug: string, label: string) {
@@ -592,7 +592,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
 
   // ─── Actualiza el link "Ir al buscador completo" según filtros ─
   function updateJumpLink() {
-    const jump = $('#lista-jump');
+    const jump = $('#lista-jump') as HTMLAnchorElement | null;
     const jumpLabel = $('#lista-jump-label');
     if (!jump || !jumpLabel) return;
     const qs = new URLSearchParams();
@@ -799,7 +799,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
         meta.textContent = `Mostrando ${Math.min(showing, data.total)} de ${data.total.toLocaleString('es-ES')}${ccaaSuffix}${finalidadSuffix}`;
       }
 
-      const masBtn = $('#lista-mas');
+      const masBtn = $('#lista-mas') as HTMLButtonElement | null;
       if (masBtn) {
         masBtn.disabled = state.page + 1 >= data.totalPages;
         masBtn.style.opacity = masBtn.disabled ? '0.4' : '1';
