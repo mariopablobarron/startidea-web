@@ -192,12 +192,21 @@ export const POST: APIRoute = async ({ request }) => {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid',
     });
+
+    // Si la conversión viene del Copiloto Autónomo, destacar el canal
+    // (es una conversión "premium del lead magnet", info útil para optimizar funnel)
+    const fromCopiloto = exp.como_conocio === 'copiloto-autonomo'
+      && (exp.ip ?? '').indexOf('auto-copiloto') === -1;
+    const canalBadge = fromCopiloto
+      ? `\n\n⚡ <i>CONVERSIÓN DESDE COPILOTO AUTÓNOMO</i> (lead magnet → cliente premium)`
+      : '';
+
     fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         chat_id:    tgChat,
-        text:       `✅ <b>Contrato ACEPTADO</b>\n\n<b>Expediente:</b> <code>${exp.id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Representante:</b> ${exp.representante}\n<b>Fecha:</b> ${ts}\n<b>IP:</b> <code>${ip}</code>\n\nSe ha enviado confirmación por email a ambas partes.`,
+        text:       `✅ <b>Contrato ACEPTADO</b>\n\n<b>Expediente:</b> <code>${exp.id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Representante:</b> ${exp.representante}\n<b>Convocatoria:</b> ${esc(exp.convocatoria_title ?? '—')}\n<b>Fecha:</b> ${ts}\n<b>IP:</b> <code>${ip}</code>${canalBadge}\n\nSe ha enviado confirmación por email a ambas partes.`,
         parse_mode: 'HTML',
       }),
     }).catch(console.error);

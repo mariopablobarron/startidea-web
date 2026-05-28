@@ -165,7 +165,7 @@ const TIPO_LABEL: Record<string, string> = {
         <!-- CTA principal -->
         <div class="mt-8 flex flex-col sm:flex-row gap-3">
           <a
-            href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}`}
+            href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=hero&utm_campaign=detail-${conv.slug}`}
             class="btn text-base py-3 px-6"
           >
             Tramitar con Startidea →
@@ -292,25 +292,50 @@ const TIPO_LABEL: Record<string, string> = {
           </div>
         </div>
 
-        <!-- CTA final -->
-        <div class="border-2 border-magenta/30 bg-magenta/5 p-6">
-          <h2 class="font-display text-xl text-ink mb-2">¿Esta convocatoria os encaja?</h2>
-          <p class="text-sm text-ink/65 leading-relaxed mb-5">
-            Startidea analiza el encaje real en 24–48h sin coste. Si tiene sentido presentarse,
-            prepara la memoria técnica, el presupuesto y la guía de presentación completos.
-            Solo cobramos el 12% si se concede la subvención.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-3">
+        <!-- CTA final: 2 vías de servicio -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Vía premium: Servicio gestionado -->
+          <div class="border-2 border-magenta bg-ink p-6 text-paper relative">
+            <span class="absolute top-0 right-0 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+              Recomendado
+            </span>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Servicio gestionado · 12% éxito</p>
+            <h2 class="font-display text-xl text-paper mb-2">Que Startidea lo presente</h2>
+            <p class="text-sm text-paper/70 leading-relaxed mb-4">
+              Análisis de encaje sin coste, memoria adaptada al baremo, presentación
+              en sede electrónica gestionada y seguimiento hasta resolución.
+              <strong class="text-paper">Sin coste si no se concede.</strong>
+            </p>
             <a
-              href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}`}
-              class="btn"
+              href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=cta-final&utm_campaign=detail-${conv.slug}`}
+              class="inline-block bg-magenta text-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors"
             >
-              Tramitar con Startidea →
-            </a>
-            <a href="/subvenciones/catalogo" class="btn-ghost text-sm">
-              ← Ver otras convocatorias
+              Pedir presupuesto →
             </a>
           </div>
+
+          <!-- Vía gratis: Copiloto Autónomo -->
+          <div class="border-2 border-ink/15 bg-paper-warm p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Copiloto Autónomo · Gratis</p>
+            <h2 class="font-display text-xl text-ink mb-2">¿Prefieres hacerlo tú?</h2>
+            <p class="text-sm text-ink/65 leading-relaxed mb-4">
+              Crea un perfil y recibirás por email los documentos preliminares
+              generados con IA cada vez que aparezca una convocatoria que encaje.
+              Tú presentas, sin coste.
+            </p>
+            <a href="/subvenciones/crear-alerta?utm_source=catalogo&utm_medium=cta-final&utm_campaign=copiloto-gratis"
+               class="btn-ghost inline-block">
+              Activar Copiloto gratis →
+            </a>
+          </div>
+
+        </div>
+
+        <div class="mt-4 text-center">
+          <a href="/subvenciones/catalogo" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            ← Ver otras convocatorias del catálogo
+          </a>
         </div>
 
       </div>

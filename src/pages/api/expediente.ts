@@ -222,8 +222,15 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
     ? (convocatoriaNombre || convocatoriaUrl || 'URL/referencia no indicada')
     : `SIN IDENTIFICAR — ${descripcionProyecto.slice(0, 100)}`;
 
+  // Destacar conversiones del Copiloto Autónomo (lead magnet → cliente premium)
+  const isCopilotoConversion = comoConocio === 'copiloto-autonomo';
+  const headerEmoji = isCopilotoConversion ? '🎯' : '🗂';
+  const conversionBadge = isCopilotoConversion
+    ? `\n⚡ <b>CONVERSIÓN DESDE COPILOTO AUTÓNOMO</b> — el Copiloto generó este lead\n`
+    : '';
+
   const tgText =
-    `<b>🗂 Nuevo expediente de subvención</b>\n\n` +
+    `<b>${headerEmoji} Nuevo expediente de subvención</b>${conversionBadge}\n` +
     `<b>ID:</b> <code>${expedienteId}</code>\n` +
     `<b>Entidad:</b> ${esc(orgName)} (${esc(cif)})\n` +
     `<b>Tipo:</b> ${esc(orgType)}\n` +

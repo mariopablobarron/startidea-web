@@ -15,7 +15,7 @@ faqs:
   - question: '¿Cuándo NO merece la pena contratar tramitación externa?'
     answer: 'Cuando el importe es muy pequeño (menos de 3.000 €), cuando la entidad ya tiene un equipo especializado en proyectos, o cuando la convocatoria es tan específica que el conocimiento interno de la entidad es insustituible. En esos casos tramitar internamente tiene más sentido.'
   - question: '¿Cómo se cobra la tramitación habitualmente?'
-    answer: 'Hay dos modelos: tarifa fija por expediente (independiente del resultado) o success fee (porcentaje sobre la subvención concedida). Startidea trabaja con tarifa fija porque alinea mejor los incentivos: trabajamos igual de bien tanto si la subvención es grande como si es pequeña.'
+    answer: 'Hay dos modelos: tarifa fija por expediente (independiente del resultado) o success fee (porcentaje sobre la subvención concedida). Startidea trabaja con success fee del 12% sobre el importe concedido. Si la subvención no se concede, la entidad no paga nada — el riesgo del análisis y la presentación lo asume Startidea.'
 ---
 
 Cuando alguien de tu entidad dedica 30 horas a redactar la memoria técnica de una subvención, ¿cuánto está costando eso? Pocas organizaciones lo calculan. Cuando se hace el cálculo, la decisión de externalizar o no cambia en muchos casos.
@@ -51,21 +51,24 @@ El tiempo es solo una parte. Hay otros factores que rara vez se incluyen en la e
 
 ## El cálculo con externalización
 
-Sigamos con el mismo ejemplo: convocatoria de 15.000 €, coste de tramitación externa 350 € (tarifa estándar para convocatorias BDNS autonómicas).
+Sigamos con el mismo ejemplo: convocatoria de 15.000 €, gestionada externamente a comisión 12% solo al éxito (modelo de Startidea — si no se concede la subvención, no hay coste).
 
 **Escenario A — Tramitación interna, tasa de éxito 40%:**
 - Coste fijo interno: 600 € (tiempo)
 - Subvención esperada: 15.000 € × 40% = 6.000 €
 - Retorno neto esperado: 6.000 € − 600 € = **5.400 €**
 
-**Escenario B — Tramitación externa, tasa de éxito 65%:**
-- Coste fijo agencia: 350 €
+**Escenario B — Tramitación externa a 12% éxito, tasa de éxito 65%:**
+- Coste si no se concede: 0 € (sin riesgo financiero previo)
 - Subvención esperada: 15.000 € × 65% = 9.750 €
-- Retorno neto esperado: 9.750 € − 350 € = **9.400 €**
+- Comisión esperada: 9.750 € × 12% = 1.170 €
+- Retorno neto esperado: 9.750 € − 1.170 € = **8.580 €**
 
-La diferencia es de 4.000 € en valor esperado. Para que el Escenario A iguale al B, la tasa de éxito interna tendría que ser del 65% y el coste interno de 0 € — lo cual nunca ocurre.
+La diferencia es de 3.180 € en valor esperado a favor de la externalización. Y, lo más importante: en el Escenario B el riesgo financiero es cero — si la subvención no se concede no hay coste, mientras que en el Escenario A las 30-40 horas internas se pierden igual.
 
 **El supuesto más sensible** es la tasa de éxito. Si tu entidad ya tiene una tasa del 70%, la externalización aporta menos. Si es del 20%, aporta mucho más. La mayoría de entidades no conoce su propia tasa de éxito histórica.
+
+**Por qué el modelo a éxito alinea mejor los incentivos**: una agencia que solo cobra si la subvención se concede tiene un incentivo directo a presentar solo las solicitudes con probabilidad razonable de éxito, redactar memorias adaptadas al baremo real y revisar todo dos veces antes de presentar. Cuando se cobra tarifa fija, ese incentivo no existe.
 
 ## Cuándo tiene más sentido cada opción
 
