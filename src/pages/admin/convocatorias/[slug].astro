@@ -1,0 +1,456 @@
+---
+/**
+ * /admin/convocatorias/[slug] — editar convocatoria existente
+ * /admin/convocatorias/nueva  — crear nueva (slug = 'nueva')
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getConvocatoria } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const { slug } = Astro.params as { slug: string };
+const isNew = slug === 'nueva';
+
+let conv = isNew ? null : (() => {
+  try { return getConvocatoria(slug); } catch { return null; }
+})();
+
+// Si no encontramos la convocatoria (y no es "nueva"), redirigir al listado
+if (!isNew && !conv) {
+  return Astro.redirect('/admin/convocatorias');
+}
+
+const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
+---
+
+<Base title={`${pageTitle} · Admin Startidea`} description="">
+  <div class="min-h-screen bg-paper-warm">
+    <div class="container-x max-w-3xl py-10">
+
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-1">
+          <a href="/admin/convocatorias" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            ← Convocatorias
+          </a>
+        </div>
+        <h1 class="font-display text-4xl text-ink">{pageTitle}</h1>
+        {!isNew && (
+          <p class="mt-1 font-mono text-[11px] text-ink/40">{slug}</p>
+        )}
+      </div>
+
+      <!-- Formulario -->
+      <form id="conv-form" class="space-y-6" novalidate>
+        <!-- Identificación -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">Identificación</legend>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Slug (URL única) *
+              </label>
+              <input
+                id="f-slug" name="slug" type="text" required
+                class="w-full border border-ink/20 bg-paper px-3 py-2 font-mono text-sm focus:border-magenta focus:outline-none"
+                value={conv?.slug ?? ''}
+                placeholder="boja-2026-inclusion-l10"
+                readonly={!isNew}
+              />
+              {!isNew && <p class="mt-1 font-mono text-[9px] text-ink/30">No se puede cambiar el slug una vez creado.</p>}
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Código / Badge
+              </label>
+              <input
+                id="f-codigo" name="codigo" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 font-mono text-sm focus:border-magenta focus:outline-none"
+                value={conv?.codigo ?? ''}
+                placeholder="L10"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Título corto *
+            </label>
+            <input
+              id="f-titulo" name="titulo" type="text" required
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              value={conv?.titulo ?? ''}
+              placeholder="Mantenimiento de entidades privadas de acción social"
+            />
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Título completo (para la BD del expediente)
+            </label>
+            <input
+              id="f-titulo-full" name="titulo_full" type="text"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              value={conv?.tituloFull ?? ''}
+              placeholder="BOJA 2026 — L10: Mantenimiento… (Junta de Andalucía)"
+            />
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Órgano convocante
+            </label>
+            <input
+              id="f-organo" name="organo" type="text"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              value={conv?.organo ?? ''}
+              placeholder="Junta de Andalucía — Consejería de Inclusión Social"
+            />
+          </div>
+        </fieldset>
+
+        <!-- Beneficiario -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">Beneficiario</legend>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Tipo de beneficiario *
+              </label>
+              <select
+                id="f-tipo" name="tipo_beneficiario"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              >
+                {[
+                  ['privada',  'Tercer sector (privada)'],
+                  ['local',    'Entidades locales'],
+                  ['empresa',  'Empresa'],
+                  ['mixto',    'Mixto'],
+                ].map(([val, label]) => (
+                  <option value={val} selected={conv?.beneficiario === val}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Etiqueta de beneficiario (tarjeta)
+              </label>
+              <input
+                id="f-ben-label" name="beneficiario_label" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.beneficiarioLabel ?? ''}
+                placeholder="Asociaciones, fundaciones y entidades religiosas"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Descripción de entidades elegibles (párrafo completo)
+            </label>
+            <textarea
+              id="f-tipo-ent" name="tipo_entidades" rows="3"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none resize-y"
+              placeholder="Entidades privadas sin ánimo de lucro con actividad de acción social en Andalucía…"
+            >{conv?.tipoEntidades ?? ''}</textarea>
+          </div>
+        </fieldset>
+
+        <!-- Plazos e importes -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">Plazos e importes</legend>
+
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Fecha límite (texto largo)
+              </label>
+              <input
+                id="f-deadline" name="deadline" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.deadline ?? ''}
+                placeholder="16 de junio de 2026"
+              />
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Plazo corto (tarjeta)
+              </label>
+              <input
+                id="f-deadline-short" name="deadline_short" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 font-mono text-sm focus:border-magenta focus:outline-none"
+                value={conv?.deadlineShort ?? ''}
+                placeholder="16 jun"
+              />
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Fecha ISO (YYYY-MM-DD, para ordenar)
+              </label>
+              <input
+                id="f-deadline-iso" name="deadline_iso" type="date"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.deadlineIso ?? ''}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Nota sobre el plazo (opcional, aviso especial)
+            </label>
+            <input
+              id="f-deadline-note" name="deadline_note" type="text"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              value={conv?.deadlineNote ?? ''}
+              placeholder="Mod. 2 Escuelas de verano: cierra el 2 de junio"
+            />
+          </div>
+
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Importe mínimo (€)
+              </label>
+              <input
+                id="f-imp-min" name="importe_min" type="number"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.importeMin ?? ''}
+                placeholder="3000"
+              />
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Importe máximo (€)
+              </label>
+              <input
+                id="f-imp-max" name="importe_max" type="number"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.importeMax ?? ''}
+                placeholder="80000"
+              />
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+                Rango (texto tarjeta)
+              </label>
+              <input
+                id="f-imp-range" name="importe_range" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                value={conv?.importeRange ?? ''}
+                placeholder="3.000 € – 80.000 €"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Detalle de importe (párrafo completo)
+            </label>
+            <textarea
+              id="f-imp-detalle" name="importe_detalle" rows="3"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none resize-y"
+              placeholder="Sin límite máximo fijado en bases. En ediciones anteriores…"
+            >{conv?.importe ?? ''}</textarea>
+          </div>
+        </fieldset>
+
+        <!-- Contenido de la tarjeta -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">Contenido de la tarjeta (1 línea = 1 bullet)</legend>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Resumen de financiación (3 bullets para la tarjeta)
+            </label>
+            <textarea
+              id="f-financia" name="financia_resumen" rows="4"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none resize-y font-mono"
+              placeholder="Alquiler de locales e instalaciones…&#10;Nóminas del personal de gestión…&#10;Suministros, seguros y mantenimiento"
+            >{(conv?.financiaResumen ?? []).join('\n')}</textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-emerald-600 mb-1.5">
+                ✓ Gastos elegibles
+              </label>
+              <textarea
+                id="f-gastos-ok" name="gastos_ok" rows="6"
+                class="w-full border border-emerald-200 bg-emerald-50/30 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none resize-y font-mono"
+                placeholder="Arrendamiento de locales…&#10;Suministros (luz, agua…)&#10;Nóminas del personal…"
+              >{(conv?.gastosOk ?? []).join('\n')}</textarea>
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-red-500 mb-1.5">
+                ✗ Gastos NO elegibles
+              </label>
+              <textarea
+                id="f-gastos-no" name="gastos_no" rows="6"
+                class="w-full border border-red-200 bg-red-50/30 px-3 py-2 text-sm focus:border-red-400 focus:outline-none resize-y font-mono"
+                placeholder="Inversiones en inmuebles…&#10;Amortizaciones…"
+              >{(conv?.gastosNo ?? []).join('\n')}</textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Requisitos de la entidad
+            </label>
+            <textarea
+              id="f-requisitos" name="requisitos" rows="5"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none resize-y font-mono"
+              placeholder="Inscripción en el Registro de Entidades…&#10;CIF activo y al corriente de AEAT y TGSS…"
+            >{(conv?.requisitos ?? []).join('\n')}</textarea>
+          </div>
+
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">
+              Nota especial (aviso visible en la tarjeta)
+            </label>
+            <input
+              id="f-nota" name="nota" type="text"
+              class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              value={conv?.nota ?? ''}
+              placeholder="⚠️ La Modalidad 2 cierra el 2 de junio de 2026."
+            />
+          </div>
+        </fieldset>
+
+        <!-- URLs -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">URLs</legend>
+          <div class="grid grid-cols-1 gap-4">
+            {[
+              { id: 'f-url-boja',  name: 'url_boja',  label: 'URL BOJA / BOE (publicación oficial)',  val: conv?.bojaUrl ?? '' },
+              { id: 'f-url-bases', name: 'url_bases',  label: 'URL bases de la convocatoria',          val: conv?.basesUrl ?? '' },
+              { id: 'f-url-sede',  name: 'url_sede',   label: 'URL sede electrónica (presentación)',   val: conv?.sedeUrl ?? '' },
+            ].map(({ id, name, label, val }) => (
+              <div>
+                <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">{label}</label>
+                <input
+                  id={id} name={name} type="url"
+                  class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+                  value={val}
+                  placeholder="https://…"
+                />
+              </div>
+            ))}
+          </div>
+        </fieldset>
+
+        <!-- Metadatos -->
+        <fieldset class="border border-ink/15 bg-paper p-6 space-y-4">
+          <legend class="font-mono text-[10px] uppercase tracking-widest text-ink/50 px-1">Metadatos</legend>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">Fuente</label>
+              <select
+                name="fuente"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 text-sm focus:border-magenta focus:outline-none"
+              >
+                {['manual','boja','bdns','boe','ue'].map((f) => (
+                  <option value={f} selected={conv?.fuente === f}>{f.toUpperCase()}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">ID externo (fuente_id)</label>
+              <input
+                name="fuente_id" type="text"
+                class="w-full border border-ink/20 bg-paper px-3 py-2 font-mono text-sm focus:border-magenta focus:outline-none"
+                value={conv?.slug ?? ''}
+                placeholder="BOJA-2026-L10"
+              />
+            </div>
+          </div>
+          <div class="flex gap-6">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="activa" value="1" class="h-4 w-4" checked={conv ? conv.activa : true} />
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/60">Activa (visible en el formulario)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="destacada" value="1" class="h-4 w-4" checked={conv?.destacada ?? false} />
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/60">Destacada (aparece primero)</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Acciones -->
+        <div class="flex items-center gap-4">
+          <button
+            type="submit"
+            id="submit-btn"
+            class="border-2 border-ink bg-ink px-6 py-3 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta hover:border-magenta transition-colors"
+          >
+            {isNew ? 'Crear convocatoria' : 'Guardar cambios'}
+          </button>
+          <a href="/admin/convocatorias" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            Cancelar
+          </a>
+          <span id="form-msg" class="hidden font-mono text-[11px] text-magenta"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
+  const form = document.getElementById('conv-form') as HTMLFormElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const formMsg = document.getElementById('form-msg') as HTMLElement;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Guardando…';
+    formMsg.className = 'hidden';
+
+    const fd = new FormData(form);
+    const body: Record<string, string> = {};
+    for (const [k, v] of fd.entries()) {
+      body[k] = v as string;
+    }
+
+    // checkboxes no marcados no aparecen en FormData → asignar 0
+    if (!fd.has('activa'))    body['activa']    = '0';
+    if (!fd.has('destacada')) body['destacada'] = '0';
+
+    try {
+      const res = await fetch('/api/admin/convocatorias', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json() as { ok: boolean; error?: string };
+      if (data.ok) {
+        formMsg.textContent = '✓ Guardado correctamente';
+        formMsg.className = 'font-mono text-[11px] text-emerald-600';
+        setTimeout(() => {
+          window.location.href = '/admin/convocatorias';
+        }, 800);
+      } else {
+        formMsg.textContent = `Error: ${data.error ?? 'desconocido'}`;
+        formMsg.className = 'font-mono text-[11px] text-red-600';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Reintentar';
+      }
+    } catch {
+      formMsg.textContent = 'Error de conexión';
+      formMsg.className = 'font-mono text-[11px] text-red-600';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Reintentar';
+    }
+  });
+</script>

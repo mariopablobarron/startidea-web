@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { listConvocatoriasActivas } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -17,269 +18,10 @@ const jsonLd = [
   ]),
 ];
 
-// ─── Catálogo de convocatorias activas ────────────────────────────────────────
-// Datos completos para el selector del paso 2: tarjeta de lista + panel de detalles.
-interface ConvData {
-  slug: string;
-  id: string;
-  titulo: string;
-  tituloFull: string;      // lo que va al expediente en BD
-  beneficiario: 'privada' | 'local';
-  beneficiarioLabel: string;
-  deadline: string;
-  deadlineShort: string;
-  deadlineNote?: string;
-  importeRange: string;
-  financiaResumen: string[];  // 3 bullets para la tarjeta
-  tipo: string;
-  gastosOk: string[];
-  gastosNo: string[];
-  importe: string;
-  requisitos: string[];
-  nota?: string;
-  bojaUrl?: string;
-}
+// ─── Catálogo de convocatorias activas — ahora viene de la BD ─────────────────
+let CONV_DATA: ReturnType<typeof listConvocatoriasActivas> = [];
+try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
 
-const CONV_DATA: ConvData[] = [
-  /* ── Tercer sector / entidades privadas ───────────────── */
-  {
-    slug: 'boja-2026-inclusion-l10',
-    id: 'L10',
-    titulo: 'Mantenimiento de entidades privadas de acción social',
-    tituloFull: 'BOJA 2026 — L10: Mantenimiento de entidades privadas de acción social (Junta de Andalucía)',
-    beneficiario: 'privada',
-    beneficiarioLabel: 'Asociaciones, fundaciones y entidades religiosas de acción social',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: '3.000 € – 80.000 €',
-    financiaResumen: [
-      'Alquiler de locales e instalaciones donde se presta el servicio',
-      'Nóminas del personal de gestión y administración de la entidad',
-      'Suministros, seguros y mantenimiento ordinario',
-    ],
-    tipo: 'Entidades privadas sin ánimo de lucro con actividad de acción social en Andalucía: asociaciones (CIF G), fundaciones (F/G), entidades religiosas (R) y similares.',
-    gastosOk: [
-      'Arrendamiento de locales e instalaciones',
-      'Suministros (luz, agua, gas, teléfono, internet)',
-      'Nóminas del personal de gestión y administración',
-      'Seguros, mantenimiento y reparaciones ordinarias',
-      'Material de oficina, gestoría, auditoría y otros gastos generales de funcionamiento',
-    ],
-    gastosNo: [
-      'Inversiones en inmuebles, equipamiento o vehículos',
-      'Gastos directos de proyectos o programas concretos (esos van a la línea L11)',
-      'Amortizaciones sobre bienes inmuebles propios',
-    ],
-    importe: 'Sin límite máximo fijado en bases. Depende del presupuesto real de la entidad y de los créditos disponibles. En ediciones anteriores: entre 3.000 € y 80.000 €, con la mayoría de concesiones entre 8.000 € y 35.000 €.',
-    requisitos: [
-      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
-      'CIF activo y al corriente de obligaciones con AEAT y TGSS',
-      'Actividad de acción social continuada en Andalucía (no puntual)',
-      'Presentación de memoria de actividades del ejercicio anterior',
-    ],
-  },
-  {
-    slug: 'boja-2026-inclusion-l11',
-    id: 'L11',
-    titulo: 'Programas de acción social para entidades privadas',
-    tituloFull: 'BOJA 2026 — L11: Programas de acción social para entidades privadas (Junta de Andalucía)',
-    beneficiario: 'privada',
-    beneficiarioLabel: 'Asociaciones, fundaciones y entidades religiosas de acción social',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: '5.000 € – 120.000 €',
-    financiaResumen: [
-      'Personal de intervención directa del programa (educadores, trabajadores sociales…)',
-      'Materiales, actividades y talleres con los beneficiarios del proyecto',
-      'Desplazamientos, difusión y gastos directos del programa',
-    ],
-    tipo: 'Entidades privadas sin ánimo de lucro con programas de acción social en Andalucía: asociaciones (CIF G), fundaciones (F/G), entidades religiosas (R) y similares.',
-    gastosOk: [
-      'Personal de intervención directa: educadores, trabajadores sociales, psicólogos, auxiliares…',
-      'Material didáctico, consumibles y recursos específicos del programa',
-      'Actividades, talleres y acciones directas con los beneficiarios',
-      'Dietas y desplazamientos del personal del proyecto',
-      'Difusión y comunicación del programa',
-    ],
-    gastosNo: [
-      'Gastos estructurales o de administración de la entidad (arrendamiento, administración… → van a L10)',
-      'Obra civil o adquisición de inmuebles',
-      'Actividades ya financiadas por otras subvenciones públicas incompatibles',
-    ],
-    importe: 'Sin límite máximo fijado. Depende del presupuesto del programa y la dotación disponible. En ediciones anteriores: entre 5.000 € y 120.000 €. Los programas con mayor alcance territorial y número de beneficiarios suelen obtener más.',
-    requisitos: [
-      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
-      'CIF activo y al corriente de AEAT y TGSS',
-      'El programa debe atender a personas en situación de vulnerabilidad en Andalucía',
-      'Memoria descriptiva del programa: objetivos, metodología, cronograma e indicadores de evaluación',
-    ],
-  },
-  {
-    slug: 'boja-2026-inclusion-l7',
-    id: 'L7',
-    titulo: 'Solidaridad y Garantía Alimentaria de Andalucía',
-    tituloFull: 'BOJA 2026 — L7: Solidaridad y Garantía Alimentaria de Andalucía (Junta de Andalucía)',
-    beneficiario: 'privada',
-    beneficiarioLabel: 'Entidades privadas con programas alimentarios o escuelas de verano',
-    deadline: '16 de junio de 2026 (Mod. 2 Escuelas de verano: 2 de junio)',
-    deadlineShort: '2–16 jun',
-    deadlineNote: 'Mod. 2 Escuelas de verano: cierra el 2 de junio',
-    importeRange: 'Variable por modalidad y plaza',
-    financiaResumen: [
-      'Mod. 1 — Emergencia alimentaria: alimentos, distribución, logística y personal',
-      'Mod. 2 — Escuelas de verano: monitores, transporte, material lúdico y comedor para menores',
-      'Coordinación y seguimiento del programa',
-    ],
-    tipo: 'Entidades privadas sin ánimo de lucro con programas de solidaridad alimentaria (Modalidad 1) o escuelas de verano para menores en zonas desfavorecidas (Modalidad 2) en Andalucía.',
-    gastosOk: [
-      'Mod. 1: Adquisición de alimentos, logística, almacenamiento y personal de distribución',
-      'Mod. 2: Monitores y personal de atención, transporte, material educativo/lúdico, comedor',
-      'Coordinación del programa, seguimiento y gastos de gestión directa',
-    ],
-    gastosNo: [
-      'Gastos de administración general de la entidad',
-      'Equipamiento permanente o inversiones en instalaciones',
-    ],
-    importe: 'Variable según la modalidad y el crédito disponible en la convocatoria. La Modalidad 2 tiende a financiarse por plaza de menor atendida. Contacta con Startidea para orientación personalizada.',
-    requisitos: [
-      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
-      'Al corriente de AEAT y TGSS',
-      'Experiencia acreditada en programas alimentarios o en actividades con menores',
-    ],
-    nota: '⚠️ La Modalidad 2 (Escuelas de verano para menores) cierra el 2 de junio de 2026. El resto de modalidades, el 16 de junio.',
-  },
-  {
-    slug: 'boja-2026-inclusion-l16',
-    id: 'L16',
-    titulo: 'Atención a mujeres jóvenes del sistema de protección de menores',
-    tituloFull: 'BOJA 2026 — L16: Atención integral a mujeres jóvenes procedentes del sistema de protección de menores (Junta de Andalucía)',
-    beneficiario: 'privada',
-    beneficiarioLabel: 'Entidades privadas con programas de atención a jóvenes ex-tuteladas',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: 'Variable según proyecto',
-    financiaResumen: [
-      'Personal de acompañamiento: educadores, psicólogos, trabajadores sociales',
-      'Acciones de inserción laboral, formativa y habitacional',
-      'Material y recursos de apoyo al proceso de incorporación social',
-    ],
-    tipo: 'Entidades privadas sin ánimo de lucro con programas específicos de atención integral a mujeres jóvenes ex-tuteladas (procedentes del sistema de protección de menores) en Andalucía.',
-    gastosOk: [
-      'Personal de intervención y acompañamiento (educadores, psicólogos, trabajadores sociales)',
-      'Acciones de inserción laboral, formativa y habitacional',
-      'Material y recursos de apoyo al proceso de incorporación social',
-      'Gastos de seguimiento e intervención individualizada',
-    ],
-    gastosNo: [
-      'Gastos estructurales de la entidad',
-      'Actividades dirigidas a colectivos distintos a mujeres jóvenes ex-tuteladas',
-    ],
-    importe: 'Variable según el presupuesto del programa y la dotación disponible. La línea es específica (menos solicitada), lo que puede beneficiar el porcentaje de concesión.',
-    requisitos: [
-      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
-      'Experiencia demostrable en atención a jóvenes ex-tutelados o mujeres en situación de vulnerabilidad',
-      'Al corriente de AEAT y TGSS',
-    ],
-  },
-  /* ── Entidades locales ────────────────────────────────── */
-  {
-    slug: 'boja-2026-inclusion-l4',
-    id: 'L4',
-    titulo: 'Programas dirigidos a la Comunidad Gitana',
-    tituloFull: 'BOJA 2026 — L4: Programas dirigidos a la Comunidad Gitana (Junta de Andalucía, entidades locales)',
-    beneficiario: 'local',
-    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: 'Variable según programa',
-    financiaResumen: [
-      'Programas de inserción social, educativa, laboral o sanitaria para la Comunidad Gitana',
-      'Personal técnico del programa (mediadores, educadores)',
-      'Materiales y actividades específicas del programa',
-    ],
-    tipo: 'Entidades locales: ayuntamientos, mancomunidades de municipios y diputaciones provinciales de Andalucía.',
-    gastosOk: [
-      'Programas de inserción social, empleo, educación, salud o vivienda para la Comunidad Gitana',
-      'Personal técnico del programa y gastos de ejecución directa',
-      'Actividades de sensibilización e integración social',
-    ],
-    gastosNo: [
-      'Gastos de funcionamiento ordinario del ayuntamiento no relacionados con el programa',
-      'Inversiones en infraestructuras',
-    ],
-    importe: 'Variable según el presupuesto del programa y los créditos asignados. Startidea realiza el diagnóstico de encaje antes de comenzar.',
-    requisitos: [
-      'Entidad local de Andalucía (ayuntamiento, mancomunidad o diputación)',
-      'Programa dirigido específicamente a la Comunidad Gitana con objetivos medibles',
-      'Al corriente de obligaciones tributarias y con la Seguridad Social',
-    ],
-  },
-  {
-    slug: 'boja-2026-inclusion-l6',
-    id: 'L6',
-    titulo: 'Atención a personas inmigrantes y emigrantes temporeras',
-    tituloFull: 'BOJA 2026 — L6: Atención a personas inmigrantes y emigrantes temporeras (Junta de Andalucía, entidades locales)',
-    beneficiario: 'local',
-    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: 'Variable según programa',
-    financiaResumen: [
-      'Servicios de atención, acogida e integración de personas inmigrantes',
-      'Orientación a temporeros agrícolas andaluces y sus familias',
-      'Personal técnico: mediadores, intérpretes, trabajadores sociales',
-    ],
-    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
-    gastosOk: [
-      'Servicios de atención, acogida e integración de personas inmigrantes',
-      'Orientación y asesoramiento a temporeros agrícolas andaluces y sus familias',
-      'Personal técnico: mediadores interculturales, intérpretes, trabajadores sociales',
-      'Actividades de inclusión y aprendizaje del idioma',
-    ],
-    gastosNo: [
-      'Gastos de funcionamiento general de la administración local no vinculados al programa',
-      'Actividades no relacionadas directamente con el colectivo beneficiario',
-    ],
-    importe: 'Variable según el presupuesto del programa y los créditos asignados en la convocatoria.',
-    requisitos: [
-      'Entidad local andaluza (ayuntamiento, mancomunidad o diputación)',
-      'Programa de atención específica a inmigrantes y/o temporeros con indicadores claros',
-      'Al corriente de obligaciones tributarias y con la Seguridad Social',
-    ],
-  },
-  {
-    slug: 'boja-2026-inclusion-l9',
-    id: 'L9',
-    titulo: 'Promoción de la participación ciudadana',
-    tituloFull: 'BOJA 2026 — L9: Promoción de la participación ciudadana (Junta de Andalucía, entidades locales)',
-    beneficiario: 'local',
-    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
-    deadline: '16 de junio de 2026',
-    deadlineShort: '16 jun',
-    importeRange: 'Variable según programa',
-    financiaResumen: [
-      'Procesos participativos, consejos ciudadanos, presupuestos participativos',
-      'Personal y material para el desarrollo de las actividades',
-      'Fomento de la participación activa en la vida municipal y comunitaria',
-    ],
-    tipo: 'Entidades locales andaluzas: ayuntamientos, mancomunidades y diputaciones provinciales.',
-    gastosOk: [
-      'Actividades concretas de fomento de la participación ciudadana activa',
-      'Procesos participativos, consejos ciudadanos, presupuestos participativos',
-      'Personal y material para el desarrollo de las actividades',
-    ],
-    gastosNo: [
-      'Gastos ordinarios de funcionamiento del ayuntamiento no vinculados al programa',
-      'Inversiones en equipamiento permanente',
-    ],
-    importe: 'Variable según el presupuesto del programa y los créditos disponibles en la convocatoria.',
-    requisitos: [
-      'Entidad local andaluza (ayuntamiento, mancomunidad o diputación)',
-      'Actividades concretas de participación ciudadana (no genéricas ni difusas)',
-      'Al corriente de obligaciones tributarias y con la Seguridad Social',
-    ],
-  },
-];
 ---
 
 <Base
@@ -430,7 +172,7 @@ const CONV_DATA: ConvData[] = [
                     <div class="flex items-start gap-3">
                       <!-- Badge ID -->
                       <span class="conv-id-badge shrink-0 flex items-center justify-center w-10 h-10 border border-magenta/30 font-mono text-xs font-bold text-magenta bg-magenta/5 mt-0.5 transition-colors">
-                        {conv.id}
+                        {conv.codigo}
                       </span>
                       <div class="flex-1 min-w-0">
                         <div class="flex items-start justify-between gap-2">
@@ -471,7 +213,7 @@ const CONV_DATA: ConvData[] = [
                     <div class="divide-y divide-ink/8">
                       <div class="bg-paper-warm/50 px-5 py-4">
                         <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Quién puede solicitarla</p>
-                        <p class="text-sm text-ink/80 leading-relaxed">{conv.tipo}</p>
+                        <p class="text-sm text-ink/80 leading-relaxed">{conv.tipoEntidades}</p>
                       </div>
                       <div class="bg-paper-warm/50 px-5 py-4">
                         <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">✅ Qué se puede subvencionar</p>

@@ -12,6 +12,7 @@
 import Database from 'better-sqlite3';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
+import { CONVOCATORIAS_SEED } from './convocatorias-seed';
 
 export type ExpedienteStatus =
   | 'recibido'
@@ -206,6 +207,75 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
   `);
+  // ─── Tabla de convocatorias ──────────────────────────────────────────────────
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS convocatorias (
+      slug                TEXT PRIMARY KEY,
+      codigo              TEXT NOT NULL DEFAULT '',
+      titulo              TEXT NOT NULL,
+      titulo_full         TEXT NOT NULL DEFAULT '',
+      organo              TEXT NOT NULL DEFAULT '',
+      tipo_beneficiario   TEXT NOT NULL DEFAULT 'privada',
+      beneficiario_label  TEXT NOT NULL DEFAULT '',
+      deadline            TEXT NOT NULL DEFAULT '',
+      deadline_short      TEXT NOT NULL DEFAULT '',
+      deadline_note       TEXT,
+      deadline_iso        TEXT,
+      importe_min         INTEGER,
+      importe_max         INTEGER,
+      importe_range       TEXT NOT NULL DEFAULT '',
+      importe_detalle     TEXT NOT NULL DEFAULT '',
+      tipo_entidades      TEXT NOT NULL DEFAULT '',
+      financia_resumen    TEXT NOT NULL DEFAULT '[]',
+      gastos_ok           TEXT NOT NULL DEFAULT '[]',
+      gastos_no           TEXT NOT NULL DEFAULT '[]',
+      requisitos          TEXT NOT NULL DEFAULT '[]',
+      nota                TEXT,
+      url_boja            TEXT,
+      url_bases           TEXT,
+      url_sede            TEXT,
+      fuente              TEXT NOT NULL DEFAULT 'manual',
+      fuente_id           TEXT,
+      activa              INTEGER NOT NULL DEFAULT 1,
+      destacada           INTEGER NOT NULL DEFAULT 0,
+      created_at          INTEGER NOT NULL DEFAULT (unixepoch()),
+      updated_at          INTEGER NOT NULL DEFAULT (unixepoch())
+    );
+    CREATE INDEX IF NOT EXISTS idx_conv_activa      ON convocatorias (activa, deadline_iso);
+    CREATE INDEX IF NOT EXISTS idx_conv_tipo        ON convocatorias (tipo_beneficiario, activa);
+    CREATE INDEX IF NOT EXISTS idx_conv_fuente      ON convocatorias (fuente, activa);
+  `);
+  // Seed inicial — solo si la tabla está vacía
+  const nConv = (_db.prepare('SELECT COUNT(*) as n FROM convocatorias').get() as { n: number }).n;
+  if (nConv === 0) {
+    const insertConv = _db.prepare(`
+      INSERT OR IGNORE INTO convocatorias
+        (slug, codigo, titulo, titulo_full, organo, tipo_beneficiario, beneficiario_label,
+         deadline, deadline_short, deadline_note, deadline_iso,
+         importe_min, importe_max, importe_range, importe_detalle,
+         tipo_entidades, financia_resumen, gastos_ok, gastos_no, requisitos,
+         nota, url_boja, url_bases, url_sede, fuente, fuente_id, activa, destacada)
+      VALUES
+        (@slug, @codigo, @titulo, @titulo_full, @organo, @tipo_beneficiario, @beneficiario_label,
+         @deadline, @deadline_short, @deadline_note, @deadline_iso,
+         @importe_min, @importe_max, @importe_range, @importe_detalle,
+         @tipo_entidades, @financia_resumen, @gastos_ok, @gastos_no, @requisitos,
+         @nota, @url_boja, @url_bases, @url_sede, @fuente, @fuente_id, @activa, @destacada)
+    `);
+    const seedTx = _db.transaction(() => {
+      for (const c of CONVOCATORIAS_SEED) {
+        insertConv.run({
+          ...c,
+          financia_resumen: JSON.stringify(c.financia_resumen),
+          gastos_ok:        JSON.stringify(c.gastos_ok),
+          gastos_no:        JSON.stringify(c.gastos_no),
+          requisitos:       JSON.stringify(c.requisitos),
+        });
+      }
+    });
+    seedTx();
+  }
+
   // Tabla de logs de consultas al widget de eligibilidad — sin PII (sin CIF, sin descripción)
   _db.exec(`
     CREATE TABLE IF NOT EXISTS eligibilidad_log (
@@ -812,6 +882,217 @@ export function statsCRMContacts(): number {
     )
   `;
   return (db.prepare(sql).get() as { n: number }).n;
+}
+
+// ─── Convocatorias ────────────────────────────────────────────────────────────
+
+export interface Convocatoria {
+  slug: string;
+  codigo: string;
+  titulo: string;
+  titulo_full: string;
+  organo: string;
+  tipo_beneficiario: string;
+  beneficiario_label: string;
+  deadline: string;
+  deadline_short: string;
+  deadline_note: string | null;
+  deadline_iso: string | null;
+  importe_min: number | null;
+  importe_max: number | null;
+  importe_range: string;
+  importe_detalle: string;
+  tipo_entidades: string;
+  financia_resumen: string;  // JSON serializado
+  gastos_ok: string;         // JSON serializado
+  gastos_no: string;         // JSON serializado
+  requisitos: string;        // JSON serializado
+  nota: string | null;
+  url_boja: string | null;
+  url_bases: string | null;
+  url_sede: string | null;
+  fuente: string;
+  fuente_id: string | null;
+  activa: number;
+  destacada: number;
+  created_at: number;
+  updated_at: number;
+}
+
+/** Versión deserializada para consumo en templates y API. */
+export interface ConvocatoriaView {
+  slug: string;
+  codigo: string;          // ← equivale a 'id' en ConvData anterior
+  titulo: string;
+  tituloFull: string;
+  organo: string;
+  beneficiario: string;    // tipo_beneficiario
+  beneficiarioLabel: string;
+  deadline: string;
+  deadlineShort: string;
+  deadlineNote: string | null;
+  deadlineIso: string | null;
+  importeMin: number | null;
+  importeMax: number | null;
+  importeRange: string;
+  importe: string;         // importe_detalle
+  tipoEntidades: string;
+  financiaResumen: string[];
+  gastosOk: string[];
+  gastosNo: string[];
+  requisitos: string[];
+  nota: string | null;
+  bojaUrl: string | null;
+  basesUrl: string | null;
+  sedeUrl: string | null;
+  fuente: string;
+  activa: boolean;
+  destacada: boolean;
+}
+
+function parseConv(row: Convocatoria): ConvocatoriaView {
+  const parse = (s: string): string[] => {
+    try { return JSON.parse(s) as string[]; }
+    catch { return s ? [s] : []; }
+  };
+  return {
+    slug:             row.slug,
+    codigo:           row.codigo,
+    titulo:           row.titulo,
+    tituloFull:       row.titulo_full,
+    organo:           row.organo,
+    beneficiario:     row.tipo_beneficiario,
+    beneficiarioLabel: row.beneficiario_label,
+    deadline:         row.deadline,
+    deadlineShort:    row.deadline_short,
+    deadlineNote:     row.deadline_note,
+    deadlineIso:      row.deadline_iso,
+    importeMin:       row.importe_min,
+    importeMax:       row.importe_max,
+    importeRange:     row.importe_range,
+    importe:          row.importe_detalle,
+    tipoEntidades:    row.tipo_entidades,
+    financiaResumen:  parse(row.financia_resumen),
+    gastosOk:         parse(row.gastos_ok),
+    gastosNo:         parse(row.gastos_no),
+    requisitos:       parse(row.requisitos),
+    nota:             row.nota,
+    bojaUrl:          row.url_boja,
+    basesUrl:         row.url_bases,
+    sedeUrl:          row.url_sede,
+    fuente:           row.fuente,
+    activa:           row.activa === 1,
+    destacada:        row.destacada === 1,
+  };
+}
+
+/** Convocatorias activas para el formulario y la API pública. */
+export function listConvocatoriasActivas(tipo?: string): ConvocatoriaView[] {
+  const db = getDb();
+  const where = tipo ? 'WHERE activa = 1 AND tipo_beneficiario = ?' : 'WHERE activa = 1';
+  const params = tipo ? [tipo] : [];
+  const rows = db.prepare(
+    `SELECT * FROM convocatorias ${where} ORDER BY destacada DESC, deadline_iso ASC, codigo ASC`,
+  ).all(...params) as Convocatoria[];
+  return rows.map(parseConv);
+}
+
+/** Todas las convocatorias (admin). */
+export function listConvocatoriasAll(): (ConvocatoriaView & { created_at: number; updated_at: number })[] {
+  const db = getDb();
+  const rows = db.prepare(
+    `SELECT * FROM convocatorias ORDER BY activa DESC, deadline_iso ASC, codigo ASC`,
+  ).all() as Convocatoria[];
+  return rows.map((r) => ({ ...parseConv(r), created_at: r.created_at, updated_at: r.updated_at }));
+}
+
+export function getConvocatoria(slug: string): ConvocatoriaView | null {
+  const db = getDb();
+  const row = db.prepare('SELECT * FROM convocatorias WHERE slug = ?').get(slug) as Convocatoria | null;
+  return row ? parseConv(row) : null;
+}
+
+export function upsertConvocatoria(data: {
+  slug: string;
+  codigo: string;
+  titulo: string;
+  titulo_full: string;
+  organo: string;
+  tipo_beneficiario: string;
+  beneficiario_label: string;
+  deadline: string;
+  deadline_short: string;
+  deadline_note: string | null;
+  deadline_iso: string | null;
+  importe_min: number | null;
+  importe_max: number | null;
+  importe_range: string;
+  importe_detalle: string;
+  tipo_entidades: string;
+  financia_resumen: string[];
+  gastos_ok: string[];
+  gastos_no: string[];
+  requisitos: string[];
+  nota: string | null;
+  url_boja: string | null;
+  url_bases: string | null;
+  url_sede: string | null;
+  fuente: string;
+  fuente_id: string | null;
+  activa: number;
+  destacada: number;
+}): void {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(`
+    INSERT INTO convocatorias
+      (slug, codigo, titulo, titulo_full, organo, tipo_beneficiario, beneficiario_label,
+       deadline, deadline_short, deadline_note, deadline_iso,
+       importe_min, importe_max, importe_range, importe_detalle,
+       tipo_entidades, financia_resumen, gastos_ok, gastos_no, requisitos,
+       nota, url_boja, url_bases, url_sede, fuente, fuente_id, activa, destacada,
+       created_at, updated_at)
+    VALUES
+      (@slug, @codigo, @titulo, @titulo_full, @organo, @tipo_beneficiario, @beneficiario_label,
+       @deadline, @deadline_short, @deadline_note, @deadline_iso,
+       @importe_min, @importe_max, @importe_range, @importe_detalle,
+       @tipo_entidades, @financia_resumen, @gastos_ok, @gastos_no, @requisitos,
+       @nota, @url_boja, @url_bases, @url_sede, @fuente, @fuente_id, @activa, @destacada,
+       @now, @now)
+    ON CONFLICT(slug) DO UPDATE SET
+      codigo = excluded.codigo, titulo = excluded.titulo, titulo_full = excluded.titulo_full,
+      organo = excluded.organo, tipo_beneficiario = excluded.tipo_beneficiario,
+      beneficiario_label = excluded.beneficiario_label,
+      deadline = excluded.deadline, deadline_short = excluded.deadline_short,
+      deadline_note = excluded.deadline_note, deadline_iso = excluded.deadline_iso,
+      importe_min = excluded.importe_min, importe_max = excluded.importe_max,
+      importe_range = excluded.importe_range, importe_detalle = excluded.importe_detalle,
+      tipo_entidades = excluded.tipo_entidades,
+      financia_resumen = excluded.financia_resumen,
+      gastos_ok = excluded.gastos_ok, gastos_no = excluded.gastos_no,
+      requisitos = excluded.requisitos, nota = excluded.nota,
+      url_boja = excluded.url_boja, url_bases = excluded.url_bases, url_sede = excluded.url_sede,
+      fuente = excluded.fuente, fuente_id = excluded.fuente_id,
+      activa = excluded.activa, destacada = excluded.destacada,
+      updated_at = @now
+  `).run({
+    ...data,
+    financia_resumen: JSON.stringify(data.financia_resumen),
+    gastos_ok:        JSON.stringify(data.gastos_ok),
+    gastos_no:        JSON.stringify(data.gastos_no),
+    requisitos:       JSON.stringify(data.requisitos),
+    now,
+  });
+}
+
+export function toggleConvocatoriaActiva(slug: string): boolean {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const row = db.prepare('SELECT activa FROM convocatorias WHERE slug = ?').get(slug) as { activa: number } | null;
+  if (!row) return false;
+  const next = row.activa === 1 ? 0 : 1;
+  db.prepare('UPDATE convocatorias SET activa = ?, updated_at = ? WHERE slug = ?').run(next, now, slug);
+  return next === 1;
 }
 
 // ─── Widget eligibilidad — logging anónimo ────────────────────────────────────

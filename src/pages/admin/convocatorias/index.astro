@@ -1,0 +1,184 @@
+---
+/**
+ * /admin/convocatorias — listado y gestión de convocatorias
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { listConvocatoriasAll } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin/convocatorias')}`);
+}
+
+let convs: ReturnType<typeof listConvocatoriasAll> = [];
+try { convs = listConvocatoriasAll(); } catch { /* DB vacía */ }
+
+const TIPO_LABEL: Record<string, string> = {
+  privada:  'Tercer sector',
+  local:    'Entidades locales',
+  empresa:  'Empresa',
+  mixto:    'Mixto',
+};
+
+function fmtDate(ts: number): string {
+  return new Date(ts * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+---
+
+<Base title="Convocatorias · Admin Startidea" description="">
+  <div class="min-h-screen bg-paper-warm">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-8 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div class="flex items-center gap-3 mb-1">
+            <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+              ← Admin
+            </a>
+          </div>
+          <h1 class="font-display text-4xl text-ink">Convocatorias</h1>
+          <p class="mt-1 text-sm text-ink/50">
+            {convs.filter(c => c.activa).length} activas · {convs.filter(c => !c.activa).length} inactivas
+          </p>
+        </div>
+        <a
+          href="/admin/convocatorias/nueva"
+          class="inline-flex items-center gap-2 border-2 border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta hover:border-magenta transition-colors"
+        >
+          + Nueva convocatoria
+        </a>
+      </div>
+
+      <!-- Tabla -->
+      {convs.length === 0 ? (
+        <div class="border border-ink/10 bg-paper p-12 text-center">
+          <p class="text-ink/40 font-mono text-sm">No hay convocatorias todavía.</p>
+        </div>
+      ) : (
+        <div class="overflow-x-auto">
+          <table class="w-full border border-ink/15 bg-paper text-sm">
+            <thead class="border-b border-ink/15 bg-paper-warm">
+              <tr>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Código</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Título</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Tipo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Plazo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Importe</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Estado</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink/8">
+              {convs.map((c) => (
+                <tr class:list={['hover:bg-paper-warm transition-colors', !c.activa && 'opacity-50']}>
+                  <td class="px-4 py-3">
+                    <span class="font-mono text-xs font-bold text-magenta">{c.codigo}</span>
+                  </td>
+                  <td class="px-4 py-3 max-w-xs">
+                    <p class="font-medium text-ink leading-snug">{c.titulo}</p>
+                    {c.destacada && (
+                      <span class="mt-1 inline-block font-mono text-[9px] uppercase tracking-widest bg-yellow-100 text-yellow-700 px-1.5 py-0.5">
+                        ★ Destacada
+                      </span>
+                    )}
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class:list={[
+                      'inline-block rounded-none px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest',
+                      c.beneficiario === 'local'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-purple-50 text-purple-700 border border-purple-200',
+                    ]}>
+                      {TIPO_LABEL[c.beneficiario] ?? c.beneficiario}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-ink/70">{c.deadlineShort || '—'}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-ink/70">{c.importeRange || '—'}</td>
+                  <td class="px-4 py-3">
+                    <span class:list={[
+                      'inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border',
+                      c.activa
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-red-50 text-red-700 border-red-200',
+                    ]}>
+                      {c.activa ? '● Activa' : '○ Inactiva'}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <a
+                        href={`/admin/convocatorias/${c.slug}`}
+                        class="font-mono text-[10px] uppercase tracking-widest text-ink/60 hover:text-magenta"
+                      >
+                        Editar
+                      </a>
+                      <button
+                        type="button"
+                        data-slug={c.slug}
+                        data-activa={c.activa ? '1' : '0'}
+                        class="toggle-btn font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta"
+                      >
+                        {c.activa ? 'Desactivar' : 'Activar'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <!-- Info fuente -->
+      <div class="mt-8 border border-ink/10 bg-paper p-5">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">Próximos pasos — Escalabilidad</p>
+        <ul class="space-y-1 text-sm text-ink/60">
+          <li>• Fase 2: motor de matching (perfil entidad → score de encaje por convocatoria)</li>
+          <li>• Fase 3: scrapers automáticos BDNS + BOJA RSS → queue de revisión aquí</li>
+          <li>• Fase 4: generación de memoria técnica IA por convocatoria</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Toggle activa/inactiva via PATCH /api/admin/convocatorias
+  const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
+
+  document.querySelectorAll<HTMLButtonElement>('.toggle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const slug = btn.dataset.slug ?? '';
+      if (!slug) return;
+      btn.disabled = true;
+      btn.textContent = '…';
+      try {
+        const res = await fetch('/api/admin/convocatorias', {
+          method: 'PATCH',
+          headers: {
+            'content-type': 'application/json',
+            'x-admin-token': ADMIN_TOKEN,
+          },
+          body: JSON.stringify({ slug }),
+        });
+        const data = await res.json() as { ok: boolean; activa: boolean };
+        if (data.ok) {
+          // Recargar para reflejar el cambio
+          window.location.reload();
+        } else {
+          alert('Error al cambiar estado');
+          btn.disabled = false;
+          btn.textContent = btn.dataset.activa === '1' ? 'Desactivar' : 'Activar';
+        }
+      } catch {
+        alert('Error de conexión');
+        btn.disabled = false;
+        btn.textContent = btn.dataset.activa === '1' ? 'Desactivar' : 'Activar';
+      }
+    });
+  });
+</script>
