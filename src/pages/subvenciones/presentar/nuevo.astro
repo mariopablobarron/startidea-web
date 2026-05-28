@@ -710,13 +710,22 @@ const jsonLd = [
         el.classList.remove('border-red-400');
       }
     }
-    // Validar radios requeridos en paso 2
+    // Validar radios requeridos en paso 2.
+    // Si convocatoria ya está preseleccionada, el campo es un hidden input
+    // (no un radio), así que `:checked` no aplica — se omite la validación.
     if (n === 2) {
-      const radioTiene = form.querySelector<HTMLInputElement>('input[name="tieneConvocatoria"]:checked');
-      if (!radioTiene) {
-        valid = false;
-        const group = form.querySelector('[name="tieneConvocatoria"]')?.closest('.space-y-2');
-        group?.classList.add('ring-1', 'ring-red-400', 'ring-offset-2');
+      const hiddenTiene = form.querySelector<HTMLInputElement>(
+        'input[name="tieneConvocatoria"][type="hidden"]'
+      );
+      if (!hiddenTiene) {
+        const radioTiene = form.querySelector<HTMLInputElement>(
+          'input[name="tieneConvocatoria"]:checked'
+        );
+        if (!radioTiene) {
+          valid = false;
+          const group = form.querySelector('[name="tieneConvocatoria"]')?.closest('.space-y-2');
+          group?.classList.add('ring-1', 'ring-red-400', 'ring-offset-2');
+        }
       }
     }
     return valid;

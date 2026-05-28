@@ -10,8 +10,16 @@
 import type { APIRoute } from 'astro';
 import { logEligibilidad } from '../../lib/expedientes-db';
 
-const OR_KEY   = import.meta.env.OPENROUTER_API_KEY ?? '';
-const MODEL    = 'anthropic/claude-haiku-4-5';
+export const prerender = false;
+
+// En producción (Node standalone) las vars privadas viven en process.env.
+// import.meta.env las lee en build-time, process.env las lee en runtime.
+const OR_KEY = (
+  (import.meta as { env?: Record<string, string> }).env?.OPENROUTER_API_KEY ??
+  process.env.OPENROUTER_API_KEY ??
+  ''
+);
+const MODEL = 'anthropic/claude-haiku-4-5';
 
 // ─── LÍNEAS BOJA 2026 ─────────────────────────────────────────────────────
 const LINEAS = [
