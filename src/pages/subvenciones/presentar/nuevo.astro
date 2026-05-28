@@ -142,9 +142,84 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
             <!-- Filtro por tipo de entidad -->
             <div class="flex flex-wrap items-center gap-2">
               <span class="font-mono text-[10px] uppercase tracking-widest text-ink/35">Ver:</span>
-              <button type="button" data-conv-filter="all"     class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink bg-ink text-paper">Todas (7)</button>
-              <button type="button" data-conv-filter="privada" class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Tercer sector (4)</button>
-              <button type="button" data-conv-filter="local"   class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Entidades locales (3)</button>
+              <button type="button" data-conv-filter="all"     class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink bg-ink text-paper">Todas ({CONV_DATA.length})</button>
+              <button type="button" data-conv-filter="privada" class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Tercer sector ({CONV_DATA.filter(c => c.beneficiario === 'privada').length})</button>
+              <button type="button" data-conv-filter="local"   class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Entidades locales ({CONV_DATA.filter(c => c.beneficiario === 'local').length})</button>
+            </div>
+
+            <!-- Widget de matching — perfil rápido de la entidad -->
+            <div id="matching-widget" class="border border-ink/15 bg-paper p-4 space-y-4 transition-all">
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 flex items-center gap-2">
+                    <span class="text-magenta">🎯</span> ¿Cuál os encaja? — 2 preguntas rápidas
+                  </p>
+                  <p class="text-xs text-ink/40 mt-0.5">Las tarjetas se ordenan automáticamente según vuestro perfil.</p>
+                </div>
+                <button type="button" id="mw-reset" class="font-mono text-[9px] uppercase tracking-widest text-ink/30 hover:text-magenta hidden">
+                  Borrar filtro ×
+                </button>
+              </div>
+
+              <!-- Pregunta: Registro de Entidades de Servicios Sociales (privada) -->
+              <div id="mw-row-registro" class="hidden">
+                <p class="text-sm font-medium text-ink mb-2">
+                  ¿Estáis inscritos en el <strong>Registro de Entidades de Servicios Sociales</strong> de la Junta de Andalucía?
+                </p>
+                <div class="flex flex-wrap gap-2" role="radiogroup">
+                  {[
+                    { val: 'si',    label: 'Sí, estamos inscritos' },
+                    { val: 'no',    label: 'No estamos inscritos' },
+                    { val: 'no_se', label: 'No lo sé' },
+                  ].map(({ val, label }) => (
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                      <input type="radio" name="mw_registro_ss" value={val} class="sr-only" />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Pregunta: Al corriente AEAT / TGSS -->
+              <div>
+                <p class="text-sm font-medium text-ink mb-2">
+                  ¿Estáis al corriente de obligaciones con <strong>Hacienda (AEAT) y Seguridad Social (TGSS)</strong>?
+                </p>
+                <div class="flex flex-wrap gap-2" role="radiogroup">
+                  {[
+                    { val: 'si', label: 'Sí, al corriente' },
+                    { val: 'no', label: 'Tenemos alguna deuda o duda' },
+                  ].map(({ val, label }) => (
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                      <input type="radio" name="mw_corriente" value={val} class="sr-only" />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Colectivos (solo para privada) -->
+              <div id="mw-row-colectivos" class="hidden">
+                <p class="text-sm font-medium text-ink mb-2">
+                  ¿Con qué colectivos trabajáis? <span class="font-normal text-ink/40">(selecciona los que apliquen)</span>
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  {[
+                    { val: 'todos',           label: 'Inclusión social general' },
+                    { val: 'alimentario',     label: 'Emergencia alimentaria' },
+                    { val: 'menores_verano',  label: 'Menores en verano' },
+                    { val: 'mujer_joven',     label: 'Mujeres jóvenes ex-tuteladas' },
+                    { val: 'comunidad_gitana',label: 'Comunidad Gitana' },
+                    { val: 'inmigrantes',     label: 'Inmigrantes / Temporeros' },
+                    { val: 'participacion',   label: 'Participación ciudadana' },
+                  ].map(({ val, label }) => (
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                      <input type="checkbox" name="mw_colectivo" value={val} class="sr-only" />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <!-- Aviso fuente -->
@@ -183,6 +258,8 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                           </div>
                         </div>
                         <p class="mt-0.5 text-xs text-ink/50">{conv.beneficiarioLabel}</p>
+                        <!-- Badge de encaje (rellena el motor de matching) -->
+                        <span class="conv-match-badge hidden items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border"></span>
                         <!-- 3 bullets resumen -->
                         <ul class="mt-2 space-y-0.5">
                           {conv.financiaResumen.map(b => (
@@ -574,6 +651,22 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
   .conv-filter-btn.is-active {
     @apply border-ink bg-ink text-paper;
   }
+
+  /* Estados de matching */
+  .conv-card.match-si {
+    @apply ring-2 ring-green-400 ring-offset-1;
+  }
+  .conv-card.match-revisar {
+    @apply ring-1 ring-amber-300 ring-offset-1;
+  }
+  .conv-card.match-no {
+    @apply opacity-40;
+  }
+
+  /* Chip seleccionado en el widget de matching */
+  .mw-chip-label:has(input:checked) {
+    @apply border-magenta bg-magenta text-paper;
+  }
 </style>
 
 <script define:vars={{ convSlugParam, convTitleParam }}>
@@ -774,6 +867,160 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
     }
   });
 
+  // ── Motor de matching ────────────────────────────────────────────────────────
+
+  // Colectivos que financia cada convocatoria (por slug estable)
+  const CONV_COLECTIVOS_MAP = {
+    'boja-2026-inclusion-l10': ['todos'],
+    'boja-2026-inclusion-l11': ['todos'],
+    'boja-2026-inclusion-l7':  ['alimentario', 'menores_verano'],
+    'boja-2026-inclusion-l16': ['mujer_joven'],
+    'boja-2026-inclusion-l4':  ['comunidad_gitana'],
+    'boja-2026-inclusion-l6':  ['inmigrantes'],
+    'boja-2026-inclusion-l9':  ['participacion'],
+  };
+
+  function getOrgBeneficiario() {
+    const orgType = document.querySelector('[name="orgType"]')?.value ?? '';
+    const privadas = ['asociacion', 'fundacion', 'entidad-religiosa'];
+    const locales  = ['entidad-local'];
+    if (privadas.includes(orgType)) return 'privada';
+    if (locales.includes(orgType))  return 'local';
+    return '';
+  }
+
+  function getMatchProfile() {
+    const beneficiario  = getOrgBeneficiario();
+    const registroSS    = document.querySelector('[name="mw_registro_ss"]:checked')?.value ?? '';
+    const alCorriente   = document.querySelector('[name="mw_corriente"]:checked')?.value ?? '';
+    const colectivos    = Array.from(document.querySelectorAll('[name="mw_colectivo"]:checked')).map(el => el.value);
+    return { beneficiario, registroSS, alCorriente, colectivos };
+  }
+
+  function scoreCard(slug, cardFilter, profile) {
+    // Sin perfil = neutro
+    const hasProfile = profile.beneficiario || profile.registroSS || profile.alCorriente || profile.colectivos.length > 0;
+    if (!hasProfile) return { encaje: null, motivos: [] };
+
+    // Tipo de entidad: mismatch → inelegible
+    if (profile.beneficiario && cardFilter !== 'all' && cardFilter !== profile.beneficiario) {
+      return { encaje: 'no', motivos: ['Tu tipo de entidad no es beneficiaria de esta convocatoria'] };
+    }
+
+    const motivos = [];
+    let encaje = 'si';
+
+    // Registro Servicios Sociales (solo para convocatorias privadas)
+    if (cardFilter === 'privada' && profile.beneficiario === 'privada') {
+      if (profile.registroSS === 'no') {
+        encaje = 'revisar';
+        motivos.push('Requiere inscripción en el Registro de Entidades de Servicios Sociales de la Junta');
+      } else if (profile.registroSS === 'no_se') {
+        encaje = 'revisar';
+        motivos.push('Hay que verificar la inscripción en el Registro de Entidades de SS');
+      }
+    }
+
+    // Al corriente AEAT/TGSS
+    if (profile.alCorriente === 'no') {
+      if (encaje === 'si') encaje = 'revisar';
+      motivos.push('Se requiere estar al corriente de AEAT y TGSS para poder concurrir');
+    }
+
+    // Colectivos (solo penaliza si la conv es específica y no coincide)
+    const convColectivos = CONV_COLECTIVOS_MAP[slug] ?? ['todos'];
+    if (profile.colectivos.length > 0 && !convColectivos.includes('todos')) {
+      const hasMatch = profile.colectivos.some(c => convColectivos.includes(c));
+      if (!hasMatch && encaje === 'si') {
+        encaje = 'revisar';
+        motivos.push('Esta línea financia colectivos distintos a los que seleccionaste');
+      }
+    }
+
+    return { encaje, motivos };
+  }
+
+  function updateMatching() {
+    const profile  = getMatchProfile();
+    const hasProfile = profile.beneficiario || profile.registroSS || profile.alCorriente || profile.colectivos.length > 0;
+
+    const resetBtn = document.getElementById('mw-reset');
+    if (resetBtn) resetBtn.classList.toggle('hidden', !hasProfile);
+
+    const siCards      = [];
+    const revisarCards = [];
+    const noCards      = [];
+
+    document.querySelectorAll('.conv-card').forEach(card => {
+      const slug       = card.dataset.convSlug ?? '';
+      const cardFilter = card.dataset.convFilter ?? '';
+      const result     = scoreCard(slug, cardFilter, profile);
+      const badge      = card.querySelector('.conv-match-badge');
+
+      card.classList.remove('match-si', 'match-revisar', 'match-no');
+
+      if (!result.encaje) {
+        // Neutro: sin perfil
+        if (badge) { badge.className = 'conv-match-badge hidden items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border'; }
+        return;
+      }
+
+      if (result.encaje === 'si') {
+        card.classList.add('match-si');
+        if (badge) {
+          badge.className = 'conv-match-badge flex items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border bg-green-50 text-green-700 border-green-300';
+          badge.textContent = '✓ Encaja';
+          badge.title = '';
+        }
+        siCards.push(card);
+      } else if (result.encaje === 'revisar') {
+        card.classList.add('match-revisar');
+        if (badge) {
+          badge.className = 'conv-match-badge flex items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border bg-amber-50 text-amber-700 border-amber-200';
+          badge.textContent = '⚠ Revisable';
+          badge.title = result.motivos.join(' · ');
+        }
+        revisarCards.push(card);
+      } else {
+        card.classList.add('match-no');
+        if (badge) {
+          badge.className = 'conv-match-badge flex items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border bg-red-50 text-red-400 border-red-200';
+          badge.textContent = '✗ No elegible';
+          badge.title = result.motivos.join(' · ');
+        }
+        noCards.push(card);
+      }
+    });
+
+    // Reordenar: encaja → revisable → no elegible
+    const grid = document.getElementById('conv-grid');
+    if (grid && hasProfile) {
+      [...siCards, ...revisarCards, ...noCards].forEach(c => grid.appendChild(c));
+    }
+  }
+
+  // Inicializar widget de matching: mostrar/ocultar preguntas según org tipo
+  function initMatchingWidget() {
+    const orgBenef = getOrgBeneficiario();
+    const rowRegistro   = document.getElementById('mw-row-registro');
+    const rowColectivos = document.getElementById('mw-row-colectivos');
+    if (rowRegistro)   rowRegistro.classList.toggle('hidden', orgBenef !== 'privada' && orgBenef !== '');
+    if (rowColectivos) rowColectivos.classList.toggle('hidden', orgBenef !== 'privada');
+  }
+
+  // Escuchar cambios en el widget de matching
+  document.getElementById('matching-widget')?.addEventListener('change', () => {
+    updateMatching();
+  });
+
+  // Botón de reset del matching
+  document.getElementById('mw-reset')?.addEventListener('click', () => {
+    document.querySelectorAll('[name^="mw_"]').forEach(el => {
+      if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
+    });
+    updateMatching();
+  });
+
   // Auto-seleccionar si viene desde landing BOJA con ?slug=
   if (convSlugParam) {
     const matchCard = document.querySelector(`[data-conv-slug="${convSlugParam}"]`);
@@ -868,6 +1115,11 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
     if (currentStep === TOTAL_STEPS - 1) updateResumen();
     currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
     updateUI();
+    // Al llegar al paso 2: inicializar widget de matching
+    if (currentStep === 2) {
+      initMatchingWidget();
+      updateMatching();
+    }
   });
   btnPrev.addEventListener('click', () => {
     currentStep = Math.max(currentStep - 1, 1);
