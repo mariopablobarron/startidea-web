@@ -11,6 +11,8 @@ import type { APIRoute } from 'astro';
 import { sendEmail } from '@/lib/email-resend';
 import {
   insertExpediente,
+  saveWizardMemoria,
+  updateStatus,
   getPortalUser,
   createPortalUser,
   createMagicToken,
@@ -153,6 +155,41 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
   } catch (err) {
     console.error('[expediente] SQLite insert error:', err);
   }
+
+  // ── Guardar borrador de memoria técnica generado en el wizard ─────────────
+  const memoriaWizard = clean(formData.get('memoriaWizard'), 30000);
+  if (memoriaWizard) {
+    try { saveWizardMemoria(expedienteId, memoriaWizard); } catch {}
+  }
+
+  // ── Auto-disparo de generación IA (fire-and-forget) ───────────────────────
+  // Inicia la generación completa en background sin bloquear la respuesta.
+  // Si falla, el admin puede generarlo manualmente desde el panel.
+  void (async () => {
+    const adminToken: string = (import.meta as unknown as Record<string, Record<string, string>>).env?.ADMIN_TOKEN
+      ?? process.env.ADMIN_TOKEN
+      ?? '';
+    if (!adminToken) return;
+    try {
+      updateStatus(expedienteId, 'analizando_ia');
+      const origin = new URL(request.url).origin;
+      const res = await fetch(`${origin}/api/generar-expediente`, {
+        method:  'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': adminToken },
+        body:    JSON.stringify({ id: expedienteId }),
+      });
+      const data = await res.json() as { ok?: boolean; error?: string };
+      if (!data.ok) {
+        console.warn(`[expediente] Auto-gen failed for ${expedienteId}:`, data.error);
+        updateStatus(expedienteId, 'recibido');
+      } else {
+        console.info(`[expediente] Auto-gen OK for ${expedienteId}`);
+      }
+    } catch (e) {
+      console.error(`[expediente] Auto-gen error for ${expedienteId}:`, e);
+      try { updateStatus(expedienteId, 'recibido'); } catch {}
+    }
+  })();
 
   // ── Auto-crear usuario de portal y generar magic link ──────────────────────
   let portalMagicUrl = 'https://startidea.es/portal';

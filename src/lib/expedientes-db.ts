@@ -365,6 +365,22 @@ export function saveAiOutput(
   });
 }
 
+/**
+ * Guarda el borrador de memoria técnica que el cliente generó en el wizard
+ * antes de enviar el formulario. Solo actualiza si el campo está vacío
+ * (no sobreescribe la memoria completa generada por Startidea).
+ */
+export function saveWizardMemoria(id: string, text: string): void {
+  if (!text?.trim()) return;
+  const db  = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  db.prepare(
+    `UPDATE expedientes
+     SET ai_memoria = @text, updated_at = @now
+     WHERE id = @id AND (ai_memoria IS NULL OR ai_memoria = '')`,
+  ).run({ id, text: text.slice(0, 30000), now });
+}
+
 // ─── Lectura ──────────────────────────────────────────────────────────────────
 
 export function getExpediente(id: string): Expediente | null {

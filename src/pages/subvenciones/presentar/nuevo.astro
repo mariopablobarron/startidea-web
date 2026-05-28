@@ -75,6 +75,8 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           <input type="hidden" name="convocatoriaNombre" id="f-conv-nombre" value={convTitleParam} />
           <input type="hidden" name="convocatoriaUrl"   id="f-conv-url"    value="" />
           <input type="hidden" name="tieneConvocatoria" id="f-tiene-conv"  value={convTitleParam ? 'si' : ''} />
+          <!-- Memoria técnica generada en el wizard (se rellena si el usuario usa el generador IA) -->
+          <input type="hidden" name="memoriaWizard"     id="f-memoria-wizard" value="" />
 
           <!-- ═══════════════════════════════════════════════════════════════
                PASO 1: La entidad
@@ -1262,7 +1264,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
       let json = null;
       try { json = await res.json(); } catch {}
 
-      if (json?.ok) { window.location.href = '/subvenciones/presentar/gracias'; return; }
+      if (json?.ok) { window.location.href = `/subvenciones/presentar/gracias${json.id ? '?id=' + json.id : ''}`; return; }
 
       if (json?.error === 'fields')      errDiv.textContent = 'Faltan datos obligatorios. Revisa los pasos anteriores.';
       else if (json?.error === 'email')  errDiv.textContent = 'El email introducido no tiene un formato válido.';
@@ -1332,6 +1334,9 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
         if (textarea)  textarea.value = data.memoria;
         if (resultDiv) resultDiv.classList.remove('hidden');
         if (statusDiv) statusDiv.classList.add('hidden');
+        // Guardar en campo oculto para que se envíe con el expediente
+        const fMemoria = document.getElementById('f-memoria-wizard') as HTMLInputElement | null;
+        if (fMemoria) fMemoria.value = data.memoria;
         // Scroll al resultado
         setTimeout(() => resultDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
       } else {
