@@ -4,93 +4,166 @@ import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
 
-// Convocatoria pre-seleccionada desde la ficha del buscador o landing BOJA
-const convSlug  = Astro.url.searchParams.get('slug')  ?? '';
-const convTitle = Astro.url.searchParams.get('title') ?? '';
-const convHint  = Astro.url.searchParams.get('hint')  ?? ''; // Descripción corta de qué financia
+// Parámetros de pre-selección desde landings BOJA o el buscador
+const convSlugParam  = Astro.url.searchParams.get('slug')  ?? '';
+const convTitleParam = Astro.url.searchParams.get('title') ?? '';
 
-// ─── Mapa de requisitos por convocatoria ──────────────────────────────────────
-// Se muestra en paso 2 para que el usuario sepa a qué presenta antes de rellenar.
-interface ConvReqs {
-  tipo: string;           // quién puede pedir
-  plazo: string;          // fecha límite
-  gastosOk: string[];     // gastos elegibles (máx 5 ítems)
-  gastosNo: string[];     // gastos NO elegibles (máx 3)
-  importe: string;        // orientación de importe
-  requisitos: string[];   // condiciones clave (máx 4)
-  nota?: string;          // aviso especial (deadline alternativo, etc.)
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Presentar subvención', url: `${SITE_URL}/subvenciones/presentar` },
+    { name: 'Nuevo expediente', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+  ]),
+];
+
+// ─── Catálogo de convocatorias activas ────────────────────────────────────────
+// Datos completos para el selector del paso 2: tarjeta de lista + panel de detalles.
+interface ConvData {
+  slug: string;
+  id: string;
+  titulo: string;
+  tituloFull: string;      // lo que va al expediente en BD
+  beneficiario: 'privada' | 'local';
+  beneficiarioLabel: string;
+  deadline: string;
+  deadlineShort: string;
+  deadlineNote?: string;
+  importeRange: string;
+  financiaResumen: string[];  // 3 bullets para la tarjeta
+  tipo: string;
+  gastosOk: string[];
+  gastosNo: string[];
+  importe: string;
+  requisitos: string[];
+  nota?: string;
+  bojaUrl?: string;
 }
 
-const CONV_REQS: Record<string, ConvReqs> = {
-  'boja-2026-inclusion-l10': {
-    tipo: 'Entidades privadas sin ánimo de lucro: asociaciones (G), fundaciones (F/G), entidades religiosas (R) y similares con actividad de acción social en Andalucía.',
-    plazo: '16 de junio de 2026',
+const CONV_DATA: ConvData[] = [
+  /* ── Tercer sector / entidades privadas ───────────────── */
+  {
+    slug: 'boja-2026-inclusion-l10',
+    id: 'L10',
+    titulo: 'Mantenimiento de entidades privadas de acción social',
+    tituloFull: 'BOJA 2026 — L10: Mantenimiento de entidades privadas de acción social (Junta de Andalucía)',
+    beneficiario: 'privada',
+    beneficiarioLabel: 'Asociaciones, fundaciones y entidades religiosas de acción social',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: '3.000 € – 80.000 €',
+    financiaResumen: [
+      'Alquiler de locales e instalaciones donde se presta el servicio',
+      'Nóminas del personal de gestión y administración de la entidad',
+      'Suministros, seguros y mantenimiento ordinario',
+    ],
+    tipo: 'Entidades privadas sin ánimo de lucro con actividad de acción social en Andalucía: asociaciones (CIF G), fundaciones (F/G), entidades religiosas (R) y similares.',
     gastosOk: [
       'Arrendamiento de locales e instalaciones',
-      'Suministros (luz, agua, gas, teléfono)',
+      'Suministros (luz, agua, gas, teléfono, internet)',
       'Nóminas del personal de gestión y administración',
       'Seguros, mantenimiento y reparaciones ordinarias',
-      'Material de oficina, gestoría, auditoría y otros gastos generales',
+      'Material de oficina, gestoría, auditoría y otros gastos generales de funcionamiento',
     ],
     gastosNo: [
-      'Inversiones en inmuebles o equipamiento',
-      'Gastos de proyectos o programas concretos (esos van a L11)',
-      'Gastos de capital o amortizaciones sobre inmuebles propios',
+      'Inversiones en inmuebles, equipamiento o vehículos',
+      'Gastos directos de proyectos o programas concretos (esos van a la línea L11)',
+      'Amortizaciones sobre bienes inmuebles propios',
     ],
-    importe: 'Sin límite máximo fijado en las bases. El importe depende del presupuesto real de la entidad y de los créditos disponibles en la convocatoria. En ediciones anteriores, los importes concedidos han oscilado entre 3.000 € y 80.000 €.',
+    importe: 'Sin límite máximo fijado en bases. Depende del presupuesto real de la entidad y de los créditos disponibles. En ediciones anteriores: entre 3.000 € y 80.000 €, con la mayoría de concesiones entre 8.000 € y 35.000 €.',
     requisitos: [
       'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
       'CIF activo y al corriente de obligaciones con AEAT y TGSS',
-      'Actividad de acción social continuada en Andalucía',
-      'Memoria de actividades del ejercicio anterior presentada',
+      'Actividad de acción social continuada en Andalucía (no puntual)',
+      'Presentación de memoria de actividades del ejercicio anterior',
     ],
   },
-  'boja-2026-inclusion-l11': {
-    tipo: 'Entidades privadas sin ánimo de lucro: asociaciones (G), fundaciones (F/G), entidades religiosas (R) y similares con programas de acción social en Andalucía.',
-    plazo: '16 de junio de 2026',
+  {
+    slug: 'boja-2026-inclusion-l11',
+    id: 'L11',
+    titulo: 'Programas de acción social para entidades privadas',
+    tituloFull: 'BOJA 2026 — L11: Programas de acción social para entidades privadas (Junta de Andalucía)',
+    beneficiario: 'privada',
+    beneficiarioLabel: 'Asociaciones, fundaciones y entidades religiosas de acción social',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: '5.000 € – 120.000 €',
+    financiaResumen: [
+      'Personal de intervención directa del programa (educadores, trabajadores sociales…)',
+      'Materiales, actividades y talleres con los beneficiarios del proyecto',
+      'Desplazamientos, difusión y gastos directos del programa',
+    ],
+    tipo: 'Entidades privadas sin ánimo de lucro con programas de acción social en Andalucía: asociaciones (CIF G), fundaciones (F/G), entidades religiosas (R) y similares.',
     gastosOk: [
-      'Personal de intervención directa del programa (educadores, trabajadores sociales, auxiliares)',
-      'Material didáctico, consumibles y recursos del programa',
-      'Actividades, talleres y acciones directas con beneficiarios',
+      'Personal de intervención directa: educadores, trabajadores sociales, psicólogos, auxiliares…',
+      'Material didáctico, consumibles y recursos específicos del programa',
+      'Actividades, talleres y acciones directas con los beneficiarios',
       'Dietas y desplazamientos del personal del proyecto',
-      'Gastos de difusión y comunicación del programa',
+      'Difusión y comunicación del programa',
     ],
     gastosNo: [
-      'Gastos estructurales o de administración de la entidad (esos van a L10)',
+      'Gastos estructurales o de administración de la entidad (arrendamiento, administración… → van a L10)',
       'Obra civil o adquisición de inmuebles',
       'Actividades ya financiadas por otras subvenciones públicas incompatibles',
     ],
-    importe: 'Sin límite máximo fijado. El importe depende del presupuesto del programa y la dotación disponible. En ediciones anteriores, los importes concedidos han oscilado entre 5.000 € y 120.000 €.',
+    importe: 'Sin límite máximo fijado. Depende del presupuesto del programa y la dotación disponible. En ediciones anteriores: entre 5.000 € y 120.000 €. Los programas con mayor alcance territorial y número de beneficiarios suelen obtener más.',
     requisitos: [
       'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
       'CIF activo y al corriente de AEAT y TGSS',
       'El programa debe atender a personas en situación de vulnerabilidad en Andalucía',
-      'Memoria descriptiva del programa con objetivos, metodología e indicadores de evaluación',
+      'Memoria descriptiva del programa: objetivos, metodología, cronograma e indicadores de evaluación',
     ],
   },
-  'boja-2026-inclusion-l7': {
-    tipo: 'Entidades privadas sin ánimo de lucro con programas de solidaridad alimentaria o escuelas de verano para menores en Andalucía.',
-    plazo: '16 de junio de 2026 (Modalidad 2 — Escuelas de verano: 2 de junio de 2026)',
+  {
+    slug: 'boja-2026-inclusion-l7',
+    id: 'L7',
+    titulo: 'Solidaridad y Garantía Alimentaria de Andalucía',
+    tituloFull: 'BOJA 2026 — L7: Solidaridad y Garantía Alimentaria de Andalucía (Junta de Andalucía)',
+    beneficiario: 'privada',
+    beneficiarioLabel: 'Entidades privadas con programas alimentarios o escuelas de verano',
+    deadline: '16 de junio de 2026 (Mod. 2 Escuelas de verano: 2 de junio)',
+    deadlineShort: '2–16 jun',
+    deadlineNote: 'Mod. 2 Escuelas de verano: cierra el 2 de junio',
+    importeRange: 'Variable por modalidad y plaza',
+    financiaResumen: [
+      'Mod. 1 — Emergencia alimentaria: alimentos, distribución, logística y personal',
+      'Mod. 2 — Escuelas de verano: monitores, transporte, material lúdico y comedor para menores',
+      'Coordinación y seguimiento del programa',
+    ],
+    tipo: 'Entidades privadas sin ánimo de lucro con programas de solidaridad alimentaria (Modalidad 1) o escuelas de verano para menores en zonas desfavorecidas (Modalidad 2) en Andalucía.',
     gastosOk: [
-      'Mod. 1 — Alimentaria: alimentos, logística, personal de distribución y almacenamiento',
-      'Mod. 2 — Escuelas de verano: monitores, transporte, material educativo/lúdico y comedor',
-      'Gastos de coordinación y seguimiento del programa',
+      'Mod. 1: Adquisición de alimentos, logística, almacenamiento y personal de distribución',
+      'Mod. 2: Monitores y personal de atención, transporte, material educativo/lúdico, comedor',
+      'Coordinación del programa, seguimiento y gastos de gestión directa',
     ],
     gastosNo: [
       'Gastos de administración general de la entidad',
-      'Equipamiento permanente o inversiones',
+      'Equipamiento permanente o inversiones en instalaciones',
     ],
-    importe: 'Variable según modalidad y crédito disponible. La Modalidad 2 (Escuelas de verano) suele tener importes unitarios menores por plaza atendida.',
+    importe: 'Variable según la modalidad y el crédito disponible en la convocatoria. La Modalidad 2 tiende a financiarse por plaza de menor atendida. Contacta con Startidea para orientación personalizada.',
     requisitos: [
       'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
       'Al corriente de AEAT y TGSS',
-      'Experiencia acreditada en el ámbito alimentario o en actividades con menores',
+      'Experiencia acreditada en programas alimentarios o en actividades con menores',
     ],
-    nota: '⚠️ La Modalidad 2 (Escuelas de verano para menores) cierra el 2 de junio de 2026. El resto de modalidades cierran el 16 de junio.',
+    nota: '⚠️ La Modalidad 2 (Escuelas de verano para menores) cierra el 2 de junio de 2026. El resto de modalidades, el 16 de junio.',
   },
-  'boja-2026-inclusion-l16': {
-    tipo: 'Entidades privadas sin ánimo de lucro con programas de atención integral a mujeres jóvenes ex-tuteladas (procedentes del sistema de protección de menores) en Andalucía.',
-    plazo: '16 de junio de 2026',
+  {
+    slug: 'boja-2026-inclusion-l16',
+    id: 'L16',
+    titulo: 'Atención a mujeres jóvenes del sistema de protección de menores',
+    tituloFull: 'BOJA 2026 — L16: Atención integral a mujeres jóvenes procedentes del sistema de protección de menores (Junta de Andalucía)',
+    beneficiario: 'privada',
+    beneficiarioLabel: 'Entidades privadas con programas de atención a jóvenes ex-tuteladas',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: 'Variable según proyecto',
+    financiaResumen: [
+      'Personal de acompañamiento: educadores, psicólogos, trabajadores sociales',
+      'Acciones de inserción laboral, formativa y habitacional',
+      'Material y recursos de apoyo al proceso de incorporación social',
+    ],
+    tipo: 'Entidades privadas sin ánimo de lucro con programas específicos de atención integral a mujeres jóvenes ex-tuteladas (procedentes del sistema de protección de menores) en Andalucía.',
     gastosOk: [
       'Personal de intervención y acompañamiento (educadores, psicólogos, trabajadores sociales)',
       'Acciones de inserción laboral, formativa y habitacional',
@@ -101,113 +174,129 @@ const CONV_REQS: Record<string, ConvReqs> = {
       'Gastos estructurales de la entidad',
       'Actividades dirigidas a colectivos distintos a mujeres jóvenes ex-tuteladas',
     ],
-    importe: 'Variable según presupuesto del programa y dotación disponible.',
+    importe: 'Variable según el presupuesto del programa y la dotación disponible. La línea es específica (menos solicitada), lo que puede beneficiar el porcentaje de concesión.',
     requisitos: [
-      'Inscripción en el Registro de Entidades de Servicios Sociales',
+      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
       'Experiencia demostrable en atención a jóvenes ex-tutelados o mujeres en situación de vulnerabilidad',
       'Al corriente de AEAT y TGSS',
     ],
   },
-  'boja-2026-inclusion-l4': {
-    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
-    plazo: '16 de junio de 2026',
+  /* ── Entidades locales ────────────────────────────────── */
+  {
+    slug: 'boja-2026-inclusion-l4',
+    id: 'L4',
+    titulo: 'Programas dirigidos a la Comunidad Gitana',
+    tituloFull: 'BOJA 2026 — L4: Programas dirigidos a la Comunidad Gitana (Junta de Andalucía, entidades locales)',
+    beneficiario: 'local',
+    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: 'Variable según programa',
+    financiaResumen: [
+      'Programas de inserción social, educativa, laboral o sanitaria para la Comunidad Gitana',
+      'Personal técnico del programa (mediadores, educadores)',
+      'Materiales y actividades específicas del programa',
+    ],
+    tipo: 'Entidades locales: ayuntamientos, mancomunidades de municipios y diputaciones provinciales de Andalucía.',
     gastosOk: [
-      'Programas de inserción social para la Comunidad Gitana',
-      'Acciones de empleo, educación, salud o vivienda dirigidas a este colectivo',
+      'Programas de inserción social, empleo, educación, salud o vivienda para la Comunidad Gitana',
       'Personal técnico del programa y gastos de ejecución directa',
+      'Actividades de sensibilización e integración social',
     ],
     gastosNo: [
-      'Gastos de funcionamiento ordinario del ayuntamiento',
+      'Gastos de funcionamiento ordinario del ayuntamiento no relacionados con el programa',
       'Inversiones en infraestructuras',
     ],
-    importe: 'Variable según presupuesto del programa y créditos asignados a la convocatoria.',
+    importe: 'Variable según el presupuesto del programa y los créditos asignados. Startidea realiza el diagnóstico de encaje antes de comenzar.',
     requisitos: [
       'Entidad local de Andalucía (ayuntamiento, mancomunidad o diputación)',
-      'Programa dirigido específicamente a la Comunidad Gitana',
+      'Programa dirigido específicamente a la Comunidad Gitana con objetivos medibles',
       'Al corriente de obligaciones tributarias y con la Seguridad Social',
     ],
   },
-  'boja-2026-inclusion-l6': {
+  {
+    slug: 'boja-2026-inclusion-l6',
+    id: 'L6',
+    titulo: 'Atención a personas inmigrantes y emigrantes temporeras',
+    tituloFull: 'BOJA 2026 — L6: Atención a personas inmigrantes y emigrantes temporeras (Junta de Andalucía, entidades locales)',
+    beneficiario: 'local',
+    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: 'Variable según programa',
+    financiaResumen: [
+      'Servicios de atención, acogida e integración de personas inmigrantes',
+      'Orientación a temporeros agrícolas andaluces y sus familias',
+      'Personal técnico: mediadores, intérpretes, trabajadores sociales',
+    ],
     tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
-    plazo: '16 de junio de 2026',
     gastosOk: [
       'Servicios de atención, acogida e integración de personas inmigrantes',
       'Orientación y asesoramiento a temporeros agrícolas andaluces y sus familias',
-      'Personal técnico de los programas (mediadores, intérpretes, trabajadores sociales)',
+      'Personal técnico: mediadores interculturales, intérpretes, trabajadores sociales',
       'Actividades de inclusión y aprendizaje del idioma',
     ],
     gastosNo: [
-      'Gastos de funcionamiento general de la administración local',
-      'Actividades no relacionadas con el colectivo beneficiario',
+      'Gastos de funcionamiento general de la administración local no vinculados al programa',
+      'Actividades no relacionadas directamente con el colectivo beneficiario',
     ],
-    importe: 'Variable según presupuesto y crédito disponible.',
+    importe: 'Variable según el presupuesto del programa y los créditos asignados en la convocatoria.',
     requisitos: [
-      'Entidad local andaluza',
-      'Programa de atención específica a inmigrantes y/o temporeros',
+      'Entidad local andaluza (ayuntamiento, mancomunidad o diputación)',
+      'Programa de atención específica a inmigrantes y/o temporeros con indicadores claros',
       'Al corriente de obligaciones tributarias y con la Seguridad Social',
     ],
   },
-  'boja-2026-inclusion-l9': {
-    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
-    plazo: '16 de junio de 2026',
+  {
+    slug: 'boja-2026-inclusion-l9',
+    id: 'L9',
+    titulo: 'Promoción de la participación ciudadana',
+    tituloFull: 'BOJA 2026 — L9: Promoción de la participación ciudadana (Junta de Andalucía, entidades locales)',
+    beneficiario: 'local',
+    beneficiarioLabel: 'Ayuntamientos, mancomunidades y diputaciones de Andalucía',
+    deadline: '16 de junio de 2026',
+    deadlineShort: '16 jun',
+    importeRange: 'Variable según programa',
+    financiaResumen: [
+      'Procesos participativos, consejos ciudadanos, presupuestos participativos',
+      'Personal y material para el desarrollo de las actividades',
+      'Fomento de la participación activa en la vida municipal y comunitaria',
+    ],
+    tipo: 'Entidades locales andaluzas: ayuntamientos, mancomunidades y diputaciones provinciales.',
     gastosOk: [
-      'Actividades de fomento de la participación ciudadana activa',
+      'Actividades concretas de fomento de la participación ciudadana activa',
       'Procesos participativos, consejos ciudadanos, presupuestos participativos',
       'Personal y material para el desarrollo de las actividades',
     ],
     gastosNo: [
-      'Gastos ordinarios de funcionamiento del ayuntamiento',
-      'Inversiones o equipamiento permanente',
+      'Gastos ordinarios de funcionamiento del ayuntamiento no vinculados al programa',
+      'Inversiones en equipamiento permanente',
     ],
-    importe: 'Variable según presupuesto y crédito disponible.',
+    importe: 'Variable según el presupuesto del programa y los créditos disponibles en la convocatoria.',
     requisitos: [
-      'Entidad local andaluza',
-      'Actividades concretas de participación ciudadana (no genéricas)',
+      'Entidad local andaluza (ayuntamiento, mancomunidad o diputación)',
+      'Actividades concretas de participación ciudadana (no genéricas ni difusas)',
       'Al corriente de obligaciones tributarias y con la Seguridad Social',
     ],
   },
-};
-
-const convReqs: ConvReqs | null = CONV_REQS[convSlug] ?? null;
-
-const jsonLd = [
-  breadcrumbList([
-    { name: 'Inicio', url: `${SITE_URL}/` },
-    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
-    { name: 'Presentar subvención', url: `${SITE_URL}/subvenciones/presentar` },
-    { name: 'Nuevo expediente', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
-  ]),
 ];
 ---
 
 <Base
   title="Nuevo expediente de subvención — Startidea"
-  description="Rellena el formulario con los datos de tu entidad y la convocatoria. En 24–48h el equipo de Startidea te entrega la memoria técnica, el presupuesto y la guía de presentación."
+  description="Elige la convocatoria, revisa los requisitos y envía el expediente. En 24–48h el equipo de Startidea te entrega el diagnóstico de encaje, la memoria técnica y el presupuesto."
   ogSlug="page/subvenciones-presentar"
   jsonLd={jsonLd}
 >
-  {convTitle && (
-    <div class="bg-magenta/10 border-b border-magenta/20 py-3">
-      <div class="container-x flex items-center justify-between gap-4">
-        <p class="text-sm text-ink">
-          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta mr-2">Convocatoria seleccionada</span>
-          <strong>{convTitle}</strong>
-        </p>
-        <a href={`/subvenciones/${convSlug}`} class="shrink-0 font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">
-          Ver ficha →
-        </a>
-      </div>
-    </div>
-  )}
-
   <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-14">
     <div class="container-x">
       <span class="label">— Nuevo expediente</span>
       <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
-        {convTitle ? 'Un paso más para solicitar la ayuda.' : 'Arranca el expediente.'}
+        Arranca el expediente.<br />
+        <em class="text-magenta italic">Sin coste hasta que se concede.</em>
       </h1>
       <p class="mt-3 max-w-measure text-ink/70">
-        Completar este formulario lleva unos 10 minutos. El equipo de Startidea prepara la memoria técnica, el presupuesto y la guía de presentación adaptados a esta convocatoria.
+        Rellena los datos de tu entidad, elige la convocatoria que os interesa y sube lo que tengas. En 24–48h Startidea os envía el diagnóstico de encaje: si tiene sentido presentarse y qué documentación falta.
       </p>
     </div>
   </section>
@@ -238,49 +327,40 @@ const jsonLd = [
 
         <!-- Formulario -->
         <form id="expediente-form" novalidate>
-          <!-- Campos ocultos: convocatoria pre-seleccionada -->
-          <input type="hidden" name="convocatoriaSlug" value={convSlug} />
-          {convTitle && <input type="hidden" name="convocatoriaNombre" id="conv-nombre-hidden" value={convTitle} />}
-          <!-- PASO 1: La entidad -->
+
+          <!-- Campos ocultos para la convocatoria seleccionada — se rellenan por JS -->
+          <input type="hidden" name="convocatoriaSlug"  id="f-conv-slug"   value={convSlugParam} />
+          <input type="hidden" name="convocatoriaNombre" id="f-conv-nombre" value={convTitleParam} />
+          <input type="hidden" name="convocatoriaUrl"   id="f-conv-url"    value="" />
+          <input type="hidden" name="tieneConvocatoria" id="f-tiene-conv"  value={convTitleParam ? 'si' : ''} />
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               PASO 1: La entidad
+          ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-1" class="step-panel space-y-6">
             <legend class="font-display text-2xl text-ink">Tu entidad</legend>
             <p class="text-sm text-ink/60">Los datos del organismo que va a presentarse a la subvención.</p>
 
             <div class="space-y-1">
               <label for="orgName" class="label">Nombre de la organización <span class="text-magenta">*</span></label>
-              <input
-                type="text"
-                id="orgName"
-                name="orgName"
-                required
-                maxlength="200"
-                placeholder="Fundación Ejemplo"
-                class="form-input w-full"
-              />
+              <input type="text" id="orgName" name="orgName" required maxlength="200" placeholder="Fundación Ejemplo" class="form-input w-full" />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label for="cif" class="label">CIF / NIF <span class="text-magenta">*</span></label>
-                <input
-                  type="text"
-                  id="cif"
-                  name="cif"
-                  required
-                  maxlength="20"
-                  placeholder="G12345678"
-                  class="form-input w-full"
-                />
+                <input type="text" id="cif" name="cif" required maxlength="20" placeholder="G12345678" class="form-input w-full" />
               </div>
               <div class="space-y-1">
                 <label for="orgType" class="label">Tipo de entidad <span class="text-magenta">*</span></label>
                 <select id="orgType" name="orgType" required class="form-input w-full">
                   <option value="">Selecciona…</option>
-                  <option value="fundacion">Fundación</option>
                   <option value="asociacion">Asociación</option>
+                  <option value="fundacion">Fundación</option>
                   <option value="cooperativa">Cooperativa</option>
+                  <option value="entidad-religiosa">Entidad religiosa</option>
+                  <option value="entidad-local">Entidad local (ayuntamiento, diputación…)</option>
                   <option value="empresa">Empresa</option>
-                  <option value="entidad-publica">Entidad pública</option>
                   <option value="otro">Otro</option>
                 </select>
               </div>
@@ -288,228 +368,205 @@ const jsonLd = [
 
             <div class="space-y-1">
               <label for="representante" class="label">Representante legal <span class="text-magenta">*</span></label>
-              <input
-                type="text"
-                id="representante"
-                name="representante"
-                required
-                maxlength="120"
-                placeholder="Nombre y apellidos"
-                class="form-input w-full"
-              />
+              <input type="text" id="representante" name="representante" required maxlength="120" placeholder="Nombre y apellidos" class="form-input w-full" />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1">
                 <label for="email" class="label">Email de contacto <span class="text-magenta">*</span></label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  maxlength="120"
-                  placeholder="tu@entidad.org"
-                  class="form-input w-full"
-                />
+                <input type="email" id="email" name="email" required maxlength="120" placeholder="tu@entidad.org" class="form-input w-full" />
               </div>
               <div class="space-y-1">
                 <label for="telefono" class="label">Teléfono</label>
-                <input
-                  type="tel"
-                  id="telefono"
-                  name="telefono"
-                  maxlength="20"
-                  placeholder="600 000 000"
-                  class="form-input w-full"
-                />
+                <input type="tel" id="telefono" name="telefono" maxlength="20" placeholder="600 000 000" class="form-input w-full" />
               </div>
             </div>
 
             <div class="space-y-1">
               <label for="provincia" class="label">Provincia / Comunidad Autónoma <span class="text-magenta">*</span></label>
-              <input
-                type="text"
-                id="provincia"
-                name="provincia"
-                required
-                maxlength="80"
-                placeholder="Granada, Andalucía"
-                class="form-input w-full"
-              />
+              <input type="text" id="provincia" name="provincia" required maxlength="80" placeholder="Granada, Andalucía" class="form-input w-full" />
             </div>
           </fieldset>
 
-          <!-- PASO 2: La convocatoria y el proyecto -->
+          <!-- ═══════════════════════════════════════════════════════════════
+               PASO 2: La convocatoria — selector tipo plataforma
+          ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-2" class="step-panel hidden space-y-6">
-            <legend class="font-display text-2xl text-ink">La subvención</legend>
-            <p class="text-sm text-ink/60">Cuéntanos a qué subvención queréis presentaros y qué hace vuestra entidad.</p>
+            <legend class="font-display text-2xl text-ink">Elige la subvención</legend>
+            <p class="text-sm text-ink/60">
+              Estas son las convocatorias activas que Startidea tramita ahora mismo. Haz clic en una para ver todos los detalles: quién puede pedir, qué gastos cubre, importe orientativo y plazo. Si ninguna encaja, usa las opciones del final.
+            </p>
 
-            {convTitle ? (
-              /* ── Convocatoria ya preseleccionada desde la landing ── */
-              <div class="space-y-4">
-                <input type="hidden" name="tieneConvocatoria" value="si" />
+            <!-- Filtro por tipo de entidad -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/35">Ver:</span>
+              <button type="button" data-conv-filter="all"     class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink bg-ink text-paper">Todas (7)</button>
+              <button type="button" data-conv-filter="privada" class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Tercer sector (4)</button>
+              <button type="button" data-conv-filter="local"   class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Entidades locales (3)</button>
+            </div>
 
-                {/* Confirmación de la convocatoria */}
-                <div class="flex items-start gap-3 border border-magenta/30 bg-magenta/5 p-4">
-                  <span class="mt-0.5 text-magenta font-bold text-lg leading-none shrink-0">✓</span>
-                  <div class="min-w-0">
-                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">Subvención seleccionada</p>
-                    <p class="font-medium text-ink text-sm leading-snug">{convTitle}</p>
-                    {convHint && (
-                      <p class="mt-2 text-xs text-ink/60 leading-relaxed">{convHint}</p>
-                    )}
-                    <p class="mt-2 text-xs text-ink/40">
-                      ¿No es esta?{' '}
-                      <a href="/subvenciones/presentar/nuevo" class="text-magenta hover:underline">
-                        Cambiar →
-                      </a>
-                    </p>
-                  </div>
-                </div>
+            <!-- Aviso fuente -->
+            <div class="flex items-start gap-2 text-xs text-ink/40">
+              <span>📋</span>
+              <span>Convocatorias del BOJA nº 99 (26 mayo 2026) — Consejería de Inclusión Social, Juventud, Familias e Igualdad. Plazo general hasta el 16 de junio de 2026.</span>
+            </div>
 
-                {/* ── Caja de requisitos de la convocatoria ── */}
-                {convReqs && (
-                  <div class="border border-ink/15 bg-paper-warm">
-                    <div class="border-b border-ink/10 px-5 py-3">
-                      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">Qué cubre esta convocatoria — léelo antes de continuar</p>
+            <!-- Grid de tarjetas de convocatoria -->
+            <div id="conv-grid" class="space-y-2">
+              {CONV_DATA.map(conv => (
+                <div
+                  class="conv-card border border-ink/15 bg-paper transition-all"
+                  data-conv-slug={conv.slug}
+                  data-conv-filter={conv.beneficiario}
+                  data-conv-title={conv.tituloFull}
+                  data-conv-url={conv.bojaUrl ?? ''}
+                >
+                  <!-- Cabecera de la tarjeta (siempre visible, clickable) -->
+                  <button
+                    type="button"
+                    class="conv-card-header w-full text-left px-4 py-3.5 hover:bg-paper-warm/80 transition-colors"
+                    aria-expanded="false"
+                  >
+                    <div class="flex items-start gap-3">
+                      <!-- Badge ID -->
+                      <span class="conv-id-badge shrink-0 flex items-center justify-center w-10 h-10 border border-magenta/30 font-mono text-xs font-bold text-magenta bg-magenta/5 mt-0.5 transition-colors">
+                        {conv.id}
+                      </span>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                          <p class="font-medium text-ink text-sm leading-snug">{conv.titulo}</p>
+                          <div class="shrink-0 text-right">
+                            <span class="font-mono text-[10px] text-amber-600 whitespace-nowrap">⏰ {conv.deadlineShort}</span>
+                            {conv.deadlineNote && <p class="text-[9px] text-amber-500 mt-0.5">{conv.deadlineNote}</p>}
+                          </div>
+                        </div>
+                        <p class="mt-0.5 text-xs text-ink/50">{conv.beneficiarioLabel}</p>
+                        <!-- 3 bullets resumen -->
+                        <ul class="mt-2 space-y-0.5">
+                          {conv.financiaResumen.map(b => (
+                            <li class="flex items-start gap-1.5 text-xs text-ink/65">
+                              <span class="shrink-0 text-green-600 mt-0.5 leading-none">▸</span>
+                              <span>{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <p class="mt-2 font-mono text-[10px] text-ink/35">Importe orientativo: {conv.importeRange}</p>
+                      </div>
+                      <!-- Flecha expand/collapse -->
+                      <span class="conv-arrow shrink-0 font-mono text-ink/25 mt-1 transition-transform duration-200 text-sm select-none">↓</span>
                     </div>
-                    <div class="divide-y divide-ink/10">
-                      {/* Quién puede pedir */}
-                      <div class="px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1.5">Quién puede solicitarla</p>
-                        <p class="text-sm text-ink/80 leading-relaxed">{convReqs.tipo}</p>
-                      </div>
+                  </button>
 
-                      {/* Gastos elegibles */}
-                      <div class="px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">✅ Gastos elegibles (qué se puede subvencionar)</p>
+                  <!-- Banner de seleccionada (visible cuando está elegida) -->
+                  <div class="conv-selected-banner hidden items-center gap-3 border-t border-magenta/30 bg-magenta/5 px-4 py-2.5">
+                    <span class="text-magenta font-bold">✓</span>
+                    <p class="text-sm font-medium text-ink flex-1">Convocatoria seleccionada</p>
+                    <button type="button" class="conv-deselect-btn font-mono text-[10px] uppercase tracking-wider text-ink/45 hover:text-magenta shrink-0">
+                      Cambiar →
+                    </button>
+                  </div>
+
+                  <!-- Panel de detalles (expandible, oculto por defecto) -->
+                  <div class="conv-details hidden border-t border-ink/10">
+                    <div class="divide-y divide-ink/8">
+                      <div class="bg-paper-warm/50 px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Quién puede solicitarla</p>
+                        <p class="text-sm text-ink/80 leading-relaxed">{conv.tipo}</p>
+                      </div>
+                      <div class="bg-paper-warm/50 px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">✅ Qué se puede subvencionar</p>
                         <ul class="space-y-1">
-                          {convReqs.gastosOk.map(g => (
+                          {conv.gastosOk.map(g => (
                             <li class="flex items-start gap-2 text-sm text-ink/75">
-                              <span class="mt-0.5 text-green-600 shrink-0 text-xs">▸</span>
+                              <span class="mt-0.5 text-green-600 shrink-0 text-xs leading-none">▸</span>
                               <span>{g}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      {/* Gastos NO elegibles */}
-                      <div class="px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">❌ Qué NO cubre</p>
+                      <div class="bg-paper-warm/50 px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">❌ Qué NO cubre</p>
                         <ul class="space-y-1">
-                          {convReqs.gastosNo.map(g => (
+                          {conv.gastosNo.map(g => (
                             <li class="flex items-start gap-2 text-sm text-ink/60">
-                              <span class="mt-0.5 text-red-400 shrink-0 text-xs">✗</span>
+                              <span class="mt-0.5 text-red-400 shrink-0 text-xs leading-none">✗</span>
                               <span>{g}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      {/* Orientación de importe */}
-                      <div class="px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">€ Orientación de importe</p>
-                        <p class="text-sm text-ink/75 leading-relaxed">{convReqs.importe}</p>
+                      <div class="bg-paper-warm/50 px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-1.5">€ Orientación de importe</p>
+                        <p class="text-sm text-ink/75 leading-relaxed">{conv.importe}</p>
                       </div>
-
-                      {/* Requisitos clave */}
-                      <div class="px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Condiciones principales</p>
+                      <div class="bg-paper-warm/50 px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">Condiciones para poder solicitar</p>
                         <ul class="space-y-1">
-                          {convReqs.requisitos.map(r => (
+                          {conv.requisitos.map(r => (
                             <li class="flex items-start gap-2 text-sm text-ink/75">
-                              <span class="mt-0.5 text-magenta shrink-0 text-xs">·</span>
+                              <span class="mt-0.5 text-magenta shrink-0 leading-none">·</span>
                               <span>{r}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      {/* Plazo */}
                       <div class="bg-amber-50 px-5 py-3">
-                        <p class="text-sm font-medium text-amber-800">
-                          <span class="font-mono text-[10px] uppercase tracking-widest mr-2">Plazo:</span>
-                          {convReqs.plazo}
-                        </p>
-                        {convReqs.nota && (
-                          <p class="mt-1 text-xs text-amber-700">{convReqs.nota}</p>
-                        )}
+                        <p class="text-sm font-semibold text-amber-800">⏰ Plazo: {conv.deadline}</p>
+                        {conv.nota && <p class="mt-1 text-xs text-amber-700">{conv.nota}</p>}
                       </div>
                     </div>
-                    <div class="border-t border-ink/10 bg-ink px-5 py-3">
-                      <p class="text-xs text-paper/70">
-                        Startidea revisa el encaje real en el diagnóstico (24–48h). Si tu proyecto no encaja al 100%, lo que necesitas es la descripción precisa en el campo de abajo.
+                    <!-- CTA dentro del panel de detalles -->
+                    <div class="border-t border-magenta/20 bg-magenta/5 px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <p class="text-xs text-ink/60 leading-relaxed">
+                        Startidea verifica el encaje real en el diagnóstico (24–48h). Si no encaja al 100 %, te lo decimos antes de seguir.
                       </p>
+                      <button type="button" class="conv-select-btn shrink-0 btn text-sm">
+                        Me interesa — continuar →
+                      </button>
                     </div>
                   </div>
-                )}
+                </div>
+              ))}
+            </div>
 
-                {/* Plazo e importe */}
-                <div class="grid grid-cols-2 gap-4">
+            <!-- Error si no se ha seleccionado nada -->
+            <div id="conv-error" class="hidden border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+              Selecciona una convocatoria de la lista, indica la tuya en la sección de abajo, o elige "Que Startidea lo analice".
+            </div>
+
+            <!-- Alternativas -->
+            <div class="space-y-3 border-t border-ink/10 pt-4">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/35">¿Ninguna de las anteriores?</p>
+
+              <!-- Mi convocatoria es diferente -->
+              <details class="border border-ink/15" id="other-conv-panel">
+                <summary class="cursor-pointer select-none flex items-center gap-3 px-4 py-3 hover:bg-paper-warm">
+                  <span class="font-mono text-[11px] uppercase tracking-wider text-ink/60">
+                    Tengo una convocatoria diferente o que no está en la lista
+                  </span>
+                  <span class="ml-auto font-mono text-xs text-ink/30">↓</span>
+                </summary>
+                <div class="space-y-4 border-t border-ink/8 p-4">
                   <div class="space-y-1">
-                    <label for="plazo" class="label">Fecha límite</label>
-                    <input type="date" id="plazo" name="plazo" class="form-input w-full" />
-                  </div>
-                  <div class="space-y-1">
-                    <label for="importeSolicitado" class="label">¿Cuánto queréis solicitar?</label>
+                    <label for="other-nombre" class="label">Nombre de la subvención</label>
                     <input
                       type="text"
-                      id="importeSolicitado"
-                      name="importeSolicitado"
-                      maxlength="30"
-                      placeholder="Ej: 20.000 €"
-                      class="form-input w-full"
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : (
-              /* ── Flujo estándar: el usuario indica su convocatoria ── */
-              <div class="space-y-4" id="conv-selector">
-                <div class="space-y-2">
-                  <p class="label">¿Ya sabéis a qué subvención queréis presentaros? <span class="text-magenta">*</span></p>
-                  <div class="grid gap-3 sm:grid-cols-2">
-                    <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
-                      <input type="radio" name="tieneConvocatoria" value="si" required class="accent-magenta mt-0.5 shrink-0" />
-                      <div>
-                        <span class="text-sm font-medium text-ink">Sí, ya la tenemos identificada</span>
-                        <p class="mt-0.5 text-xs text-ink/50">Tenemos el nombre o el enlace a la convocatoria.</p>
-                      </div>
-                    </label>
-                    <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
-                      <input type="radio" name="tieneConvocatoria" value="no" class="accent-magenta mt-0.5 shrink-0" />
-                      <div>
-                        <span class="text-sm font-medium text-ink">No, necesitamos ayuda para encontrarla</span>
-                        <p class="mt-0.5 text-xs text-ink/50">Startidea identifica las convocatorias que mejor encajan con vuestro proyecto.</p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Si tiene convocatoria */}
-                <div id="has-convocatoria" class="space-y-4" style="display:none">
-                  <div class="space-y-1">
-                    <label for="convocatoriaNombre" class="label">Nombre de la subvención <span class="text-magenta">*</span></label>
-                    <input
-                      type="text"
-                      id="convocatoriaNombre"
-                      name="convocatoriaNombre"
+                      id="other-nombre"
                       maxlength="300"
-                      placeholder="Ej: Subvenciones acción social Junta de Andalucía 2026"
+                      placeholder="Ej: Subvenciones acción social Diputación de Granada 2026"
                       class="form-input w-full"
                     />
                   </div>
                   <div class="space-y-1">
-                    <label for="convocatoriaUrl" class="label">Enlace a la convocatoria (si lo tienes)</label>
+                    <label for="other-url" class="label">Enlace (si lo tienes)</label>
                     <input
                       type="url"
-                      id="convocatoriaUrl"
-                      name="convocatoriaUrl"
+                      id="other-url"
                       maxlength="500"
-                      placeholder="https://www.juntadeandalucia.es/… o enlace del BOE/BOJA"
+                      placeholder="https://… (BOE, BOJA, sede electrónica…)"
                       class="form-input w-full"
                     />
-                    <p class="text-xs text-ink/40">No es obligatorio. Con el nombre es suficiente para que Startidea localice la convocatoria.</p>
+                    <p class="text-xs text-ink/35">No obligatorio. Con el nombre es suficiente para localizarla.</p>
                   </div>
                   <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
@@ -518,46 +575,42 @@ const jsonLd = [
                     </div>
                     <div class="space-y-1">
                       <label for="importeSolicitado" class="label">¿Cuánto queréis solicitar?</label>
-                      <input
-                        type="text"
-                        id="importeSolicitado"
-                        name="importeSolicitado"
-                        maxlength="30"
-                        placeholder="Ej: 20.000 €"
-                        class="form-input w-full"
-                      />
+                      <input type="text" id="importeSolicitado" name="importeSolicitado" maxlength="30" placeholder="Ej: 20.000 €" class="form-input w-full" />
                     </div>
                   </div>
+                  <div id="other-conv-confirm" class="hidden border border-magenta/30 bg-magenta/5 p-3 text-sm text-ink">
+                    <span class="text-magenta font-bold mr-2">✓</span>Convocatoria manual registrada.
+                    <button type="button" id="btn-clear-other" class="ml-2 font-mono text-[10px] text-ink/40 hover:text-magenta uppercase">Limpiar</button>
+                  </div>
                 </div>
+              </details>
 
-                {/* Si no tiene convocatoria */}
-                <div id="no-convocatoria" class="space-y-4" style="display:none">
-                  <div class="border border-ink/10 bg-paper-warm p-4 text-sm text-ink/70">
-                    Sin problema. Con la descripción de vuestro proyecto Startidea identifica las convocatorias más adecuadas y os presenta las opciones en el diagnóstico.
-                  </div>
-                  <div class="space-y-1">
-                    <label for="importeEstimado" class="label">¿Cuánta financiación necesitáis?</label>
-                    <input
-                      type="text"
-                      id="importeEstimado"
-                      name="importeEstimado"
-                      maxlength="30"
-                      placeholder="Ej: 30.000 €"
-                      class="form-input w-full"
-                    />
-                  </div>
+              <!-- No sé cuál me interesa -->
+              <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-4 hover:border-ink/30 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
+                <input type="radio" id="conv-no-se" name="conv-no-se-radio" value="no-se" class="accent-magenta mt-0.5 shrink-0" />
+                <div>
+                  <p class="font-mono text-[11px] uppercase tracking-wider text-ink/65">Que Startidea lo analice y encuentre la convocatoria</p>
+                  <p class="mt-1 text-xs text-ink/50 leading-relaxed">
+                    Con la descripción de vuestra actividad y necesidades, Startidea identifica las convocatorias con mejor encaje y os las presenta en el diagnóstico. Sin coste.
+                  </p>
                 </div>
+              </label>
+
+              <!-- Importe estimado (solo para "no sé") -->
+              <div id="no-se-importe" class="hidden space-y-1 pl-7">
+                <label for="importeEstimado" class="label">¿Cuánta financiación necesitáis?</label>
+                <input type="text" id="importeEstimado" name="importeEstimado" maxlength="30" placeholder="Ej: 30.000 €" class="form-input w-full" />
               </div>
-            )}
+            </div>
 
-            {/* Campo de descripción — siempre visible, lenguaje simplificado */}
-            <div class="space-y-2">
-              <label for="descripcionProyecto" class="label">
+            <!-- ─── Descripción del proyecto ─────────────────────────────────── -->
+            <div class="space-y-2 border-t border-ink/10 pt-6">
+              <label for="descripcionProyecto" class="label text-base">
                 ¿Qué hace vuestra entidad y para qué necesitáis la subvención?
                 <span class="text-magenta">*</span>
               </label>
               <p class="text-xs text-ink/50 leading-relaxed">
-                No tiene que ser perfecto — Startidea lo refinará. Con 3-4 frases es suficiente para arrancar.
+                No tiene que ser perfecto — Startidea lo refinará. Con 3–4 frases es suficiente para arrancar.
               </p>
               <textarea
                 id="descripcionProyecto"
@@ -581,6 +634,7 @@ const jsonLd = [
               <p class="text-xs text-ink/30">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
             </div>
 
+            <!-- ─── Datos de impacto (accordion opcional) ─────────────────── -->
             <details class="border border-ink/10">
               <summary class="cursor-pointer select-none px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink/60 hover:bg-paper-warm">
                 + Datos de impacto de la organización
@@ -591,53 +645,25 @@ const jsonLd = [
                 <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
                     <label for="beneficiariosAnuales" class="label">Personas atendidas al año</label>
-                    <input
-                      type="number"
-                      id="beneficiariosAnuales"
-                      name="beneficiariosAnuales"
-                      min="0"
-                      max="9999999"
-                      class="form-input w-full"
-                      placeholder="340"
-                    />
+                    <input type="number" id="beneficiariosAnuales" name="beneficiariosAnuales" min="0" max="9999999" class="form-input w-full" placeholder="340" />
                   </div>
                   <div class="space-y-1">
                     <label for="presupuestoAnual" class="label">Presupuesto anual (aprox.)</label>
-                    <input
-                      type="text"
-                      id="presupuestoAnual"
-                      name="presupuestoAnual"
-                      maxlength="40"
-                      class="form-input w-full"
-                      placeholder="120.000 €"
-                    />
+                    <input type="text" id="presupuestoAnual" name="presupuestoAnual" maxlength="40" class="form-input w-full" placeholder="120.000 €" />
                   </div>
                 </div>
                 <div class="space-y-1">
                   <label for="logrosDestacados" class="label">Logros e indicadores destacados</label>
-                  <textarea
-                    id="logrosDestacados"
-                    name="logrosDestacados"
-                    rows="3"
-                    maxlength="500"
-                    class="form-input w-full resize-none"
-                    placeholder="Ej: 340 jóvenes formados en 2023 (75% insertados laboralmente). 18 pisos tutelados activos. Premio X al mejor proyecto social 2022…"
-                  ></textarea>
+                  <textarea id="logrosDestacados" name="logrosDestacados" rows="3" maxlength="500" class="form-input w-full resize-none" placeholder="Ej: 340 jóvenes formados en 2023 (75% insertados laboralmente). 18 pisos tutelados activos. Premio X al mejor proyecto social 2022…"></textarea>
                 </div>
                 <div class="space-y-1">
                   <label for="subvencionesAnteriores" class="label">Subvenciones recibidas anteriormente (referencias)</label>
-                  <textarea
-                    id="subvencionesAnteriores"
-                    name="subvencionesAnteriores"
-                    rows="3"
-                    maxlength="500"
-                    class="form-input w-full resize-none"
-                    placeholder="Ej: Junta de Andalucía 2022: 45.000€ programa empleo. Diputación Granada 2023: 15.000€ atención domiciliaria…"
-                  ></textarea>
+                  <textarea id="subvencionesAnteriores" name="subvencionesAnteriores" rows="3" maxlength="500" class="form-input w-full resize-none" placeholder="Ej: Junta de Andalucía 2022: 45.000€ programa empleo. Diputación Granada 2023: 15.000€ atención domiciliaria…"></textarea>
                 </div>
               </div>
             </details>
 
+            <!-- ─── Experiencia previa ────────────────────────────────────── -->
             <div class="space-y-2">
               <p class="label">¿Tiene la entidad experiencia previa en subvenciones?</p>
               <div class="flex flex-wrap gap-4">
@@ -650,6 +676,7 @@ const jsonLd = [
               </div>
             </div>
 
+            <!-- ─── Presentación electrónica ──────────────────────────────── -->
             <div class="space-y-3">
               <p class="label">¿Cómo queréis gestionar la presentación electrónica?</p>
               <p class="text-xs text-ink/50">En ningún caso Startidea utiliza ni solicita vuestro certificado digital. Siempre permanece bajo vuestro control.</p>
@@ -658,28 +685,29 @@ const jsonLd = [
                   <input type="radio" name="apoderamiento" value="si" class="accent-magenta mt-0.5 shrink-0" />
                   <div>
                     <span class="text-sm font-medium text-ink">Otorgamos apoderamiento a Startidea</span>
-                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea presenta en vuestro nombre usando su propio certificado como representante autorizado. Vosotros solo otorgáis el permiso en la sede electrónica (5 minutos).</p>
+                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea presenta en vuestro nombre usando su propio certificado. Vosotros solo otorgáis el permiso en la sede electrónica (5 minutos).</p>
                   </div>
                 </label>
                 <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
                   <input type="radio" name="apoderamiento" value="no" class="accent-magenta mt-0.5 shrink-0" />
                   <div>
                     <span class="text-sm font-medium text-ink">Preferimos firmar nosotros</span>
-                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara y entrega el expediente completo. Cuando dais el visto bueno, os enviamos las instrucciones para que firmáis y presentéis vosotros con vuestro certificado (menos de 10 minutos).</p>
+                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara el expediente completo. Cuando dais el visto bueno, os enviamos las instrucciones para que firmáis y presentéis con vuestro certificado (menos de 10 minutos).</p>
                   </div>
                 </label>
               </div>
             </div>
           </fieldset>
 
-          <!-- PASO 3: Documentos -->
+          <!-- ═══════════════════════════════════════════════════════════════
+               PASO 3: Documentos
+          ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-3" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Documentos disponibles</legend>
             <p class="text-sm text-ink/60">
               Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
             </p>
 
-            <!-- Banner documentos -->
             <div class="border border-magenta/30 bg-magenta/5 p-4">
               <p class="font-mono text-xs uppercase tracking-widest text-magenta">⚡ Cuanto más, mejor</p>
               <p class="mt-1.5 text-sm text-ink/70">
@@ -691,79 +719,27 @@ const jsonLd = [
 
             <div class="space-y-4">
               {[
-                {
-                  id: 'doc-memoria-anual',
-                  name: 'docMemoriaAnual',
-                  label: '⭐ Memoria de actividades del año anterior',
-                  hint: 'El documento más valioso para el expediente. Permite incluir tu historial, indicadores de impacto, beneficiarios y proyectos.',
-                  badge: 'MUY RECOMENDADO',
-                },
-                {
-                  id: 'doc-estatutos',
-                  name: 'docEstatutos',
-                  label: '⭐ Estatutos de la entidad',
-                  hint: 'Permite verificar que el objeto social encaja con la convocatoria y documentar la presentación. Con sello de inscripción.',
-                  badge: 'MUY RECOMENDADO',
-                },
-                {
-                  id: 'doc-memoria',
-                  name: 'docMemoria',
-                  label: 'Borrador de memoria técnica del proyecto',
-                  hint: 'Si tienes un borrador, el equipo lo mejora y adapta a la convocatoria. Si no tienes, lo elaboramos desde cero.',
-                },
-                {
-                  id: 'doc-presupuesto',
-                  name: 'docPresupuesto',
-                  label: 'Presupuesto estimado del proyecto',
-                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), el equipo lo reformatea según las partidas que pide la convocatoria.',
-                },
-                {
-                  id: 'doc-hacienda',
-                  name: 'docHacienda',
-                  label: 'Certificado AEAT (Hacienda)',
-                  hint: 'Al corriente de obligaciones tributarias. Válido 6 meses desde la fecha de emisión.',
-                },
-                {
-                  id: 'doc-ss',
-                  name: 'docSS',
-                  label: 'Certificado TGSS (Seguridad Social)',
-                  hint: 'Al corriente de pagos a la Seguridad Social. Válido 6 meses. Si no lo tienes aún, se puede solicitar justo antes de presentar.',
-                },
-                {
-                  id: 'doc-otros',
-                  name: 'docOtros',
-                  label: 'Otros documentos relevantes',
-                  hint: 'Actas, informes de auditoría, premios, publicaciones… Cualquier documento que acredite la trayectoria o capacidad técnica.',
-                  multiple: true,
-                },
+                { id: 'doc-memoria-anual',  name: 'docMemoriaAnual',  label: '⭐ Memoria de actividades del año anterior',          hint: 'El documento más valioso para el expediente. Permite incluir tu historial, indicadores de impacto, beneficiarios y proyectos.', badge: 'MUY RECOMENDADO' },
+                { id: 'doc-estatutos',      name: 'docEstatutos',     label: '⭐ Estatutos de la entidad',                          hint: 'Permite verificar que el objeto social encaja con la convocatoria y documentar la presentación. Con sello de inscripción.', badge: 'MUY RECOMENDADO' },
+                { id: 'doc-memoria',        name: 'docMemoria',       label: 'Borrador de memoria técnica del proyecto',           hint: 'Si tienes un borrador, el equipo lo mejora y adapta a la convocatoria. Si no tienes, lo elaboramos desde cero.' },
+                { id: 'doc-presupuesto',    name: 'docPresupuesto',   label: 'Presupuesto estimado del proyecto',                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), el equipo lo reformatea según las partidas que pide la convocatoria.' },
+                { id: 'doc-hacienda',       name: 'docHacienda',      label: 'Certificado AEAT (Hacienda)',                        hint: 'Al corriente de obligaciones tributarias. Válido 6 meses desde la fecha de emisión.' },
+                { id: 'doc-ss',             name: 'docSS',            label: 'Certificado TGSS (Seguridad Social)',                hint: 'Al corriente de pagos a la Seguridad Social. Válido 6 meses. Se puede solicitar justo antes de presentar.' },
+                { id: 'doc-otros',          name: 'docOtros',         label: 'Otros documentos relevantes',                       hint: 'Actas, informes de auditoría, premios, publicaciones… Cualquier documento que acredite la trayectoria o capacidad técnica.', multiple: true },
               ].map(doc => (
                 <div class:list={['border p-4', doc.badge ? 'border-magenta/30 bg-magenta/3' : 'border-ink/10']}>
                   <label for={doc.id} class="block cursor-pointer">
                     <div class="flex items-start justify-between gap-3">
                       <p class="font-mono text-sm text-ink">{doc.label}</p>
-                      {doc.badge && (
-                        <span class="shrink-0 font-mono text-[9px] uppercase tracking-widest text-magenta">
-                          {doc.badge}
-                        </span>
-                      )}
+                      {doc.badge && <span class="shrink-0 font-mono text-[9px] uppercase tracking-widest text-magenta">{doc.badge}</span>}
                     </div>
                     <p class="mt-0.5 text-xs text-ink/50">{doc.hint}</p>
                     <div class="mt-3 flex items-center gap-3">
-                      <span class="border border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-paper-warm">
-                        Seleccionar archivo
-                      </span>
+                      <span class="border border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-paper-warm">Seleccionar archivo</span>
                       <span class="text-xs text-ink/40" id={`${doc.id}-name`}>Sin archivo seleccionado</span>
                     </div>
                   </label>
-                  <input
-                    type="file"
-                    id={doc.id}
-                    name={doc.name}
-                    multiple={doc.multiple}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods,.txt"
-                    class="sr-only"
-                    data-file-label={`${doc.id}-name`}
-                  />
+                  <input type="file" id={doc.id} name={doc.name} multiple={doc.multiple} accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods,.txt" class="sr-only" data-file-label={`${doc.id}-name`} />
                 </div>
               ))}
             </div>
@@ -773,48 +749,27 @@ const jsonLd = [
             </div>
           </fieldset>
 
-          <!-- PASO 4: Confirmar -->
+          <!-- ═══════════════════════════════════════════════════════════════
+               PASO 4: Confirmar
+          ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-4" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Confirmar y enviar</legend>
             <p class="text-sm text-ink/60">Revisa el resumen y confirma el envío.</p>
 
-            <!-- Resumen -->
             <div id="resumen" class="space-y-3 border border-ink/15 bg-paper-warm p-5">
               <h3 class="font-mono text-xs uppercase tracking-wider text-ink/50">Resumen del expediente</h3>
               <dl class="space-y-2 text-sm">
-                <div class="flex gap-2">
-                  <dt class="w-32 shrink-0 text-ink/50">Entidad</dt>
-                  <dd id="resumen-entidad" class="text-ink"></dd>
-                </div>
-                <div class="flex gap-2">
-                  <dt class="w-32 shrink-0 text-ink/50">CIF</dt>
-                  <dd id="resumen-cif" class="text-ink"></dd>
-                </div>
-                <div class="flex gap-2">
-                  <dt class="w-32 shrink-0 text-ink/50">Email</dt>
-                  <dd id="resumen-email" class="text-ink"></dd>
-                </div>
-                <div class="flex gap-2">
-                  <dt class="w-32 shrink-0 text-ink/50">Convocatoria</dt>
-                  <dd id="resumen-convocatoria" class="text-ink"></dd>
-                </div>
-                <div class="flex gap-2">
-                  <dt class="w-32 shrink-0 text-ink/50">Documentos</dt>
-                  <dd id="resumen-docs" class="text-ink"></dd>
-                </div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Entidad</dt><dd id="resumen-entidad" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">CIF</dt><dd id="resumen-cif" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Email</dt><dd id="resumen-email" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Convocatoria</dt><dd id="resumen-convocatoria" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Documentos</dt><dd id="resumen-docs" class="text-ink"></dd></div>
               </dl>
             </div>
 
             <div class="space-y-1">
               <label for="comentarios" class="label">Comentarios adicionales (opcional)</label>
-              <textarea
-                id="comentarios"
-                name="comentarios"
-                rows="3"
-                maxlength="800"
-                placeholder="Cualquier cosa que sea relevante y que no hayas podido explicar antes."
-                class="form-input w-full resize-none"
-              ></textarea>
+              <textarea id="comentarios" name="comentarios" rows="3" maxlength="800" placeholder="Cualquier cosa que sea relevante y que no hayas podido explicar antes." class="form-input w-full resize-none"></textarea>
             </div>
 
             <div class="space-y-1">
@@ -831,7 +786,6 @@ const jsonLd = [
               </select>
             </div>
 
-            <!-- Campo honeypot anti-spam -->
             <input type="text" name="website" class="sr-only" tabindex="-1" autocomplete="off" />
 
             <div class="flex items-start gap-3">
@@ -842,34 +796,14 @@ const jsonLd = [
               </label>
             </div>
 
-            <!-- Estado del envío -->
             <div id="form-error" class="hidden border border-red-300 bg-red-50 p-4 text-sm text-red-700"></div>
           </fieldset>
 
           <!-- Botones de navegación -->
           <div class="mt-10 flex items-center justify-between border-t border-ink/10 pt-6">
-            <button
-              type="button"
-              id="btn-prev"
-              class="btn-ghost hidden"
-              aria-label="Paso anterior"
-            >
-              ← Atrás
-            </button>
-            <button
-              type="button"
-              id="btn-next"
-              class="btn ml-auto"
-            >
-              Siguiente →
-            </button>
-            <button
-              type="submit"
-              id="btn-submit"
-              class="btn ml-auto hidden"
-            >
-              Enviar expediente →
-            </button>
+            <button type="button" id="btn-prev" class="btn-ghost hidden" aria-label="Paso anterior">← Atrás</button>
+            <button type="button" id="btn-next" class="btn ml-auto">Siguiente →</button>
+            <button type="submit"  id="btn-submit" class="btn ml-auto hidden">Enviar expediente →</button>
           </div>
         </form>
       </div>
@@ -881,38 +815,246 @@ const jsonLd = [
   .form-input {
     @apply border border-ink/20 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink focus:ring-1 focus:ring-ink;
   }
-  .form-input:invalid:not(:placeholder-shown) {
-    @apply border-red-400;
+  .form-input:invalid:not(:placeholder-shown) { @apply border-red-400; }
+
+  /* Tarjetas de convocatoria */
+  .conv-card.is-selected {
+    @apply ring-2 ring-magenta ring-offset-1;
+  }
+  .conv-card.is-selected .conv-id-badge {
+    @apply bg-magenta text-paper border-magenta;
+  }
+  .conv-card.is-open .conv-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Filtro activo */
+  .conv-filter-btn.is-active {
+    @apply border-ink bg-ink text-paper;
   }
 </style>
 
-<script>
+<script define:vars={{ convSlugParam, convTitleParam }}>
   const TOTAL_STEPS = 4;
   let currentStep = 1;
 
-  const form = document.getElementById('expediente-form') as HTMLFormElement;
-  const btnPrev = document.getElementById('btn-prev') as HTMLButtonElement;
-  const btnNext = document.getElementById('btn-next') as HTMLButtonElement;
-  const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement;
+  const form   = document.getElementById('expediente-form');
+  const btnPrev   = document.getElementById('btn-prev');
+  const btnNext   = document.getElementById('btn-next');
+  const btnSubmit = document.getElementById('btn-submit');
 
-  function getPanel(n: number) {
-    return document.getElementById(`step-${n}`) as HTMLElement;
+  // ── Helpers campos ocultos de convocatoria ────────────────────────────────
+  const fSlug   = () => document.getElementById('f-conv-slug');
+  const fNombre = () => document.getElementById('f-conv-nombre');
+  const fUrl    = () => document.getElementById('f-conv-url');
+  const fTiene  = () => document.getElementById('f-tiene-conv');
+
+  function setConvFields(slug, nombre, url, tiene) {
+    fSlug().value   = slug;
+    fNombre().value = nombre;
+    fUrl().value    = url;
+    fTiene().value  = tiene;
   }
 
-  function getDotCircle(n: number) {
-    const dot = document.querySelector(`[data-step-dot="${n}"] [data-dot-circle]`) as HTMLElement;
-    return dot;
+  // ── Selector de convocatorias ─────────────────────────────────────────────
+  let selectedSlug = '';
+
+  function selectCard(slug) {
+    // Desmarcar anterior
+    if (selectedSlug) {
+      const prev = document.querySelector(`[data-conv-slug="${selectedSlug}"]`);
+      if (prev) {
+        prev.classList.remove('is-selected');
+        prev.querySelector('.conv-selected-banner')?.classList.add('hidden');
+      }
+    }
+    selectedSlug = slug;
+    const card = document.querySelector(`[data-conv-slug="${slug}"]`);
+    if (!card) return;
+
+    // Marcar nueva
+    card.classList.add('is-selected');
+    const banner = card.querySelector('.conv-selected-banner');
+    if (banner) {
+      banner.classList.remove('hidden');
+      banner.style.display = 'flex';
+    }
+
+    // Cerrar panel de detalles
+    collapseCard(slug);
+
+    // Rellenar campos ocultos
+    const titulo = card.getAttribute('data-conv-title') ?? '';
+    const url    = card.getAttribute('data-conv-url')   ?? '';
+    setConvFields(slug, titulo, url, 'si');
+
+    // Limpiar "no sé" radio y sección de otra conv
+    const noSeRadio = document.getElementById('conv-no-se');
+    if (noSeRadio) noSeRadio.checked = false;
+    document.getElementById('no-se-importe')?.classList.add('hidden');
+    document.getElementById('conv-error')?.classList.add('hidden');
+
+    // Scroll suave al área de descripción
+    setTimeout(() => {
+      document.getElementById('descripcionProyecto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
   }
+
+  function deselectCard() {
+    if (!selectedSlug) return;
+    const card = document.querySelector(`[data-conv-slug="${selectedSlug}"]`);
+    if (card) {
+      card.classList.remove('is-selected');
+      const banner = card.querySelector('.conv-selected-banner');
+      if (banner) { banner.classList.add('hidden'); banner.style.display = ''; }
+    }
+    selectedSlug = '';
+    setConvFields('', '', '', '');
+  }
+
+  function expandCard(slug) {
+    const card = document.querySelector(`[data-conv-slug="${slug}"]`);
+    if (!card) return;
+
+    // Colapsar otras tarjetas abiertas
+    document.querySelectorAll('.conv-card.is-open').forEach(c => {
+      if (c !== card) collapseCard(c.getAttribute('data-conv-slug'));
+    });
+
+    card.classList.add('is-open');
+    card.querySelector('.conv-details')?.classList.remove('hidden');
+    card.querySelector('.conv-card-header')?.setAttribute('aria-expanded', 'true');
+  }
+
+  function collapseCard(slug) {
+    const card = document.querySelector(`[data-conv-slug="${slug}"]`);
+    if (!card) return;
+    card.classList.remove('is-open');
+    card.querySelector('.conv-details')?.classList.add('hidden');
+    card.querySelector('.conv-card-header')?.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleCard(slug) {
+    const card = document.querySelector(`[data-conv-slug="${slug}"]`);
+    if (!card) return;
+    if (card.classList.contains('is-open')) collapseCard(slug);
+    else expandCard(slug);
+  }
+
+  // Cabecera clickable
+  document.querySelectorAll('.conv-card-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const card = header.closest('[data-conv-slug]');
+      const slug = card?.getAttribute('data-conv-slug') ?? '';
+      if (slug === selectedSlug) return; // ya seleccionada, no hacer nada
+      toggleCard(slug);
+    });
+  });
+
+  // Botón "Deseleccionar"
+  document.querySelectorAll('.conv-deselect-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('[data-conv-slug]');
+      const slug = card?.getAttribute('data-conv-slug') ?? '';
+      deselectCard();
+      expandCard(slug); // abrir el panel para que pueda comparar
+    });
+  });
+
+  // Botón "Me interesa — continuar"
+  document.querySelectorAll('.conv-select-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('[data-conv-slug]');
+      const slug = card?.getAttribute('data-conv-slug') ?? '';
+      selectCard(slug);
+    });
+  });
+
+  // Filtros por tipo de entidad
+  document.querySelectorAll('.conv-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-conv-filter') ?? 'all';
+      document.querySelectorAll('.conv-filter-btn').forEach(b =>
+        b.classList.toggle('is-active', b.getAttribute('data-conv-filter') === filter)
+      );
+      document.querySelectorAll('[data-conv-slug]').forEach(card => {
+        const cardType = card.getAttribute('data-conv-filter') ?? '';
+        card.style.display = (filter === 'all' || cardType === filter) ? '' : 'none';
+      });
+    });
+  });
+
+  // Sección "otra convocatoria" — sincronizar con campos ocultos en tiempo real
+  const otherNombre = document.getElementById('other-nombre');
+  const otherUrl    = document.getElementById('other-url');
+  const otherConfirm = document.getElementById('other-conv-confirm');
+
+  function syncOtherConv() {
+    const nombre = otherNombre?.value?.trim() ?? '';
+    const url    = otherUrl?.value?.trim()    ?? '';
+    if (nombre || url) {
+      if (selectedSlug) deselectCard();
+      const noSeRadio = document.getElementById('conv-no-se');
+      if (noSeRadio) noSeRadio.checked = false;
+      document.getElementById('no-se-importe')?.classList.add('hidden');
+      setConvFields('', nombre, url, nombre || url ? 'si' : '');
+      if (otherConfirm) otherConfirm.classList.remove('hidden');
+      document.getElementById('conv-error')?.classList.add('hidden');
+    } else {
+      setConvFields('', '', '', '');
+      if (otherConfirm) otherConfirm.classList.add('hidden');
+    }
+  }
+  otherNombre?.addEventListener('input', syncOtherConv);
+  otherUrl?.addEventListener('input', syncOtherConv);
+
+  // Limpiar conv manual
+  document.getElementById('btn-clear-other')?.addEventListener('click', () => {
+    if (otherNombre) otherNombre.value = '';
+    if (otherUrl)    otherUrl.value    = '';
+    if (otherConfirm) otherConfirm.classList.add('hidden');
+    setConvFields('', '', '', '');
+    document.getElementById('other-conv-panel')?.removeAttribute('open');
+  });
+
+  // "No sé cuál" radio
+  document.getElementById('conv-no-se')?.addEventListener('change', e => {
+    if (e.target.checked) {
+      deselectCard();
+      if (otherNombre) otherNombre.value = '';
+      if (otherUrl)    otherUrl.value    = '';
+      if (otherConfirm) otherConfirm.classList.add('hidden');
+      setConvFields('', '', '', 'no');
+      document.getElementById('no-se-importe')?.classList.remove('hidden');
+      document.getElementById('conv-error')?.classList.add('hidden');
+    }
+  });
+
+  // Auto-seleccionar si viene desde landing BOJA con ?slug=
+  if (convSlugParam) {
+    const matchCard = document.querySelector(`[data-conv-slug="${convSlugParam}"]`);
+    if (matchCard) {
+      selectCard(convSlugParam);
+    } else if (convTitleParam) {
+      // Slug desconocido pero hay título — conv externa
+      setConvFields(convSlugParam, convTitleParam, '', 'si');
+      if (otherNombre) otherNombre.value = convTitleParam;
+      document.getElementById('other-conv-panel')?.setAttribute('open', '');
+      if (otherConfirm) otherConfirm.classList.remove('hidden');
+    }
+  }
+
+  // ── Navegación por pasos ──────────────────────────────────────────────────
+  function getPanel(n) { return document.getElementById(`step-${n}`); }
 
   function updateUI() {
-    // Paneles
     for (let i = 1; i <= TOTAL_STEPS; i++) {
       getPanel(i)?.classList.toggle('hidden', i !== currentStep);
     }
-
-    // Dots
     for (let i = 1; i <= TOTAL_STEPS; i++) {
-      const dot = getDotCircle(i);
+      const dot = document.querySelector(`[data-step-dot="${i}"] [data-dot-circle]`);
       if (!dot) continue;
       if (i < currentStep) {
         dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-ink bg-ink font-mono text-sm text-paper transition-colors';
@@ -925,26 +1067,20 @@ const jsonLd = [
         dot.textContent = String(i);
       }
     }
-
-    // Botones
     btnPrev.classList.toggle('hidden', currentStep === 1);
     btnNext.classList.toggle('hidden', currentStep === TOTAL_STEPS);
     btnSubmit.classList.toggle('hidden', currentStep !== TOTAL_STEPS);
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function validateStep(n: number): boolean {
+  function validateStep(n) {
     const panel = getPanel(n);
-    const required = panel.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]');
+    const required = panel.querySelectorAll('[required]');
     let valid = true;
     for (const el of required) {
-      // Los checkboxes se validan con .checked, no con .value (que siempre es "on")
-      const isEmpty = (el as HTMLInputElement).type === 'checkbox'
-        ? !(el as HTMLInputElement).checked
-        : !el.value.trim();
+      const isEmpty = el.type === 'checkbox' ? !el.checked : !el.value.trim();
       if (isEmpty) {
-        if ((el as HTMLInputElement).type !== 'checkbox') el.focus();
+        if (el.type !== 'checkbox') el.focus();
         el.classList.add('border-red-400', 'ring-1', 'ring-red-400');
         valid = false;
         break;
@@ -952,51 +1088,37 @@ const jsonLd = [
         el.classList.remove('border-red-400', 'ring-1', 'ring-red-400');
       }
     }
-    // Validar radios requeridos en paso 2.
-    // Si convocatoria ya está preseleccionada, el campo es un hidden input
-    // (no un radio), así que `:checked` no aplica — se omite la validación.
+    // Paso 2: verificar que haya una convocatoria seleccionada
     if (n === 2) {
-      const hiddenTiene = form.querySelector<HTMLInputElement>(
-        'input[name="tieneConvocatoria"][type="hidden"]'
-      );
-      if (!hiddenTiene) {
-        const radioTiene = form.querySelector<HTMLInputElement>(
-          'input[name="tieneConvocatoria"]:checked'
-        );
-        if (!radioTiene) {
-          valid = false;
-          const group = form.querySelector('[name="tieneConvocatoria"]')?.closest('.space-y-2');
-          group?.classList.add('ring-1', 'ring-red-400', 'ring-offset-2');
-        }
+      const tiene = fTiene()?.value ?? '';
+      const nombre = fNombre()?.value ?? '';
+      const slug   = fSlug()?.value   ?? '';
+      if (!tiene && !nombre && !slug) {
+        valid = false;
+        document.getElementById('conv-error')?.classList.remove('hidden');
+        document.getElementById('conv-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
     return valid;
   }
 
   function updateResumen() {
-    const orgName = (form.querySelector('#orgName') as HTMLInputElement).value;
-    const cif = (form.querySelector('#cif') as HTMLInputElement).value;
-    const email = (form.querySelector('#email') as HTMLInputElement).value;
-    const convoUrl = (form.querySelector('#convocatoriaUrl') as HTMLInputElement)?.value ?? '';
-    // Cuando la convocatoria viene preseleccionada desde la landing BOJA el campo
-    // tiene id="conv-nombre-hidden"; en el flujo estándar id="convocatoriaNombre".
-    const convoNombre =
-      (form.querySelector('#conv-nombre-hidden, #convocatoriaNombre') as HTMLInputElement)?.value ?? '';
-    const necesidad = (form.querySelector('#descripcionProyecto') as HTMLTextAreaElement).value;
-    const fileInputs = form.querySelectorAll<HTMLInputElement>('input[type="file"]');
-
-    const docs: string[] = [];
+    const orgName    = document.getElementById('orgName')?.value ?? '';
+    const cif        = document.getElementById('cif')?.value     ?? '';
+    const email      = document.getElementById('email')?.value   ?? '';
+    const convoNombre = fNombre()?.value ?? '';
+    const convoUrl    = fUrl()?.value    ?? '';
+    const necesidad   = document.getElementById('descripcionProyecto')?.value ?? '';
+    const fileInputs  = form.querySelectorAll('input[type="file"]');
+    const docs = [];
     fileInputs.forEach(fi => {
-      if (fi.files && fi.files.length > 0) {
-        docs.push(`${fi.files.length} archivo(s) en ${fi.name}`);
-      }
+      if (fi.files && fi.files.length > 0) docs.push(`${fi.files.length} archivo(s) en ${fi.name}`);
     });
-
-    (document.getElementById('resumen-entidad') as HTMLElement).textContent = orgName || '—';
-    (document.getElementById('resumen-cif') as HTMLElement).textContent = cif || '—';
-    (document.getElementById('resumen-email') as HTMLElement).textContent = email || '—';
-    (document.getElementById('resumen-convocatoria') as HTMLElement).textContent = convoNombre || convoUrl || necesidad.slice(0, 80) || '—';
-    (document.getElementById('resumen-docs') as HTMLElement).textContent = docs.length ? docs.join(', ') : 'Ninguno (se puede completar más adelante)';
+    document.getElementById('resumen-entidad').textContent     = orgName || '—';
+    document.getElementById('resumen-cif').textContent         = cif     || '—';
+    document.getElementById('resumen-email').textContent       = email   || '—';
+    document.getElementById('resumen-convocatoria').textContent = convoNombre || convoUrl || necesidad.slice(0, 80) || '—';
+    document.getElementById('resumen-docs').textContent        = docs.length ? docs.join(', ') : 'Ninguno (se puede completar más adelante)';
   }
 
   btnNext.addEventListener('click', () => {
@@ -1005,30 +1127,20 @@ const jsonLd = [
     currentStep = Math.min(currentStep + 1, TOTAL_STEPS);
     updateUI();
   });
-
   btnPrev.addEventListener('click', () => {
     currentStep = Math.max(currentStep - 1, 1);
     updateUI();
   });
 
-  // Toggle convocatoria sections
-  form.querySelectorAll('input[name="tieneConvocatoria"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      const val = (form.querySelector('input[name="tieneConvocatoria"]:checked') as HTMLInputElement)?.value;
-      (document.getElementById('has-convocatoria') as HTMLElement).style.display = val === 'si' ? 'block' : 'none';
-      (document.getElementById('no-convocatoria') as HTMLElement).style.display = val === 'no' ? 'block' : 'none';
-    });
-  });
-
   // Contador de caracteres descripción
-  const descArea = document.getElementById('descripcionProyecto') as HTMLTextAreaElement;
-  const charsLeft = document.getElementById('chars-left') as HTMLElement;
+  const descArea  = document.getElementById('descripcionProyecto');
+  const charsLeft = document.getElementById('chars-left');
   descArea?.addEventListener('input', () => {
     charsLeft.textContent = String(2000 - descArea.value.length);
   });
 
   // File input labels
-  document.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach(input => {
+  document.querySelectorAll('input[type="file"]').forEach(input => {
     input.addEventListener('change', () => {
       const labelId = input.dataset.fileLabel;
       if (!labelId) return;
@@ -1037,75 +1149,59 @@ const jsonLd = [
       if (input.files && input.files.length > 0) {
         const names = Array.from(input.files).map(f => f.name).join(', ');
         label.textContent = names.length > 50 ? names.slice(0, 47) + '…' : names;
-        label.classList.add('text-ink');
-        label.classList.remove('text-ink/40');
+        label.classList.add('text-ink'); label.classList.remove('text-ink/40');
       } else {
         label.textContent = 'Sin archivo seleccionado';
-        label.classList.remove('text-ink');
-        label.classList.add('text-ink/40');
+        label.classList.remove('text-ink'); label.classList.add('text-ink/40');
       }
     });
   });
 
   // Submit
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     if (!validateStep(TOTAL_STEPS)) return;
 
-    const errDiv = document.getElementById('form-error') as HTMLElement;
+    const errDiv = document.getElementById('form-error');
     errDiv.classList.add('hidden');
     btnSubmit.disabled = true;
     btnSubmit.textContent = 'Enviando…';
 
-    // Combinar datos de impacto de la organización en el campo comentarios
-    // para que el motor IA los reciba como contexto estructurado
-    const benef = (form.querySelector('#beneficiariosAnuales') as HTMLInputElement)?.value?.trim();
-    const ppto = (form.querySelector('#presupuestoAnual') as HTMLInputElement)?.value?.trim();
-    const logros = (form.querySelector('#logrosDestacados') as HTMLTextAreaElement)?.value?.trim();
-    const subvPrev = (form.querySelector('#subvencionesAnteriores') as HTMLTextAreaElement)?.value?.trim();
-    const comentariosEl = form.querySelector('#comentarios') as HTMLTextAreaElement;
-
-    const ctxLines: string[] = [];
-    if (benef) ctxLines.push(`Personas atendidas al año: ${benef}`);
-    if (ppto) ctxLines.push(`Presupuesto anual: ${ppto}`);
-    if (logros) ctxLines.push(`Logros e indicadores:\n${logros}`);
+    // Combinar datos de impacto en comentarios
+    const benef    = document.getElementById('beneficiariosAnuales')?.value?.trim();
+    const ppto     = document.getElementById('presupuestoAnual')?.value?.trim();
+    const logros   = document.getElementById('logrosDestacados')?.value?.trim();
+    const subvPrev = document.getElementById('subvencionesAnteriores')?.value?.trim();
+    const comentariosEl = form.querySelector('#comentarios');
+    const ctxLines = [];
+    if (benef)    ctxLines.push(`Personas atendidas al año: ${benef}`);
+    if (ppto)     ctxLines.push(`Presupuesto anual: ${ppto}`);
+    if (logros)   ctxLines.push(`Logros e indicadores:\n${logros}`);
     if (subvPrev) ctxLines.push(`Subvenciones anteriores:\n${subvPrev}`);
-
     if (ctxLines.length > 0) {
       const ctxBlock = `[Datos de la organización]\n${ctxLines.join('\n')}`;
-      const existingComments = comentariosEl.value.trim();
-      comentariosEl.value = existingComments
-        ? `${ctxBlock}\n---\nComentarios: ${existingComments}`
-        : ctxBlock;
+      const existing = comentariosEl.value.trim();
+      comentariosEl.value = existing ? `${ctxBlock}\n---\nComentarios: ${existing}` : ctxBlock;
     }
 
     const data = new FormData(form);
 
     try {
       const res = await fetch('/api/expediente', { method: 'POST', body: data });
-      let json: { ok: boolean; error?: string } | null = null;
-      try { json = await res.json(); } catch { /* body no es JSON — respuesta de error del servidor */ }
+      let json = null;
+      try { json = await res.json(); } catch {}
 
-      if (json?.ok) {
-        window.location.href = '/subvenciones/presentar/gracias';
-        return;
-      }
+      if (json?.ok) { window.location.href = '/subvenciones/presentar/gracias'; return; }
 
-      // Mostrar mensaje de error específico si el servidor lo devuelve
-      if (json?.error === 'fields') {
-        errDiv.textContent = 'Faltan datos obligatorios. Revisa los pasos anteriores.';
-      } else if (json?.error === 'email') {
-        errDiv.textContent = 'El email introducido no tiene un formato válido.';
-      } else if (!res.ok) {
-        errDiv.textContent = `Error del servidor (${res.status}). Escríbenos a hola@startidea.es indicando que el formulario no funciona.`;
-      } else {
-        errDiv.textContent = 'Ha habido un problema al enviar el formulario. Por favor, escríbenos directamente a hola@startidea.es.';
-      }
+      if (json?.error === 'fields')      errDiv.textContent = 'Faltan datos obligatorios. Revisa los pasos anteriores.';
+      else if (json?.error === 'email')  errDiv.textContent = 'El email introducido no tiene un formato válido.';
+      else if (!res.ok)                  errDiv.textContent = `Error del servidor (${res.status}). Escríbenos a hola@startidea.es indicando que el formulario no funciona.`;
+      else                               errDiv.textContent = 'Ha habido un problema al enviar el formulario. Escríbenos directamente a hola@startidea.es.';
       errDiv.classList.remove('hidden');
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar expediente →';
     } catch {
-      errDiv.textContent = 'No se pudo conectar con el servidor. Comprueba tu conexión a internet e inténtalo de nuevo. Si el problema persiste, escríbenos a hola@startidea.es.';
+      errDiv.textContent = 'No se pudo conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo. Si persiste: hola@startidea.es.';
       errDiv.classList.remove('hidden');
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar expediente →';
