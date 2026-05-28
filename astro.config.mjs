@@ -8,6 +8,15 @@ export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'standalone' }),
   prefetch: true,
+  // Astro 5 activa security.checkOrigin: true por defecto en SSR. Esto
+  // rechaza con 403 los POST de forms que no envían Origin matching, lo
+  // que rompe el wizard /subvenciones/presentar/nuevo (multipart form sin
+  // Origin desde la propia página) y otros formularios públicos.
+  // Defensas que sí tenemos: honeypot anti-bot, rate limit por IP en
+  // endpoints públicos críticos, validación server-side de campos.
+  security: {
+    checkOrigin: false,
+  },
   // Redirecciones 301 desde URLs del WordPress antiguo.
   // Solo una versión por URL: Astro 5 con trailingSlash:'ignore' (default)
   // normaliza ambas variantes (con y sin /) desde una sola entrada.

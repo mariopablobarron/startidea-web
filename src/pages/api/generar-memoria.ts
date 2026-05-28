@@ -62,7 +62,10 @@ const ORG_TYPE_LABEL: Record<string, string> = {
 
 // ── Endpoint ──────────────────────────────────────────────────────────────
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const apiKey = import.meta.env.OPENROUTER_API_KEY;
+  // En SSR con adapter Node, las vars de entorno runtime se leen de
+  // process.env, NO de import.meta.env (que solo expone build-time).
+  // Fallback a import.meta.env por compatibilidad con preview.
+  const apiKey = process.env.OPENROUTER_API_KEY ?? import.meta.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     console.error('[generar-memoria] OPENROUTER_API_KEY no configurada');
     return json({ ok: false, error: 'no_api_key' }, 500);

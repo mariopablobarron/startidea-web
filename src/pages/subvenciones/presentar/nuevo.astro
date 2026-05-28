@@ -674,7 +674,6 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <label for="como-conocio" class="label">¿Cómo has conocido este servicio?</label>
               <select id="como-conocio" name="comoConocio" class="form-input w-full">
                 <option value="">Selecciona…</option>
-                <option value="copiloto-autonomo">Email del Copiloto Autónomo</option>
                 <option value="buscador">Buscador (Google, etc.)</option>
                 <option value="recomendacion">Recomendación de alguien</option>
                 <option value="buscador-subvenciones">Buscador de subvenciones de Startidea</option>
@@ -683,6 +682,9 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                 <option value="nota">Una nota o artículo</option>
                 <option value="ya-cliente">Ya soy cliente de Startidea</option>
                 <option value="otro">Otro</option>
+                <!-- "copiloto-autonomo" se inyecta dinámicamente solo cuando el
+                     usuario llega con utm_source=copiloto-autonomo, vía el
+                     script más abajo. No aparece como opción manual. -->
               </select>
             </div>
 
@@ -768,12 +770,20 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
   // Pre-seleccionar dropdown "Cómo has conocido"
   if (utmSource) {
     const select = document.getElementById('como-conocio');
-    let preselect = '';
-    if (utmSource === 'copiloto-autonomo') preselect = 'copiloto-autonomo';
-    else if (utmSource === 'catalogo' || utmCampaign === 'catalogo') preselect = 'catalogo-startidea';
-    if (preselect && select) {
-      // Esperar a que el DOM esté listo
-      setTimeout(() => { select.value = preselect; }, 100);
+    if (select) {
+      // Para "copiloto-autonomo" no existe la opción en el HTML — la inyectamos
+      // dinámicamente solo si llega vía UTM (no la queremos seleccionable a mano)
+      if (utmSource === 'copiloto-autonomo') {
+        setTimeout(() => {
+          const opt = document.createElement('option');
+          opt.value = 'copiloto-autonomo';
+          opt.textContent = 'Email del Copiloto Autónomo';
+          opt.selected = true;
+          select.appendChild(opt);
+        }, 100);
+      } else if (utmSource === 'catalogo' || utmCampaign === 'catalogo') {
+        setTimeout(() => { select.value = 'catalogo-startidea'; }, 100);
+      }
     }
   }
 
