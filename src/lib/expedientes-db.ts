@@ -129,6 +129,8 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_exp_status ON expedientes (status);
     CREATE INDEX IF NOT EXISTS idx_exp_created ON expedientes (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_exp_email ON expedientes (email);
+    CREATE INDEX IF NOT EXISTS idx_exp_como_conocio ON expedientes (como_conocio);
+    CREATE INDEX IF NOT EXISTS idx_exp_convocatoria_slug ON expedientes (convocatoria_slug);
     CREATE UNIQUE INDEX IF NOT EXISTS idx_exp_contrato_token ON expedientes (contrato_token)
       WHERE contrato_token IS NOT NULL;
   `);

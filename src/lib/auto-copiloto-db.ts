@@ -450,3 +450,42 @@ export function getProfileByEmail(email: string): AutoCopilotoProfile | null {
     .prepare(`SELECT * FROM auto_copiloto_profiles WHERE LOWER(email) = LOWER(?) ORDER BY created_at ASC LIMIT 1`)
     .get(email) as AutoCopilotoProfile | null;
 }
+
+/**
+ * Limpia perfiles no confirmados más antiguos que `olderThanDays`.
+ *
+ * Se ejecuta vía cron mensual. Los perfiles que no se han confirmado en >30
+ * días son típicamente:
+ *  - emails desechables (10minutemail, etc.) usados sin intención real
+ *  - spam de bots (parcialmente prevenido por rate-limit ya)
+ *  - usuarios que no encuentran el email de confirmación y abandonan
+ *
+ * En cualquier caso, sin confirmar no reciben emails ni participan en cron,
+ * por lo que solo ocupan espacio en BD. Eliminamos para mantener la BD ágil.
+ *
+ * Devuelve el número de perfiles eliminados.
+ */
+export function cleanupUnconfirmedProfiles(olderThanDays = 30): number {
+  const db = getDb();
+  const cutoff = Math.floor(Date.now() / 1000) - olderThanDays * 24 * 60 * 60;
+  const info = db
+    .prepare(`DELETE FROM auto_copiloto_profiles WHERE confirmed = 0 AND created_at < ?`)
+    .run(cutoff);
+  return info.changes ?? 0;
+}
+
+/**
+ * Resumen de housekeeping para el panel admin.
+ * Cuenta perfiles que serían eliminados sin ejecutar realmente.
+ */
+export function previewCleanupUnconfirmed(olderThanDays = 30): {
+  count: number;
+  oldest_ts: number | null;
+} {
+  const db = getDb();
+  const cutoff = Math.floor(Date.now() / 1000) - olderThanDays * 24 * 60 * 60;
+  const row = db
+    .prepare(`SELECT COUNT(*) as n, MIN(created_at) as oldest FROM auto_copiloto_profiles WHERE confirmed = 0 AND created_at < ?`)
+    .get(cutoff) as { n: number; oldest: number | null };
+  return { count: row.n ?? 0, oldest_ts: row.oldest };
+}

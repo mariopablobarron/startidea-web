@@ -35,6 +35,7 @@ fi
 declare -A SCRIPTS=(
   ["$INFRA_DIR/auto-copiloto-cron.sh"]="auto-copiloto-cron.sh"
   ["$INFRA_DIR/deadline-reminders-cron.sh"]="deadline-reminders-cron.sh"
+  ["$INFRA_DIR/cleanup-cron.sh"]="startidea-cleanup-cron.sh"
   ["$SCRIPTS_DIR/scraper-bdns-daily.sh"]="startidea-scraper-bdns.sh"
   ["$SCRIPTS_DIR/backup-db.sh"]="startidea-backup-db.sh"
 )
@@ -84,6 +85,9 @@ Bloque sugerido de crontab (ejecutar: crontab -e):
 
 # Recordatorios de plazo a clientes (09:00 UTC, solo días laborables)
 0 9 * * 1-5 $BIN_DIR/deadline-reminders-cron.sh     >> $LOG_DIR/startidea-deadline-reminders.log 2>&1
+
+# Housekeeping mensual de BD (1º de cada mes, 03:30 UTC)
+30 3 1 * *  $BIN_DIR/startidea-cleanup-cron.sh      >> $LOG_DIR/startidea-cleanup.log 2>&1
 
 Para aplicar:
   crontab -e

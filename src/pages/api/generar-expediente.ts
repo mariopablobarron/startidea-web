@@ -23,6 +23,7 @@ import { isValidAdminHeader } from '@/lib/admin-session';
 import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
 import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/doc-extractor';
 import { sendEmail } from '@/lib/email-resend';
+import { notifyError } from '@/lib/notify-error';
 import { join } from 'node:path';
 
 export const prerender = false;
@@ -78,6 +79,20 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!gen.ok) {
     updateStatus(id, 'recibido');
+    // La generación falló para un expediente real — Mario debe enterarse
+    // (el cliente probablemente ya está esperando los documentos)
+    await notifyError({
+      component: 'generar-expediente',
+      severity:  'error',
+      message:   `Generación IA falló para expediente ${id}. Cliente ${exp.org_nombre} (${exp.email}) puede haber visto error en el portal.`,
+      context:   {
+        expediente_id:    id,
+        org_nombre:       exp.org_nombre,
+        email:            exp.email,
+        convocatoria:     exp.convocatoria_title ?? exp.convocatoria_slug ?? 'sin identificar',
+        ai_error:         gen.error,
+      },
+    });
     return new Response(
       JSON.stringify({ ok: false, error: gen.error ?? 'generation_failed' }),
       { status: 502 },

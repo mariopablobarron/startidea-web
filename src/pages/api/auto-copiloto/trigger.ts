@@ -40,6 +40,7 @@ import { buildConvContext, runAiGeneration, parseEligibility } from '@/lib/copil
 import { sendEmail } from '@/lib/email-resend';
 import { detectSede } from '@/lib/sedes-map';
 import { buildPremiumCTAHtml } from '@/lib/copiloto-cta';
+import { notifyError } from '@/lib/notify-error';
 
 export const prerender = false;
 
@@ -498,7 +499,14 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
   } catch (err) {
-    console.error('[auto-copiloto/trigger] Error fetching HUB:', err);
+    // HUB caído = cron del día no detecta nada. Crítico: avisa a Mario.
+    await notifyError({
+      component: 'auto-copiloto/trigger',
+      severity:  'critical',
+      message:   'No se pudo conectar al HUB para obtener convocatorias del día. Ningún perfil recibirá emails hasta que se resuelva.',
+      error:     err,
+      context:   { hub_url: HUB_URL },
+    });
     return new Response(
       JSON.stringify({ ok: false, error: 'hub_unavailable' }),
       { status: 502 },
@@ -685,6 +693,18 @@ export const POST: APIRoute = async ({ request }) => {
   const processed = results.filter((r) => r.status === 'ok').length;
   const errors = results.filter((r) => r.status === 'error').length;
   const elapsed = Math.round((Date.now() - startTime) / 1000);
+
+  // Si más del 50% de los intentos han fallado, es señal de problema sistémico
+  // (OpenRouter saturado, prompt roto, cuota agotada, etc.) → alerta crítica
+  const total = processed + errors;
+  if (total > 0 && errors / total > 0.5) {
+    await notifyError({
+      component: 'auto-copiloto/trigger',
+      severity:  'critical',
+      message:   `Tasa de error elevada en el ciclo diario del Copiloto: ${errors}/${total} fallos (${Math.round((errors/total) * 100)}%). Revisar logs de OpenRouter, cuota y prompt.`,
+      context:   { processed, errors, elapsed_s: elapsed },
+    });
+  }
 
   if (processed > 0 || errors > 0) {
     const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
