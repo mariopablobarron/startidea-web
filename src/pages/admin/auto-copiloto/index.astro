@@ -13,7 +13,8 @@ import { isAdminLoggedIn } from '@/lib/admin-session';
 import {
   listAllProfiles,
   statsProfiles,
-  getLogByProfile,
+  listRecentLog,
+  statsLog,
 } from '@/lib/auto-copiloto-db';
 
 export const prerender = false;
@@ -24,16 +25,27 @@ if (!isAdminLoggedIn(Astro.cookies)) {
 
 let profiles: ReturnType<typeof listAllProfiles> = [];
 let pStats = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
+let recentLog: ReturnType<typeof listRecentLog> = [];
+let lStats = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
 
 try {
   profiles = listAllProfiles();
   pStats   = statsProfiles();
+  recentLog = listRecentLog(30);
+  lStats   = statsLog();
 } catch { /* BD vacía */ }
 
 function fmtDate(ts: number | null | undefined): string {
   if (!ts) return '—';
   return new Date(ts * 1000).toLocaleDateString('es-ES', {
     day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+function fmtDateTime(ts: number | null | undefined): string {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleString('es-ES', {
+    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
   });
 }
 
@@ -98,8 +110,9 @@ const BOJA_CAMPAIGNS = [
         </div>
       </div>
 
-      <!-- KPIs -->
-      <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <!-- KPIs perfiles -->
+      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Perfiles</p>
+      <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
         <div class="border border-ink/15 bg-paper p-4 text-center">
           <p class="font-display text-3xl text-ink">{pStats.total}</p>
           <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40 mt-0.5">Total</p>
@@ -119,6 +132,27 @@ const BOJA_CAMPAIGNS = [
         <div class="border border-ink/10 bg-paper/50 p-4 text-center">
           <p class="font-display text-3xl text-ink/40">{pStats.paused}</p>
           <p class="font-mono text-[9px] uppercase tracking-widest text-ink/30 mt-0.5">Pausados</p>
+        </div>
+      </div>
+
+      <!-- KPIs actividad -->
+      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Actividad (envíos automáticos)</p>
+      <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div class="border border-ink/15 bg-paper p-4 text-center">
+          <p class="font-display text-3xl text-ink">{lStats.total}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40 mt-0.5">Total histórico</p>
+        </div>
+        <div class="border border-emerald-200 bg-emerald-50/30 p-4 text-center">
+          <p class="font-display text-3xl text-emerald-700">{lStats.enviados}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-emerald-600 mt-0.5">Emails enviados</p>
+        </div>
+        <div class="border border-red-200 bg-red-50/30 p-4 text-center">
+          <p class="font-display text-3xl text-red-700">{lStats.errores}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-red-600 mt-0.5">Errores</p>
+        </div>
+        <div class="border border-magenta/30 bg-magenta/5 p-4 text-center">
+          <p class="font-display text-3xl text-magenta">{lStats.ultimas_24h}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-magenta mt-0.5">Últimas 24h</p>
         </div>
       </div>
 
@@ -243,6 +277,70 @@ const BOJA_CAMPAIGNS = [
           </div>
         )}
       </section>
+
+      <!-- ─── Actividad reciente del Copiloto ──────────────────────────────── -->
+      {recentLog.length > 0 && (
+        <section class="mt-10">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+              Actividad reciente — últimas {recentLog.length} ejecuciones
+            </h2>
+            <span class="font-mono text-[10px] text-ink/30">
+              ✅ enviado · ❌ error · ⏭ skip
+            </span>
+          </div>
+
+          <div class="border border-ink/15 bg-paper overflow-hidden">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-ink/10 bg-paper-warm/50">
+                  <th class="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-widest text-ink/40">Cuándo</th>
+                  <th class="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-widest text-ink/40">Estado</th>
+                  <th class="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-widest text-ink/40">Org / Perfil</th>
+                  <th class="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-widest text-ink/40">Convocatoria</th>
+                  <th class="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest text-ink/40 hidden md:table-cell">Expediente</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-ink/8">
+                {recentLog.map((l) => {
+                  const icon = l.error ? '❌' : l.sent ? '✅' : '⏭';
+                  const color = l.error ? 'text-red-700' : l.sent ? 'text-emerald-700' : 'text-ink/40';
+                  return (
+                    <tr class="hover:bg-paper-warm/40 transition-colors">
+                      <td class="px-3 py-2 font-mono text-[10px] text-ink/40 whitespace-nowrap">
+                        {fmtDateTime(l.created_at)}
+                      </td>
+                      <td class={`px-3 py-2 ${color}`}>
+                        <span class="font-mono text-xs">{icon}</span>
+                      </td>
+                      <td class="px-3 py-2 max-w-[200px]">
+                        <p class="text-xs text-ink truncate">{l.org_nombre ?? '— perfil borrado —'}</p>
+                        <p class="font-mono text-[10px] text-ink/40 truncate">{l.email ?? ''}</p>
+                      </td>
+                      <td class="px-3 py-2 max-w-[260px]">
+                        <p class="text-xs text-ink/70 truncate">{l.convocatoria_title || l.convocatoria_slug}</p>
+                        {l.error && (
+                          <p class="font-mono text-[9px] text-red-600 truncate">⚠ {l.error}</p>
+                        )}
+                      </td>
+                      <td class="px-3 py-2 text-right hidden md:table-cell">
+                        {l.expediente_id ? (
+                          <a href={`/admin/expedientes/${l.expediente_id}`}
+                             class="font-mono text-[10px] font-bold text-magenta hover:underline whitespace-nowrap">
+                            {l.expediente_id}
+                          </a>
+                        ) : (
+                          <span class="font-mono text-[10px] text-ink/20">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
     </div>
   </div>

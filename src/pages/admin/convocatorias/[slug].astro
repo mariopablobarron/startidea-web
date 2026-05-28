@@ -45,6 +45,34 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
         )}
       </div>
 
+      <!-- Panel Acciones Copiloto Autónomo (solo si conv activa) -->
+      {!isNew && conv?.activa && (
+        <div class="mb-6 border-2 border-magenta/20 bg-paper p-5">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-2xl shrink-0" aria-hidden="true">🤖</span>
+            <div class="min-w-0 flex-1">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Copiloto Autónomo</p>
+              <p class="mt-1 text-sm text-ink/70">
+                Re-disparar el matching contra los perfiles activos del Copiloto. Útil si añades nuevos
+                perfiles después de activar esta convocatoria, o si quieres reintentar tras un error.
+                Los perfiles ya procesados no se duplicarán.
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              id="btn-notify-profiles"
+              type="button"
+              data-slug={slug}
+              class="inline-flex items-center gap-2 border-2 border-magenta bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-magenta hover:bg-magenta hover:text-paper transition-colors"
+            >
+              ⚡ Notificar perfiles ahora
+            </button>
+            <span id="notify-status" class="font-mono text-[11px] text-ink/50"></span>
+          </div>
+        </div>
+      )}
+
       <!-- Formulario -->
       <form id="conv-form" class="space-y-6" novalidate>
         <!-- Identificación -->
@@ -451,6 +479,63 @@ const pageTitle = isNew ? 'Nueva convocatoria' : `Editar — ${conv!.titulo}`;
       formMsg.className = 'font-mono text-[11px] text-red-600';
       submitBtn.disabled = false;
       submitBtn.textContent = 'Reintentar';
+    }
+  });
+
+  // ── Notificar perfiles del Copiloto Autónomo ────────────────────────────
+  const notifyBtn = document.getElementById('btn-notify-profiles') as HTMLButtonElement | null;
+  const notifyStatus = document.getElementById('notify-status') as HTMLElement | null;
+
+  notifyBtn?.addEventListener('click', async () => {
+    const slug = notifyBtn.dataset.slug ?? '';
+    if (!slug) return;
+    if (!confirm('¿Re-disparar el matching contra los perfiles del Copiloto?\n\nGenerará documentos con IA y enviará emails para perfiles que encajen y no hayan sido procesados antes.')) return;
+
+    notifyBtn.disabled = true;
+    notifyBtn.textContent = '⟳ Procesando…';
+    if (notifyStatus) notifyStatus.textContent = 'Buscando perfiles que encajen…';
+
+    try {
+      const res = await fetch('/api/auto-copiloto/match-catalog', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ slug }),
+      });
+      const data = await res.json() as {
+        ok: boolean;
+        profiles_checked?: number;
+        matched?: number;
+        processed?: number;
+        errors?: number;
+        message?: string;
+        error?: string;
+      };
+
+      if (notifyStatus) {
+        if (data.ok) {
+          if ((data.matched ?? 0) === 0) {
+            notifyStatus.textContent = `ℹ ${data.message ?? 'Sin perfiles que encajen'} (${data.profiles_checked ?? 0} perfiles evaluados)`;
+            notifyStatus.className = 'font-mono text-[11px] text-ink/50';
+          } else {
+            notifyStatus.textContent = `✅ ${data.processed ?? 0} procesados · ${data.errors ?? 0} errores · ${data.matched ?? 0} matches encontrados de ${data.profiles_checked ?? 0} perfiles`;
+            notifyStatus.className = 'font-mono text-[11px] text-emerald-600';
+          }
+        } else {
+          notifyStatus.textContent = `⚠ Error: ${data.error ?? 'desconocido'}`;
+          notifyStatus.className = 'font-mono text-[11px] text-red-600';
+        }
+      }
+    } catch (err) {
+      if (notifyStatus) {
+        notifyStatus.textContent = `⚠ Error de conexión: ${err instanceof Error ? err.message : String(err)}`;
+        notifyStatus.className = 'font-mono text-[11px] text-red-600';
+      }
+    } finally {
+      notifyBtn.disabled = false;
+      notifyBtn.textContent = '⚡ Notificar perfiles ahora';
     }
   });
 </script>

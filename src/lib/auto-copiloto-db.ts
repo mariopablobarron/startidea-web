@@ -363,6 +363,51 @@ export function getLogByProfile(profile_id: string, limit = 20): AutoCopilotoLog
 }
 
 /**
+ * Devuelve las últimas N entradas del log cross-perfil (más recientes primero),
+ * incluyendo email + nombre de la org para mostrar en el panel admin.
+ */
+export function listRecentLog(limit = 50): Array<AutoCopilotoLog & {
+  email: string;
+  org_nombre: string;
+}> {
+  const db = getDb();
+  return db.prepare(`
+    SELECT l.*, p.email, p.org_nombre
+    FROM auto_copiloto_log l
+    LEFT JOIN auto_copiloto_profiles p ON p.id = l.profile_id
+    ORDER BY l.created_at DESC
+    LIMIT ?
+  `).all(limit) as Array<AutoCopilotoLog & { email: string; org_nombre: string }>;
+}
+
+/**
+ * Estadísticas de actividad del log para el panel admin.
+ */
+export function statsLog(): {
+  total: number;
+  enviados: number;
+  errores: number;
+  ultimas_24h: number;
+} {
+  const db = getDb();
+  const cutoff24h = Math.floor(Date.now() / 1000) - 24 * 60 * 60;
+  const r = db.prepare(`
+    SELECT
+      COUNT(*) AS total,
+      SUM(CASE WHEN sent = 1 THEN 1 ELSE 0 END) AS enviados,
+      SUM(CASE WHEN error IS NOT NULL THEN 1 ELSE 0 END) AS errores,
+      SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) AS ultimas_24h
+    FROM auto_copiloto_log
+  `).get(cutoff24h) as { total: number; enviados: number; errores: number; ultimas_24h: number };
+  return {
+    total: r.total ?? 0,
+    enviados: r.enviados ?? 0,
+    errores: r.errores ?? 0,
+    ultimas_24h: r.ultimas_24h ?? 0,
+  };
+}
+
+/**
  * Lista TODOS los perfiles para el panel admin (activos, pausados, no confirmados).
  */
 export function listAllProfiles(limit = 200): AutoCopilotoProfile[] {
