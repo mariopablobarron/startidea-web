@@ -37,6 +37,19 @@ function isEmail(s: string): boolean {
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  try {
+    return await handlePost(request, clientAddress ?? '');
+  } catch (err) {
+    // Garantía de último recurso: siempre devolver JSON aunque algo explote
+    console.error('[expediente] Unhandled error in POST handler:', err);
+    return new Response(
+      JSON.stringify({ ok: false, error: 'internal', message: String(err) }),
+      { status: 500, headers: { 'content-type': 'application/json' } },
+    );
+  }
+};
+
+async function handlePost(request: Request, clientAddress: string): Promise<Response> {
   const TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? import.meta.env.TELEGRAM_BOT_TOKEN;
   const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? import.meta.env.TELEGRAM_CHAT_ID;
   const EXPEDIENTES_DIR = process.env.EXPEDIENTES_DIR ?? '/tmp/expedientes';
@@ -335,4 +348,4 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });
-};
+}

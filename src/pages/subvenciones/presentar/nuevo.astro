@@ -9,6 +9,167 @@ const convSlug  = Astro.url.searchParams.get('slug')  ?? '';
 const convTitle = Astro.url.searchParams.get('title') ?? '';
 const convHint  = Astro.url.searchParams.get('hint')  ?? ''; // Descripción corta de qué financia
 
+// ─── Mapa de requisitos por convocatoria ──────────────────────────────────────
+// Se muestra en paso 2 para que el usuario sepa a qué presenta antes de rellenar.
+interface ConvReqs {
+  tipo: string;           // quién puede pedir
+  plazo: string;          // fecha límite
+  gastosOk: string[];     // gastos elegibles (máx 5 ítems)
+  gastosNo: string[];     // gastos NO elegibles (máx 3)
+  importe: string;        // orientación de importe
+  requisitos: string[];   // condiciones clave (máx 4)
+  nota?: string;          // aviso especial (deadline alternativo, etc.)
+}
+
+const CONV_REQS: Record<string, ConvReqs> = {
+  'boja-2026-inclusion-l10': {
+    tipo: 'Entidades privadas sin ánimo de lucro: asociaciones (G), fundaciones (F/G), entidades religiosas (R) y similares con actividad de acción social en Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Arrendamiento de locales e instalaciones',
+      'Suministros (luz, agua, gas, teléfono)',
+      'Nóminas del personal de gestión y administración',
+      'Seguros, mantenimiento y reparaciones ordinarias',
+      'Material de oficina, gestoría, auditoría y otros gastos generales',
+    ],
+    gastosNo: [
+      'Inversiones en inmuebles o equipamiento',
+      'Gastos de proyectos o programas concretos (esos van a L11)',
+      'Gastos de capital o amortizaciones sobre inmuebles propios',
+    ],
+    importe: 'Sin límite máximo fijado en las bases. El importe depende del presupuesto real de la entidad y de los créditos disponibles en la convocatoria. En ediciones anteriores, los importes concedidos han oscilado entre 3.000 € y 80.000 €.',
+    requisitos: [
+      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
+      'CIF activo y al corriente de obligaciones con AEAT y TGSS',
+      'Actividad de acción social continuada en Andalucía',
+      'Memoria de actividades del ejercicio anterior presentada',
+    ],
+  },
+  'boja-2026-inclusion-l11': {
+    tipo: 'Entidades privadas sin ánimo de lucro: asociaciones (G), fundaciones (F/G), entidades religiosas (R) y similares con programas de acción social en Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Personal de intervención directa del programa (educadores, trabajadores sociales, auxiliares)',
+      'Material didáctico, consumibles y recursos del programa',
+      'Actividades, talleres y acciones directas con beneficiarios',
+      'Dietas y desplazamientos del personal del proyecto',
+      'Gastos de difusión y comunicación del programa',
+    ],
+    gastosNo: [
+      'Gastos estructurales o de administración de la entidad (esos van a L10)',
+      'Obra civil o adquisición de inmuebles',
+      'Actividades ya financiadas por otras subvenciones públicas incompatibles',
+    ],
+    importe: 'Sin límite máximo fijado. El importe depende del presupuesto del programa y la dotación disponible. En ediciones anteriores, los importes concedidos han oscilado entre 5.000 € y 120.000 €.',
+    requisitos: [
+      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
+      'CIF activo y al corriente de AEAT y TGSS',
+      'El programa debe atender a personas en situación de vulnerabilidad en Andalucía',
+      'Memoria descriptiva del programa con objetivos, metodología e indicadores de evaluación',
+    ],
+  },
+  'boja-2026-inclusion-l7': {
+    tipo: 'Entidades privadas sin ánimo de lucro con programas de solidaridad alimentaria o escuelas de verano para menores en Andalucía.',
+    plazo: '16 de junio de 2026 (Modalidad 2 — Escuelas de verano: 2 de junio de 2026)',
+    gastosOk: [
+      'Mod. 1 — Alimentaria: alimentos, logística, personal de distribución y almacenamiento',
+      'Mod. 2 — Escuelas de verano: monitores, transporte, material educativo/lúdico y comedor',
+      'Gastos de coordinación y seguimiento del programa',
+    ],
+    gastosNo: [
+      'Gastos de administración general de la entidad',
+      'Equipamiento permanente o inversiones',
+    ],
+    importe: 'Variable según modalidad y crédito disponible. La Modalidad 2 (Escuelas de verano) suele tener importes unitarios menores por plaza atendida.',
+    requisitos: [
+      'Inscripción en el Registro de Entidades de Servicios Sociales de la Junta de Andalucía',
+      'Al corriente de AEAT y TGSS',
+      'Experiencia acreditada en el ámbito alimentario o en actividades con menores',
+    ],
+    nota: '⚠️ La Modalidad 2 (Escuelas de verano para menores) cierra el 2 de junio de 2026. El resto de modalidades cierran el 16 de junio.',
+  },
+  'boja-2026-inclusion-l16': {
+    tipo: 'Entidades privadas sin ánimo de lucro con programas de atención integral a mujeres jóvenes ex-tuteladas (procedentes del sistema de protección de menores) en Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Personal de intervención y acompañamiento (educadores, psicólogos, trabajadores sociales)',
+      'Acciones de inserción laboral, formativa y habitacional',
+      'Material y recursos de apoyo al proceso de incorporación social',
+      'Gastos de seguimiento e intervención individualizada',
+    ],
+    gastosNo: [
+      'Gastos estructurales de la entidad',
+      'Actividades dirigidas a colectivos distintos a mujeres jóvenes ex-tuteladas',
+    ],
+    importe: 'Variable según presupuesto del programa y dotación disponible.',
+    requisitos: [
+      'Inscripción en el Registro de Entidades de Servicios Sociales',
+      'Experiencia demostrable en atención a jóvenes ex-tutelados o mujeres en situación de vulnerabilidad',
+      'Al corriente de AEAT y TGSS',
+    ],
+  },
+  'boja-2026-inclusion-l4': {
+    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Programas de inserción social para la Comunidad Gitana',
+      'Acciones de empleo, educación, salud o vivienda dirigidas a este colectivo',
+      'Personal técnico del programa y gastos de ejecución directa',
+    ],
+    gastosNo: [
+      'Gastos de funcionamiento ordinario del ayuntamiento',
+      'Inversiones en infraestructuras',
+    ],
+    importe: 'Variable según presupuesto del programa y créditos asignados a la convocatoria.',
+    requisitos: [
+      'Entidad local de Andalucía (ayuntamiento, mancomunidad o diputación)',
+      'Programa dirigido específicamente a la Comunidad Gitana',
+      'Al corriente de obligaciones tributarias y con la Seguridad Social',
+    ],
+  },
+  'boja-2026-inclusion-l6': {
+    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Servicios de atención, acogida e integración de personas inmigrantes',
+      'Orientación y asesoramiento a temporeros agrícolas andaluces y sus familias',
+      'Personal técnico de los programas (mediadores, intérpretes, trabajadores sociales)',
+      'Actividades de inclusión y aprendizaje del idioma',
+    ],
+    gastosNo: [
+      'Gastos de funcionamiento general de la administración local',
+      'Actividades no relacionadas con el colectivo beneficiario',
+    ],
+    importe: 'Variable según presupuesto y crédito disponible.',
+    requisitos: [
+      'Entidad local andaluza',
+      'Programa de atención específica a inmigrantes y/o temporeros',
+      'Al corriente de obligaciones tributarias y con la Seguridad Social',
+    ],
+  },
+  'boja-2026-inclusion-l9': {
+    tipo: 'Entidades locales: ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
+    plazo: '16 de junio de 2026',
+    gastosOk: [
+      'Actividades de fomento de la participación ciudadana activa',
+      'Procesos participativos, consejos ciudadanos, presupuestos participativos',
+      'Personal y material para el desarrollo de las actividades',
+    ],
+    gastosNo: [
+      'Gastos ordinarios de funcionamiento del ayuntamiento',
+      'Inversiones o equipamiento permanente',
+    ],
+    importe: 'Variable según presupuesto y crédito disponible.',
+    requisitos: [
+      'Entidad local andaluza',
+      'Actividades concretas de participación ciudadana (no genéricas)',
+      'Al corriente de obligaciones tributarias y con la Seguridad Social',
+    ],
+  },
+};
+
+const convReqs: ConvReqs | null = CONV_REQS[convSlug] ?? null;
+
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
@@ -205,6 +366,83 @@ const jsonLd = [
                     </p>
                   </div>
                 </div>
+
+                {/* ── Caja de requisitos de la convocatoria ── */}
+                {convReqs && (
+                  <div class="border border-ink/15 bg-paper-warm">
+                    <div class="border-b border-ink/10 px-5 py-3">
+                      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">Qué cubre esta convocatoria — léelo antes de continuar</p>
+                    </div>
+                    <div class="divide-y divide-ink/10">
+                      {/* Quién puede pedir */}
+                      <div class="px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1.5">Quién puede solicitarla</p>
+                        <p class="text-sm text-ink/80 leading-relaxed">{convReqs.tipo}</p>
+                      </div>
+
+                      {/* Gastos elegibles */}
+                      <div class="px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">✅ Gastos elegibles (qué se puede subvencionar)</p>
+                        <ul class="space-y-1">
+                          {convReqs.gastosOk.map(g => (
+                            <li class="flex items-start gap-2 text-sm text-ink/75">
+                              <span class="mt-0.5 text-green-600 shrink-0 text-xs">▸</span>
+                              <span>{g}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Gastos NO elegibles */}
+                      <div class="px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">❌ Qué NO cubre</p>
+                        <ul class="space-y-1">
+                          {convReqs.gastosNo.map(g => (
+                            <li class="flex items-start gap-2 text-sm text-ink/60">
+                              <span class="mt-0.5 text-red-400 shrink-0 text-xs">✗</span>
+                              <span>{g}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Orientación de importe */}
+                      <div class="px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1.5">€ Orientación de importe</p>
+                        <p class="text-sm text-ink/75 leading-relaxed">{convReqs.importe}</p>
+                      </div>
+
+                      {/* Requisitos clave */}
+                      <div class="px-5 py-4">
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Condiciones principales</p>
+                        <ul class="space-y-1">
+                          {convReqs.requisitos.map(r => (
+                            <li class="flex items-start gap-2 text-sm text-ink/75">
+                              <span class="mt-0.5 text-magenta shrink-0 text-xs">·</span>
+                              <span>{r}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Plazo */}
+                      <div class="bg-amber-50 px-5 py-3">
+                        <p class="text-sm font-medium text-amber-800">
+                          <span class="font-mono text-[10px] uppercase tracking-widest mr-2">Plazo:</span>
+                          {convReqs.plazo}
+                        </p>
+                        {convReqs.nota && (
+                          <p class="mt-1 text-xs text-amber-700">{convReqs.nota}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div class="border-t border-ink/10 bg-ink px-5 py-3">
+                      <p class="text-xs text-paper/70">
+                        Startidea revisa el encaje real en el diagnóstico (24–48h). Si tu proyecto no encaja al 100%, lo que necesitas es la descripción precisa en el campo de abajo.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {/* Plazo e importe */}
                 <div class="grid grid-cols-2 gap-4">
@@ -701,13 +939,17 @@ const jsonLd = [
     const required = panel.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]');
     let valid = true;
     for (const el of required) {
-      if (!el.value.trim()) {
-        el.focus();
-        el.classList.add('border-red-400');
+      // Los checkboxes se validan con .checked, no con .value (que siempre es "on")
+      const isEmpty = (el as HTMLInputElement).type === 'checkbox'
+        ? !(el as HTMLInputElement).checked
+        : !el.value.trim();
+      if (isEmpty) {
+        if ((el as HTMLInputElement).type !== 'checkbox') el.focus();
+        el.classList.add('border-red-400', 'ring-1', 'ring-red-400');
         valid = false;
         break;
       } else {
-        el.classList.remove('border-red-400');
+        el.classList.remove('border-red-400', 'ring-1', 'ring-red-400');
       }
     }
     // Validar radios requeridos en paso 2.
@@ -841,17 +1083,29 @@ const jsonLd = [
 
     try {
       const res = await fetch('/api/expediente', { method: 'POST', body: data });
-      const json = await res.json();
-      if (json.ok) {
+      let json: { ok: boolean; error?: string } | null = null;
+      try { json = await res.json(); } catch { /* body no es JSON — respuesta de error del servidor */ }
+
+      if (json?.ok) {
         window.location.href = '/subvenciones/presentar/gracias';
-      } else {
-        errDiv.textContent = 'Ha habido un error al enviar el formulario. Escríbenos a hola@startidea.es directamente.';
-        errDiv.classList.remove('hidden');
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = 'Enviar expediente →';
+        return;
       }
+
+      // Mostrar mensaje de error específico si el servidor lo devuelve
+      if (json?.error === 'fields') {
+        errDiv.textContent = 'Faltan datos obligatorios. Revisa los pasos anteriores.';
+      } else if (json?.error === 'email') {
+        errDiv.textContent = 'El email introducido no tiene un formato válido.';
+      } else if (!res.ok) {
+        errDiv.textContent = `Error del servidor (${res.status}). Escríbenos a hola@startidea.es indicando que el formulario no funciona.`;
+      } else {
+        errDiv.textContent = 'Ha habido un problema al enviar el formulario. Por favor, escríbenos directamente a hola@startidea.es.';
+      }
+      errDiv.classList.remove('hidden');
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Enviar expediente →';
     } catch {
-      errDiv.textContent = 'Error de conexión. Comprueba tu internet e inténtalo de nuevo.';
+      errDiv.textContent = 'No se pudo conectar con el servidor. Comprueba tu conexión a internet e inténtalo de nuevo. Si el problema persiste, escríbenos a hola@startidea.es.';
       errDiv.classList.remove('hidden');
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar expediente →';
