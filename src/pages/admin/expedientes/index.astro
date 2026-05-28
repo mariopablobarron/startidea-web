@@ -129,8 +129,13 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
                       <p class="text-xs text-ink/50">{exp.org_cif} · {exp.provincia}</p>
                     </td>
                     <td class="px-4 py-3 max-w-[200px]">
-                      {exp.convocatoria_slug ? (
-                        <a href={`/subvenciones/${exp.convocatoria_slug}`} target="_blank"
+                      {exp.convocatoria_url ? (
+                        <a href={exp.convocatoria_url} target="_blank" rel="noopener noreferrer"
+                           class="text-xs text-ink/70 hover:text-magenta truncate block">
+                          {exp.convocatoria_title ?? exp.convocatoria_slug ?? '↗'}
+                        </a>
+                      ) : exp.convocatoria_slug ? (
+                        <a href={`/subvenciones/catalogo/${exp.convocatoria_slug}`} target="_blank"
                            class="text-xs text-ink/70 hover:text-magenta truncate block">
                           {exp.convocatoria_title ?? exp.convocatoria_slug}
                         </a>
