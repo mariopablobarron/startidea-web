@@ -75,6 +75,17 @@ function fmtDateShort(ts: number | null | undefined): string {
   });
 }
 
+// URL ficha de convocatoria (fuera del JSX para evitar que esbuild
+// interprete la regex literal como divisor en contexto JSX → bug
+// "Unterminated regular expression" en build).
+function buildConvocatoriaFichaUrl(slug: string | null | undefined): string | null {
+  if (!slug) return null;
+  const bojaMatch = slug.match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
+  return bojaMatch
+    ? `/subvenciones/${bojaMatch[1]}-social`
+    : `/subvenciones/${slug}`;
+}
+
 const EXP_STATUS_LABELS: Record<string, string> = {
   recibido:      '📥 Recibido',
   analizando_ia: '⏳ En preparación',
@@ -192,10 +203,7 @@ function fmtEur(n: number) {
                 <table class="w-full text-sm">
                   <tbody class="divide-y divide-ink/8">
                     {expedientes.map((exp) => {
-                      const bojaMatch = (exp.convocatoria_slug ?? '').match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
-                      const fichaUrl = bojaMatch
-                        ? `/subvenciones/${bojaMatch[1]}-social`
-                        : exp.convocatoria_slug ? `/subvenciones/${exp.convocatoria_slug}` : null;
+                      const fichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
                       const importe = parseImporte(exp.importe_concedido);
                       return (
                         <tr class="hover:bg-paper-warm/40 transition-colors">
