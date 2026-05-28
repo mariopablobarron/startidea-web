@@ -100,6 +100,25 @@ export const PATCH: APIRoute = async ({ request }) => {
 
   try {
     const activa = toggleConvocatoriaActiva(slug);
+
+    // Cuando se activa una convocatoria, notificar perfiles del Copiloto Autónomo
+    // que encajen. Fire-and-forget — no bloqueamos la respuesta.
+    if (activa) {
+      const origin = new URL(request.url).origin;
+      const adminToken = request.headers.get('x-admin-token') ?? '';
+      fetch(`${origin}/api/auto-copiloto/match-catalog`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': adminToken,
+        },
+        body: JSON.stringify({ slug }),
+      }).catch((e) =>
+        console.error('[convocatorias PATCH] match-catalog notify error:', e),
+      );
+      console.log(`[convocatorias PATCH] Activada ${slug} → match-catalog disparado (async)`);
+    }
+
     return json({ ok: true, slug, activa });
   } catch (err) {
     return json({ ok: false, error: 'internal', detail: String(err) }, 500);

@@ -199,13 +199,14 @@ function fmtDate(ts: number): string {
         </div>
       )}
 
-      <!-- Info fuente -->
+      <!-- Info del sistema -->
       <div class="mt-8 border border-ink/10 bg-paper p-5">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">Próximos pasos — Escalabilidad</p>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">Cómo funciona el Copiloto Autónomo</p>
         <ul class="space-y-1 text-sm text-ink/60">
-          <li>• Fase 2: motor de matching (perfil entidad → score de encaje por convocatoria)</li>
-          <li>• Fase 3: scrapers automáticos BDNS + BOJA RSS → queue de revisión aquí</li>
-          <li>• Fase 4: generación de memoria técnica IA por convocatoria</li>
+          <li>✅ Al <strong>activar</strong> una convocatoria, el sistema notifica automáticamente a los perfiles del Copiloto que encajan.</li>
+          <li>✅ El cron diario detecta convocatorias nuevas del HUB externo y procesa matches.</li>
+          <li>✅ Scraper BDNS: ejecutar manualmente o con cron <code class="font-mono text-[11px] bg-paper-warm px-1">scraper-bdns-daily.sh</code> en el VPS.</li>
+          <li>⏳ S6: Playwright sede electrónica (container separado — pendiente).</li>
         </ul>
       </div>
 
@@ -278,6 +279,7 @@ function fmtDate(ts: number): string {
   document.querySelectorAll<HTMLButtonElement>('.toggle-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const slug = btn.dataset.slug ?? '';
+      const wasActiva = btn.dataset.activa === '1';
       if (!slug) return;
       btn.disabled = true;
       btn.textContent = '…';
@@ -292,17 +294,25 @@ function fmtDate(ts: number): string {
         });
         const data = await res.json() as { ok: boolean; activa: boolean };
         if (data.ok) {
-          // Recargar para reflejar el cambio
-          window.location.reload();
+          if (data.activa) {
+            // Activada → informar que el matching corre en background
+            if (scraperStatus && scraperMsg) {
+              scraperStatus.classList.remove('hidden');
+              scraperMsg.textContent = `✅ Convocatoria "${slug}" activada. Notificando perfiles del Copiloto Autónomo en segundo plano…`;
+            }
+            setTimeout(() => window.location.reload(), 2000);
+          } else {
+            window.location.reload();
+          }
         } else {
           alert('Error al cambiar estado');
           btn.disabled = false;
-          btn.textContent = btn.dataset.activa === '1' ? 'Desactivar' : 'Activar';
+          btn.textContent = wasActiva ? 'Desactivar' : 'Activar';
         }
       } catch {
         alert('Error de conexión');
         btn.disabled = false;
-        btn.textContent = btn.dataset.activa === '1' ? 'Desactivar' : 'Activar';
+        btn.textContent = wasActiva ? 'Desactivar' : 'Activar';
       }
     });
   });
