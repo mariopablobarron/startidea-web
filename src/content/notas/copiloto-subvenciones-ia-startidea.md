@@ -87,4 +87,6 @@ Si quieres que estudiemos si tu próxima convocatoria es candidata, el primer pa
 
 El Copiloto no es la solución a todas las subvenciones. Pero para las que sí funciona, cambia el tiempo que le dedicas: de semanas a horas.
 
-[Solicitar acceso al Copiloto →](/subvenciones/presentar/nuevo)
+Si aún no tienes una convocatoria identificada, el [catálogo de Startidea](/subvenciones/catalogo) lista las que el equipo revisa y tramita activamente.
+
+[Empezar el expediente →](/subvenciones/presentar/nuevo)
