@@ -33,6 +33,78 @@ Web institucional de **Startidea** (agencia de innovación social en Granada, fu
 - Los agentes SEO (analista + redactor) viven en `src/lib/seo-agents/`. Su output persiste en `seo_agent_outputs` (SQLite).
 - Cron diario 06:00 UTC sincroniza GA4/GSC; lunes 07:00 UTC corre el analista. Si modificas esos scripts, están en la VPS en `/usr/local/bin/seo-*-*.sh`.
 
+## Gotchas de Astro 5 — patrones que rompen el build o el runtime
+
+Aprendidos a costa de varios deploys fallidos. Antes de hacer commit con cambios en `.astro`, verificar que no se incurre en ninguno:
+
+### 1. Regex literal dentro de IIFE en expresión JSX → "Unterminated regular expression"
+
+**Síntoma:** build falla con `Unterminated regular expression` y un offset que NO coincide con la línea real (esbuild reporta col errónea).
+
+**Causa:** dentro de un `{(() => { ... })()}` o `{items.map(x => { const m = x.match(/pattern/); ... })}`, esbuild interpreta el primer `/` de la regex literal como operador división (porque está en contexto JSX/expression). Falla silenciosamente.
+
+**Patrón seguro:** mover la regex a una función del frontmatter (TypeScript sin ambigüedad). El JSX queda con un ternario o llamada limpia.
+
+```astro
+---
+// ✅ Bien: regex en frontmatter
+function buildFichaUrl(slug: string | null): string | null {
+  if (!slug) return null;
+  const m = slug.match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
+  return m ? `/subvenciones/${m[1]}-social` : `/subvenciones/${slug}`;
+}
+const fichaUrl = buildFichaUrl(exp.convocatoria_slug);
+---
+<a href={fichaUrl}>Ver ficha</a>
+
+<!-- ❌ Mal: regex en IIFE JSX -->
+{(() => {
+  const m = exp.convocatoria_slug.match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
+  return m ? <a href={`/subvenciones/${m[1]}-social`}>...</a> : null;
+})()}
+```
+
+### 2. TypeScript dentro de `<script>` sin `lang="ts"` → SyntaxError silencioso en navegador
+
+**Síntoma:** el script no se ejecuta en navegador, los handlers no se registran, sin error visible en consola. Algunos navegadores parsean parte y descartan resto.
+
+**Causa:** `<script>` (sin atributos) y `<script define:vars={{...}}>` se emiten **literal al HTML**, sin transpilar TypeScript. Cualquier sintaxis TS (casts, generics, non-null `!`) rompe el parse del navegador.
+
+**Sintaxis TS que NO sobrevive en `<script>` plain:**
+- `as HTMLInputElement`, `as { ok: boolean }`, `as CustomType`, `as Foo[]`
+- `querySelectorAll<HTMLButtonElement>(...)` (generic)
+- `el!`, `el!.foo`, `el!.method()` (non-null assertion)
+- `: string`, `: Type` (type annotations)
+- `interface`, `type Foo =`
+
+**Solución 1 (recomendada):** añadir `lang="ts"` al `<script>`. Astro lo procesa con loader TS.
+
+```astro
+<script lang="ts">
+  const btn = document.getElementById('btn') as HTMLButtonElement;
+</script>
+```
+
+**Solución 2:** si el script necesita `define:vars`, escribir JS plain sin tipos.
+
+```astro
+<script define:vars={{ apiUrl }}>
+  // JavaScript puro — sin casts, sin generics, sin "!"
+  const btn = document.getElementById('btn');
+  btn?.addEventListener('click', () => fetch(apiUrl));
+</script>
+```
+
+**Cómo verificar antes de commit:** `awk '/^<script.* define:vars/{flag=1; next} /^<\/script>/{flag=0} flag' archivo.astro > /tmp/x.js && node --check /tmp/x.js`.
+
+### 3. `npm run build` local es el árbitro final, no `tsc --noEmit`
+
+`tsc --noEmit` no detecta los problemas anteriores porque no parsea los `<script>` inline ni el JSX del template. **Antes de cualquier push con cambios en `.astro`, correr `npm run build` local**. Tarda ~2 min pero evita ciclos de deploy fallido en Coolify.
+
+### 4. Coolify NO auto-deploya
+
+Push a `main` NO dispara redeploy. Hay que ir a `https://coolify.startidea.es` y pulsar **Deploy** manualmente. Si Mario pasa varios commits sin desplegar, todos van juntos en el siguiente Deploy. **Si el build falla, revisar primero la fecha del log de Coolify vs la fecha del último commit** — a menudo el log es de un build anterior al fix.
+
 ## Cómo pedir cosas a Claude en este repo
 
 Ejemplos útiles:
