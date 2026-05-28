@@ -462,17 +462,29 @@
         method: 'POST',
         body: fd,
       });
+      // El HUB puede devolver HTML de nginx ante errores upstream (503, 502...).
+      // Parsear como JSON sin verificar content-type tiraba al catch genérico,
+      // mostrando "Error de red" engañoso al usuario. Discriminamos primero:
+      const ct = res.headers.get('content-type') ?? '';
+      if (!ct.includes('application/json')) {
+        // Respuesta no-JSON = upstream caído o mal configurado en el HUB
+        setStatus(`Servicio de transcripción no disponible (${res.status}). Usa el campo de texto.`);
+        setBusy(false);
+        return;
+      }
       const j = await res.json();
       if (!res.ok || !j.ok) {
         setStatus(j.error === 'voice_not_configured'
           ? 'Voz no configurada — usa el campo de texto.'
-          : `Error transcribiendo (${j.error ?? res.status}).`);
+          : `Error transcribiendo (${j.error ?? res.status}). Usa el campo de texto.`);
         setBusy(false);
         return;
       }
       userText = (j.text ?? '').trim();
-    } catch {
-      setStatus('Error de red al transcribir.');
+    } catch (err) {
+      // Solo cae aquí en error de red real (offline, DNS, TLS, abort).
+      console.error('[VoiceAgent] transcribe network error:', err);
+      setStatus('Error de red al transcribir. Usa el campo de texto.');
       setBusy(false);
       return;
     }
