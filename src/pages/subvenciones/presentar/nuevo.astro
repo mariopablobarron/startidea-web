@@ -527,6 +527,83 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
             </p>
 
+            <!-- ─── Generador IA de memoria técnica ───────────────────── -->
+            <div class="border-2 border-magenta/40 bg-paper">
+              <div class="border-b border-magenta/20 bg-magenta/5 px-5 py-4">
+                <div class="flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">✦ Nuevo — IA</p>
+                    <h3 class="mt-0.5 font-display text-xl text-ink">Borrador de memoria técnica</h3>
+                    <p class="mt-1 text-sm text-ink/60 leading-relaxed">
+                      Con los datos que has introducido, la IA genera un borrador estructurado (8 secciones)
+                      adaptado a la convocatoria elegida. Tarda 20–30 segundos.
+                    </p>
+                  </div>
+                  <span class="shrink-0 font-mono text-[9px] uppercase tracking-widest border border-magenta/30 text-magenta px-2 py-1">
+                    Gratis
+                  </span>
+                </div>
+              </div>
+
+              <div class="px-5 py-5 space-y-4">
+                <!-- Estado de generación -->
+                <div id="gen-mem-status" class="hidden border border-ink/10 bg-paper-warm px-4 py-3">
+                  <p id="gen-mem-status-msg" class="text-sm text-ink/60 animate-pulse">Conectando con el modelo de IA…</p>
+                </div>
+
+                <!-- Botón principal -->
+                <button
+                  type="button"
+                  id="btn-gen-memoria"
+                  class="btn w-full sm:w-auto"
+                >
+                  ✦ Generar borrador de memoria técnica
+                </button>
+                <p class="text-xs text-ink/35">Requiere haber descrito el proyecto en el paso anterior.</p>
+
+                <!-- Resultado generado -->
+                <div id="gen-mem-result" class="hidden space-y-3 border-t border-ink/10 pt-4">
+                  <div class="flex items-center justify-between gap-3 flex-wrap">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-green-700">✓ Borrador generado</p>
+                    <div class="flex items-center gap-2">
+                      <button
+                        type="button"
+                        id="btn-copy-memoria"
+                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+                      >
+                        Copiar
+                      </button>
+                      <button
+                        type="button"
+                        id="btn-download-memoria"
+                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+                      >
+                        Descargar .txt
+                      </button>
+                    </div>
+                  </div>
+                  <textarea
+                    id="gen-mem-textarea"
+                    rows="22"
+                    readonly
+                    spellcheck="false"
+                    class="form-input w-full resize-y font-mono text-xs text-ink/80 leading-relaxed bg-paper-warm"
+                  ></textarea>
+                  <p class="text-[11px] text-ink/35 leading-relaxed">
+                    ⚠ Borrador orientativo generado por IA. Los corchetes [COMPLETAR] marcan datos que debes añadir.
+                    Startidea revisará y completará la memoria definitiva durante la elaboración del expediente.
+                  </p>
+                  <button
+                    type="button"
+                    id="btn-regen-memoria"
+                    class="font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta"
+                  >
+                    ↺ Regenerar
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div class="border border-magenta/30 bg-magenta/5 p-4">
               <p class="font-mono text-xs uppercase tracking-widest text-magenta">⚡ Cuanto más, mejor</p>
               <p class="mt-1.5 text-sm text-ink/70">
@@ -1200,6 +1277,114 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar expediente →';
     }
+  });
+
+  // ── Generador IA de memoria técnica ──────────────────────────────────────
+
+  async function runGenerarMemoria() {
+    const slug        = (fSlug()?.value ?? '').trim();
+    const convNombre  = (fNombre()?.value ?? '').trim();
+    const orgName     = (document.getElementById('orgName') as HTMLInputElement)?.value?.trim() ?? '';
+    const orgType     = (document.getElementById('orgType') as HTMLSelectElement)?.value ?? '';
+    const descripcion = (document.getElementById('descripcionProyecto') as HTMLTextAreaElement)?.value?.trim() ?? '';
+    const beneficiariosAnuales = (document.getElementById('beneficiariosAnuales') as HTMLInputElement)?.value?.trim() ?? '';
+    const presupuestoAnual     = (document.getElementById('presupuestoAnual') as HTMLInputElement)?.value?.trim() ?? '';
+    const logros               = (document.getElementById('logrosDestacados') as HTMLTextAreaElement)?.value?.trim() ?? '';
+
+    const statusDiv   = document.getElementById('gen-mem-status');
+    const statusMsg   = document.getElementById('gen-mem-status-msg');
+    const resultDiv   = document.getElementById('gen-mem-result');
+    const textarea    = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
+    const btnGen      = document.getElementById('btn-gen-memoria') as HTMLButtonElement;
+    const btnRegen    = document.getElementById('btn-regen-memoria') as HTMLButtonElement;
+
+    if (!descripcion) {
+      alert('Describe el proyecto en el paso anterior para poder generar la memoria técnica.');
+      return;
+    }
+
+    // UI: loading
+    if (btnGen)    { btnGen.disabled  = true;  btnGen.textContent  = '⟳ Generando (~30s)…'; }
+    if (btnRegen)  { btnRegen.disabled = true; }
+    if (statusDiv) statusDiv.classList.remove('hidden');
+    if (statusMsg) statusMsg.textContent = 'La IA está redactando el borrador. Esto puede tardar hasta 30 segundos…';
+    if (resultDiv) resultDiv.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/generar-memoria', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          slug,
+          conv_nombre:          convNombre,
+          nombre_entidad:       orgName,
+          org_type:             orgType,
+          descripcion_proyecto: descripcion,
+          beneficiarios_anuales: beneficiariosAnuales,
+          presupuesto_anual:    presupuestoAnual,
+          logros,
+        }),
+      });
+
+      const data = await res.json() as { ok: boolean; memoria?: string; error?: string; message?: string };
+
+      if (data.ok && data.memoria) {
+        if (textarea)  textarea.value = data.memoria;
+        if (resultDiv) resultDiv.classList.remove('hidden');
+        if (statusDiv) statusDiv.classList.add('hidden');
+        // Scroll al resultado
+        setTimeout(() => resultDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      } else {
+        const errMsg = data.error === 'rate_limited'
+          ? 'Demasiadas generaciones seguidas. Espera un minuto.'
+          : data.error === 'missing_descripcion'
+          ? 'Describe el proyecto en el paso 2 antes de generar.'
+          : `Error al generar (${data.error ?? 'desconocido'}). Startidea elaborará la memoria durante el diagnóstico.`;
+        if (statusMsg) { statusMsg.textContent = errMsg; statusMsg.classList.remove('animate-pulse'); }
+      }
+    } catch {
+      if (statusMsg) {
+        statusMsg.textContent = 'Sin conexión con el servidor de IA. Startidea elaborará la memoria durante el diagnóstico.';
+        statusMsg.classList.remove('animate-pulse');
+      }
+    } finally {
+      if (btnGen)  { btnGen.disabled  = false; btnGen.textContent  = '✦ Generar borrador de memoria técnica'; }
+      if (btnRegen){ btnRegen.disabled = false; }
+    }
+  }
+
+  document.getElementById('btn-gen-memoria')?.addEventListener('click',  () => runGenerarMemoria());
+  document.getElementById('btn-regen-memoria')?.addEventListener('click', () => runGenerarMemoria());
+
+  // Copiar al portapapeles
+  document.getElementById('btn-copy-memoria')?.addEventListener('click', async () => {
+    const ta  = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
+    const btn = document.getElementById('btn-copy-memoria') as HTMLButtonElement;
+    if (!ta?.value) return;
+    try {
+      await navigator.clipboard.writeText(ta.value);
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    } catch {
+      ta.select();
+      document.execCommand('copy');
+    }
+  });
+
+  // Descargar como .txt
+  document.getElementById('btn-download-memoria')?.addEventListener('click', () => {
+    const ta      = document.getElementById('gen-mem-textarea') as HTMLTextAreaElement;
+    const orgName = (document.getElementById('orgName') as HTMLInputElement)?.value?.trim() ?? 'entidad';
+    if (!ta?.value) return;
+    const blob = new Blob([ta.value], { type: 'text/plain;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const slug = orgName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-').slice(0, 40);
+    a.href     = url;
+    a.download = `memoria-tecnica-borrador-${slug}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   });
 
   // Init
