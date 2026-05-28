@@ -121,4 +121,4 @@ Planificar la justificación desde el inicio del proyecto, no al final, es la di
 
 ---
 
-Si tu organización está ante una convocatoria abierta o quiere saber qué hay disponible ahora mismo, el [buscador de subvenciones de Startidea](/subvenciones) agrega más de 1.900 convocatorias en tiempo real. Y si necesitas que alguien construya y presente el expediente por ti, [la primera llamada es sin coste](/contacto).
+Si tu organización está ante una convocatoria abierta o quiere saber qué hay disponible ahora mismo, el [buscador de subvenciones de Startidea](/subvenciones) agrega más de 1.900 convocatorias en tiempo real. Para el tercer sector y entidades locales en Andalucía, el [catálogo propio de Startidea](/subvenciones/catalogo) muestra solo las convocatorias que el equipo ha revisado y está tramitando activamente. Y si necesitas que alguien construya y presente el expediente por ti, [la primera llamada es sin coste](/contacto).
