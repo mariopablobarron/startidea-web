@@ -57,8 +57,9 @@ const jsonLd = [
   ]),
   // FAQPage opcional. Si la nota define faqs en su frontmatter, generamos
   // el schema → activa Featured Snippets en Google y sube CTR ~3×.
+  // El content schema usa { question, answer }; faqPageSchema espera { q, a }.
   ...(nota.data.faqs && nota.data.faqs.length > 0
-    ? [faqPageSchema(nota.data.faqs)]
+    ? [faqPageSchema(nota.data.faqs.map(f => ({ q: f.question, a: f.answer })))]
     : []),
 ];
 ---
