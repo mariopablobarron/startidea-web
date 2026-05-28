@@ -15,6 +15,8 @@ if (!isAdminLoggedIn(Astro.cookies)) {
 let convs: ReturnType<typeof listConvocatoriasAll> = [];
 try { convs = listConvocatoriasAll(); } catch { /* DB vacía */ }
 
+const pendingBdns = convs.filter(c => !c.activa && c.fuente === 'bdns');
+
 const TIPO_LABEL: Record<string, string> = {
   privada:  'Tercer sector',
   local:    'Entidades locales',
@@ -44,12 +46,62 @@ function fmtDate(ts: number): string {
             {convs.filter(c => c.activa).length} activas · {convs.filter(c => !c.activa).length} inactivas
           </p>
         </div>
-        <a
-          href="/admin/convocatorias/nueva"
-          class="inline-flex items-center gap-2 border-2 border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta hover:border-magenta transition-colors"
-        >
-          + Nueva convocatoria
-        </a>
+        <div class="flex items-center gap-3 flex-wrap">
+          <button
+            id="btn-scraper"
+            type="button"
+            class="inline-flex items-center gap-2 border-2 border-ink/40 bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/70 hover:border-ink hover:text-ink transition-colors"
+          >
+            ⟳ Scraper BDNS
+            {pendingBdns.length > 0 && (
+              <span class="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-400 text-ink font-bold text-[9px]">
+                {pendingBdns.length}
+              </span>
+            )}
+          </button>
+          <a
+            href="/admin/convocatorias/nueva"
+            class="inline-flex items-center gap-2 border-2 border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta hover:border-magenta transition-colors"
+          >
+            + Nueva convocatoria
+          </a>
+        </div>
+      </div>
+
+      <!-- Cola de revisión BDNS -->
+      {pendingBdns.length > 0 && (
+        <div class="mb-6 border-2 border-amber-300 bg-amber-50 p-5">
+          <div class="flex items-center justify-between gap-4 mb-3">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-amber-700 font-bold">
+              ⚠ {pendingBdns.length} convocatoria{pendingBdns.length > 1 ? 's' : ''} pendiente{pendingBdns.length > 1 ? 's' : ''} de revisión (BDNS)
+            </p>
+            <span class="font-mono text-[10px] text-amber-600">Actívalas tras revisar los datos</span>
+          </div>
+          <div class="space-y-1">
+            {pendingBdns.slice(0, 6).map(c => (
+              <div class="flex items-center justify-between gap-4 py-1 border-b border-amber-200 last:border-0">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="font-mono text-[9px] text-amber-700 shrink-0">{c.codigo}</span>
+                  <span class="text-sm text-ink leading-snug truncate">{c.titulo}</span>
+                </div>
+                <a
+                  href={`/admin/convocatorias/${c.slug}`}
+                  class="shrink-0 font-mono text-[10px] uppercase tracking-widest text-amber-700 hover:text-magenta"
+                >
+                  Revisar →
+                </a>
+              </div>
+            ))}
+            {pendingBdns.length > 6 && (
+              <p class="pt-1 font-mono text-[10px] text-amber-600">…y {pendingBdns.length - 6} más (ver tabla)</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Scraper status (oculto, se muestra al ejecutar) -->
+      <div id="scraper-status" class="hidden mb-6 border border-ink/10 bg-paper p-4">
+        <p id="scraper-msg" class="font-mono text-sm text-ink/70"></p>
       </div>
 
       <!-- Tabla -->
@@ -73,9 +125,14 @@ function fmtDate(ts: number): string {
             </thead>
             <tbody class="divide-y divide-ink/8">
               {convs.map((c) => (
-                <tr class:list={['hover:bg-paper-warm transition-colors', !c.activa && 'opacity-50']}>
+                <tr class:list={[
+                  'hover:bg-paper-warm transition-colors',
+                  !c.activa && c.fuente === 'bdns' ? 'bg-amber-50/60' : (!c.activa && 'opacity-50'),
+                ]}>
                   <td class="px-4 py-3">
-                    <span class="font-mono text-xs font-bold text-magenta">{c.codigo}</span>
+                    <span class:list={['font-mono text-xs font-bold', c.fuente === 'bdns' ? 'text-amber-600' : 'text-magenta']}>
+                      {c.codigo}
+                    </span>
                   </td>
                   <td class="px-4 py-3 max-w-xs">
                     <p class="font-medium text-ink leading-snug">{c.titulo}</p>
@@ -147,8 +204,66 @@ function fmtDate(ts: number): string {
 </Base>
 
 <script>
-  // Toggle activa/inactiva via PATCH /api/admin/convocatorias
   const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
+
+  // ── Scraper BDNS ──────────────────────────────────────────────────────
+  const btnScraper = document.getElementById('btn-scraper') as HTMLButtonElement | null;
+  const scraperStatus = document.getElementById('scraper-status') as HTMLElement | null;
+  const scraperMsg = document.getElementById('scraper-msg') as HTMLElement | null;
+
+  btnScraper?.addEventListener('click', async () => {
+    if (!confirm('¿Ejecutar scraper BDNS ahora? Tardará unos segundos.')) return;
+
+    btnScraper.disabled = true;
+    btnScraper.textContent = '⟳ Scrapeando…';
+    if (scraperStatus && scraperMsg) {
+      scraperStatus.classList.remove('hidden');
+      scraperMsg.textContent = 'Conectando con la API de infosubvenciones.es…';
+    }
+
+    try {
+      const res = await fetch('/api/admin/scraper-bdns', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: '{}',
+      });
+
+      const data = await res.json() as {
+        ok: boolean;
+        fetched?: number;
+        normalized?: number;
+        inserted?: number;
+        skipped?: number;
+        errors?: string[];
+        items?: string[];
+      };
+
+      if (scraperMsg) {
+        if (data.ok) {
+          const txt = data.inserted && data.inserted > 0
+            ? `✅ ${data.inserted} convocatoria${data.inserted > 1 ? 's' : ''} nueva${data.inserted > 1 ? 's' : ''} añadida${data.inserted > 1 ? 's' : ''} para revisión. Recargando…`
+            : `ℹ Sin novedades (${data.fetched ?? 0} consultadas, ${data.skipped ?? 0} ya existentes).`;
+          scraperMsg.textContent = txt;
+        } else {
+          scraperMsg.textContent = `⚠ Error: ${data.errors?.[0] ?? 'desconocido'}`;
+        }
+      }
+
+      if (data.ok && data.inserted && data.inserted > 0) {
+        setTimeout(() => window.location.reload(), 1800);
+      }
+    } catch (e) {
+      if (scraperMsg) scraperMsg.textContent = `⚠ Error de conexión: ${e instanceof Error ? e.message : String(e)}`;
+    } finally {
+      btnScraper.disabled = false;
+      btnScraper.textContent = '⟳ Scraper BDNS';
+    }
+  });
+
+  // ── Toggle activa/inactiva via PATCH /api/admin/convocatorias ─────────
 
   document.querySelectorAll<HTMLButtonElement>('.toggle-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
