@@ -82,6 +82,26 @@ export const POST: APIRoute = async ({ request }) => {
       activa:             body.activa === '0' ? 0 : 1,
       destacada:          body.destacada === '1' ? 1 : 0,
     });
+
+    // Si la convocatoria se crea ya activa, disparar match-catalog contra los
+    // perfiles del Copiloto Autónomo (mismo comportamiento que el PATCH al
+    // activar). Fire-and-forget — no bloqueamos la respuesta.
+    if (body.activa !== '0') {
+      const origin = new URL(request.url).origin;
+      const adminToken = request.headers.get('x-admin-token') ?? '';
+      fetch(`${origin}/api/auto-copiloto/match-catalog`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': adminToken,
+        },
+        body: JSON.stringify({ slug }),
+      }).catch((e) =>
+        console.error('[convocatorias POST] match-catalog notify error:', e),
+      );
+      console.log(`[convocatorias POST] Creada activa ${slug} → match-catalog disparado (async)`);
+    }
+
     return json({ ok: true, slug });
   } catch (err) {
     console.error('[api/admin/convocatorias] POST:', err);
