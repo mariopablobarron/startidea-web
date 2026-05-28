@@ -8,7 +8,7 @@
  */
 import Base from '@/layouts/Base.astro';
 import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 import { listConvocatoriasActivas } from '@/lib/expedientes-db';
 
 export const prerender = false;
@@ -32,6 +32,28 @@ const jsonLd = [
     { name: 'Inicio',        url: `${SITE_URL}/` },
     { name: 'Subvenciones',  url: `${SITE_URL}/subvenciones` },
     { name: 'Catálogo',      url: `${SITE_URL}/subvenciones/catalogo` },
+  ]),
+  faqPageSchema([
+    {
+      q: '¿Para qué tipo de entidades son estas convocatorias?',
+      a: 'El catálogo incluye convocatorias para dos perfiles principales: entidades privadas sin ánimo de lucro (asociaciones, fundaciones, tercer sector de acción social) y entidades de la administración local (ayuntamientos, mancomunidades, diputaciones). Algunas convocatorias son mixtas y admiten ambos tipos.',
+    },
+    {
+      q: '¿Cuánto cuesta tramitar con Startidea?',
+      a: 'Startidea trabaja a comisión de éxito: cobra el 12% del importe concedido solo si la subvención se concede. El análisis de encaje previo no tiene coste. Si la subvención no se concede, no hay ningún coste.',
+    },
+    {
+      q: '¿En qué se diferencia este catálogo del buscador BDNS?',
+      a: 'El buscador BDNS muestra miles de convocatorias sin filtrar. Este catálogo solo incluye convocatorias que Startidea ha revisado manualmente: verifica que las bases son claras, que los plazos son reales y que hay probabilidad razonable de éxito para entidades del tercer sector o locales en Andalucía.',
+    },
+    {
+      q: '¿Qué documentos genera Startidea para cada convocatoria?',
+      a: 'Para cada expediente Startidea prepara: memoria técnica adaptada a los criterios de valoración, presupuesto con los conceptos elegibles según las bases, checklist de documentación formal, y guía de presentación electrónica paso a paso.',
+    },
+    {
+      q: '¿Puedo presentarme a una convocatoria aunque no tenga toda la documentación preparada?',
+      a: 'Sí. El análisis de encaje inicial solo requiere información básica de la organización y una descripción del proyecto. La documentación formal se reúne durante la preparación del expediente, que tiene lugar antes del cierre del plazo de la convocatoria.',
+    },
   ]),
 ];
 ---
