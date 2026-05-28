@@ -7,6 +7,7 @@
  * SEO: index/follow, BreadcrumbList, descripción diferenciada.
  */
 import Base from '@/layouts/Base.astro';
+import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
 import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 import { listConvocatoriasActivas } from '@/lib/expedientes-db';
 
@@ -40,6 +41,9 @@ const jsonLd = [
   description={`Catálogo curado de ${total} convocatorias de subvenciones activas para el tercer sector, entidades locales y empresas en Andalucía. Startidea revisa cada convocatoria y tramita el expediente a comisión de éxito.`}
   jsonLd={jsonLd}
 >
+  <!-- Tabs de navegación -->
+  <SubvencionesTabs active="catalogo" />
+
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper-warm py-14 md:py-18">
     <div class="container-x">

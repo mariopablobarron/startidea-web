@@ -4,3 +4,4 @@ Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://startidea.es/sitemap-index.xml
+Sitemap: https://startidea.es/sitemap-catalogo.xml

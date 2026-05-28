@@ -10,15 +10,16 @@
 //   <SubvencionesTabs active="alerta" />
 
 interface Props {
-  active: 'lista' | 'mapa' | 'alerta';
+  active: 'lista' | 'mapa' | 'alerta' | 'catalogo' | 'copiloto';
 }
 
 const { active } = Astro.props;
 
 const tabs: Array<{ id: Props['active']; label: string; href: string }> = [
-  { id: 'lista', label: 'Lista', href: '/subvenciones' },
-  { id: 'mapa', label: 'Mapa por CCAA', href: '/subvenciones/mapa' },
-  { id: 'alerta', label: 'Crear alerta', href: '/subvenciones/crear-alerta' },
+  { id: 'lista',    label: 'Buscador BDNS',      href: '/subvenciones' },
+  { id: 'catalogo', label: 'Catálogo Startidea',  href: '/subvenciones/catalogo' },
+  { id: 'mapa',     label: 'Mapa por CCAA',       href: '/subvenciones/mapa' },
+  { id: 'alerta',   label: 'Crear alerta',         href: '/subvenciones/crear-alerta' },
 ];
 ---
 

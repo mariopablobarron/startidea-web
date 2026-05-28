@@ -172,6 +172,16 @@ function fmtDate(ts: number): string {
                       >
                         Editar
                       </a>
+                      {c.activa && (
+                        <a
+                          href={`/subvenciones/catalogo/${c.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="font-mono text-[10px] uppercase tracking-widest text-emerald-600 hover:text-magenta"
+                        >
+                          Ver ↗
+                        </a>
+                      )}
                       <button
                         type="button"
                         data-slug={c.slug}
