@@ -27,6 +27,15 @@ interface Props {
 const { nota, prev, next } = Astro.props;
 const { Content } = await nota.render();
 
+// ─── Detección de tema "financiación/subvenciones" ───────────────────────
+// Para mostrar un CTA comercial específico antes del newsletter (más
+// relevante que el genérico y mejor conversión que "suscríbete").
+const isFinanciacion =
+  nota.data.category === 'Financiación' ||
+  (nota.data.tags ?? []).some(t =>
+    ['subvenciones', 'financiación', 'fondos', 'BDNS', 'ayudas'].includes(t),
+  );
+
 const fmtDate = new Intl.DateTimeFormat('es-ES', {
   year: 'numeric',
   month: 'long',
@@ -152,6 +161,47 @@ const jsonLd = [
     <!-- Notas relacionadas de la misma categoría -->
     {nota.data.category && (
       <NotasRelacionadas category={nota.data.category} exclude={nota.slug} />
+    )}
+
+    <!-- CTA comercial específico para notas de financiación/subvenciones -->
+    {isFinanciacion && (
+      <section class="border-y border-magenta/30 bg-paper-warm py-14 md:py-16">
+        <div class="container-narrow">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            <div class="md:col-span-7">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">
+                — Si esta lectura te ha hecho pensar en alguna convocatoria
+              </span>
+              <h2 class="mt-3 font-display text-2xl md:text-3xl text-ink leading-tight">
+                Pídele a Startidea un análisis de viabilidad <em class="italic text-magenta">sin coste.</em>
+              </h2>
+              <p class="mt-4 text-ink/70 leading-relaxed text-sm md:text-base">
+                Cuéntanos qué convocatoria os interesa o qué proyecto queréis
+                financiar. En 24–48h te enviamos el diagnóstico de encaje —
+                si tiene sentido presentarse, qué documentación necesitáis y
+                qué probabilidad real de éxito vemos. <strong class="text-ink">Sin compromiso, sin coste.</strong>
+              </p>
+              <p class="mt-3 text-xs text-ink/50 leading-relaxed">
+                Si después decides que Startidea presente la convocatoria, comisión 12% solo si se concede.
+              </p>
+            </div>
+            <div class="md:col-span-5 flex flex-col gap-3">
+              <a href={`/subvenciones/presentar/nuevo?utm_source=nota&utm_medium=cta-financiacion&utm_campaign=${nota.slug}`}
+                 class="inline-block bg-magenta text-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-ink transition-colors text-center">
+                Pedir análisis gratis →
+              </a>
+              <a href="/subvenciones/catalogo"
+                 class="inline-block border-2 border-ink bg-paper text-ink px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:border-magenta hover:text-magenta transition-colors text-center">
+                Ver catálogo de convocatorias →
+              </a>
+              <a href={`/subvenciones/crear-alerta?utm_source=nota&utm_medium=cta-copiloto&utm_campaign=${nota.slug}`}
+                 class="text-center font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+                · O activa el Copiloto Autónomo (gratis) ·
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     )}
 
     <!-- CTA final + suscripción -->
