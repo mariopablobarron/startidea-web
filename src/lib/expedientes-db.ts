@@ -474,6 +474,70 @@ export function statsExpedientes(): Record<ExpedienteStatus | 'total', number> {
   return result as Record<ExpedienteStatus | 'total', number>;
 }
 
+/**
+ * Conversión Copiloto Autónomo → cliente de pago.
+ *
+ * Mide cuántos perfiles del Copiloto Autónomo han generado un expediente real
+ * desde el wizard (es decir, han pedido el servicio gestionado con comisión 12%).
+ *
+ * "Expedientes auto-generados" = creados por el cron del Copiloto (no convertidos).
+ * "Expedientes manuales del Copiloto" = wizards con como_conocio='copiloto-autonomo'
+ *   (un perfil del Copiloto vio el email y decidió pasarlo a servicio gestionado).
+ * "Con contrato firmado" = de esos manuales, cuántos llegaron a contrato.
+ */
+export function statsCopilotoConversion(): {
+  perfilesActivos: number | null;        // se rellena externamente desde auto-copiloto-db
+  expedientesAutogenerados: number;      // creados por el cron (no clientes de pago)
+  expedientesConversion: number;         // gente que vino del Copiloto al wizard
+  conversionContratoFirmado: number;     // de esos, cuántos firmaron contrato
+  conversionPresentados: number;         // de esos, cuántos están presentados
+  facturadoConversion: number;           // facturas emitidas a expedientes "conversion"
+} {
+  const db = getDb();
+  const autogen = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes WHERE como_conocio = 'copiloto-autonomo'`,
+  ).get() as { n: number }).n;
+
+  // Wizard manual con tracking del Copiloto. El cron usa "copiloto-autonomo" tal cual,
+  // pero el wizard con UTM lo prefija con "copiloto-autonomo-cta" o el select trae el valor.
+  // Para distinguir, los autogenerados tienen ip='auto-copiloto' o 'auto-copiloto-catalog'.
+  const conversion = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes
+     WHERE como_conocio = 'copiloto-autonomo'
+       AND ip NOT LIKE 'auto-copiloto%'`,
+  ).get() as { n: number }).n;
+
+  const conContrato = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes
+     WHERE como_conocio = 'copiloto-autonomo'
+       AND ip NOT LIKE 'auto-copiloto%'
+       AND contrato_at IS NOT NULL`,
+  ).get() as { n: number }).n;
+
+  const presentados = (db.prepare(
+    `SELECT COUNT(*) as n FROM expedientes
+     WHERE como_conocio = 'copiloto-autonomo'
+       AND ip NOT LIKE 'auto-copiloto%'
+       AND status = 'presentado'`,
+  ).get() as { n: number }).n;
+
+  const facturado = (db.prepare(
+    `SELECT COALESCE(SUM(CAST(importe_concedido AS REAL)), 0) as t FROM expedientes
+     WHERE como_conocio = 'copiloto-autonomo'
+       AND ip NOT LIKE 'auto-copiloto%'
+       AND factura_at IS NOT NULL`,
+  ).get() as { t: number }).t;
+
+  return {
+    perfilesActivos: null,
+    expedientesAutogenerados: autogen - conversion,
+    expedientesConversion: conversion,
+    conversionContratoFirmado: conContrato,
+    conversionPresentados: presentados,
+    facturadoConversion: Math.round(facturado * 0.12), // 12% comisión
+  };
+}
+
 /** Estadísticas de contratos para el panel admin */
 export function statsContratos(): {
   sinEnviar: number;

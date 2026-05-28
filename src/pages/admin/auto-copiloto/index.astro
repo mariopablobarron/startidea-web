@@ -16,6 +16,7 @@ import {
   listRecentLog,
   statsLog,
 } from '@/lib/auto-copiloto-db';
+import { statsCopilotoConversion } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -27,13 +28,27 @@ let profiles: ReturnType<typeof listAllProfiles> = [];
 let pStats = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
 let recentLog: ReturnType<typeof listRecentLog> = [];
 let lStats = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
+let convStats = {
+  perfilesActivos:           null as number | null,
+  expedientesAutogenerados:  0,
+  expedientesConversion:     0,
+  conversionContratoFirmado: 0,
+  conversionPresentados:     0,
+  facturadoConversion:       0,
+};
 
 try {
   profiles = listAllProfiles();
   pStats   = statsProfiles();
   recentLog = listRecentLog(30);
   lStats   = statsLog();
+  convStats = statsCopilotoConversion();
 } catch { /* BD vacía */ }
+
+// Tasa de conversión (% de emails enviados que llevaron a expediente real)
+const tasaConv = lStats.enviados > 0
+  ? Math.round((convStats.expedientesConversion / lStats.enviados) * 100)
+  : 0;
 
 function fmtDate(ts: number | null | undefined): string {
   if (!ts) return '—';
@@ -153,6 +168,37 @@ const BOJA_CAMPAIGNS = [
         <div class="border border-magenta/30 bg-magenta/5 p-4 text-center">
           <p class="font-display text-3xl text-magenta">{lStats.ultimas_24h}</p>
           <p class="font-mono text-[9px] uppercase tracking-widest text-magenta mt-0.5">Últimas 24h</p>
+        </div>
+      </div>
+
+      <!-- Embudo de conversión Copiloto → cliente de pago -->
+      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+        💰 Embudo de monetización · Copiloto → Cliente
+      </p>
+      <div class="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div class="border border-ink/15 bg-paper p-4 text-center">
+          <p class="font-display text-3xl text-ink">{lStats.enviados}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40 mt-0.5">Docs enviados</p>
+          <p class="text-[10px] text-ink/30 mt-1">100%</p>
+        </div>
+        <div class="border border-blue-200 bg-blue-50/30 p-4 text-center">
+          <p class="font-display text-3xl text-blue-700">{convStats.expedientesConversion}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-blue-600 mt-0.5">→ Wizard premium</p>
+          <p class="text-[10px] text-blue-500 mt-1">{tasaConv}%</p>
+        </div>
+        <div class="border border-purple-200 bg-purple-50/30 p-4 text-center">
+          <p class="font-display text-3xl text-purple-700">{convStats.conversionContratoFirmado}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-purple-600 mt-0.5">Contrato firmado</p>
+        </div>
+        <div class="border border-emerald-200 bg-emerald-50/30 p-4 text-center">
+          <p class="font-display text-3xl text-emerald-700">{convStats.conversionPresentados}</p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-emerald-600 mt-0.5">Presentados</p>
+        </div>
+        <div class="border-2 border-magenta bg-magenta/5 p-4 text-center">
+          <p class="font-display text-3xl text-magenta">
+            {convStats.facturadoConversion.toLocaleString('es-ES')} €
+          </p>
+          <p class="font-mono text-[9px] uppercase tracking-widest text-magenta mt-0.5">Comisión facturada</p>
         </div>
       </div>
 

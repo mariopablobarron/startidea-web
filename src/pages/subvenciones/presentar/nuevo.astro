@@ -674,9 +674,11 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <label for="como-conocio" class="label">¿Cómo has conocido este servicio?</label>
               <select id="como-conocio" name="comoConocio" class="form-input w-full">
                 <option value="">Selecciona…</option>
+                <option value="copiloto-autonomo">Email del Copiloto Autónomo</option>
                 <option value="buscador">Buscador (Google, etc.)</option>
                 <option value="recomendacion">Recomendación de alguien</option>
                 <option value="buscador-subvenciones">Buscador de subvenciones de Startidea</option>
+                <option value="catalogo-startidea">Catálogo Startidea</option>
                 <option value="redes">Redes sociales</option>
                 <option value="nota">Una nota o artículo</option>
                 <option value="ya-cliente">Ya soy cliente de Startidea</option>
@@ -756,6 +758,45 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
   const btnPrev   = document.getElementById('btn-prev');
   const btnNext   = document.getElementById('btn-next');
   const btnSubmit = document.getElementById('btn-submit');
+
+  // ── Auto-detect tracking UTM (Copiloto Autónomo, catálogo, etc.) ──────────
+  const utmParams = new URLSearchParams(window.location.search);
+  const utmSource = utmParams.get('utm_source') ?? '';
+  const utmContent = utmParams.get('utm_content') ?? ''; // expediente_id del email
+  const utmCampaign = utmParams.get('utm_campaign') ?? '';
+
+  // Pre-seleccionar dropdown "Cómo has conocido"
+  if (utmSource) {
+    const select = document.getElementById('como-conocio');
+    let preselect = '';
+    if (utmSource === 'copiloto-autonomo') preselect = 'copiloto-autonomo';
+    else if (utmSource === 'catalogo' || utmCampaign === 'catalogo') preselect = 'catalogo-startidea';
+    if (preselect && select) {
+      // Esperar a que el DOM esté listo
+      setTimeout(() => { select.value = preselect; }, 100);
+    }
+  }
+
+  // Mostrar banner contextual si viene del Copiloto Autónomo
+  if (utmSource === 'copiloto-autonomo' && utmContent) {
+    const headerArea = document.querySelector('main') ?? document.body;
+    const banner = document.createElement('div');
+    banner.className = 'mb-6 border-l-4 border-magenta bg-magenta/5 px-5 py-4';
+    banner.innerHTML = `
+      <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-1">
+        ⚡ Viniendo desde el Copiloto Autónomo
+      </p>
+      <p class="text-sm text-ink/80">
+        Te derivamos desde el expediente <strong class="font-mono">${utmContent.replace(/[^A-Z0-9-]/gi, '')}</strong>.
+        Al enviar este formulario, Startidea se encarga de presentar la convocatoria por ti
+        (comisión 12% solo al éxito). Si solo querías los documentos del Copiloto, ya los tienes en tu email.
+      </p>
+    `;
+    const formEl = document.getElementById('expediente-form');
+    if (formEl?.parentElement) {
+      formEl.parentElement.insertBefore(banner, formEl);
+    }
+  }
 
   // ── Helpers campos ocultos de convocatoria ────────────────────────────────
   const fSlug   = () => document.getElementById('f-conv-slug');

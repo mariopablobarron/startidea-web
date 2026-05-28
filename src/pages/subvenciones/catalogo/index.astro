@@ -205,15 +205,51 @@ const jsonLd = [
         </div>
       )}
 
-      <!-- CTA alerta -->
-      <div class="mt-14 border border-ink/10 bg-paper-warm p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1">¿No encuentras la tuya?</p>
-          <p class="text-sm text-ink/70">Crea una alerta y te avisamos cuando aparezca una convocatoria que encaje con tu organización.</p>
+      <!-- ─── Doble CTA: Copiloto gratis vs Servicio gestionado ────────── -->
+      <div class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Opción 1: Copiloto Autónomo gratis -->
+        <div class="border-2 border-ink/15 bg-paper-warm p-7 flex flex-col">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Opción 1 · Gratis</p>
+          <h3 class="font-display text-2xl text-ink mb-2">Copiloto Autónomo</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mb-5">
+            Crea un perfil con tus datos y palabras clave. Cuando aparece una
+            convocatoria que encaja, recibes por email <strong>memoria técnica,
+            presupuesto, checklist y guía de presentación</strong> generados
+            automáticamente con IA.
+          </p>
+          <ul class="text-sm text-ink/70 mb-5 space-y-1.5">
+            <li>✓ Alertas automáticas + documentación IA</li>
+            <li>✓ Tú presentas en la sede electrónica</li>
+            <li>✓ Sin coste, cancelas cuando quieras</li>
+          </ul>
+          <a href="/subvenciones/crear-alerta" class="btn-ghost mt-auto self-start">
+            Activar Copiloto gratis →
+          </a>
         </div>
-        <a href="/subvenciones/crear-alerta" class="btn shrink-0">
-          Crear alerta gratis →
-        </a>
+
+        <!-- Opción 2: Servicio gestionado (premium) -->
+        <div class="border-2 border-magenta bg-ink p-7 flex flex-col text-paper relative">
+          <span class="absolute top-0 right-0 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+            Cero riesgo
+          </span>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Opción 2 · 12% solo al éxito</p>
+          <h3 class="font-display text-2xl text-paper mb-2">Que Startidea lo presente</h3>
+          <p class="text-sm text-paper/75 leading-relaxed mb-5">
+            Startidea adapta la memoria al proyecto real, revisa la elegibilidad
+            con criterio legal y presenta el expediente en la sede electrónica.
+            <strong class="text-paper">Solo cobra si la subvención se concede.</strong>
+          </p>
+          <ul class="text-sm text-paper/75 mb-5 space-y-1.5">
+            <li class="text-paper/90">✓ Memoria adaptada al baremo</li>
+            <li class="text-paper/90">✓ Presentación gestionada (Autofirma incluido)</li>
+            <li class="text-paper/90">✓ Seguimiento hasta resolución</li>
+          </ul>
+          <a href="/subvenciones/presentar/nuevo?utm_source=catalogo&utm_medium=cta&utm_campaign=premium-block"
+             class="inline-block bg-magenta text-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors mt-auto self-start">
+            Pedir presupuesto →
+          </a>
+        </div>
       </div>
     </div>
   </section>

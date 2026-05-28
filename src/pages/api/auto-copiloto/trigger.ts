@@ -39,6 +39,7 @@ import { insertExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-
 import { buildConvContext, runAiGeneration, parseEligibility } from '@/lib/copiloto-engine';
 import { sendEmail } from '@/lib/email-resend';
 import { detectSede } from '@/lib/sedes-map';
+import { buildPremiumCTAHtml } from '@/lib/copiloto-cta';
 
 export const prerender = false;
 
@@ -259,6 +260,7 @@ async function sendAutoCopilotoEmail(opts: {
   to: string;
   org_nombre: string;
   representante: string;
+  convocatoria_slug: string;
   convocatoria_title: string;
   convocatoria_url: string | null;
   expediente_id: string;
@@ -375,11 +377,18 @@ async function sendAutoCopilotoEmail(opts: {
     <div style="color:#e0ddd8;font-size:14px;line-height:1.7">${mdToHtml(opts.ai_guia)}</div>
   </div>` : ''}
 
+  ${buildPremiumCTAHtml({
+    convocatoriaSlug:  opts.convocatoria_slug,
+    convocatoriaTitle: opts.convocatoria_title,
+    expedienteId:      opts.expediente_id,
+    fuente:            'hub',
+  })}
+
   <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
 
   <p style="font-size:13px;color:#888;line-height:1.6">
-    Si tienes dudas o quieres que revisemos los documentos juntos, responde a este email
-    o escríbenos a <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
+    ¿Dudas puntuales sobre los documentos? Responde a este email o escríbenos a
+    <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
     con el código <strong>${esc(opts.expediente_id)}</strong>.
   </p>
 
@@ -622,6 +631,7 @@ export const POST: APIRoute = async ({ request }) => {
             to: profile.email,
             org_nombre: profile.org_nombre,
             representante: profile.representante,
+            convocatoria_slug: conv.slug,
             convocatoria_title: conv.title,
             convocatoria_url: conv.source_url ?? null,
             expediente_id: expId,
