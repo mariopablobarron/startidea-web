@@ -91,11 +91,14 @@ export const JUNTA_ORGANISMOS = [
   'A01002980', // Consejería de Salud
   'A01002983', // Consejería de Fomento
   'A01003000', // Consejería de Cultura
+  'A01003279', // Consejería de la Presidencia, Interior, Diálogo Social y Simplificación Administrativa
+  'A01003309', // Consejería de Economía, Hacienda y Fondos Europeos
 ];
 
 // ─── Keywords para filtrar convocatorias relevantes ───────────────────────
 
 export const SOCIAL_KEYWORDS = [
+  // Tercer sector / entidades privadas
   'inclusión social',
   'integración social',
   'entidades sociales',
@@ -123,6 +126,21 @@ export const SOCIAL_KEYWORDS = [
   'cooperación',
   'igualdad',
   'empleo social',
+  // Entidades locales / ayuntamientos
+  'entidades locales',
+  'corporaciones locales',
+  'municipios',
+  'ayuntamientos',
+  'mancomunidades',
+  'pequeños municipios',
+  'zona rural',
+  'municipios de menos',
+  'equipamientos municipales',
+  'planes de empleo',
+  'empleo local',
+  'dinamización local',
+  'desarrollo local',
+  'cultura local',
 ];
 
 // ─── Utilidades ───────────────────────────────────────────────────────────
