@@ -71,6 +71,19 @@ function getDir(): string {
   return process.env.EXPEDIENTES_DIR ?? '/data/expedientes';
 }
 
+/**
+ * Backup online consistente de la BD a `destPath`, respetando el WAL.
+ *
+ * Usa la API `.backup()` de better-sqlite3 (no un `readFileSync` del .db):
+ * en modo WAL los writes recientes viven en `expedientes.db-wal` hasta que
+ * ocurre un checkpoint, así que copiar solo el archivo principal puede dar
+ * una copia incompleta o inconsistente. `.backup()` produce un snapshot
+ * completo y coherente aunque haya escrituras en curso.
+ */
+export function backupDb(destPath: string): Promise<void> {
+  return getDb().backup(destPath).then(() => undefined);
+}
+
 function getDb(): Database.Database {
   if (_db) return _db;
   const dir = getDir();

@@ -10,26 +10,28 @@
  */
 import type { APIRoute } from 'astro';
 import { isValidAdminHeader } from '@/lib/admin-session';
-import { readFileSync, existsSync } from 'node:fs';
+import { backupDb } from '@/lib/expedientes-db';
+import { readFileSync, existsSync, unlinkSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 export const prerender = false;
 
-export const GET: APIRoute = ({ request }) => {
+export const GET: APIRoute = async ({ request }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';
   if (!isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ error: 'unauthorized' }), { status: 401 });
   }
 
-  const dir    = process.env.EXPEDIENTES_DIR ?? '/data/expedientes';
-  const dbPath = join(dir, 'expedientes.db');
-
-  if (!existsSync(dbPath)) {
-    return new Response(JSON.stringify({ error: 'db_not_found' }), { status: 404 });
-  }
-
+  // Backup online consistente: NO leer el .db principal con readFileSync.
+  // En modo WAL los writes recientes viven en expedientes.db-wal hasta el
+  // checkpoint, así que un read directo del .db puede dar una copia
+  // incompleta. backupDb() usa la API .backup() de better-sqlite3, que
+  // produce un snapshot completo y coherente a un archivo temporal.
+  const tmpPath = join(tmpdir(), `expedientes-backup-${Date.now()}.db`);
   try {
-    const data = readFileSync(dbPath);
+    await backupDb(tmpPath);
+    const data = readFileSync(tmpPath);
     const date = new Date().toISOString().slice(0, 10);
     return new Response(data, {
       status: 200,
@@ -42,6 +44,8 @@ export const GET: APIRoute = ({ request }) => {
     });
   } catch (err) {
     console.error('[backup-db]', err);
-    return new Response(JSON.stringify({ error: 'read_failed' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'backup_failed' }), { status: 500 });
+  } finally {
+    try { if (existsSync(tmpPath)) unlinkSync(tmpPath); } catch { /* limpieza best-effort */ }
   }
 };
