@@ -18,6 +18,7 @@ import {
   statsContratos,
   statsEconomico,
   statsCopilotoConversion,
+  statsGa4,
 } from '@/lib/expedientes-db';
 import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
 
@@ -33,6 +34,7 @@ let economico   = { facturadoTotal: 0, pipelineTotal: 0, pendienteFacturar: 0 };
 let acProfiles  = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
 let acLog       = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
 let conversion  = { perfilesActivos: 0 as number | null, expedientesAutogenerados: 0, expedientesConversion: 0, conversionContratoFirmado: 0, conversionPresentados: 0, facturadoConversion: 0 };
+let ga4 = { days_covered: 0, sessions_total: 0, page_views_total: 0, sessions_subvenciones: 0, sessions_diagnostico: 0, sessions_presentar: 0, sessions_catalogo: 0, last_synced_at: null as number | null, last_date: null as string | null };
 
 try {
   stats        = statsExpedientes() as typeof stats;
@@ -41,6 +43,7 @@ try {
   acProfiles   = statsProfiles();
   acLog        = statsLog();
   conversion   = statsCopilotoConversion();
+  ga4          = statsGa4(30);
 } catch { /* BD vacía */ }
 
 function fmtEur(n: number): string {
@@ -56,7 +59,26 @@ function pct(a: number, b: number): string {
 // Etapas pensadas como "funnel del negocio", no como "estado del expediente".
 // Cada etapa es un SUPERSET de la siguiente (cohorte que avanza).
 
+// Si hay datos GA4 sincronizados, anteponemos 2 etapas al embudo (visitas
+// globales → visitas a subvenciones). Si la BD del snapshot está vacía
+// (cron no implementado aún), arrancamos directamente en "perfiles".
+const etapasGa4 = ga4.days_covered > 0 ? [
+  {
+    nombre:   `Visitas web (últimos ${ga4.days_covered} d)`,
+    valor:    ga4.sessions_total,
+    detalle:  `${ga4.page_views_total} páginas vistas · top: ${ga4.last_date ?? '—'}`,
+    desde:    '/admin',
+  },
+  {
+    nombre:   'Visitas a /subvenciones/*',
+    valor:    ga4.sessions_subvenciones,
+    detalle:  `Catálogo ${ga4.sessions_catalogo} · Diagnóstico ${ga4.sessions_diagnostico} · Wizard ${ga4.sessions_presentar}`,
+    desde:    '/admin',
+  },
+] : [];
+
 const etapas = [
+  ...etapasGa4,
   {
     nombre:   'Perfiles registrados',
     valor:    acProfiles.total,
@@ -242,7 +264,11 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
           Notas metodológicas
         </p>
         <ul class="text-[12px] text-ink/60 space-y-1.5 leading-relaxed">
-          <li>• El embudo arranca en "perfiles del Copiloto Autónomo", no en visitas web. Para añadir el tramo "visitas → diagnósticos" haría falta conectar GA4 a la BD local (hoy desactivado).</li>
+          {ga4.days_covered > 0 ? (
+            <li>• Datos GA4 sincronizados desde el HUB via cron 06:00 UTC. Cobertura: {ga4.days_covered} días con datos hasta {ga4.last_date}.</li>
+          ) : (
+            <li>• Esperando primer snapshot GA4 del cron. El embudo arranca en "perfiles del Copiloto Autónomo" mientras tanto.</li>
+          )}
           <li>• "Expedientes abiertos" incluye todos los canales (buscador, catálogo, copiloto, recomendación). El sub-embudo Copiloto Autónomo aísla solo los que vinieron del lead magnet.</li>
           <li>• "Drop %" es la caída desde la etapa anterior. Un drop alto en un escalón concreto es el primer sitio donde mirar para optimizar.</li>
           <li>• Facturado se calcula a partir de expedientes con <code>factura_num</code> emitido. Pipeline = importe_concedido sin factura aún.</li>

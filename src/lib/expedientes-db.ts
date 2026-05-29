@@ -209,6 +209,25 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
   `);
+  // Tabla ga4_snapshot — snapshot diario agregado de GA4 desde el HUB.
+  // Replica el resumen relevante para el funnel/admin sin depender de Postgres
+  // remoto. El cron del VPS (seo-sync-daily.sh) hace POST con los totales
+  // tras sincronizar con Google. Guardamos UNA fila por día (PK=date).
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS ga4_snapshot (
+      date                   TEXT PRIMARY KEY,
+      sessions_total         INTEGER NOT NULL DEFAULT 0,
+      page_views_total       INTEGER NOT NULL DEFAULT 0,
+      sessions_subvenciones  INTEGER NOT NULL DEFAULT 0,
+      sessions_diagnostico   INTEGER NOT NULL DEFAULT 0,
+      sessions_presentar     INTEGER NOT NULL DEFAULT 0,
+      sessions_catalogo      INTEGER NOT NULL DEFAULT 0,
+      top_path               TEXT,
+      top_path_sessions      INTEGER NOT NULL DEFAULT 0,
+      synced_at              INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_ga4_snap_date ON ga4_snapshot (date DESC);
+  `);
   // Tabla scraper_runs — histórico de ejecuciones de scrapers (BDNS, IDAE, BOJA...)
   // Permite mostrar en /admin si los scrapers están vivos, cuántas convocatorias
   // han traído y si han fallado. Sin esta tabla solo se podía inferir por
@@ -1539,4 +1558,121 @@ export function statsScrapers(): {
     totalRuns7d: r.totalRuns7d,
     okRate7d:    r.okRate7d ?? 1,
   }));
+}
+
+// ─── Snapshot GA4 (alimentado por cron desde el HUB) ──────────────────────
+
+export type Ga4Snapshot = {
+  date:                   string;       // YYYY-MM-DD
+  sessions_total:         number;
+  page_views_total:       number;
+  sessions_subvenciones:  number;
+  sessions_diagnostico:   number;
+  sessions_presentar:     number;
+  sessions_catalogo:      number;
+  top_path:               string | null;
+  top_path_sessions:      number;
+  synced_at:              number;
+};
+
+/**
+ * Upsert de una fila de snapshot GA4. Idempotente por (date).
+ * Llamado por /api/internal/ga4-snapshot que recibe el POST del cron VPS.
+ */
+export function upsertGa4Snapshot(snap: Omit<Ga4Snapshot, 'synced_at'> & { synced_at?: number }): void {
+  const db = getDb();
+  const syncedAt = snap.synced_at ?? Math.floor(Date.now() / 1000);
+  db.prepare(`
+    INSERT INTO ga4_snapshot (
+      date, sessions_total, page_views_total,
+      sessions_subvenciones, sessions_diagnostico, sessions_presentar, sessions_catalogo,
+      top_path, top_path_sessions, synced_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(date) DO UPDATE SET
+      sessions_total        = excluded.sessions_total,
+      page_views_total      = excluded.page_views_total,
+      sessions_subvenciones = excluded.sessions_subvenciones,
+      sessions_diagnostico  = excluded.sessions_diagnostico,
+      sessions_presentar    = excluded.sessions_presentar,
+      sessions_catalogo     = excluded.sessions_catalogo,
+      top_path              = excluded.top_path,
+      top_path_sessions     = excluded.top_path_sessions,
+      synced_at             = excluded.synced_at
+  `).run(
+    snap.date,
+    snap.sessions_total,
+    snap.page_views_total,
+    snap.sessions_subvenciones,
+    snap.sessions_diagnostico,
+    snap.sessions_presentar,
+    snap.sessions_catalogo,
+    snap.top_path,
+    snap.top_path_sessions,
+    syncedAt,
+  );
+}
+
+/**
+ * Devuelve los últimos N días de snapshot. Útil para series temporales
+ * en el embudo del admin.
+ */
+export function recentGa4Snapshots(days = 30): Ga4Snapshot[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM ga4_snapshot ORDER BY date DESC LIMIT ?`,
+  ).all(days) as Ga4Snapshot[];
+}
+
+/**
+ * Agrega los snapshots de los últimos N días en totales globales.
+ * Si no hay datos para todo el rango, agrega solo lo disponible.
+ *
+ * lastSyncedAt = epoch del último día con datos (útil para mostrar frescura
+ * en el panel: "última actualización hace X días").
+ */
+export function statsGa4(days = 30): {
+  days_covered:           number;        // cuántos días con datos
+  sessions_total:         number;
+  page_views_total:       number;
+  sessions_subvenciones:  number;
+  sessions_diagnostico:   number;
+  sessions_presentar:     number;
+  sessions_catalogo:      number;
+  last_synced_at:         number | null;
+  last_date:              string | null;
+} {
+  const db = getDb();
+  const fromDate = new Date(Date.now() - days * 86400 * 1000).toISOString().slice(0, 10);
+
+  const row = db.prepare(`
+    SELECT
+      COUNT(*)                         AS days_covered,
+      COALESCE(SUM(sessions_total), 0)         AS sessions_total,
+      COALESCE(SUM(page_views_total), 0)       AS page_views_total,
+      COALESCE(SUM(sessions_subvenciones), 0)  AS sessions_subvenciones,
+      COALESCE(SUM(sessions_diagnostico), 0)   AS sessions_diagnostico,
+      COALESCE(SUM(sessions_presentar), 0)     AS sessions_presentar,
+      COALESCE(SUM(sessions_catalogo), 0)      AS sessions_catalogo,
+      MAX(synced_at)                   AS last_synced_at,
+      MAX(date)                        AS last_date
+    FROM ga4_snapshot
+    WHERE date >= ?
+  `).get(fromDate) as {
+    days_covered: number; sessions_total: number; page_views_total: number;
+    sessions_subvenciones: number; sessions_diagnostico: number;
+    sessions_presentar: number; sessions_catalogo: number;
+    last_synced_at: number | null; last_date: string | null;
+  };
+
+  return {
+    days_covered:          row.days_covered ?? 0,
+    sessions_total:        row.sessions_total ?? 0,
+    page_views_total:      row.page_views_total ?? 0,
+    sessions_subvenciones: row.sessions_subvenciones ?? 0,
+    sessions_diagnostico:  row.sessions_diagnostico ?? 0,
+    sessions_presentar:    row.sessions_presentar ?? 0,
+    sessions_catalogo:     row.sessions_catalogo ?? 0,
+    last_synced_at:        row.last_synced_at,
+    last_date:             row.last_date,
+  };
 }
