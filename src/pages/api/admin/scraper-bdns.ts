@@ -30,8 +30,10 @@ function json(body: unknown, status = 200): Response {
 }
 
 async function sendTelegram(msg: string): Promise<void> {
-  const token = import.meta.env.TELEGRAM_BOT_TOKEN;
-  const chatId = import.meta.env.TELEGRAM_CHAT_ID;
+  // En SSR con adapter Node, las vars runtime se leen de process.env.
+  // Fallback a import.meta.env por compatibilidad con preview local.
+  const token = process.env.TELEGRAM_BOT_TOKEN ?? import.meta.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID ?? import.meta.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return;
   try {
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {

@@ -12,12 +12,10 @@ import { getExpediente, setContratoToken } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { generarEmailContratoHtml, type ContratoData } from '@/lib/contrato-generator';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 export const POST: APIRoute = async ({ request }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';

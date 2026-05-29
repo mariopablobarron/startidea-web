@@ -13,12 +13,10 @@ import {
 } from '@/lib/expedientes-db';
 import { STARTIDEA } from '@/lib/contrato-generator';
 import { sendEmail } from '@/lib/email-resend';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 function esc(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>

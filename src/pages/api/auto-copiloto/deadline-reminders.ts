@@ -14,12 +14,10 @@ import type { APIRoute } from 'astro';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { getPendingReminders, markReminded } from '@/lib/auto-copiloto-db';
 import { sendEmail } from '@/lib/email-resend';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 function esc(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>

@@ -11,12 +11,10 @@ import { getExpediente, updateStatus } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { detectSede } from '@/lib/sedes-map';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 function esc(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>

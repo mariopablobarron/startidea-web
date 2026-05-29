@@ -41,6 +41,7 @@ import { sendEmail } from '@/lib/email-resend';
 import { detectSede } from '@/lib/sedes-map';
 import { buildPremiumCTAHtml } from '@/lib/copiloto-cta';
 import { notifyError } from '@/lib/notify-error';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
@@ -48,9 +49,6 @@ const HUB_URL = 'https://hub.startidea.tech';
 const MAX_PER_PROFILE = 2; // convocatorias máximas por perfil por ejecución
 const RECENT_HOURS = 26;   // solo convocatorias publicadas en las últimas 26h
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 function esc(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>

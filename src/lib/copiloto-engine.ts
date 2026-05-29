@@ -11,10 +11,8 @@ import type { Expediente } from './expedientes-db';
 import { getConvocatoria } from './expedientes-db';
 import { fetchSubsidyDetail } from './subsidies-api';
 import { detectSede, sedeContextoPrompt } from './sedes-map';
+import { getEnv } from '@/lib/env';
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 // ─── Extracción de baremo/criterios de valoración ─────────────────────────────
 

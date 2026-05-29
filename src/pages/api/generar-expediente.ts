@@ -25,12 +25,10 @@ import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/d
 import { sendEmail } from '@/lib/email-resend';
 import { notifyError } from '@/lib/notify-error';
 import { join } from 'node:path';
+import { getEnv } from '@/lib/env';
 
 export const prerender = false;
 
-function getEnv(key: string): string {
-  return process.env[key] ?? (import.meta as any).env?.[key] ?? '';
-}
 
 export const POST: APIRoute = async ({ request }) => {
   // Auth: el panel envía sha256(ADMIN_TOKEN) como cookie → header x-admin-token
