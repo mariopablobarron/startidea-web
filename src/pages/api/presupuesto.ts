@@ -5,7 +5,7 @@
 
 import type { APIRoute } from 'astro';
 import { calcularPresupuesto } from '@/data/servicios';
-import { sendOwnerLeadEmail } from '@/lib/email-resend';
+import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
 
 export const prerender = false;
 
@@ -195,14 +195,6 @@ async function enviarEmailConfirmacion(opts: {
   diagnostico: string;
   serviciosNombres: string[];
 }): Promise<void> {
-  const RESEND_KEY = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
-  const FROM = process.env.RESEND_FROM || import.meta.env.RESEND_FROM || 'Startidea <hola@hubstartidea.es>';
-  const REPLY_TO = process.env.RESEND_REPLY_TO || import.meta.env.RESEND_REPLY_TO || 'hola@startidea.es';
-  if (!RESEND_KEY) {
-    console.warn('[presupuesto] RESEND_API_KEY no configurada — saltando email');
-    return;
-  }
-
   const serviciosHtml = opts.serviciosNombres.length
     ? `<ul style="padding-left:1.2em;margin:0">${opts.serviciosNombres
         .map((s) => `<li style="margin:0 0 0.3em 0">${escapeHtml(s)}</li>`)
@@ -226,22 +218,12 @@ async function enviarEmailConfirmacion(opts: {
   <p style="font-size:12px;color:#999">Startidea · C/ Conde Cifuentes 33, 18005 Granada · <a href="https://startidea.es" style="color:#999">startidea.es</a></p>
 </body></html>`;
 
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${RESEND_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: FROM,
-      to: [opts.email],
-      reply_to: REPLY_TO,
-      subject: 'Hemos recibido tu briefing — Startidea',
-      html,
-    }),
+  // Usa el helper compartido (mismo FROM/reply-to/error-handling que el resto
+  // de endpoints). El FROM correcto sale de RESEND_FROM; nunca hardcodear un
+  // dominio distinto a startidea.es aquí.
+  await sendEmail({
+    to: opts.email,
+    subject: 'Hemos recibido tu briefing — Startidea',
+    html,
   });
-  if (!r.ok) {
-    const txt = await r.text().catch(() => '');
-    throw new Error(`Resend ${r.status}: ${txt.slice(0, 200)}`);
-  }
 }
