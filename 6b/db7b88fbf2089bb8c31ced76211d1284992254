@@ -1,0 +1,37 @@
+src/lib/env.ts
+  s_fc84abf46d9a4c::t_7ef307ed2211b4 1-22
+src/lib/copiloto-engine.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 14
+src/pages/api/aceptar-contrato.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 16
+src/pages/api/generar-expediente.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 28
+src/pages/api/entregar-expediente.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 14
+src/pages/api/auto-copiloto/deadline-reminders.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 17
+src/pages/api/admin/scraper-bdns.ts
+  s_fc84abf46d9a4c::t_a9574c4c0cb36b 33-36
+src/pages/api/auto-copiloto/trigger.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 44
+src/pages/api/enviar-contrato.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 15
+src/pages/api/portal-registro.ts
+  s_fc84abf46d9a4c::t_0d1c4d164ee790 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6bdb7b88fbf2089bb8c31ced76211d1284992254",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
