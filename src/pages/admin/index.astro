@@ -17,6 +17,7 @@ import {
   getExpedientesRecientes,
 } from '@/lib/expedientes-db';
 import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
+import { recentScraperRuns } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -53,6 +54,11 @@ try {
   acLog         = statsLog();
   conversion    = statsCopilotoConversion();
 } catch { /* DB vacía todavía */ }
+
+let scraperRuns: ReturnType<typeof recentScraperRuns> = [];
+try {
+  scraperRuns = recentScraperRuns(5);
+} catch { /* tabla no migrada aún */ }
 
 // Formatea "hace X días" desde un epoch (segundos)
 function fmtAgo(ts: number | null): string {
@@ -313,15 +319,18 @@ const STATUS_COLORS: Record<string, string> = {
               </a>
 
               <!-- 3) Embudo de conversión -->
-              <div class="block border border-ink/15 bg-paper p-4">
+              <a href="/admin/funnel" class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
                 <div class="flex items-baseline justify-between">
                   <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
                     Conversión copiloto → cliente
                   </p>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30 group-hover:text-magenta">
+                    Funnel →
+                  </span>
                 </div>
                 {(conversion.expedientesConversion + conversion.expedientesAutogenerados) > 0 ? (
                   <>
-                    <p class="mt-2 font-display text-3xl text-ink">
+                    <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
                       {conversion.expedientesConversion}
                     </p>
                     <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
@@ -352,6 +361,80 @@ const STATUS_COLORS: Record<string, string> = {
                       El embudo se llena cuando un perfil del Copiloto Autónomo abre un expediente con Startidea.
                     </p>
                   </>
+                )}
+              </a>
+
+            </div>
+
+            <!-- ─── Fila 2: Estado de servicios + Scrapers ──────────────────── -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 mt-3">
+
+              <!-- 4) Estado de servicios (carga client-side) -->
+              <div id="sos-health" class="block border border-ink/15 bg-paper p-4" data-health-widget>
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Estado de servicios
+                  </p>
+                  <span id="sos-health-status" class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                    Comprobando…
+                  </span>
+                </div>
+                <ul id="sos-health-list" class="mt-3 space-y-1.5 text-[11px]">
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">HUB chat IA</span>
+                    <span class="font-mono text-ink/30" data-probe="hub_voice">— ms</span>
+                  </li>
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">OpenRouter</span>
+                    <span class="font-mono text-ink/30" data-probe="openrouter">— ms</span>
+                  </li>
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">BD tamaño</span>
+                    <span class="font-mono text-ink/30" data-probe="db">—</span>
+                  </li>
+                  <li class="flex items-baseline justify-between border-t border-ink/10 pt-1.5 mt-1.5">
+                    <span class="font-mono uppercase text-ink/60">Último expediente</span>
+                    <span class="font-mono text-ink/30" data-probe="last_exp">—</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 5) Scrapers — últimas ejecuciones -->
+              <div class="block border border-ink/15 bg-paper p-4">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Scrapers
+                  </p>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                    Últimas {scraperRuns.length} ejec.
+                  </span>
+                </div>
+                {scraperRuns.length === 0 ? (
+                  <p class="mt-3 font-mono text-[11px] text-ink/40 leading-relaxed">
+                    Sin ejecuciones registradas todavía. Se rellenará cuando corra el cron diario de BDNS (06:00 UTC) o cuando dispares manualmente desde /admin/convocatorias.
+                  </p>
+                ) : (
+                  <ul class="mt-3 space-y-1.5 text-[11px]">
+                    {scraperRuns.map((run) => (
+                      <li class="flex items-baseline justify-between gap-2">
+                        <div class="flex items-baseline gap-2 min-w-0">
+                          <span class:list={[
+                            'inline-block w-2 h-2 rounded-full flex-shrink-0',
+                            run.ok === 1 ? 'bg-emerald-500' : 'bg-red-500',
+                          ]}></span>
+                          <span class="font-mono uppercase text-ink/70 flex-shrink-0">{run.scraper}</span>
+                          <span class="font-mono text-[10px] text-ink/40 truncate">
+                            {fmtAgo(run.started_at)}
+                            {run.duration_ms ? ` · ${Math.round(run.duration_ms / 1000)}s` : ''}
+                          </span>
+                        </div>
+                        <span class="font-mono text-ink/60 flex-shrink-0">
+                          {run.total_new > 0 ? <span class="text-emerald-700">+{run.total_new}</span> : '0'}
+                          {run.error && <span class="text-red-600 ml-1" title={run.error}>!</span>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
 
@@ -587,6 +670,88 @@ const STATUS_COLORS: Record<string, string> = {
 </Base>
 
 <script>
+  // ─── Estado de servicios — carga async vía /api/admin/health ──────────────
+  // Se ejecuta tras pintar la página para no bloquear el render. Si algún
+  // probe tarda 4s o falla, el endpoint lo reporta como down y el badge
+  // queda rojo. Cache 10s en cliente para no martillar OpenRouter en refrescos.
+  (async () => {
+    const widget = document.getElementById('sos-health');
+    if (!widget) return;
+    const statusEl = document.getElementById('sos-health-status');
+
+    function fmtAgo(epochSec) {
+      const days = Math.floor((Date.now() / 1000 - epochSec) / 86400);
+      if (days === 0)  return 'hoy';
+      if (days === 1)  return 'ayer';
+      if (days < 30)   return `hace ${days} d`;
+      if (days < 365)  return `hace ${Math.floor(days / 30)} m`;
+      return `hace ${Math.floor(days / 365)} a`;
+    }
+
+    function setProbe(name, ok, text, errClass) {
+      const el = widget.querySelector(`[data-probe="${name}"]`);
+      if (!el) return;
+      el.textContent = text;
+      el.className = ok
+        ? 'font-mono text-emerald-700'
+        : (errClass ?? 'font-mono text-red-600');
+    }
+
+    try {
+      const r = await fetch('/api/admin/health', { credentials: 'same-origin' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      if (!data.ok) throw new Error('unauthorized');
+
+      const { probes, activity } = data;
+      const allOk =
+        probes.hub_voice?.ok &&
+        probes.openrouter?.ok &&
+        probes.db?.ok;
+
+      if (statusEl) {
+        statusEl.textContent = allOk ? '● Todo OK' : '● Incidencia';
+        statusEl.className = allOk
+          ? 'font-mono text-[10px] uppercase tracking-widest text-emerald-700'
+          : 'font-mono text-[10px] uppercase tracking-widest text-red-600';
+      }
+
+      setProbe('hub_voice',
+        probes.hub_voice?.ok,
+        probes.hub_voice?.ok
+          ? `${probes.hub_voice.latency_ms} ms`
+          : `down · ${probes.hub_voice?.detail ?? '?'}`);
+
+      setProbe('openrouter',
+        probes.openrouter?.ok,
+        probes.openrouter?.ok
+          ? `${probes.openrouter.latency_ms} ms`
+          : `down · ${probes.openrouter?.detail ?? '?'}`);
+
+      setProbe('db',
+        probes.db?.ok,
+        probes.db?.ok
+          ? `${probes.db.size_mb} MB`
+          : `error · ${probes.db?.detail ?? '?'}`);
+
+      if (activity?.last_expediente_at) {
+        setProbe('last_exp', true, fmtAgo(activity.last_expediente_at), 'font-mono text-ink/70');
+      } else {
+        setProbe('last_exp', true, 'sin datos', 'font-mono text-ink/40');
+      }
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = '● Error';
+        statusEl.className = 'font-mono text-[10px] uppercase tracking-widest text-red-600';
+      }
+      widget.querySelectorAll('[data-probe]').forEach((el) => {
+        el.textContent = '—';
+        el.className = 'font-mono text-ink/30';
+      });
+      console.error('[sos-health]', err);
+    }
+  })();
+
   // Backup BD — descarga con autenticación
   document.getElementById('backup-link')?.addEventListener('click', async (e) => {
     e.preventDefault();

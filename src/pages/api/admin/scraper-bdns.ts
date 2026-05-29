@@ -12,7 +12,7 @@
  */
 import type { APIRoute } from 'astro';
 import { isValidAdminHeader } from '@/lib/admin-session';
-import { upsertConvocatoria, getConvocatoria } from '@/lib/expedientes-db';
+import { upsertConvocatoria, getConvocatoria, logScraperRun } from '@/lib/expedientes-db';
 import {
   scrapeBDNS,
   JUNTA_ORGANISMOS,
@@ -67,11 +67,24 @@ export const POST: APIRoute = async ({ request }) => {
     timeoutMs:  25000,
   };
 
+  // Trackeamos la ejecución completa para el panel SOS. Si el scraper crashea
+  // antes de terminar, registramos como ok=false con el error capturado.
+  const started_at = Math.floor(Date.now() / 1000);
+  const triggered_by = request.headers.get('x-cron') === '1' ? 'cron' : 'admin';
+
   let result;
   try {
     result = await scrapeBDNS(scrapeOpts);
   } catch (e) {
     console.error('[scraper-bdns] Error:', e);
+    logScraperRun({
+      scraper: 'bdns',
+      started_at,
+      finished_at: Math.floor(Date.now() / 1000),
+      ok: false,
+      error: e instanceof Error ? e.message.slice(0, 500) : String(e).slice(0, 500),
+      triggered_by,
+    });
     return json({ ok: false, error: 'scrape_failed', detail: String(e) }, 500);
   }
 
@@ -119,6 +132,22 @@ export const POST: APIRoute = async ({ request }) => {
     `[scraper-bdns] fetched=${result.fetched} normalized=${result.normalized.length} ` +
     `inserted=${inserted} skipped=${skipped} errors=${result.errors.length}`
   );
+
+  // Registrar la ejecución en scraper_runs (panel SOS lo lee).
+  // ok = true incluso si hay errors parciales en upserts — el scraper en sí
+  // funcionó (devolvió datos). Si quisiéramos distinguir, podríamos marcar
+  // ok=false cuando errors.length === fetched (todo falló).
+  logScraperRun({
+    scraper: 'bdns',
+    started_at,
+    finished_at: Math.floor(Date.now() / 1000),
+    ok: true,
+    total_found:   result.fetched,
+    total_new:     inserted,
+    total_updated: skipped,    // upsert sin cambios — interpretamos como "ya estaba"
+    error: result.errors.length > 0 ? result.errors.slice(0, 3).join(' | ').slice(0, 500) : null,
+    triggered_by,
+  });
 
   return json({
     ok: true,

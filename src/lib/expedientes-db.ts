@@ -209,6 +209,28 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_crm_notes_email ON crm_notes (LOWER(email), created_at DESC);
   `);
+  // Tabla scraper_runs — histórico de ejecuciones de scrapers (BDNS, IDAE, BOJA...)
+  // Permite mostrar en /admin si los scrapers están vivos, cuántas convocatorias
+  // han traído y si han fallado. Sin esta tabla solo se podía inferir por
+  // created_at de la tabla convocatorias, lo cual no distingue 0-resultados
+  // legítimos de scraper-caído.
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS scraper_runs (
+      id              TEXT PRIMARY KEY,
+      scraper         TEXT NOT NULL,
+      started_at      INTEGER NOT NULL,
+      finished_at     INTEGER,
+      ok              INTEGER NOT NULL DEFAULT 0,
+      total_found     INTEGER NOT NULL DEFAULT 0,
+      total_new       INTEGER NOT NULL DEFAULT 0,
+      total_updated   INTEGER NOT NULL DEFAULT 0,
+      duration_ms     INTEGER,
+      error           TEXT,
+      triggered_by    TEXT NOT NULL DEFAULT 'cron'
+    );
+    CREATE INDEX IF NOT EXISTS idx_scraper_runs_scraper_started ON scraper_runs (scraper, started_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_scraper_runs_started ON scraper_runs (started_at DESC);
+  `);
   // ─── Tabla de convocatorias ──────────────────────────────────────────────────
   _db.exec(`
     CREATE TABLE IF NOT EXISTS convocatorias (
@@ -1395,4 +1417,126 @@ export function statsCatalogo(): {
     porFuente,
     ultimaIngesta:   totals.ultimaIngesta,
   };
+}
+
+// ─── Histórico de scrapers ──────────────────────────────────────────────────
+
+export type ScraperRun = {
+  id:             string;
+  scraper:        string;
+  started_at:     number;
+  finished_at:    number | null;
+  ok:             number;          // 0 | 1
+  total_found:    number;
+  total_new:      number;
+  total_updated:  number;
+  duration_ms:    number | null;
+  error:          string | null;
+  triggered_by:   string;
+};
+
+/**
+ * Inserta una ejecución completa de scraper (cron, panel admin, o test).
+ *
+ * Se llama AL FINAL del scraper, con todos los counts ya conocidos. Si el
+ * scraper crashea antes de terminar, no se inserta nada — el panel mostrará
+ * "última ejecución" como vieja, que ya es señal útil de algo está mal.
+ *
+ * Para registrar fallos parciales (scraper que crashea), pasar ok=0 + error.
+ */
+export function logScraperRun(run: {
+  scraper:       string;
+  started_at:    number;
+  finished_at:   number;
+  ok:            boolean;
+  total_found?:  number;
+  total_new?:    number;
+  total_updated?: number;
+  error?:        string | null;
+  triggered_by?: string;
+}): void {
+  const db = getDb();
+  const id = `${run.scraper}_${run.started_at}_${Math.random().toString(36).slice(2, 6)}`;
+  db.prepare(
+    `INSERT INTO scraper_runs (id, scraper, started_at, finished_at, ok,
+       total_found, total_new, total_updated, duration_ms, error, triggered_by)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).run(
+    id,
+    run.scraper,
+    run.started_at,
+    run.finished_at,
+    run.ok ? 1 : 0,
+    run.total_found ?? 0,
+    run.total_new ?? 0,
+    run.total_updated ?? 0,
+    run.finished_at - run.started_at,
+    run.error ?? null,
+    run.triggered_by ?? 'cron',
+  );
+}
+
+/** Últimas N ejecuciones de scrapers (todas las fuentes mezcladas). */
+export function recentScraperRuns(limit = 10): ScraperRun[] {
+  const db = getDb();
+  return db.prepare(
+    `SELECT * FROM scraper_runs ORDER BY started_at DESC LIMIT ?`,
+  ).all(limit) as ScraperRun[];
+}
+
+/**
+ * Métricas agregadas de salud de scrapers para el panel SOS.
+ *
+ * Devuelve un resumen por scraper con el LAST RUN. Si un scraper no ha corrido
+ * NUNCA, no aparece. Útil para detectar "BDNS no corre desde hace 3 días".
+ */
+export function statsScrapers(): {
+  scraper:      string;
+  lastRun:      number;          // epoch del último run
+  lastOk:       boolean;
+  lastNew:      number;
+  lastUpdated:  number;
+  lastError:    string | null;
+  totalRuns7d:  number;
+  okRate7d:     number;          // 0..1
+}[] {
+  const db = getDb();
+  const cutoff7d = Math.floor(Date.now() / 1000) - 7 * 86400;
+
+  // Sub-query: último run por scraper
+  const rows = db.prepare(`
+    WITH last_runs AS (
+      SELECT scraper, MAX(started_at) AS last_started
+      FROM scraper_runs
+      GROUP BY scraper
+    )
+    SELECT
+      sr.scraper,
+      sr.started_at  AS lastRun,
+      sr.ok          AS lastOk,
+      sr.total_new   AS lastNew,
+      sr.total_updated AS lastUpdated,
+      sr.error       AS lastError,
+      (SELECT COUNT(*) FROM scraper_runs sr2 WHERE sr2.scraper = sr.scraper AND sr2.started_at >= ?) AS totalRuns7d,
+      (SELECT CAST(AVG(ok) AS REAL) FROM scraper_runs sr2 WHERE sr2.scraper = sr.scraper AND sr2.started_at >= ?) AS okRate7d
+    FROM scraper_runs sr
+    INNER JOIN last_runs lr
+      ON lr.scraper = sr.scraper AND lr.last_started = sr.started_at
+    ORDER BY sr.scraper ASC
+  `).all(cutoff7d, cutoff7d) as Array<{
+    scraper: string; lastRun: number; lastOk: number; lastNew: number;
+    lastUpdated: number; lastError: string | null;
+    totalRuns7d: number; okRate7d: number | null;
+  }>;
+
+  return rows.map((r) => ({
+    scraper:     r.scraper,
+    lastRun:     r.lastRun,
+    lastOk:      r.lastOk === 1,
+    lastNew:     r.lastNew,
+    lastUpdated: r.lastUpdated,
+    lastError:   r.lastError,
+    totalRuns7d: r.totalRuns7d,
+    okRate7d:    r.okRate7d ?? 1,
+  }));
 }
