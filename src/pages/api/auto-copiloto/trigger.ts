@@ -42,10 +42,10 @@ import { detectSede } from '@/lib/sedes-map';
 import { buildPremiumCTAHtml } from '@/lib/copiloto-cta';
 import { notifyError } from '@/lib/notify-error';
 import { sendTelegram } from '@/lib/telegram';
+import { HUB_URL } from '@/lib/hub';
 
 export const prerender = false;
 
-const HUB_URL = 'https://hub.startidea.tech';
 const MAX_PER_PROFILE = 2; // convocatorias máximas por perfil por ejecución
 const RECENT_HOURS = 26;   // solo convocatorias publicadas en las últimas 26h
 

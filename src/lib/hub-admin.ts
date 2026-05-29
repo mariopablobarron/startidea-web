@@ -4,10 +4,7 @@
 // Si no está configurada, las funciones devuelven null y la página renderiza
 // vacía con un mensaje claro (en lugar de crashear).
 
-const HUB_URL =
-  (import.meta as { env?: Record<string, string> }).env?.PUBLIC_HUB_URL ??
-  process.env.PUBLIC_HUB_URL ??
-  "https://hub.startidea.tech";
+import { HUB_URL } from "@/lib/hub";
 
 function getHubAdminSecret(): string {
   return (

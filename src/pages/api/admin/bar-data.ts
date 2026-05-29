@@ -12,13 +12,9 @@
 import type { APIRoute } from "astro";
 import { isAdminLoggedIn } from "@/lib/admin-session";
 import { listDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
+import { HUB_URL } from "@/lib/hub";
 
 export const prerender = false;
-
-const HUB_URL =
-  (import.meta as { env?: Record<string, string> }).env?.PUBLIC_HUB_URL ??
-  process.env.PUBLIC_HUB_URL ??
-  "https://hub.startidea.tech";
 
 async function fetchWithTimeout<T = unknown>(
   url: string,

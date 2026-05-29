@@ -10,6 +10,7 @@
 import Base from '@/layouts/Base.astro';
 import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
 import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { HUB_URL } from '@/lib/hub';
 
 const jsonLd = [
   breadcrumbList([
@@ -18,8 +19,6 @@ const jsonLd = [
     { name: 'Mapa por CCAA', url: `${SITE_URL}/subvenciones/mapa` },
   ]),
 ];
-
-const HUB_URL = import.meta.env.PUBLIC_HUB_URL || 'https://hub.startidea.tech';
 
 // ─── SSR fetch de stats (con fallback silencioso) ──────────────
 type Stats = {
@@ -562,7 +561,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
   };
   const state: State = { ccaa: '', ccaaLabel: '', finalidad: '', page: 0 };
 
-  const HUB_URL = 'https://hub.startidea.tech';
+  const HUB_URL = import.meta.env.PUBLIC_HUB_URL || 'https://hub.startidea.tech';
   const PAGE_SIZE = 10;
 
   const $ = (sel: string) => document.querySelector(sel) as HTMLElement | null;
