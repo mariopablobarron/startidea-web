@@ -1,0 +1,29 @@
+src/pages/admin/funnel.astro
+  s_fc84abf46d9a4c::t_1369e871ba4ad2 21
+  s_fc84abf46d9a4c::t_952c4768f88dc2 267-271
+  s_fc84abf46d9a4c::t_de896c62c13a90 62-79,81
+  s_fc84abf46d9a4c::t_367d99f017e9ce 37,46
+src/pages/api/internal/ga4-snapshot.ts
+  s_fc84abf46d9a4c::t_3a57f8b78d8421 31-33
+  s_fc84abf46d9a4c::t_c82079a4c0006b 40,52-55
+  s_fc84abf46d9a4c::t_887942efc676ed 1-30,34-39,41-51,56-107
+src/lib/expedientes-db.ts
+  s_fc84abf46d9a4c::t_06aac398396be6 1562-1678
+  s_fc84abf46d9a4c::t_c6023b1e844e3c 212-230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "2b20cc639dea1e22e1f5e07ffb95cdf65d74fa06",
+  "prompts": {},
+  "sessions": {
+    "s_fc84abf46d9a4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e740542-1cbd-4eae-9864-23486c52296a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
