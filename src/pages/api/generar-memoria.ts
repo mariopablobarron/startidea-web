@@ -212,7 +212,9 @@ Lista numerada de los aspectos que la entidad debe verificar, completar o aporta
         'Authorization':  `Bearer ${apiKey}`,
         'Content-Type':   'application/json',
         'HTTP-Referer':   'https://startidea.es',
-        'X-Title':        'Startidea — Copiloto Subvenciones',
+        // HTTP headers solo aceptan ASCII (ByteString). El em dash (—, U+2014)
+        // hacía que fetch() lanzara "Cannot convert argument to a ByteString".
+        'X-Title':        'Startidea Copiloto Subvenciones',
       },
       body: JSON.stringify({
         model:       MODEL,
