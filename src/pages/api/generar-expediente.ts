@@ -25,7 +25,7 @@ import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/d
 import { sendEmail } from '@/lib/email-resend';
 import { notifyError } from '@/lib/notify-error';
 import { join } from 'node:path';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -164,9 +164,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // Notificar a Mario por Telegram
-  const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-  const tgChat = getEnv('TELEGRAM_CHAT_ID');
-  if (tgToken && tgChat) {
+  {
     const elegIcon = elegibilidad?.bloqueante ? '🔴 BLOQUEANTE' : elegibilidad ? `🟢 ${elegibilidad.score}/100` : '❓';
     const tgText = `✅ <b>Documentos generados</b>\n\n` +
       `<b>Expediente:</b> <code>${id}</code>\n` +
@@ -175,11 +173,7 @@ export const POST: APIRoute = async ({ request }) => {
       `<b>Elegibilidad:</b> ${elegIcon}\n\n` +
       `Memoria: ${memoria ? '✅' : '❌'} | Presupuesto: ${presupuesto ? '✅' : '❌'} | Checklist: ${checklist ? '✅' : '❌'} | Guía: ${guia ? '✅' : '❌'}\n\n` +
       `Panel: https://startidea.es/admin/expedientes/${id}`;
-    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ chat_id: tgChat, text: tgText, parse_mode: 'HTML' }),
-    }).catch(console.error);
+    void sendTelegram(tgText);
   }
 
   return new Response(JSON.stringify({

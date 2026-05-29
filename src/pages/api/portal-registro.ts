@@ -15,7 +15,7 @@ import {
   createMagicToken,
 } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -160,19 +160,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Notificar a Mario cuando hay un alta nueva
   if (esNuevo) {
-    const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-    const tgChat  = getEnv('TELEGRAM_CHAT_ID');
-    if (tgToken && tgChat) {
-      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          chat_id:    tgChat,
-          text:       `🆕 <b>Nuevo registro en el portal</b>\n\n<b>Nombre:</b> ${esc(body.nombre!.trim())}\n<b>Organización:</b> ${esc(body.orgNombre!.trim())}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${body.orgTipo ?? '—'}\n<b>Provincia:</b> ${body.provincia ?? '—'}\n<b>Cómo nos conoció:</b> ${body.comoConocio ?? '—'}`,
-          parse_mode: 'HTML',
-        }),
-      }).catch(console.error);
-    }
+    void sendTelegram(`🆕 <b>Nuevo registro en el portal</b>\n\n<b>Nombre:</b> ${esc(body.nombre!.trim())}\n<b>Organización:</b> ${esc(body.orgNombre!.trim())}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${body.orgTipo ?? '—'}\n<b>Provincia:</b> ${body.provincia ?? '—'}\n<b>Cómo nos conoció:</b> ${body.comoConocio ?? '—'}`);
   }
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });

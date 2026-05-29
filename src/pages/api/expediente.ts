@@ -9,6 +9,7 @@
 
 import type { APIRoute } from 'astro';
 import { sendEmail } from '@/lib/email-resend';
+import { sendTelegram } from '@/lib/telegram';
 import {
   insertExpediente,
   saveWizardMemoria,
@@ -53,8 +54,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 };
 
 async function handlePost(request: Request, clientAddress: string): Promise<Response> {
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? import.meta.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? import.meta.env.TELEGRAM_CHAT_ID;
   const EXPEDIENTES_DIR = process.env.EXPEDIENTES_DIR ?? '/tmp/expedientes';
 
   // ── Rate limit por IP: máx 5 expedientes / hora ───────────────────────────
@@ -272,23 +271,8 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
     `<b>Ruta:</b> <code>${expedienteDir}</code>\n` +
     `<b>IP:</b> ${clientAddress || 'unknown'}`;
 
-  // Enviar Telegram
-  if (TOKEN && CHAT_ID) {
-    try {
-      await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: tgText,
-          parse_mode: 'HTML',
-          disable_web_page_preview: true,
-        }),
-      });
-    } catch (err) {
-      console.error('[expediente] Telegram error:', err);
-    }
-  }
+  // Enviar Telegram (best-effort: el helper nunca lanza)
+  await sendTelegram(tgText);
 
   // Email a Mario (async, no bloqueante)
   const convLink = convocatoriaUrl

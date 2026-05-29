@@ -8,6 +8,7 @@
  * Honeypot ya filtrado en el cliente (campo `website`).
  */
 import type { APIRoute } from 'astro';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -32,26 +33,6 @@ const ORG_LABEL: Record<string, string> = {
   'empresa-proposito': 'Empresa con propósito',
   'otro': 'Otro / aún no lo sé',
 };
-
-async function notifyTelegram(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chat = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chat) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chat,
-        text,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true,
-      }),
-    });
-  } catch (err) {
-    console.error('[conversion-rapida] telegram fail', (err as Error).message);
-  }
-}
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   let body: any;
@@ -96,7 +77,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (message) lines.push(`<b>Reto:</b> ${escapeHtml(message)}`);
   lines.push(``, `<b>Source:</b> ${escapeHtml(source)}`);
 
-  await notifyTelegram(lines.join('\n'));
+  await sendTelegram(lines.join('\n'));
 
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,

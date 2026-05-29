@@ -41,7 +41,7 @@ import { sendEmail } from '@/lib/email-resend';
 import { detectSede } from '@/lib/sedes-map';
 import { buildPremiumCTAHtml } from '@/lib/copiloto-cta';
 import { notifyError } from '@/lib/notify-error';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -705,23 +705,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   if (processed > 0 || errors > 0) {
-    const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-    const tgChat = getEnv('TELEGRAM_CHAT_ID');
-    if (tgToken && tgChat) {
-      const lines = results
-        .filter((r) => r.status !== 'skip')
-        .map((r) => `${r.status === 'ok' ? '✅' : '❌'} ${r.profile} → ${r.conv.slice(0, 50)}`)
-        .join('\n');
-      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: tgChat,
-          text: `🤖 <b>Copiloto Autónomo — ciclo diario</b>\n\n✅ Generados: ${processed}\n❌ Errores: ${errors}\n⏱ Tiempo: ${elapsed}s\n\n${lines}`,
-          parse_mode: 'HTML',
-        }),
-      }).catch(console.error);
-    }
+    const lines = results
+      .filter((r) => r.status !== 'skip')
+      .map((r) => `${r.status === 'ok' ? '✅' : '❌'} ${r.profile} → ${r.conv.slice(0, 50)}`)
+      .join('\n');
+    void sendTelegram(`🤖 <b>Copiloto Autónomo — ciclo diario</b>\n\n✅ Generados: ${processed}\n❌ Errores: ${errors}\n⏱ Tiempo: ${elapsed}s\n\n${lines}`);
   }
 
   return new Response(

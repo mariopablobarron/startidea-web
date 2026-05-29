@@ -6,6 +6,7 @@
 import type { APIRoute } from 'astro';
 import { calcularPresupuesto } from '@/data/servicios';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
+import { sendTelegram, hasTelegramConfig } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -59,10 +60,7 @@ function generarDiagnostico(r: Record<string, string>): string {
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN || import.meta.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID || import.meta.env.TELEGRAM_CHAT_ID;
-
-  if (!TOKEN || !CHAT_ID) {
+  if (!hasTelegramConfig()) {
     return new Response(JSON.stringify({ ok: false, error: 'config' }), { status: 500 });
   }
 
@@ -130,23 +128,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     (calc.lineas.length ? escapeHtml(calc.lineas.join('\n')) : '(ninguno)') +
     `\n\n<b>Estimación interna:</b> ${escapeHtml(calc.resumen)}`;
 
-  try {
-    const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true,
-      }),
-    });
-    const data = await r.json();
-    if (!data.ok) {
-      return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
-    }
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: 'network' }), { status: 502 });
+  if (!(await sendTelegram(text))) {
+    return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
   }
 
   // Email de confirmación al cliente (no-bloqueante: si falla, el form sigue

@@ -12,7 +12,7 @@ import { getExpediente, setContratoToken } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { generarEmailContratoHtml, type ContratoData } from '@/lib/contrato-generator';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -74,19 +74,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // Notificar a Mario por Telegram
-  const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-  const tgChat  = getEnv('TELEGRAM_CHAT_ID');
-  if (tgToken && tgChat) {
-    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id:    tgChat,
-        text:       `📝 <b>Contrato enviado al cliente</b>\n\n<b>Expediente:</b> <code>${id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Email:</b> ${exp.email}\n<b>Convocatoria:</b> ${exp.convocatoria_title ?? '—'}`,
-        parse_mode: 'HTML',
-      }),
-    }).catch(console.error);
-  }
+  void sendTelegram(`📝 <b>Contrato enviado al cliente</b>\n\n<b>Expediente:</b> <code>${id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Email:</b> ${exp.email}\n<b>Convocatoria:</b> ${exp.convocatoria_title ?? '—'}`);
 
   return new Response(JSON.stringify({ ok: true, token }), { status: 200 });
 };

@@ -11,6 +11,7 @@
  * Auth: x-admin-token header
  */
 import type { APIRoute } from 'astro';
+import { sendTelegram } from '@/lib/telegram';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { upsertConvocatoria, getConvocatoria, logScraperRun } from '@/lib/expedientes-db';
 import {
@@ -27,23 +28,6 @@ function json(body: unknown, status = 200): Response {
     status,
     headers: { 'content-type': 'application/json' },
   });
-}
-
-async function sendTelegram(msg: string): Promise<void> {
-  // En SSR con adapter Node, las vars runtime se leen de process.env.
-  // Fallback a import.meta.env por compatibilidad con preview local.
-  const token = process.env.TELEGRAM_BOT_TOKEN ?? import.meta.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID ?? import.meta.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: 'HTML' }),
-    });
-  } catch {
-    // no bloquear si Telegram falla
-  }
 }
 
 export const POST: APIRoute = async ({ request }) => {

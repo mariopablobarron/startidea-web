@@ -14,7 +14,7 @@ import type { APIRoute } from 'astro';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { getPendingReminders, markReminded } from '@/lib/auto-copiloto-db';
 import { sendEmail } from '@/lib/email-resend';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -139,19 +139,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Telegram si hubo actividad
   if (sent7 + sent2 + errors > 0) {
-    const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-    const tgChat = getEnv('TELEGRAM_CHAT_ID');
-    if (tgToken && tgChat) {
-      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: tgChat,
-          text: `📅 <b>Recordatorios de plazo</b>\n\n✅ 7 días: ${sent7}\n✅ 2 días: ${sent2}\n❌ Errores: ${errors}\n⏱ ${Math.round((Date.now() - startTime) / 1000)}s`,
-          parse_mode: 'HTML',
-        }),
-      }).catch(console.error);
-    }
+    void sendTelegram(`📅 <b>Recordatorios de plazo</b>\n\n✅ 7 días: ${sent7}\n✅ 2 días: ${sent2}\n❌ Errores: ${errors}\n⏱ ${Math.round((Date.now() - startTime) / 1000)}s`);
   }
 
   return new Response(JSON.stringify({

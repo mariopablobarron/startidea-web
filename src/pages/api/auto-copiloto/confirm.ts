@@ -8,6 +8,7 @@
 import type { APIRoute } from 'astro';
 import { confirmProfile } from '@/lib/auto-copiloto-db';
 import { sendEmail } from '@/lib/email-resend';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -81,19 +82,7 @@ export const GET: APIRoute = async ({ url }) => {
   }).catch(console.error);
 
   // Telegram
-  const tgToken = process.env.TELEGRAM_BOT_TOKEN ?? '';
-  const tgChat = process.env.TELEGRAM_CHAT_ID ?? '';
-  if (tgToken && tgChat) {
-    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: tgChat,
-        text: `✅ <b>Copiloto Autónomo activado</b>\n\n<b>Org:</b> ${profile.org_nombre}\n<b>Email:</b> ${profile.email}\n<b>Tipo:</b> ${profile.org_tipo}\n<b>Territorio:</b> ${profile.ccaa || 'nacional'}`,
-        parse_mode: 'HTML',
-      }),
-    }).catch(console.error);
-  }
+  void sendTelegram(`✅ <b>Copiloto Autónomo activado</b>\n\n<b>Org:</b> ${profile.org_nombre}\n<b>Email:</b> ${profile.email}\n<b>Tipo:</b> ${profile.org_tipo}\n<b>Territorio:</b> ${profile.ccaa || 'nacional'}`);
 
   return htmlPage(
     '¡Copiloto activado!',

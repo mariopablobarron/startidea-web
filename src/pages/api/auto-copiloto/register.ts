@@ -9,6 +9,7 @@
 import type { APIRoute } from 'astro';
 import { createProfile, getProfileByEmail } from '@/lib/auto-copiloto-db';
 import { sendEmail } from '@/lib/email-resend';
+import { sendTelegram } from '@/lib/telegram';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const prerender = false;
@@ -178,19 +179,7 @@ export const POST: APIRoute = async ({ request, url }) => {
   });
 
   // Telegram a Mario
-  const tgToken = process.env.TELEGRAM_BOT_TOKEN ?? '';
-  const tgChat = process.env.TELEGRAM_CHAT_ID ?? '';
-  if (tgToken && tgChat) {
-    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: tgChat,
-        text: `🤖 <b>Nuevo Copiloto Autónomo registrado</b>\n\n<b>Org:</b> ${org_nombre}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${ORG_TIPOS[org_tipo] ?? org_tipo}\n<b>Estado:</b> Pendiente de confirmación`,
-        parse_mode: 'HTML',
-      }),
-    }).catch(console.error);
-  }
+  void sendTelegram(`🤖 <b>Nuevo Copiloto Autónomo registrado</b>\n\n<b>Org:</b> ${org_nombre}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${ORG_TIPOS[org_tipo] ?? org_tipo}\n<b>Estado:</b> Pendiente de confirmación`);
 
   return new Response(
     JSON.stringify({ ok: true, emailSent: emailOk, id: profile.id }),

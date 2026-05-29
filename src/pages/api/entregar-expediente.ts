@@ -11,7 +11,7 @@ import { getExpediente, updateStatus } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { detectSede } from '@/lib/sedes-map';
-import { getEnv } from '@/lib/env';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -159,19 +159,7 @@ export const POST: APIRoute = async ({ request }) => {
   updateStatus(id, 'entregado');
 
   // Notificar a Mario
-  const tgToken = getEnv('TELEGRAM_BOT_TOKEN');
-  const tgChat = getEnv('TELEGRAM_CHAT_ID');
-  if (tgToken && tgChat) {
-    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: tgChat,
-        text: `📬 <b>Docs entregados al cliente</b>\n\n<b>Expediente:</b> <code>${id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Email:</b> ${exp.email}\n<b>Convocatoria:</b> ${exp.convocatoria_title ?? '—'}`,
-        parse_mode: 'HTML',
-      }),
-    }).catch(console.error);
-  }
+  void sendTelegram(`📬 <b>Docs entregados al cliente</b>\n\n<b>Expediente:</b> <code>${id}</code>\n<b>Cliente:</b> ${exp.org_nombre}\n<b>Email:</b> ${exp.email}\n<b>Convocatoria:</b> ${exp.convocatoria_title ?? '—'}`);
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };

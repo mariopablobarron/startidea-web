@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { sendOwnerLeadEmail } from '@/lib/email-resend';
+import { sendTelegram, hasTelegramConfig } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -19,10 +20,7 @@ function escape(s: string): string {
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN || import.meta.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID || import.meta.env.TELEGRAM_CHAT_ID;
-
-  if (!TOKEN || !CHAT_ID) {
+  if (!hasTelegramConfig()) {
     return new Response(JSON.stringify({ ok: false, error: 'config' }), { status: 500 });
   }
 
@@ -72,23 +70,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     `<b>Consentimiento RGPD:</b> ${consent ? 'sí' : 'no'}\n\n` +
     `${escape(message)}`;
 
-  try {
-    const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true,
-      }),
-    });
-    const data = await r.json();
-    if (!data.ok) {
-      return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
-    }
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: 'network' }), { status: 502 });
+  if (!(await sendTelegram(text))) {
+    return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
   }
 
   // Email a Mario (no-bloqueante, ya recibió Telegram).
