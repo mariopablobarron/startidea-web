@@ -1333,3 +1333,66 @@ export function statsCopilotoByConv(): CopilotoConvStats[] {
     ORDER BY n_profiles DESC
   `).all() as CopilotoConvStats[];
 }
+
+/**
+ * Métricas del catálogo de convocatorias para el panel /admin (Sistema Operativo).
+ *
+ * Devuelve un snapshot del estado del catálogo:
+ * - activas        — convocatorias visibles en /subvenciones/catalogo
+ * - urgentes       — activas con deadline_iso en los próximos 14 días
+ * - expiradas      — con deadline pasado (deberían desactivarse)
+ * - nuevasUltimos7d — añadidas (created_at) en los últimos 7 días — útil para
+ *                    saber si los scrapers están trayendo cosas o están parados
+ * - porFuente      — desglose por origen: manual / boja / bdns / idae / ...
+ */
+export function statsCatalogo(): {
+  total:           number;
+  activas:         number;
+  urgentes:        number;
+  expiradas:       number;
+  nuevasUltimos7d: number;
+  porFuente:       Record<string, number>;
+  ultimaIngesta:   number | null;
+} {
+  const db = getDb();
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const in14Iso = new Date(Date.now() + 14 * 86400 * 1000).toISOString().slice(0, 10);
+  const sevenDaysAgo = Math.floor(Date.now() / 1000) - 7 * 86400;
+
+  const totals = db.prepare(`
+    SELECT
+      COUNT(*)                                                     AS total,
+      SUM(CASE WHEN activa = 1 THEN 1 ELSE 0 END)                  AS activas,
+      SUM(CASE WHEN activa = 1
+                AND deadline_iso IS NOT NULL
+                AND deadline_iso >= ?
+                AND deadline_iso <= ?  THEN 1 ELSE 0 END)          AS urgentes,
+      SUM(CASE WHEN deadline_iso IS NOT NULL
+                AND deadline_iso < ?    THEN 1 ELSE 0 END)         AS expiradas,
+      SUM(CASE WHEN created_at >= ?     THEN 1 ELSE 0 END)         AS nuevasUltimos7d,
+      MAX(created_at)                                              AS ultimaIngesta
+    FROM convocatorias
+  `).get(todayIso, in14Iso, todayIso, sevenDaysAgo) as {
+    total: number; activas: number; urgentes: number; expiradas: number;
+    nuevasUltimos7d: number; ultimaIngesta: number | null;
+  };
+
+  const porFuenteRows = db.prepare(`
+    SELECT fuente, COUNT(*) AS n
+    FROM convocatorias
+    GROUP BY fuente
+  `).all() as { fuente: string; n: number }[];
+
+  const porFuente: Record<string, number> = {};
+  for (const r of porFuenteRows) porFuente[r.fuente || 'sin_fuente'] = r.n;
+
+  return {
+    total:           totals.total ?? 0,
+    activas:         totals.activas ?? 0,
+    urgentes:        totals.urgentes ?? 0,
+    expiradas:       totals.expiradas ?? 0,
+    nuevasUltimos7d: totals.nuevasUltimos7d ?? 0,
+    porFuente,
+    ultimaIngesta:   totals.ultimaIngesta,
+  };
+}

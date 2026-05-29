@@ -11,9 +11,12 @@ import {
   statsEconomico,
   statsPortalUsers,
   statsCRMContacts,
+  statsCatalogo,
+  statsCopilotoConversion,
   getExpedientesRecibidosSinProcesar,
   getExpedientesRecientes,
 } from '@/lib/expedientes-db';
+import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
 
 export const prerender = false;
 
@@ -29,6 +32,14 @@ let nCRMContacts = 0;
 let urgentes: ReturnType<typeof getExpedientesRecibidosSinProcesar> = [];
 let recientes:  ReturnType<typeof getExpedientesRecientes> = [];
 
+// ─── Sistema Operativo de Subvenciones (SOS) ────────────────────────────────
+// Métricas agregadas que dan visión de "centro de mando" en un solo sitio.
+// Cada bloque es defensivo: si la BD no tiene la tabla aún, devuelve neutro.
+let catalogo    = { total: 0, activas: 0, urgentes: 0, expiradas: 0, nuevasUltimos7d: 0, porFuente: {} as Record<string, number>, ultimaIngesta: null as number | null };
+let acProfiles  = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
+let acLog       = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
+let conversion  = { perfilesActivos: 0 as number | null, expedientesAutogenerados: 0, expedientesConversion: 0, conversionContratoFirmado: 0, conversionPresentados: 0, facturadoConversion: 0 };
+
 try {
   stats         = statsExpedientes() as typeof stats;
   contratos     = statsContratos();
@@ -37,7 +48,25 @@ try {
   nCRMContacts  = statsCRMContacts();
   urgentes      = getExpedientesRecibidosSinProcesar();
   recientes     = getExpedientesRecientes(6);
+  catalogo      = statsCatalogo();
+  acProfiles    = statsProfiles();
+  acLog         = statsLog();
+  conversion    = statsCopilotoConversion();
 } catch { /* DB vacía todavía */ }
+
+// Formatea "hace X días" desde un epoch (segundos)
+function fmtAgo(ts: number | null): string {
+  if (!ts) return '—';
+  const days = Math.floor((Date.now() / 1000 - ts) / 86400);
+  if (days === 0)  return 'hoy';
+  if (days === 1)  return 'ayer';
+  if (days < 30)   return `hace ${days} d`;
+  if (days < 365)  return `hace ${Math.floor(days / 30)} m`;
+  return `hace ${Math.floor(days / 365)} a`;
+}
+
+// Fuentes ordenadas para mostrar (las que no estén en porFuente salen 0)
+const fuentesOrden = ['boja', 'bdns', 'idae', 'manual'];
 
 const enProceso = (stats.analizando_ia ?? 0) + (stats.docs_listos ?? 0) + (stats.entregado ?? 0);
 const concedidos = stats.presentado ?? 0;
@@ -179,6 +208,153 @@ const STATUS_COLORS: Record<string, string> = {
                   <p class="mt-1 text-xs text-green-500">No hay acciones pendientes urgentes</p>
                 </div>
               )}
+            </div>
+          </div>
+
+          <!-- ─── Sistema Operativo de Subvenciones (SOS) ───────────────── -->
+          {/*
+            Centro de mando: catálogo + auto-copiloto + conversión.
+            Cada widget enlaza a su módulo correspondiente para profundizar.
+          */}
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                Sistema operativo — Subvenciones
+              </p>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                Snapshot
+              </span>
+            </div>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+
+              <!-- 1) Catálogo -->
+              <a href="/admin/convocatorias"
+                 class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Catálogo activo
+                  </p>
+                  <span class="font-mono text-[10px] text-ink/30">
+                    {catalogo.total} total
+                  </span>
+                </div>
+                <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
+                  {catalogo.activas}
+                </p>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <p class:list={[
+                      'font-mono uppercase tracking-wider',
+                      catalogo.urgentes > 0 ? 'text-yellow-700' : 'text-ink/40',
+                    ]}>
+                      {catalogo.urgentes} urgente{catalogo.urgentes !== 1 ? 's' : ''}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Cierran en {'<'} 14 d</p>
+                  </div>
+                  <div>
+                    <p class:list={[
+                      'font-mono uppercase tracking-wider',
+                      catalogo.nuevasUltimos7d > 0 ? 'text-emerald-700' : 'text-ink/40',
+                    ]}>
+                      +{catalogo.nuevasUltimos7d} 7d
+                    </p>
+                    <p class="text-[10px] text-ink/40">Última: {fmtAgo(catalogo.ultimaIngesta)}</p>
+                  </div>
+                </div>
+                {catalogo.expiradas > 0 && (
+                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-red-600">
+                    {catalogo.expiradas} con plazo vencido — revisar
+                  </p>
+                )}
+                <p class="mt-3 font-mono text-[10px] uppercase tracking-wider text-ink/30">
+                  {fuentesOrden.filter(f => (catalogo.porFuente[f] ?? 0) > 0).map(f => `${f} ${catalogo.porFuente[f]}`).join(' · ') || 'Sin convocatorias'}
+                </p>
+              </a>
+
+              <!-- 2) Copiloto Autónomo -->
+              <a href="/admin/auto-copiloto"
+                 class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Copiloto autónomo
+                  </p>
+                  <span class:list={[
+                    'font-mono text-[10px] uppercase tracking-widest',
+                    acLog.errores > 0 ? 'text-red-600' : 'text-ink/30',
+                  ]}>
+                    {acLog.errores > 0 ? `${acLog.errores} errores` : 'OK'}
+                  </span>
+                </div>
+                <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
+                  {acProfiles.active}
+                </p>
+                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                  Perfiles activos
+                </p>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                      {acLog.ultimas_24h}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Envíos 24 h</p>
+                  </div>
+                  <div>
+                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                      {acProfiles.pendingConfirm}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Sin confirmar</p>
+                  </div>
+                </div>
+                {acProfiles.paused > 0 && (
+                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                    {acProfiles.paused} pausados
+                  </p>
+                )}
+              </a>
+
+              <!-- 3) Embudo de conversión -->
+              <div class="block border border-ink/15 bg-paper p-4">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Conversión copiloto → cliente
+                  </p>
+                </div>
+                {(conversion.expedientesConversion + conversion.expedientesAutogenerados) > 0 ? (
+                  <>
+                    <p class="mt-2 font-display text-3xl text-ink">
+                      {conversion.expedientesConversion}
+                    </p>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                      Expedientes desde el copiloto
+                    </p>
+                    <div class="mt-3 space-y-1 text-[11px]">
+                      <div class="flex items-baseline justify-between">
+                        <span class="font-mono uppercase text-ink/60">Firmados</span>
+                        <span class="font-mono text-ink">{conversion.conversionContratoFirmado}</span>
+                      </div>
+                      <div class="flex items-baseline justify-between">
+                        <span class="font-mono uppercase text-ink/60">Presentados</span>
+                        <span class="font-mono text-ink">{conversion.conversionPresentados}</span>
+                      </div>
+                      <div class="flex items-baseline justify-between border-t border-ink/10 pt-1 mt-1">
+                        <span class="font-mono uppercase text-magenta">Facturado</span>
+                        <span class="font-mono text-magenta font-bold">{fmtEur(conversion.facturadoConversion)}</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p class="mt-2 font-display text-3xl text-ink/30">0</p>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                      Sin conversiones todavía
+                    </p>
+                    <p class="mt-3 font-mono text-[10px] text-ink/40 leading-relaxed">
+                      El embudo se llena cuando un perfil del Copiloto Autónomo abre un expediente con Startidea.
+                    </p>
+                  </>
+                )}
+              </div>
+
             </div>
           </div>
 
