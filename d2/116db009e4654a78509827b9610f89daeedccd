@@ -1,0 +1,54 @@
+src/pages/notas.astro
+  s_0ab79ba551035b::t_5fcaa92c497561 4
+  s_0ab79ba551035b::t_b2fb208fb87a71 32-52
+  s_0ab79ba551035b::t_10012cba0d3faf 57,59
+src/pages/financiacion-empresas.astro
+  s_0ab79ba551035b::t_41dc2b957c74ad 168
+src/content/cursos/comunicacion-estrategica-tercer-sector.md
+  s_0ab79ba551035b::t_84a223f6f4b77a 3
+src/pages/tecnologia.astro
+  s_0ab79ba551035b::t_56cd9240849938 110
+src/pages/merchandising.astro
+  s_0ab79ba551035b::t_a7d5d1e7a7552a 26
+src/pages/google-ad-grants.astro
+  s_0ab79ba551035b::t_ba5248329b5eae 87
+src/pages/laboratorio/hyperframes.astro
+  s_0ab79ba551035b::t_4056a357898e3a 57
+src/pages/recursos/diagnostico-modelo-fundraising.astro
+  s_0ab79ba551035b::t_896d195f3cff17 7
+src/content/cursos/email-marketing-segmentado-tercer-sector.md
+  s_0ab79ba551035b::t_93d8187af5a071 3
+src/pages/casos.astro
+  s_0ab79ba551035b::t_9e22511a2f6e10 4,8-30
+  s_0ab79ba551035b::t_2636e1131dd4c0 37
+src/pages/laboratorio/index.astro
+  s_0ab79ba551035b::t_5547272db4f08c 59
+src/pages/integraciones-google.astro
+  s_0ab79ba551035b::t_bb18c1325528f5 23
+src/content/cursos/subvenciones-como-presentar-solicitud.md
+  s_0ab79ba551035b::t_bb850f6f0d466e 3
+src/pages/sobre.astro
+  s_0ab79ba551035b::t_573f2fd28c6fd1 5
+  s_0ab79ba551035b::t_d325a9a030eabb 38-45
+  s_0ab79ba551035b::t_1bd80f63fd62e9 52
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_0b5d74a3efa130 158
+src/pages/subvenciones/mapa.astro
+  s_0ab79ba551035b::t_dc0d1ec3a56fd9 135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d2116db009e4654a78509827b9610f89daeedccd",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
