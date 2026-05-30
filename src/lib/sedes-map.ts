@@ -18,6 +18,9 @@ export interface SedeInfo {
   tramiteHint: string;
   autofirmaRequired: boolean;
   notasEspeciales?: string;
+  /** Clave del driver de tramitación asistida (container copiloto-sede). Solo
+   *  las sedes con driver implementado la tienen. Sin key → no hay automatización. */
+  key?: string;
 }
 
 // Patrones de detección: [patrón en URL o nombre organismo, SedeInfo]
@@ -28,6 +31,7 @@ const SEDES: Array<{ patterns: string[]; sede: SedeInfo }> = [
       'consejeria', 'consejer', 'idae andaluc', 'feder',
     ],
     sede: {
+      key: 'junta-andalucia',
       nombre: 'Junta de Andalucía',
       url: 'https://ws030.juntadeandalucia.es/sal/servicios/tramites',
       urlTramite: 'https://www.juntadeandalucia.es/haciendayadministracionpublica/sede/',

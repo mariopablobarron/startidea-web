@@ -515,6 +515,21 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
                     ⚠ Requiere Autofirma instalado
                   </p>
                 )}
+                {sedeDetectada.key && (
+                  <div class="border-t border-blue-200 pt-3">
+                    <button
+                      id="btn-tramitar-sede"
+                      data-expid={exp.id}
+                      class="border border-blue-300 bg-white px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-blue-700 hover:bg-blue-600 hover:text-white disabled:opacity-50"
+                    >
+                      ⚙ Tramitación asistida (Fase 2)
+                    </button>
+                    <p class="mt-1 text-[10px] text-ink/40">
+                      Prepara el trámite en la sede hasta la firma. El cliente firma con su certificado.
+                    </p>
+                    <p id="tramitar-sede-result" class="mt-2 text-xs leading-relaxed"></p>
+                  </div>
+                )}
                 {sedeDetectada.notasEspeciales && (
                   <details class="mt-2">
                     <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-ink/50 hover:text-ink">
@@ -557,6 +572,38 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
     .split('; ')
     .find((r) => r.startsWith('startidea_admin='))
     ?.split('=')[1] ?? '';
+
+  // Tramitación asistida en sede (Fase 2 — container copiloto-sede)
+  document.getElementById('btn-tramitar-sede')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.expid!;
+    const out = document.getElementById('tramitar-sede-result')!;
+    btn.disabled = true;
+    out.textContent = 'Preparando el trámite en la sede…';
+    out.className = 'mt-2 text-xs leading-relaxed text-ink/60';
+    try {
+      const res = await fetch('/api/admin/tramitar-sede', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        out.className = 'mt-2 text-xs leading-relaxed text-green-700';
+        out.innerHTML = `✅ ${data.message ?? 'Trámite preparado.'}` +
+          (data.sedeUrl ? ` <a href="${data.sedeUrl}" target="_blank" rel="noopener" class="underline">Abrir sede ↗</a>` : '') +
+          (data.siguientePaso ? `<br><span class="text-ink/50">${data.siguientePaso}</span>` : '');
+      } else {
+        out.className = 'mt-2 text-xs leading-relaxed text-red-600';
+        out.textContent = `⚠ ${data.detail ?? data.error ?? 'Error desconocido'}`;
+      }
+    } catch (err) {
+      out.className = 'mt-2 text-xs leading-relaxed text-red-600';
+      out.textContent = `⚠ ${(err as Error).message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
 
   // Generar con IA
   document.getElementById('btn-generar')?.addEventListener('click', async (e) => {
