@@ -19,6 +19,15 @@ for (const cat of CATS) {
 // Contadores
 const counts: Record<string, number> = { Todas: notas.length };
 for (const cat of CATS) counts[cat] = byCategory[cat].length;
+
+// Audiencias (segunda dimensión de filtro). Las notas con audience 'Todas'
+// (universales) cuentan y se muestran bajo cualquier audiencia concreta.
+const AUDS = ['Tercer sector', 'Instituciones', 'Empresas con propósito'] as const;
+const TODAS_AUD = 'Todas las audiencias';
+const audCounts: Record<string, number> = { [TODAS_AUD]: notas.length };
+for (const aud of AUDS) {
+  audCounts[aud] = notas.filter((n) => n.data.audience === aud || n.data.audience === 'Todas').length;
+}
 ---
 
 <Base
@@ -57,6 +66,26 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
           </button>
         ))}
       </div>
+
+      <!-- Pills de audiencia -->
+      <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Filtrar por audiencia">
+        {([TODAS_AUD, ...AUDS] as const).map((aud) => (
+          <button
+            type="button"
+            data-aud={aud}
+            class:list={[
+              'aud-pill border px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition-colors',
+              aud === TODAS_AUD
+                ? 'border-magenta bg-magenta text-paper'
+                : 'border-ink/30 bg-paper text-ink/70 hover:border-magenta hover:text-magenta',
+            ]}
+            aria-pressed={aud === TODAS_AUD ? 'true' : 'false'}
+          >
+            {aud === TODAS_AUD ? 'Toda audiencia' : aud}
+            <span class="ml-1.5 opacity-60">({audCounts[aud]})</span>
+          </button>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -91,7 +120,7 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
                     const subItems = byCategory[subCat];
                     if (!subItems || subItems.length === 0) return null;
                     return (
-                      <div>
+                      <div class="sub-section" data-subcat={subCat}>
                         <div class="mb-8 grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
                           <div class="col-span-12 lg:col-span-3">
                             <button
@@ -107,12 +136,12 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
                             </p>
                           </div>
                         </div>
-                        <ol class="divide-y divide-ink/15 border-b border-ink/15">
+                        <ol class="nota-list divide-y divide-ink/15 border-b border-ink/15">
                           {subItems.map((nota) => {
                             const words = nota.body.trim().split(/\s+/).length;
                             const min = Math.max(1, Math.round(words / 200));
                             return (
-                              <li>
+                              <li class="nota-item" data-audience={nota.data.audience}>
                                 <a
                                   href={`/notas/${nota.slug}`}
                                   class="reveal group grid grid-cols-12 gap-x-8 gap-y-4 py-8 transition-colors hover:bg-paper-warm"
@@ -161,12 +190,12 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
                 </div>
               ) : (
                 /* Vista de categoría individual: lista simple */
-                <ol class="divide-y divide-ink/15 border-y border-ink/15">
+                <ol class="nota-list divide-y divide-ink/15 border-y border-ink/15">
                   {items.map((nota) => {
                     const words = nota.body.trim().split(/\s+/).length;
                     const min = Math.max(1, Math.round(words / 200));
                     return (
-                      <li>
+                      <li class="nota-item" data-audience={nota.data.audience}>
                         <a
                           href={`/notas/${nota.slug}`}
                           class="reveal group grid grid-cols-12 gap-x-8 gap-y-4 py-8 transition-colors hover:bg-paper-warm"
@@ -213,6 +242,14 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
             </div>
           );
         })}
+
+        {/* Estado vacío al combinar filtros (categoría + audiencia) */}
+        <p data-empty class="hidden border-t border-ink/15 pt-8 font-display text-xl text-ink/60 md:text-2xl">
+          No hay notas que combinen esa categoría y esa audiencia.{' '}
+          <button type="button" data-reset class="italic text-magenta underline-offset-4 hover:underline">
+            Quitar filtros
+          </button>
+        </p>
       </div>
     </section>
   ) : (
@@ -301,52 +338,77 @@ for (const cat of CATS) counts[cat] = byCategory[cat].length;
 </Base>
 
 <script>
-  const pills = document.querySelectorAll('.cat-pill');
+  // Filtrado en dos dimensiones: categoría (alterna secciones) + audiencia
+  // (oculta notas individuales). JS plano sin tipos (gotcha CLAUDE.md #2).
+  const catPills = document.querySelectorAll('.cat-pill');
+  const audPills = document.querySelectorAll('.aud-pill');
   const pillLinks = document.querySelectorAll('.cat-pill-link');
   const sections = document.querySelectorAll('.cat-section');
+  const subSections = document.querySelectorAll('.sub-section');
+  const notaLists = document.querySelectorAll('.nota-list');
+  const emptyMsg = document.querySelector('[data-empty]');
+  const resetBtn = document.querySelector('[data-reset]');
 
-  function activateCat(cat: string) {
-    // Actualizar pills
+  const CATS = ['Comunicación', 'Financiación', 'Estrategia', 'Agencia'];
+  const AUDS = ['Tercer sector', 'Instituciones', 'Empresas con propósito'];
+  const TODAS_AUD = 'Todas las audiencias';
+
+  let activeCat = 'Todas';
+  let activeAud = TODAS_AUD;
+
+  function audMatches(itemAud) {
+    if (activeAud === TODAS_AUD) return true;
+    // Las notas universales ('Todas') encajan en cualquier audiencia concreta.
+    return itemAud === activeAud || itemAud === 'Todas';
+  }
+
+  function paintPills(pills, active, activeClasses, idleClasses) {
     pills.forEach((p) => {
-      const active = p.dataset.cat === cat;
-      p.setAttribute('aria-pressed', String(active));
-      if (active) {
-        p.classList.add('border-ink', 'bg-ink', 'text-paper');
-        p.classList.remove('border-ink/30', 'bg-paper', 'text-ink/70');
-      } else {
-        p.classList.remove('border-ink', 'bg-ink', 'text-paper');
-        p.classList.add('border-ink/30', 'bg-paper', 'text-ink/70');
-      }
+      const isActive = (p.dataset.cat || p.dataset.aud) === active;
+      p.setAttribute('aria-pressed', String(isActive));
+      activeClasses.forEach((c) => p.classList.toggle(c, isActive));
+      idleClasses.forEach((c) => p.classList.toggle(c, !isActive));
+    });
+  }
+
+  function apply() {
+    // 1. Categoría: solo la sección activa visible.
+    sections.forEach((s) => s.classList.toggle('hidden', s.dataset.section !== activeCat));
+
+    // 2. Audiencia: ocultar las notas que no encajan (en cualquier sección).
+    document.querySelectorAll('.nota-item').forEach((li) => {
+      li.classList.toggle('hidden', !audMatches(li.dataset.audience));
     });
 
-    // Mostrar/ocultar secciones
-    sections.forEach((s) => {
-      s.classList.toggle('hidden', s.dataset.section !== cat);
-    });
+    // 3. Colapsar listas y sub-secciones que se queden sin notas visibles.
+    notaLists.forEach((ol) => ol.classList.toggle('hidden', !ol.querySelector('.nota-item:not(.hidden)')));
+    subSections.forEach((sec) => sec.classList.toggle('hidden', !sec.querySelector('.nota-item:not(.hidden)')));
 
-    // Actualizar URL sin recargar
+    // 4. Estado vacío si la combinación no deja ninguna nota.
+    const anyVisible = document.querySelector('.cat-section:not(.hidden) .nota-item:not(.hidden)');
+    if (emptyMsg) emptyMsg.classList.toggle('hidden', Boolean(anyVisible));
+
+    // 5. Pintar ambas filas de pills.
+    paintPills(catPills, activeCat, ['border-ink', 'bg-ink', 'text-paper'], ['border-ink/30', 'bg-paper', 'text-ink/70']);
+    paintPills(audPills, activeAud, ['border-magenta', 'bg-magenta', 'text-paper'], ['border-ink/30', 'bg-paper', 'text-ink/70']);
+
+    // 6. Sincronizar URL (?cat=&aud=) sin recargar.
     const url = new URL(window.location.href);
-    if (cat === 'Todas') {
-      url.searchParams.delete('cat');
-    } else {
-      url.searchParams.set('cat', cat);
-    }
+    if (activeCat === 'Todas') url.searchParams.delete('cat'); else url.searchParams.set('cat', activeCat);
+    if (activeAud === TODAS_AUD) url.searchParams.delete('aud'); else url.searchParams.set('aud', activeAud);
     history.replaceState(null, '', url.toString());
   }
 
-  // Pills principales
-  pills.forEach((p) => {
-    p.addEventListener('click', () => activateCat(p.dataset.cat));
-  });
+  catPills.forEach((p) => p.addEventListener('click', () => { activeCat = p.dataset.cat; apply(); }));
+  pillLinks.forEach((p) => p.addEventListener('click', () => { activeCat = p.dataset.cat; apply(); }));
+  audPills.forEach((p) => p.addEventListener('click', () => { activeAud = p.dataset.aud; apply(); }));
+  if (resetBtn) resetBtn.addEventListener('click', () => { activeCat = 'Todas'; activeAud = TODAS_AUD; apply(); });
 
-  // Links de sub-categoría dentro de "Todas"
-  pillLinks.forEach((p) => {
-    p.addEventListener('click', () => activateCat(p.dataset.cat));
-  });
-
-  // Leer categoría inicial desde URL (?cat=Financiación)
-  const urlCat = new URL(window.location.href).searchParams.get('cat');
-  if (urlCat && ['Comunicación', 'Financiación', 'Estrategia', 'Agencia'].includes(urlCat)) {
-    activateCat(urlCat);
-  }
+  // Estado inicial desde la URL (?cat=Financiación&aud=Tercer sector).
+  const params = new URL(window.location.href).searchParams;
+  const urlCat = params.get('cat');
+  const urlAud = params.get('aud');
+  if (urlCat && CATS.includes(urlCat)) activeCat = urlCat;
+  if (urlAud && AUDS.includes(urlAud)) activeAud = urlAud;
+  apply();
 </script>
