@@ -14,13 +14,14 @@
  * flujo post-autenticación requieren EXPLORACIÓN EN VIVO con una cuenta/certificado
  * de prueba (la mayoría del trámite vive detrás de Cl@ve). Marcado con TODO.
  */
-import { chromium } from 'playwright';
-
+// Import lazy de Playwright: así el server arranca y el modo mock funciona sin
+// la dependencia pesada instalada (útil para smoke-tests y healthcheck).
 const SEDE_URL = 'https://ws030.juntadeandalucia.es/sal/servicios/tramites';
 
 export async function tramitarJuntaAndalucia(job) {
   const { expedienteId, formData, files, mode } = job;
 
+  const { chromium } = await import('playwright');
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({
     locale: 'es-ES',
