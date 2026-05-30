@@ -1,0 +1,14 @@
+{
+  "name": "copiloto-sede",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Copiloto de Subvenciones — Fase 2: tramitación ASISTIDA en sede electrónica con Playwright. Container SEPARADO del startidea-web principal (la imagen principal NO lleva Playwright).",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

@@ -16,3 +16,5 @@ README.md
 .claude
 video/
 *.log
+# Copiloto Fase 2 — container Playwright SEPARADO (NO va en la imagen principal)
+copiloto-sede/
