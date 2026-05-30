@@ -1,0 +1,25 @@
+src/pages/api/admin/scraper-bdns.ts
+  s_0ab79ba551035b::t_94e94817f2bed4 17
+  s_0ab79ba551035b::t_a26ff8980fca53 117-119,124
+  s_0ab79ba551035b::t_736deac5be7557 42-47
+src/pages/admin/convocatorias/index.astro
+  s_0ab79ba551035b::t_33b846e7b84042 208
+src/lib/scrapers/bdns.ts
+  s_0ab79ba551035b::t_32308b2fdbe222 2,4-10,13,18-26,29-30,32-53,94,96-114,116,203-253,257-259,274-282,285-286,289-291,293,295,299-300,302-303,306-312,324,326,331,335,337-338,349-351,353-359,365,367-370,376-389,392-400,404,408-411,413-418,420-431,434-435,440,442
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f2ea23f35490ffa9e080608556c1bf3e579fe7c6",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
