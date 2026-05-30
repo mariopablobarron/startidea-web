@@ -58,7 +58,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
     <!-- Preload fuentes críticas del fold (Montserrat latin) — sin esto el
          browser solo descubre el woff2 después de parsear el CSS, lo que
-         retrasaba LCP del <h1> hasta 4-5s. Con preload bajamos a ~2s. -->
+         retrasaba el LCP del titular hasta 4-5s. Con preload bajamos a ~2s. -->
     <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={montserratLatinItalic} as="font" type="font/woff2" crossorigin />
 
