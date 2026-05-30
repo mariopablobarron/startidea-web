@@ -1,0 +1,25 @@
+src/lib/sedes-map.ts
+  s_0ab79ba551035b::t_57e16b183d1d9d 34
+  s_0ab79ba551035b::t_4b7e37aa3d609a 21-23
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_16f2f4fa3e8866 518-532
+  s_0ab79ba551035b::t_70df66819bab68 576-607
+src/pages/api/admin/tramitar-sede.ts
+  s_0ab79ba551035b::t_75be96e8c35e89 1-110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a6337b7342aa4817e7ff9766f4e2a7a60b776dc9",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
