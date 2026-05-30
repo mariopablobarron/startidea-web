@@ -2,8 +2,8 @@
  * expedientes-db.ts
  *
  * SQLite local para gestión de expedientes del Copiloto de subvenciones.
- * Usa better-sqlite3 (ya en el proyecto para seo.db).
- * La BD vive en EXPEDIENTES_DIR (default /data/expedientes) junto a los archivos.
+ * Usa better-sqlite3. La BD (expedientes.db) vive en EXPEDIENTES_DIR
+ * (default /data/expedientes) junto a los archivos de cada expediente.
  *
  * Status del expediente:
  *   recibido → analizando_ia → docs_listos → entregado → presentado | rechazado
