@@ -1,0 +1,25 @@
+src/pages/notas.astro
+  s_0ab79ba551035b::t_7b7813e8f9dd64 193,198
+  s_0ab79ba551035b::t_7595a283e7de7c 341-344,347-357,359-365,367-370,372,374-380,383-395,397-398,402-405,407-413
+  s_0ab79ba551035b::t_b073962bc3fa9c 139,144
+  s_0ab79ba551035b::t_fda220122c92d8 245-252
+  s_0ab79ba551035b::t_e5309a088a0b1b 123
+  s_0ab79ba551035b::t_9c12388a0c61a6 69-88
+  s_0ab79ba551035b::t_da70dd00f77cd0 22-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7952364be35d4509db0acf64e6f921ba4993cb0a",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
