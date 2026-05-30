@@ -1,0 +1,21 @@
+copiloto-sede/drivers/index.mjs
+  s_0ab79ba551035b::t_77e4f902fc1bcc 10-29,33
+copiloto-sede/drivers/junta-andalucia.mjs
+  s_0ab79ba551035b::t_68289803ea6b06 17-18,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "08b5e73c0fcafe746d5535720ace0d7c7c440b1e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
