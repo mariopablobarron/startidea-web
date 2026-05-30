@@ -1,6 +1,6 @@
 ---
 title: 'Subvenciones: cómo preparar y presentar una solicitud con garantías'
-description: 'Masterclass práctica de 4 horas para responsables de gestión de entidades del tercer sector y pequeñas empresas. Desde identificar las convocatorias adecuadas hasta presentar el expediente completo en sede electrónica con certificado digital. Metodología Startidea aplicada a casos reales.'
+description: 'Masterclass de 4 horas para entidades del tercer sector y pymes: de identificar la convocatoria a presentar el expediente en sede electrónica con certificado digital.'
 pubDate: 2026-05-26
 formato: online
 modalidad: masterclass

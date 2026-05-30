@@ -1,6 +1,6 @@
 ---
 title: 'Comunicación estratégica para entidades del tercer sector'
-description: 'Taller intensivo de un día para responsables de comunicación de ONGs, fundaciones y asociaciones. Aprenderás a construir un plan de comunicación realista con los recursos de una organización pequeña: mensajes, canales, equipo y calendario. Sin plantillas genéricas: todo adaptado a tu caso.'
+description: 'Taller de un día para responsables de comunicación de ONGs y fundaciones: construye un plan realista con los recursos de una organización pequeña. Sin plantillas genéricas.'
 pubDate: 2026-05-26
 formato: presencial
 modalidad: taller

@@ -1,6 +1,6 @@
 ---
 title: 'Email marketing segmentado para el tercer sector'
-description: 'Masterclass práctica de 4 horas para responsables de comunicación de asociaciones, fundaciones y ONGs. Aprenderás a segmentar tu lista de correo, diseñar secuencias automáticas para donantes y voluntarios, y medir qué funciona. Sin grandes presupuestos, sin herramientas de pago obligatorio.'
+description: 'Masterclass de 4 horas para comunicación de asociaciones y fundaciones: segmenta tu lista, automatiza secuencias para donantes y voluntarios y mide qué funciona. Sin grandes presupuestos.'
 pubDate: 2026-05-26
 formato: online
 modalidad: masterclass

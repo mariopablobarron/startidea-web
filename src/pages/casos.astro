@@ -1,15 +1,40 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { casos } from '@/data/casos';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const audiencias = ['Todas', ...new Set(casos.map(c => c.audience))];
 const disciplinas = ['Todas', ...new Set(casos.map(c => c.discipline))];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Casos', url: `${SITE_URL}/casos` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Casos de Startidea',
+    description: 'Proyectos reales con organizaciones del tercer sector, instituciones y empresas con propósito.',
+    url: `${SITE_URL}/casos`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: casos.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/casos/${c.slug}`,
+        name: c.title,
+      })),
+    },
+  },
+];
 ---
 
 <Base
   title="Casos — Startidea"
   description="Proyectos reales con organizaciones reales: Down Granada, Granada Social, Proyecto Hombre, Tres Mil Millones de Latidos."
   ogSlug="page/casos"
+  jsonLd={jsonLd}
 >
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
     <div class="container-x">

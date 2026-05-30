@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const notas = await getCollection('notas', ({ data }) => !data.draft);
 notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
@@ -28,12 +29,34 @@ const audCounts: Record<string, number> = { [TODAS_AUD]: notas.length };
 for (const aud of AUDS) {
   audCounts[aud] = notas.filter((n) => n.data.audience === aud || n.data.audience === 'Todas').length;
 }
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Notas', url: `${SITE_URL}/notas` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Notas de Startidea',
+    description: 'Notas mensuales sobre comunicación, estrategia, financiación y producto digital con propósito.',
+    url: `${SITE_URL}/notas`,
+    blogPost: notas.slice(0, 20).map((n) => ({
+      '@type': 'BlogPosting',
+      headline: n.data.title,
+      url: `${SITE_URL}/notas/${n.slug}`,
+      datePublished: n.data.pubDate.toISOString().slice(0, 10),
+      author: { '@type': 'Person', name: n.data.author },
+    })),
+  },
+];
 ---
 
 <Base
   title="Notas — Startidea"
-  description="Notas mensuales sobre comunicación, estrategia, financiación y producto digital al servicio de organizaciones con propósito. Una al mes. Cinco minutos. Sin tracking pixels."
+  description="Notas mensuales sobre comunicación, estrategia, financiación y producto digital con propósito. Una al mes, cinco minutos, sin tracking pixels."
   ogSlug="page/notas"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

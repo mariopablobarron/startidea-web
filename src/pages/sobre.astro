@@ -2,6 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import { Picture } from 'astro:assets';
 import marioPortrait from '@/assets/brand/mario-fundador.jpg';
+import { organizationSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const hitos = [
   { year: '2011', title: 'Fundación de Startidea', body: 'Febrero de 2011, Granada. Mario Pablo Sánchez Barrón funda la agencia. Primera asignación: comunicación estratégica para una plataforma confesional nacional. Lo que iba a ser un encargo se convirtió en relación de tres años.' },
@@ -34,12 +35,21 @@ const valores = [
   'Cada proyecto se mide. Si no movió algo, no lo hicimos bien.',
   'Honestidad antes que ventas. Si no encajamos, lo decimos en la primera llamada.',
 ];
+
+const jsonLd = [
+  organizationSchema(),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Quiénes somos', url: `${SITE_URL}/sobre` },
+  ]),
+];
 ---
 
 <Base
   title="Quiénes somos · Startidea | Innovación social Granada"
   description="Agencia fundada en Granada en 2011. Quince años acompañando a tercer sector, instituciones y empresas con propósito. Estrategia, comunicación, fundraising."
   ogSlug="page/sobre"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
