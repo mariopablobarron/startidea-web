@@ -1,46 +1,56 @@
 /**
- * Scraper BDNS — cliente de la API pública de infosubvenciones.es
+ * Scraper BDNS — cliente de la API pública de SNPSAP (infosubvenciones.es)
  *
- * Docs API (no oficial):
- *   https://www.infosubvenciones.es/bdnstrans/GE/es/api/convocatorias
+ * IMPORTANTE: el API REST vive en /bdnstrans/api (devuelve JSON).
+ * La ruta /bdnstrans/GE/es/... es el FRONT-END web (devuelve HTML) y NO debe usarse.
+ * Todas las llamadas requieren el parámetro vpd=GE.
+ *
+ * Flujo en dos fases:
+ *   1. Lista ligera:  /convocatorias/busqueda?vpd=GE&descripcion=<término>
+ *   2. Detalle:       /convocatorias?vpd=GE&numConv=<numeroConvocatoria>
  *
  * Uso:
- *   const result = await scrapeBDNS({ organismos: ['A01002981'], keywords: ['inclusión'] });
+ *   const result = await scrapeBDNS({ soloAbiertas: true });
  */
 
 // ─── Tipos API BDNS ────────────────────────────────────────────────────────
 
-export interface BDNSConvRaw {
-  id: number;
-  tdns?: string;                 // código interno BDNS
-  titulo?: string;
-  tituloConvocatoria?: string;
-  fechaPublicacion?: string;     // YYYY-MM-DD o DD/MM/YYYY
-  fechaInicioSolicitud?: string;
-  fechaFinSolicitud?: string;
-  importeTotal?: number;
-  importeMaxAyuda?: number;
-  importeMinAyuda?: number;
-  organismo?: {
-    codigo: string;
-    descripcion: string;
-    codigoMinisterio?: string;
-  };
-  tiposBeneficiario?: { codigo: string; descripcion: string }[];
-  finalidades?: { codigo: string; descripcion: string }[];
-  sectoresActividad?: { codigo: string; descripcion: string }[];
-  regimenConcurrencia?: string;
-  descripcion?: string;
-  urlConvocatoria?: string;
-  fuente?: string;
+/** Item del listado ligero (/convocatorias/busqueda). Campos nivelN FLAT. */
+export interface BDNSListItem {
+  id?: number;
+  numeroConvocatoria?: string;
+  descripcion?: string;            // título de la convocatoria
+  fechaRecepcion?: string;         // YYYY-MM-DD
+  nivel1?: string;                 // p.ej. "ESTADO" / "ANDALUCÍA"
+  nivel2?: string;
+  nivel3?: string;
 }
 
-export interface BDNSResponse {
+export interface BDNSListResponse {
+  content?: BDNSListItem[];
   totalElements?: number;
-  content?: BDNSConvRaw[];
-  // v2
-  resultados?: BDNSConvRaw[];
-  total?: number;
+}
+
+/** Detalle completo (/convocatorias?numConv=N). */
+export interface BDNSDetail {
+  codigoBDNS?: string;
+  numeroConvocatoria?: string;
+  descripcion?: string;            // título
+  organo?: {
+    nivel1?: string;
+    nivel2?: string;
+    nivel3?: string;
+  };
+  fechaInicioSolicitud?: string;   // YYYY-MM-DD
+  fechaFinSolicitud?: string;      // YYYY-MM-DD
+  abierto?: boolean;               // NO fiable — usar filtro por fecha
+  presupuestoTotal?: number;
+  tiposBeneficiarios?: { descripcion?: string; codigo?: string }[];
+  sectores?: { descripcion?: string; codigo?: string }[];
+  regiones?: { descripcion?: string; codigo?: string }[];
+  descripcionFinalidad?: string;
+  urlBasesReguladoras?: string;
+  sedeElectronica?: string;        // a veces sin esquema (//... o dominio pelado)
 }
 
 export interface ScrapeResult {
@@ -81,22 +91,29 @@ export interface NormalizedConv {
   destacada: 0;
 }
 
-// ─── Organismos Junta de Andalucía relevantes ─────────────────────────────
+// ─── Términos de búsqueda y keywords de relevancia ────────────────────────
 
-export const JUNTA_ORGANISMOS = [
-  'A01002981', // Consejería de Inclusión Social, Juventud, FF y Migraciones
-  'A01002977', // Consejería de Educación
-  'A01002982', // Consejería de Igualdad y Políticas Sociales (anterior nombre)
-  'A01003001', // Consejería de Empleo
-  'A01002980', // Consejería de Salud
-  'A01002983', // Consejería de Fomento
-  'A01003000', // Consejería de Cultura
-  'A01003279', // Consejería de la Presidencia, Interior, Diálogo Social y Simplificación Administrativa
-  'A01003309', // Consejería de Economía, Hacienda y Fondos Europeos
+/**
+ * Términos fuertes para las consultas a la API (fase 1). Cada uno dispara una
+ * búsqueda independiente; los resultados se deduplican por numeroConvocatoria.
+ * Se mantienen curados y cortos para no saturar el API.
+ */
+export const BDNS_SEARCH_TERMS = [
+  'inclusión social',
+  'entidades sociales',
+  'tercer sector',
+  'acción social',
+  'servicios sociales',
+  'personas con discapacidad',
+  'infancia',
+  'juventud',
+  'igualdad',
+  'voluntariado',
+  'entidades locales',
+  'desarrollo local',
 ];
 
-// ─── Keywords para filtrar convocatorias relevantes ───────────────────────
-
+/** Keywords para filtrar la relevancia social del detalle (fase 2). */
 export const SOCIAL_KEYWORDS = [
   // Tercer sector / entidades privadas
   'inclusión social',
@@ -183,15 +200,63 @@ function fmtImporte(n: number): string {
   return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 }
 
-function isSocialRelevant(raw: BDNSConvRaw): boolean {
-  const text = [raw.titulo, raw.tituloConvocatoria, raw.descripcion]
-    .filter(Boolean).join(' ').toLowerCase();
+const BDNS_API = 'https://www.infosubvenciones.es/bdnstrans/api';
+
+/**
+ * Fetch con timeout + guarda de content-type. Lanza si la respuesta NO es JSON
+ * (defensa contra la regresión de pegar al front-end HTML).
+ */
+async function fetchJson<T>(url: string, timeoutMs: number): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Startidea-Bot/1.0 (startidea.es)',
+      },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const ct = res.headers.get('content-type') ?? '';
+    if (!ct.includes('json')) {
+      throw new Error(`respuesta no-JSON (content-type: ${ct || 'desconocido'}) — ¿URL del front-end?`);
+    }
+    return await res.json() as T;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Relevancia geográfica: Andalucía/Granada aparece en niveles variables.
+ * Estatal (ESTADO) solo si includeEstatal=true.
+ */
+function isAndaluciaRelevant(
+  n1?: string,
+  n2?: string,
+  n3?: string,
+  includeEstatal = false,
+): boolean {
+  const joined = [n1, n2, n3].filter(Boolean).join(' ').toLowerCase();
+  if (joined.includes('andaluc') || joined.includes('granada')) return true;
+  if (includeEstatal && joined.includes('estado')) return true;
+  return false;
+}
+
+function isSocialRelevant(d: BDNSDetail): boolean {
+  const text = [
+    d.descripcion,
+    d.descripcionFinalidad,
+    ...(d.sectores ?? []).map(s => s.descripcion),
+    ...(d.tiposBeneficiarios ?? []).map(b => b.descripcion),
+  ].filter(Boolean).join(' ').toLowerCase();
   return SOCIAL_KEYWORDS.some(kw => text.includes(kw));
 }
 
-function guessTipoBeneficiario(raw: BDNSConvRaw): NormalizedConv['tipo_beneficiario'] {
-  const beneficiarios = (raw.tiposBeneficiario ?? []).map(b => b.descripcion?.toLowerCase() ?? '');
-  const all = beneficiarios.join(' ');
+function guessTipoBeneficiario(d: BDNSDetail): NormalizedConv['tipo_beneficiario'] {
+  const all = (d.tiposBeneficiarios ?? [])
+    .map(b => b.descripcion?.toLowerCase() ?? '').join(' ');
 
   const tienePrivada = all.includes('entidad sin') || all.includes('ong') ||
     all.includes('asociaci') || all.includes('fundaci') || all.includes('privad');
@@ -206,35 +271,45 @@ function guessTipoBeneficiario(raw: BDNSConvRaw): NormalizedConv['tipo_beneficia
   return 'privada'; // por defecto
 }
 
+function normalizeSede(url?: string): string | null {
+  if (!url) return null;
+  const u = url.trim();
+  if (!u) return null;
+  if (/^https?:\/\//i.test(u)) return u;
+  if (u.startsWith('//')) return `https:${u}`;
+  return `https://${u}`;
+}
+
 // ─── Normalizador ────────────────────────────────────────────────────────
 
-export function normalizeBDNS(raw: BDNSConvRaw): NormalizedConv | null {
-  const titulo = (raw.titulo ?? raw.tituloConvocatoria ?? '').trim();
+export function normalizeBDNS(d: BDNSDetail): NormalizedConv | null {
+  const titulo = (d.descripcion ?? '').trim();
   if (!titulo) return null;
 
-  const fuente_id = raw.tdns ?? String(raw.id);
-  const slug = `bdns-${fuente_id}-${slugify(titulo)}`.slice(0, 100);
-  const organo = raw.organismo?.descripcion ?? '';
+  const fuente_id = d.codigoBDNS ?? d.numeroConvocatoria ?? null;
+  if (!fuente_id) return null;
 
-  const deadlineIso = parseDate(raw.fechaFinSolicitud);
+  const slug = `bdns-${fuente_id}-${slugify(titulo)}`.slice(0, 100);
+  const organo = d.organo?.nivel3 || d.organo?.nivel2 || d.organo?.nivel1 || '';
+
+  const deadlineIso = parseDate(d.fechaFinSolicitud);
   const deadlineStr = deadlineIso ? fmtDateSpanish(deadlineIso) : 'Consultar BDNS';
   const deadlineShort = deadlineIso ? fmtDateShort(deadlineIso) : '—';
 
-  const importeMin = raw.importeMinAyuda ?? null;
-  const importeMax = raw.importeMaxAyuda ?? raw.importeTotal ?? null;
+  const importeMax = d.presupuestoTotal ?? null;
+  const importeRange = importeMax ? `Hasta ${fmtImporte(importeMax)}` : '';
 
-  let importeRange = '';
-  if (importeMax) {
-    importeRange = importeMin && importeMin !== importeMax
-      ? `${fmtImporte(importeMin)} – ${fmtImporte(importeMax)}`
-      : `Hasta ${fmtImporte(importeMax)}`;
-  }
-
-  const tipo_beneficiario = guessTipoBeneficiario(raw);
-  const beneficiarioLabel = (raw.tiposBeneficiario ?? [])
+  const tipo_beneficiario = guessTipoBeneficiario(d);
+  const beneficiarioLabel = (d.tiposBeneficiarios ?? [])
     .map(b => b.descripcion).filter(Boolean).join(', ');
 
-  const finalidades = (raw.finalidades ?? []).map(f => f.descripcion).filter(Boolean);
+  const financia: string[] = [];
+  if (d.descripcionFinalidad) financia.push(d.descripcionFinalidad);
+  for (const s of d.sectores ?? []) {
+    if (s.descripcion) financia.push(s.descripcion);
+  }
+
+  const inicioIso = parseDate(d.fechaInicioSolicitud);
 
   return {
     slug,
@@ -246,23 +321,21 @@ export function normalizeBDNS(raw: BDNSConvRaw): NormalizedConv | null {
     beneficiario_label: beneficiarioLabel,
     deadline: deadlineStr,
     deadline_short: deadlineShort,
-    deadline_note: raw.fechaInicioSolicitud
-      ? `Inicio solicitudes: ${parseDate(raw.fechaInicioSolicitud) ?? raw.fechaInicioSolicitud}`
-      : null,
+    deadline_note: inicioIso ? `Inicio solicitudes: ${inicioIso}` : null,
     deadline_iso: deadlineIso,
-    importe_min: importeMin,
+    importe_min: null,
     importe_max: importeMax,
     importe_range: importeRange,
     importe_detalle: '',
     tipo_entidades: beneficiarioLabel,
-    financia_resumen: finalidades.slice(0, 5),
+    financia_resumen: financia.slice(0, 5),
     gastos_ok: [],
     gastos_no: [],
     requisitos: [],
-    nota: raw.descripcion ? raw.descripcion.slice(0, 500) : null,
+    nota: null,
     url_boja: null,
-    url_bases: raw.urlConvocatoria ?? null,
-    url_sede: null,
+    url_bases: d.urlBasesReguladoras ?? null,
+    url_sede: normalizeSede(d.sedeElectronica),
     fuente: 'bdns',
     fuente_id,
     activa: 0,
@@ -273,107 +346,100 @@ export function normalizeBDNS(raw: BDNSConvRaw): NormalizedConv | null {
 // ─── Scraper principal ───────────────────────────────────────────────────
 
 export interface ScrapeOptions {
-  /** Códigos de organismo (DIR3). Si vacío, busca por keywords sin filtro de organismo. */
-  organismos?: string[];
-  /** Keywords para filtrar por relevancia social */
-  keywords?: string[];
-  /** Número máximo de resultados a traer de la API (default 200) */
-  maxResults?: number;
-  /** Solo convocatorias con plazo abierto */
+  /** Términos de búsqueda. Si vacío, usa BDNS_SEARCH_TERMS. */
+  search?: string[];
+  /** Solo convocatorias con plazo de solicitud abierto (filtro por fecha) */
   soloAbiertas?: boolean;
-  /** Timeout en ms (default 15000) */
+  /** Incluir convocatorias estatales además de las de Andalucía */
+  includeEstatal?: boolean;
+  /** Máximo de resultados de lista por término (default 30) */
+  maxPerTerm?: number;
+  /** Máximo de detalles a descargar en total (default 60) */
+  maxDetails?: number;
+  /** Timeout por petición en ms (default 15000) */
   timeoutMs?: number;
 }
 
-const BDNS_API = 'https://www.infosubvenciones.es/bdnstrans/GE/es/api/convocatorias';
-
 export async function scrapeBDNS(opts: ScrapeOptions = {}): Promise<ScrapeResult> {
   const {
-    organismos = JUNTA_ORGANISMOS,
-    keywords = SOCIAL_KEYWORDS,
-    maxResults = 200,
+    search = BDNS_SEARCH_TERMS,
     soloAbiertas = true,
-    timeoutMs = 20000,
+    includeEstatal = false,
+    maxPerTerm = 30,
+    maxDetails = 60,
+    timeoutMs = 15000,
   } = opts;
 
   const errors: string[] = [];
-  const allRaw: BDNSConvRaw[] = [];
-
-  // La API BDNS acepta parámetros de búsqueda
   const today = new Date().toISOString().slice(0, 10);
-  const params = new URLSearchParams({
-    page: '0',
-    pageSize: String(maxResults),
-    order: 'fechaPublicacion',
-    dir: 'DESC',
-    ...(soloAbiertas ? { fechaFinSolicitudDesde: today } : {}),
-  });
 
-  // Buscamos por cada organismo o una búsqueda general si no hay organismos
-  const searchList: (string | null)[] = organismos.length > 0 ? organismos : [null];
+  // ── Fase 1: listado ligero por cada término ──────────────────────────────
+  const seen = new Set<string>();
+  const candidates: { num: string }[] = [];
 
-  for (const org of searchList) {
-    const searchParams = new URLSearchParams(params);
-    if (org) searchParams.set('codigoOrganismo', org);
-
-    const url = `${BDNS_API}?${searchParams.toString()}`;
+  for (const term of search) {
+    const params = new URLSearchParams({
+      vpd: 'GE',
+      page: '0',
+      pageSize: String(maxPerTerm),
+      order: 'fechaRecepcion',
+      direccion: 'desc',
+      descripcion: term,
+    });
+    const url = `${BDNS_API}/convocatorias/busqueda?${params.toString()}`;
 
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-      const res = await fetch(url, {
-        signal: controller.signal,
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'Startidea-Bot/1.0 (startidea.es)',
-        },
-      });
-      clearTimeout(timer);
-
-      if (!res.ok) {
-        errors.push(`BDNS API ${org ?? 'general'}: HTTP ${res.status}`);
-        continue;
+      const data = await fetchJson<BDNSListResponse>(url, timeoutMs);
+      const items = data.content ?? [];
+      for (const it of items) {
+        const num = it.numeroConvocatoria;
+        if (!num || seen.has(num)) continue;
+        // Filtro de región barato sobre la lista (nivelN FLAT)
+        if (!isAndaluciaRelevant(it.nivel1, it.nivel2, it.nivel3, includeEstatal)) continue;
+        seen.add(num);
+        candidates.push({ num });
       }
-
-      const data = await res.json() as BDNSResponse;
-      const items: BDNSConvRaw[] = data.content ?? data.resultados ?? [];
-      allRaw.push(...items);
-
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      errors.push(`BDNS API ${org ?? 'general'}: ${msg}`);
+      errors.push(`Lista "${term}": ${msg}`);
     }
   }
 
-  // Deduplicar por id/tdns
-  const seen = new Set<string>();
-  const unique = allRaw.filter(r => {
-    const k = r.tdns ?? String(r.id);
-    if (seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
+  // Cap de detalles a descargar
+  const toFetch = candidates.slice(0, maxDetails);
 
-  // Filtrar por relevancia social si hay keywords
-  const relevant = keywords.length > 0
-    ? unique.filter(r => isSocialRelevant(r))
-    : unique;
-
-  // Normalizar
+  // ── Fase 2: detalle por convocatoria ──────────────────────────────────────
   const normalized: NormalizedConv[] = [];
-  for (const r of relevant) {
+  let fetched = 0;
+
+  for (const { num } of toFetch) {
+    const params = new URLSearchParams({ vpd: 'GE', numConv: num });
+    const url = `${BDNS_API}/convocatorias?${params.toString()}`;
+
     try {
-      const n = normalizeBDNS(r);
+      const detail = await fetchJson<BDNSDetail>(url, timeoutMs);
+      fetched++;
+
+      // Filtro plazo abierto (por fecha, no por el flag abierto — no es fiable)
+      if (soloAbiertas) {
+        const dl = parseDate(detail.fechaFinSolicitud);
+        if (!dl || dl < today) continue;
+      }
+
+      if (!isSocialRelevant(detail)) continue;
+
+      const n = normalizeBDNS(detail);
       if (n) normalized.push(n);
     } catch (e) {
-      errors.push(`Normalización ${r.tdns ?? r.id}: ${e instanceof Error ? e.message : String(e)}`);
+      const msg = e instanceof Error ? e.message : String(e);
+      errors.push(`Detalle ${num}: ${msg}`);
     }
   }
 
   return {
+    // ok si no hubo errores, o si pese a errores parciales obtuvimos datos
     ok: errors.length === 0 || normalized.length > 0,
-    fetched: unique.length,
+    fetched,
     normalized,
     errors,
   };

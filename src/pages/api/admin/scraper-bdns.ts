@@ -14,12 +14,7 @@ import type { APIRoute } from 'astro';
 import { sendTelegram } from '@/lib/telegram';
 import { isValidAdminHeader } from '@/lib/admin-session';
 import { upsertConvocatoria, getConvocatoria, logScraperRun } from '@/lib/expedientes-db';
-import {
-  scrapeBDNS,
-  JUNTA_ORGANISMOS,
-  SOCIAL_KEYWORDS,
-  type ScrapeOptions,
-} from '@/lib/scrapers/bdns';
+import { scrapeBDNS, type ScrapeOptions } from '@/lib/scrapers/bdns';
 
 export const prerender = false;
 
@@ -44,11 +39,12 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const scrapeOpts: ScrapeOptions = {
-    organismos: opts.organismos ?? JUNTA_ORGANISMOS,
-    keywords:   opts.keywords   ?? SOCIAL_KEYWORDS,
-    soloAbiertas: opts.soloAbiertas ?? true,
-    maxResults: 200,
-    timeoutMs:  25000,
+    search:         opts.search,
+    soloAbiertas:   opts.soloAbiertas ?? true,
+    includeEstatal: opts.includeEstatal ?? false,
+    maxPerTerm:     30,
+    maxDetails:     60,
+    timeoutMs:      15000,
   };
 
   // Trackeamos la ejecución completa para el panel SOS. Si el scraper crashea
@@ -118,14 +114,14 @@ export const POST: APIRoute = async ({ request }) => {
   );
 
   // Registrar la ejecución en scraper_runs (panel SOS lo lee).
-  // ok = true incluso si hay errors parciales en upserts — el scraper en sí
-  // funcionó (devolvió datos). Si quisiéramos distinguir, podríamos marcar
-  // ok=false cuando errors.length === fetched (todo falló).
+  // ok refleja la salud REAL del scrape (result.ok): false si todo falló y no
+  // se obtuvo nada. La RESPUESTA del endpoint sigue siendo ok:true porque el
+  // disparo (cron/admin) se ejecutó — scraper_runs.ok es la fuente de verdad.
   logScraperRun({
     scraper: 'bdns',
     started_at,
     finished_at: Math.floor(Date.now() / 1000),
-    ok: true,
+    ok: result.ok,
     total_found:   result.fetched,
     total_new:     inserted,
     total_updated: skipped,    // upsert sin cambios — interpretamos como "ya estaba"
