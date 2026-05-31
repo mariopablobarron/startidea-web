@@ -1,0 +1,69 @@
+src/content/notas/copiloto-subvenciones-ia-startidea.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-producir-podcast-tercer-sector.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/tesoreria-defensiva-ong-esperar-pago-administracion.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/roi-tramitar-subvenciones-agencia.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/convocatoria-2026-agenda-2030-ong.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-medir-impacto-social-organizacion.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/greenwashing-vs-proposito.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/boja-2026-subvenciones-inclusion-social-andalucia.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-hacer-fundraising-efectivo-fundacion.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-conseguir-subvenciones-ong.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/metodo-diagnostico-startidea.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/agencia-pequena-vs-grande.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/rehacer-startidea-en-doce-horas.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/newsletter-segmentacion-ong-tercer-sector.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/fundraising-individual-asociaciones-pequenas.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/medir-resultados-email-marketing-esfl.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/como-crear-alianzas-estrategicas-entre-ongs.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/fundraising-asociaciones-captacion-fondos.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/memoria-anual-que-se-lee.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/social-media-tercer-sector-granada.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/subvenciones-abiertas-andalucia-2026.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+src/content/notas/plan-comunicacion-ong.md
+  s_0ab79ba551035b::t_8032c93ba00f7e 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8853b19a069c52e2a014d74dcdb20199895b3d95",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
