@@ -101,9 +101,14 @@ const fichaUrl = buildFichaUrl(exp.convocatoria_slug);
 
 `tsc --noEmit` no detecta los problemas anteriores porque no parsea los `<script>` inline ni el JSX del template. **Antes de cualquier push con cambios en `.astro`, correr `npm run build` local**. Tarda ~2 min pero evita ciclos de deploy fallido en Coolify.
 
-### 4. Coolify NO auto-deploya
+### 4. Auto-deploy SÍ activo vía GitHub Actions (NO vía panel Coolify)
 
-Push a `main` NO dispara redeploy. Hay que ir a `https://coolify.startidea.es` y pulsar **Deploy** manualmente. Si Mario pasa varios commits sin desplegar, todos van juntos en el siguiente Deploy. **Si el build falla, revisar primero la fecha del log de Coolify vs la fecha del último commit** — a menudo el log es de un build anterior al fix.
+**Cada push a `main` despliega solo.** El mecanismo NO es el panel de Coolify, es el workflow `.github/workflows/deploy.yml`: en cada push a `main` (salvo cambios solo en `docs/`, `reports/`, `README.md`, `infra/`) hace SSH al VPS con la key dedicada (`secret VPS_SSH_KEY`, restringida con `command="..."` en `authorized_keys` a ejecutar solo `/root/deploy-startidea-web.sh` → build + recreate). ~3-4 min. Coolify solo gestiona Traefik/certs/panel.
+
+- **Verificar un deploy**: `gh run list --workflow=deploy.yml --limit 5` (debe salir `success`).
+- **Forzar deploy sin commit nuevo**: `gh workflow run deploy.yml`.
+- **Si un cambio NO aparece en prod**: confirmar que el path no está en `paths-ignore` (p.ej. solo tocar `reports/` NO dispara deploy — es a propósito).
+- ~~"Coolify no auto-deploya, hay que pulsar Deploy"~~ **OBSOLETO** (era cierto antes del 12-may-2026). Ya NO hay que tocar el panel.
 
 ## Cómo pedir cosas a Claude en este repo
 
