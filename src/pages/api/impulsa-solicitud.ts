@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { randomUUID } from 'node:crypto';
 import { saveSolicitud, countSolicitudes } from '@/lib/impulsa-db';
 import { sendTelegram } from '@/lib/telegram';
-import { sendOwnerLeadEmail } from '@/lib/email-resend';
+import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
 
 export const prerender = false;
 
@@ -128,6 +128,29 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       <p style="margin:0 0 4px 0"><strong>Objetivo:</strong> ${s.objetivo}</p>
     `,
   }).catch((err) => console.error('[impulsa] email fail:', err));
+
+  // Confirmación automática al solicitante (transaccional).
+  const firstName = s.contacto_nombre.split(' ')[0] || '';
+  sendEmail({
+    to: s.contacto_email,
+    subject: 'Hemos recibido tu solicitud — Startidea Impulsa',
+    html: `
+      <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a;max-width:560px">
+        <p>Hola ${firstName}:</p>
+        <p>La solicitud de <strong>${s.org_nombre}</strong> al programa <strong>Startidea Impulsa</strong> ha quedado registrada. Gracias por presentar tu entidad.</p>
+        <p>Esto es lo que pasa ahora:</p>
+        <ul>
+          <li>El equipo de Startidea revisa tu diagnóstico.</li>
+          <li>Recibirás una <strong>valoración y una hoja de ruta de comunicación</strong> para tu organización — te seleccionen o no en el reparto. El diagnóstico es tuyo.</li>
+          <li>Si tu entidad entra entre las seleccionadas, se acuerda el paquete de servicios y los plazos para ejecutarlo contigo.</li>
+        </ul>
+        <p>Mientras tanto, puedes consultar las <a href="https://startidea.es/impulsa/bases">bases del programa</a> o leer las <a href="https://startidea.es/notas">notas de Startidea</a> sobre comunicación y fundraising para el tercer sector.</p>
+        <p>Cualquier duda, responde a este correo o escribe a <a href="mailto:impulsa@startidea.es">impulsa@startidea.es</a>.</p>
+        <p style="color:#666">Startidea · Innovación social, comunicación y fundraising<br>Granada · <a href="https://startidea.es">startidea.es</a></p>
+      </div>
+    `,
+    replyTo: 'impulsa@startidea.es',
+  }).catch((err) => console.error('[impulsa] confirm email fail:', err));
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
 };
