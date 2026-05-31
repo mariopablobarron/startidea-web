@@ -1,0 +1,23 @@
+src/content/notas/errores-justificacion-subvencion.md
+  s_0ab79ba551035b::t_de3ff0f02bebb0 1-80
+reports/google-business-profile-kit.md
+  s_0ab79ba551035b::t_8389068348303f 1-116
+reports/informe-original-fundraising-metodologia.md
+  s_0ab79ba551035b::t_6465da3d7260c4 1-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fa22968256f98296ffb8c3fce2b11ab86366ee5d",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
