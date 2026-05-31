@@ -1,0 +1,27 @@
+src/pages/llms.txt.ts
+  s_0ab79ba551035b::t_60f3f6b65a4585 39-42
+src/components/Footer.astro
+  s_0ab79ba551035b::t_8f353a5e357fb6 35
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_ae367b8add54ae 170-176
+src/pages/glosario.astro
+  s_0ab79ba551035b::t_0ae2ecb1bb97f3 1-226
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_1dcac7792d9959 390-417
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "80fa7fe1985389c5ca3583b267a29c793d8eef24",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
