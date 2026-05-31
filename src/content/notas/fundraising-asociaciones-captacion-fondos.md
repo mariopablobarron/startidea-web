@@ -2,6 +2,7 @@
 title: 'Fundraising para asociaciones: cómo captar fondos sin depender de una sola fuente'
 description: 'Guía práctica de captación de fondos para asociaciones y entidades del tercer sector. Fuentes, estrategias, errores frecuentes y por qué diversificar importa más que encontrar la subvención perfecta.'
 pubDate: 2026-05-26
+tldr: 'Una asociación capta fondos de forma sostenible cuando combina varias fuentes —socios, donantes puntuales, grandes donantes, empresas y subvenciones— en lugar de buscar la subvención perfecta. La regla práctica: que ninguna fuente supere el 40% del presupuesto. Diversificar importa más que encontrar una única fuente ideal.'
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['fundraising', 'captación de fondos', 'asociaciones', 'ONG', 'subvenciones', 'socios']

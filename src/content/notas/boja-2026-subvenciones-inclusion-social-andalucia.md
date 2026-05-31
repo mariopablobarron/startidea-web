@@ -2,6 +2,7 @@
 title: 'BOJA 2026: 15 líneas de subvención de la Junta de Andalucía para el tercer sector (plazo hasta el 16 de junio)'
 description: 'La Consejería de Inclusión Social de la Junta de Andalucía ha publicado 15 líneas de subvención en el BOJA nº 99 del 26 de mayo de 2026. Plazo general hasta el 16 de junio. Guía completa de beneficiarios, importes y cómo solicitar.'
 pubDate: 2026-05-27
+tldr: 'La Consejería de Inclusión Social de la Junta de Andalucía publicó en el BOJA nº 99 (26 may 2026) quince líneas de subvención para el tercer sector, con plazo general hasta el 16 de junio de 2026. Cada línea tiene beneficiarios e importes propios; antes de presentarse conviene comprobar el encaje y reunir la documentación administrativa habitual. Startidea tramita estas convocatorias con certificado digital.'
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['subvenciones', 'junta de andalucia', 'BOJA', 'tercer sector', 'inclusion social', 'asociaciones', 'fundaciones']

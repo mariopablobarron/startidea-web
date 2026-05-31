@@ -2,6 +2,7 @@
 title: 'Convocatoria 2026 Agenda 2030: ayuda a fondo perdido para ONGs y entidades sociales (cierra el 20 de junio)'
 description: 'La Convocatoria 2026 para la Agenda 2030 financia proyectos piloto de sostenibilidad, innovación social, comunicación y alianzas multiactor para asociaciones, fundaciones, ONGs y entidades de la Economía Social. Plazo improrrogable: 20 de junio de 2026. Esta nota explica los requisitos, los gastos cubiertos y cómo Startidea presenta el expediente con certificado digital por ti.'
 pubDate: 2026-05-25
+tldr: 'La Convocatoria 2026 para la Agenda 2030 financia a fondo perdido proyectos piloto de sostenibilidad, innovación social, comunicación y alianzas multiactor para asociaciones, fundaciones, ONG y entidades de la Economía Social, con plazo improrrogable hasta el 20 de junio de 2026. Se tramita por vía electrónica con certificado digital y AutoFirma.'
 updatedDate: 2026-05-28
 audience: 'Tercer sector'
 category: 'Financiación'

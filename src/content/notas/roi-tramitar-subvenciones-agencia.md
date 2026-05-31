@@ -2,6 +2,7 @@
 title: '¿Vale la pena pagar para tramitar una subvención? El cálculo que pocas entidades hacen'
 description: 'Muchas organizaciones del tercer sector tramitan sus subvenciones internamente sin calcular cuánto cuesta realmente ese tiempo. Aquí está el cálculo completo: coste interno, probabilidad de éxito, importe concedido y qué cambia cuando lo gestiona alguien externo.'
 pubDate: 2026-05-26
+tldr: 'Tramitar una subvención internamente tiene un coste de tiempo que pocas entidades calculan. El ROI real surge de comparar ese coste interno —horas ponderadas por la probabilidad de éxito— frente a externalizar a comisión de éxito, donde solo se paga si se concede. Externalizar suele compensar cuando el tiempo interno escasea o la convocatoria es compleja.'
 updatedDate: 2026-05-26
 category: 'Financiación'
 audience: 'Tercer sector'

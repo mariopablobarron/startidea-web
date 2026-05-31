@@ -2,6 +2,7 @@
 title: 'Cómo crear alianzas estratégicas entre ONGs (sin que muera la primera reunión)'
 description: 'La mayoría de las alianzas entre organizaciones del tercer sector se anuncian con foto y rueda de prensa, y se silencian al año sin resultados. Esta nota describe las cuatro condiciones reales que distinguen una alianza que produce algo de una alianza decorativa.'
 pubDate: 2026-05-21
+tldr: 'Una alianza entre organizaciones produce resultados solo si cumple cuatro condiciones: asimetría reconocida (cada parte aporta algo distinto), un proyecto concreto en lugar de un marco genérico, una persona responsable y no una organización abstracta, y una métrica común acordada de antemano. Sin ellas, la alianza se queda en foto y rueda de prensa.'
 audience: 'Tercer sector'
 category: 'Estrategia'
 tags: ['alianzas', 'colaboración', 'ONG', 'tercer sector', 'estrategia']

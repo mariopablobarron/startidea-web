@@ -2,6 +2,7 @@
 title: 'Ayudas CDTI para innovación empresarial: NEOTEC, PID, Línea Directa y cuándo conviene cada una'
 description: 'CDTI (Centro para el Desarrollo Tecnológico Industrial) es el principal organismo público español de apoyo a la I+D+i empresarial. Esta nota explica las cuatro líneas más usadas (NEOTEC, PID, Línea Directa de Innovación, Cervera) con sus rangos de financiación, requisitos reales y cuándo conviene cada una.'
 pubDate: 2026-05-25
+tldr: 'CDTI es el principal organismo público español de apoyo a la I+D+i empresarial. Sus cuatro líneas más usadas —NEOTEC, PID, Línea Directa de Innovación y Cervera— cubren fines y rangos distintos, entre subvención y crédito blando. La elección depende del estado del proyecto y de si interesa ayuda a fondo perdido o financiación a devolver.'
 audience: 'Empresas con propósito'
 category: 'Financiación'
 tags: ['cdti', 'innovación', 'i+d+i', 'startups', 'financiación', 'neotec']

@@ -2,6 +2,7 @@
 title: 'Tesorería defensiva: cómo no quebrar mientras la Junta tarda 18 meses en pagar'
 description: 'El desfase entre gastar y cobrar es el principal riesgo de supervivencia para las entidades del tercer sector con financiación pública. Cuatro mecanismos concretos que funcionan hoy para cubrir ese hueco sin hipotecar la organización.'
 pubDate: 2026-05-27
+tldr: 'El mayor riesgo de una entidad con financiación pública no es quedarse sin la subvención, sino el desfase entre gastar y cobrar cuando la Administración tarda meses en pagar. Cuatro mecanismos lo cubren sin hipotecar la organización: anticipos de subvención, línea ICO, factoring de créditos contra la Administración y un fondo de maniobra propio, que es la única solución estructural.'
 updatedDate: 2026-05-27
 category: 'Financiación'
 audience: 'Tercer sector'

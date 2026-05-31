@@ -2,6 +2,7 @@
 title: 'Cómo hacer fundraising efectivo para una fundación (sin depender de un solo donante)'
 description: 'El fundraising real no es buscar al mecenas providencial. Es construir una mezcla de fuentes que aguante un mal año. Esta nota separa los cuatro pilares (socios, grandes donantes, empresas, subvenciones) y cómo equilibrarlos según el tamaño de la fundación.'
 pubDate: 2026-05-20
+tldr: 'El fundraising sólido no busca un mecenas providencial, sino una mezcla equilibrada de fuentes que aguante un mal año: socios recurrentes, grandes donantes, empresas e instituciones, y campañas. La regla de referencia reparte los ingresos para que ninguna fuente sea crítica. El error que arruina cualquier mezcla es depender de un solo donante.'
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['fundraising', 'captación de fondos', 'fundaciones', 'tercer sector', 'estrategia']

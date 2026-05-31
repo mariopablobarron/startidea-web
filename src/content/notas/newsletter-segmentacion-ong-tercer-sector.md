@@ -2,6 +2,7 @@
 title: 'Por qué tu newsletter del tercer sector llega a todos y no interesa a nadie'
 description: 'La mayoría de las organizaciones sin ánimo de lucro tienen una sola lista de correo y envían lo mismo a todos. El resultado: bajas constantes, aperturas del 18% y directivos que piden "más contenido". La solución no es más frecuencia: es segmentación. Guía práctica para ONGs, fundaciones y asociaciones.'
 pubDate: 2026-05-26
+tldr: 'Una newsletter del tercer sector que envía lo mismo a todos genera bajas y aperturas bajas; la solución no es más frecuencia, sino segmentar. Con tres segmentos mínimos —por ejemplo socios, donantes y simpatizantes— el contenido se vuelve relevante para cada público. Se puede implementar sin un equipo de comunicación dedicado.'
 category: 'Comunicación'
 audience: 'Tercer sector'
 tags: ['newsletter', 'email marketing', 'segmentación', 'comunicación', 'fundraising', 'tercer sector']

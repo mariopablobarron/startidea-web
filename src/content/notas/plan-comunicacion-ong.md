@@ -2,6 +2,7 @@
 title: 'Plan de comunicación para una ONG: estructura, pasos y errores frecuentes'
 description: 'Cómo construir un plan de comunicación real para una ONG, fundación o asociación. No el documento que nadie lee: el plan que orienta decisiones durante doce meses.'
 pubDate: 2026-05-26
+tldr: 'Un plan de comunicación útil para una ONG no es el documento que nadie lee, sino el que orienta decisiones durante doce meses. Se sostiene sobre seis elementos —objetivos, públicos, mensajes, canales, calendario y medición— y reconoce con honestidad lo que la comunicación no puede resolver por sí sola.'
 category: 'Comunicación'
 audience: 'Tercer sector'
 tags: ['plan de comunicación', 'ONG', 'fundación', 'comunicación', 'estrategia']
