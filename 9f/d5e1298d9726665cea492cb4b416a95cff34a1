@@ -1,0 +1,26 @@
+src/pages/subvenciones/presentar/index.astro
+  s_0ab79ba551035b::t_95c074ffbc5d69 3,11-31
+src/pages/llms.txt.ts
+  s_0ab79ba551035b::t_d9536620aa496b 1-62
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_236e7403d99455 71
+  s_0ab79ba551035b::t_0a0de0122ddeb9 389-424
+  s_0ab79ba551035b::t_f4ba9c33ad6eea 12-42
+  s_0ab79ba551035b::t_74ebf89f032178 320-330
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9fd5e1298d9726665cea492cb4b416a95cff34a1",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
