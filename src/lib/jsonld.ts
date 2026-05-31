@@ -387,6 +387,35 @@ export function faqPageSchema(items: FaqItem[]) {
  * lo usan como señal "Startidea ofrece exactamente esto".
  */
 /**
+ * DefinedTermSet / DefinedTerm — para un glosario. Los LLMs y motores de
+ * respuesta citan definiciones con mucha frecuencia: una página de términos
+ * bien estructurada se convierte en fuente para queries "qué es X". Alto
+ * valor GEO/AEO. Cada término queda asociado al set y a la organización.
+ */
+interface GlossaryTerm {
+  term: string;
+  definition: string;
+}
+
+export function definedTermSetSchema(name: string, url: string, terms: GlossaryTerm[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    '@id': `${url}#glosario`,
+    name,
+    url,
+    inLanguage: 'es-ES',
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    hasDefinedTerm: terms.map((t) => ({
+      '@type': 'DefinedTerm',
+      name: t.term,
+      description: t.definition,
+      inDefinedTermSet: `${url}#glosario`,
+    })),
+  };
+}
+
+/**
  * HowTo schema — para páginas que describen un proceso paso a paso
  * (p.ej. "cómo presentar una subvención"). Los AI Overviews de Google y
  * los motores de respuesta (Perplexity, ChatGPT) extraen los pasos

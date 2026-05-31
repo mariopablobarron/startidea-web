@@ -167,6 +167,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'Para ti',
       subtitle: 'Convocatorias del BDNS más Andalucía TRADE e IDAE. Sin paywall, sin créditos, sin clickbait. Filtrado desde el ADN del tercer sector.',
     },
+    'page/glosario': {
+      kind: 'page',
+      eyebrow: '— Glosario del tercer sector',
+      title: 'Los términos, sin jerga.',
+      accent: 'sin jerga',
+      subtitle: 'Fundraising, base social, concurrencia competitiva, BDNS, declaración responsable… Definiciones claras de comunicación social, fundraising y subvenciones.',
+    },
     'page/subvenciones-mapa': {
       kind: 'page',
       eyebrow: '— Mapa de subvenciones · BDNS',

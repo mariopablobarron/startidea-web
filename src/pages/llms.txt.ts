@@ -36,6 +36,10 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 - [Tercer sector](${SITE_URL}/para-quien/tercer-sector): ONG, fundaciones y asociaciones.
 - [Subvenciones abiertas](${SITE_URL}/subvenciones): buscador de convocatorias públicas para entidades sociales y empresas.
 
+## Recursos
+
+- [Glosario del tercer sector](${SITE_URL}/glosario): definiciones claras de fundraising, base social, concurrencia competitiva, BDNS, declaración responsable, impacto social y más.
+
 ## Sobre Startidea
 
 - [Sobre Startidea y el método](${SITE_URL}/sobre): historia, equipo y forma de trabajar.
