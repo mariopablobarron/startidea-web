@@ -1,0 +1,19 @@
+src/content/notas/leer-convocatoria-subvencion-antes-de-redactar.md
+  s_0ab79ba551035b::t_b797d8be2383ef 1-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ca7b62b71a0e15dfc96246b8cd04273aa7861c5e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
