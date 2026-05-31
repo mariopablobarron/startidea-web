@@ -1,0 +1,13 @@
+{
+  "name": "copiloto-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Servidor MCP del Copiloto de Subvenciones de Startidea. Expone la tramitación como herramientas para que un agente IA (Claude u otro cliente MCP) las invoque.",
+  "bin": { "copiloto-mcp": "server.mjs" },
+  "scripts": { "start": "node server.mjs" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  }
+}
