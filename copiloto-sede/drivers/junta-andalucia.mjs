@@ -16,10 +16,12 @@
  */
 // Import lazy de Playwright: así el server arranca y el modo mock funciona sin
 // la dependencia pesada instalada (útil para smoke-tests y healthcheck).
+import { sign } from '../signers/index.mjs';
+
 const SEDE_URL = 'https://ws030.juntadeandalucia.es/sal/servicios/tramites';
 
 export async function tramitarJuntaAndalucia(job) {
-  const { expedienteId, formData, files, mode } = job;
+  const { expedienteId, formData, files, mode, signMode } = job;
 
   const { chromium } = await import('playwright');
   const browser = await chromium.launch({ headless: true });
@@ -66,11 +68,27 @@ export async function tramitarJuntaAndalucia(job) {
       };
     }
 
-    // ── 4. Modo apoderado (V3) — Startidea firma como representante ────────
-    // TODO(V3): requiere alta del cliente en el Registro Electrónico de
-    // Apoderamientos (REA/Cl@ve) y certificado de Startidea cargado de forma
-    // segura. NO implementado en el MVP.
-    throw new Error("modo 'apoderado' no implementado en el MVP (requiere REA + certificado Startidea)");
+    // ── 4. Modo AUTÓNOMO — el agente firma y presenta sin humano ──────────
+    // signMode decide CON QUÉ certificado se firma:
+    //   'entidad'   → certificado de la propia entidad cliente
+    //   'apoderado' → certificado de Startidea (apoderamiento REA)
+    //   'mock'      → firma simulada (pruebas)
+    // TODO(live): rellenar el formulario real antes de firmar (selectores SAL).
+    const firma = await sign({
+      signMode: signMode || 'mock',
+      expedienteId,
+      // document: <solicitud generada>,  // TODO: documento real a firmar
+      certRef: { kind: signMode === 'apoderado' ? 'startidea' : 'entidad' },
+    });
+    await browser.close();
+    return {
+      status: firma.signed ? 'presentado' : 'error_firma',
+      signMode: signMode || 'mock',
+      csv: firma.csv ?? null,
+      registro: firma.registro ?? null,
+      message: firma.detail,
+      sedeUrl: SEDE_URL,
+    };
   } finally {
     await browser.close().catch(() => {});
   }

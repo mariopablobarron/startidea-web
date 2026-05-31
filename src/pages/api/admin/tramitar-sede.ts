@@ -32,9 +32,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   let id = '';
+  let modo: 'asistido' | 'autonomo' = 'asistido';
   try {
-    const body = (await request.json()) as { id?: string };
+    const body = (await request.json()) as { id?: string; modo?: string };
     id = (body.id ?? '').trim();
+    if (body.modo === 'autonomo') modo = 'autonomo';
   } catch {
     return json({ ok: false, error: 'bad_json' }, 400);
   }
@@ -68,11 +70,17 @@ export const POST: APIRoute = async ({ request }) => {
     }, 503);
   }
 
+  // Opción de firma según lo elegido por la entidad en el alta del expediente:
+  //   apoderamiento=1 → Startidea firma como representante (certificado nuestro)
+  //   apoderamiento=0 → firma la entidad con SU certificado
+  const signMode = exp.apoderamiento === 1 ? 'apoderado' : 'entidad';
+
   // Payload para el container: datos del expediente + sede + adjuntos.
   const payload = {
     expedienteId: exp.id,
     sede: sede.key,
-    mode: 'asistido',
+    mode: modo, // 'asistido' (handoff de firma) | 'autonomo' (el agente firma)
+    signMode,   // 'entidad' | 'apoderado' (solo aplica en modo autonomo)
     formData: {
       org_nombre: exp.org_nombre,
       org_cif: exp.org_cif,
