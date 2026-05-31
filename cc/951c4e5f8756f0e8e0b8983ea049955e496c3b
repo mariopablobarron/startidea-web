@@ -1,0 +1,28 @@
+copiloto-sede/scripts/encrypt-cert.mjs
+  s_0ab79ba551035b::t_01b6d9bc523997 1-39
+copiloto-sede/README.md
+  s_0ab79ba551035b::t_6b470c11eb2ee2 52-80
+copiloto-sede/signers/index.mjs
+  s_0ab79ba551035b::t_9a1e49535fe07b 17-19,21
+  s_0ab79ba551035b::t_f720f6ef2252b9 61-65,70-80
+copiloto-sede/.gitignore
+  s_0ab79ba551035b::t_1a4a17138f3f2a 1-11
+copiloto-sede/lib/cert-store.mjs
+  s_0ab79ba551035b::t_9d6f73119ddfbd 1-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cc951c4e5f8756f0e8e0b8983ea049955e496c3b",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
