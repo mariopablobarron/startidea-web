@@ -1,12 +1,34 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, serviceSchema, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, serviceSchema, howToSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Financiación', url: `${SITE_URL}/financiacion-empresas` },
     { name: 'Presentar subvención', url: `${SITE_URL}/subvenciones/presentar` },
+  ]),
+  // HowTo: los AI Overviews / motores de respuesta extraen estos 4 pasos
+  // literalmente para "cómo presentar una subvención".
+  howToSchema({
+    name: 'Cómo presentar una subvención para una entidad social',
+    description:
+      'Proceso para tramitar y presentar una subvención: diagnóstico de encaje, construcción del expediente, firma con certificado digital y presentación electrónica.',
+    totalTime: 'P2D',
+    steps: [
+      { name: 'Rellenar el formulario', text: 'Datos de la entidad, la convocatoria a la que se quiere presentar y la documentación disponible. Unos 10 minutos.', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+      { name: 'Analizar el encaje', text: 'En 24–48h se recibe el diagnóstico de encaje: si tiene sentido presentarse, qué puntuación máxima alcanzable tiene el proyecto y qué documentación hace falta.' },
+      { name: 'Construir el expediente', text: 'Memoria técnica, presupuesto justificado, declaraciones responsables y documentación administrativa completa.' },
+      { name: 'Firmar y presentar', text: 'El representante legal introduce su certificado digital para firmar. Startidea presenta electrónicamente y entrega el justificante con código CSV.' },
+    ],
+  }),
+  // FAQPage con las preguntas frecuentes de la página → Featured Snippets.
+  faqPageSchema([
+    { q: '¿Puedo presentarme si no tengo todos los documentos?', a: 'Sí. Rellena el formulario con lo que tengas. En el diagnóstico se indica qué falta y cuánto tiempo se necesita para conseguirlo antes del plazo de la convocatoria.' },
+    { q: '¿Necesito certificado digital?', a: 'Sí, para la presentación electrónica el representante legal de la entidad necesita certificado digital (FNMT de persona física o de representante de persona jurídica). Si no se tiene, en el diagnóstico se explica cómo obtenerlo.' },
+    { q: '¿Qué pasa si la subvención no se concede?', a: 'No se paga nada. El servicio funciona estrictamente a comisión de éxito: si la Administración deniega la subvención, Startidea no cobra. Sin facturas ni penalizaciones.' },
+    { q: '¿Puede Startidea presentar en mi nombre sin que yo esté?', a: 'Para eso se otorga un apoderamiento electrónico en el REA (Registro Electrónico de Apoderamientos) que habilita a Startidea a actuar en nombre de la entidad. Si se quiere esta modalidad, se indica en el formulario.' },
+    { q: '¿Cuánto tiempo antes del plazo hay que contactar?', a: 'Para convocatorias básicas, con 5 días hábiles es suficiente. Para estándar, 2 semanas. Para complejas, mínimo 4 semanas.' },
   ]),
   serviceSchema({
     name: 'Presentación de subvenciones para empresas y entidades',
