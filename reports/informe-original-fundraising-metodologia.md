@@ -45,9 +45,14 @@ Opcional al final: email (para enviarles el informe → además capta leads/base
 
 ## 4. Herramienta y montaje
 
-- **Opción rápida:** Google Forms o Tally (gratis, export a CSV).
-- **Opción integrada (mejor):** formulario propio en startidea.es (`/encuesta-fundraising`) con los datos a SQLite/Postgres → control total y otra URL indexable. Si se elige esta vía, Claude la puede montar (endpoint + tabla + página).
-- Consentimiento RGPD claro: "datos anónimos para un informe agregado; el email solo para enviarte el resultado".
+✅ **HECHO (2026-05-31): formulario propio en la web ya construido y desplegado.**
+- Página pública: **`https://startidea.es/encuesta-fundraising`** (10 preguntas, ~4 min, anónima, slider de % público, consentimiento RGPD).
+- Endpoint: `src/pages/api/encuesta-fundraising.ts` (validación + listas blancas + honeypot + rate-limit).
+- Persistencia: SQLite `encuesta.db` (tabla `respuestas_encuesta`) vía `src/lib/encuesta-db.ts`, en el volumen `/data/expedientes` del VPS. Cada respuesta dispara un aviso a Telegram con el total acumulado.
+
+⚠️ **Pendiente técnico (cuando empiecen a llegar respuestas):**
+- `encuesta.db` NO está en el cron de backup actual (solo cubre `expedientes.db`). Añadir su backup antes de acumular respuestas valiosas, o exportar a mano periódicamente.
+- No hay endpoint de export todavía. Para sacar los datos: `docker exec` + `sqlite3 /data/expedientes/encuesta.db "SELECT * ..." -csv`, o pedir a Claude un endpoint admin de export CSV (rápido de añadir cuando haga falta).
 
 ---
 
@@ -79,8 +84,10 @@ Cuando haya muestra:
 
 ## 7. Siguiente paso (decisión de Mario)
 
-- [ ] ¿Montamos el formulario en la web (`/encuesta-fundraising`, Claude lo construye) o usamos Tally/Google Forms para arrancar ya?
-- [ ] ¿Lanzamos en la próxima newsletter? (fija fecha)
-- [ ] Texto del email/post de difusión: Claude lo redacta cuando se decida el canal.
+- [x] ~~Montar el formulario en la web~~ → HECHO: `/encuesta-fundraising` en producción.
+- [ ] **Difundir** para conseguir las 50–150 respuestas: newsletter (Buttondown) + LinkedIn de Mario + página de Startidea + reenvío a la red del Hub. Fija fecha de envío.
+- [ ] Texto del email/post de difusión: lo redacta Claude cuando se decida la fecha.
+- [ ] Añadir `encuesta.db` al backup del VPS antes de acumular respuestas.
+- [ ] Con n≥50: Claude exporta el CSV, procesa y construye `/informe/dependencia-publica-tercer-sector-2026` con schema `Dataset`.
 
 > Honestidad metodológica = parte de la autoridad. Un informe con n declarado y método transparente se cita; uno con cifras infladas se desmonta y daña la marca.

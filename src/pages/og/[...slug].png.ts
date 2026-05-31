@@ -174,6 +174,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'sin jerga',
       subtitle: 'Fundraising, base social, concurrencia competitiva, BDNS, declaración responsable… Definiciones claras de comunicación social, fundraising y subvenciones.',
     },
+    'page/encuesta-fundraising': {
+      kind: 'page',
+      eyebrow: '— Encuesta · 4 minutos',
+      title: '¿De qué depende tu financiación?',
+      accent: 'tu financiación',
+      subtitle: 'Encuesta anónima sobre dependencia pública en entidades del tercer sector. Startidea publicará el informe agregado — quien participa lo recibe antes que nadie.',
+    },
     'page/subvenciones-mapa': {
       kind: 'page',
       eyebrow: '— Mapa de subvenciones · BDNS',
