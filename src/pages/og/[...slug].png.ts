@@ -181,6 +181,20 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'tu financiación',
       subtitle: 'Encuesta anónima sobre dependencia pública en entidades del tercer sector. Startidea publicará el informe agregado — quien participa lo recibe antes que nadie.',
     },
+    'page/impulsa': {
+      kind: 'page',
+      eyebrow: '— Startidea Impulsa · Programa RSC',
+      title: '80.000 € en comunicación para el tercer sector.',
+      accent: 'para el tercer sector',
+      subtitle: 'Diagnóstico estratégico gratuito + ejecución del plan: web, redes, audiovisual y software de gestión. En especie, para entidades sociales de toda España.',
+    },
+    'page/impulsa-bases': {
+      kind: 'page',
+      eyebrow: '— Startidea Impulsa · Bases',
+      title: 'Bases del programa.',
+      accent: 'del programa',
+      subtitle: 'Requisitos, dotación, criterios de valoración y obligaciones del programa de comunicación con propósito para el tercer sector.',
+    },
     'page/subvenciones-mapa': {
       kind: 'page',
       eyebrow: '— Mapa de subvenciones · BDNS',

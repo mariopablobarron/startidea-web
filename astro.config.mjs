@@ -66,6 +66,9 @@ export default defineConfig({
         // Páginas de formularios y confirmaciones (noindex)
         if (page.includes('/diagnostico/'))        return false;
         if (page.includes('/presupuesto/nuevo'))   return false;
+        if (page.includes('/encuesta-fundraising')) return false;
+        // Startidea Impulsa — borrador hasta validación legal + lanzamiento
+        if (page.includes('/impulsa'))             return false;
         // Subvenciones: excluir páginas individuales del scraper BDNS (~2100 URLs)
         // Solo conservar: index · curated landings (boja-2026-*) · mapa
         if (page.includes('/subvenciones/')) {
