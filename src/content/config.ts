@@ -15,6 +15,10 @@ const notas = defineCollection({
     draft: z.boolean().default(false),
     author: z.string().default('Mario Pablo Sánchez Barrón'),
     authorRole: z.string().default('Fundador · Startidea'),
+    // Respuesta corta (TL;DR) opcional. Si se define, se renderiza
+    // destacada al inicio de la nota: es lo que los motores de IA
+    // (AI Overviews, Perplexity, ChatGPT) extraen como respuesta directa.
+    tldr: z.string().min(40).max(600).optional(),
     // FAQs opcionales. Si se definen, /notas/[slug] genera JSON-LD
     // FAQPage adicional → activa Featured Snippets en Google + sube CTR.
     faqs: z

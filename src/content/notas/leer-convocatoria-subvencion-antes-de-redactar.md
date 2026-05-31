@@ -6,6 +6,7 @@ audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['subvenciones', 'convocatorias', 'bases reguladoras', 'criterios de valoración', 'tercer sector', 'tramitación']
 draft: false
+tldr: 'Antes de redactar el proyecto se leen, en este orden: los requisitos (¿puede presentarse la entidad?), el objeto (¿encaja lo que hace?), las bases reguladoras además de la convocatoria, y los criterios de valoración (la tabla con la que se puntúa en concurrencia competitiva). Si falta un requisito excluyente o la puntuación máxima alcanzable es baja, lo más rentable es no presentarse y liberar recursos para otra convocatoria.'
 faqs:
   - question: '¿Qué hay que leer primero en una convocatoria de subvención?'
     answer: 'El objeto y los requisitos de la entidad beneficiaria, antes que el importe. El objeto dice qué se financia de verdad; los requisitos dicen si la organización puede siquiera presentarse. Empezar por la cuantía es el error más común: lleva a redactar proyectos para convocatorias en las que la entidad no encaja o ni siquiera es beneficiaria elegible.'

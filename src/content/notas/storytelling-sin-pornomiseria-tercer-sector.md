@@ -6,6 +6,7 @@ audience: 'Tercer sector'
 category: 'Comunicación'
 tags: ['storytelling', 'comunicación', 'tercer sector', 'ONG', 'ética', 'relato', 'pornomiseria']
 draft: false
+tldr: 'Contar el impacto con dignidad significa poner a la persona como protagonista activa —qué decide y qué cambia—, no como víctima pasiva; mostrar el proceso y no solo la carencia; y pedir siempre consentimiento informado. La pornomiseria capta donativos de impulso por lástima, pero aleja al perfil que se compromete a largo plazo; el relato digno construye la base social estable que sostiene la organización.'
 faqs:
   - question: '¿Qué es la pornomiseria en la comunicación del tercer sector?'
     answer: 'Es el uso del sufrimiento ajeno como recurso para conmover y captar fondos: imágenes de personas en su peor momento, relatos centrados en la carencia y la víctima pasiva, mensajes que buscan culpa más que comprensión. Funciona a corto plazo porque la lástima moviliza, pero cosifica a las personas, refuerza estereotipos y erosiona la confianza a medio plazo.'

@@ -6,6 +6,7 @@ audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['fundraising', 'base social', 'socios', 'cuota recurrente', 'captación de fondos', 'ONG', 'diversificación']
 draft: false
+tldr: 'Para reducir la dependencia del dinero público, una entidad construye base social: personas con cuota mensual recurrente. Se arranca activando los círculos propios (equipo, voluntariado, beneficiarios) con una propuesta de valor clara y un alta sin fricción, y se prioriza la fidelización —bajar la tasa de bajas— antes que la captación. Objetivo realista a tres años: que ninguna fuente supere el 40% del presupuesto.'
 faqs:
   - question: '¿Qué es la base social de una ONG y por qué importa tanto?'
     answer: 'La base social es el conjunto de personas que sostienen la organización con una aportación recurrente, normalmente una cuota mensual o trimestral. Importa porque es la fuente de financiación más estable y libre que existe: no se justifica ante una administración, no caduca con una convocatoria y no la decide un tercero. Una entidad con base social sólida puede planificar a años vista; una que depende de subvenciones planifica de convocatoria en convocatoria.'
