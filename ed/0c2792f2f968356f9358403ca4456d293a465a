@@ -1,0 +1,28 @@
+src/lib/encuesta-db.ts
+  s_0ab79ba551035b::t_6e8a6cab9df261 1-106
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_782114220b6198 177-183
+src/pages/api/encuesta-fundraising.ts
+  s_0ab79ba551035b::t_3c5a79c20a3bc8 1-114
+src/pages/encuesta-fundraising.astro
+  s_0ab79ba551035b::t_495a1a1a5f6f31 1-291
+reports/informe-original-fundraising-metodologia.md
+  s_0ab79ba551035b::t_28ae61e9d24710 87-91
+  s_0ab79ba551035b::t_eb1532c6359dd9 48-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ed0c2792f2f968356f9358403ca4456d293a465a",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
