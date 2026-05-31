@@ -49,6 +49,35 @@ startidea-web (main)                  copiloto-sede (este container)
 
 - `PORT` (default 8090)
 - `COPILOTO_SEDE_SECRET` — secreto compartido con el main para autenticar `/tramitar`.
+- `CERT_STORE_DIR` — volumen read-only con los certificados cifrados (default `/certs`).
+- `CERT_MASTER_KEY` — clave maestra para descifrar certificados (secret de runtime, NUNCA en repo).
+- `CERT_PASS_<NAME>` — passphrase del .pfx por entidad (`<NAME>` = CIF sin guiones, o `STARTIDEA`).
+
+## Firma y custodia de certificados
+
+Dos opciones de firma, elegibles por expediente (`signMode`, derivado del campo
+`apoderamiento` del expediente en el main):
+
+- **`entidad`** — certificado de representante de la propia entidad cliente.
+- **`apoderado`** — certificado de Startidea (requiere apoderamiento inscrito en REA/Cl@ve).
+- **`mock`** — firma simulada (pruebas del flujo autónomo).
+
+**Custodia** (`lib/cert-store.mjs`): los certificados se guardan **cifrados**
+(AES-256-GCM) en `CERT_STORE_DIR`, fuera del repo y de la imagen. Se descifran
+SOLO en memoria al firmar; nunca se escriben en claro.
+
+Cómo añadir un certificado:
+```bash
+# 1. Cifrar EN LOCAL (el .pfx en claro nunca sale de tu máquina):
+CERT_MASTER_KEY="<clave>" node scripts/encrypt-cert.mjs entidad.pfx G12345678.pfx.enc
+# 2. Subir SOLO el .pfx.enc al volumen del host (perms 0700 root):
+scp G12345678.pfx.enc root@vps:/docker/copiloto-sede-certs/
+# 3. Definir en el entorno del container: CERT_MASTER_KEY + CERT_PASS_G12345678
+```
+El `.gitignore` impide commitear `*.pfx`, `*.pfx.enc`, `certs/`, etc.
+
+**Único TODO de firma**: la firma XAdES/PAdES real con el `.pfx` cargado
+(AutoFirma batch / @firma / PKCS#11) en `signers/{entidad,apoderado}.mjs`.
 
 ## Deploy (separado, NO en Coolify del main)
 
