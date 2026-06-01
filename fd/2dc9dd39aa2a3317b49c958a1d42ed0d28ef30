@@ -1,0 +1,22 @@
+src/lib/impulsa-db.ts
+  s_0ab79ba551035b::t_f21d360cd77ff3 140-145
+src/pages/portal/dashboard.astro
+  s_0ab79ba551035b::t_c4f261c4f0c50c 429-449
+  s_0ab79ba551035b::t_46da193640b920 20,33-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fd2dc9dd39aa2a3317b49c958a1d42ed0d28ef30",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
