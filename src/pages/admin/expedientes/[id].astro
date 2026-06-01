@@ -619,9 +619,18 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
   document.getElementById('btn-generar')?.addEventListener('click', async (e) => {
     const btn = e.currentTarget as HTMLButtonElement;
     const id = btn.dataset.id!;
+    const orig = btn.textContent;
     const statusEl = document.getElementById('generar-status')!;
     btn.disabled = true;
+    btn.textContent = '⏳ Generando…';
+    btn.classList.add('opacity-60', 'cursor-wait');
     statusEl.classList.remove('hidden');
+
+    const restore = () => {
+      btn.disabled = false;
+      btn.textContent = orig;
+      btn.classList.remove('opacity-60', 'cursor-wait');
+    };
 
     try {
       const res = await fetch('/api/generar-expediente', {
@@ -634,15 +643,15 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
       });
       const j = await res.json();
       if (j.ok) {
-        statusEl.innerHTML = '✅ Documentos generados. Recargando...';
+        statusEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-green-700"><span>✅</span><span>Documentos generados. Recargando…</span></div>';
         setTimeout(() => window.location.reload(), 1500);
       } else {
-        statusEl.innerHTML = `❌ Error: ${j.error ?? 'desconocido'}`;
-        btn.disabled = false;
+        statusEl.innerHTML = `<div class="text-sm text-red-700">❌ Error: ${j.error ?? 'desconocido'}. Inténtalo de nuevo.</div>`;
+        restore();
       }
     } catch {
-      statusEl.innerHTML = '❌ Error de red. Inténtalo de nuevo.';
-      btn.disabled = false;
+      statusEl.innerHTML = '<div class="text-sm text-red-700">❌ Error de red. Inténtalo de nuevo.</div>';
+      restore();
     }
   });
 

@@ -176,6 +176,26 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     void sendTelegram(tgText);
   }
 
+  // Aviso a Mario por email (además del Telegram).
+  {
+    const elegTxt = elegibilidad?.bloqueante ? '🔴 BLOQUEANTE' : elegibilidad ? `🟢 ${elegibilidad.score}/100` : '❓ sin determinar';
+    sendEmail({
+      to: 'hola@startidea.es',
+      replyTo: 'hola@startidea.es',
+      subject: `✅ Documentos IA generados — ${exp.org_nombre} [${id}]`,
+      html: `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a;max-width:560px">
+        <p>La IA ha generado los documentos del expediente <strong>${id}</strong>.</p>
+        <ul>
+          <li><strong>Entidad:</strong> ${exp.org_nombre}</li>
+          <li><strong>Convocatoria:</strong> ${exp.convocatoria_title || 'sin identificar'}</li>
+          <li><strong>Elegibilidad:</strong> ${elegTxt}</li>
+          <li>Memoria ${memoria ? '✅' : '❌'} · Presupuesto ${presupuesto ? '✅' : '❌'} · Checklist ${checklist ? '✅' : '❌'} · Guía ${guia ? '✅' : '❌'}</li>
+        </ul>
+        <p><a href="https://startidea.es/admin/expedientes/${id}">Abrir en el panel →</a></p>
+      </div>`,
+    }).catch((err) => console.error('[generar-expediente] Email Mario error:', err));
+  }
+
   return new Response(JSON.stringify({
     ok: true,
     id,
