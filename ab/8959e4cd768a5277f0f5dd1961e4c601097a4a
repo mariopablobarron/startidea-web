@@ -1,0 +1,21 @@
+src/pages/api/admin/expediente-doc.ts
+  s_0ab79ba551035b::t_9516ccddefd993 1-90
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_8ff4ca4cdcd87c 193-204
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ab8959e4cd768a5277f0f5dd1961e4c601097a4a",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
