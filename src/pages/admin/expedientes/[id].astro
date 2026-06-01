@@ -190,8 +190,18 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
             {docs.length === 0 ? (
               <p class="text-sm text-ink/40 italic">Ninguno</p>
             ) : (
-              <ul class="space-y-1 text-xs text-ink/70">
-                {docs.map((d) => <li class="font-mono">· {d}</li>)}
+              <ul class="space-y-1.5 text-xs text-ink/70">
+                {docs.map((d, i) => (
+                  <li class="font-mono">
+                    ·{' '}
+                    <a
+                      href={`/api/admin/expediente-doc?id=${encodeURIComponent(exp.id)}&i=${i}`}
+                      target="_blank"
+                      rel="noopener"
+                      class="text-magenta underline-offset-2 hover:underline"
+                    >{d}</a>
+                  </li>
+                ))}
               </ul>
             )}
           </div>
