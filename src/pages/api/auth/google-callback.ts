@@ -33,7 +33,12 @@ function loginError(reason: string) {
 export const GET: APIRoute = async ({ url, cookies }) => {
   const clientId     = env('GOOGLE_ADMIN_CLIENT_ID');
   const clientSecret = env('GOOGLE_ADMIN_CLIENT_SECRET');
-  const adminEmail   = env('ADMIN_EMAIL') || 'mariopablobarron@gmail.com';
+  // Lista blanca de cuentas Google autorizadas. ADMIN_EMAIL admite varias
+  // separadas por coma; si no está, se usan las cuentas de Mario por defecto.
+  const adminEmails = (env('ADMIN_EMAIL') || 'mariopablobarron@gmail.com,mario@startidea.es')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
 
   if (!clientId || !clientSecret) {
     return loginError('oauth_not_configured');
@@ -96,8 +101,8 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     return loginError('userinfo_error');
   }
 
-  // ── 3. Verificar que es Mario ──────────────────────────────────────────
-  if (!verified || email.toLowerCase() !== adminEmail.toLowerCase()) {
+  // ── 3. Verificar que es una cuenta autorizada ──────────────────────────
+  if (!verified || !adminEmails.includes(email.toLowerCase())) {
     console.warn('[google-callback] unauthorized email attempt:', email);
     return loginError('unauthorized_email');
   }
