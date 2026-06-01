@@ -243,7 +243,7 @@ async function sendCatalogMatchEmail(opts: {
     </ol>
   </div>
 
-  <div style="background:#fff8f2;border:1px solid #e5e7eb;padding:12px 20px;margin:16px 0;font-size:13px;color:#666;font-style:italic">
+  <div style="background:#f9fafb;border:1px solid #e5e7eb;padding:12px 20px;margin:16px 0;font-size:13px;color:#666;font-style:italic">
     ⚡ Estos documentos fueron preparados automáticamente por el Copiloto de Startidea.
     Están pensados como punto de partida, no como versión final. Revisa siempre los datos
     antes de presentar.

@@ -89,7 +89,7 @@ export function generarFacturaHtml(data: FacturaData): string {
 
   /* Partes */
   .partes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
-  .parte { padding: 16px; background: #f9f6f1; }
+  .parte { padding: 16px; background: #f9fafb; }
   .parte h2 { font-family: monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-bottom: 10px; }
   .parte p { margin: 3px 0; font-size: 13px; }
   .parte strong { color: #1f1f22; }

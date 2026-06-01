@@ -88,7 +88,7 @@ export function generarContratoHtml(data: ContratoData): string {
   .clausula { margin: 20px 0; }
   .clausula-num { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
   .clausula p { margin: 6px 0; }
-  .highlight { background: #f9f6f1; border-left: 3px solid #e6356b; padding: 10px 16px; margin: 12px 0; font-weight: 600; }
+  .highlight { background: #f9fafb; border-left: 3px solid #e6356b; padding: 10px 16px; margin: 12px 0; font-weight: 600; }
   .firma { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
   .firma-box { border-top: 1px solid #999; padding-top: 12px; font-size: 13px; }
   .firma-box p { margin: 3px 0; }

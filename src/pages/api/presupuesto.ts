@@ -187,7 +187,7 @@ async function enviarEmailConfirmacion(opts: {
   const html = `<!doctype html>
 <html lang="es">
 <head><meta charset="utf-8" /></head>
-<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:32px 24px;background:#fafaf7">
+<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:32px 24px;background:#f9fafb">
   <p style="margin:0 0 24px 0;font-size:14px;color:#666;text-transform:uppercase;letter-spacing:0.08em">Startidea — Agencia de innovación social · Granada</p>
   <h1 style="font-size:28px;line-height:1.2;margin:0 0 24px 0;font-weight:600">Hola ${escapeHtml(opts.name.split(' ')[0] || opts.name)},</h1>
   <p>Recibido tu briefing en startidea.es. Lo está leyendo el equipo y te respondemos con un presupuesto detallado en las próximas 24 horas laborales.</p>

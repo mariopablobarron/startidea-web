@@ -177,7 +177,7 @@ async function sendCampaignEmail(opts: {
     : `<li>Accede a la sede electrónica del organismo con tu certificado digital</li>`;
 
   const deadlineHtml = opts.convocatoria_deadline
-    ? `<div style="background:#fff7f0;border:1px solid #fdba74;padding:12px 20px;margin:16px 0;font-size:14px">
+    ? `<div style="background:#f9fafb;border:1px solid #fdba74;padding:12px 20px;margin:16px 0;font-size:14px">
          ⚠ <strong>Plazo de presentación: ${esc(opts.convocatoria_deadline)}</strong>. Presenta con margen para evitar saturación de la sede.
        </div>`
     : '';

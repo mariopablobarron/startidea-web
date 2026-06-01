@@ -68,7 +68,7 @@ export async function sendOwnerLeadEmail(opts: {
   const wrappedHtml = `<!doctype html>
 <html lang="es">
 <head><meta charset="utf-8" /></head>
-<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:24px;background:#fafaf7">
+<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:24px;background:#f9fafb">
   <p style="margin:0 0 16px 0;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.12em">Startidea — Lead capturado</p>
   ${opts.bodyHtml}
   <hr style="border:0;border-top:1px solid #eee;margin:32px 0 12px 0" />
