@@ -1,0 +1,49 @@
+src/pages/api/auto-copiloto/match-catalog.ts
+  s_0ab79ba551035b::t_4abd168a872315 231,246,253,259,265,271,273,283,291,348
+src/pages/api/auto-copiloto/deadline-reminders.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 61,80
+src/pages/api/portal-registro.ts
+  s_0ab79ba551035b::t_4abd168a872315 108
+src/pages/api/entregar-expediente.ts
+  s_0ab79ba551035b::t_4abd168a872315 73,84,100,107,114,121,123,126,140
+src/pages/api/generar-expediente.ts
+  s_0ab79ba551035b::t_4abd168a872315 123,131,148,154
+src/lib/factura-generator.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 115
+src/pages/api/admin/mensaje-expediente.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 68
+src/lib/copiloto-cta.ts
+  s_0ab79ba551035b::t_4abd168a872315 52,56,67,72,77,82,90
+src/pages/api/auto-copiloto/trigger.ts
+  s_0ab79ba551035b::t_4abd168a872315 224,240,291,303,332,349,356,362,368,374,376,386,394
+src/pages/api/auto-copiloto/register.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 158
+src/pages/api/auto-copiloto/confirm.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 69
+src/pages/api/aceptar-contrato.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 80,84,88,92,96
+src/pages/copiloto-subvenciones.astro
+  s_0ab79ba551035b::t_468c468d46b6a5 31
+src/lib/contrato-generator.ts
+  s_0ab79ba551035b::t_468c468d46b6a5 83,99,286
+src/pages/api/status-expediente.ts
+  s_0ab79ba551035b::t_4abd168a872315 120
+src/pages/api/admin/auto-copiloto/campaign.ts
+  s_0ab79ba551035b::t_4abd168a872315 206,222,228,234,240,242,245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5552c5322409dfcb02244e7be003e4d03966191e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
