@@ -1,0 +1,33 @@
+src/pages/api/admin/auto-copiloto/campaign.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 180
+src/lib/factura-generator.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 92
+src/pages/api/auto-copiloto/match-catalog.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 246
+src/pages/api/auto-copiloto/trigger.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 349
+src/pages/api/presupuesto.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 190
+src/lib/email-resend.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 71
+src/pages/contrato/[token].astro
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 85
+src/lib/contrato-generator.ts
+  s_0ab79ba551035b::t_db1cd6b1bed4cf 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "38335b2c2cd96d2d7793d335a7fddd259f40c2b5",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
