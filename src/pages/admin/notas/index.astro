@@ -1,0 +1,103 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getCollection } from 'astro:content';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect('/admin/login?next=' + encodeURIComponent('/admin/notas'));
+}
+
+const all = await getCollection('notas');
+all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const total = all.length;
+const publicadas = all.filter((n) => !n.data.draft).length;
+const borradores = total - publicadas;
+const conTldr = all.filter((n) => !n.data.draft && n.data.tldr).length;
+const conFaqs = all.filter((n) => !n.data.draft && n.data.faqs && n.data.faqs.length).length;
+
+// Distribución por categoría (solo publicadas)
+const porCat: Record<string, number> = {};
+for (const n of all) { if (n.data.draft) continue; const c = n.data.category || '—'; porCat[c] = (porCat[c] ?? 0) + 1; }
+
+const fmt = (d: Date) => d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+const CAT_COLOR: Record<string, string> = {
+  'Comunicación': 'text-blue-700',
+  'Financiación': 'text-emerald-700',
+  'Estrategia': 'text-magenta',
+  'Agencia': 'text-amber-700',
+};
+---
+
+<Base title="Admin · Notas / contenido" noindex={true}>
+  <section class="bg-paper py-12">
+    <div class="container-x">
+      <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+      <h1 class="mt-1 font-display text-3xl text-ink">Notas / contenido — {publicadas} publicadas</h1>
+
+      <!-- KPIs -->
+      <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        {[
+          { v: total, l: 'Total' },
+          { v: publicadas, l: 'Publicadas' },
+          { v: borradores, l: 'Borradores' },
+          { v: conTldr, l: 'Con respuesta corta' },
+          { v: conFaqs, l: 'Con FAQs' },
+        ].map((k) => (
+          <div class="border border-ink/15 bg-paper-warm p-4">
+            <p class="font-display text-2xl text-ink">{k.v}</p>
+            <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">{k.l}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-3 text-sm text-ink/70">
+        {Object.entries(porCat).sort((a, b) => b[1] - a[1]).map(([c, n]) => (
+          <span class="border border-ink/15 px-3 py-1">{c}: <strong>{n}</strong></span>
+        ))}
+      </div>
+
+      <!-- Tabla -->
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-ink/20 text-left text-ink/50">
+              <th class="py-2 pr-3">Fecha</th>
+              <th class="py-2 pr-3">Título</th>
+              <th class="py-2 pr-3">Categoría</th>
+              <th class="py-2 pr-3">Estado</th>
+              <th class="py-2 pr-3">SEO/GEO</th>
+              <th class="py-2 pr-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {all.map((n) => (
+              <tr class="border-b border-ink/10 text-ink/80">
+                <td class="py-2 pr-3 whitespace-nowrap font-mono text-xs text-ink/50">{fmt(n.data.pubDate)}</td>
+                <td class="py-2 pr-3">{n.data.title}</td>
+                <td class={`py-2 pr-3 ${CAT_COLOR[n.data.category || ''] ?? 'text-ink/50'}`}>{n.data.category || '—'}</td>
+                <td class="py-2 pr-3">
+                  {n.data.draft
+                    ? <span class="font-mono text-[10px] uppercase tracking-widest text-amber-700">borrador</span>
+                    : <span class="font-mono text-[10px] uppercase tracking-widest text-emerald-700">publicada</span>}
+                </td>
+                <td class="py-2 pr-3 font-mono text-[10px] text-ink/40">
+                  {n.data.tldr ? 'TL;DR ' : ''}{n.data.faqs && n.data.faqs.length ? `· ${n.data.faqs.length} FAQ` : ''}
+                </td>
+                <td class="py-2 pr-3 whitespace-nowrap">
+                  {!n.data.draft && <a href={`/notas/${n.slug}`} target="_blank" rel="noopener" class="font-mono text-[10px] uppercase tracking-widest text-magenta hover:underline">ver ↗</a>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-6 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+        La edición del contenido se hace en el repo (src/content/notas/). Esta vista es de control y SEO/GEO.
+      </p>
+    </div>
+  </section>
+</Base>
