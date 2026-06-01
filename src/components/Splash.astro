@@ -13,7 +13,7 @@
 
 <div
   id="splash"
-  class="fixed inset-0 z-[100] flex items-center justify-center bg-paper transition-opacity duration-700 ease-out"
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-paper transition-opacity duration-300 ease-out"
   style="opacity:0; pointer-events:none;"
   aria-hidden="true"
 >
@@ -75,19 +75,21 @@
           splash.style.opacity = '0';
           document.documentElement.style.overflow = '';
           try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
-          setTimeout(() => splash.remove(), 800);
+          setTimeout(() => splash.remove(), 320);
         };
 
         video.addEventListener('ended', finish);
-        setTimeout(finish, 5000);
+        // Tope de seguridad reducido: aunque el vídeo sea largo, no se queda
+        // más de ~2.6s en pantalla.
+        setTimeout(finish, 2600);
       };
 
       // requestIdleCallback ejecuta cuando el browser está libre — después
       // de paint inicial y LCP. Fallback a setTimeout en navegadores viejos.
       if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(start, { timeout: 1200 });
+        (window as any).requestIdleCallback(start, { timeout: 400 });
       } else {
-        setTimeout(start, 200);
+        setTimeout(start, 100);
       }
     }
   }
