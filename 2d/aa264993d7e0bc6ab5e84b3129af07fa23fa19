@@ -1,0 +1,23 @@
+public/recursos/diagnostico-modelo-fundraising.html
+  s_0ab79ba551035b::t_22bf3d9fb6b9bd 19
+src/pages/contrato/[token].astro
+  s_0ab79ba551035b::t_22bf3d9fb6b9bd 51
+public/brand/icon-master.svg
+  s_0ab79ba551035b::t_22bf3d9fb6b9bd 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "2daa264993d7e0bc6ab5e84b3129af07fa23fa19",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
