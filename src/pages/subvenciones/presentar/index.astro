@@ -1,5 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import { breadcrumbList, serviceSchema, howToSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 const jsonLd = [
@@ -215,6 +216,9 @@ const jsonLd = [
       </div>
     </div>
   </section>
+
+  <!-- Notas relacionadas (silo pilar ↔ cluster) -->
+  <NotasRelacionadas category="Financiación" limit={3} />
 
   <!-- CTA final -->
   <section class="bg-ink py-16 md:py-24">
