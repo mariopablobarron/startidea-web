@@ -5,7 +5,9 @@ import { getAllRespuestas } from '@/lib/encuesta-db';
 export const prerender = false;
 
 function csvCell(v: unknown): string {
-  const s = v === null || v === undefined ? '' : String(v);
+  let s = v === null || v === undefined ? '' : String(v);
+  // Anti CSV/formula injection: neutraliza celdas que empiezan por = + - @ (o tab/CR)
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
   return `"${s.replace(/"/g, '""')}"`;
 }
 

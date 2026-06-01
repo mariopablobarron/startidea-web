@@ -13,6 +13,11 @@ function clean(s: unknown, max = 500): string {
   return s.trim().slice(0, max);
 }
 
+// Escapa para HTML (emails) y para el parse_mode HTML de Telegram.
+function esc(s: unknown): string {
+  return String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+}
+
 function isEmail(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 }
@@ -109,9 +114,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const total = countSolicitudes();
     sendTelegram(
       `<b>Nueva solicitud · Startidea Impulsa</b>\n` +
-        `${s.org_nombre} (${s.org_tipo})\n` +
-        `Contacto: ${s.contacto_nombre} · ${s.contacto_email}\n` +
-        `Interés: ${servicios.join(', ') || '—'}\n` +
+        `${esc(s.org_nombre)} (${esc(s.org_tipo)})\n` +
+        `Contacto: ${esc(s.contacto_nombre)} · ${esc(s.contacto_email)}\n` +
+        `Interés: ${esc(servicios.join(', ')) || '—'}\n` +
         `Total acumulado: <b>${total}</b>`,
     ).catch(() => {});
   } catch { /* noop */ }
@@ -121,11 +126,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     leadName: s.contacto_nombre,
     leadEmail: s.contacto_email,
     bodyHtml: `
-      <p style="margin:0 0 4px 0"><strong>${s.org_nombre}</strong> · ${s.org_tipo}</p>
-      <p style="margin:0 0 12px 0;color:#666">${s.contacto_nombre} (${s.contacto_cargo}) · ${s.contacto_email} · ${s.contacto_telefono}</p>
-      <p style="margin:0 0 4px 0"><strong>Servicios de interés:</strong> ${servicios.join(', ') || '—'}</p>
-      <p style="margin:0 0 4px 0"><strong>Retos:</strong> ${s.retos}</p>
-      <p style="margin:0 0 4px 0"><strong>Objetivo:</strong> ${s.objetivo}</p>
+      <p style="margin:0 0 4px 0"><strong>${esc(s.org_nombre)}</strong> · ${esc(s.org_tipo)}</p>
+      <p style="margin:0 0 12px 0;color:#666">${esc(s.contacto_nombre)} (${esc(s.contacto_cargo)}) · ${esc(s.contacto_email)} · ${esc(s.contacto_telefono)}</p>
+      <p style="margin:0 0 4px 0"><strong>Servicios de interés:</strong> ${esc(servicios.join(', ')) || '—'}</p>
+      <p style="margin:0 0 4px 0"><strong>Retos:</strong> ${esc(s.retos)}</p>
+      <p style="margin:0 0 4px 0"><strong>Objetivo:</strong> ${esc(s.objetivo)}</p>
     `,
   }).catch((err) => console.error('[impulsa] email fail:', err));
 
@@ -136,8 +141,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     subject: 'Hemos recibido tu solicitud — Startidea Impulsa',
     html: `
       <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a;max-width:560px">
-        <p>Hola ${firstName}:</p>
-        <p>La solicitud de <strong>${s.org_nombre}</strong> al programa <strong>Startidea Impulsa</strong> ha quedado registrada. Gracias por presentar tu entidad.</p>
+        <p>Hola ${esc(firstName)}:</p>
+        <p>La solicitud de <strong>${esc(s.org_nombre)}</strong> al programa <strong>Startidea Impulsa</strong> ha quedado registrada. Gracias por presentar tu entidad.</p>
         <p>Esto es lo que pasa ahora:</p>
         <ul>
           <li>El equipo de Startidea revisa tu diagnóstico.</li>
