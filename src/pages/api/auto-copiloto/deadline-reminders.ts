@@ -58,7 +58,7 @@ function buildReminderEmail(opts: {
   ${opts.expediente_id ? `
   <p style="font-size:14px;color:#666;margin:8px 0 24px">
     El Copiloto generó la documentación preliminar en el expediente
-    <code style="font-family:monospace;background:#f0ece4;padding:2px 6px">${esc(opts.expediente_id)}</code>.
+    <code style="font-family:monospace;background:#f3f4f6;padding:2px 6px">${esc(opts.expediente_id)}</code>.
     Si no la has recibido o tienes dudas, responde a este email.
   </p>` : ''}
   <div style="background:#fff7f8;border-left:3px solid #e6356b;padding:12px 20px;margin:0 0 24px;font-size:14px;color:#333">
@@ -77,7 +77,7 @@ function buildReminderEmail(opts: {
       Escríbenos →
     </a>
   </p>
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:24px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0">
   <p style="font-size:12px;color:#bbb">
     Recordatorio automático del Copiloto de Subvenciones de Startidea.
     <a href="${manageUrl}" style="color:#bbb">Gestionar mi Copiloto →</a>

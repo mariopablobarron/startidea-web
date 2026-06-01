@@ -70,7 +70,7 @@ export const POST: APIRoute = async ({ request }) => {
 <!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Documentos Startidea</title></head>
-<body style="font-family:Georgia,serif;color:#1f1f22;background:#faf8f5;margin:0;padding:0">
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#ffffff;margin:0;padding:0">
 <div style="max-width:640px;margin:0 auto;padding:32px 24px">
 
   <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">— Startidea · Copiloto de Subvenciones</p>
@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 24px">
     Hemos preparado la documentación para <strong>${esc(convName)}</strong>
-    a partir de los datos que nos facilitaste (expediente <code style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${esc(id)}</code>).
+    a partir de los datos que nos facilitaste (expediente <code style="font-family:monospace;font-size:13px;background:#f3f4f6;padding:2px 6px">${esc(id)}</code>).
     Revísala, completa los campos marcados con <strong>[COMPLETAR]</strong> y escríbenos si necesitas ajustes.
   </p>
 
@@ -97,33 +97,33 @@ export const POST: APIRoute = async ({ request }) => {
   </div>
 
   <!-- MEMORIA TÉCNICA -->
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📄 Memoria técnica</h2>
     ${mdToHtml(exp.ai_memoria!)}
   </div>
 
   ${exp.ai_presupuesto ? `
   <!-- PRESUPUESTO -->
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">💶 Presupuesto</h2>
     ${mdToHtml(exp.ai_presupuesto)}
   </div>` : ''}
 
   ${exp.ai_checklist ? `
   <!-- CHECKLIST -->
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📋 Documentos necesarios</h2>
     ${mdToHtml(exp.ai_checklist)}
   </div>` : ''}
 
   ${exp.ai_guia ? `
   <!-- GUÍA -->
-  <div style="background:#1f1f22;border:1px solid #333;padding:24px;margin:24px 0;color:#faf8f5">
+  <div style="background:#1f1f22;border:1px solid #333;padding:24px;margin:24px 0;color:#ffffff">
     <h2 style="font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin:0 0 16px;font-family:monospace">🗺️ Cómo presentarlo paso a paso</h2>
-    <div style="color:#e0ddd8;font-size:14px;line-height:1.7">${mdToHtml(exp.ai_guia)}</div>
+    <div style="color:#e5e7eb;font-size:14px;line-height:1.7">${mdToHtml(exp.ai_guia)}</div>
   </div>` : ''}
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
 
   <p style="font-size:13px;color:#888;line-height:1.6">
     Si tienes dudas o necesitas ajustar algo, responde a este email
@@ -137,7 +137,7 @@ export const POST: APIRoute = async ({ request }) => {
     <a href="https://startidea.es" style="color:#e6356b">startidea.es</a>
   </p>
 
-  <p style="font-size:11px;color:#bbb;margin-top:32px;border-top:1px solid #e0ddd8;padding-top:16px">
+  <p style="font-size:11px;color:#bbb;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:16px">
     Startidea · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada
   </p>
 </div>

@@ -117,7 +117,7 @@ function buildEmail(info: StatusInfo, expId: string): string {
 
   ${ctaBlock}
 
-  <div style="background:#faf8f5;border:1px solid #e0ddd8;padding:12px 16px;margin:8px 0 24px;font-family:monospace;font-size:11px;color:#888">
+  <div style="background:#ffffff;border:1px solid #e5e7eb;padding:12px 16px;margin:8px 0 24px;font-family:monospace;font-size:11px;color:#888">
     Expediente: <strong>${esc(expId)}</strong>
   </div>
 

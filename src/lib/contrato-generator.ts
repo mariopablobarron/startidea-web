@@ -80,7 +80,7 @@ export function generarContratoHtml(data: ContratoData): string {
   h1 { font-size: 16px; font-weight: 700; text-align: center; letter-spacing: 0.08em; margin-bottom: 4px; }
   h2 { font-size: 13px; font-weight: 700; text-align: center; color: #555; margin-bottom: 32px; letter-spacing: 0.04em; }
   .ref { text-align: center; font-family: monospace; font-size: 12px; color: #888; margin-bottom: 40px; }
-  .partes { border: 1px solid #d0ccc5; padding: 20px 24px; margin: 24px 0; }
+  .partes { border: 1px solid #d1d5db; padding: 20px 24px; margin: 24px 0; }
   .partes table { width: 100%; border-collapse: collapse; }
   .partes td { padding: 4px 8px; vertical-align: top; font-size: 13px; }
   .partes td:first-child { width: 160px; color: #777; font-weight: 600; }
@@ -96,7 +96,7 @@ export function generarContratoHtml(data: ContratoData): string {
     padding: 14px 32px; font-family: monospace; font-size: 13px; letter-spacing: 0.05em; font-weight: 700;
     margin: 32px auto; max-width: 320px; }
   .legal-note { font-size: 12px; color: #888; font-style: italic; text-align: center; margin: 8px 0 32px; }
-  hr { border: none; border-top: 1px solid #d0ccc5; margin: 32px 0; }
+  hr { border: none; border-top: 1px solid #d1d5db; margin: 32px 0; }
   @media print { .aceptar-btn, .legal-note { display: none; } }
 </style>
 </head>
@@ -283,7 +283,7 @@ export function generarEmailContratoHtml(data: ContratoData): string {
     O copia esta URL: <span style="font-family:monospace;word-break:break-all">${acceptUrl}</span>
   </p>
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:28px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0">
 
   <p style="font-size:13px;color:#888">
     ¿Tienes dudas sobre alguna cláusula? Responde a este email o escríbenos a

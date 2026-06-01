@@ -155,7 +155,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     ${confirmUrl}
   </p>
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
 
   <p style="font-size:13px;color:#888">
     ¿No reconoces este registro? Ignora este email — el perfil no se activará sin confirmar.

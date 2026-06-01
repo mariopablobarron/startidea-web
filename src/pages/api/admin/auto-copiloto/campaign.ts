@@ -203,7 +203,7 @@ async function sendCampaignEmail(opts: {
 
   <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 24px">
     Hemos preparado la documentación preliminar (expediente
-    <code style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${esc(opts.expediente_id)}</code>).
+    <code style="font-family:monospace;font-size:13px;background:#f3f4f6;padding:2px 6px">${esc(opts.expediente_id)}</code>).
     Revisad los documentos, completad los campos marcados con <strong>[COMPLETAR]</strong> y presentadla.
   </p>
 
@@ -219,30 +219,30 @@ async function sendCampaignEmail(opts: {
     </ol>
   </div>
 
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📄 Memoria técnica</h2>
     ${mdToHtml(opts.ai_memoria)}
   </div>
 
   ${opts.ai_presupuesto ? `
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">💶 Presupuesto</h2>
     ${mdToHtml(opts.ai_presupuesto)}
   </div>` : ''}
 
   ${opts.ai_checklist ? `
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📋 Documentación necesaria</h2>
     ${mdToHtml(opts.ai_checklist)}
   </div>` : ''}
 
   ${opts.ai_guia ? `
-  <div style="background:#1f1f22;padding:24px;margin:24px 0;color:#faf8f5">
+  <div style="background:#1f1f22;padding:24px;margin:24px 0;color:#ffffff">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin:0 0 16px;font-family:monospace">🗺️ Cómo presentarlo</h2>
-    <div style="color:#e0ddd8;font-size:14px;line-height:1.7">${mdToHtml(opts.ai_guia)}</div>
+    <div style="color:#e5e7eb;font-size:14px;line-height:1.7">${mdToHtml(opts.ai_guia)}</div>
   </div>` : ''}
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
   <p style="font-size:13px;color:#888">
     Dudas o revisión: <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a> · código <strong>${esc(opts.expediente_id)}</strong>
   </p>

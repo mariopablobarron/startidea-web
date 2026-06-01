@@ -112,7 +112,7 @@ export function generarFacturaHtml(data: FacturaData): string {
   .totales tr.total td:last-child { color: #e6356b; }
 
   /* Pie */
-  .pie { margin-top: 40px; border-top: 1px solid #e0ddd8; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 12px; color: #888; line-height: 1.6; }
+  .pie { margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 12px; color: #888; line-height: 1.6; }
   .pie h3 { font-family: monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #aaa; margin-bottom: 6px; }
 
   /* Print */

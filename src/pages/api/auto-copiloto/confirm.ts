@@ -66,7 +66,7 @@ export const GET: APIRoute = async ({ url }) => {
     Puedes pausar o cancelar el Copiloto en cualquier momento:
   </p>
   <a href="${manageUrl}" style="color:#e6356b;font-size:13px">Gestionar mi Copiloto →</a>
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
   <p style="font-size:13px;color:#888">
     Startidea · <a href="https://startidea.es" style="color:#e6356b">startidea.es</a>
   </p>

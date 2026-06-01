@@ -120,7 +120,7 @@ export const POST: APIRoute = async ({ request }) => {
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"></head>
-<body style="font-family:Georgia,serif;color:#1f1f22;background:#faf8f5;margin:0;padding:0">
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#ffffff;margin:0;padding:0">
 <div style="max-width:600px;margin:0 auto;padding:32px 24px">
   <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">— Startidea · Copiloto de Subvenciones</p>
   <h1 style="font-size:22px;font-weight:700;line-height:1.3;margin:0 0 16px;color:#1f1f22">
@@ -128,7 +128,7 @@ export const POST: APIRoute = async ({ request }) => {
   </h1>
   <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 20px">
     La IA de Startidea ha preparado un borrador de la documentación para
-    <strong>${convName}</strong> (expediente <span style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${id}</span>).
+    <strong>${convName}</strong> (expediente <span style="font-family:monospace;font-size:13px;background:#f3f4f6;padding:2px 6px">${id}</span>).
   </p>
   <div style="border-left:3px solid #e6356b;padding:12px 20px;background:#fff7f8;margin:20px 0;font-size:14px;color:#333">
     <strong>¿Qué pasa ahora?</strong>
@@ -145,13 +145,13 @@ export const POST: APIRoute = async ({ request }) => {
      style="display:inline-block;background:#e6356b;color:#fff;font-family:monospace;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;padding:12px 24px;margin:4px 0 20px">
     Acceder al portal →
   </a>
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:28px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0">
   <p style="font-size:13px;color:#888;line-height:1.6">
     Un saludo,<br>
     <strong>Equipo Startidea</strong><br>
     <a href="https://startidea.es" style="color:#e6356b">startidea.es</a>
   </p>
-  <p style="font-size:11px;color:#bbb;margin-top:24px;border-top:1px solid #e0ddd8;padding-top:16px">
+  <p style="font-size:11px;color:#bbb;margin-top:24px;border-top:1px solid #e5e7eb;padding-top:16px">
     Startidea · CIF B19583632 · C/ Conde Cifuentes, 33 · 18005 Granada
   </p>
 </div>

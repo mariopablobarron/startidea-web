@@ -221,7 +221,7 @@ async function sendEligibilityAlertEmail(opts: {
   </p>
   ${opts.resumen ? `<div style="background:#fff5f5;border-left:3px solid #dc2626;padding:12px 20px;margin:0 0 20px;font-size:14px;color:#333">${esc(opts.resumen)}</div>` : ''}
 
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:20px;margin:20px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:20px;margin:20px 0">
     <p style="font-size:13px;font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin:0 0 12px">Análisis de requisitos</p>
     ${eligibilityChecksToHtml(opts.checks)}
   </div>
@@ -237,7 +237,7 @@ async function sendEligibilityAlertEmail(opts: {
     <a href="mailto:hola@startidea.es?subject=Revisar análisis: ${esc(opts.convocatoria_title)}" style="color:#e6356b;font-size:13px">Contactar con Startidea →</a>
   </div>
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:28px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0">
   <p style="font-size:12px;color:#bbb">
     Alerta del Copiloto Autónomo · Expediente <code>${esc(opts.expediente_id)}</code> ·
     <a href="${manageUrl}" style="color:#bbb">Gestionar Copiloto →</a>
@@ -288,7 +288,7 @@ async function sendAutoCopilotoEmail(opts: {
   // Semáforo de elegibilidad para el email de documentos
   const scoreColor = opts.eligibilityScore >= 70 ? '#16a34a' : opts.eligibilityScore >= 45 ? '#d97706' : '#dc2626';
   const eligibilityBadge = opts.eligibilityChecks.length > 0 ? `
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:20px 24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:20px 24px;margin:24px 0">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
       <p style="font-size:13px;font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin:0">
         🔍 Análisis de elegibilidad
@@ -300,7 +300,7 @@ async function sendAutoCopilotoEmail(opts: {
     ${eligibilityChecksToHtml(opts.eligibilityChecks)}
     ${opts.eligibilityResumen ? `<p style="font-size:13px;color:#555;margin:8px 0 0;font-style:italic">${esc(opts.eligibilityResumen)}</p>` : ''}
     ${opts.datosFaltantes && opts.datosFaltantes !== 'Ninguno' ? `
-    <div style="border-top:1px solid #f0ece4;margin-top:12px;padding-top:12px">
+    <div style="border-top:1px solid #f3f4f6;margin-top:12px;padding-top:12px">
       <p style="font-size:12px;color:#888;margin:0 0 6px;font-weight:bold">Para confirmar elegibilidad falta saber:</p>
       ${opts.datosFaltantes.split('\n').filter((l: string) => l.startsWith('- ')).map((l: string) =>
         `<p style="font-size:12px;color:#666;margin:2px 0">${esc(l)}</p>`
@@ -329,7 +329,7 @@ async function sendAutoCopilotoEmail(opts: {
 
   <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 24px">
     Hemos preparado automáticamente la documentación preliminar (expediente
-    <code style="font-family:monospace;font-size:13px;background:#f0ece4;padding:2px 6px">${esc(opts.expediente_id)}</code>).
+    <code style="font-family:monospace;font-size:13px;background:#f3f4f6;padding:2px 6px">${esc(opts.expediente_id)}</code>).
     Revísala, completa los campos marcados con <strong>[COMPLETAR]</strong> y preséntala.
   </p>
 
@@ -346,34 +346,34 @@ async function sendAutoCopilotoEmail(opts: {
     </ol>
   </div>
 
-  <div style="background:#fff8f2;border:1px solid #e0ddd8;padding:12px 20px;margin:16px 0;font-size:13px;color:#666;font-style:italic">
+  <div style="background:#fff8f2;border:1px solid #e5e7eb;padding:12px 20px;margin:16px 0;font-size:13px;color:#666;font-style:italic">
     ⚡ Estos documentos fueron preparados automáticamente por el Copiloto de Startidea.
     Están pensados como punto de partida, no como versión final. Revisa siempre los datos
     antes de presentar.
   </div>
 
   <!-- MEMORIA -->
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📄 Memoria técnica</h2>
     ${mdToHtml(opts.ai_memoria)}
   </div>
 
   ${opts.ai_presupuesto ? `
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">💶 Presupuesto</h2>
     ${mdToHtml(opts.ai_presupuesto)}
   </div>` : ''}
 
   ${opts.ai_checklist ? `
-  <div style="background:#fff;border:1px solid #e0ddd8;padding:24px;margin:24px 0">
+  <div style="background:#fff;border:1px solid #e5e7eb;padding:24px;margin:24px 0">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin:0 0 16px;font-family:monospace">📋 Documentación necesaria</h2>
     ${mdToHtml(opts.ai_checklist)}
   </div>` : ''}
 
   ${opts.ai_guia ? `
-  <div style="background:#1f1f22;border:1px solid #333;padding:24px;margin:24px 0;color:#faf8f5">
+  <div style="background:#1f1f22;border:1px solid #333;padding:24px;margin:24px 0;color:#ffffff">
     <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin:0 0 16px;font-family:monospace">🗺️ Cómo presentarlo</h2>
-    <div style="color:#e0ddd8;font-size:14px;line-height:1.7">${mdToHtml(opts.ai_guia)}</div>
+    <div style="color:#e5e7eb;font-size:14px;line-height:1.7">${mdToHtml(opts.ai_guia)}</div>
   </div>` : ''}
 
   ${buildPremiumCTAHtml({
@@ -383,7 +383,7 @@ async function sendAutoCopilotoEmail(opts: {
     fuente:            'hub',
   })}
 
-  <hr style="border:none;border-top:1px solid #e0ddd8;margin:32px 0">
+  <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
 
   <p style="font-size:13px;color:#888;line-height:1.6">
     ¿Dudas puntuales sobre los documentos? Responde a este email o escríbenos a
@@ -391,7 +391,7 @@ async function sendAutoCopilotoEmail(opts: {
     con el código <strong>${esc(opts.expediente_id)}</strong>.
   </p>
 
-  <p style="font-size:12px;color:#bbb;margin-top:24px;border-top:1px solid #e0ddd8;padding-top:16px">
+  <p style="font-size:12px;color:#bbb;margin-top:24px;border-top:1px solid #e5e7eb;padding-top:16px">
     Recibiste este email porque activaste el Copiloto Autónomo de Subvenciones de Startidea.
     <a href="${manageUrl}" style="color:#bbb">Pausar o cancelar →</a>
   </p>

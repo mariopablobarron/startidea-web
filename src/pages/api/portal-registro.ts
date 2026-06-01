@@ -105,7 +105,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
   </p>
 
-  <div style="background:#faf8f5;border:1px solid #e0ddd8;padding:16px 18px;margin:0 0 20px">
+  <div style="background:#ffffff;border:1px solid #e5e7eb;padding:16px 18px;margin:0 0 20px">
     <p style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#888;margin:0 0 10px">
       Desde el portal puedes
     </p>

@@ -77,23 +77,23 @@ function buildConfirmacionEmail(opts: {
   ${adminNote}${clientNote}
 
   <table style="width:100%;border-collapse:collapse;font-size:14px;margin:0 0 20px">
-    <tr style="border-bottom:1px solid #f0ece4">
+    <tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:8px 0;color:#888;width:40%;font-family:monospace;font-size:12px">ORGANIZACIÓN</td>
       <td style="padding:8px 0;font-weight:600">${esc(orgNombre)}</td>
     </tr>
-    <tr style="border-bottom:1px solid #f0ece4">
+    <tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:8px 0;color:#888;font-family:monospace;font-size:12px">REPRESENTANTE</td>
       <td style="padding:8px 0">${esc(representante)}</td>
     </tr>
-    <tr style="border-bottom:1px solid #f0ece4">
+    <tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:8px 0;color:#888;font-family:monospace;font-size:12px">EXPEDIENTE</td>
       <td style="padding:8px 0;font-family:monospace;font-size:13px;color:#e6356b;font-weight:700">${esc(expId)}</td>
     </tr>
-    <tr style="border-bottom:1px solid #f0ece4">
+    <tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:8px 0;color:#888;font-family:monospace;font-size:12px">CONVOCATORIA</td>
       <td style="padding:8px 0;font-size:13px">${esc(conv)}</td>
     </tr>
-    <tr style="border-bottom:1px solid #f0ece4">
+    <tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:8px 0;color:#888;font-family:monospace;font-size:12px">FECHA ACEPTACIÓN</td>
       <td style="padding:8px 0;font-size:13px">${esc(fecha)}</td>
     </tr>

@@ -49,11 +49,11 @@ export function buildPremiumCTAHtml(opts: PremiumCTAOpts): string {
   const wizardUrl = buildWizardUrl(opts);
   return `
   <!-- ─── CTA PREMIUM: Presentación gestionada ────────────────────────────── -->
-  <div style="background:#1f1f22;border:1px solid #1f1f22;padding:32px 28px;margin:32px 0;color:#faf8f5">
+  <div style="background:#1f1f22;border:1px solid #1f1f22;padding:32px 28px;margin:32px 0;color:#ffffff">
     <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#e6356b;margin:0 0 12px;font-weight:700">
       ¿Quieres ahorrarte el trabajo?
     </p>
-    <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:700;line-height:1.25;margin:0 0 14px;color:#faf8f5">
+    <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:700;line-height:1.25;margin:0 0 14px;color:#ffffff">
       Que Startidea presente esta convocatoria por ti.
     </h2>
     <p style="font-size:14px;line-height:1.65;color:#cfc9bf;margin:0 0 18px">
@@ -64,22 +64,22 @@ export function buildPremiumCTAHtml(opts: PremiumCTAOpts): string {
 
     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 22px">
       <tr>
-        <td style="padding:6px 0;font-size:13px;color:#e0ddd8;line-height:1.5">
+        <td style="padding:6px 0;font-size:13px;color:#e5e7eb;line-height:1.5">
           <span style="color:#e6356b;font-weight:700">✓</span>&nbsp;&nbsp;Memoria técnica adaptada al proyecto y al baremo de la convocatoria
         </td>
       </tr>
       <tr>
-        <td style="padding:6px 0;font-size:13px;color:#e0ddd8;line-height:1.5">
+        <td style="padding:6px 0;font-size:13px;color:#e5e7eb;line-height:1.5">
           <span style="color:#e6356b;font-weight:700">✓</span>&nbsp;&nbsp;Revisión legal de los requisitos y subsanación de documentación
         </td>
       </tr>
       <tr>
-        <td style="padding:6px 0;font-size:13px;color:#e0ddd8;line-height:1.5">
+        <td style="padding:6px 0;font-size:13px;color:#e5e7eb;line-height:1.5">
           <span style="color:#e6356b;font-weight:700">✓</span>&nbsp;&nbsp;Presentación en sede electrónica gestionada (te ahorras Autofirma)
         </td>
       </tr>
       <tr>
-        <td style="padding:6px 0;font-size:13px;color:#e0ddd8;line-height:1.5">
+        <td style="padding:6px 0;font-size:13px;color:#e5e7eb;line-height:1.5">
           <span style="color:#e6356b;font-weight:700">✓</span>&nbsp;&nbsp;Seguimiento hasta resolución y, si hace falta, justificación
         </td>
       </tr>
@@ -87,7 +87,7 @@ export function buildPremiumCTAHtml(opts: PremiumCTAOpts): string {
 
     <div style="background:#2a2a2e;border-left:3px solid #e6356b;padding:14px 18px;margin:0 0 22px">
       <p style="font-size:12px;color:#8a8580;margin:0 0 4px;font-family:'Helvetica Neue',Arial,sans-serif;letter-spacing:0.08em;text-transform:uppercase">Precio</p>
-      <p style="font-size:18px;color:#faf8f5;margin:0;font-weight:700">
+      <p style="font-size:18px;color:#ffffff;margin:0;font-weight:700">
         12% del importe concedido
       </p>
       <p style="font-size:12px;color:#a8a39a;margin:6px 0 0;line-height:1.5">

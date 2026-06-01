@@ -65,7 +65,7 @@ export const POST: APIRoute = async ({ request }) => {
     Expediente <strong>${esc(expId)}</strong> · ${esc(exp.org_nombre)}
   </p>
 
-  <div style="background:#fff;border:1px solid #e0ddd8;border-left:3px solid #e6356b;padding:16px 20px;margin:0 0 20px;font-size:15px;line-height:1.7;color:#1f1f22;white-space:pre-wrap">
+  <div style="background:#fff;border:1px solid #e5e7eb;border-left:3px solid #e6356b;padding:16px 20px;margin:0 0 20px;font-size:15px;line-height:1.7;color:#1f1f22;white-space:pre-wrap">
 ${esc(msgBody.trim())}
   </div>
 
