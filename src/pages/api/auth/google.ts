@@ -16,9 +16,12 @@ const REDIRECT_URI = 'https://startidea.es/api/auth/google-callback';
 const SCOPES = 'openid email';
 
 function getClientId(): string {
+  const e = (import.meta as { env?: Record<string, string> }).env ?? {};
+  // Reutiliza las credenciales del conector Google (GA4/GSC) si no hay unas
+  // dedicadas para el admin. Así basta con autorizar la URL de redirección.
   return (
-    (import.meta as { env?: Record<string, string> }).env?.GOOGLE_ADMIN_CLIENT_ID ??
-    process.env.GOOGLE_ADMIN_CLIENT_ID ??
+    e.GOOGLE_ADMIN_CLIENT_ID ?? process.env.GOOGLE_ADMIN_CLIENT_ID ??
+    e.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID ??
     ''
   );
 }

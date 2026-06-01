@@ -31,8 +31,10 @@ function loginError(reason: string) {
 }
 
 export const GET: APIRoute = async ({ url, cookies }) => {
-  const clientId     = env('GOOGLE_ADMIN_CLIENT_ID');
-  const clientSecret = env('GOOGLE_ADMIN_CLIENT_SECRET');
+  // Reutiliza las credenciales del conector Google (GA4/GSC) si no hay
+  // dedicadas para el admin (mismo OAuth client, distinta URL de redirección).
+  const clientId     = env('GOOGLE_ADMIN_CLIENT_ID') || env('GOOGLE_CLIENT_ID');
+  const clientSecret = env('GOOGLE_ADMIN_CLIENT_SECRET') || env('GOOGLE_CLIENT_SECRET');
   // Lista blanca de cuentas Google autorizadas. ADMIN_EMAIL admite varias
   // separadas por coma; si no está, se usan las cuentas de Mario por defecto.
   const adminEmails = (env('ADMIN_EMAIL') || 'mariopablobarron@gmail.com,mario@startidea.es')
