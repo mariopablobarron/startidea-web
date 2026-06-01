@@ -35,7 +35,28 @@ export interface SolicitudImpulsa {
   contacto_telefono: string;
   ip: string;
   created_at: number;
+  estado: string;
+  notas_admin: string;
 }
+
+export type EstadoImpulsa =
+  | 'recibida'
+  | 'diagnostico_enviado'
+  | 'seleccionada'
+  | 'no_seleccionada'
+  | 'contactada'
+  | 'cliente'
+  | 'descartada';
+
+export const ESTADOS_IMPULSA: EstadoImpulsa[] = [
+  'recibida',
+  'diagnostico_enviado',
+  'seleccionada',
+  'no_seleccionada',
+  'contactada',
+  'cliente',
+  'descartada',
+];
 
 let _db: Database.Database | null = null;
 
@@ -75,15 +96,24 @@ function getDb(): Database.Database {
       contacto_email    TEXT NOT NULL DEFAULT '',
       contacto_telefono TEXT NOT NULL DEFAULT '',
       ip                TEXT NOT NULL DEFAULT '',
-      created_at        INTEGER NOT NULL
+      created_at        INTEGER NOT NULL,
+      estado            TEXT NOT NULL DEFAULT 'recibida',
+      notas_admin       TEXT NOT NULL DEFAULT ''
     );
     CREATE INDEX IF NOT EXISTS idx_imp_created ON solicitudes_impulsa (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_imp_email ON solicitudes_impulsa (contacto_email);
   `);
+  // Migraciones seguras (la tabla pudo crearse antes de añadir estos campos)
+  for (const sql of [
+    `ALTER TABLE solicitudes_impulsa ADD COLUMN estado TEXT NOT NULL DEFAULT 'recibida'`,
+    `ALTER TABLE solicitudes_impulsa ADD COLUMN notas_admin TEXT NOT NULL DEFAULT ''`,
+  ]) {
+    try { _db.exec(sql); } catch { /* columna ya existe */ }
+  }
   return _db;
 }
 
-export function saveSolicitud(s: SolicitudImpulsa): void {
+export function saveSolicitud(s: Omit<SolicitudImpulsa, 'estado' | 'notas_admin'>): void {
   getDb()
     .prepare(`
       INSERT INTO solicitudes_impulsa (
@@ -105,6 +135,23 @@ export function saveSolicitud(s: SolicitudImpulsa): void {
 
 export function countSolicitudes(): number {
   return (getDb().prepare('SELECT COUNT(*) as n FROM solicitudes_impulsa').get() as { n: number }).n;
+}
+
+export function setEstado(id: string, estado: string, notas?: string): boolean {
+  const db = getDb();
+  if (typeof notas === 'string') {
+    return db.prepare('UPDATE solicitudes_impulsa SET estado = ?, notas_admin = ? WHERE id = ?').run(estado, notas, id).changes > 0;
+  }
+  return db.prepare('UPDATE solicitudes_impulsa SET estado = ? WHERE id = ?').run(estado, id).changes > 0;
+}
+
+export function statsImpulsa(): Record<string, number> {
+  const rows = getDb()
+    .prepare('SELECT estado, COUNT(*) as n FROM solicitudes_impulsa GROUP BY estado')
+    .all() as Array<{ estado: string; n: number }>;
+  const out: Record<string, number> = {};
+  for (const r of rows) out[r.estado] = r.n;
+  return out;
 }
 
 export function getAllSolicitudes(): SolicitudImpulsa[] {

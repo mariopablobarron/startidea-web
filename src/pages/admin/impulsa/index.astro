@@ -1,0 +1,129 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getAllSolicitudes, statsImpulsa, ESTADOS_IMPULSA } from '@/lib/impulsa-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect('/admin/login?next=' + encodeURIComponent('/admin/impulsa'));
+}
+
+const filtro = Astro.url.searchParams.get('estado') ?? '';
+let solicitudes = getAllSolicitudes();
+if (filtro) solicitudes = solicitudes.filter((s) => s.estado === filtro);
+const stats = statsImpulsa();
+const total = getAllSolicitudes().length;
+
+const ESTADO_LABEL: Record<string, string> = {
+  recibida: '📥 Recibida',
+  diagnostico_enviado: '📄 Diagnóstico enviado',
+  seleccionada: '⭐ Seleccionada',
+  no_seleccionada: '➖ No seleccionada',
+  contactada: '📞 Contactada',
+  cliente: '✅ Cliente',
+  descartada: '🗑️ Descartada',
+};
+
+function fmt(ts: number): string {
+  return new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+function servicios(raw: string): string {
+  try { const a = JSON.parse(raw); return Array.isArray(a) && a.length ? a.join(', ') : '—'; } catch { return '—'; }
+}
+---
+
+<Base title="Admin · Startidea Impulsa" noindex={true}>
+  <section class="bg-paper py-12">
+    <div class="container-x">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h1 class="font-display text-3xl text-ink">Startidea Impulsa — solicitudes ({total})</h1>
+        <a href="/admin/impulsa/export.csv" class="btn-ghost">Exportar CSV ↓</a>
+      </div>
+
+      <!-- Filtros por estado -->
+      <div class="mt-6 flex flex-wrap gap-2 text-sm">
+        <a href="/admin/impulsa" class={`border px-3 py-1 ${!filtro ? 'border-magenta text-magenta' : 'border-ink/20 text-ink/70'}`}>Todas ({total})</a>
+        {ESTADOS_IMPULSA.map((e) => (
+          <a href={`/admin/impulsa?estado=${e}`} class={`border px-3 py-1 ${filtro === e ? 'border-magenta text-magenta' : 'border-ink/20 text-ink/70'}`}>
+            {ESTADO_LABEL[e]} ({stats[e] ?? 0})
+          </a>
+        ))}
+      </div>
+
+      <!-- Lista -->
+      <div class="mt-8 space-y-4">
+        {solicitudes.length === 0 && <p class="text-ink/60">No hay solicitudes{filtro ? ' en este estado' : ''}.</p>}
+        {solicitudes.map((s) => (
+          <article class="border border-ink/15 bg-paper-warm p-5" data-id={s.id}>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 class="font-display text-xl text-ink">{s.org_nombre} <span class="text-sm font-normal text-ink/50">· {s.org_tipo}</span></h2>
+              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">{fmt(s.created_at)}</span>
+            </div>
+            <p class="mt-1 text-sm text-ink/70">
+              {s.contacto_nombre}{s.contacto_cargo ? ` (${s.contacto_cargo})` : ''} ·
+              <a href={`mailto:${s.contacto_email}`} class="link-underline">{s.contacto_email}</a>
+              {s.contacto_telefono ? ` · ${s.contacto_telefono}` : ''}
+            </p>
+            <dl class="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-sm text-ink/75 sm:grid-cols-2">
+              <div><dt class="inline font-semibold">Interés:</dt> <dd class="inline">{servicios(s.servicios_interes)}</dd></div>
+              <div><dt class="inline font-semibold">Web:</dt> <dd class="inline">{s.web_estado || '—'}{s.web_actual ? ` · ${s.web_actual}` : ''}</dd></div>
+              <div><dt class="inline font-semibold">Presupuesto:</dt> <dd class="inline">{s.presupuesto || '—'}</dd></div>
+              <div><dt class="inline font-semibold">Ámbito:</dt> <dd class="inline">{s.ambito || '—'}</dd></div>
+            </dl>
+            {s.mision && <p class="mt-2 text-sm text-ink/70"><span class="font-semibold">Misión:</span> {s.mision}</p>}
+            {s.retos && <p class="mt-1 text-sm text-ink/70"><span class="font-semibold">Retos:</span> {s.retos}</p>}
+            {s.objetivo && <p class="mt-1 text-sm text-ink/70"><span class="font-semibold">Objetivo:</span> {s.objetivo}</p>}
+
+            <div class="mt-4 flex flex-wrap items-end gap-3 border-t border-ink/10 pt-4">
+              <label class="text-xs text-ink/60">Estado
+                <select class="js-estado mt-1 block border border-ink/20 bg-paper px-3 py-2 text-sm text-ink">
+                  {ESTADOS_IMPULSA.map((e) => (
+                    <option value={e} selected={s.estado === e}>{ESTADO_LABEL[e]}</option>
+                  ))}
+                </select>
+              </label>
+              <label class="flex-1 text-xs text-ink/60">Notas
+                <input type="text" class="js-notas mt-1 block w-full border border-ink/20 bg-paper px-3 py-2 text-sm text-ink" value={s.notas_admin} placeholder="Notas internas…" />
+              </label>
+              <button class="js-guardar btn-ghost text-sm">Guardar</button>
+              <span class="js-msg text-xs"></span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // JS puro — sin tipos.
+  document.querySelectorAll('article[data-id]').forEach((card) => {
+    const id = card.getAttribute('data-id');
+    const btn = card.querySelector('.js-guardar');
+    const sel = card.querySelector('.js-estado');
+    const notas = card.querySelector('.js-notas');
+    const msg = card.querySelector('.js-msg');
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      if (msg) { msg.textContent = 'Guardando…'; msg.className = 'js-msg text-xs text-ink/50'; }
+      try {
+        const res = await fetch('/api/admin/impulsa-estado', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id, estado: sel ? sel.value : '', notas: notas ? notas.value : '' }),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          if (msg) { msg.textContent = '✓ Guardado'; msg.className = 'js-msg text-xs text-magenta'; }
+        } else {
+          if (msg) { msg.textContent = 'Error'; msg.className = 'js-msg text-xs text-red-600'; }
+        }
+      } catch (e) {
+        if (msg) { msg.textContent = 'Error de red'; msg.className = 'js-msg text-xs text-red-600'; }
+      }
+      btn.disabled = false;
+    });
+  });
+</script>
