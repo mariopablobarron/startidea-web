@@ -26,7 +26,7 @@ El objetivo es que organizaciones sociales con recursos limitados accedan a comu
 
 ### 2. Entidad convocante
 
-Startidea (CIF B19583632), con domicilio en C/ Conde Cifuentes, 33, 18005 Granada. Contacto del programa: **impulsa@startidea.es** · https://startidea.es
+Startidea (CIF B19583632), con domicilio en C/ Conde Cifuentes, 33, 18005 Granada. Contacto del programa: **hola@startidea.es** · https://startidea.es
 
 ### 3. Dotación y naturaleza de la ayuda
 
@@ -109,11 +109,11 @@ Los materiales y entregables creados se ceden a la entidad para el cumplimiento 
 
 > Esta cláusula es la que hace legal el componente comercial. **El fin comercial se declara abiertamente.**
 
-- **Responsable:** Startidea (CIF B19583632), C/ Conde Cifuentes 33, 18005 Granada · impulsa@startidea.es
+- **Responsable:** Startidea (CIF B19583632), C/ Conde Cifuentes 33, 18005 Granada · hola@startidea.es
 - **Finalidades:** (1) gestionar y evaluar la solicitud; (2) elaborar y entregar el diagnóstico y la hoja de ruta; (3) **contactar a la entidad para ofrecerle servicios de Startidea —incluidos los no cubiertos por el programa— y futuras colaboraciones.** Esta tercera finalidad se acepta de forma expresa al enviar el formulario.
 - **Base jurídica:** consentimiento del interesado y/o interés legítimo de Startidea en el desarrollo de su actividad.
 - **Conservación:** mientras dure el programa y, para la finalidad comercial, hasta que la entidad solicite la baja.
-- **Derechos:** acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a impulsa@startidea.es. Derecho a reclamar ante la AEPD.
+- **Derechos:** acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a hola@startidea.es. Derecho a reclamar ante la AEPD.
 - **Cesiones:** no se ceden datos a terceros salvo obligación legal.
 
 ### 13. Aceptación, modificación y cancelación

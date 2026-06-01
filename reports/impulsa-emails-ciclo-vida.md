@@ -1,7 +1,7 @@
 # Startidea Impulsa — Emails del ciclo de vida
 
 > Plantillas para acompañar a cada solicitante. El motor comercial vive aquí: **todo el mundo recibe valor (su diagnóstico), y eso abre la conversación de servicios**.
-> Español neutro, sin "nosotros". Sustituye `[corchetes]`. From: hola@startidea.es · Reply-to: impulsa@startidea.es
+> Español neutro, sin "nosotros". Sustituye `[corchetes]`. From: hola@startidea.es · Reply-to: hola@startidea.es
 
 ---
 
