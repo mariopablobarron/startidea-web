@@ -1,0 +1,28 @@
+src/pages/llms.txt.ts
+  s_0ab79ba551035b::t_e4953bf3f02971 34-37
+src/pages/impulsa/bases.astro
+  s_0ab79ba551035b::t_fb4b9d4e0c174d 39,90,94
+  s_0ab79ba551035b::t_b08fec4d13e70d 68
+src/pages/api/impulsa-solicitud.ts
+  s_0ab79ba551035b::t_26c4b28d8a7f3a 148,152
+src/pages/impulsa/index.astro
+  s_0ab79ba551035b::t_9e6627e7b7263a 279
+src/components/Footer.astro
+  s_0ab79ba551035b::t_13109259103d6d 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c21819bbd65572758c83f49c9798412480252372",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
