@@ -1,0 +1,31 @@
+src/pages/api/generar-factura.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 19,23,25
+src/pages/api/admin/tramitar-sede.ts
+  s_0ab79ba551035b::t_b7537ecf79119f 16,29-30
+src/pages/api/entregar-expediente.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 12,35,38
+src/pages/api/admin/mensaje-expediente.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 12,23,25
+src/pages/api/generar-expediente.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 22,33,36
+src/pages/api/status-expediente.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 10,136,138
+src/pages/api/enviar-contrato.ts
+  s_0ab79ba551035b::t_7dff830d5b3640 13,20,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "deb9579f42fe4f98d5a9023552fd78fe106e6303",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
