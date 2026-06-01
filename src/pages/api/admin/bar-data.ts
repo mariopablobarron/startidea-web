@@ -13,6 +13,34 @@ import type { APIRoute } from "astro";
 import { isAdminLoggedIn } from "@/lib/admin-session";
 import { listDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
 import { HUB_URL } from "@/lib/hub";
+import { getExpedientesRecibidosSinProcesar, statsContratos } from "@/lib/expedientes-db";
+import { getAllSolicitudes } from "@/lib/impulsa-db";
+
+interface Notif { icon: string; text: string; href: string; ts: number }
+
+// Construye las notificaciones accionables desde las BDs locales (rápido).
+function buildNotifications(): Notif[] {
+  const out: Notif[] = [];
+  try {
+    for (const e of getExpedientesRecibidosSinProcesar().slice(0, 12)) {
+      out.push({ icon: "📋", text: `Expediente sin procesar · ${e.org_nombre}`, href: `/admin/expedientes/${e.id}`, ts: (e.created_at ?? 0) * 1000 });
+    }
+  } catch { /* sin tabla */ }
+  try {
+    const imp = getAllSolicitudes().filter((s) => s.estado === "recibida").slice(0, 12);
+    for (const s of imp) {
+      out.push({ icon: "🚀", text: `Solicitud Impulsa · ${s.org_nombre}`, href: "/admin/impulsa?estado=recibida", ts: s.created_at });
+    }
+  } catch { /* sin solicitudes */ }
+  try {
+    const c = statsContratos();
+    if (c.sinEnviar > 0) {
+      out.push({ icon: "📄", text: `${c.sinEnviar} contrato${c.sinEnviar !== 1 ? "s" : ""} sin enviar`, href: "/admin/expedientes", ts: Date.now() });
+    }
+  } catch { /* sin contratos */ }
+  out.sort((a, b) => b.ts - a.ts);
+  return out;
+}
 
 export const prerender = false;
 
@@ -60,12 +88,16 @@ export const GET: APIRoute = async ({ cookies }) => {
     leadsNew = neueva?.total ?? null;
   }
 
+  const notifications = buildNotifications();
+
   return new Response(
     JSON.stringify({
       ok: true,
       subsidies_total: statsPublic?.total ?? null,
       leads_7d: leadsLast7,
       leads_new: leadsNew,
+      notif_count: notifications.length,
+      notifications,
     }),
     {
       headers: {
