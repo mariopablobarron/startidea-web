@@ -75,7 +75,8 @@ nacional (sin geo). Propuestas (alimentar al curador):
   leads de contacto/diagnóstico. Revisar con el agente SEO (lunes).
 
 ## Siguientes acciones
-- [ ] Crear/activar Google Business Profile del Hub (Granada).
+- [ ] Crear/activar Google Business Profile del Hub (Granada) → kit en reports/google-business-profile-kit.md.
 - [ ] Añadir métricas reales a los casos.
-- [ ] Lanzar los primeros 4 artículos pilar de fundraising y subvenciones.
-- [ ] Revisar H1 del resto de pilares (consultoria) con keyword nacional.
+- [x] ~~Lanzar los primeros artículos pilar~~ HECHO: 5 notas pilar (fundraising, subvenciones ×2, comunicación, consultoría) con tldr + FAQs, enlazadas a su pilar.
+- [x] ~~Revisar H1 /consultoria con keyword nacional~~ HECHO: "Consultoría e innovación social. / Pensar mejor. Decidir con criterio."
+- [x] ~~GEO/AEO técnico~~ HECHO: /llms.txt, entidad de autor #founder, HowTo en subvenciones, /glosario (DefinedTerm), bloque "respuesta corta" (tldr) en las 29 notas.
