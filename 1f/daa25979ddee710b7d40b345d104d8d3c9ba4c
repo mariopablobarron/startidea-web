@@ -1,0 +1,22 @@
+.github/workflows/deploy.yml
+  s_0ab79ba551035b::t_ed706e2e80be28 39-45,52-55,61-67
+src/pages/api/admin/bar-data.ts
+  s_0ab79ba551035b::t_b4d6ab04739f16 16
+  s_0ab79ba551035b::t_e886232c131afa 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "1fdaa25979ddee710b7d40b345d104d8d3c9ba4c",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
