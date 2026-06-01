@@ -137,6 +137,12 @@ export function countSolicitudes(): number {
   return (getDb().prepare('SELECT COUNT(*) as n FROM solicitudes_impulsa').get() as { n: number }).n;
 }
 
+export function getSolicitudesByEmail(email: string): SolicitudImpulsa[] {
+  return getDb()
+    .prepare('SELECT * FROM solicitudes_impulsa WHERE LOWER(contacto_email) = LOWER(?) ORDER BY created_at DESC')
+    .all(email) as SolicitudImpulsa[];
+}
+
 export function searchSolicitudes(q: string, limit = 25): SolicitudImpulsa[] {
   const like = `%${q.trim().toLowerCase()}%`;
   return getDb()

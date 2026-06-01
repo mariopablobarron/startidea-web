@@ -17,6 +17,7 @@ import {
   markMessagesRead,
 } from '@/lib/expedientes-db';
 import type { Expediente, PortalUser } from '@/lib/expedientes-db';
+import { getSolicitudesByEmail } from '@/lib/impulsa-db';
 
 export const prerender = false;
 
@@ -28,6 +29,23 @@ if (!email) return Astro.redirect('/portal');
 
 const expedientes = getExpedientesByEmail(email);
 const user        = getPortalUser(email);
+
+// Módulo Startidea Impulsa: activo si el cliente presentó solicitud (por email).
+let impulsaSolicitud: { estado: string; org_nombre: string } | null = null;
+try {
+  const ss = getSolicitudesByEmail(email);
+  if (ss.length > 0) impulsaSolicitud = { estado: ss[0].estado, org_nombre: ss[0].org_nombre };
+} catch { /* sin BD impulsa */ }
+
+const IMPULSA_ESTADO_LABEL: Record<string, string> = {
+  recibida: 'Solicitud recibida · en evaluación',
+  diagnostico_enviado: 'Diagnóstico enviado',
+  seleccionada: '¡Entidad seleccionada! 🎉',
+  no_seleccionada: 'No seleccionada en esta edición',
+  contactada: 'En conversación con Startidea',
+  cliente: 'Cliente activo',
+  descartada: 'Solicitud cerrada',
+};
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -405,6 +423,27 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
           <div style="font-size:15px;font-weight:700;margin-bottom:4px">Copiloto de Subvenciones</div>
           <div style="font-size:12px;color:#666;line-height:1.5">El equipo prepara la memoria, presupuesto y guía de presentación. Comisión a éxito del 12%.</div>
           <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#e6356b;font-weight:700">Solicitar →</div>
+        </a>
+      )}
+
+      <!-- Startidea Impulsa — módulo que se ACTIVA al presentar solicitud RSC -->
+      {impulsaSolicitud ? (
+        <a href="/impulsa/bases" target="_blank"
+           style="background:#f0fdf4;border:2px solid #16a34a;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+          <div style="font-size:28px;margin-bottom:10px">🚀</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#16a34a;margin-bottom:4px">✓ Activo</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Startidea Impulsa</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">{IMPULSA_ESTADO_LABEL[impulsaSolicitud.estado] ?? 'Solicitud registrada'}.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#16a34a;font-weight:700">Ver bases →</div>
+        </a>
+      ) : (
+        <a href="/impulsa" target="_blank"
+           style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+          <div style="font-size:28px;margin-bottom:10px">🚀</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible · RSC</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Startidea Impulsa</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">80.000 € en comunicación, web y audiovisual en especie para el tercer sector.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#888;font-weight:700">Presentar entidad →</div>
         </a>
       )}
 
