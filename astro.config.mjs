@@ -22,6 +22,9 @@ export default defineConfig({
   // normaliza ambas variantes (con y sin /) desde una sola entrada.
   // Duplicar con "/" causaba colisiones de ruta en el router.
   redirects: {
+    // Atajos del programa Startidea Impulsa (fáciles de dictar / cartelería)
+    '/bases':                                             '/impulsa/bases',
+    '/programa':                                          '/impulsa',
     '/quienessomos':                                      '/sobre',
     '/servicios':                                         '/como-trabajamos',
     '/portfolio':                                         '/casos',
