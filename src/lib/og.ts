@@ -13,10 +13,16 @@ const montserratSemiBold = readFileSync(join(fontsDir, 'Montserrat-600.ttf'));
 const montserratBlack = readFileSync(join(fontsDir, 'Montserrat-900.ttf'));
 const montserratBlackItalic = readFileSync(join(fontsDir, 'Montserrat-900i.ttf'));
 
-// ─── Paleta marca ───────────────────────────────────────────
+// ─── Logo oficial (manual de marca) ─────────────────────────
+// Lockup oficial (isotipo + wordmark) en color sobre blanco. Se embebe
+// como data URI porque Satori no resuelve rutas/URLs de imagen.
+const logoBuf = readFileSync(join(process.cwd(), 'public/brand/logo-isotipo-only.png'));
+const LOGO_DATA_URI = `data:image/png;base64,${logoBuf.toString('base64')}`;
+
+// ─── Paleta marca (manual: blanco puro · magenta corporativo · tinta) ──
 const PALETTE = {
-  paper: '#faf8f5',
-  paperWarm: '#f3efe8',
+  paper: '#ffffff',
+  paperWarm: '#f3f4f6',
   ink: '#3d3d40',
   inkSoft: '#4a4a4d',
   inkMute: '#6e6f70',
@@ -102,11 +108,7 @@ export async function renderOg(input: OgInput): Promise<Uint8Array> {
         align-items:center;
         width:100%;
       ">
-        <div style="display:flex;align-items:baseline;">
-          <span style="font-size:40px;font-weight:900;letter-spacing:-0.02em;color:${PALETTE.magenta};">start</span>
-          <span style="font-size:40px;font-weight:900;letter-spacing:-0.02em;color:${PALETTE.ink};">id</span>
-          <span style="font-size:40px;font-weight:900;letter-spacing:-0.02em;color:${PALETTE.magenta};">ea</span>
-        </div>
+        <img src="${LOGO_DATA_URI}" width="116" height="116" style="display:flex;object-fit:contain;" />
         ${eyebrowBlock}
       </div>
 
