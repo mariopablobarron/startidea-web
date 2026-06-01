@@ -145,11 +145,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           <li>Si tu entidad entra entre las seleccionadas, se acuerda el paquete de servicios y los plazos para ejecutarlo contigo.</li>
         </ul>
         <p>Mientras tanto, puedes consultar las <a href="https://startidea.es/impulsa/bases">bases del programa</a> o leer las <a href="https://startidea.es/notas">notas de Startidea</a> sobre comunicación y fundraising para el tercer sector.</p>
-        <p>Cualquier duda, responde a este correo o escribe a <a href="mailto:impulsa@startidea.es">impulsa@startidea.es</a>.</p>
+        <p>Cualquier duda, responde a este correo o escribe a <a href="mailto:hola@startidea.es">hola@startidea.es</a>.</p>
         <p style="color:#666">Startidea · Innovación social, comunicación y fundraising<br>Granada · <a href="https://startidea.es">startidea.es</a></p>
       </div>
     `,
-    replyTo: 'impulsa@startidea.es',
+    replyTo: 'hola@startidea.es',
   }).catch((err) => console.error('[impulsa] confirm email fail:', err));
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });
