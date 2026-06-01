@@ -17,6 +17,8 @@ import {
   getExpedientesRecientes,
 } from '@/lib/expedientes-db';
 import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
+import { statsImpulsa, countSolicitudes } from '@/lib/impulsa-db';
+import { countRespuestas } from '@/lib/encuesta-db';
 import { recentScraperRuns } from '@/lib/expedientes-db';
 
 export const prerender = false;
@@ -59,6 +61,14 @@ let scraperRuns: ReturnType<typeof recentScraperRuns> = [];
 try {
   scraperRuns = recentScraperRuns(5);
 } catch { /* tabla no migrada aún */ }
+
+// Startidea Impulsa (programa RSC) + Encuesta de fundraising — BDs propias.
+let impulsaTotal = 0;
+let impulsaStats: Record<string, number> = {};
+let encuestaTotal = 0;
+try { impulsaTotal = countSolicitudes(); impulsaStats = statsImpulsa(); } catch { /* sin solicitudes */ }
+try { encuestaTotal = countRespuestas(); } catch { /* sin respuestas */ }
+const impulsaNuevas = impulsaStats['recibida'] ?? 0;
 
 // Formatea "hace X días" desde un epoch (segundos)
 function fmtAgo(ts: number | null): string {
@@ -622,10 +632,39 @@ const STATUS_COLORS: Record<string, string> = {
         <!-- Startidea Impulsa -->
         <a href="/admin/impulsa"
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
-          <span class="text-3xl" aria-hidden="true">🚀</span>
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">🚀</span>
+            {impulsaTotal > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {impulsaTotal} solicitud{impulsaTotal !== 1 ? 'es' : ''}
+              </span>
+            )}
+          </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Startidea Impulsa</h2>
           <p class="mt-2 text-sm text-ink/60 leading-relaxed">
             Solicitudes del programa RSC: estados, notas y export CSV.
+          </p>
+          {impulsaNuevas > 0 && (
+            <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-yellow-700">
+              ⚠ {impulsaNuevas} sin revisar
+            </p>
+          )}
+        </a>
+
+        <!-- Encuesta de fundraising (informe original) -->
+        <a href="/admin/encuesta"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">📊</span>
+            {encuestaTotal > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {encuestaTotal} respuesta{encuestaTotal !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Encuesta · Informe</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Respuestas de /encuesta-fundraising: agregados para el informe y export CSV.
           </p>
         </a>
 
