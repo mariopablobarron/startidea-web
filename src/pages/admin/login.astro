@@ -50,9 +50,10 @@ const nextParam = Astro.url.searchParams.get("next") ?? "/admin";
 const googleOauthUrl = `/api/auth/google?next=${encodeURIComponent(nextParam)}`;
 
 // ¿Está Google OAuth configurado en este entorno?
+const _env = (import.meta as { env?: Record<string, string> }).env ?? {};
 const googleConfigured = !!(
-  (import.meta as { env?: Record<string, string> }).env?.GOOGLE_ADMIN_CLIENT_ID ??
-  process.env.GOOGLE_ADMIN_CLIENT_ID
+  _env.GOOGLE_ADMIN_CLIENT_ID ?? process.env.GOOGLE_ADMIN_CLIENT_ID ??
+  _env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID
 );
 ---
 
@@ -139,7 +140,7 @@ const googleConfigured = !!(
         )}
 
         <p class="mt-10 border-t border-ink/15 pt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
-          El acceso con Google solo funciona con mariopablobarron@gmail.com.<br />
+          El acceso con Google funciona con mariopablobarron@gmail.com y mario@startidea.es.<br />
           La cookie es HTTP-only y dura 30 días.
         </p>
       </div>
