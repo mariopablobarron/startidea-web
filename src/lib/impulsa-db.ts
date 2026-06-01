@@ -137,6 +137,17 @@ export function countSolicitudes(): number {
   return (getDb().prepare('SELECT COUNT(*) as n FROM solicitudes_impulsa').get() as { n: number }).n;
 }
 
+export function searchSolicitudes(q: string, limit = 25): SolicitudImpulsa[] {
+  const like = `%${q.trim().toLowerCase()}%`;
+  return getDb()
+    .prepare(
+      `SELECT * FROM solicitudes_impulsa
+       WHERE LOWER(org_nombre) LIKE @q OR LOWER(contacto_nombre) LIKE @q OR LOWER(contacto_email) LIKE @q
+       ORDER BY created_at DESC LIMIT @limit`,
+    )
+    .all({ q: like, limit }) as SolicitudImpulsa[];
+}
+
 export function setEstado(id: string, estado: string, notas?: string): boolean {
   const db = getDb();
   if (typeof notas === 'string') {

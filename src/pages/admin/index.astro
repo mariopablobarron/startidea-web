@@ -172,14 +172,20 @@ const STATUS_COLORS: Record<string, string> = {
     <div class="container-x py-10">
 
       <!-- Header -->
-      <div class="mb-8 flex items-center justify-between">
+      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">— Startidea</span>
           <h1 class="mt-1 font-display text-4xl text-ink">Panel de admin</h1>
         </div>
-        <a href="/admin/logout" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
-          Cerrar sesión →
-        </a>
+        <div class="flex items-center gap-4">
+          <form method="get" action="/admin/buscar" class="hidden sm:flex">
+            <input type="search" name="q" placeholder="Buscar contacto / entidad…"
+                   class="w-56 border border-ink/20 bg-paper px-3 py-2 text-sm text-ink focus:border-magenta focus:outline-none" />
+          </form>
+          <a href="/admin/logout" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            Cerrar sesión →
+          </a>
+        </div>
       </div>
 
       <!-- ─── Bandeja de pendientes ───────────────────────── -->
