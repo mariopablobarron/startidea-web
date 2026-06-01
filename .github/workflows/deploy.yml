@@ -36,18 +36,32 @@ jobs:
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Capturar host keys del VPS (los 3 algoritmos)
-          ssh-keyscan -t ed25519,rsa,ecdsa 72.61.195.108 2>/dev/null > ~/.ssh/known_hosts
+          # Capturar host keys del VPS (los 3 algoritmos), con reintento
+          # (ssh-keyscan a veces devuelve vacío de forma transitoria).
+          for k in 1 2 3; do
+            ssh-keyscan -t ed25519,rsa,ecdsa 72.61.195.108 2>/dev/null > ~/.ssh/known_hosts
+            [ -s ~/.ssh/known_hosts ] && break
+            echo "known_hosts vacío (intento $k) — reintentando…"; sleep 5
+          done
           echo "Known hosts capturados:"
           cat ~/.ssh/known_hosts | wc -l
 
           # Conectar — la SSH key tiene command="..." forzado en authorized_keys
           # del VPS, así que cualquier conexión ejecuta /root/deploy-startidea-web.sh
           # y nada más. El ":" del comando es ignorado por el lado del VPS.
-          ssh -i ~/.ssh/id_ed25519 \
+          # Reintento: el primer connect falla a veces de forma transitoria
+          # (incidente 2026-06-01). Hasta 3 intentos con backoff.
+          attempt=1
+          until ssh -i ~/.ssh/id_ed25519 \
               -o ConnectTimeout=30 \
               -o ServerAliveInterval=30 \
               -o ServerAliveCountMax=10 \
               -o BatchMode=yes \
               root@72.61.195.108 \
-              ":"
+              ":"; do
+            if [ "$attempt" -ge 3 ]; then
+              echo "Deploy falló tras $attempt intentos."; exit 1
+            fi
+            echo "Intento $attempt falló — reintentando en 15s…"
+            attempt=$((attempt + 1)); sleep 15
+          done

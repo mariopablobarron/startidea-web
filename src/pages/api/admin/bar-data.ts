@@ -13,7 +13,7 @@ import type { APIRoute } from "astro";
 import { isAdminLoggedIn } from "@/lib/admin-session";
 import { listDiagnosis, isHubAdminConfigured } from "@/lib/hub-admin";
 import { HUB_URL } from "@/lib/hub";
-import { getExpedientesRecibidosSinProcesar, statsContratos } from "@/lib/expedientes-db";
+import { listExpedientes, statsContratos } from "@/lib/expedientes-db";
 import { getAllSolicitudes } from "@/lib/impulsa-db";
 
 interface Notif { icon: string; text: string; href: string; ts: number }
@@ -22,7 +22,9 @@ interface Notif { icon: string; text: string; href: string; ts: number }
 function buildNotifications(): Notif[] {
   const out: Notif[] = [];
   try {
-    for (const e of getExpedientesRecibidosSinProcesar().slice(0, 12)) {
+    // Todos los expedientes en estado "recibido" (sin procesar), recientes
+    // primero — coherente con el contador del dashboard. Aviso inmediato.
+    for (const e of listExpedientes({ status: "recibido", limit: 12 }).items) {
       out.push({ icon: "📋", text: `Expediente sin procesar · ${e.org_nombre}`, href: `/admin/expedientes/${e.id}`, ts: (e.created_at ?? 0) * 1000 });
     }
   } catch { /* sin tabla */ }
