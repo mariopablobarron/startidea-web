@@ -108,7 +108,9 @@ export async function renderOg(input: OgInput): Promise<Uint8Array> {
         align-items:center;
         width:100%;
       ">
-        <img src="${LOGO_DATA_URI}" width="116" height="116" style="display:flex;object-fit:contain;" />
+        <div style="display:flex;align-items:center;">
+          <img src="${LOGO_DATA_URI}" width="116" height="116" style="width:116px;height:116px;object-fit:contain;" />
+        </div>
         ${eyebrowBlock}
       </div>
 
