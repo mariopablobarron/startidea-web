@@ -82,7 +82,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: Georgia, serif;
-      background: #faf8f5;
+      background: #ffffff;
       color: #1f1f22;
       min-height: 100vh;
     }
@@ -133,7 +133,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     /* ─── Tarjeta de expediente ─────────────────────────── */
     .exp-card {
       background: #fff;
-      border: 1px solid #e0ddd8;
+      border: 1px solid #e5e7eb;
       margin-bottom: 24px;
       overflow: hidden;
     }
@@ -143,7 +143,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       justify-content: space-between;
       gap: 12px;
       padding: 20px 24px 16px;
-      border-bottom: 1px solid #f0ece4;
+      border-bottom: 1px solid #f3f4f6;
     }
     .exp-id {
       font-family: monospace;
@@ -174,7 +174,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     .status-rechazado     { background: #fff1f2; border-color: #fda4af; color: #be123c; }
 
     /* ─── Progress bar ──────────────────────────────────── */
-    .progress-wrap { padding: 20px 24px; background: #faf8f5; border-bottom: 1px solid #f0ece4; }
+    .progress-wrap { padding: 20px 24px; background: #ffffff; border-bottom: 1px solid #f3f4f6; }
     .progress-steps {
       display: flex;
       align-items: flex-start;
@@ -188,7 +188,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       left: 12px;
       right: 12px;
       height: 2px;
-      background: #e0ddd8;
+      background: #e5e7eb;
       z-index: 0;
     }
     .step-item {
@@ -204,7 +204,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      border: 2px solid #d0ccc5;
+      border: 2px solid #d1d5db;
       background: #fff;
       display: flex;
       align-items: center;
@@ -213,7 +213,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     }
     .step-dot.done  { background: #e6356b; border-color: #e6356b; color: #fff; }
     .step-dot.current { background: #fff; border-color: #e6356b; color: #e6356b; font-weight: 700; }
-    .step-dot.future { background: #fff; border-color: #d0ccc5; color: #d0ccc5; }
+    .step-dot.future { background: #fff; border-color: #d1d5db; color: #d1d5db; }
     .step-label {
       font-family: monospace;
       font-size: 9px;
@@ -231,9 +231,9 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     .exp-body   { padding: 20px 24px; }
     .sections   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .section-card {
-      border: 1px solid #e0ddd8;
+      border: 1px solid #e5e7eb;
       padding: 16px;
-      background: #faf8f5;
+      background: #ffffff;
     }
     .section-title {
       font-family: monospace;
@@ -278,14 +278,14 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       align-items: center;
       gap: 8px;
       padding: 10px 0;
-      border-top: 1px solid #e0ddd8;
+      border-top: 1px solid #e5e7eb;
       user-select: none;
     }
     .docs-section summary::before { content: '▸'; color: #e6356b; }
     details[open] summary::before { content: '▾'; }
     .doc-content {
       background: #fff;
-      border: 1px solid #e0ddd8;
+      border: 1px solid #e5e7eb;
       padding: 16px;
       font-family: monospace;
       font-size: 12px;
@@ -301,7 +301,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     /* ─── Próximos pasos ─────────────────────────────────── */
     .next-steps {
       margin-top: 16px;
-      border-top: 1px solid #f0ece4;
+      border-top: 1px solid #f3f4f6;
       padding-top: 16px;
     }
     .next-steps h3 {
@@ -316,7 +316,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       display: flex;
       gap: 10px;
       padding: 8px 0;
-      border-bottom: 1px solid #f5f2ee;
+      border-bottom: 1px solid #f9fafb;
       font-size: 13px;
       color: #555;
       align-items: flex-start;
@@ -341,7 +341,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     /* ─── Sin expedientes ─────────────────────────────────── */
     .empty {
       background: #fff;
-      border: 1px solid #e0ddd8;
+      border: 1px solid #e5e7eb;
       padding: 40px 24px;
       text-align: center;
     }
@@ -395,7 +395,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
 
       <!-- Diagnóstico de comunicación -->
       <a href="/diagnostico" target="_blank"
-         style="background:#fff;border:1px solid #e0ddd8;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+         style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
         <div style="font-size:28px;margin-bottom:10px">🎯</div>
         <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:4px">Diagnóstico gratuito</div>
@@ -405,7 +405,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
 
       <!-- Formación / Lab -->
       <a href="/laboratorio/cursos" target="_blank"
-         style="background:#fff;border:1px solid #e0ddd8;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+         style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
         <div style="font-size:28px;margin-bottom:10px">🎓</div>
         <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:4px">Formación — Startidea Lab</div>
@@ -414,7 +414,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
       </a>
 
       <!-- Próximamente -->
-      <div style="background:#faf8f5;border:1px dashed #d0ccc5;padding:20px;color:#aaa">
+      <div style="background:#ffffff;border:1px dashed #d1d5db;padding:20px;color:#aaa">
         <div style="font-size:28px;margin-bottom:10px">🔜</div>
         <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#ccc;margin-bottom:4px">Próximamente</div>
         <div style="font-size:15px;font-weight:700;margin-bottom:4px;color:#bbb">Más servicios</div>
@@ -439,12 +439,12 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
 
     <!-- Perfil si está registrado -->
     {user && (
-      <details style="background:#fff;border:1px solid #e0ddd8;margin-bottom:24px">
+      <details style="background:#fff;border:1px solid #e5e7eb;margin-bottom:24px">
         <summary style="cursor:pointer;padding:14px 20px;font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#666;list-style:none;display:flex;justify-content:space-between;align-items:center">
           <span>🏢 {user.org_nombre}</span>
           <span style="color:#aaa;font-size:10px">Ver / editar perfil</span>
         </summary>
-        <div style="padding:0 20px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;border-top:1px solid #f0ece4;padding-top:16px">
+        <div style="padding:0 20px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;border-top:1px solid #f3f4f6;padding-top:16px">
           {[
             ['Representante', user.nombre],
             ['Email', user.email],
@@ -473,7 +473,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     </h2>
 
     {expedientes.length === 0 ? (
-      <div style="background:#fff;border:1px solid #e0ddd8;padding:0;overflow:hidden">
+      <div style="background:#fff;border:1px solid #e5e7eb;padding:0;overflow:hidden">
         <!-- Bienvenida onboarding -->
         <div style="background:#1f1f22;color:#fff;padding:32px 28px">
           <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#e6356b;margin-bottom:10px">Primeros pasos</div>
@@ -492,7 +492,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
               Iniciar solicitud →
             </a>
           </div>
-          <div style="border:1px solid #e0ddd8;padding:20px;background:#faf8f5">
+          <div style="border:1px solid #e5e7eb;padding:20px;background:#ffffff">
             <div style="font-size:24px;margin-bottom:10px">🎯</div>
             <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">Paso 2 — Opcional</div>
             <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Diagnóstico gratuito</div>
@@ -502,7 +502,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
               Hacer diagnóstico →
             </a>
           </div>
-          <div style="border:1px solid #e0ddd8;padding:20px;background:#faf8f5">
+          <div style="border:1px solid #e5e7eb;padding:20px;background:#ffffff">
             <div style="font-size:24px;margin-bottom:10px">📞</div>
             <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">¿Tienes dudas?</div>
             <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Habla con el equipo</div>
@@ -649,32 +649,32 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
               <!-- Documentos generados — links descargables -->
               {exp.ai_memoria && (
                 <div class="docs-section">
-                  <div style="padding:14px 0 0;border-top:1px solid #e0ddd8">
+                  <div style="padding:14px 0 0;border-top:1px solid #e5e7eb">
                     <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
                       📄 Documentos generados — guarda como PDF desde el navegador
                     </div>
                     <div style="display:flex;flex-wrap:wrap;gap:8px">
                       {exp.ai_memoria && (
                         <a href={`/portal/docs/${exp.id}/memoria`} target="_blank"
-                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
                           📝 Memoria →
                         </a>
                       )}
                       {exp.ai_presupuesto && (
                         <a href={`/portal/docs/${exp.id}/presupuesto`} target="_blank"
-                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
                           💶 Presupuesto →
                         </a>
                       )}
                       {exp.ai_checklist && (
                         <a href={`/portal/docs/${exp.id}/checklist`} target="_blank"
-                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
                           ✅ Checklist →
                         </a>
                       )}
                       {exp.ai_guia && (
                         <a href={`/portal/docs/${exp.id}/guia`} target="_blank"
-                           style="border:1px solid #e0ddd8;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
                           🗺 Guía →
                         </a>
                       )}
@@ -693,7 +693,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                 markMessagesRead(exp.id, 'client');
                 if (msgs.length === 0) return null;
                 return (
-                  <div style="margin-top:14px;border-top:1px solid #e0ddd8;padding-top:14px">
+                  <div style="margin-top:14px;border-top:1px solid #e5e7eb;padding-top:14px">
                     <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
                       💬 Mensajes de Startidea
                     </div>
@@ -778,7 +778,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
     )}
 
     <!-- Footer del portal -->
-    <div style="margin-top:40px;border-top:1px solid #e0ddd8;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12px;color:#aaa">
+    <div style="margin-top:40px;border-top:1px solid #e5e7eb;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12px;color:#aaa">
       <div>
         Startidea Consulting, S.L. · CIF B19583632 · Granada ·
         <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
