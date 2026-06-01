@@ -1,0 +1,32 @@
+src/pages/admin/index.astro
+  s_0ab79ba551035b::t_a9e7fa13d66121 622-631
+src/pages/admin/impulsa/index.astro
+  s_0ab79ba551035b::t_d171ad3356e257 1-129
+src/lib/impulsa-db.ts
+  s_0ab79ba551035b::t_edd6150678878e 38-39,42-59
+  s_0ab79ba551035b::t_6eb2e8f6e77431 116
+  s_0ab79ba551035b::t_8054bf9ed8bacd 140-156
+  s_0ab79ba551035b::t_b13b917d52ba49 99-101,106-112
+src/pages/admin/encuesta/export.csv.ts
+  s_0ab79ba551035b::t_c2a8751c76d2cd 1-41
+src/pages/api/admin/impulsa-estado.ts
+  s_0ab79ba551035b::t_dfcbc6db741c4b 1-29
+src/pages/admin/impulsa/export.csv.ts
+  s_0ab79ba551035b::t_77f21bdd9cb334 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5b1a3bba312c5ef6bad1942708bd567142f8b16d",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
