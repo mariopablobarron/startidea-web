@@ -17,8 +17,8 @@ import {
   getExpedientesRecientes,
 } from '@/lib/expedientes-db';
 import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
-import { statsImpulsa, countSolicitudes } from '@/lib/impulsa-db';
-import { countRespuestas } from '@/lib/encuesta-db';
+import { statsImpulsa, countSolicitudes, getAllSolicitudes } from '@/lib/impulsa-db';
+import { countRespuestas, getAllRespuestas } from '@/lib/encuesta-db';
 import { recentScraperRuns } from '@/lib/expedientes-db';
 
 export const prerender = false;
@@ -69,6 +69,47 @@ let encuestaTotal = 0;
 try { impulsaTotal = countSolicitudes(); impulsaStats = statsImpulsa(); } catch { /* sin solicitudes */ }
 try { encuestaTotal = countRespuestas(); } catch { /* sin respuestas */ }
 const impulsaNuevas = impulsaStats['recibida'] ?? 0;
+
+// ─── Bandeja de pendientes (acción requerida, fuentes locales rápidas) ───
+const pendientes = [
+  { n: stats.recibido ?? 0,      label: 'Expedientes sin procesar',     href: '/admin/expedientes?status=recibido' },
+  { n: contratos.sinEnviar ?? 0, label: 'Contratos sin enviar',          href: '/admin/expedientes' },
+  { n: impulsaNuevas,            label: 'Solicitudes Impulsa sin revisar', href: '/admin/impulsa?estado=recibida' },
+].filter((p) => p.n > 0);
+const totalPendientes = pendientes.reduce((s, p) => s + p.n, 0);
+
+// ─── Feed de actividad reciente (unificado, multi-subsistema) ───
+// OJO: expedientes guarda created_at en SEGUNDOS; impulsa/encuesta en MS.
+type Act = { ts: number; tipo: string; label: string; href: string };
+let actividad: Act[] = [];
+try {
+  for (const e of recientes) {
+    actividad.push({ ts: (e.created_at ?? 0) * 1000, tipo: 'Expediente', label: e.org_nombre || 'Expediente', href: `/admin/expedientes/${e.id}` });
+  }
+  for (const s of getAllSolicitudes().slice(0, 10)) {
+    actividad.push({ ts: s.created_at, tipo: 'Impulsa', label: s.org_nombre, href: '/admin/impulsa' });
+  }
+  for (const r of getAllRespuestas().slice(0, 10)) {
+    actividad.push({ ts: r.created_at, tipo: 'Encuesta', label: `${r.tipo_entidad} · ${r.pct_publico}% público`, href: '/admin/encuesta' });
+  }
+  actividad.sort((a, b) => b.ts - a.ts);
+  actividad = actividad.slice(0, 12);
+} catch { /* sin datos */ }
+
+function fmtActAgo(ms: number): string {
+  const mins = Math.floor((Date.now() - ms) / 60000);
+  if (mins < 1) return 'ahora';
+  if (mins < 60) return `hace ${mins} min`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `hace ${h} h`;
+  const d = Math.floor(h / 24);
+  return d === 1 ? 'ayer' : `hace ${d} d`;
+}
+const TIPO_COLOR: Record<string, string> = {
+  Expediente: 'text-magenta',
+  Impulsa: 'text-blue-700',
+  Encuesta: 'text-emerald-700',
+};
 
 // Formatea "hace X días" desde un epoch (segundos)
 function fmtAgo(ts: number | null): string {
@@ -130,6 +171,46 @@ const STATUS_COLORS: Record<string, string> = {
           Cerrar sesión →
         </a>
       </div>
+
+      <!-- ─── Bandeja de pendientes ───────────────────────── -->
+      <div class="mb-8 border-2 border-ink/15 bg-paper p-5">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl" aria-hidden="true">{totalPendientes > 0 ? '🔔' : '✅'}</span>
+          <h2 class="font-display text-lg text-ink">
+            {totalPendientes > 0 ? `${totalPendientes} acciones pendientes` : 'Todo al día — sin pendientes'}
+          </h2>
+        </div>
+        {pendientes.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-3">
+            {pendientes.map((p) => (
+              <a href={p.href} class="flex items-center gap-2 border border-yellow-300 bg-yellow-50/60 px-4 py-2 text-sm text-yellow-800 transition-colors hover:border-magenta hover:text-magenta">
+                <span class="font-display text-lg">{p.n}</span>
+                <span>{p.label}</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- ─── Feed de actividad reciente ──────────────────── -->
+      {actividad.length > 0 && (
+        <div class="mb-8 border border-ink/15 bg-paper p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Actividad reciente</p>
+          <ul class="divide-y divide-ink/10">
+            {actividad.map((a) => (
+              <li>
+                <a href={a.href} class="flex items-center justify-between gap-3 py-2 text-sm hover:text-magenta">
+                  <span class="flex items-center gap-2 truncate">
+                    <span class={`font-mono text-[10px] uppercase tracking-widest ${TIPO_COLOR[a.tipo] ?? 'text-ink/50'}`}>{a.tipo}</span>
+                    <span class="truncate text-ink/80">{a.label}</span>
+                  </span>
+                  <span class="shrink-0 font-mono text-[10px] text-ink/40">{fmtActAgo(a.ts)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <!-- ─── KPIs del Copiloto ──────────────────────────── -->
       {stats.total > 0 && (
