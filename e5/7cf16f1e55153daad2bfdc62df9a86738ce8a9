@@ -1,0 +1,21 @@
+tailwind.config.js
+  s_0ab79ba551035b::t_9fa7c9d13cde9f 33-37,39
+src/layouts/Base.astro
+  s_0ab79ba551035b::t_d35e802c6f8495 70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e57cf16f1e55153daad2bfdc62df9a86738ce8a9",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
