@@ -1,0 +1,21 @@
+src/pages/consultoria.astro
+  s_0ab79ba551035b::t_b6368cba3411de 144-145
+reports/plan-seo-nacional.md
+  s_0ab79ba551035b::t_d0235be655fd5b 78,80-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "555f88768a5629e8116acd004856c4422a47c7f8",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
