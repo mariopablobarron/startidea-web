@@ -10,16 +10,16 @@ import type { APIRoute } from 'astro';
 import { randomUUID } from 'node:crypto';
 import { getExpediente, setContratoToken } from '@/lib/expedientes-db';
 import { sendEmail } from '@/lib/email-resend';
-import { isValidAdminHeader } from '@/lib/admin-session';
+import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 import { generarEmailContratoHtml, type ContratoData } from '@/lib/contrato-generator';
 import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!isValidAdminHeader(reqToken)) {
+  if (!isAdminLoggedIn(cookies) && !isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 

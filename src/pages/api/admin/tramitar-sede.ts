@@ -13,7 +13,7 @@
  * Si el container no está desplegado todavía, devuelve un error claro (no rompe).
  */
 import type { APIRoute } from 'astro';
-import { isValidAdminHeader } from '@/lib/admin-session';
+import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 import { getExpediente } from '@/lib/expedientes-db';
 import { detectSede } from '@/lib/sedes-map';
 
@@ -26,8 +26,8 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
-export const POST: APIRoute = async ({ request }) => {
-  if (!isValidAdminHeader(request.headers.get('x-admin-token') ?? '')) {
+export const POST: APIRoute = async ({ request, cookies }) => {
+  if (!isAdminLoggedIn(cookies) && !isValidAdminHeader(request.headers.get('x-admin-token') ?? '')) {
     return json({ ok: false, error: 'unauthorized' }, 401);
   }
 

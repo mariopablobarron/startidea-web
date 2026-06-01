@@ -16,13 +16,13 @@ import {
   saveFactura,
   setImporteConcedido,
 } from '@/lib/expedientes-db';
-import { isValidAdminHeader } from '@/lib/admin-session';
+import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!isValidAdminHeader(reqToken)) {
+  if (!isAdminLoggedIn(cookies) && !isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 

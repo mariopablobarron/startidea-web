@@ -7,7 +7,7 @@
 import type { APIRoute } from 'astro';
 import { updateStatus, getExpediente } from '@/lib/expedientes-db';
 import type { ExpedienteStatus } from '@/lib/expedientes-db';
-import { isValidAdminHeader } from '@/lib/admin-session';
+import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 import { sendEmail } from '@/lib/email-resend';
 
 export const prerender = false;
@@ -133,9 +133,9 @@ function buildEmail(info: StatusInfo, expId: string): string {
 </body></html>`;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!isValidAdminHeader(reqToken)) {
+  if (!isAdminLoggedIn(cookies) && !isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 

@@ -9,7 +9,7 @@ import {
   getExpediente,
   addExpedienteMessage,
 } from '@/lib/expedientes-db';
-import { isValidAdminHeader } from '@/lib/admin-session';
+import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 import { sendEmail } from '@/lib/email-resend';
 
 export const prerender = false;
@@ -20,9 +20,9 @@ function esc(s: string): string {
   );
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   const reqToken = request.headers.get('x-admin-token') ?? '';
-  if (!isValidAdminHeader(reqToken)) {
+  if (!isAdminLoggedIn(cookies) && !isValidAdminHeader(reqToken)) {
     return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), { status: 401 });
   }
 
