@@ -15,7 +15,7 @@ Description: Agencia de innovación social y comunicación con sede en Granada (
 Founded: 2011
 Founder: Mario Pablo Sánchez Barrón
 Location: Granada, España
-Industry: Innovación social, comunicación, consultoría, fundraising
+Industry: Innovación social, comunicación, consultoría, fundraising, tecnología, ciberseguridad, RGPD
 
 # Para más detalle estructurado
 LLMs: https://startidea.es/llms.txt
