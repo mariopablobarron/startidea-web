@@ -30,7 +30,7 @@
 ### Semana 1
 
 **📅 Jue 4 · 🚀 Impulsa — LANZAMIENTO** · *talking head + motion*
-- **Gancho (0-3s):** "Startidea va a regalar 80.000 € en comunicación. Sin trampa."
+- **Gancho (0-3s):** "Programa de RSC: Startidea destina 80.000 € en comunicación al tercer sector."
 - **Guion:**
   1. (a cámara) "La comunicación no debería ser un lujo para quien dedica su vida a una causa."
   2. (texto grande) "80.000 € en servicios · para el tercer sector · en especie."
