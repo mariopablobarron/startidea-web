@@ -81,6 +81,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'que aguantan',
       subtitle: 'Webs editoriales, plataformas a medida, producto digital con IA, migraciones sin pérdida SEO. Stack moderno cuando suma, estable cuando es lo correcto.',
     },
+    'page/proteccion-digital': {
+      kind: 'page',
+      eyebrow: '— Protección Digital',
+      title: 'Seguridad sin alarmismo.',
+      accent: 'sin alarmismo',
+      subtitle: 'Ciberseguridad y cumplimiento RGPD para entidades sociales sin departamento de TI. Diagnóstico de exposición, auditoría de seguridad web y acompañamiento continuo.',
+    },
     'page/comunicacion': {
       kind: 'page',
       eyebrow: '— Comunicación Estratégica',
