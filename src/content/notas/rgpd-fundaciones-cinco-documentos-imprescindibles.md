@@ -125,7 +125,7 @@ Para una fundación mediana, el documento de medidas suele cubrir:
 - **Política de contraseñas**: gestor obligatorio, longitud mínima, no reutilización.
 - **Cifrado**: discos de portátiles cifrados, conexiones HTTPS, copias de seguridad cifradas.
 - **Backups**: frecuencia, ubicación, prueba de restauración.
-- **Borrado seguro**: cómo se elimina información al deshechar un dispositivo o cerrar una cuenta.
+- **Borrado seguro**: cómo se elimina información al desechar un dispositivo o cerrar una cuenta.
 - **Formación al equipo**: periodicidad y contenidos.
 - **Gestión de proveedores**: criterios de selección con perspectiva de seguridad.
 - **Auditoría interna periódica**: cómo se revisa que las medidas se aplican de verdad.
