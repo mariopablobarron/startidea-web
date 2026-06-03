@@ -4,7 +4,7 @@ description: 'Guía honesta para ONGs, fundaciones e instituciones eclesiales so
 pubDate: 2026-05-26
 audience: 'Tercer sector'
 tags: ['ciberseguridad', 'protección de datos', 'RGPD', 'ONG', 'fundaciones', 'tercer sector', 'instituciones eclesiales']
-draft: true
+draft: false
 faqs:
   - question: '¿Una ONG pequeña necesita preocuparse por ciberseguridad?'
     answer: 'Sí, aunque no del mismo modo que una empresa grande. Las entidades sociales gestionan datos especialmente sensibles —donantes, beneficiarios, en muchos casos menores o personas en situación de vulnerabilidad— y una brecha tiene impacto reputacional fuerte en un sector que vive de la confianza. La buena noticia es que el 80% del riesgo se cubre con medidas básicas que no requieren presupuesto técnico: contraseñas robustas con gestor, doble factor en todas las cuentas críticas, copias de seguridad reales y formación al equipo. Lo caro y complejo viene después, y solo si la entidad tiene activos digitales propios (plataformas, intranets, portales).'

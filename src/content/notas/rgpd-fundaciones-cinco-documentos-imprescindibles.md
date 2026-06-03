@@ -4,7 +4,7 @@ description: 'Qué papeles tiene que tener archivados una fundación o asociaci�
 pubDate: 2026-05-26
 audience: 'Tercer sector'
 tags: ['RGPD', 'protección de datos', 'fundaciones', 'ONG', 'AEPD', 'cumplimiento normativo', 'tercer sector']
-draft: true
+draft: false
 faqs:
   - question: '¿Una fundación pequeña está obligada a cumplir el RGPD?'
     answer: 'Sí. El RGPD se aplica a cualquier entidad —incluidas asociaciones, fundaciones, federaciones y plataformas— que trate datos personales de personas físicas en la Unión Europea, con independencia de su tamaño, su forma jurídica o su ánimo de lucro. Una fundación de tres personas y un patronato voluntario tiene las mismas obligaciones de fondo que una de cien. Lo que cambia es la proporcionalidad de las medidas, no la obligación de cumplir.'
