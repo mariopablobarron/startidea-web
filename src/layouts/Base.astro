@@ -21,6 +21,7 @@ import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import VoiceAgent from '@/components/VoiceAgent.astro';
 import MobileCtaBar from '@/components/MobileCtaBar.astro';
+import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
@@ -113,6 +114,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
       <slot />
     </main>
     <Footer />
+    <WhatsAppFloat />
     <AsistenteIA />
     <VoiceAgent />
     <MobileCtaBar />
