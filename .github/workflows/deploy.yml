@@ -30,38 +30,63 @@ jobs:
       - name: Deploy via OpenSSH directo
         env:
           SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+        # IMPORTANTE: sin `set -e`. Gestionamos los errores a mano para poder
+        # reintentar; con errexit, un ssh-keyscan que devuelve no-cero de forma
+        # transitoria abortaba el paso en ~5s sin logs (causa del flake recurrente).
+        shell: bash --noprofile --norc {0}
         run: |
+          set -uo pipefail
+
           # Preparar SSH
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Capturar host keys del VPS (los 3 algoritmos), con reintento
-          # (ssh-keyscan a veces devuelve vacío de forma transitoria).
-          for k in 1 2 3; do
-            ssh-keyscan -t ed25519,rsa,ecdsa 72.61.195.108 2>/dev/null > ~/.ssh/known_hosts
-            [ -s ~/.ssh/known_hosts ] && break
-            echo "known_hosts vacío (intento $k) — reintentando…"; sleep 5
+          # Host keys del VPS: best-effort, NO bloqueante (|| true). Si keyscan
+          # falla o sale vacío, el connect usa StrictHostKeyChecking=accept-new
+          # como fallback, así que nunca bloquea el deploy.
+          for k in 1 2 3 4; do
+            ssh-keyscan -T 10 -t ed25519,rsa,ecdsa 72.61.195.108 > ~/.ssh/known_hosts 2>/dev/null || true
+            if [ -s ~/.ssh/known_hosts ]; then
+              echo "known_hosts OK (intento $k): $(wc -l < ~/.ssh/known_hosts) líneas"
+              break
+            fi
+            echo "known_hosts vacío (intento $k) — reintentando en 5s…"
+            sleep 5
           done
-          echo "Known hosts capturados:"
-          cat ~/.ssh/known_hosts | wc -l
 
           # Conectar — la SSH key tiene command="..." forzado en authorized_keys
           # del VPS, así que cualquier conexión ejecuta /root/deploy-startidea-web.sh
           # y nada más. El ":" del comando es ignorado por el lado del VPS.
-          # Reintento: el primer connect falla a veces de forma transitoria
-          # (incidente 2026-06-01). Hasta 3 intentos con backoff.
-          attempt=1
-          until ssh -i ~/.ssh/id_ed25519 \
-              -o ConnectTimeout=30 \
-              -o ServerAliveInterval=30 \
-              -o ServerAliveCountMax=10 \
-              -o BatchMode=yes \
-              root@72.61.195.108 \
-              ":"; do
-            if [ "$attempt" -ge 3 ]; then
-              echo "Deploy falló tras $attempt intentos."; exit 1
+          # El código de salida de ssh = el del script remoto (salvo rc=255, que
+          # es fallo de transporte SSH). Reintentamos SOLO ante 255; si el script
+          # remoto falla (build roto), salimos al momento sin machacar reintentos.
+          attempt=1; max=5; rc=1
+          while [ "$attempt" -le "$max" ]; do
+            ssh -i ~/.ssh/id_ed25519 \
+                -o StrictHostKeyChecking=accept-new \
+                -o ConnectTimeout=30 \
+                -o ConnectionAttempts=3 \
+                -o ServerAliveInterval=30 \
+                -o ServerAliveCountMax=10 \
+                -o BatchMode=yes \
+                root@72.61.195.108 \
+                ":"
+            rc=$?
+            if [ "$rc" -eq 0 ]; then
+              echo "Deploy OK (intento $attempt)."
+              break
             fi
-            echo "Intento $attempt falló — reintentando en 15s…"
-            attempt=$((attempt + 1)); sleep 15
+            if [ "$rc" -ne 255 ]; then
+              echo "El script remoto devolvió rc=$rc (no es fallo de transporte) — no reintento."
+              exit "$rc"
+            fi
+            if [ "$attempt" -ge "$max" ]; then
+              echo "Deploy falló por transporte SSH tras $max intentos (rc=255)."
+              exit "$rc"
+            fi
+            wait_s=$((attempt * 15))
+            echo "Intento $attempt: fallo de transporte SSH (rc=255) — reintentando en ${wait_s}s…"
+            sleep "$wait_s"
+            attempt=$((attempt + 1))
           done
