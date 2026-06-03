@@ -8,23 +8,35 @@
 <button
   type="button"
   id="ai-chip"
-  class="fixed bottom-6 right-6 z-50 hidden md:inline-flex items-center gap-2 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
+  data-track="cta"
+  data-track-id="ai_chip_open_desktop"
+  data-track-text="Pregunta lo que sea"
+  class="fixed bottom-6 right-6 z-50 hidden md:inline-flex flex-col items-start gap-0.5 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"
 >
-  <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-magenta"></span>
-  <span>Asistente IA</span>
+  <span class="flex items-center gap-2">
+    <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-magenta group-hover:bg-paper"></span>
+    <span>Pregunta lo que sea</span>
+    <span aria-hidden="true">→</span>
+  </span>
+  <span class="font-mono text-[9px] normal-case tracking-normal text-paper/65">
+    Te responde el equipo · con IA
+  </span>
 </button>
 
 <button
   type="button"
   id="ai-chip-mobile"
+  data-track="cta"
+  data-track-id="ai_chip_open_mobile"
+  data-track-text="Pregunta lo que sea"
   class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:border-magenta md:hidden"
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"
-  aria-label="Abrir asistente IA"
+  aria-label="Pregunta lo que sea — Asistente Startidea"
 >
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -41,8 +53,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between border-b-2 border-ink bg-ink px-5 py-3 text-paper">
     <div>
-      <p id="ai-title" class="font-mono text-[11px] uppercase tracking-widest">— Asistente · Startidea</p>
-      <p class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/55">Pregunta lo que necesites</p>
+      <p id="ai-title" class="font-mono text-[11px] uppercase tracking-widest">— Pregunta lo que sea</p>
+      <p class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/55">Te responde el equipo · con IA</p>
     </div>
     <div class="flex items-center gap-3">
       <button
