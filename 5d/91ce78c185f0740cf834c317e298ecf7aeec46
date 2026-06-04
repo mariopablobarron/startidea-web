@@ -1,0 +1,28 @@
+src/content/notas/convocatoria-2026-agenda-2030-ong.md
+  s_0ab79ba551035b::t_ec051688a0d976 3
+  s_0ab79ba551035b::t_e191785fcf23f1 57-69
+  s_0ab79ba551035b::t_c410a4bf7e85c9 24
+  s_0ab79ba551035b::t_a91cd161395eba 5
+  s_0ab79ba551035b::t_a166491348fc8a 47,49-53
+  s_0ab79ba551035b::t_3ad8ba14126775 13
+  s_0ab79ba551035b::t_f31f9934a60c47 142
+src/pages/subvenciones/agenda-2030-2026.astro
+  s_0ab79ba551035b::t_542af26a910909 152,155-156,163,165-167,174,176-178,185,187-188,195,197-209
+  s_0ab79ba551035b::t_63d999a1afe73c 230-271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5d91ce78c185f0740cf834c317e298ecf7aeec46",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
