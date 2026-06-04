@@ -1,0 +1,26 @@
+src/pages/diagnostico/brief-web.astro
+  s_0ab79ba551035b::t_60c274729841f7 427-444
+  s_0ab79ba551035b::t_74070040970058 170
+  s_0ab79ba551035b::t_48766662f32e89 288
+  s_0ab79ba551035b::t_ec1451cac74543 587-591
+  s_0ab79ba551035b::t_03b769693dc3c2 334
+  s_0ab79ba551035b::t_a65f34ab9b9648 599-605
+  s_0ab79ba551035b::t_8755938adc6a3f 557-562
+  s_0ab79ba551035b::t_011a3595ee6bed 82-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "65012f4d40b5d3e53e010beaffe6d150f328d28f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
