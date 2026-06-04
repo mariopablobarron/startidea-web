@@ -1,0 +1,78 @@
+---
+// Favicon animado — el isotipo de Startidea (lazos) se "dibuja" en la pestaña
+// al entrar, como guiño a la intro/splash de la home.
+//
+// Cómo: el favicon estático ya es el isotipo (link rel=icon → isotipo-lazos.png
+// en Base.astro). Aquí, una sola vez por sesión y solo en escritorio sin
+// reduce-motion, dibujamos el isotipo en un <canvas> con un revelado izq→der
+// + escala/fundido, y actualizamos el href del <link> frame a frame. Es la
+// única forma que anima el icono de pestaña en Chrome/Firefox/Edge.
+//
+// Si se omite (reduce-motion, móvil, sesión repetida) no pasa nada: el favicon
+// estático sigue siendo el isotipo. Nunca bloquea ni toca el critical path.
+---
+
+<script>
+  (() => {
+    const link = document.getElementById("favicon");
+    if (!(link instanceof HTMLLinkElement)) return;
+
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 768; // favicon no se ve en pestañas móviles
+    const KEY = "startidea:faviconIntro";
+    let seen = false;
+    try { seen = !!sessionStorage.getItem(KEY); } catch (_) {}
+    if (reduce || isMobile || seen) return;
+
+    const STATIC = link.getAttribute("href") || "/brand/isotipo-lazos.png";
+    const img = new Image();
+    img.src = STATIC;
+
+    img.onload = () => {
+      const SIZE = 64;
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = SIZE;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const DUR = 1300;
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      let startTs = 0;
+
+      function draw(reveal: number, scale: number, alpha: number) {
+        ctx!.clearRect(0, 0, SIZE, SIZE);
+        ctx!.save();
+        ctx!.globalAlpha = Math.max(0, Math.min(1, alpha));
+        // Revelado izquierda→derecha (parece que se dibuja el garabato)
+        ctx!.beginPath();
+        ctx!.rect(0, 0, SIZE * reveal, SIZE);
+        ctx!.clip();
+        const dw = SIZE * scale, dh = SIZE * scale;
+        ctx!.drawImage(img, (SIZE - dw) / 2, (SIZE - dh) / 2, dw, dh);
+        ctx!.restore();
+        try { link!.href = canvas.toDataURL("image/png"); } catch (_) {}
+      }
+
+      function frame(ts: number) {
+        if (!startTs) startTs = ts;
+        const p = Math.min(1, (ts - startTs) / DUR);
+        const e = easeOutCubic(p);
+        draw(e, 0.86 + 0.14 * e, p * 1.6);
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          draw(1, 1, 1); // frame final estático y limpio
+          try { sessionStorage.setItem(KEY, "1"); } catch (_) {}
+        }
+      }
+
+      // Arrancar cuando el navegador esté libre (tras el LCP), sin competir.
+      const go = () => requestAnimationFrame(frame);
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(go, { timeout: 500 });
+      } else {
+        setTimeout(go, 150);
+      }
+    };
+  })();
+</script>

@@ -17,6 +17,7 @@ import montserratLatinItalic from '@fontsource-variable/montserrat/files/montser
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
+import FaviconAnimado from '@/components/FaviconAnimado.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import VoiceAgent from '@/components/VoiceAgent.astro';
@@ -62,7 +63,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={montserratLatinItalic} as="font" type="font/woff2" crossorigin />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link id="favicon" rel="icon" type="image/png" sizes="any" href="/brand/isotipo-lazos.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -103,6 +104,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
   <body class="overflow-x-hidden pb-[72px] xl:pb-0">
     <AdminBar />
     <Splash />
+    <FaviconAnimado />
     <Nav />
     <main>
       <slot />
