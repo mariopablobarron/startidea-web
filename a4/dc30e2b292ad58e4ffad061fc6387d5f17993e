@@ -1,0 +1,23 @@
+src/layouts/Base.astro
+  s_0ab79ba551035b::t_9bcaf8f7f28cef 66
+  s_0ab79ba551035b::t_377bd32d31b787 107
+  s_0ab79ba551035b::t_98d966c94449e4 20
+src/components/FaviconAnimado.astro
+  s_0ab79ba551035b::t_4d49e1d6429583 1-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "a4dc30e2b292ad58e4ffad061fc6387d5f17993e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
