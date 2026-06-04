@@ -15,6 +15,7 @@ on:
       - 'README.md'
       - '.gitignore'
       - 'infra/**'   # docker-compose template y .env.example no afectan al build
+      - '.github/workflows/**'  # cambios de CI no disparan deploy SSH (ver build-deploy.yml)
   workflow_dispatch:
 
 concurrency:
