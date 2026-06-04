@@ -1,0 +1,9 @@
+reports/one-pager-subvenciones.html
+  ai_agent 1-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "89f7a5c5c7fb5f8e68ccf6c1ce14a41452fb2855",
+  "prompts": {}
+}
