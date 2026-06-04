@@ -26,6 +26,11 @@ const initial = await fetchSubsidies({
   sort: 'recent',
 });
 
+// Destacado manual de la Convocatoria 2026 Agenda 2030 (estatal). El buscador
+// aún no la indexa desde BDNS, así que se enlaza a mano a su ficha. Se auto-
+// oculta tras el cierre (SSR evalúa la fecha en cada petición).
+const showAgenda2030 = new Date() <= new Date('2026-06-20T23:59:59+02:00');
+
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
@@ -76,6 +81,27 @@ const jsonLd = [
       </p>
     </div>
   </section>
+
+  {showAgenda2030 && (
+    <a
+      href="/subvenciones/agenda-2030-2026"
+      class="block border-b border-ink/10 bg-magenta/5 py-4 transition-colors hover:bg-magenta/10"
+    >
+      <div class="container-x flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="rounded-full bg-magenta px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-paper">
+            Destacada
+          </span>
+          <span class="text-sm text-ink md:text-base">
+            <strong class="font-display">Convocatoria 2026 Agenda 2030</strong> — estatal, hasta 300.000 € a fondo perdido para entidades del tercer sector.
+          </span>
+        </div>
+        <span class="whitespace-nowrap font-mono text-[11px] uppercase tracking-widest text-magenta">
+          Cierra 20 jun · ver ficha →
+        </span>
+      </div>
+    </a>
+  )}
 
   <!-- Destacado Granada (sede de Startidea) -->
   <div class="border-b border-ink/10 bg-ink py-4 text-paper">
