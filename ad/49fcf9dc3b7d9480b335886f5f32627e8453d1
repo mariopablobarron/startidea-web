@@ -1,0 +1,21 @@
+src/pages/diagnostico/brief-web.astro
+  s_0ab79ba551035b::t_62d1e1cae00a38 1-712
+src/pages/diagnostico/index.astro
+  s_0ab79ba551035b::t_65df139021881c 34,37-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ad49fcf9dc3b7d9480b335886f5f32627e8453d1",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
