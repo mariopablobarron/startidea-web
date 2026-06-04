@@ -1,0 +1,26 @@
+.github/workflows/build-deploy.yml
+  s_0ab79ba551035b::t_3974c879be5b83 1-98
+.github/workflows/deploy.yml
+  s_0ab79ba551035b::t_51b38a4540f10d 18
+infra/docker-compose.production.template.yml
+  s_0ab79ba551035b::t_f6274b992b4149 42-44
+  s_0ab79ba551035b::t_9c06b484773f74 18-23
+infra/MIGRACION-DEPLOY-WATCHTOWER.md
+  s_0ab79ba551035b::t_643ac3970c3a52 1-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "8e150f5aa61a4a9a99a90ed919fd26243bcce7ec",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
