@@ -576,6 +576,11 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     form
       .querySelectorAll("[data-stage-label-emprendedor]")
       .forEach((el) => el.classList.toggle("hidden", !isEmp));
+    // El nombre de proyecto es OPCIONAL para emprendedor/a (la etiqueta dice
+    // "si lo tiene") → quitamos required en esa rama para no exigirlo. En el
+    // resto de perfiles sigue siendo obligatorio.
+    const orgInput = form.querySelector("[name='organizationName']");
+    if (orgInput instanceof HTMLInputElement) orgInput.required = !isEmp;
   }
 
   function validateStep(): string | null {
@@ -655,6 +660,11 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
       const v = fd.get(k);
       if (typeof v === "string" && v) data[k] = v;
     });
+    // Emprendedor/a sin nombre de proyecto: el backend exige organizationName,
+    // así que usamos su propio nombre como organización (fundador/a en solitario).
+    if (!data.organizationName && typeof data.name === "string") {
+      data.organizationName = data.name;
+    }
     // services multi-select
     const services = fd.getAll("services").map(String).filter(Boolean);
     // Campos extra → answers bag
