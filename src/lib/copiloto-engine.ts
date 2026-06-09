@@ -11,6 +11,7 @@ import type { Expediente } from './expedientes-db';
 import { getConvocatoria } from './expedientes-db';
 import { fetchSubsidyDetail } from './subsidies-api';
 import { detectSede, sedeContextoPrompt } from './sedes-map';
+import { BRAND_CONSTITUTION } from './brand-constitution';
 import { getEnv } from '@/lib/env';
 
 
@@ -320,7 +321,9 @@ Revisa y corrige aplicando esta lista, en este orden de prioridad:
 REGLAS CRÍTICAS:
 - NO inventes datos. Conserva TODAS las marcas [COMPLETAR: ...] tal cual; si detectas una afirmación vaga sin respaldo, conviértela en [COMPLETAR: ...].
 - Mantén el formato Markdown y la estructura de secciones.
-- Responde SOLO con la memoria mejorada: sin preámbulo, sin comentarios, sin explicar los cambios.`;
+- Responde SOLO con la memoria mejorada: sin preámbulo, sin comentarios, sin explicar los cambios.
+
+${BRAND_CONSTITUTION}`;
 
   const user = `${convContext}
 
@@ -432,6 +435,8 @@ FORMATO:
 - Formatea en Markdown limpio y bien estructurado
 - No inventes datos — si falta información clave, márcala exactamente así: [COMPLETAR: descripción de qué falta]
 - Usa cifras y hechos concretos; cuando no los tengas, marca [COMPLETAR: dato concreto necesario]
+
+${BRAND_CONSTITUTION}
 
 INSTRUCCIÓN CRÍTICA DE FORMATO: Responde SOLO con los bloques marcados, sin texto introductorio ni explicaciones fuera de ellos.`;
 
