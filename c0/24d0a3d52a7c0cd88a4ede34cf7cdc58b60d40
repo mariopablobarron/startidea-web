@@ -1,0 +1,30 @@
+infra/copiloto-sede/drivers/generic.mjs
+  s_0ab79ba551035b::t_db61bb19a72780 1-46
+infra/copiloto-sede/drivers/junta-andalucia.mjs
+  s_0ab79ba551035b::t_012308a495c70c 13-15,17
+  s_0ab79ba551035b::t_d06672d440cf78 1-12,16,18-22
+infra/copiloto-sede/README.md
+  s_0ab79ba551035b::t_ee1ae9b8b939d3 1-61
+infra/copiloto-sede/Dockerfile
+  s_0ab79ba551035b::t_b5b3d1be086bdf 1-20
+infra/copiloto-sede/package.json
+  s_0ab79ba551035b::t_527a58133953cb 1-13
+infra/copiloto-sede/server.mjs
+  s_0ab79ba551035b::t_d8e8d19189ec49 1-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c024d0a3d52a7c0cd88a4ede34cf7cdc58b60d40",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
