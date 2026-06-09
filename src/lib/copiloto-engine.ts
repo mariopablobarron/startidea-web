@@ -17,40 +17,63 @@ import { getEnv } from '@/lib/env';
 // ─── Extracción de baremo/criterios de valoración ─────────────────────────────
 
 /**
- * Intenta extraer el baremo de puntuación de las bases.
- * Busca secciones con "criterios de valoración", "puntos", "puntuación máxima", etc.
- * Si las encuentra, devuelve un bloque formateado para incluir en el prompt.
+ * Mini "Corrective RAG" sobre el texto bruto de las bases.
+ *
+ * En vez de volcar 6000 caracteres a ciegas (donde la sección de requisitos
+ * puede quedar fuera y el modelo acaba inventando), localizamos las secciones
+ * que de verdad importan para el análisis: REQUISITOS de beneficiarios y
+ * BAREMO de valoración. Luego graduamos: si NO aparecen, el llamante inyecta
+ * un aviso para que el modelo NO alucine requisitos.
  */
-function extractBaremo(basesText: string): string {
-  const lines = basesText.split('\n');
-  const baremoLines: string[] = [];
-  let inBaremo = false;
 
-  const baremoHeaders = [
-    'criterios de valoraci', 'criterios de selecci', 'baremo',
-    'puntuaci', 'valoraci', 'criterios de concesi',
-  ];
-  const stopHeaders = [
-    'documentaci', 'presentaci', 'plazo', 'justificaci',
-    'obligaci', 'reintegro',
-  ];
+/** Extrae el cuerpo de una sección que empieza en uno de `startHeaders` y
+ *  termina al llegar a uno de `stopHeaders` (o al límite de líneas). */
+function extractSection(
+  basesText: string,
+  startHeaders: string[],
+  stopHeaders: string[],
+  maxLines = 40,
+): string {
+  const lines = basesText.split('\n');
+  const out: string[] = [];
+  let inSection = false;
 
   for (const line of lines) {
     const lower = line.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    if (!inBaremo && baremoHeaders.some((h) => lower.includes(h))) {
-      inBaremo = true;
+    if (!inSection && startHeaders.some((h) => lower.includes(h))) {
+      inSection = true;
     }
-    if (inBaremo) {
-      if (stopHeaders.some((h) => lower.includes(h)) && baremoLines.length > 3) {
-        break;
-      }
-      baremoLines.push(line);
-      if (baremoLines.length >= 40) break; // max 40 líneas de baremo
+    if (inSection) {
+      if (stopHeaders.some((h) => lower.includes(h)) && out.length > 3) break;
+      out.push(line);
+      if (out.length >= maxLines) break;
     }
   }
 
-  if (baremoLines.length < 2) return '';
-  return `\nCRITERIOS DE VALORACIÓN (BAREMO):\n${baremoLines.join('\n')}`;
+  return out.length >= 2 ? out.join('\n') : '';
+}
+
+/** Sección de baremo / criterios de valoración (lo que más importa para la memoria). */
+function extractBaremo(basesText: string): string {
+  const body = extractSection(
+    basesText,
+    ['criterios de valoraci', 'criterios de selecci', 'baremo', 'puntuaci', 'criterios de concesi'],
+    ['documentaci', 'presentaci', 'plazo', 'justificaci', 'obligaci', 'reintegro'],
+  );
+  return body ? `\nCRITERIOS DE VALORACIÓN (BAREMO):\n${body}` : '';
+}
+
+/** Sección de requisitos / beneficiarios (lo que más importa para la elegibilidad). */
+function extractRequisitos(basesText: string): string {
+  const body = extractSection(
+    basesText,
+    [
+      'beneficiari', 'requisitos', 'podran ser', 'podran solicitar',
+      'destinatari', 'quien puede', 'entidades solicitantes',
+    ],
+    ['documentaci', 'presentaci', 'plazo', 'criterios de valoraci', 'baremo', 'obligaci', 'gastos'],
+  );
+  return body ? `\nREQUISITOS DE LOS BENEFICIARIOS:\n${body}` : '';
 }
 
 // ─── Contexto de la convocatoria ─────────────────────────────────────────────
@@ -105,6 +128,17 @@ export async function buildConvContext(opts: {
         const conv = await fetchSubsidyDetail(opts.convocatoria_slug);
         if (conv) {
           organismo = conv.organization ?? null;
+
+          // Mini Corrective RAG: extraemos las secciones clave de las bases y
+          // graduamos su presencia en vez de volcar 6000 caracteres a ciegas.
+          const bases = conv.bases_text ?? '';
+          const requisitosBlock = bases ? extractRequisitos(bases) : '';
+          const baremoBlock = bases ? extractBaremo(bases) : '';
+          // "Corrección": si no localizamos requisitos NI baremo en el texto,
+          // avisamos al modelo para que NO invente (que se apoye en SIN_DATOS
+          // y [COMPLETAR] en lugar de alucinar requisitos).
+          const basesInsuficientes = !!bases && !requisitosBlock && !baremoBlock;
+
           context = [
             `CONVOCATORIA: ${conv.title}`,
             conv.organization ? `ORGANISMO: ${conv.organization}` : '',
@@ -113,11 +147,11 @@ export async function buildConvContext(opts: {
               ? `DOTACIÓN MÁXIMA: ${conv.amount_eur.toLocaleString('es-ES')} €`
               : '',
             conv.description ? `\nDESCRIPCIÓN BASES:\n${conv.description}` : '',
-            conv.bases_text
-              ? `\nCONTENIDO BASES:\n${conv.bases_text.slice(0, 6000)}`
-              : '',
-            conv.bases_text
-              ? extractBaremo(conv.bases_text)
+            requisitosBlock, // sección dirigida → elegibilidad
+            baremoBlock,     // sección dirigida → memoria
+            bases ? `\nCONTENIDO BASES (extracto):\n${bases.slice(0, 5000)}` : '',
+            basesInsuficientes
+              ? '\n⚠️ AVISO AL ANALISTA: no se han localizado secciones explícitas de requisitos de beneficiarios ni de baremo en el texto de las bases disponible. NO infieras requisitos que no estén escritos literalmente: para cualquier requisito sin base textual usa estado SIN_DATOS, y en la memoria marca [COMPLETAR: revisar bases oficiales].'
               : '',
             conv.startidea_summary
               ? `\nRESUMEN EDITORIAL:\n${conv.startidea_summary}`
