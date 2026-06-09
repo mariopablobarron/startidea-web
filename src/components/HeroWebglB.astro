@@ -71,10 +71,10 @@
   .hero-b__btn--s { border: 1.5px solid rgba(255, 255, 255, 0.3); color: #fff; }
 </style>
 
-<script is:inline type="importmap">
-  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-</script>
-<script is:inline type="module">
+<script>
+  // Astro empaqueta Three (import dinámico → chunk propio, code-split y cargado
+  // tras el LCP). Servido desde 'self' → cumple la CSP del sitio (unpkg está
+  // bloqueado por la Content-Security-Policy).
   const canvas = document.getElementById('hero-b-canvas');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = window.innerWidth < 760;
