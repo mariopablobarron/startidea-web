@@ -1,0 +1,27 @@
+---
+// Preview (noindex, sin enlazar) del Concepto B de hero WebGL dentro del shell
+// real del sitio (Nav + Footer). Para validar el rediseño en contexto antes de
+// tocar la home de producción.
+import Base from '@/layouts/Base.astro';
+import HeroWebglB from '@/components/HeroWebglB.astro';
+---
+
+<Base
+  title="Preview · Hero B (hilo/ADN) — Startidea"
+  description="Preview interno del concepto de hero WebGL."
+  ogSlug="page/lab-home-b"
+  noindex={true}
+>
+  <HeroWebglB />
+
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <p class="label">— Preview interno</p>
+      <h2 class="mt-4 font-display text-display-md text-ink">El resto de la home seguiría igual.</h2>
+      <p class="mt-4 max-w-measure text-ink/70">
+        Esto es solo una prueba del nuevo hero (Concepto B) dentro del sitio real.
+        Debajo continuarían las secciones actuales sin cambios.
+      </p>
+    </div>
+  </section>
+</Base>
