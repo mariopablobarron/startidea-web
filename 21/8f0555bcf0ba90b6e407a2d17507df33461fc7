@@ -1,0 +1,19 @@
+src/lib/sedes-map.ts
+  s_0ab79ba551035b::t_98512c836ed376 36-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "218f0555bcf0ba90b6e407a2d17507df33461fc7",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
