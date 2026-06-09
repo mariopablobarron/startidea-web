@@ -1,0 +1,23 @@
+src/components/HeroWebglB.astro
+  s_0ab79ba551035b::t_053d8e363d777e 74-77
+package.json
+  s_0ab79ba551035b::t_f0b6c11c320cee 33
+package-lock.json
+  s_0ab79ba551035b::t_f0b6c11c320cee 28,33-35,7114-7118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "80969d14ec11b455b6ab929ffd939b0cd065680d",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
