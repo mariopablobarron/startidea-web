@@ -1,0 +1,20 @@
+src/lib/copiloto-engine.ts
+  s_0ab79ba551035b::t_bb8cc73e51666c 20-26,28-36,38-39,43-44,46-49,53-76
+  s_0ab79ba551035b::t_2efec3e3ca5de6 131-141,150-154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "41d200f21cb48eef3f55efea747650785c3f81e6",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
