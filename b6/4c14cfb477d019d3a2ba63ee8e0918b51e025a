@@ -1,0 +1,21 @@
+public/lab/hero-a-isotipo.html
+  s_0ab79ba551035b::t_48f5321b25af98 1-129
+public/lab/hero-b-ribbon.html
+  s_0ab79ba551035b::t_0b1d0e607fb4dd 1-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b64c14cfb477d019d3a2ba63ee8e0918b51e025a",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
