@@ -38,6 +38,11 @@
     background: radial-gradient(120% 120% at 70% 18%, #241016 0%, #161416 45%, #0e0d0e 100%);
   }
   #hero-b-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* Glow magenta suave bajo la copy (sobre el canvas, bajo el contenido). */
+  .hero-b::after {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(42% 52% at 34% 56%, rgba(230,53,107,0.18), transparent 70%);
+  }
   .hero-b__inner {
     position: relative; z-index: 2; min-height: 100svh; display: flex; align-items: center;
     padding: clamp(24px, 6vw, 96px);
@@ -77,13 +82,14 @@
   // bloqueado por la Content-Security-Policy).
   const canvas = document.getElementById('hero-b-canvas');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const small = window.innerWidth < 760;
-  // Fallback: sin WebGL queda el degradado oscuro + la copy.
-  if (canvas && !reduce && !small) {
+  // Solo cae al fallback estático con prefers-reduced-motion. En móvil corre una
+  // versión más ligera (menos segmentos, menos pixelRatio, sin antialias).
+  if (canvas && !reduce) {
     const start = async () => {
+      const small = window.innerWidth < 760;
       const THREE = await import('three');
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.3 : 2));
       const scene = new THREE.Scene();
       scene.fog = new THREE.Fog(0x0e0d0e, 30, 90);
       const cam = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
@@ -99,9 +105,10 @@
         }
         return new THREE.CatmullRomCurve3(pts);
       };
-      const tube1 = new THREE.Mesh(new THREE.TubeGeometry(makeCurve(0), 220, 0.7, 16, false),
-        new THREE.MeshStandardMaterial({ color: 0xe6356b, emissive: 0xe6356b, emissiveIntensity: 0.55, roughness: 0.3, metalness: 0.5 }));
-      const tube2 = new THREE.Mesh(new THREE.TubeGeometry(makeCurve(Math.PI), 220, 0.32, 12, false),
+      const segs = small ? 120 : 220, rad = small ? 10 : 16;
+      const tube1 = new THREE.Mesh(new THREE.TubeGeometry(makeCurve(0), segs, 0.7, rad, false),
+        new THREE.MeshStandardMaterial({ color: 0xe6356b, emissive: 0xe6356b, emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.5 }));
+      const tube2 = new THREE.Mesh(new THREE.TubeGeometry(makeCurve(Math.PI), segs, 0.32, Math.max(8, rad - 4), false),
         new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x888888, emissiveIntensity: 0.2, roughness: 0.5, metalness: 0.3 }));
       const group = new THREE.Group();
       group.add(tube1, tube2);
