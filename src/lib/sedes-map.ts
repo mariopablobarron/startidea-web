@@ -33,9 +33,9 @@ const SEDES: Array<{ patterns: string[]; sede: SedeInfo }> = [
     sede: {
       key: 'junta-andalucia',
       nombre: 'Junta de Andalucía',
-      url: 'https://ws030.juntadeandalucia.es/sal/servicios/tramites',
-      urlTramite: 'https://www.juntadeandalucia.es/haciendayadministracionpublica/sede/',
-      tramiteHint: `Accede a la sede de la Junta en https://www.juntadeandalucia.es/haciendayadministracionpublica/sede/. Busca el trámite por su nombre exacto o por el código de la convocatoria. Usa el buscador de trámites con las palabras clave del título de la convocatoria.`,
+      url: 'https://www.juntadeandalucia.es/servicios/procedimientos.html',
+      urlTramite: 'https://www.juntadeandalucia.es/servicios/procedimientos.html',
+      tramiteHint: `Accede al Catálogo de Procedimientos y Servicios de la Junta en https://www.juntadeandalucia.es/servicios/procedimientos.html y busca el trámite escribiendo en el buscador las palabras clave del título de la convocatoria (puedes filtrar por "Sólo abiertos"). Desde la ficha del procedimiento accedes a la presentación telemática en la sede.`,
       autofirmaRequired: true,
       notasEspeciales: `En la sede de la Junta de Andalucía: (1) Necesitas Autofirma instalado y configurado antes de acceder. (2) El certificado digital debe estar emitido por FNMT o CatCert. (3) Cuando el formulario pida "Memoria del proyecto", adjunta el fichero en PDF con el nombre normalizado (sin acentos, sin espacios). (4) La mayoría de trámites TRADE tienen un plazo de firma de 2 horas desde la generación del borrador — no dejes la firma para el último momento. (5) Guarda el justificante CSV inmediatamente después de presentar.`,
     },
