@@ -1,0 +1,23 @@
+src/lib/brand-constitution.ts
+  s_0ab79ba551035b::t_f3d4b9fd77fbf1 1-75
+src/lib/copiloto-engine.ts
+  s_0ab79ba551035b::t_dd58fcd9991337 439-440
+  s_0ab79ba551035b::t_6e2781adf6047b 14
+  s_0ab79ba551035b::t_3bb1bf66910c58 324-326
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6865e0106464b8c1615146c449f29dd0596d2372",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
