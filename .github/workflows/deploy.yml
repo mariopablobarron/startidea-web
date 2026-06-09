@@ -1,21 +1,18 @@
 name: Deploy a producción (VPS Hostinger)
 
-# Cada push a main dispara un deploy. La SSH key dedicada que vive en el
-# secret `VPS_SSH_KEY` solo puede ejecutar /root/deploy-startidea-web.sh
-# del VPS — está restringida con command="..." en authorized_keys.
-# Coolify v3 sigue gestionando Traefik, certs y panel; este workflow
-# solo controla qué imagen construye y arranca el container.
+# RESPALDO MANUAL. El deploy automático en push ya NO se hace por aquí.
+#
+# Desde 2026-06-09 el deploy automático lo hace el VPS por PULL: un cron cada
+# 2 min (infra/startidea-web-autodeploy.sh → /root/) detecta el commit nuevo de
+# main y lanza /root/deploy-startidea-web.sh. Motivo: este workflow entra por
+# SSH (puerto 22) y fail2ban banea las IPs efímeras de los runners de GitHub,
+# tumbando el deploy de forma recurrente (incidentes 04 y 09-jun-2026).
+#
+# Este workflow queda solo como disparo MANUAL de emergencia (workflow_dispatch),
+# por si el cron del VPS estuviera caído. Requiere que el puerto 22 acepte al
+# runner (puede estar baneado).
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - 'reports/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'infra/**'   # docker-compose template y .env.example no afectan al build
-      - '.github/workflows/**'  # cambios de CI no disparan deploy SSH (ver build-deploy.yml)
   workflow_dispatch:
 
 concurrency:
