@@ -12,6 +12,7 @@ import { getConvocatoria } from './expedientes-db';
 import { fetchSubsidyDetail } from './subsidies-api';
 import { detectSede, sedeContextoPrompt } from './sedes-map';
 import { BRAND_CONSTITUTION } from './brand-constitution';
+import { pickModel } from './model-router';
 import { getEnv } from '@/lib/env';
 
 
@@ -343,7 +344,7 @@ ${memoria}`;
         'X-Title': 'Startidea Copiloto (reflexión)',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-haiku-4-5',
+        model: pickModel('redaccion'),
         max_tokens: 4000,
         messages: [
           { role: 'system', content: system },
@@ -624,7 +625,7 @@ Usa lenguaje muy claro y concreto — como si explicas a alguien sin experiencia
         'X-Title': 'Startidea Copiloto',
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-haiku-4-5',
+        model: pickModel('generacion'),
         max_tokens: 7000,
         messages: [
           { role: 'system', content: sistemaPrompt },
