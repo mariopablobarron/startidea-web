@@ -9,6 +9,7 @@
  */
 import type { APIRoute } from 'astro';
 import { logEligibilidad } from '../../lib/expedientes-db';
+import { pickModel } from '@/lib/model-router';
 
 export const prerender = false;
 
@@ -19,7 +20,7 @@ const OR_KEY = (
   process.env.OPENROUTER_API_KEY ??
   ''
 );
-const MODEL = 'anthropic/claude-haiku-4-5';
+const MODEL = pickModel('clasificacion');
 
 // ─── LÍNEAS BOJA 2026 ─────────────────────────────────────────────────────
 const LINEAS = [

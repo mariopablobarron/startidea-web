@@ -1,10 +1,12 @@
 import type { APIRoute } from 'astro';
 import { sendTelegram } from '@/lib/telegram';
 import { getCollection } from 'astro:content';
+import { pickModel } from '@/lib/model-router';
+import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
 
 export const prerender = false;
 
-const MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-haiku-4.5';
+const MODEL = process.env.OPENROUTER_MODEL || pickModel('default');
 const MAX_OUTPUT_TOKENS = parseInt(process.env.OPENROUTER_MAX_TOKENS || '600', 10);
 const SITE_URL = 'https://startidea.es';
 
@@ -103,7 +105,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const systemPrompt = await buildSystemPrompt();
   const messages = [
-    { role: 'system' as const, content: systemPrompt },
+    { role: 'system' as const, content: `${systemPrompt}\n\n${BRAND_CONSTITUTION}` },
     ...history,
   ];
 

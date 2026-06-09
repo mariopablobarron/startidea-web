@@ -20,11 +20,14 @@
  */
 import type { APIRoute } from 'astro';
 import { getConvocatoria } from '@/lib/expedientes-db';
+import { pickModel } from '@/lib/model-router';
+import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
 
 export const prerender = false;
 
 const OPENROUTER_API = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'anthropic/claude-haiku-4-5';
+// Redacción de memoria → Sonnet (calidad), override-able por MODELO_REDACCION.
+const MODEL = pickModel('redaccion');
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -221,7 +224,7 @@ Lista numerada de los aspectos que la entidad debe verificar, completar o aporta
         max_tokens:  4096,
         temperature: 0.3,
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: `${systemPrompt}\n\n${BRAND_CONSTITUTION}` },
           { role: 'user',   content: userPrompt   },
         ],
       }),
