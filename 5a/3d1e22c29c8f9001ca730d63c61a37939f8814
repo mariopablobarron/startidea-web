@@ -1,0 +1,26 @@
+src/pages/api/generar-memoria.ts
+  s_0ab79ba551035b::t_27743577e5d3b5 227
+  s_0ab79ba551035b::t_b7d07789ab5c01 23-24,29-30
+src/pages/api/chat.ts
+  s_0ab79ba551035b::t_814f3f94b62092 108
+  s_0ab79ba551035b::t_e004ff4d4e3940 4-5,9
+src/pages/api/eligibilidad.ts
+  s_0ab79ba551035b::t_8258017f4a5018 23
+  s_0ab79ba551035b::t_ed41e7768db341 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5a3d1e22c29c8f9001ca730d63c61a37939f8814",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
