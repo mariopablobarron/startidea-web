@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Startidea — Concepto B (hilo/ADN 3D)</title>
+<style>
+  :root { --magenta:#e6356b; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; overflow:hidden; color:#fff;
+    font-family:'Montserrat',system-ui,-apple-system,sans-serif;
+    background:radial-gradient(120% 120% at 70% 20%, #241016 0%, #161416 45%, #0e0d0e 100%); }
+  #c { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .hero { position:relative; z-index:2; height:100%; display:flex; flex-direction:column;
+    justify-content:center; padding:clamp(24px,6vw,96px); pointer-events:none; }
+  .glass { pointer-events:auto; max-width:640px; padding:clamp(24px,3vw,44px);
+    border-radius:24px; background:rgba(255,255,255,.06); backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.12); box-shadow:0 30px 80px rgba(0,0,0,.4);
+    opacity:0; transform:translateY(24px); animation:up 1s .3s forwards; }
+  .eyebrow { font-size:13px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--magenta); font-weight:700; margin-bottom:16px; }
+  h1 { font-size:clamp(38px,6.5vw,84px); line-height:1.0; font-weight:800; letter-spacing:-.02em; }
+  h1 em { color:var(--magenta); font-style:italic; }
+  p { margin-top:22px; max-width:46ch; font-size:clamp(15px,1.3vw,19px); line-height:1.55; color:rgba(255,255,255,.72); }
+  .cta { margin-top:32px; display:flex; gap:14px; }
+  .btn { padding:14px 26px; border-radius:999px; font-weight:700; font-size:15px; text-decoration:none; transition:transform .2s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn.p { background:var(--magenta); color:#fff; box-shadow:0 10px 30px rgba(230,53,107,.4); }
+  .btn.s { border:1.5px solid rgba(255,255,255,.3); color:#fff; }
+  .tag { position:fixed; left:clamp(24px,6vw,96px); bottom:28px; z-index:2; font-size:12px;
+    letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.4); }
+  @keyframes up { to{opacity:1;transform:none} }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hero">
+  <div class="glass">
+    <div class="eyebrow">Agencia de comunicación e innovación social</div>
+    <h1>El <em>hilo</em> que<br>conecta.</h1>
+    <p>Startidea acompaña al tercer sector, las instituciones y las empresas con propósito a comunicar mejor, captar recursos y construir herramientas que no envejecen.</p>
+    <div class="cta">
+      <a class="btn p" href="#">Hablar con Startidea</a>
+      <a class="btn s" href="#">Ver el trabajo</a>
+    </div>
+  </div>
+</div>
+<div class="tag">Concepto B · hilo / ADN 3D</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0e0d0e, 30, 90);
+const cam = new THREE.PerspectiveCamera(55,1,0.1,200); cam.position.set(0,0,46);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Curva ondulante → cinta/tubo (el "hilo")
+function makeCurve(off){
+  const pts=[];
+  for(let i=0;i<=160;i++){ const t=i/160; const x=(t-0.5)*70;
+    const y=Math.sin(t*Math.PI*4+off)*8 + Math.cos(t*Math.PI*2)*3;
+    const z=Math.cos(t*Math.PI*3+off)*8;
+    pts.push(new THREE.Vector3(x,y,z)); }
+  return new THREE.CatmullRomCurve3(pts);
+}
+const tube1 = new THREE.Mesh(
+  new THREE.TubeGeometry(makeCurve(0), 220, 0.7, 16, false),
+  new THREE.MeshStandardMaterial({ color:0xe6356b, emissive:0xe6356b, emissiveIntensity:0.55, roughness:0.3, metalness:0.5 }));
+const tube2 = new THREE.Mesh(
+  new THREE.TubeGeometry(makeCurve(Math.PI), 220, 0.32, 12, false),
+  new THREE.MeshStandardMaterial({ color:0xffffff, emissive:0x888888, emissiveIntensity:0.2, roughness:0.5, metalness:0.3 }));
+const group = new THREE.Group(); group.add(tube1, tube2); scene.add(group);
+
+// "puentes" de partículas entre las dos hebras (sensación ADN)
+const bridgeGeo = new THREE.BufferGeometry();
+const bc = makeCurve(0), bc2 = makeCurve(Math.PI); const bpos=[];
+for(let i=0;i<=160;i+=4){ const t=i/160; const a=bc.getPoint(t), b=bc2.getPoint(t);
+  for(let k=0;k<=6;k++){ const f=k/6; bpos.push(a.x+(b.x-a.x)*f, a.y+(b.y-a.y)*f, a.z+(b.z-a.z)*f); } }
+bridgeGeo.setAttribute('position', new THREE.Float32BufferAttribute(bpos,3));
+group.add(new THREE.Points(bridgeGeo, new THREE.PointsMaterial({ color:0xe6356b, size:0.45, transparent:true, opacity:0.6, depthWrite:false })));
+
+scene.add(new THREE.AmbientLight(0xffffff,0.5));
+const key = new THREE.PointLight(0xe6356b, 2.2, 120); key.position.set(20,18,30); scene.add(key);
+const fill = new THREE.PointLight(0x6688ff, 1.0, 120); fill.position.set(-25,-10,20); scene.add(fill);
+
+const mouse = new THREE.Vector2(0,0);
+addEventListener('pointermove', e=>{ mouse.x=(e.clientX/innerWidth-0.5); mouse.y=(e.clientY/innerHeight-0.5); });
+function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix(); }
+addEventListener('resize',resize); resize();
+
+let t=0;
+function frame(){
+  t+= reduce?0:0.004;
+  group.rotation.z = t*0.6;
+  group.rotation.x = -0.2 + mouse.y*0.3;
+  group.rotation.y += ((mouse.x*0.5) - group.rotation.y)*0.05;
+  cam.position.x += (mouse.x*8 - cam.position.x)*0.04;
+  cam.position.y += (-mouse.y*6 - cam.position.y)*0.04;
+  cam.lookAt(0,0,0);
+  renderer.render(scene,cam);
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>

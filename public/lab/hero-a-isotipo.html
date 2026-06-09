@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Startidea — Concepto A (isotipo en partículas)</title>
+<style>
+  :root { --magenta:#e6356b; --grafito:#2a2a2a; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; background:#f7f6f3; color:var(--grafito);
+    font-family:'Montserrat',system-ui,-apple-system,sans-serif; overflow:hidden; }
+  #c { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .hero { position:relative; z-index:2; height:100%; display:flex; flex-direction:column;
+    justify-content:center; padding:clamp(24px,6vw,96px); pointer-events:none; }
+  .eyebrow { font-size:13px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--magenta); font-weight:700; margin-bottom:18px; opacity:0; animation:up .9s .3s forwards; }
+  h1 { font-size:clamp(40px,7vw,92px); line-height:.98; font-weight:800; max-width:14ch;
+    letter-spacing:-.02em; opacity:0; animation:up 1s .45s forwards; }
+  h1 em { color:var(--magenta); font-style:italic; }
+  p { margin-top:26px; max-width:46ch; font-size:clamp(16px,1.4vw,20px); line-height:1.5;
+    color:#555; opacity:0; animation:up 1s .65s forwards; }
+  .cta { margin-top:36px; display:flex; gap:14px; pointer-events:auto; opacity:0; animation:up 1s .85s forwards; }
+  .btn { padding:14px 26px; border-radius:999px; font-weight:700; font-size:15px; text-decoration:none;
+    transition:transform .2s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn.p { background:var(--magenta); color:#fff; }
+  .btn.s { border:1.5px solid #ccc; color:var(--grafito); }
+  .tag { position:fixed; left:clamp(24px,6vw,96px); bottom:28px; z-index:2; font-size:12px;
+    letter-spacing:.2em; text-transform:uppercase; color:#999; }
+  @keyframes up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hero">
+  <div class="eyebrow">Agencia de comunicación e innovación social</div>
+  <h1>Una <em>huella</em> que conecta.</h1>
+  <p>Startidea ayuda a entidades del tercer sector, instituciones y empresas con propósito a comunicar mejor, captar recursos y construir herramientas que no envejecen.</p>
+  <div class="cta">
+    <a class="btn p" href="#">Hablar con Startidea</a>
+    <a class="btn s" href="#">Ver el trabajo</a>
+  </div>
+</div>
+<div class="tag">Concepto A · isotipo en partículas</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+cam.position.z = 42;
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Cargar el isotipo y muestrear sus píxeles para colocar partículas en su forma.
+const img = new Image();
+img.crossOrigin = 'anonymous';
+img.src = '/brand/isotipo-lazos.png';
+img.onload = () => {
+  const S = 200;
+  const cv = document.createElement('canvas'); cv.width = cv.height = S;
+  const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, S, S);
+  const data = ctx.getImageData(0,0,S,S).data;
+  const targets = [];
+  const step = 2;
+  for (let y=0; y<S; y+=step) for (let x=0; x<S; x+=step) {
+    const a = data[(y*S+x)*4+3];
+    if (a > 90) targets.push([(x/S-0.5)*44, -(y/S-0.5)*44, (Math.random()-0.5)*3]);
+  }
+  const N = targets.length;
+  const pos = new Float32Array(N*3);     // posición actual (arranca dispersa)
+  const tgt = new Float32Array(N*3);     // destino (forma del isotipo)
+  for (let i=0;i<N;i++){
+    tgt[i*3]=targets[i][0]; tgt[i*3+1]=targets[i][1]; tgt[i*3+2]=targets[i][2];
+    pos[i*3]=(Math.random()-0.5)*120; pos[i*3+1]=(Math.random()-0.5)*120; pos[i*3+2]=(Math.random()-0.5)*60;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const mat = new THREE.PointsMaterial({ color:0xe6356b, size:0.32, transparent:true, opacity:0.95,
+    sizeAttenuation:true, depthWrite:false, blending:THREE.NormalBlending });
+  const pts = new THREE.Points(geo, mat);
+  scene.add(pts);
+
+  // unas pocas partículas grafito de acento
+  const N2 = Math.floor(N*0.12);
+  const pos2 = new Float32Array(N2*3);
+  for (let i=0;i<N2;i++){ const j=Math.floor(Math.random()*N);
+    pos2[i*3]=tgt[j*3]; pos2[i*3+1]=tgt[j*3+1]; pos2[i*3+2]=tgt[j*3+2]+0.4; }
+  const geo2=new THREE.BufferGeometry(); geo2.setAttribute('position',new THREE.BufferAttribute(pos2,3));
+  scene.add(new THREE.Points(geo2,new THREE.PointsMaterial({color:0x2a2a2a,size:0.18,transparent:true,opacity:0.5,depthWrite:false})));
+
+  const mouse = new THREE.Vector2(0,0);
+  addEventListener('pointermove', e => { mouse.x=(e.clientX/innerWidth-0.5); mouse.y=(e.clientY/innerHeight-0.5); });
+
+  let t=0;
+  function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix(); }
+  addEventListener('resize', resize); resize();
+
+  function frame(){
+    t+=0.01;
+    const p = geo.attributes.position.array;
+    const ease = reduce ? 1 : Math.min(1, t*0.5);
+    for (let i=0;i<N;i++){
+      const ix=i*3;
+      // atrae hacia la forma + leve respiración
+      const wob = reduce?0:Math.sin(t*1.5+i*0.05)*0.25;
+      p[ix]   += ((tgt[ix]   - p[ix])   * 0.06) ;
+      p[ix+1] += ((tgt[ix+1] - p[ix+1]) * 0.06) + wob*0.02;
+      p[ix+2] += ((tgt[ix+2] - p[ix+2]) * 0.06);
+    }
+    geo.attributes.position.needsUpdate = true;
+    pts.rotation.y = mouse.x*0.4;
+    pts.rotation.x = mouse.y*0.25;
+    scene.rotation.y = Math.sin(t*0.2)*0.05;
+    renderer.render(scene,cam);
+    requestAnimationFrame(frame);
+  }
+  frame();
+};
+</script>
+</body>
+</html>
