@@ -294,6 +294,82 @@ export interface GenerationResult {
 }
 
 /**
+ * Reflexión (patrón Reflection/Reflexion de all-agentic-architectures).
+ *
+ * Segunda pasada que actúa como EVALUADOR: revisa la memoria técnica recién
+ * generada contra el baremo y la reescribe mejorada. Cuesta +1 llamada a Haiku.
+ * Es una mejora, nunca un bloqueo: ante cualquier error/timeout o respuesta
+ * sospechosamente corta, devuelve la memoria original intacta.
+ */
+async function reflectMemoria(
+  openrouterKey: string,
+  convContext: string,
+  memoria: string,
+): Promise<string> {
+  const system = `Eres un EVALUADOR técnico de subvenciones públicas en España con 15 años de experiencia puntuando solicitudes. Tu tarea NO es escribir desde cero, sino REVISAR una memoria técnica ya redactada y devolverla MEJORADA para que puntúe lo más alto posible según el baremo de la convocatoria.
+
+Revisa y corrige aplicando esta lista, en este orden de prioridad:
+1. BAREMO INVERTIDO: ¿están los criterios de MAYOR puntuación tratados primero y con más extensión? Si no, reordena.
+2. INDICADORES SMART: ¿cada objetivo tiene un indicador medible (qué, cuánto, cuándo, fuente de verificación)? Si falta, añádelo.
+3. CUANTIFICACIÓN: ¿hay afirmaciones vagas ("muchos", "amplia experiencia")? Sustitúyelas por cifras; si no hay dato, marca [COMPLETAR: dato concreto].
+4. COHERENCIA: ¿alcance, objetivos, presupuesto y cronograma cuentan la misma historia?
+5. SOSTENIBILIDAD: ¿explica cómo continúa el proyecto tras la subvención?
+6. VOCABULARIO ESPEJO: ¿usa el lenguaje literal de las bases y del baremo?
+7. TRANSVERSALIDAD: si el baremo lo valora (igualdad, sostenibilidad ambiental, digitalización, accesibilidad), ¿está presente?
+
+REGLAS CRÍTICAS:
+- NO inventes datos. Conserva TODAS las marcas [COMPLETAR: ...] tal cual; si detectas una afirmación vaga sin respaldo, conviértela en [COMPLETAR: ...].
+- Mantén el formato Markdown y la estructura de secciones.
+- Responde SOLO con la memoria mejorada: sin preámbulo, sin comentarios, sin explicar los cambios.`;
+
+  const user = `${convContext}
+
+---
+
+MEMORIA TÉCNICA A REVISAR Y MEJORAR:
+
+${memoria}`;
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${openrouterKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://startidea.es',
+        'X-Title': 'Startidea Copiloto (reflexión)',
+      },
+      body: JSON.stringify({
+        model: 'anthropic/claude-haiku-4-5',
+        max_tokens: 4000,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user },
+        ],
+      }),
+      signal: AbortSignal.timeout(90_000),
+    });
+    if (!res.ok) {
+      console.warn('[copiloto-engine] reflexión memoria HTTP', res.status, '— conservo original');
+      return memoria;
+    }
+    const json = await res.json();
+    const improved = (json.choices?.[0]?.message?.content ?? '').trim();
+    // Salvaguarda: si vuelve vacía o sospechosamente corta (p. ej. un comentario
+    // en vez de la memoria), conservamos la original.
+    if (improved.length < memoria.length * 0.5) {
+      console.warn('[copiloto-engine] reflexión devolvió texto demasiado corto — conservo original');
+      return memoria;
+    }
+    console.log('[copiloto-engine] memoria mejorada por reflexión');
+    return improved;
+  } catch (err) {
+    console.warn('[copiloto-engine] reflexión error — conservo original:', err);
+    return memoria;
+  }
+}
+
+/**
  * Llama a OpenRouter (Claude Haiku) con el contexto de convocatoria + datos del
  * expediente y devuelve los 4 bloques de documentos parseados.
  *
@@ -604,5 +680,11 @@ Usa lenguaje muy claro y concreto — como si explicas a alguien sin experiencia
 
   console.log(`[copiloto-engine] Elegibilidad: score=${elegibilidad?.score ?? '?'} bloqueante=${elegibilidad?.bloqueante ?? '?'}`);
 
-  return { ok: true, memoria, presupuesto, checklist, guia, elegibilidad, datosFaltantes };
+  // Reflexión (Reflection): 2ª pasada que revisa y mejora la memoria contra el
+  // baremo antes de entregarla. Solo si hay memoria (no si fue NO PROCEDE).
+  const memoriaFinal = memoria
+    ? await reflectMemoria(openrouterKey, convContext, memoria)
+    : memoria;
+
+  return { ok: true, memoria: memoriaFinal, presupuesto, checklist, guia, elegibilidad, datosFaltantes };
 }
