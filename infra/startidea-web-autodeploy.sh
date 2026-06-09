@@ -45,5 +45,30 @@ if [ "$latest" = "$running" ]; then
   exit 0   # ya al día, nada que hacer
 fi
 
+# Saltar el rebuild si el(los) commit(s) nuevos SOLO tocan rutas no desplegables
+# (docs/reports/infra/.github/*.md) — mismo criterio que el paths-ignore del
+# deploy SSH. Si la API de compare falla, por seguridad NO saltamos (desplegamos).
+if [ -n "$running" ]; then
+  files=$(curl -fsS -m 20 -H 'Accept: application/vnd.github+json' \
+    "https://api.github.com/repos/${REPO}/compare/${running}...${latest}" 2>/dev/null \
+    | sed -n 's/.*"filename":[[:space:]]*"\([^"]*\)".*/\1/p')
+  if [ -n "$files" ]; then
+    deployable=0
+    while IFS= read -r f; do
+      [ -z "$f" ] && continue
+      case "$f" in
+        docs/*|reports/*|infra/*|.github/*|*.md|.gitignore) : ;;  # ignorable
+        *) deployable=1 ;;                                        # toca algo desplegable
+      esac
+    done <<INNER_EOF
+$files
+INNER_EOF
+    if [ "$deployable" -eq 0 ]; then
+      echo "$(date -u +%FT%TZ) commit ${latest}: solo docs/reports/infra — no desplegable, salto"
+      exit 0
+    fi
+  fi
+fi
+
 echo "$(date -u +%FT%TZ) commit nuevo ${latest} (desplegado: ${running:-desconocido}) → lanzando deploy"
 bash /root/deploy-startidea-web.sh
