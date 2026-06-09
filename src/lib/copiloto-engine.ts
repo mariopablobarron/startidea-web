@@ -158,7 +158,9 @@ export async function buildConvContext(opts: {
 
 export interface EligibilityCheck {
   emoji: '✅' | '❌' | '⚠️' | '❓';
-  texto: string; // nombre del requisito y evaluación en una línea
+  estado: 'cumple' | 'no_cumple' | 'parcial' | 'sin_datos';
+  peso: 'bloqueante' | 'normal';
+  texto: string; // "<emoji> Nombre del requisito — evaluación" (formato que espera la UI)
 }
 
 export interface EligibilityResult {
@@ -169,29 +171,74 @@ export interface EligibilityResult {
   raw: string;             // bloque completo para guardar en BD
 }
 
+const ESTADO_EMOJI: Record<EligibilityCheck['estado'], EligibilityCheck['emoji']> = {
+  cumple: '✅',
+  no_cumple: '❌',
+  parcial: '⚠️',
+  sin_datos: '❓',
+};
+
+/**
+ * Parsea una línea REQ en un check estructurado.
+ * Formato deterministic-picker (el modelo solo decide categorías):
+ *   REQ: CUMPLE | NORMAL | Tipo de entidad — La conv admite fundaciones; el perfil es fundación.
+ *   REQ: NO_CUMPLE | BLOQUEANTE | Antigüedad mínima — La conv exige 2 años; el perfil no acredita.
+ * Acepta también el formato legacy (línea que empieza con emoji) por compatibilidad.
+ */
+function parseReqLine(line: string): EligibilityCheck | null {
+  const parts = line.split('|');
+  if (parts.length >= 3) {
+    const e = parts[0].trim().toUpperCase();
+    const p = parts[1].trim().toUpperCase();
+    const rest = parts.slice(2).join('|').trim();
+    const estado: EligibilityCheck['estado'] = e.startsWith('CUMPLE')
+      ? 'cumple'
+      : e.startsWith('NO')
+        ? 'no_cumple'
+        : e.startsWith('PARC')
+          ? 'parcial'
+          : 'sin_datos';
+    const peso: EligibilityCheck['peso'] = p.startsWith('BLOQ') ? 'bloqueante' : 'normal';
+    const emoji = ESTADO_EMOJI[estado];
+    return { estado, peso, emoji, texto: `${emoji} ${rest}` };
+  }
+  // Fallback legacy: línea que empieza con emoji.
+  let estado: EligibilityCheck['estado'] | null = null;
+  if (line.startsWith('✅')) estado = 'cumple';
+  else if (line.startsWith('❌')) estado = 'no_cumple';
+  else if (line.startsWith('⚠️') || line.startsWith('⚠')) estado = 'parcial';
+  else if (line.startsWith('❓')) estado = 'sin_datos';
+  if (!estado) return null;
+  return { estado, peso: 'normal', emoji: ESTADO_EMOJI[estado], texto: line };
+}
+
 /**
  * Parsea el bloque ===ELEGIBILIDAD=== generado por el modelo.
- * Formato esperado:
- *   SCORE: 75
- *   BLOQUEANTE: NO
- *   REQ: ✅ Tipo de entidad — La conv admite fundaciones. El perfil es fundación.
- *   REQ: ❌ Empleados mínimos — La conv exige 5. No hay datos en el perfil.
+ *
+ * Patrón "deterministic-picker": el modelo SOLO emite el veredicto categórico
+ * de cada requisito (estado + peso); el SCORE y el BLOQUEANTE los calcula este
+ * código de forma reproducible y auditable (no nos fiamos de un número que el
+ * LLM se inventa). Formato esperado por requisito:
+ *   REQ: [CUMPLE|NO_CUMPLE|PARCIAL|SIN_DATOS] | [BLOQUEANTE|NORMAL] | Nombre — evaluación
  *   RESUMEN: ...
  */
 export function parseEligibility(block: string): EligibilityResult {
-  const scoreMatch = block.match(/^SCORE:\s*(\d+)/im);
-  const score = scoreMatch ? Math.min(100, Math.max(0, parseInt(scoreMatch[1]))) : 50;
-  const bloqueante = /^BLOQUEANTE:\s*SI/im.test(block);
-
   const checks: EligibilityCheck[] = [];
-  for (const m of block.matchAll(/^REQ:\s*(.+)$/gm)) {
-    const line = m[1].trim();
-    let emoji: EligibilityCheck['emoji'] = '❓';
-    if (line.startsWith('✅')) emoji = '✅';
-    else if (line.startsWith('❌')) emoji = '❌';
-    else if (line.startsWith('⚠️')) emoji = '⚠️';
-    checks.push({ emoji, texto: line });
+  for (const m of block.matchAll(/^REQ:\s*(.+)$/gim)) {
+    const c = parseReqLine(m[1].trim());
+    if (c) checks.push(c);
   }
+
+  // Score = % de requisitos evaluables que se cumplen (parcial cuenta medio).
+  // sin_datos no penaliza ni puntúa (no es evaluable todavía).
+  const evaluables = checks.filter((c) => c.estado !== 'sin_datos').length;
+  const cumple = checks.filter((c) => c.estado === 'cumple').length;
+  const parcial = checks.filter((c) => c.estado === 'parcial').length;
+  const score =
+    evaluables === 0 ? 50 : Math.round((100 * (cumple + 0.5 * parcial)) / evaluables);
+
+  // Bloqueante = algún requisito de peso BLOQUEANTE que NO se cumple.
+  const bloqueante = checks.some((c) => c.peso === 'bloqueante' && c.estado === 'no_cumple');
 
   const resumenMatch = block.match(/^RESUMEN:\s*(.+)$/im);
   const resumen = resumenMatch ? resumenMatch[1].trim() : '';
@@ -302,11 +349,22 @@ Genera los siguientes bloques separados por los marcadores EXACTOS. No añadas t
 
 ===ELEGIBILIDAD===
 Analiza si la organización cumple los requisitos de la convocatoria.
-Formato estricto (una línea por campo):
-SCORE: [0-100]
-BLOQUEANTE: [SI/NO]
-REQ: [✅/❌/⚠️/❓] [Nombre del requisito] — [Evaluación en 1 frase: qué dice la conv y qué tiene el perfil]
-(Repite REQ: para cada requisito de las bases: tipo de entidad, antigüedad mínima, territorio, CNAE, empleados, volumen económico, registros obligatorios, certificados previos, incompatibilidades, etc. Si las bases no especifican un requisito, no inventes uno.)
+NO calcules ninguna puntuación ni veredicto global: tú SOLO emites el veredicto de cada requisito; nuestro sistema calcula el score y si hay bloqueo.
+Formato estricto, UNA línea por requisito, con los dos campos separados por " | ":
+REQ: [ESTADO] | [PESO] | [Nombre del requisito] — [Evaluación en 1 frase: qué exige la conv y qué tiene el perfil]
+Donde:
+- ESTADO = CUMPLE | NO_CUMPLE | PARCIAL | SIN_DATOS
+  · CUMPLE: el perfil cumple claramente
+  · NO_CUMPLE: no cumple o incumplimiento probable
+  · PARCIAL: probable pero condicionado a datos adicionales
+  · SIN_DATOS: el perfil no aporta datos suficientes para decidir
+- PESO = BLOQUEANTE | NORMAL
+  · BLOQUEANTE: si NO se cumple, inhabilita la solicitud por sí solo (p. ej. tipo de entidad no admitido, territorio fuera de ámbito)
+  · NORMAL: resta pero no inhabilita
+Ejemplos:
+REQ: CUMPLE | NORMAL | Antigüedad mínima — La conv exige 1 año; el perfil acredita 14 años.
+REQ: NO_CUMPLE | BLOQUEANTE | Tipo de entidad — La conv es solo para fundaciones; el perfil es asociación.
+Repite REQ: para cada requisito de las bases (tipo de entidad, antigüedad mínima, territorio, CNAE, empleados, volumen económico, registros obligatorios, certificados previos, incompatibilidades, etc.). Si las bases no especifican un requisito, no lo inventes.
 RESUMEN: [1-2 frases de conclusión sobre la elegibilidad]
 
 ===DATOS_FALTANTES===
@@ -314,7 +372,7 @@ Lista de preguntas concretas que no puedes responder sobre elegibilidad porque e
 Formato: una pregunta por línea, empezando con "- "
 
 ===MEMORIA_TECNICA===
-[SOLO si BLOQUEANTE: NO — si BLOQUEANTE: SI, escribe exactamente "[NO PROCEDE: ver análisis de elegibilidad]" y nada más]
+[SOLO si NINGÚN requisito BLOQUEANTE quedó en NO_CUMPLE. Si hay al menos un requisito de peso BLOQUEANTE con estado NO_CUMPLE, escribe exactamente "[NO PROCEDE: ver análisis de elegibilidad]" y nada más]
 
 ANTES DE ESCRIBIR: identifica de los CRITERIOS DE VALORACIÓN los 3 criterios de mayor puntuación. Estructura la memoria priorizando esos criterios primero y dedicándoles más extensión.
 
