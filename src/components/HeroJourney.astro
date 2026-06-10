@@ -68,10 +68,36 @@
   .jny.is-static .jny__end { position: relative; opacity: 1; transform: none; }
 </style>
 
+<style is:global>
+  /* Mientras el viaje ocupa la pantalla, ocultamos el chrome del sitio (Nav,
+     barra CTA móvil, chips flotantes) para inmersión total. Reaparece al
+     llegar al contenido. Solo afecta a páginas con el viaje. */
+  html.journey-immersive header,
+  html.journey-immersive #mobile-cta-bar,
+  html.journey-immersive #ai-chip,
+  html.journey-immersive a[data-track-id^='float_whatsapp'] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity .45s ease;
+  }
+</style>
+
 <script>
   const section = document.querySelector('[data-jny]');
   const canvas = document.getElementById('jny-canvas');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Oculta/restaura el chrome del sitio según el viaje ocupe o no la pantalla.
+  if (section) {
+    const navToggle = () => {
+      const r = section.getBoundingClientRect();
+      const active = r.top <= 5 && r.bottom > innerHeight * 1.12;
+      document.documentElement.classList.toggle('journey-immersive', active);
+    };
+    addEventListener('scroll', navToggle, { passive: true });
+    addEventListener('resize', navToggle);
+    navToggle();
+  }
 
   if (!section || !canvas) {
     // nada

@@ -14,7 +14,7 @@
 // Flujo narrativo: gancho → quiénes son → qué hacen → cómo → prueba social
 // → cómo empezar.
 import Base from '@/layouts/Base.astro';
-import Hero from '@/components/Hero.astro';
+import HeroJourney from '@/components/HeroJourney.astro';
 import CtaConversion from '@/components/CtaConversion.astro';
 import LogosBanner from '@/components/LogosBanner.astro';
 import MetricasHero from '@/components/MetricasHero.astro';
@@ -37,8 +37,8 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   description="Agencia de comunicación e innovación social en Granada (desde 2011). Startidea ayuda al tercer sector, instituciones y empresas con propósito a comunicar mejor, captar más recursos (fundraising) y crear herramientas digitales."
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
-  <!-- 1. Gancho -->
-  <Hero />
+  <!-- 1. Gancho — viaje inmersivo 3D (Plan A) -->
+  <HeroJourney />
   <CtaConversion />
 
   <!-- 2. Social proof inmediato — banda de logos reconocibles -->
