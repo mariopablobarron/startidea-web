@@ -113,19 +113,20 @@ const propiedades = [
 ];
 ---
 
-<section id="ecosistema" class="relative bg-paper-warm py-24 md:py-32">
-  <div class="container-x">
+<section id="ecosistema" class="eco-dark relative overflow-hidden bg-ink py-24 text-paper md:py-32" data-ecosistema>
+  <canvas id="eco-canvas" aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
+  <div class="container-x relative z-10">
     <!-- Encabezado -->
-    <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+    <div class="grid grid-cols-12 gap-x-8 border-t border-paper/15 pt-8">
       <div class="col-span-12 lg:col-span-3">
         <span class="label">— Ecosistema</span>
       </div>
       <div class="col-span-12 mt-6 lg:col-span-9 md:mt-0">
-        <h2 class="font-display text-display-lg leading-[0.98] text-ink">
+        <h2 class="font-display text-display-lg leading-[0.98] text-paper">
           Una casa.
-          <span class="block italic text-ink/55">Muchas voces que se hablan.</span>
+          <span class="block italic text-paper/55">Muchas voces que se hablan.</span>
         </h2>
-        <p class="mt-6 max-w-measure text-lede text-ink/80">
+        <p class="mt-6 max-w-measure text-lede text-paper/80">
           Cuatro disciplinas internas que se contratan juntas o por separado, y un ecosistema de marcas e iniciativas con vida propia. Todo bajo un mismo techo en Granada.
         </p>
       </div>
@@ -133,28 +134,28 @@ const propiedades = [
 
     <!-- Bloque 1: DISCIPLINAS -->
     <div class="mt-16">
-      <div class="flex items-baseline gap-4 border-b border-ink/15 pb-4">
+      <div class="flex items-baseline gap-4 border-b border-paper/15 pb-4">
         <span class="num-edit text-3xl">·</span>
         <span class="label">— Disciplinas</span>
-        <span class="font-mono text-xs text-ink-mute">Servicios contratables · enlaces internos</span>
+        <span class="font-mono text-xs text-paper/45">Servicios contratables · enlaces internos</span>
       </div>
 
       <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {disciplinas.map((p) => (
           <a href={p.href} class="reveal group card-edit !pt-10">
-            <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
+            <div class="flex items-baseline justify-between border-b border-paper/15 pb-6">
               <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
               <span class="label text-right tracking-wide sm:tracking-widest">{p.tag}</span>
             </div>
-            <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
+            <h3 class="mt-7 font-display text-3xl leading-tight text-paper transition-colors group-hover:text-magenta md:text-4xl">
               {p.nombre}
             </h3>
-            <p class="mt-5 text-sm leading-relaxed text-ink/75">{p.body}</p>
+            <p class="mt-5 text-sm leading-relaxed text-paper/75">{p.body}</p>
             <div class="mt-7 flex items-center justify-between">
-              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/60 transition-colors group-hover:text-magenta">
+              <span class="font-mono text-[11px] uppercase tracking-widest text-paper/60 transition-colors group-hover:text-magenta">
                 /{p.nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')}
               </span>
-              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">→</span>
+              <span aria-hidden="true" class="font-mono text-sm text-paper/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">→</span>
             </div>
           </a>
         ))}
@@ -163,10 +164,10 @@ const propiedades = [
 
     <!-- Bloque 2: PROPIEDADES -->
     <div class="mt-20">
-      <div class="flex items-baseline gap-4 border-b border-ink/15 pb-4">
+      <div class="flex items-baseline gap-4 border-b border-paper/15 pb-4">
         <span class="num-edit text-3xl">·</span>
         <span class="label">— Marcas e iniciativas</span>
-        <span class="font-mono text-xs text-ink-mute">Sub-marcas con dominio propio e iniciativas de Startidea</span>
+        <span class="font-mono text-xs text-paper/45">Sub-marcas con dominio propio e iniciativas de Startidea</span>
       </div>
 
       <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
@@ -185,23 +186,94 @@ const propiedades = [
                 {p.badge}
               </span>
             )}
-            <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
+            <div class="flex items-baseline justify-between border-b border-paper/15 pb-6">
               <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
               <span class="label text-right tracking-wide sm:tracking-widest">{p.tag}</span>
             </div>
-            <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
+            <h3 class="mt-7 font-display text-3xl leading-tight text-paper transition-colors group-hover:text-magenta md:text-4xl">
               {p.nombre}
             </h3>
-            <p class="mt-5 text-sm leading-relaxed text-ink/75">{p.body}</p>
+            <p class="mt-5 text-sm leading-relaxed text-paper/75">{p.body}</p>
             <div class="mt-7 flex items-center justify-between">
-              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/60 transition-colors group-hover:text-magenta">
+              <span class="font-mono text-[11px] uppercase tracking-widest text-paper/60 transition-colors group-hover:text-magenta">
                 {p.url}
               </span>
-              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">{p.external ? '↗' : '→'}</span>
+              <span aria-hidden="true" class="font-mono text-sm text-paper/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">{p.external ? '↗' : '→'}</span>
             </div>
           </a>
         ))}
       </div>
     </div>
   </div>
+
+  <style>
+    /* Voltea las clases editoriales propias para que se lean sobre el oscuro. */
+    .eco-dark :global(.label) { color: rgba(255, 255, 255, 0.55); }
+    .eco-dark :global(.num-edit) { color: rgba(255, 255, 255, 0.22); }
+    .eco-dark :global(.card-edit) { border-top-color: rgba(255, 255, 255, 0.15); }
+  </style>
+
+  <script>
+    // Campo de partículas 3D "universo" detrás del ecosistema de marcas.
+    // Mismo lenguaje que el hero/manifiesto. Calmado, con parallax al scroll y
+    // cursor. Three empaquetado, tras el LCP; sin WebGL con reduce-motion.
+    const canvas = document.getElementById('eco-canvas');
+    const section = document.querySelector('[data-ecosistema]');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canvas && section && !reduce) {
+      const start = async () => {
+        const small = window.innerWidth < 760;
+        let THREE;
+        try { THREE = await import('three'); } catch { return; }
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.4 : 2));
+        const scene = new THREE.Scene();
+        const cam = new THREE.PerspectiveCamera(65, 1, 0.1, 400);
+        cam.position.z = 60;
+
+        const COUNT = small ? 1500 : 3200;
+        const pos = new Float32Array(COUNT * 3), col = new Float32Array(COUNT * 3);
+        const cMag = new THREE.Color(0xe6356b), cW = new THREE.Color(0xffffff), cG = new THREE.Color(0x8a8a93);
+        for (let i = 0; i < COUNT; i++) {
+          pos[i*3] = (Math.random() - 0.5) * 280;
+          pos[i*3+1] = (Math.random() - 0.5) * 180;
+          pos[i*3+2] = -120 + Math.random() * 160;
+          const c = Math.random() < 0.5 ? cMag : (Math.random() < 0.5 ? cW : cG);
+          col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        const field = new THREE.Points(geo, new THREE.PointsMaterial({ size: small ? 0.9 : 0.7, vertexColors: true, transparent: true, opacity: 0.7, depthWrite: false }));
+        scene.add(field);
+
+        const mouse = { x: 0, y: 0 };
+        addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
+        let prog = 0;
+        const onScroll = () => { const r = section.getBoundingClientRect();
+          prog = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))); };
+        addEventListener('scroll', onScroll, { passive: true }); onScroll();
+        const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+        addEventListener('resize', resize); resize();
+
+        let t = 0, paused = false;
+        document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+        const loop = () => {
+          if (!paused) {
+            t += 0.016;
+            field.rotation.y = t * 0.03 + mouse.x * 0.25;
+            field.rotation.x = mouse.y * 0.12;
+            field.position.y = (prog - 0.5) * 40;
+            cam.position.x += (mouse.x * 8 - cam.position.x) * 0.03;
+            cam.lookAt(0, 0, 0);
+            renderer.render(scene, cam);
+          }
+          requestAnimationFrame(loop);
+        };
+        loop();
+      };
+      if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 900 });
+      else setTimeout(start, 300);
+    }
+  </script>
 </section>
