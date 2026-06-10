@@ -1,0 +1,28 @@
+src/components/Ecosistema.astro
+  s_0ab79ba551035b::t_da7d0ac56166cb 120,137,146,167,189
+  s_0ab79ba551035b::t_be8f7faf991dd2 153,196
+  s_0ab79ba551035b::t_762b3508c2373c 150,193
+  s_0ab79ba551035b::t_c1ae7a63c53246 155,158,198,201
+  s_0ab79ba551035b::t_efc9f2c3f5e2ec 208-278
+  s_0ab79ba551035b::t_aa31435b81fb0f 129
+  s_0ab79ba551035b::t_39b3bdde41c267 127
+  s_0ab79ba551035b::t_84b6c9cc6d7436 116-118
+  s_0ab79ba551035b::t_462313d93f0764 140,170
+  s_0ab79ba551035b::t_b5fe01fd8c6928 125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9f9a3f1a9b0063d4533c198c0f7b081a25190289",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
