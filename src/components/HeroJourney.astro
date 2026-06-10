@@ -38,6 +38,8 @@
 
 <style>
   .jny { position: relative; height: 320vh; }
+  /* Visitas siguientes en la misma sesión: viaje corto (no forzar scroll largo). */
+  .jny.is-quick { height: 130vh; }
   .jny__layer {
     position: fixed; inset: 0; z-index: 60; overflow: hidden; color: #fff;
     background: #08070a; transition: opacity .4s ease;
@@ -96,6 +98,13 @@
   } else if (reduce) {
     section.classList.add('is-static');
   } else {
+    // Once-per-session: la 1ª visita ve el viaje completo; las siguientes una
+    // versión corta (is-quick) para no forzar el scroll largo cada vez.
+    const KEY = 'startidea:journeySeen';
+    let seen = false; try { seen = !!sessionStorage.getItem(KEY); } catch (_) {}
+    try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
+    if (seen) section.classList.add('is-quick');
+
     const progAt = () => {
       const denom = section.offsetHeight - innerHeight;
       return denom > 0 ? Math.min(1, Math.max(0, scrollY - section.offsetTop) / denom) : 0;
