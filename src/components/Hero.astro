@@ -118,7 +118,7 @@
           }
           const geo = new THREE.BufferGeometry();
           geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-          const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xe6356b, size: 0.3, transparent: true, opacity: 0.85, depthWrite: false }));
+          const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xe6356b, size: 0.3, transparent: true, opacity: small ? 0.3 : 0.85, depthWrite: false }));
           scene.add(pts);
           const mouse = { x: 0, y: 0 };
           addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
