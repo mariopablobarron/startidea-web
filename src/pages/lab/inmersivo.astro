@@ -1,0 +1,177 @@
+---
+// Preview INMERSIVO (noindex, sin Nav/Footer) — experiencia 3D guiada por scroll.
+// La cámara vuela por un campo de partículas (inmersión) y al final del viaje
+// las partículas forman el isotipo de Startidea. Pensado para "clavar la
+// sensación" de sumergirse en 3D al hacer scroll. Three empaquetado (CSP-ok).
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Startidea · Inmersivo (preview)</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      :root { --magenta: #e6356b; }
+      html { scroll-behavior: auto; }
+      body { background: #08070a; color: #fff; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+      /* Altura de scroll = sala de viaje */
+      #scroll-space { height: 600vh; }
+      #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+      .overlay { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+      .stage { position: fixed; left: 0; right: 0; padding: 0 8vw; opacity: 0; transition: opacity .5s ease; }
+      .stage.show { opacity: 1; }
+      .s-intro { top: 50%; transform: translateY(-50%); }
+      .eyebrow { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--magenta); font-weight: 700; margin-bottom: 18px; }
+      h1 { font-size: clamp(40px, 8vw, 110px); line-height: .95; font-weight: 800; letter-spacing: -.02em; }
+      h1 em { color: var(--magenta); font-style: italic; }
+      .scroll-hint { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 3; font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: rgba(255,255,255,.6); animation: bob 1.8s ease-in-out infinite; }
+      @keyframes bob { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,8px)} }
+      .s-mid { top: 50%; transform: translateY(-50%); text-align: center; }
+      .s-mid p { font-size: clamp(22px, 3.4vw, 46px); font-weight: 700; max-width: 16ch; margin: 0 auto; line-height: 1.15; }
+      .s-end { top: 50%; transform: translateY(-50%); text-align: center; }
+      .s-end .eyebrow { color: rgba(255,255,255,.6); }
+      .s-end h2 { font-size: clamp(30px, 5vw, 68px); font-weight: 800; }
+      .s-end .cta { margin-top: 28px; pointer-events: auto; }
+      .btn { display: inline-block; background: var(--magenta); color: #fff; padding: 15px 30px; border-radius: 999px; font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: 0 12px 40px rgba(230,53,107,.4); }
+      .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(70% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%); }
+    </style>
+  </head>
+  <body>
+    <div id="scroll-space"></div>
+    <canvas id="c"></canvas>
+    <div class="vignette"></div>
+
+    <div class="overlay">
+      <div class="stage s-intro" data-stage="intro">
+        <p class="eyebrow">Startidea · innovación social</p>
+        <h1>Entra en<br />la <em>idea</em>.</h1>
+      </div>
+      <div class="stage s-mid" data-stage="mid">
+        <p>Comunicación, recursos y tecnología que <em style="color:var(--magenta);font-style:normal">no envejecen</em>.</p>
+      </div>
+      <div class="stage s-end" data-stage="end">
+        <p class="eyebrow">Una huella que conecta</p>
+        <h2>Startidea</h2>
+        <div class="cta"><a class="btn" href="/contacto">Hablar con Startidea →</a></div>
+      </div>
+    </div>
+    <div class="scroll-hint" data-hint>Scroll ↓</div>
+
+    <script>
+      const canvas = document.getElementById('c');
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const start = async () => {
+        const small = window.innerWidth < 760;
+        const THREE = await import('three');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
+        renderer.setClearColor(0x08070a, 1);
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x08070a, 0.0016);
+        const cam = new THREE.PerspectiveCamera(70, 1, 0.1, 3000);
+
+        // ── Campo de partículas por el que volamos (túnel/galaxia) ──
+        const COUNT = small ? 2600 : 6000;
+        const FAR = -1500;            // profundidad del viaje
+        const fpos = new Float32Array(COUNT * 3);
+        const fcol = new Float32Array(COUNT * 3);
+        const cMag = new THREE.Color(0xe6356b), cWhite = new THREE.Color(0xffffff), cGrey = new THREE.Color(0x8a8a93);
+        for (let i = 0; i < COUNT; i++) {
+          const z = 60 - Math.random() * (60 - FAR);   // repartidas por todo el viaje
+          // radio que se abre con la lejanía → sensación de túnel/embudo
+          const r = 24 + Math.random() * 120;
+          const a = Math.random() * Math.PI * 2;
+          fpos[i * 3] = Math.cos(a) * r;
+          fpos[i * 3 + 1] = Math.sin(a) * r * 0.7;
+          fpos[i * 3 + 2] = z;
+          const c = Math.random() < 0.6 ? cMag : (Math.random() < 0.5 ? cWhite : cGrey);
+          fcol[i * 3] = c.r; fcol[i * 3 + 1] = c.g; fcol[i * 3 + 2] = c.b;
+        }
+        const fgeo = new THREE.BufferGeometry();
+        fgeo.setAttribute('position', new THREE.BufferAttribute(fpos, 3));
+        fgeo.setAttribute('color', new THREE.BufferAttribute(fcol, 3));
+        const field = new THREE.Points(fgeo, new THREE.PointsMaterial({ size: small ? 1.1 : 0.9, vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false, sizeAttenuation: true }));
+        scene.add(field);
+
+        // ── Isotipo al final del viaje (formado por partículas) ──
+        const ISO_Z = FAR + 60;
+        const isoPts = [];
+        await new Promise((res) => {
+          const img = new Image(); img.crossOrigin = 'anonymous'; img.src = '/brand/isotipo-lazos.png';
+          img.onload = () => {
+            const S = 160; const cv = document.createElement('canvas'); cv.width = cv.height = S;
+            const x2 = cv.getContext('2d'); x2.drawImage(img, 0, 0, S, S);
+            const d = x2.getImageData(0, 0, S, S).data; const st = small ? 2 : 1;
+            for (let y = 0; y < S; y += st) for (let x = 0; x < S; x += st)
+              if (d[(y * S + x) * 4 + 3] > 90) isoPts.push((x / S - 0.5) * 90, -(y / S - 0.5) * 90, ISO_Z + (Math.random() - 0.5) * 6);
+            res();
+          };
+          img.onerror = () => res();
+        });
+        const igeo = new THREE.BufferGeometry();
+        igeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(isoPts), 3));
+        const iso = new THREE.Points(igeo, new THREE.PointsMaterial({ color: 0xe6356b, size: 1.1, transparent: true, opacity: 0, depthWrite: false }));
+        scene.add(iso);
+
+        const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+        addEventListener('resize', resize); resize();
+
+        // ── Scroll → progreso del viaje ──
+        const stages = [...document.querySelectorAll('.stage')];
+        const hint = document.querySelector('[data-hint]');
+        let prog = 0, target = 0;
+        const onScroll = () => {
+          const max = document.body.scrollHeight - innerHeight;
+          target = max > 0 ? scrollY / max : 0;
+        };
+        addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+        const showStage = (name, on) => { const el = stages.find(s => s.dataset.stage === name); if (el) el.classList.toggle('show', on); };
+
+        let t = 0, paused = false;
+        document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+        const loop = () => {
+          if (!paused) {
+            t += 0.016;
+            prog += (target - prog) * 0.08;          // suavizado del scroll
+            // Cámara vuela hacia el fondo
+            cam.position.z = 60 + prog * (ISO_Z - 60 + 30);
+            cam.position.x = Math.sin(t * 0.2) * 3 + Math.sin(prog * 6) * 4;  // vaivén cinematográfico
+            cam.position.y = Math.cos(t * 0.17) * 2;
+            cam.rotation.z = Math.sin(t * 0.1) * 0.04;
+            cam.lookAt(0, 0, cam.position.z - 100);
+            field.rotation.z = prog * 0.6;
+            // Reaparición de partículas que quedan detrás (loop infinito de túnel)
+            const fp = fgeo.attributes.position.array;
+            for (let i = 2; i < fp.length; i += 3) { if (fp[i] > cam.position.z + 30) fp[i] -= (60 - FAR); }
+            fgeo.attributes.position.needsUpdate = true;
+            // Isotipo aparece al acercarte al final
+            iso.material.opacity = Math.max(0, (prog - 0.74) / 0.26);
+            iso.rotation.z = (1 - prog) * 1.2;
+            // Stages de texto según el progreso
+            showStage('intro', prog < 0.16);
+            showStage('mid', prog > 0.34 && prog < 0.6);
+            showStage('end', prog > 0.82);
+            if (hint) hint.style.opacity = prog > 0.05 ? '0' : '0.6';
+            renderer.render(scene, cam);
+          }
+          requestAnimationFrame(loop);
+        };
+        // arranque: intro visible
+        showStage('intro', true);
+        loop();
+      };
+
+      if (reduce) {
+        // Sin animación: mostramos la intro estática.
+        document.querySelector('[data-stage="intro"]').classList.add('show');
+      } else if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => start(), { timeout: 800 });
+      } else { setTimeout(start, 200); }
+    </script>
+  </body>
+</html>
