@@ -3,6 +3,7 @@
 ---
 
 <section class="relative overflow-hidden border-b border-ink/15 bg-paper">
+  <canvas id="hero-fp-canvas" aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
   <div class="container-x relative z-10 grid min-h-[88vh] grid-cols-12 gap-x-8 pt-12 pb-20 md:pt-20 md:pb-28 lg:pt-24">
     <div class="col-span-12 flex items-center justify-between md:col-span-12">
       <span class="label">— Agencia de comunicación e innovación social</span>
@@ -47,4 +48,75 @@
       </a>
     </div>
   </div>
+
+  <script>
+    // "La huella": partículas que forman el isotipo de Startidea como fondo del
+    // hero. Three empaquetado (import dinámico, tras el LCP). Fallback estático
+    // con prefers-reduced-motion; versión ligera en móvil. No afecta al H1/SEO.
+    const canvas = document.getElementById('hero-fp-canvas');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canvas && !reduce) {
+      const start = async () => {
+        const small = window.innerWidth < 760;
+        const THREE = await import('three');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.3 : 2));
+        const scene = new THREE.Scene();
+        const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+        cam.position.z = 42;
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = '/brand/isotipo-lazos.png';
+        img.onload = () => {
+          const S = 200;
+          const cv = document.createElement('canvas'); cv.width = cv.height = S;
+          const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, S, S);
+          const data = ctx.getImageData(0, 0, S, S).data;
+          const targets = [];
+          const step = small ? 3 : 2;
+          const OX = small ? 4 : 17; // isotipo desplazado a la derecha
+          for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
+            if (data[(y * S + x) * 4 + 3] > 90)
+              targets.push([(x / S - 0.5) * 38 + OX, -(y / S - 0.5) * 38, (Math.random() - 0.5) * 3]);
+          }
+          const N = targets.length;
+          const pos = new Float32Array(N * 3), tgt = new Float32Array(N * 3);
+          for (let i = 0; i < N; i++) {
+            tgt[i * 3] = targets[i][0]; tgt[i * 3 + 1] = targets[i][1]; tgt[i * 3 + 2] = targets[i][2];
+            pos[i * 3] = (Math.random() - 0.5) * 120; pos[i * 3 + 1] = (Math.random() - 0.5) * 120; pos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+          }
+          const geo = new THREE.BufferGeometry();
+          geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+          const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xe6356b, size: 0.3, transparent: true, opacity: 0.85, depthWrite: false }));
+          scene.add(pts);
+          const mouse = { x: 0, y: 0 };
+          addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
+          const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+          addEventListener('resize', resize); resize();
+          let t = 0, paused = false;
+          document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+          const frame = () => {
+            if (!paused) {
+              t += 0.01;
+              const p = geo.attributes.position.array;
+              for (let i = 0; i < N; i++) {
+                const ix = i * 3, wob = Math.sin(t * 1.5 + i * 0.05) * 0.25;
+                p[ix] += (tgt[ix] - p[ix]) * 0.06;
+                p[ix + 1] += (tgt[ix + 1] - p[ix + 1]) * 0.06 + wob * 0.02;
+                p[ix + 2] += (tgt[ix + 2] - p[ix + 2]) * 0.06;
+              }
+              geo.attributes.position.needsUpdate = true;
+              pts.rotation.y = mouse.x * 0.4; pts.rotation.x = mouse.y * 0.25;
+              scene.rotation.y = Math.sin(t * 0.2) * 0.05;
+              renderer.render(scene, cam);
+            }
+            requestAnimationFrame(frame);
+          };
+          frame();
+        };
+      };
+      if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 800 });
+      else setTimeout(start, 200);
+    }
+  </script>
 </section>
