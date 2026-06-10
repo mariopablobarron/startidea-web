@@ -5,8 +5,9 @@
 // reducir longitud total del home.
 ---
 
-<section id="manifiesto" class="relative bg-ink py-24 text-paper md:py-32">
-  <div class="container-x">
+<section id="manifiesto" class="relative overflow-hidden bg-ink py-24 text-paper md:py-32" data-manifiesto>
+  <canvas id="manifiesto-canvas" aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
+  <div class="container-x relative z-10">
     <div class="grid grid-cols-12 gap-x-8 gap-y-12">
       <div class="col-span-12 lg:col-span-3">
         <span class="label !text-paper/60">— Manifiesto</span>
@@ -64,4 +65,68 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Fondo de partículas 3D (mismo "espacio" que el hero inmersivo) detrás del
+    // manifiesto. Calmado: deriva lenta + parallax con scroll y cursor. Three
+    // empaquetado, tras el LCP. Sin WebGL en reduce-motion (queda el fondo ink).
+    const canvas = document.getElementById('manifiesto-canvas');
+    const section = document.querySelector('[data-manifiesto]');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canvas && section && !reduce) {
+      const start = async () => {
+        const small = window.innerWidth < 760;
+        let THREE;
+        try { THREE = await import('three'); } catch { return; }
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.4 : 2));
+        const scene = new THREE.Scene();
+        const cam = new THREE.PerspectiveCamera(65, 1, 0.1, 400);
+        cam.position.z = 60;
+
+        const COUNT = small ? 1500 : 3200;
+        const pos = new Float32Array(COUNT * 3), col = new Float32Array(COUNT * 3);
+        const cMag = new THREE.Color(0xe6356b), cW = new THREE.Color(0xffffff), cG = new THREE.Color(0x8a8a93);
+        for (let i = 0; i < COUNT; i++) {
+          pos[i*3] = (Math.random() - 0.5) * 280;
+          pos[i*3+1] = (Math.random() - 0.5) * 180;
+          pos[i*3+2] = -120 + Math.random() * 160;
+          const c = Math.random() < 0.5 ? cMag : (Math.random() < 0.5 ? cW : cG);
+          col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        const field = new THREE.Points(geo, new THREE.PointsMaterial({ size: small ? 0.9 : 0.7, vertexColors: true, transparent: true, opacity: 0.7, depthWrite: false }));
+        scene.add(field);
+
+        const mouse = { x: 0, y: 0 };
+        addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
+        let prog = 0;
+        const onScroll = () => { const r = section.getBoundingClientRect();
+          prog = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))); };
+        addEventListener('scroll', onScroll, { passive: true }); onScroll();
+        const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+        addEventListener('resize', resize); resize();
+
+        let t = 0, paused = false;
+        document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+        const loop = () => {
+          if (!paused) {
+            t += 0.016;
+            field.rotation.y = t * 0.03 + mouse.x * 0.25;
+            field.rotation.x = mouse.y * 0.12;
+            field.position.y = (prog - 0.5) * 40;       // parallax con scroll
+            cam.position.x += (mouse.x * 8 - cam.position.x) * 0.03;
+            cam.lookAt(0, 0, 0);
+            renderer.render(scene, cam);
+          }
+          requestAnimationFrame(loop);
+        };
+        loop();
+      };
+      if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 900 });
+      else setTimeout(start, 300);
+    }
+  </script>
 </section>
