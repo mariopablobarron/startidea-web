@@ -1,0 +1,26 @@
+---
+// Preview (noindex) del Concepto A — "la huella" (isotipo en partículas) dentro
+// del shell real. Fondo claro → encaja con la Nav blanca sin costura.
+import Base from '@/layouts/Base.astro';
+import HeroWebglA from '@/components/HeroWebglA.astro';
+---
+
+<Base
+  title="Preview · Hero A (la huella) — Startidea"
+  description="Preview interno del concepto de hero WebGL (la huella)."
+  ogSlug="page/lab-home-a"
+  noindex={true}
+>
+  <HeroWebglA />
+
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <p class="label">— Preview interno</p>
+      <h2 class="mt-4 font-display text-display-md text-ink">El resto de la home seguiría igual.</h2>
+      <p class="mt-4 max-w-measure text-ink/70">
+        Prueba del nuevo hero (Concepto A · la huella) dentro del sitio real.
+        Al ser claro, convive con la Nav actual sin cambios.
+      </p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,123 @@
+---
+// HeroWebglA — Concepto A: "la huella". Miles de partículas magenta se
+// ensamblan formando el isotipo de Startidea y reaccionan al cursor.
+//
+// Fondo claro → encaja con la Nav blanca actual (sin costura).
+// Rendimiento/accesibilidad:
+//  - Three.js empaquetado (import dinámico, code-split, tras el LCP).
+//  - prefers-reduced-motion → sin WebGL: queda el fondo claro + la copy.
+//  - Móvil → versión ligera (menos partículas, menos pixelRatio).
+---
+
+<section class="hero-a">
+  <canvas id="hero-a-canvas" aria-hidden="true"></canvas>
+  <div class="hero-a__inner">
+    <p class="hero-a__eyebrow">Agencia de comunicación e innovación social</p>
+    <h1 class="hero-a__title">Una <em>huella</em><br />que conecta.</h1>
+    <p class="hero-a__lede">
+      Startidea ayuda a entidades del tercer sector, instituciones y empresas con
+      propósito a comunicar mejor, captar recursos y construir herramientas
+      digitales que no envejecen.
+    </p>
+    <div class="hero-a__cta">
+      <a class="hero-a__btn hero-a__btn--p" href="/contacto">Hablar con Startidea</a>
+      <a class="hero-a__btn hero-a__btn--s" href="/casos">Ver el trabajo</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-a { position: relative; min-height: 100svh; overflow: hidden;
+    background: #f7f6f3; color: #2a2a2a; }
+  #hero-a-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero-a__inner { position: relative; z-index: 2; min-height: 100svh; display: flex;
+    flex-direction: column; justify-content: center; padding: clamp(24px, 6vw, 96px); }
+  .hero-a__eyebrow { font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: #e6356b; font-weight: 700; margin-bottom: 18px; }
+  .hero-a__title { font-family: var(--font-startidea-alt, inherit);
+    font-size: clamp(40px, 7vw, 92px); line-height: 0.98; font-weight: 800;
+    letter-spacing: -0.02em; max-width: 14ch; }
+  .hero-a__title em { color: #e6356b; font-style: italic; }
+  .hero-a__lede { margin-top: 26px; max-width: 46ch; font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.5; color: #555; }
+  .hero-a__cta { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .hero-a__btn { padding: 14px 26px; border-radius: 999px; font-weight: 700; font-size: 15px;
+    text-decoration: none; transition: transform 0.2s; }
+  .hero-a__btn:hover { transform: translateY(-2px); }
+  .hero-a__btn--p { background: #e6356b; color: #fff; }
+  .hero-a__btn--s { border: 1.5px solid #ccc; color: #2a2a2a; }
+</style>
+
+<script>
+  // Astro empaqueta Three (import dinámico → chunk propio, tras el LCP).
+  const canvas = document.getElementById('hero-a-canvas');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (canvas && !reduce) {
+    const start = async () => {
+      const small = window.innerWidth < 760;
+      const THREE = await import('three');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small, alpha: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.3 : 2));
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+      cam.position.z = 42;
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = '/brand/isotipo-lazos.png';
+      img.onload = () => {
+        const S = 200;
+        const cv = document.createElement('canvas'); cv.width = cv.height = S;
+        const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, S, S);
+        const data = ctx.getImageData(0, 0, S, S).data;
+        const targets = [];
+        const step = small ? 3 : 2; // menos partículas en móvil
+        const OX = 14; // desplaza el isotipo a la derecha (deja sitio a la copy)
+        for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
+          if (data[(y * S + x) * 4 + 3] > 90)
+            targets.push([(x / S - 0.5) * 40 + OX, -(y / S - 0.5) * 40, (Math.random() - 0.5) * 3]);
+        }
+        const N = targets.length;
+        const pos = new Float32Array(N * 3), tgt = new Float32Array(N * 3);
+        for (let i = 0; i < N; i++) {
+          tgt[i * 3] = targets[i][0]; tgt[i * 3 + 1] = targets[i][1]; tgt[i * 3 + 2] = targets[i][2];
+          pos[i * 3] = (Math.random() - 0.5) * 120; pos[i * 3 + 1] = (Math.random() - 0.5) * 120; pos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xe6356b, size: 0.32, transparent: true, opacity: 0.95, depthWrite: false }));
+        scene.add(pts);
+
+        const mouse = { x: 0, y: 0 };
+        addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; });
+        const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+        addEventListener('resize', resize); resize();
+
+        let t = 0, paused = false;
+        document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+        const frame = () => {
+          if (!paused) {
+            t += 0.01;
+            const p = geo.attributes.position.array;
+            for (let i = 0; i < N; i++) {
+              const ix = i * 3;
+              const wob = Math.sin(t * 1.5 + i * 0.05) * 0.25;
+              p[ix] += (tgt[ix] - p[ix]) * 0.06;
+              p[ix + 1] += (tgt[ix + 1] - p[ix + 1]) * 0.06 + wob * 0.02;
+              p[ix + 2] += (tgt[ix + 2] - p[ix + 2]) * 0.06;
+            }
+            geo.attributes.position.needsUpdate = true;
+            pts.rotation.y = mouse.x * 0.4;
+            pts.rotation.x = mouse.y * 0.25;
+            scene.rotation.y = Math.sin(t * 0.2) * 0.05;
+            renderer.render(scene, cam);
+          }
+          requestAnimationFrame(frame);
+        };
+        frame();
+      };
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 800 });
+    else setTimeout(start, 200);
+  }
+</script>
