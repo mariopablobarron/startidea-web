@@ -90,21 +90,24 @@
         const data = ctx.getImageData(0, 0, S, S).data;
 
         // Nube VOLUMÉTRICA: el isotipo replicado en varias capas de profundidad.
-        const layers = small ? 3 : 5;
-        const step = small ? 3 : 2;
-        const SP = small ? 40 : 40;     // tamaño del isotipo
-        const OX = small ? 0 : 16;      // a la derecha en desktop; centrado en móvil
-        const OY = small ? 8 : 2;       // un poco arriba en móvil
-        const DEPTH = small ? 10 : 16;  // espesor de la nube en Z
+        // Nube que FORMA el logo: pocas capas y dispersión mínima → el isotipo
+        // se reconoce con nitidez, manteniendo profundidad y aire de nebulosa.
+        const layers = small ? 2 : 3;
+        const step = small ? 2 : 1;     // más densidad → forma definida
+        const SP = small ? 42 : 46;     // tamaño del isotipo (protagonista)
+        const OX = small ? 0 : 13;
+        const OY = small ? 8 : 2;
+        const DEPTH = small ? 6 : 9;    // espesor fino → la silueta se lee
+        const JIT = 0.45;               // dispersión mínima
         const pts3 = [];
         for (let l = 0; l < layers; l++) {
-          const z = (l / (layers - 1) - 0.5) * DEPTH;
+          const z = layers === 1 ? 0 : (l / (layers - 1) - 0.5) * DEPTH;
           for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
             if (data[(y * S + x) * 4 + 3] > 90) {
               pts3.push(
-                (x / S - 0.5) * SP + OX + (Math.random() - 0.5) * 1.2,
-                -(y / S - 0.5) * SP + OY + (Math.random() - 0.5) * 1.2,
-                z + (Math.random() - 0.5) * (DEPTH / layers),
+                (x / S - 0.5) * SP + OX + (Math.random() - 0.5) * JIT,
+                -(y / S - 0.5) * SP + OY + (Math.random() - 0.5) * JIT,
+                z + (Math.random() - 0.5) * (DEPTH / layers) * 0.5,
               );
             }
           }
