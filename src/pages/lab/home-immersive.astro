@@ -1,0 +1,25 @@
+---
+// Preview (noindex) del hero "cine inmersivo CLARO" dentro del shell real.
+import Base from '@/layouts/Base.astro';
+import HeroImmersive from '@/components/HeroImmersive.astro';
+---
+
+<Base
+  title="Preview · Hero inmersivo — Startidea"
+  description="Preview interno del hero cine inmersivo (la huella en 3D)."
+  ogSlug="page/lab-home-immersive"
+  noindex={true}
+>
+  <HeroImmersive />
+
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <p class="label">— Preview interno</p>
+      <h2 class="mt-4 font-display text-display-md text-ink">El resto de la home seguiría igual.</h2>
+      <p class="mt-4 max-w-measure text-ink/70">
+        Prueba del hero cine inmersivo (la huella en 3D con profundidad, niebla y
+        cámara que entra al hacer scroll). Mueve el cursor y haz scroll.
+      </p>
+    </div>
+  </section>
+</Base>
