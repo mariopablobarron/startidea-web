@@ -1,0 +1,165 @@
+---
+// HeroJourney — home como VIAJE inmersivo (Plan A).
+// La sección se "fija" (sticky) durante ~300vh: al hacer scroll la cámara vuela
+// por un campo de partículas 3D y al final del viaje llega al isotipo + el
+// titular. Después la sección suelta el scroll y sigue la home normal debajo.
+//
+// SEO: el H1 real ("Innovación social que se nota") vive en la llegada (DOM
+// siempre presente; solo cambia su opacidad). Reduce-motion / sin WebGL: se
+// muestra un hero estático con el H1 (sin viaje). Three empaquetado (CSP-ok).
+---
+
+<section class="jny" data-jny>
+  <div class="jny__sticky">
+    <canvas id="jny-canvas" aria-hidden="true"></canvas>
+    <div class="jny__vignette"></div>
+
+    <div class="jny__overlay container-x">
+      <div class="jny__stage jny__intro" data-stage="intro">
+        <p class="jny__eyebrow">Startidea · innovación social</p>
+        <p class="jny__lead">Entra en la <em>idea</em>.</p>
+      </div>
+
+      <div class="jny__stage jny__mid" data-stage="mid">
+        <p class="jny__midtext">Comunicación, recursos y tecnología que <em>no envejecen</em>.</p>
+      </div>
+
+      <div class="jny__stage jny__end" data-stage="end">
+        <p class="jny__eyebrow">— Agencia de comunicación e innovación social</p>
+        <h1 class="jny__h1">Innovación social<br />que <em>se nota</em>.</h1>
+        <div class="jny__cta">
+          <a href="/contacto" class="btn" data-track="cta" data-track-id="hero_journey_diagnostico">Reserva una llamada de diagnóstico →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="jny__hint" data-hint>Scroll ↓</div>
+  </div>
+</section>
+
+<style>
+  .jny { position: relative; height: 320vh; background: #08070a; }
+  .jny__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; color: #fff; }
+  #jny-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+  .jny__vignette { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(70% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%); }
+  .jny__overlay { position: absolute; inset: 0; z-index: 2; }
+  .jny__stage { position: absolute; left: 0; right: 0; padding-left: clamp(24px,6vw,96px); padding-right: clamp(24px,6vw,96px);
+    top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+  .jny__stage.show { opacity: 1; }
+  .jny__stage .btn { pointer-events: auto; }
+  .jny__eyebrow { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: #e6356b; font-weight: 700; margin-bottom: 16px; }
+  .jny__lead { font-family: var(--font-startidea-alt, inherit); font-size: clamp(40px,8vw,104px); line-height: .95; font-weight: 800; letter-spacing: -.02em; }
+  .jny__lead em { color: #e6356b; font-style: italic; }
+  .jny__mid { text-align: center; }
+  .jny__midtext { font-size: clamp(22px,3.4vw,46px); font-weight: 700; max-width: 18ch; margin: 0 auto; line-height: 1.15; }
+  .jny__midtext em { color: #e6356b; font-style: normal; }
+  .jny__h1 { font-family: var(--font-startidea-alt, inherit); font-size: clamp(40px,7vw,96px); line-height: .96; font-weight: 800; letter-spacing: -.02em; }
+  .jny__h1 em { color: #e6356b; font-style: italic; }
+  .jny__cta { margin-top: 30px; }
+  .jny__end .jny__eyebrow { color: rgba(255,255,255,.55); }
+  .jny__hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 3;
+    font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: rgba(255,255,255,.55); transition: opacity .4s; }
+
+  /* Sin WebGL / reduce-motion: hero estático con el H1, sin viaje. */
+  .jny.is-static { height: auto; }
+  .jny.is-static .jny__sticky { position: relative; height: auto; min-height: 100svh; display: flex; align-items: center; padding: 96px 0; }
+  .jny.is-static #jny-canvas, .jny.is-static .jny__intro, .jny.is-static .jny__mid, .jny.is-static .jny__hint { display: none; }
+  .jny.is-static .jny__end { position: relative; opacity: 1; transform: none; }
+</style>
+
+<script>
+  const section = document.querySelector('[data-jny]');
+  const canvas = document.getElementById('jny-canvas');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!section || !canvas) {
+    // nada
+  } else if (reduce) {
+    section.classList.add('is-static');
+  } else {
+    const start = async () => {
+      const small = window.innerWidth < 760;
+      let THREE;
+      try { THREE = await import('three'); } catch { section.classList.add('is-static'); return; }
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: !small });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2));
+      renderer.setClearColor(0x08070a, 1);
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x08070a, 0.0016);
+      const cam = new THREE.PerspectiveCamera(70, 1, 0.1, 3000);
+
+      const COUNT = small ? 2400 : 5500;
+      const FAR = -1500;
+      const fpos = new Float32Array(COUNT * 3), fcol = new Float32Array(COUNT * 3);
+      const cMag = new THREE.Color(0xe6356b), cW = new THREE.Color(0xffffff), cG = new THREE.Color(0x8a8a93);
+      for (let i = 0; i < COUNT; i++) {
+        const z = 60 - Math.random() * (60 - FAR);
+        const r = 24 + Math.random() * 120, a = Math.random() * Math.PI * 2;
+        fpos[i*3] = Math.cos(a)*r; fpos[i*3+1] = Math.sin(a)*r*0.7; fpos[i*3+2] = z;
+        const c = Math.random() < 0.6 ? cMag : (Math.random() < 0.5 ? cW : cG);
+        fcol[i*3]=c.r; fcol[i*3+1]=c.g; fcol[i*3+2]=c.b;
+      }
+      const fgeo = new THREE.BufferGeometry();
+      fgeo.setAttribute('position', new THREE.BufferAttribute(fpos, 3));
+      fgeo.setAttribute('color', new THREE.BufferAttribute(fcol, 3));
+      const field = new THREE.Points(fgeo, new THREE.PointsMaterial({ size: small ? 1.1 : 0.9, vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+      scene.add(field);
+
+      const ISO_Z = FAR + 60; const isoArr = [];
+      await new Promise((res) => {
+        const img = new Image(); img.crossOrigin = 'anonymous'; img.src = '/brand/isotipo-lazos.png';
+        img.onload = () => { const S=160, cv=document.createElement('canvas'); cv.width=cv.height=S;
+          const x2=cv.getContext('2d'); x2.drawImage(img,0,0,S,S); const d=x2.getImageData(0,0,S,S).data; const st=small?2:1;
+          for (let y=0;y<S;y+=st) for (let x=0;x<S;x+=st) if (d[(y*S+x)*4+3]>90) isoArr.push((x/S-0.5)*90,-(y/S-0.5)*90,ISO_Z+(Math.random()-0.5)*6);
+          res(); };
+        img.onerror = () => res();
+      });
+      const igeo = new THREE.BufferGeometry();
+      igeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(isoArr), 3));
+      const iso = new THREE.Points(igeo, new THREE.PointsMaterial({ color: 0xe6356b, size: 1.1, transparent: true, opacity: 0, depthWrite: false }));
+      scene.add(iso);
+
+      const resize = () => { const w=innerWidth,h=innerHeight; renderer.setSize(w,h); cam.aspect=w/h; cam.updateProjectionMatrix(); };
+      addEventListener('resize', resize); resize();
+
+      const stages = [...section.querySelectorAll('.jny__stage')];
+      const hint = section.querySelector('[data-hint]');
+      const show = (n, on) => { const e = stages.find(s => s.dataset.stage === n); if (e) e.classList.toggle('show', on); };
+
+      let prog = 0, target = 0, t = 0, paused = false;
+      const onScroll = () => { const r = section.getBoundingClientRect(); const denom = r.height - innerHeight;
+        target = denom > 0 ? Math.min(1, Math.max(0, -r.top / denom)) : 0; };
+      addEventListener('scroll', onScroll, { passive: true }); onScroll();
+      document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+      const loop = () => {
+        if (!paused) {
+          t += 0.016; prog += (target - prog) * 0.08;
+          cam.position.z = 60 + prog * (ISO_Z - 60 + 30);
+          cam.position.x = Math.sin(t*0.2)*3 + Math.sin(prog*6)*4;
+          cam.position.y = Math.cos(t*0.17)*2;
+          cam.rotation.z = Math.sin(t*0.1)*0.04;
+          cam.lookAt(0, 0, cam.position.z - 100);
+          field.rotation.z = prog * 0.6;
+          const fp = fgeo.attributes.position.array;
+          for (let i = 2; i < fp.length; i += 3) if (fp[i] > cam.position.z + 30) fp[i] -= (60 - FAR);
+          fgeo.attributes.position.needsUpdate = true;
+          iso.material.opacity = Math.max(0, (prog - 0.74) / 0.26);
+          iso.rotation.z = (1 - prog) * 1.2;
+          show('intro', prog < 0.16);
+          show('mid', prog > 0.34 && prog < 0.6);
+          show('end', prog > 0.82);
+          if (hint) hint.style.opacity = prog > 0.05 ? '0' : '0.55';
+          renderer.render(scene, cam);
+        }
+        requestAnimationFrame(loop);
+      };
+      show('intro', true);
+      loop();
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 800 });
+    else setTimeout(start, 200);
+  }
+</script>

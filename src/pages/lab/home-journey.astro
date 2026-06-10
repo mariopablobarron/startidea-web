@@ -1,0 +1,34 @@
+---
+// Preview (noindex) del Plan A: home = viaje inmersivo + contenido normal debajo.
+// Valida la transición de scroll fijado → flujo normal y la presencia del H1.
+import Base from '@/layouts/Base.astro';
+import HeroJourney from '@/components/HeroJourney.astro';
+---
+
+<Base
+  title="Preview · Home viaje inmersivo — Startidea"
+  description="Preview interno del Plan A (home como viaje inmersivo)."
+  ogSlug="page/lab-home-journey"
+  noindex={true}
+>
+  <HeroJourney />
+
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <p class="label">— A partir de aquí</p>
+      <h2 class="mt-4 font-display text-display-md text-ink">…sigue la home normal.</h2>
+      <p class="mt-4 max-w-measure text-ink/70">
+        Tras el viaje inmersivo, el scroll se suelta y continúa el sitio como
+        siempre (Ecosistema, Casos, Notas…). Esto es solo una sección de prueba
+        para validar la transición.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-t border-ink/15 bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <h2 class="font-display text-display-md text-ink">Segunda sección de ejemplo.</h2>
+      <p class="mt-4 max-w-measure text-ink/70">Para comprobar que el scroll normal funciona bien después del viaje.</p>
+    </div>
+  </section>
+</Base>
