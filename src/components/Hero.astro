@@ -74,10 +74,11 @@
           const data = ctx.getImageData(0, 0, S, S).data;
           const targets = [];
           const step = small ? 3 : 2;
-          const OX = small ? 4 : 17; // isotipo desplazado a la derecha
+          const OX = small ? 4 : 21; // isotipo desplazado a la derecha (separado del H1)
+          const SP = small ? 38 : 33; // tamaño del isotipo
           for (let y = 0; y < S; y += step) for (let x = 0; x < S; x += step) {
             if (data[(y * S + x) * 4 + 3] > 90)
-              targets.push([(x / S - 0.5) * 38 + OX, -(y / S - 0.5) * 38, (Math.random() - 0.5) * 3]);
+              targets.push([(x / S - 0.5) * SP + OX, -(y / S - 0.5) * SP, (Math.random() - 0.5) * 3]);
           }
           const N = targets.length;
           const pos = new Float32Array(N * 3), tgt = new Float32Array(N * 3);
