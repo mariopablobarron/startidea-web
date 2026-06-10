@@ -25,6 +25,10 @@ Startidea es agencia, hub, medio y línea de productos en una sola casa. Quince 
   - Estrategia de captación de fondos, búsqueda de subvenciones, alianzas con empresas, planes de socios.
 - **Producción audiovisual y podcast** · `/audiovisual`
   - Vídeo institucional, vídeo de impacto, podcast editorial, cobertura de eventos.
+- **Tecnología, plataformas y producto digital** · `/tecnologia`
+  - Webs editoriales, intranets a medida, producto digital con IA, migraciones SEO. Astro, Next.js, WordPress profesional cuando corresponde.
+- **Protección digital y cumplimiento RGPD** · `/proteccion-digital`
+  - Ciberseguridad y protección de datos para entidades sociales sin departamento TI. Diagnóstico de exposición digital, auditoría de seguridad web (pentest) y acompañamiento continuo. Sin alarmismo.
 
 ## Audiencia objetivo
 
@@ -54,6 +58,8 @@ Sede en Granada (Andalucía, España). Opera con clientes en toda España. Proye
 - Servicios: [https://startidea.es/que-hacemos](https://startidea.es/que-hacemos)
 - Casos: [https://startidea.es/casos](https://startidea.es/casos)
 - Para quién: [https://startidea.es/para-quien](https://startidea.es/para-quien)
+- Tecnología y plataformas: [https://startidea.es/tecnologia](https://startidea.es/tecnologia)
+- Protección digital y RGPD: [https://startidea.es/proteccion-digital](https://startidea.es/proteccion-digital)
 - Notas editoriales: [https://startidea.es/notas](https://startidea.es/notas)
 - Diagnóstico gratis: [https://startidea.es/diagnostico](https://startidea.es/diagnostico)
 - Contacto: [https://startidea.es/contacto](https://startidea.es/contacto)

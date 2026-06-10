@@ -22,6 +22,7 @@ import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import VoiceAgent from '@/components/VoiceAgent.astro';
 import MobileCtaBar from '@/components/MobileCtaBar.astro';
+import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
@@ -46,7 +47,12 @@ const {
 
 const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
 const ogImageUrl = `${SITE_URL}/og/${ogSlug}.png`;
-const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
+// Canonical sin trailing slash — convención del repo (ver redirects en
+// astro.config.mjs). Astro 5 con trailingSlash:'ignore' sirve la misma
+// página con y sin slash; sin normalizar, el canonical se auto-referencia
+// distinto según cómo se entre, creando duplicados a ojos de Google.
+const canonicalPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '');
+const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
 const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 ---
 
@@ -110,6 +116,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
       <slot />
     </main>
     <Footer />
+    <WhatsAppFloat />
     <AsistenteIA />
     <VoiceAgent />
     <MobileCtaBar />

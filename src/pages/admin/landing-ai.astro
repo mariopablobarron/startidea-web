@@ -1,0 +1,190 @@
+---
+// /admin/landing-ai — Generador interno de landing pages con AI.
+//
+// Auth: cookie startidea_admin (mismo patrón que /admin/leads).
+// Flujo:
+//   1. El usuario describe la landing en un textarea + selecciona audiencia + escribe objetivo.
+//   2. POST a /api/landing-generate (modelo Claude Haiku 4.5 vía OpenRouter).
+//   3. El endpoint devuelve { landing: JSON, html: string }.
+//   4. Se inyecta el HTML en el panel de preview de la derecha.
+//
+// MVP: sin guardar, sin desplegar, sin editar visual. Solo prompt → preview.
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(
+    `/admin/login?next=${encodeURIComponent('/admin/landing-ai')}`,
+  );
+}
+---
+
+<Base
+  title="Landing AI — Generador interno · Startidea"
+  description="Generador interno de landing pages con AI. Admin-only."
+  ogSlug="page/404"
+>
+  <section class="border-b border-ink/15 bg-paper py-12">
+    <div class="container-x">
+      <span class="label">— Admin · Laboratorio</span>
+      <h1 class="mt-4 font-display text-display-lg leading-tight text-ink">
+        Landing <em class="italic text-magenta">AI</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">
+        Describe lo que quieres. Claude Haiku genera la estructura, Startidea
+        la renderiza con la marca correcta. MVP: solo preview, sin guardar.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper-warm py-12">
+    <div class="container-x">
+      <div class="grid gap-8 lg:grid-cols-2">
+        <!-- Formulario -->
+        <form id="landing-form" class="space-y-5">
+          <div>
+            <label for="prompt" class="block font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+              Describe la landing
+            </label>
+            <textarea
+              id="prompt"
+              name="prompt"
+              rows="6"
+              required
+              minlength="10"
+              maxlength="1500"
+              class="mt-2 block w-full border-2 border-ink/20 bg-paper p-3 font-sans text-sm leading-relaxed text-ink focus:border-magenta focus:outline-none"
+              placeholder="Ej: Landing para captar voluntariado para un proyecto de acompañamiento a personas mayores en Granada. Que transmita cercanía, urgencia razonable y diga claramente cuántas horas mínimas pedimos."
+            ></textarea>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="audience" class="block font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                Audiencia
+              </label>
+              <select
+                id="audience"
+                name="audience"
+                required
+                class="mt-2 block w-full border-2 border-ink/20 bg-paper p-3 font-sans text-sm text-ink focus:border-magenta focus:outline-none"
+              >
+                <option value="tercer-sector">Tercer sector (ONG, fundación)</option>
+                <option value="instituciones">Instituciones (ayuntamiento, diócesis)</option>
+                <option value="empresas-con-proposito">Empresas con propósito</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="goal" class="block font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+                Objetivo principal
+              </label>
+              <input
+                id="goal"
+                name="goal"
+                required
+                minlength="3"
+                maxlength="80"
+                class="mt-2 block w-full border-2 border-ink/20 bg-paper p-3 font-sans text-sm text-ink focus:border-magenta focus:outline-none"
+                placeholder="captar socios mensuales"
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <button
+              type="submit"
+              id="generate-btn"
+              class="btn"
+            >
+              Generar landing
+              <span aria-hidden="true">→</span>
+            </button>
+            <span id="status" class="font-mono text-[11px] uppercase tracking-widest text-ink-mute"></span>
+          </div>
+
+          <details class="mt-6 border-t border-ink/15 pt-4">
+            <summary class="cursor-pointer font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta">
+              Ver JSON crudo (debug)
+            </summary>
+            <pre id="json-output" class="mt-3 max-h-96 overflow-auto bg-ink p-4 font-mono text-[10px] leading-relaxed text-paper/85"></pre>
+          </details>
+        </form>
+
+        <!-- Preview -->
+        <div class="border-2 border-ink/15 bg-paper">
+          <div class="flex items-center justify-between border-b-2 border-ink bg-ink px-4 py-2 text-paper">
+            <span class="font-mono text-[11px] uppercase tracking-widest">Preview</span>
+            <span id="preview-meta" class="font-mono text-[10px] uppercase tracking-wider text-paper/55">vacío</span>
+          </div>
+          <div id="preview" class="prose-none">
+            <p class="p-8 text-center font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+              Aún no hay nada generado.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById('landing-form');
+      const btn = document.getElementById('generate-btn');
+      const statusEl = document.getElementById('status');
+      const preview = document.getElementById('preview');
+      const previewMeta = document.getElementById('preview-meta');
+      const jsonOut = document.getElementById('json-output');
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const data = {
+          prompt: form.prompt.value.trim(),
+          audience: form.audience.value,
+          goal: form.goal.value.trim(),
+        };
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        statusEl.textContent = 'Generando…';
+        preview.innerHTML = '<p class="p-8 text-center font-mono text-[11px] uppercase tracking-widest text-ink-mute">Esperando al modelo…</p>';
+        jsonOut.textContent = '';
+
+        const t0 = Date.now();
+        try {
+          const res = await fetch('/api/landing-generate', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          const payload = await res.json();
+          const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+
+          if (!res.ok || !payload.ok) {
+            statusEl.textContent = 'Error: ' + (payload.error || res.status);
+            preview.innerHTML =
+              '<p class="p-8 text-center font-mono text-[11px] uppercase tracking-widest text-signal">' +
+              (payload.detail || payload.error || 'Error desconocido') +
+              '</p>';
+            return;
+          }
+
+          statusEl.textContent = 'Generado en ' + elapsed + 's';
+          previewMeta.textContent = payload.landing.meta.title.slice(0, 50);
+          preview.innerHTML = payload.html;
+          jsonOut.textContent = JSON.stringify(payload.landing, null, 2);
+        } catch (err) {
+          statusEl.textContent = 'Error de red';
+          preview.innerHTML =
+            '<p class="p-8 text-center font-mono text-[11px] uppercase tracking-widest text-signal">' +
+            (err && err.message ? err.message : 'fallo desconocido') +
+            '</p>';
+        } finally {
+          btn.disabled = false;
+          btn.style.opacity = '';
+        }
+      });
+    })();
+  </script>
+</Base>

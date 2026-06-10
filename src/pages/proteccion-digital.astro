@@ -1,0 +1,293 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const principios = [
+  {
+    title: 'Sin alarmismo, sin venta de miedo',
+    body: 'La industria de la ciberseguridad vive del FUD. Aquí se evalúa qué hace falta de verdad para una entidad concreta y se prioriza. Si lo que toca es resolver contraseñas y formación, eso es lo que se dice.',
+  },
+  {
+    title: 'Lenguaje del sector, no jerga técnica',
+    body: 'Tercer sector e instituciones eclesiales tienen sus propias dinámicas —juntas, asambleas, donantes, financiadores públicos—. Las recomendaciones se entregan en su idioma y respetando sus restricciones reales.',
+  },
+  {
+    title: 'Proporcionalidad antes que perfección',
+    body: 'No tiene sentido un SOC 24/7 en una asociación de 12 personas. Tampoco tiene sentido ignorar el RGPD en una fundación que trata datos de menores. La medida correcta depende del riesgo real, y se ajusta.',
+  },
+];
+
+const niveles = [
+  {
+    num: '01',
+    title: 'Diagnóstico de exposición digital',
+    body: 'Revisión externa sin tocar nada. Mira qué se ve desde fuera de la organización: dominios, certificados, configuración de email, apariciones en brechas públicas, exposición inadvertida de paneles o documentos. Informe ejecutivo de 8-12 páginas con semáforo y prioridades. Punto de entrada lógico para casi cualquier entidad.',
+    items: [
+      'Auditoría de dominios y subdominios expuestos',
+      'Configuración de email: SPF · DKIM · DMARC',
+      'Revisión de certificados SSL y caducidades',
+      'Apariciones del dominio en bases de brechas (HIBP)',
+      'Exposición de documentos, paneles o repositorios públicos',
+      'Cumplimiento RGPD básico verificable desde fuera',
+    ],
+    meta: { dur: '1-2 días', precio: '€800 – €1.500', cierre: 'Informe ejecutivo + llamada de 60 min para priorizar' },
+  },
+  {
+    num: '02',
+    title: 'Auditoría de seguridad web',
+    body: 'Pentest manual sobre los activos digitales propios de la entidad: portal de socios, intranet, plataforma de gestión, app, sistema de donaciones a medida. Busca vulnerabilidades reales —no falsos positivos automatizados— con pasos reproducibles y recomendación de corrección. Incluye retest tras los parches. Solo necesario si la entidad tiene plataformas propias.',
+    items: [
+      'Pentest manual con metodología PTES + OWASP WSTG v4.2',
+      'Cobertura OWASP Top 10:2025 + lógica de negocio',
+      'Informe técnico con CVSS 4.0, CWE y pasos reproducibles',
+      'Resumen ejecutivo en lenguaje no técnico para juntas',
+      'Retest tras la corrección incluido en el alcance',
+      'Entrega cifrada con qpdf por canal seguro',
+    ],
+    meta: { dur: '5-10 días', precio: '€3.000 – €8.000', cierre: 'Informe técnico + retest + sesión con desarrollo' },
+  },
+  {
+    num: '03',
+    title: 'Acompañamiento continuo',
+    body: 'Iguala mensual para entidades que prefieren tener la seguridad cubierta sin sobresaltos. Monitorización de brechas que afecten al dominio o a proveedores, alerta de vulnerabilidades críticas que requieran parche urgente, retest semestral, formación al equipo y asesoría puntual ante incidentes. Sin permanencia.',
+    items: [
+      'Monitorización mensual de brechas y exposición',
+      'Alerta inmediata de CVEs críticas que afecten al stack',
+      'Revisión semestral de configuración y permisos',
+      'Formación anual al equipo con casos del propio sector',
+      'Asesoría rápida ante incidentes (SLA 24h laborables)',
+      'Actualización de procedimientos y plantillas RGPD',
+    ],
+    meta: { dur: 'Iguala mensual', precio: '€200 – €500 / mes', cierre: 'Sin permanencia · cancelable con 30 días de aviso' },
+  },
+];
+
+const complementario = [
+  {
+    title: 'Cumplimiento RGPD operativo',
+    body: 'Levantamiento del Registro de Actividades de Tratamiento, política de privacidad y cláusulas adaptadas, contratos de encargado con proveedores, procedimiento escrito de gestión de brechas. Lo mínimo razonable para cumplir el Art. 32 RGPD sin sobre-ingeniería.',
+  },
+  {
+    title: 'Análisis de Impacto en Protección de Datos (EIPD)',
+    body: 'Para tratamientos de alto riesgo: atención a menores, datos de salud, perfiles de personas en situación de vulnerabilidad, tratamientos a gran escala de categorías especiales. Documento que cumple Art. 35 RGPD y sirve de defensa real ante incidentes.',
+  },
+  {
+    title: 'Formación a equipos',
+    body: 'Sesiones de 2-3 horas con casos reales del tercer sector y del sector eclesial. Phishing dirigido, gestión de contraseñas, qué hacer ante un incidente, responsabilidades del personal y voluntariado. Sin presentaciones genéricas.',
+  },
+  {
+    title: 'Revisión de contratos con proveedores cloud',
+    body: 'Análisis cláusula a cláusula de los contratos de encargado del tratamiento de Google Workspace, Microsoft 365, Mailchimp, plataformas de donaciones. Identifica transferencias internacionales, cláusulas problemáticas y obligaciones de la entidad como responsable.',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Esto es solo para entidades grandes?',
+    a: 'No. El diagnóstico de exposición digital está pensado para asociaciones pequeñas y fundaciones medianas que no tienen departamento TI. Se entrega en 1-2 días y el coste empieza en €800.',
+  },
+  {
+    q: '¿Hace falta firmar antes algún NDA?',
+    a: 'Sí. Antes de cualquier trabajo se firma un acuerdo de confidencialidad mutua. La entrega final se hace siempre cifrada por canal seguro, con la contraseña por canal separado.',
+  },
+  {
+    q: '¿Subcontratáis a alguien para los pentests?',
+    a: 'La ejecución técnica de pentest la realiza Startidea con apoyo puntual de un pentester certificado (OSCP/CEH) cuando el alcance lo requiere. La relación con el cliente, el diagnóstico de necesidades, la traducción al lenguaje del sector y el cierre del informe siempre los lleva Startidea directamente.',
+  },
+  {
+    q: '¿Qué pasa si encontráis algo grave durante el diagnóstico?',
+    a: 'Se comunica de forma inmediata al punto de contacto técnico de la entidad, antes incluso de entregar el informe. Si se detecta una brecha activa, se prioriza la contención antes que la documentación.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Protección digital', url: `${SITE_URL}/proteccion-digital` },
+  ]),
+  faqPageSchema(faqs),
+  serviceSchema({
+    name: 'Protección digital y cumplimiento RGPD',
+    description:
+      'Ciberseguridad y cumplimiento RGPD para entidades sociales sin departamento de TI: tercer sector, instituciones eclesiales y empresas con propósito. Diagnóstico de exposición digital, auditoría de seguridad web (pentest) y acompañamiento continuo en seguridad.',
+    serviceType: 'Ciberseguridad y protección de datos',
+    url: `${SITE_URL}/proteccion-digital`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Institución eclesial', 'Empresa con propósito'],
+    offers: [
+      { name: 'Diagnóstico de exposición digital', description: 'Revisión externa de dominios, certificados, configuración de email, brechas públicas y exposición inadvertida. Informe ejecutivo en 1-2 días.' },
+      { name: 'Auditoría de seguridad web (pentest)', description: 'Pentest manual sobre plataformas propias con metodología PTES + OWASP WSTG. Informe técnico con CVSS 4.0 y retest incluido.' },
+      { name: 'Acompañamiento continuo en seguridad', description: 'Iguala mensual con monitorización de brechas, alertas de CVEs críticas, revisión semestral y formación al equipo.' },
+      { name: 'Cumplimiento RGPD operativo', description: 'Registro de Actividades de Tratamiento, política de privacidad, contratos de encargado y procedimiento de gestión de brechas.' },
+    ],
+  }),
+];
+---
+
+<Base
+  title="Protección digital — Startidea"
+  description="Ciberseguridad y cumplimiento RGPD para entidades sociales sin departamento de TI. Diagnóstico de exposición digital, auditoría de seguridad web y acompañamiento continuo. Para tercer sector, instituciones y empresas con propósito."
+  ogSlug="page/proteccion-digital"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Protección digital</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Seguridad<br/>
+        <em class="italic text-magenta">sin alarmismo</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Tercer sector, instituciones eclesiales y empresas con propósito gestionan datos especialmente sensibles —donantes, beneficiarios, voluntariado, en muchos casos menores— con presupuestos modestos y sin equipo TI dedicado. Startidea ofrece protección digital proporcional al riesgo real, en el idioma del sector, sin venderle miedo a nadie.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn">
+          Reservar 30 min sin coste
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="#faqs" class="btn-ghost">
+          Ver preguntas frecuentes
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principios -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Principios</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cómo se trabaja <em class="italic text-magenta">la seguridad</em>.
+          </h2>
+
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {principios.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Niveles -->
+  {niveles.map((nivel, i) => (
+    <section class={`relative py-20 md:py-28 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="num-edit text-7xl">{nivel.num}</span>
+          </div>
+
+          <div class="col-span-12 mt-8 lg:col-span-9 lg:mt-0">
+            <h2 class="font-display text-display-md leading-[1.05] text-ink">
+              {nivel.title}
+            </h2>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">
+              {nivel.body}
+            </p>
+
+            <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
+              {nivel.items.map((it) => (
+                <li class="flex items-start gap-3 border-t border-ink/15 pt-3 text-sm text-ink/85">
+                  <span class="mt-1.5 inline-block h-px w-3 flex-shrink-0 bg-magenta"></span>
+                  <span>{it}</span>
+                </li>
+              ))}
+            </ul>
+
+            <dl class="mt-10 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3 lg:max-w-3xl">
+              <div class={`p-5 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Duración</dt>
+                <dd class="mt-2 font-display text-lg text-ink">{nivel.meta.dur}</dd>
+              </div>
+              <div class={`p-5 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Inversión orientativa</dt>
+                <dd class="mt-2 font-display text-lg text-ink">{nivel.meta.precio}</dd>
+              </div>
+              <div class={`p-5 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-warm'}`}>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Entregable</dt>
+                <dd class="mt-2 text-sm text-ink/85">{nivel.meta.cierre}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- Complementarios -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Complementarios</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            Trabajos puntuales <em class="italic text-magenta">complementarios</em>.
+          </h2>
+          <p class="mt-5 max-w-measure text-lede text-paper/85">
+            Encajes específicos que se contratan por separado o se incluyen en una iguala según el caso.
+          </p>
+
+          <ul class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2">
+            {complementario.map((c) => (
+              <li class="bg-ink p-6">
+                <p class="font-display text-2xl text-paper">{c.title}</p>
+                <p class="mt-3 text-sm leading-relaxed text-paper/75">{c.body}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Reservar conversación de 30 min
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section id="faqs" class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">suele preguntarse</em>.
+          </h2>
+
+          <div class="mt-12 divide-y divide-ink/15 border-y-2 border-ink/15">
+            {faqs.map((f) => (
+              <details class="group py-6">
+                <summary class="flex cursor-pointer list-none items-start justify-between gap-6">
+                  <span class="font-display text-xl leading-tight text-ink group-hover:text-magenta">{f.q}</span>
+                  <span aria-hidden="true" class="mt-1 font-mono text-2xl text-magenta transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p class="mt-4 max-w-measure text-ink/85">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="proteccion-digital" />
+</Base>
