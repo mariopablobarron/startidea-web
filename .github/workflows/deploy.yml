@@ -1,20 +1,18 @@
 name: Deploy a producción (VPS Hostinger)
 
-# Cada push a main dispara un deploy. La SSH key dedicada que vive en el
-# secret `VPS_SSH_KEY` solo puede ejecutar /root/deploy-startidea-web.sh
-# del VPS — está restringida con command="..." en authorized_keys.
-# Coolify v3 sigue gestionando Traefik, certs y panel; este workflow
-# solo controla qué imagen construye y arranca el container.
+# RESPALDO MANUAL. El deploy automático en push ya NO se hace por aquí.
+#
+# Desde 2026-06-09 el deploy automático lo hace el VPS por PULL: un cron cada
+# 2 min (infra/startidea-web-autodeploy.sh → /root/) detecta el commit nuevo de
+# main y lanza /root/deploy-startidea-web.sh. Motivo: este workflow entra por
+# SSH (puerto 22) y fail2ban banea las IPs efímeras de los runners de GitHub,
+# tumbando el deploy de forma recurrente (incidentes 04 y 09-jun-2026).
+#
+# Este workflow queda solo como disparo MANUAL de emergencia (workflow_dispatch),
+# por si el cron del VPS estuviera caído. Requiere que el puerto 22 acepte al
+# runner (puede estar baneado).
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - 'reports/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'infra/**'   # docker-compose template y .env.example no afectan al build
   workflow_dispatch:
 
 concurrency:
@@ -30,24 +28,68 @@ jobs:
       - name: Deploy via OpenSSH directo
         env:
           SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+        # IMPORTANTE: sin `set -e`. Gestionamos los errores a mano para poder
+        # reintentar; con errexit, un ssh-keyscan que devuelve no-cero de forma
+        # transitoria abortaba el paso en ~5s sin logs (causa del flake recurrente).
+        shell: bash --noprofile --norc {0}
         run: |
+          set -uo pipefail
+
           # Preparar SSH
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          # Capturar host keys del VPS (los 3 algoritmos)
-          ssh-keyscan -t ed25519,rsa,ecdsa 72.61.195.108 2>/dev/null > ~/.ssh/known_hosts
-          echo "Known hosts capturados:"
-          cat ~/.ssh/known_hosts | wc -l
+          # Host keys del VPS: best-effort, NO bloqueante (|| true). Si keyscan
+          # falla o sale vacío, el connect usa StrictHostKeyChecking=accept-new
+          # como fallback, así que nunca bloquea el deploy.
+          for k in 1 2 3 4; do
+            ssh-keyscan -T 10 -t ed25519,rsa,ecdsa 72.61.195.108 > ~/.ssh/known_hosts 2>/dev/null || true
+            if [ -s ~/.ssh/known_hosts ]; then
+              echo "known_hosts OK (intento $k): $(wc -l < ~/.ssh/known_hosts) líneas"
+              break
+            fi
+            echo "known_hosts vacío (intento $k) — reintentando en 5s…"
+            sleep 5
+          done
 
           # Conectar — la SSH key tiene command="..." forzado en authorized_keys
           # del VPS, así que cualquier conexión ejecuta /root/deploy-startidea-web.sh
           # y nada más. El ":" del comando es ignorado por el lado del VPS.
-          ssh -i ~/.ssh/id_ed25519 \
-              -o ConnectTimeout=30 \
-              -o ServerAliveInterval=30 \
-              -o ServerAliveCountMax=10 \
-              -o BatchMode=yes \
-              root@72.61.195.108 \
-              ":"
+          # El código de salida de ssh = el del script remoto (salvo rc=255, que
+          # es fallo de transporte SSH). Reintentamos SOLO ante 255; si el script
+          # remoto falla (build roto), salimos al momento sin machacar reintentos.
+          # 3 intentos: suficiente para un blip transitorio del primer connect.
+          # Más no ayuda ante "broken pipe" recurrente (conexión que se cae a
+          # mitad del build): reintentar relanza el build entero y solo castiga
+          # más al VPS. El arreglo de fondo de ese caso es servidor-side
+          # (build desacoplado con setsid/nohup) — ver memoria de infra.
+          attempt=1; max=3; rc=1
+          while [ "$attempt" -le "$max" ]; do
+            ssh -i ~/.ssh/id_ed25519 \
+                -o StrictHostKeyChecking=accept-new \
+                -o ConnectTimeout=30 \
+                -o ConnectionAttempts=3 \
+                -o ServerAliveInterval=30 \
+                -o ServerAliveCountMax=10 \
+                -o BatchMode=yes \
+                root@72.61.195.108 \
+                ":"
+            rc=$?
+            if [ "$rc" -eq 0 ]; then
+              echo "Deploy OK (intento $attempt)."
+              break
+            fi
+            if [ "$rc" -ne 255 ]; then
+              echo "El script remoto devolvió rc=$rc (no es fallo de transporte) — no reintento."
+              exit "$rc"
+            fi
+            if [ "$attempt" -ge "$max" ]; then
+              echo "Deploy falló por transporte SSH tras $max intentos (rc=255)."
+              exit "$rc"
+            fi
+            wait_s=$((attempt * 15))
+            echo "Intento $attempt: fallo de transporte SSH (rc=255) — reintentando en ${wait_s}s…"
+            sleep "$wait_s"
+            attempt=$((attempt + 1))
+          done

@@ -15,7 +15,12 @@
 
 services:
   startidea-web:
-    image: cmoh7d8hi001bp2a4qwjobhzy:${IMAGE_TAG:-latest}
+    # Imagen publicada por .github/workflows/build-deploy.yml en ghcr.io.
+    # Watchtower (en el VPS) vigila el tag :latest y, al detectar nuevo digest,
+    # hace pull + recreate automáticamente — sin SSH entrante. Ver
+    # infra/MIGRACION-DEPLOY-WATCHTOWER.md.
+    # (Imagen vieja construida por Coolify en el VPS: cmoh7d8hi001bp2a4qwjobhzy)
+    image: ghcr.io/mariopablobarron/startidea-web:latest
     container_name: startidea-web
     restart: unless-stopped
     environment:
@@ -34,6 +39,9 @@ services:
     networks:
       - coolify
     labels:
+      # Watchtower: vigilar este contenedor y auto-actualizarlo cuando cambie
+      # el digest de ghcr.io/.../startidea-web:latest.
+      com.centurylinklabs.watchtower.enable: "true"
       traefik.enable: "true"
       traefik.docker.network: coolify
       traefik.http.routers.startidea-web.rule: "Host(`startidea.es`)"

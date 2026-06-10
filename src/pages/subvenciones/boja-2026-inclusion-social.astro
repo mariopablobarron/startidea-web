@@ -1,0 +1,712 @@
+---
+/**
+ * /subvenciones/boja-2026-inclusion-social
+ *
+ * Landing curada para las 15 líneas de la Orden de 20 de mayo de 2026
+ * publicadas en el BOJA nº 99 del 26 de mayo de 2026.
+ * Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía.
+ *
+ * Plazo general: 27 mayo – 16 junio de 2026 (15 días hábiles)
+ * Excepción: Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+export const prerender = true;
+
+const DEADLINE = '16 de junio de 2026';
+const DEADLINE_L7M2 = '2 de junio de 2026';
+const BOJA = 'nº 99 — 26 de mayo de 2026';
+
+interface Linea {
+  id: string;
+  beneficiario: 'privada' | 'local' | 'institucional' | 'persona';
+  titulo: string;
+  desc: string;
+  deadline: string;
+  deadlineNote?: string;
+  slug: string;
+}
+
+const LINEAS: Linea[] = [
+  /* ── Personas físicas ─────────────────────────────────── */
+  {
+    id: 'L1',
+    beneficiario: 'persona',
+    titulo: 'Subvenciones individuales para personas mayores',
+    desc: 'Ayudas directas a personas mayores en situación de necesidad. Startidea ayuda en la preparación y organización de la documentación de solicitud.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l1',
+  },
+  {
+    id: 'L2',
+    beneficiario: 'persona',
+    titulo: 'Subvenciones individuales para personas con discapacidad',
+    desc: 'Ayudas directas a personas con discapacidad reconocida. Startidea ayuda en la preparación y organización de la documentación de solicitud.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l2',
+  },
+  /* ── Entidades privadas (tercer sector) ───────────────── */
+  {
+    id: 'L7',
+    beneficiario: 'privada',
+    titulo: 'Solidaridad y Garantía Alimentaria de Andalucía',
+    desc: 'Programas de entidades privadas en el marco de la Solidaridad y Garantía Alimentaria. La Modalidad 2 (Escuelas de verano para menores en zonas desfavorecidas) cierra antes.',
+    deadline: DEADLINE_L7M2,
+    deadlineNote: 'Mod. 2 (Escuelas de verano): 2 junio · Resto: 16 junio',
+    slug: 'boja-2026-inclusion-l7',
+  },
+  {
+    id: 'L10',
+    beneficiario: 'privada',
+    titulo: 'Mantenimiento de entidades privadas de acción social',
+    desc: 'Financiación estructural para el mantenimiento de entidades privadas sin ánimo de lucro dedicadas al ámbito de la acción social en Andalucía.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l10',
+  },
+  {
+    id: 'L11',
+    beneficiario: 'privada',
+    titulo: 'Programas de acción social para entidades privadas',
+    desc: 'Apoyo a programas de acción social promovidos por entidades privadas. Amplio espectro de actuaciones sociales en Andalucía.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l11',
+  },
+  {
+    id: 'L16',
+    beneficiario: 'privada',
+    titulo: 'Atención integral a mujeres jóvenes del Sistema de Protección de Menores',
+    desc: 'Programas de entidades privadas para la atención integral a mujeres jóvenes procedentes del Sistema de Protección de Menores.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l16',
+  },
+  /* ── Entidades locales ────────────────────────────────── */
+  {
+    id: 'L4',
+    beneficiario: 'local',
+    titulo: 'Programas dirigidos a la Comunidad Gitana',
+    desc: 'Subvenciones para ayuntamientos, mancomunidades y diputaciones provinciales con programas dirigidos a la Comunidad Gitana.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l4',
+  },
+  {
+    id: 'L6',
+    beneficiario: 'local',
+    titulo: 'Atención a personas inmigrantes y emigrantes temporeras',
+    desc: 'Subvenciones a entidades locales para la atención a personas inmigrantes, emigrantes temporeras andaluzas y sus familias.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l6',
+  },
+  {
+    id: 'L9',
+    beneficiario: 'local',
+    titulo: 'Promoción de la participación ciudadana',
+    desc: 'Subvenciones a entidades locales andaluzas para el fomento y desarrollo de la participación ciudadana activa.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l9',
+  },
+  /* ── Institucionales ──────────────────────────────────── */
+  {
+    id: 'L3',
+    beneficiario: 'institucional',
+    titulo: 'Investigación e innovación en Servicios Sociales',
+    desc: 'Subvenciones para proyectos de investigación e innovación en el ámbito de los Servicios Sociales. Verificar bases reguladoras para confirmar beneficiarios elegibles.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l3',
+  },
+  {
+    id: 'L5',
+    beneficiario: 'institucional',
+    titulo: 'Programas y mantenimiento en el ámbito de la discapacidad',
+    desc: 'Subvenciones institucionales para entidades del sector de la discapacidad (federaciones, confederaciones, entidades representativas). Revisar bases 2021.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l5',
+  },
+  {
+    id: 'L8',
+    beneficiario: 'institucional',
+    titulo: 'Derechos, igualdad de trato y no discriminación de personas LGTBI',
+    desc: 'Subvenciones para garantizar los derechos, la igualdad de trato y no discriminación de las personas LGTBI y sus familiares. Comprobar beneficiarios en la orden.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l8',
+  },
+  {
+    id: 'L12',
+    beneficiario: 'institucional',
+    titulo: 'Promoción y formación del voluntariado y centros de recursos',
+    desc: 'Programas para la promoción, sensibilización y formación del voluntariado y para la gestión de centros de recursos para el voluntariado y las asociaciones.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l12',
+  },
+  {
+    id: 'L13',
+    beneficiario: 'institucional',
+    titulo: 'Formación de personas mayores en universidades públicas andaluzas',
+    desc: 'Programas de actividades complementarias a la formación de personas mayores en universidades públicas andaluzas y fomento de prácticas intergeneracionales.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l13',
+  },
+  {
+    id: 'L14',
+    beneficiario: 'institucional',
+    titulo: 'Programas y mantenimiento en el ámbito de las personas mayores',
+    desc: 'Subvenciones institucionales para entidades con programas y mantenimiento en el ámbito de las personas mayores en Andalucía.',
+    deadline: DEADLINE,
+    slug: 'boja-2026-inclusion-l14',
+  },
+];
+
+const grupos = [
+  {
+    key: 'privada' as const,
+    label: 'Entidades privadas y tercer sector',
+    chip: '✅ Tramitamos directamente',
+    chipColor: 'bg-magenta/10 text-magenta border-magenta/20',
+    desc: 'Asociaciones, fundaciones, cooperativas y entidades sin ánimo de lucro. Son el núcleo del Copiloto de Subvenciones.',
+  },
+  {
+    key: 'local' as const,
+    label: 'Entidades locales',
+    chip: '✅ Tramitamos directamente',
+    chipColor: 'bg-magenta/10 text-magenta border-magenta/20',
+    desc: 'Ayuntamientos, mancomunidades y diputaciones provinciales de Andalucía.',
+  },
+  {
+    key: 'institucional' as const,
+    label: 'Convocatorias institucionales',
+    chip: '⚠️ Verificar bases antes de solicitar',
+    chipColor: 'bg-amber-50 text-amber-700 border-amber-200',
+    desc: 'El beneficiario exacto varía por línea. Confirmar con las bases reguladoras 2021 y la orden de convocatoria publicada en el BOJA nº 99.',
+  },
+  {
+    key: 'persona' as const,
+    label: 'Personas físicas',
+    chip: 'Ayuda documental disponible',
+    chipColor: 'bg-ink/5 text-ink/60 border-ink/10',
+    desc: 'Subvenciones individuales para personas mayores y con discapacidad. Startidea puede ayudar a organizar y revisar la documentación necesaria.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'BOJA 2026 — Inclusión Social', url: `${SITE_URL}/subvenciones/boja-2026-inclusion-social` },
+  ]),
+  faqPageSchema([
+    {
+      question: '¿Quién puede solicitar las subvenciones BOJA 2026 de Inclusión Social?',
+      answer: 'Depende de la línea: entidades privadas sin ánimo de lucro (asociaciones G, fundaciones G, cooperativas F, entidades religiosas inscritas R), entidades locales (ayuntamientos, diputaciones, mancomunidades P), organismos institucionales (universidades, federaciones Q) y personas físicas para las líneas individuales L1 y L2. La primera letra del CIF identifica el tipo de entidad.',
+    },
+    {
+      question: '¿Cuál es el plazo para presentar las solicitudes del BOJA 2026?',
+      answer: `El plazo general es del 27 de mayo al 16 de junio de 2026 (15 días hábiles). Excepción: la Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio de 2026. Todas las solicitudes se presentan por el Registro Electrónico Único de la Junta de Andalucía.`,
+    },
+    {
+      question: '¿Cuánto cuesta que Startidea tramite la subvención BOJA 2026?',
+      answer: 'El modelo es comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia.',
+    },
+    {
+      question: '¿Qué documentación se necesita para presentarse a las líneas del BOJA 2026?',
+      answer: 'La documentación habitual incluye: estatutos actualizados con sello de inscripción, CIF/NIF en vigor, acreditación del representante legal, certificado AEAT al corriente de obligaciones tributarias, certificado TGSS al corriente de la Seguridad Social, memoria de actividades del último ejercicio y presupuesto del proyecto o programa.',
+    },
+    {
+      question: '¿Puede una entidad presentarse a más de una línea del BOJA 2026 a la vez?',
+      answer: 'Sí, siempre que la entidad sea beneficiaria elegible en cada línea y que los proyectos presentados sean distintos. Por ejemplo, una asociación de acción social puede presentarse simultáneamente a L10 (mantenimiento estructural) y a L11 (programas concretos) si su actividad encaja con ambas convocatorias.',
+    },
+  ]),
+];
+
+function buildLink(linea: Linea) {
+  const params = new URLSearchParams({
+    title: `Junta de Andalucía — ${linea.titulo} (${linea.id}) · BOJA 2026`,
+    slug: linea.slug,
+    hint: linea.desc, // muestra en el paso 2 del formulario qué financia esta línea
+  });
+  return `/subvenciones/presentar/nuevo?${params.toString()}`;
+}
+---
+
+<Base
+  title="BOJA 2026 — 15 líneas de subvención · Consejería de Inclusión Social · Junta de Andalucía"
+  description="Las 15 líneas de subvención de la Consejería de Inclusión Social de la Junta de Andalucía, publicadas en el BOJA nº 99 (26 mayo 2026). Plazo general: hasta el 16 de junio de 2026. Startidea tramita todas las líneas para entidades privadas, locales y particulares."
+  jsonLd={jsonLd}
+>
+
+  <!-- Alerta de plazo -->
+  <div class="border-b border-amber-200 bg-amber-50 py-3">
+    <div class="container-x flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm text-amber-800">
+        <strong>⏰ Plazo abierto:</strong> {DEADLINE_L7M2} (L7 Mod.2) · {DEADLINE} (resto de líneas)
+      </p>
+      <a
+        href="#lineas"
+        class="shrink-0 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-700 hover:text-amber-900"
+      >
+        Ver las 15 líneas ↓
+      </a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span class="label">— Convocatoria abierta</span>
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">BOJA {BOJA}</span>
+      </div>
+      <h1 class="font-display text-display-xl leading-[0.96] text-ink">
+        15 líneas del BOJA.<br />
+        <em class="italic text-magenta">Startidea lo tramita todo.</em>
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/75">
+        La Consejería de Inclusión Social ha publicado 15 líneas de subvención (BOJA nº 99, 26 mayo 2026). Plazo hasta el <strong>{DEADLINE}</strong>. Startidea gestiona el expediente completo: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. Solo pagas si se concede.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#elegibilidad" class="btn">¿Podemos pedir? Comprobarlo →</a>
+        <a href="#lineas" class="btn-ghost">Ver las 15 líneas ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos clave -->
+  <section class="border-b border-ink/15 bg-paper-warm py-10">
+    <div class="container-x">
+      <dl class="grid grid-cols-2 gap-px bg-ink/10 border border-ink/10 md:grid-cols-4">
+        {[
+          { term: 'Publicación', def: '26 mayo 2026 · BOJA nº 99' },
+          { term: 'Apertura del plazo', def: '27 mayo 2026' },
+          { term: 'Cierre general', def: '16 junio 2026' },
+          { term: 'Cierre L7 Mod.2', def: '2 junio 2026' },
+        ].map(({ term, def }) => (
+          <div class="bg-paper p-5">
+            <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/50">{term}</dt>
+            <dd class="mt-1 text-sm font-medium text-ink">{def}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-xs text-ink/50 max-w-prose">
+        Obligación de relación electrónica: todas las solicitudes deben presentarse a través del Registro Electrónico Único de la Junta de Andalucía. El 4 de junio de 2026 es día hábil; el plazo no se amplía. Startidea recomienda presentar con un mínimo de 5 días de margen.
+      </p>
+    </div>
+  </section>
+
+  <!-- Widget de elegibilidad express -->
+  <section id="elegibilidad" class="border-b border-ink/15 bg-white py-14 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl">
+        <span class="label">— Comprobación express</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+          ¿Vuestra entidad<br />
+          <em class="italic text-magenta">puede pedir estas ayudas?</em>
+        </h2>
+        <p class="mt-4 max-w-prose text-ink/70">
+          Introducid el CIF de vuestra organización. Si añadís una frase de lo que hacéis, Startidea afina mucho más el resultado. En menos de 10 segundos sabéis a qué líneas podéis optar.
+        </p>
+
+        <form id="el-form" class="mt-8 space-y-5" novalidate>
+          <!-- CIF -->
+          <div class="space-y-1.5">
+            <label for="el-cif" class="label text-base">
+              CIF de la entidad <span class="text-magenta">*</span>
+            </label>
+            <div class="flex flex-wrap items-center gap-3">
+              <input
+                type="text"
+                id="el-cif"
+                name="cif"
+                placeholder="G12345678"
+                maxlength="12"
+                autocomplete="off"
+                spellcheck="false"
+                class="border border-ink/20 bg-paper px-4 py-3 text-lg font-mono text-ink outline-none focus:border-ink w-48 uppercase tracking-widest"
+              />
+              <span id="el-cif-msg" class="text-sm font-medium hidden"></span>
+            </div>
+          </div>
+
+          <!-- Descripción opcional -->
+          <div class="space-y-1.5">
+            <label for="el-desc" class="label text-base">
+              ¿Qué hace vuestra entidad?
+              <span class="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink/40">
+                Opcional — mejora mucho el resultado
+              </span>
+            </label>
+            <textarea
+              id="el-desc"
+              name="descripcion"
+              rows="3"
+              class="border border-ink/20 bg-paper px-4 py-3 text-sm text-ink outline-none focus:border-ink w-full resize-none"
+              placeholder="Ej: Somos una asociación que llevamos 20 años gestionando un centro de día para personas con discapacidad en Granada. También tenemos servicio de ayuda a domicilio."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="el-btn"
+            class="btn text-base px-8 py-3"
+          >
+            Comprobar ahora →
+          </button>
+        </form>
+
+        <!-- Resultado -->
+        <div id="el-result" class="mt-8 hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona: el modelo de servicio -->
+  <section class="border-b border-ink/15 bg-ink text-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-10">
+        <div class="col-span-12 lg:col-span-5">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">— No es un directorio</span>
+          <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
+            Startidea gestiona<br />
+            <em class="italic text-magenta">el expediente completo.</em>
+          </h2>
+          <p class="mt-4 text-paper/70 max-w-measure">
+            No es solo información sobre convocatorias. Startidea tramita la solicitud de principio a fin: análisis de encaje, redacción de la memoria técnica, presupuesto desglosado y presentación electrónica en la sede de la Junta de Andalucía.
+          </p>
+          <div class="mt-6 border border-magenta/30 bg-magenta/10 p-4">
+            <p class="font-mono text-sm font-bold text-magenta">Sin coste por adelantado.</p>
+            <p class="mt-1 text-sm text-paper/75">
+              Honorarios solo a éxito: <strong class="text-paper">12% sobre el importe concedido</strong>. Si no se obtiene la subvención, no se cobra nada.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-7">
+          <ol class="space-y-0 divide-y divide-paper/10 border-y border-paper/10">
+            {[
+              {
+                n: '01',
+                t: 'Rellenas el formulario',
+                d: 'Completas el formulario con los datos de tu entidad y seleccionas la convocatoria. Al enviar, se crea automáticamente tu acceso al portal de Startidea y recibes un enlace por email — sin contraseña, sin trámite adicional.',
+              },
+              {
+                n: '02',
+                t: 'Subes la documentación de tu entidad',
+                d: 'Estatutos actualizados, CIF, certificado de Hacienda, certificado de Seguridad Social y memoria de actividades del último año. Es la documentación que casi todas las convocatorias requieren.',
+              },
+              {
+                n: '03',
+                t: 'Startidea prepara el expediente',
+                d: 'El equipo elabora la memoria técnica, el presupuesto justificado y la guía de presentación adaptados a la convocatoria. Un consultor revisa y completa cada documento antes de entregarlo.',
+              },
+              {
+                n: '04',
+                t: 'Revisáis, aprobáis y se presenta',
+                d: 'Revisáis el expediente completo en el portal. En el formulario indicáis si queréis que Startidea presente en vuestro nombre (otorgando apoderamiento REA, proceso de 5 minutos) o si preferís firmar vosotros con vuestro certificado (menos de 10 minutos con las instrucciones que os enviamos). En ningún caso Startidea usa vuestro certificado digital.',
+              },
+            ].map((s) => (
+              <li class="grid grid-cols-12 gap-x-4 py-6">
+                <span class="col-span-2 font-mono text-sm text-magenta">{s.n}</span>
+                <div class="col-span-10">
+                  <p class="font-medium text-paper">{s.t}</p>
+                  <p class="mt-1 text-sm text-paper/60 leading-relaxed">{s.d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Líneas por grupo -->
+  <section id="lineas" class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+
+      <div class="mb-12 border-t border-ink/15 pt-8">
+        <span class="label">— Las 15 líneas</span>
+        <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+          Elige tu línea<br />
+          <em class="italic text-magenta">y arranca el expediente.</em>
+        </h2>
+        <p class="mt-4 max-w-measure text-ink/70">
+          Cada botón abre el formulario con la convocatoria ya preseleccionada. En menos de 24 horas recibes el diagnóstico de encaje y el coste exacto del servicio.
+        </p>
+      </div>
+
+      <div class="space-y-14">
+        {grupos.map((grupo) => {
+          const lineasGrupo = LINEAS.filter((l) => l.beneficiario === grupo.key);
+          return (
+            <div>
+              <!-- Cabecera del grupo -->
+              <div class="mb-6 flex flex-wrap items-start gap-3 border-t-2 border-ink/20 pt-6">
+                <div class="flex-1">
+                  <h3 class="font-display text-xl text-ink">{grupo.label}</h3>
+                  <p class="mt-1 text-sm text-ink/60">{grupo.desc}</p>
+                </div>
+                <span class={`shrink-0 border px-3 py-1 font-mono text-[10px] uppercase tracking-widest ${grupo.chipColor}`}>
+                  {grupo.chip}
+                </span>
+              </div>
+
+              <!-- Grid de líneas -->
+              <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {lineasGrupo.map((linea) => (
+                  <article class="flex flex-col border border-ink/10 bg-white p-5 transition-shadow hover:shadow-md">
+                    <div class="mb-3 flex items-center justify-between gap-2">
+                      <span class="font-mono text-xs font-bold uppercase tracking-widest text-magenta">{linea.id}</span>
+                      {linea.deadlineNote ? (
+                        <span class="font-mono text-[9px] uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5">
+                          ⏰ {linea.deadlineNote}
+                        </span>
+                      ) : (
+                        <span class="font-mono text-[9px] uppercase tracking-wide text-ink/40">
+                          Hasta {linea.deadline}
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 class="font-display text-base leading-snug text-ink flex-1">
+                      {linea.titulo}
+                    </h4>
+
+                    <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+                      {linea.desc}
+                    </p>
+
+                    <a
+                      href={buildLink(linea)}
+                      class="mt-4 inline-block bg-ink text-paper text-center font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2.5 transition-colors hover:bg-magenta"
+                    >
+                      Tramitar con Startidea →
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentación que necesitamos -->
+  <section class="border-t border-ink/15 bg-paper-warm py-12">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-6 items-start">
+        <div class="col-span-12 lg:col-span-4">
+          <span class="label">— Qué necesitamos de vuestra parte</span>
+          <h2 class="mt-3 font-display text-2xl text-ink">
+            Solo la documentación<br />
+            <em class="italic text-magenta">de la entidad.</em>
+          </h2>
+          <p class="mt-3 text-sm text-ink/65 max-w-prose">
+            Son los documentos que casi cualquier convocatoria pública requiere. Si ya los tenéis preparados, el proceso es inmediato.
+          </p>
+          <a href="/copiloto-subvenciones" class="mt-5 inline-block font-mono text-xs uppercase tracking-widest text-magenta hover:underline">
+            Más sobre el Copiloto de Subvenciones →
+          </a>
+        </div>
+        <div class="col-span-12 lg:col-span-8">
+          <ul class="grid gap-3 sm:grid-cols-2">
+            {[
+              { doc: 'Estatutos actualizados', nota: 'Con la última modificación inscrita en el registro correspondiente.' },
+              { doc: 'NIF / CIF de la entidad', nota: 'Tarjeta de identificación fiscal vigente.' },
+              { doc: 'Certificado de Hacienda', nota: 'Estar al corriente de obligaciones tributarias. Se obtiene online en minutos.' },
+              { doc: 'Certificado de Seguridad Social', nota: 'Estar al corriente de obligaciones con la SS. También se obtiene online.' },
+              { doc: 'Memoria de actividades', nota: 'Descripción de los programas y actividades del último ejercicio cerrado.' },
+              { doc: 'Presupuesto del proyecto (opcional)', nota: 'Estimación de ingresos y gastos del programa. Si no lo tenéis, Startidea os ayuda a construirlo desde cero.' },
+            ].map(({ doc, nota }) => (
+              <li class="border border-ink/10 bg-white p-4">
+                <p class="font-medium text-sm text-ink">{doc}</p>
+                <p class="mt-1 text-xs text-ink/55 leading-relaxed">{nota}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enlace rápido a elegibilidad desde hero -->
+
+  <!-- CTA final -->
+  <section class="border-t border-ink/15 bg-ink py-14 md:py-20 text-paper">
+    <div class="container-x text-center">
+      <h2 class="font-display text-display-md leading-tight">
+        El plazo cierra el <em class="italic text-magenta">{DEADLINE}.</em>
+      </h2>
+      <p class="mt-4 text-paper/70 max-w-measure mx-auto">
+        Startidea recomienda iniciar el expediente antes del 9 de junio para tener margen ante incidencias técnicas en la sede electrónica de la Junta de Andalucía.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="#lineas" class="bg-magenta text-paper font-mono text-sm font-bold uppercase tracking-widest px-8 py-3 hover:bg-magenta/90 transition-colors">
+          Elegir línea →
+        </a>
+        <a href="/contacto" class="border border-paper/30 text-paper font-mono text-sm uppercase tracking-widest px-6 py-3 hover:border-paper/60 transition-colors">
+          Consulta sin coste
+        </a>
+      </div>
+      <p class="mt-6 text-sm text-paper/40">
+        ¿Buscas otras convocatorias? →
+        <a href="/subvenciones/catalogo" class="text-paper/60 hover:text-magenta underline underline-offset-2">
+          Catálogo completo de Startidea
+        </a>
+      </p>
+    </div>
+  </section>
+
+
+<script define:vars={{
+  linksMap: Object.fromEntries(LINEAS.map(l => [l.id, buildLink(l)])),
+}}>
+/* ── Elegibilidad widget ────────────────────────────────────────────────── */
+(function () {
+  const CIF_TIPOS = {
+    G: 'Asociación o fundación detectada ✓',
+    F: 'Cooperativa detectada ✓',
+    P: 'Entidad local detectada ✓',
+    Q: 'Organismo público detectado ✓',
+    R: 'Congregación religiosa detectada ✓',
+    A: 'Sociedad Anónima — puede no ser elegible',
+    B: 'Sociedad Limitada — puede no ser elegible',
+    J: 'Sociedad Civil — puede no ser elegible',
+  };
+
+  const cifInput  = document.getElementById('el-cif');
+  const cifMsg    = document.getElementById('el-cif-msg');
+  const descInput = document.getElementById('el-desc');
+  const btn       = document.getElementById('el-btn');
+  const result    = document.getElementById('el-result');
+  const form      = document.getElementById('el-form');
+
+  if (!form) return; // página sin widget
+
+  // Auto-detect al escribir CIF
+  cifInput.addEventListener('input', () => {
+    const letra = cifInput.value.trim().toUpperCase()[0];
+    const msg   = letra ? CIF_TIPOS[letra] : null;
+    if (msg) {
+      cifMsg.textContent = msg;
+      cifMsg.className   = msg.includes('✓')
+        ? 'text-sm font-medium text-green-700'
+        : 'text-sm font-medium text-amber-700';
+      cifMsg.classList.remove('hidden');
+    } else {
+      cifMsg.classList.add('hidden');
+    }
+  });
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const cif  = cifInput.value.trim();
+    const desc = descInput.value.trim();
+
+    if (!cif && !desc) {
+      cifInput.focus();
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = '⏳ Analizando…';
+    result.classList.add('hidden');
+
+    try {
+      const res  = await fetch('/api/eligibilidad', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json' },
+        body:    JSON.stringify({ cif, descripcion: desc }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        result.innerHTML = errorBox(data.error);
+      } else if (!data.aplica || !data.lineas?.length) {
+        result.innerHTML = warningBox(
+          data.mensaje || 'Vuestra entidad puede no ser beneficiaria de estas líneas.',
+          data.aviso
+        );
+      } else {
+        result.innerHTML = successBox(data);
+      }
+
+      result.classList.remove('hidden');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (_) {
+      result.innerHTML = errorBox('Error de conexión. Inténtalo de nuevo.');
+      result.classList.remove('hidden');
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Comprobar ahora →';
+    }
+  });
+
+  // ── Helpers de renderizado ──────────────────────────────────────────────
+  function errorBox(msg) {
+    return `<div class="border border-red-200 bg-red-50 p-5 text-sm text-red-700">${msg}</div>`;
+  }
+
+  function warningBox(msg, aviso) {
+    return `
+      <div class="border-l-4 border-amber-400 bg-amber-50 p-5">
+        <p class="font-medium text-amber-800">${msg}</p>
+        ${aviso ? `<p class="mt-2 text-sm text-amber-700">⚠️ ${aviso}</p>` : ''}
+        <p class="mt-3 text-sm text-amber-700">
+          Si tenéis dudas,
+          <a href="/contacto" class="underline font-medium">contactad con Startidea</a>
+          para un análisis personalizado sin coste.
+        </p>
+      </div>`;
+  }
+
+  function successBox(data) {
+    const tipoHtml = data.tipo_entidad
+      ? `<p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">${data.tipo_entidad}</p>`
+      : '';
+
+    const avisoHtml = data.aviso
+      ? `<div class="mt-3 border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-700">⚠️ ${data.aviso}</div>`
+      : '';
+
+    const lineasHtml = data.lineas.map(l => {
+      const link    = (window.BOJA_LINKS || {})[l.id] || `/subvenciones/presentar/nuevo?slug=${l.id}`;
+      const encajeBadge = l.encaje === 'alto'
+        ? '<span class="bg-green-100 text-green-700 text-[10px] font-mono px-2 py-0.5 uppercase tracking-wide">Encaje alto</span>'
+        : '<span class="bg-amber-100 text-amber-700 text-[10px] font-mono px-2 py-0.5 uppercase tracking-wide">Verificar encaje</span>';
+      return `
+        <div class="border border-ink/10 bg-paper p-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span class="font-mono text-xs font-bold text-magenta">${l.id}</span>
+              ${encajeBadge}
+            </div>
+            <p class="font-medium text-sm text-ink leading-snug">${l.titulo}</p>
+            <p class="mt-1 text-xs text-ink/60 leading-relaxed">${l.razon}</p>
+          </div>
+          <a href="${link}"
+             class="shrink-0 bg-ink text-paper font-mono text-[11px] font-bold uppercase tracking-widest px-5 py-2.5 text-center hover:bg-magenta transition-colors whitespace-nowrap">
+            Tramitar →
+          </a>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="space-y-4">
+        <div class="border-t-2 border-magenta pt-4">
+          ${tipoHtml}
+          <p class="text-ink font-medium">${data.mensaje}</p>
+          ${avisoHtml}
+        </div>
+        <div class="space-y-3">${lineasHtml}</div>
+        <p class="text-xs text-ink/40">
+          Análisis orientativo basado en el tipo de entidad y actividad descrita.
+          Startidea verifica el encaje exacto durante el diagnóstico.
+        </p>
+      </div>`;
+  }
+
+  // Exponer mapa de links al scope global del script
+  window.BOJA_LINKS = linksMap;
+})();
+</script>
+
+</Base>

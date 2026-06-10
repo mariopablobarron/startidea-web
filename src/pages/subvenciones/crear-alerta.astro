@@ -171,14 +171,14 @@ const jsonLd = [
 
 <script>
   const API_BASE =
-    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+    (import.meta as any).env?.PUBLIC_HUB_URL ?? 'https://hub.startidea.tech';
 
   // Prerelleno desde query string
   const url = new URL(window.location.href);
   const fillIf = (id: string, qsKey: string) => {
     const v = url.searchParams.get(qsKey);
     if (v) {
-      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      const el = document.getElementById(id);
       if (el) el.value = v;
     }
   };
@@ -186,9 +186,9 @@ const jsonLd = [
   fillIf('finalidades', 'finalidad');
   fillIf('beneficiary_types', 'beneficiary');
 
-  const form = document.getElementById('watch-form') as HTMLFormElement;
-  const btn = document.getElementById('watch-submit') as HTMLButtonElement;
-  const resultEl = document.getElementById('watch-result')!;
+  const form = document.getElementById('watch-form');
+  const btn = document.getElementById('watch-submit');
+  const resultEl = document.getElementById('watch-result');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

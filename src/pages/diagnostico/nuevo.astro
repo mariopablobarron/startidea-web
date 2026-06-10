@@ -525,16 +525,16 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
 <script>
   // ─── Wizard adaptativo ──────────────────────────────────────────
-  const form = document.getElementById("diag-form") as HTMLFormElement | null;
+  const form = document.getElementById("diag-form");
   if (!form) throw new Error("form missing");
 
-  const intakeUrl = form.dataset.intakeUrl!;
-  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
-  const stepLabel = document.querySelector("[data-step-label]") as HTMLElement | null;
-  const progress = document.querySelector("[data-progress]") as HTMLElement | null;
-  const statusBox = form.querySelector("[data-status]") as HTMLElement | null;
-  const challengeCounter = form.querySelector("[data-count-challenge]") as HTMLElement | null;
-  const challenge = form.querySelector<HTMLTextAreaElement>("[name='challenge']");
+  const intakeUrl = form.dataset.intakeUrl;
+  const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
+  const stepLabel = document.querySelector("[data-step-label]");
+  const progress = document.querySelector("[data-progress]");
+  const statusBox = form.querySelector("[data-status]");
+  const challengeCounter = form.querySelector("[data-count-challenge]");
+  const challenge = form.querySelector("[name='challenge']");
 
   let current = 0;
   const total = steps.length;
@@ -549,38 +549,43 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   }
 
   function getAudience(): string {
-    return (form.querySelector<HTMLInputElement>("[name='audience']:checked")?.value) ?? "";
+    return (form.querySelector("[name='audience']:checked")?.value) ?? "";
   }
 
   function refreshAdaptive() {
     const audience = getAudience();
     // Sub-tipo correcto visible
-    form.querySelectorAll<HTMLElement>("[data-subtype-for]").forEach((el) => {
+    form.querySelectorAll("[data-subtype-for]").forEach((el) => {
       el.classList.toggle("hidden", el.dataset.subtypeFor !== audience);
     });
     // Preguntas extra correctas visibles
-    form.querySelectorAll<HTMLElement>("[data-extra-for]").forEach((el) => {
+    form.querySelectorAll("[data-extra-for]").forEach((el) => {
       el.classList.toggle("hidden", el.dataset.extraFor !== audience);
     });
     // Etiquetas que cambian para emprendedor
     const isEmp = audience === "emprendedor";
     form
-      .querySelectorAll<HTMLElement>("[data-org-label-default]")
+      .querySelectorAll("[data-org-label-default]")
       .forEach((el) => el.classList.toggle("hidden", isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-org-label-emprendedor]")
+      .querySelectorAll("[data-org-label-emprendedor]")
       .forEach((el) => el.classList.toggle("hidden", !isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-stage-label-default]")
+      .querySelectorAll("[data-stage-label-default]")
       .forEach((el) => el.classList.toggle("hidden", isEmp));
     form
-      .querySelectorAll<HTMLElement>("[data-stage-label-emprendedor]")
+      .querySelectorAll("[data-stage-label-emprendedor]")
       .forEach((el) => el.classList.toggle("hidden", !isEmp));
+    // El nombre de proyecto es OPCIONAL para emprendedor/a (la etiqueta dice
+    // "si lo tiene") → quitamos required en esa rama para no exigirlo. En el
+    // resto de perfiles sigue siendo obligatorio.
+    const orgInput = form.querySelector("[name='organizationName']");
+    if (orgInput instanceof HTMLInputElement) orgInput.required = !isEmp;
   }
 
   function validateStep(): string | null {
     const fs = steps[current];
-    const required = Array.from(fs.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[required]")).filter(
+    const required = Array.from(fs.querySelectorAll("[required]")).filter(
       (el) => !el.closest(".hidden"),
     );
     for (const el of required) {
@@ -590,7 +595,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
         if (!anyChecked) return `Falta elegir: ${groupName}`;
       } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
         return `Falta o no es válido: ${el.name || el.id}`;
-      } else if ((el as HTMLInputElement).minLength && el.value.length < (el as HTMLInputElement).minLength) {
+      } else if ((el).minLength && el.value.length < (el).minLength) {
         return `Muy corto: ${el.name || el.id}`;
       }
     }
@@ -598,7 +603,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   }
 
   form.addEventListener("click", (e) => {
-    const t = e.target as HTMLElement;
+    const t = e.target;
     if (t.matches("[data-next]")) {
       const err = validateStep();
       if (err) {
@@ -615,7 +620,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
   // Cambio de audience refresca el wizard
   form.addEventListener("change", (e) => {
-    const t = e.target as HTMLInputElement;
+    const t = e.target;
     if (t.name === "audience") refreshAdaptive();
     if (t.name === "challenge" && challengeCounter) {
       challengeCounter.textContent = String(t.value.length);
@@ -655,6 +660,11 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
       const v = fd.get(k);
       if (typeof v === "string" && v) data[k] = v;
     });
+    // Emprendedor/a sin nombre de proyecto: el backend exige organizationName,
+    // así que usamos su propio nombre como organización (fundador/a en solitario).
+    if (!data.organizationName && typeof data.name === "string") {
+      data.organizationName = data.name;
+    }
     // services multi-select
     const services = fd.getAll("services").map(String).filter(Boolean);
     // Campos extra → answers bag

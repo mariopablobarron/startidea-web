@@ -1,0 +1,62 @@
+---
+/**
+ * /admin/factura/[facturaNum] — Factura imprimible (HTML → PDF via Ctrl+P).
+ * Auth: cookie startidea_admin requerida.
+ *
+ * Sirve directamente el HTML de `generarFacturaHtml` — no usa el layout de la app.
+ */
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { listExpedientes } from '@/lib/expedientes-db';
+import { generarFacturaHtml, calcularFactura, type FacturaData } from '@/lib/factura-generator';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const { facturaNum } = Astro.params;
+if (!facturaNum) {
+  return new Response('Not found', { status: 404 });
+}
+
+// Buscar el expediente que tenga este número de factura
+const { items } = listExpedientes({ limit: 1000 });
+const exp = items.find((e) => e.factura_num === facturaNum);
+
+if (!exp) {
+  return new Response(
+    `<!DOCTYPE html><html><body style="font-family:monospace;padding:40px;color:#dc2626">
+      <p>Factura <strong>${facturaNum}</strong> no encontrada.</p>
+      <a href="/admin/expedientes" style="color:#e6356b">← Volver a expedientes</a>
+    </body></html>`,
+    { status: 404, headers: { 'content-type': 'text/html; charset=utf-8' } },
+  );
+}
+
+const importeNum = parseFloat(
+  (exp.importe_concedido ?? '0').replace(/[.,\s€]/g, (c) => (c === ',' ? '.' : '')),
+);
+
+const facturaData: FacturaData = {
+  facturaNum:        exp.factura_num!,
+  facturaAt:         exp.factura_at ?? Math.floor(Date.now() / 1000),
+  expedienteId:      exp.id,
+  convocatoriaTitle: exp.convocatoria_title,
+  orgNombre:         exp.org_nombre,
+  orgCif:            exp.org_cif,
+  orgTipo:           exp.org_tipo,
+  representante:     exp.representante,
+  email:             exp.email,
+  telefono:          exp.telefono,
+  provincia:         exp.provincia,
+  importeConcedido:  importeNum,
+};
+
+const html = generarFacturaHtml(facturaData);
+
+return new Response(html, {
+  status: 200,
+  headers: { 'content-type': 'text/html; charset=utf-8' },
+});
+---

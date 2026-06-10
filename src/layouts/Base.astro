@@ -17,6 +17,7 @@ import montserratLatinItalic from '@fontsource-variable/montserrat/files/montser
 import Nav from '@/components/Nav.astro';
 import Footer from '@/components/Footer.astro';
 import Splash from '@/components/Splash.astro';
+import FaviconAnimado from '@/components/FaviconAnimado.astro';
 import CookieBanner from '@/components/CookieBanner.astro';
 import AsistenteIA from '@/components/AsistenteIA.astro';
 import VoiceAgent from '@/components/VoiceAgent.astro';
@@ -64,16 +65,16 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
     <!-- Preload fuentes críticas del fold (Montserrat latin) — sin esto el
          browser solo descubre el woff2 después de parsear el CSS, lo que
-         retrasaba LCP del <h1> hasta 4-5s. Con preload bajamos a ~2s. -->
+         retrasaba el LCP del titular hasta 4-5s. Con preload bajamos a ~2s. -->
     <link rel="preload" href={montserratLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={montserratLatinItalic} as="font" type="font/woff2" crossorigin />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link id="favicon" rel="icon" type="image/png" sizes="any" href="/brand/isotipo-lazos.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#faf8f5" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="alternate" type="application/rss+xml" title="Startidea — Notas" href="/rss.xml" />
 
     <title>{title}</title>
@@ -109,6 +110,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
   <body class="overflow-x-hidden pb-[72px] xl:pb-0">
     <AdminBar />
     <Splash />
+    <FaviconAnimado />
     <Nav />
     <main>
       <slot />

@@ -1,0 +1,351 @@
+---
+/**
+ * /precios — Landing comercial con tabla comparativa de opciones.
+ *
+ * 3 caminos visibles al lead:
+ *  1) Hacerlo solo (referencia, sin coste — pero con coste oculto en tiempo)
+ *  2) Copiloto Autónomo (gratis, lead magnet)
+ *  3) Servicio gestionado (12% al éxito, premium)
+ *
+ * SEO target: "cuánto cuesta tramitar subvención", "precio tramitar subvención
+ * agencia", "comisión éxito subvenciones España".
+ *
+ * SSR: prerender=false para reusar JSON-LD coherente con el catálogo.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+export const prerender = false;
+
+const pageUrl = `${SITE_URL}/precios`;
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio',    url: `${SITE_URL}/` },
+    { name: 'Precios',   url: pageUrl },
+  ]),
+  serviceSchema({
+    name:        'Tramitación de subvenciones a comisión de éxito',
+    description: 'Startidea gestiona el expediente completo de la convocatoria de subvención: análisis de encaje, memoria técnica adaptada al baremo, presupuesto justificado y presentación en sede electrónica. Comisión del 12% sobre el importe concedido, solo si se concede.',
+    serviceType: 'Tramitación de subvenciones',
+    url:         pageUrl,
+    audience:    ['Asociación', 'Fundación', 'Cooperativa', 'Empresa con propósito', 'Ayuntamiento', 'Entidad local'],
+    offers: [
+      {
+        name: 'Copiloto Autónomo',
+        description: 'Servicio gratuito: alertas automáticas + documentación preliminar generada con IA cada vez que aparece una convocatoria que encaja con tu organización.',
+        url: `${SITE_URL}/subvenciones/crear-alerta`,
+      },
+      {
+        name: 'Servicio gestionado a éxito',
+        description: 'Startidea analiza el encaje, prepara la memoria adaptada al baremo, revisa elegibilidad y presenta el expediente en sede electrónica. Comisión 12% solo si la subvención se concede.',
+        url: `${SITE_URL}/subvenciones/presentar/nuevo`,
+      },
+    ],
+  }),
+  faqPageSchema([
+    {
+      q: '¿Cuánto cuesta tramitar una subvención con Startidea?',
+      a: 'Startidea trabaja a comisión de éxito: cobra el 12% del importe finalmente concedido, solo si la subvención se concede. El análisis de encaje previo no tiene coste. Si la subvención no se concede, no hay ningún coste para la entidad.',
+    },
+    {
+      q: '¿Cuándo se factura la comisión del 12%?',
+      a: 'Cuando la administración resuelve la concesión y publica el importe definitivo. Startidea emite factura por el 12% sobre ese importe concedido. Si la administración revisa a la baja o reduce el importe, la comisión se ajusta proporcionalmente.',
+    },
+    {
+      q: '¿Qué incluye el servicio gestionado?',
+      a: 'Análisis previo de encaje, redacción de memoria técnica adaptada a los criterios de valoración, presupuesto justificado, checklist de documentación, presentación en sede electrónica (Autofirma incluido) y seguimiento hasta la resolución. Si se requiere subsanación, también la gestiona Startidea.',
+    },
+    {
+      q: '¿En qué se diferencia el Copiloto Autónomo del servicio gestionado?',
+      a: 'El Copiloto Autónomo es gratuito y envía por email los documentos preliminares generados con IA, pero la entidad presenta por su cuenta. El servicio gestionado adapta los documentos al proyecto real, los revisa con criterio legal y presenta Startidea en sede electrónica con responsabilidad sobre el resultado.',
+    },
+    {
+      q: '¿Hay tarifa fija como alternativa al 12% éxito?',
+      a: 'El modelo principal es comisión a éxito porque alinea mejor los incentivos: Startidea solo cobra si la subvención se concede. Para proyectos muy específicos o convocatorias atípicas se valoran modelos personalizados — escribe a hola@startidea.es con el contexto.',
+    },
+    {
+      q: '¿Quién puede contratar el servicio?',
+      a: 'Asociaciones, fundaciones, cooperativas, empresas con propósito, ayuntamientos y entidades locales. La especialidad de Startidea son las convocatorias del tercer sector andaluz, BOJA Junta de Andalucía y fondos para entidades locales, pero también gestiona convocatorias nacionales y europeas.',
+    },
+    {
+      q: '¿Hay coste por evaluar si nuestra convocatoria encaja?',
+      a: 'No. El análisis de encaje inicial es gratuito y sin compromiso. Startidea responde en 24–48h con un diagnóstico de viabilidad real: si tiene sentido presentarse, qué documentación falta y qué probabilidad de éxito hay. Solo si se contrata el servicio y la subvención se concede hay coste.',
+    },
+  ]),
+];
+---
+
+<Base
+  title="Precios — Tramitación de subvenciones a éxito 12% | Startidea"
+  description="Comisión 12% del importe concedido, sin coste si no se concede. O activa el Copiloto Autónomo gratis para recibir documentos IA cuando aparezcan convocatorias que encajen."
+  ogSlug="page/precios"
+  jsonLd={jsonLd}
+>
+
+  <!-- Hero -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="font-mono text-[11px] uppercase tracking-widest text-magenta">
+          — Modelo de precios
+        </span>
+        <h1 class="mt-4 font-display text-display-xl leading-[1.05] text-ink">
+          Solo cobramos<br />
+          <em class="italic text-magenta">si la subvención se concede.</em>
+        </h1>
+        <p class="mt-6 text-lede text-ink/70">
+          Comisión del 12% sobre el importe concedido. Sin tarifa fija, sin
+          mensualidad, sin coste por evaluar. Y si solo quieres recibir los
+          documentos IA por email, el Copiloto Autónomo es gratis.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla comparativa -->
+  <section class="border-y border-ink/10 bg-paper-warm py-14 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- Opción 1: Hacerlo solo -->
+        <div class="border border-ink/15 bg-paper p-7 flex flex-col">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45">Opción 1 · Por tu cuenta</p>
+          <h2 class="mt-3 font-display text-3xl text-ink leading-tight">Hacerlo internamente</h2>
+          <p class="mt-2 font-mono text-[11px] uppercase tracking-widest text-ink/50">Coste aparente</p>
+          <p class="font-display text-4xl text-ink mt-1">0&nbsp;€</p>
+          <p class="mt-1 text-xs text-ink/55 italic">
+            Pero con coste real de tiempo: 30–40 h/expediente para convocatorias estándar.
+          </p>
+
+          <hr class="border-ink/10 my-5">
+
+          <ul class="space-y-2.5 text-sm text-ink/75 flex-1">
+            <li>✓ Control total del proceso</li>
+            <li>✓ Sin comisiones a terceros</li>
+            <li class="text-ink/45">✗ Tasa de éxito típica: 30–40%</li>
+            <li class="text-ink/45">✗ Curva de aprendizaje por convocatoria</li>
+            <li class="text-ink/45">✗ Riesgo de exclusión por error formal</li>
+            <li class="text-ink/45">✗ Coste de oportunidad alto</li>
+          </ul>
+
+          <a href="/notas/roi-tramitar-subvenciones-agencia"
+             class="mt-6 inline-block border border-ink text-ink text-center py-3 px-5 font-mono text-[11px] uppercase tracking-widest hover:bg-ink hover:text-paper transition-colors">
+            Ver cálculo ROI →
+          </a>
+        </div>
+
+        <!-- Opción 2: Copiloto Autónomo (gratis) -->
+        <div class="border-2 border-ink/25 bg-paper p-7 flex flex-col">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-emerald-700">Opción 2 · Lead magnet</p>
+          <h2 class="mt-3 font-display text-3xl text-ink leading-tight">Copiloto Autónomo</h2>
+          <p class="mt-2 font-mono text-[11px] uppercase tracking-widest text-ink/50">Precio</p>
+          <p class="font-display text-4xl text-ink mt-1">Gratis</p>
+          <p class="mt-1 text-xs text-ink/55 italic">
+            Sin cuenta, sin tarjeta, sin créditos. Cancelas cuando quieras.
+          </p>
+
+          <hr class="border-ink/10 my-5">
+
+          <ul class="space-y-2.5 text-sm text-ink/75 flex-1">
+            <li>✓ Alertas automáticas de nuevas convocatorias</li>
+            <li>✓ Memoria técnica preliminar IA por convocatoria</li>
+            <li>✓ Presupuesto orientativo + checklist documentación</li>
+            <li>✓ Guía de presentación electrónica paso a paso</li>
+            <li>✓ Análisis de elegibilidad con semáforo</li>
+            <li class="text-ink/45">✗ Tú presentas el expediente</li>
+            <li class="text-ink/45">✗ Sin revisión legal personalizada</li>
+          </ul>
+
+          <a href="/subvenciones/crear-alerta?utm_source=precios&utm_medium=card&utm_campaign=copiloto-gratis"
+             class="mt-6 inline-block border-2 border-ink text-ink text-center py-3 px-5 font-mono text-[11px] uppercase tracking-widest hover:border-magenta hover:text-magenta transition-colors">
+            Activar Copiloto gratis →
+          </a>
+        </div>
+
+        <!-- Opción 3: Servicio gestionado (premium) -->
+        <div class="border-2 border-magenta bg-ink p-7 flex flex-col text-paper relative">
+          <span class="absolute -top-3 right-5 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+            Recomendado
+          </span>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Opción 3 · A éxito</p>
+          <h2 class="mt-3 font-display text-3xl text-paper leading-tight">Servicio gestionado</h2>
+          <p class="mt-2 font-mono text-[11px] uppercase tracking-widest text-paper/55">Comisión</p>
+          <p class="font-display text-4xl text-paper mt-1">12%</p>
+          <p class="mt-1 text-xs text-paper/55 italic">
+            Del importe finalmente concedido. <strong class="text-paper">0&nbsp;€ si no se concede.</strong>
+          </p>
+
+          <hr class="border-paper/15 my-5">
+
+          <ul class="space-y-2.5 text-sm text-paper/85 flex-1">
+            <li>✓ Análisis de encaje real con criterio legal</li>
+            <li>✓ Memoria adaptada al baremo de la convocatoria</li>
+            <li>✓ Presupuesto justificado partida por partida</li>
+            <li>✓ Documentación administrativa completa</li>
+            <li>✓ Presentación en sede electrónica (Autofirma)</li>
+            <li>✓ Subsanaciones gestionadas si hay requerimiento</li>
+            <li>✓ Seguimiento hasta resolución y notificación</li>
+          </ul>
+
+          <a href="/subvenciones/presentar/nuevo?utm_source=precios&utm_medium=card&utm_campaign=premium-gestionado"
+             class="mt-6 inline-block bg-magenta text-paper text-center py-3 px-5 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors">
+            Pedir presupuesto →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Disclaimer pricing -->
+      <p class="mt-8 text-center font-mono text-[10px] uppercase tracking-widest text-ink/40">
+        Sin cuotas mensuales · Sin coste por evaluar · Sin permanencia
+      </p>
+
+    </div>
+  </section>
+
+  <!-- Cómo funciona el éxito 12% -->
+  <section class="bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="font-display text-display-md leading-tight text-ink">
+          Cómo funciona la comisión 12% al éxito.
+        </h2>
+        <p class="mt-4 text-lede text-ink/70">
+          Es el modelo que mejor alinea los incentivos: Startidea solo gana si
+          tu organización gana. Sin éxito, sin coste.
+        </p>
+
+        <div class="mt-10 space-y-6">
+
+          <div class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">1.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Análisis de encaje sin coste</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Cuéntanos qué convocatoria os interesa o qué proyecto queréis
+                financiar. En 24–48h Startidea responde con un diagnóstico
+                honesto: si tiene sentido presentarse y qué probabilidad real
+                de éxito vemos. Sin compromiso.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">2.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Firma del contrato a éxito</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Si el diagnóstico es favorable, firmamos contrato sencillo
+                (electrónico). Define el 12% sobre el importe concedido como
+                única contraprestación. Si la subvención no se concede, el
+                contrato termina sin coste.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">3.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Preparación y presentación</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Memoria técnica adaptada al baremo, presupuesto justificado,
+                documentación administrativa, presentación en sede electrónica
+                con Autofirma. Tú revisas el borrador antes de firmar; lo
+                presenta Startidea.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-[36px,1fr] gap-4 items-start">
+            <span class="font-display text-2xl text-magenta">4.</span>
+            <div>
+              <h3 class="font-display text-xl text-ink">Resolución</h3>
+              <p class="mt-1 text-sm text-ink/65 leading-relaxed">
+                Cuando la administración resuelve, si se concede emitimos
+                factura por el 12% del importe concedido. Si no se concede,
+                no hay factura. Así de simple.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-ink/10 bg-paper-warm py-14 md:py-20">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="font-display text-display-md leading-tight text-ink mb-10">
+          Preguntas frecuentes sobre precios.
+        </h2>
+
+        <div class="space-y-6">
+          {[
+            {
+              q: '¿Hay alguna situación en la que tengamos que pagar aunque no se conceda?',
+              a: 'No. El contrato establece que la comisión solo se devenga si la administración resuelve concediendo la subvención. Si se deniega, si se desiste o si la resolución no llega en el plazo previsto, no hay coste para la entidad.',
+            },
+            {
+              q: '¿Qué pasa si nos conceden un importe menor al solicitado?',
+              a: 'La comisión se calcula sobre el importe finalmente concedido, no sobre el solicitado. Si pediste 20.000€ y te conceden 12.000€, la comisión es 12% × 12.000€ = 1.440€.',
+            },
+            {
+              q: '¿La comisión incluye IVA?',
+              a: 'La comisión es 12% sobre el importe concedido. La factura aplica IVA según la normativa vigente (21% sobre la comisión). El IVA es deducible si tu entidad puede deducirlo (la mayoría de fundaciones y empresas sí pueden).',
+            },
+            {
+              q: '¿Qué pasa si abandonamos a mitad del proceso?',
+              a: 'No hay penalización. Puedes desistir en cualquier momento antes de la presentación. Si ya hemos preparado documentación, te la entregamos. El contrato solo obliga al 12% si se llega a presentar Y se concede.',
+            },
+            {
+              q: '¿Y los gastos de notario, registro o tasas administrativas?',
+              a: 'Las convocatorias del tercer sector y locales que Startidea tramita habitualmente no tienen tasas administrativas. Si tu convocatoria específica las tuviera, te las indicaríamos antes de firmar para que las asumas tú directamente (no pasan por la factura de Startidea).',
+            },
+            {
+              q: '¿Aplican condiciones distintas para fondos europeos o convocatorias de alto importe?',
+              a: 'Para convocatorias con importe potencial superior a 100.000€ o complejidad técnica alta (fondos europeos, CDTI, ENISA), valoramos condiciones específicas que pueden incluir un anticipo de gastos o un tramo fijo. Hablamos contigo antes de firmar.',
+            },
+          ].map(({ q, a }) => (
+            <details class="border border-ink/15 bg-paper p-6 group">
+              <summary class="cursor-pointer font-display text-lg text-ink list-none flex items-start justify-between gap-3">
+                <span>{q}</span>
+                <span class="font-mono text-magenta group-open:rotate-45 transition-transform">+</span>
+              </summary>
+              <p class="mt-3 text-sm text-ink/70 leading-relaxed">{a}</p>
+            </details>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-16 md:py-20 text-paper">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-display-md leading-tight text-paper">
+          ¿Tienes una convocatoria en mente?
+        </h2>
+        <p class="mt-5 text-lede text-paper/80">
+          Cuéntanos qué quieres presentar. En 24–48h te respondemos con
+          diagnóstico honesto. Sin coste, sin compromiso.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/subvenciones/presentar/nuevo?utm_source=precios&utm_medium=cta-final&utm_campaign=analisis-gratis"
+             class="bg-magenta text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors">
+            Pedir análisis gratis →
+          </a>
+          <a href="/subvenciones/catalogo"
+             class="border-2 border-paper text-paper px-6 py-3 font-mono text-[11px] uppercase tracking-widest hover:border-magenta hover:text-magenta transition-colors">
+            Ver catálogo de convocatorias →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Base>

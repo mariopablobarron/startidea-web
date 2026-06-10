@@ -39,6 +39,24 @@ export async function getStaticPaths() {
     }
     if (res.totalPages && page + 1 >= res.totalPages) break;
   }
+
+  // Incluir también las cerradas recientes (convocatorias añadidas manualmente
+  // con interés editorial, ej. OEPM, CDTI, ENISA). Hard-cap bajo: solo la
+  // primera página para no inflar el build.
+  try {
+    const cerradas = await fetchSubsidies({
+      status: 'cerrado',
+      pageSize: 50,
+      page: 0,
+      sort: 'recent',
+    });
+    for (const item of cerradas.items) {
+      if (item.slug) slugs.add(item.slug);
+    }
+  } catch {
+    // no bloquear el build si falla
+  }
+
   return [...slugs].map((slug) => ({ params: { slug } }));
 }
 
@@ -107,6 +125,7 @@ const jsonLd = [
   description={description}
   ogSlug="page/subvenciones"
   jsonLd={jsonLd}
+  noindex={true}
 >
   <!-- Breadcrumbs -->
   <section class="border-b border-ink/10 bg-paper-warm py-3">
@@ -298,23 +317,42 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- CTA Startidea (consultoría) -->
-  <section class="bg-paper-warm py-12 md:py-16">
+  <!-- CTA Copiloto: Solicitar con IA -->
+  <section class="bg-ink py-14 md:py-20 text-paper">
     <div class="container-x">
-      <div class="grid grid-cols-12 gap-x-8 border-y border-ink/15 py-10">
+      <div class="grid grid-cols-12 gap-x-8 items-center">
         <div class="col-span-12 lg:col-span-7">
-          <span class="label">— ¿Necesitas ayuda con esta convocatoria?</span>
-          <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
-            Te ayudamos a <em class="italic text-magenta">redactar la solicitud</em>.
+          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— Copiloto Startidea</span>
+          <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
+            Startidea gestiona la solicitud.<br />
+            <em class="italic text-magenta">Tú solo firmas.</em>
           </h2>
-          <p class="mt-5 max-w-measure text-ink/80">
-            Si esta convocatoria encaja con tu organización, podemos ayudarte
-            a preparar la solicitud, la memoria económica y el seguimiento.
-            Una llamada de 30 minutos sin compromiso para ver si es viable.
+          <p class="mt-5 max-w-measure text-paper/75">
+            El equipo de Startidea prepara la memoria técnica,
+            el presupuesto y la guía de presentación adaptados a esta convocatoria.
+            Sin plantillas genéricas: todo calibrado a las bases de {subsidy.organization ?? 'esta entidad'}.
           </p>
+          <ul class="mt-5 space-y-1.5 text-sm text-paper/70">
+            <li class="flex items-baseline gap-2"><span class="text-magenta">✓</span> Memoria técnica adaptada a estas bases</li>
+            <li class="flex items-baseline gap-2"><span class="text-magenta">✓</span> Presupuesto estructurado por partidas</li>
+            <li class="flex items-baseline gap-2"><span class="text-magenta">✓</span> Checklist de documentos necesarios</li>
+            <li class="flex items-baseline gap-2"><span class="text-magenta">✓</span> Guía paso a paso para presentar en sede electrónica</li>
+          </ul>
         </div>
-        <div class="col-span-12 mt-6 flex items-end justify-end lg:col-span-5 lg:mt-0">
-          <a href="/contacto" class="btn">Hablamos →</a>
+        <div class="col-span-12 mt-8 flex flex-col items-start gap-4 lg:col-span-5 lg:mt-0 lg:items-end">
+          <a
+            href={`/subvenciones/presentar/nuevo?slug=${encodeURIComponent(slug as string)}&title=${encodeURIComponent(subsidy.title.slice(0, 150))}`}
+            class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta text-base px-8 py-4"
+          >
+            Solicitar con Startidea →
+          </a>
+          <p class="text-xs text-paper/40 lg:text-right">
+            12% comisión a éxito — sin coste si no se concede.<br />
+            Diagnóstico de encaje previo sin compromiso.
+          </p>
+          <a href="/contacto" class="font-mono text-[11px] uppercase tracking-widest text-paper/40 hover:text-paper">
+            O prefiero hablar primero →
+          </a>
         </div>
       </div>
     </div>

@@ -5,7 +5,8 @@
 
 import type { APIRoute } from 'astro';
 import { calcularPresupuesto } from '@/data/servicios';
-import { sendOwnerLeadEmail } from '@/lib/email-resend';
+import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
+import { sendTelegram, hasTelegramConfig } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -59,10 +60,7 @@ function generarDiagnostico(r: Record<string, string>): string {
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const TOKEN = process.env.TELEGRAM_BOT_TOKEN || import.meta.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID || import.meta.env.TELEGRAM_CHAT_ID;
-
-  if (!TOKEN || !CHAT_ID) {
+  if (!hasTelegramConfig()) {
     return new Response(JSON.stringify({ ok: false, error: 'config' }), { status: 500 });
   }
 
@@ -130,23 +128,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     (calc.lineas.length ? escapeHtml(calc.lineas.join('\n')) : '(ninguno)') +
     `\n\n<b>Estimación interna:</b> ${escapeHtml(calc.resumen)}`;
 
-  try {
-    const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true,
-      }),
-    });
-    const data = await r.json();
-    if (!data.ok) {
-      return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
-    }
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: 'network' }), { status: 502 });
+  if (!(await sendTelegram(text))) {
+    return new Response(JSON.stringify({ ok: false, error: 'telegram' }), { status: 502 });
   }
 
   // Email de confirmación al cliente (no-bloqueante: si falla, el form sigue
@@ -195,14 +178,6 @@ async function enviarEmailConfirmacion(opts: {
   diagnostico: string;
   serviciosNombres: string[];
 }): Promise<void> {
-  const RESEND_KEY = process.env.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
-  const FROM = process.env.RESEND_FROM || import.meta.env.RESEND_FROM || 'Startidea <hola@hubstartidea.es>';
-  const REPLY_TO = process.env.RESEND_REPLY_TO || import.meta.env.RESEND_REPLY_TO || 'hola@startidea.es';
-  if (!RESEND_KEY) {
-    console.warn('[presupuesto] RESEND_API_KEY no configurada — saltando email');
-    return;
-  }
-
   const serviciosHtml = opts.serviciosNombres.length
     ? `<ul style="padding-left:1.2em;margin:0">${opts.serviciosNombres
         .map((s) => `<li style="margin:0 0 0.3em 0">${escapeHtml(s)}</li>`)
@@ -212,7 +187,7 @@ async function enviarEmailConfirmacion(opts: {
   const html = `<!doctype html>
 <html lang="es">
 <head><meta charset="utf-8" /></head>
-<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:32px 24px;background:#fafaf7">
+<body style="font-family:Inter,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55;color:#1a1a1a;max-width:560px;margin:0 auto;padding:32px 24px;background:#f9fafb">
   <p style="margin:0 0 24px 0;font-size:14px;color:#666;text-transform:uppercase;letter-spacing:0.08em">Startidea — Agencia de innovación social · Granada</p>
   <h1 style="font-size:28px;line-height:1.2;margin:0 0 24px 0;font-weight:600">Hola ${escapeHtml(opts.name.split(' ')[0] || opts.name)},</h1>
   <p>Recibido tu briefing en startidea.es. Lo está leyendo el equipo y te respondemos con un presupuesto detallado en las próximas 24 horas laborales.</p>
@@ -226,22 +201,12 @@ async function enviarEmailConfirmacion(opts: {
   <p style="font-size:12px;color:#999">Startidea · C/ Conde Cifuentes 33, 18005 Granada · <a href="https://startidea.es" style="color:#999">startidea.es</a></p>
 </body></html>`;
 
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${RESEND_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: FROM,
-      to: [opts.email],
-      reply_to: REPLY_TO,
-      subject: 'Hemos recibido tu briefing — Startidea',
-      html,
-    }),
+  // Usa el helper compartido (mismo FROM/reply-to/error-handling que el resto
+  // de endpoints). El FROM correcto sale de RESEND_FROM; nunca hardcodear un
+  // dominio distinto a startidea.es aquí.
+  await sendEmail({
+    to: opts.email,
+    subject: 'Hemos recibido tu briefing — Startidea',
+    html,
   });
-  if (!r.ok) {
-    const txt = await r.text().catch(() => '');
-    throw new Error(`Resend ${r.status}: ${txt.slice(0, 200)}`);
-  }
 }

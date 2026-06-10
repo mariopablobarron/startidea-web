@@ -1,0 +1,11 @@
+node_modules/
+# NUNCA commitear certificados (ni en claro ni cifrados) ni claves
+certs/
+*.pfx
+*.p12
+*.pem
+*.key
+*.pfx.enc
+*.p12.enc
+.env
+.env.*

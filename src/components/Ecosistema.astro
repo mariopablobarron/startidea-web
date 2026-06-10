@@ -42,14 +42,16 @@ const propiedades = [
     body: 'Espacio físico en Granada. Coworking, salas de reuniones, estudio de podcast y radio. Comunidad de profesionales con propósito.',
     url: 'hubstartidea.es',
     href: 'https://hubstartidea.es',
+    external: true,
   },
   {
     num: '06',
     nombre: 'Merchandising',
-    tag: '+2.400 productos · Precio al instante',
-    body: 'Catálogo B2B online: configura cantidad y marcaje (serigrafía, bordado, láser, DTF) y ves el total exacto al momento. Producción en Centros Especiales de Empleo y talleres locales. Pago directo con tarjeta.',
+    tag: 'Atención personalizada · Precio online',
+    body: 'Catálogo de productos personalizables con atención personalizada: elige la técnica de marcaje (serigrafía, bordado, láser, DTF) y consulta el precio al momento. Producción en Centros Especiales de Empleo y talleres locales. Bronze Partner FYVAR desde 2016.',
     url: 'merchandising.hubstartidea.es',
     href: 'https://merchandising.hubstartidea.es',
+    external: true,
     badge: 'Online ahora',
   },
   {
@@ -59,6 +61,7 @@ const propiedades = [
     body: 'Plataforma sociocultural: videopodcasts, noticias, opinión, galas solidarias. La voz pública de la innovación social en Granada.',
     url: 'granadasocial.org',
     href: 'https://granadasocial.org',
+    external: true,
   },
   {
     num: '08',
@@ -67,6 +70,7 @@ const propiedades = [
     body: 'Plataforma propia de mentoría con IA en español. Acompañamiento emocional sin registro, con supervisión clínica humana.',
     url: 'tresmilmillonesdelatidos.es',
     href: 'https://tresmilmillonesdelatidos.es',
+    external: true,
   },
   {
     num: '09',
@@ -75,7 +79,36 @@ const propiedades = [
     body: 'Plataforma de matching entre fundadores, inversores y mentores. Discover diario con scoring, chat en vivo y planes freemium con conversión real. Construida sobre HumHub + Next.js.',
     url: 'app.aceleradora.hubstartidea.es',
     href: 'https://app.aceleradora.hubstartidea.es',
+    external: true,
     badge: 'Live',
+  },
+  {
+    num: '10',
+    nombre: 'Subvenciones',
+    tag: 'Buscador · Financiación pública',
+    body: 'Buscador gratuito de convocatorias abiertas (BDNS, IDAE, Junta de Andalucía…) filtradas para el tercer sector. Sin paywall. Y si una encaja, Startidea la tramita a éxito.',
+    url: 'startidea.es/subvenciones',
+    href: '/subvenciones',
+    external: false,
+  },
+  {
+    num: '11',
+    nombre: 'Startidea Lab',
+    tag: 'Laboratorio · Cursos',
+    body: 'Formación práctica y herramientas abiertas: cursos de comunicación, fundraising y tecnología para entidades con propósito. El laboratorio donde Startidea prueba y comparte.',
+    url: 'startidea.es/laboratorio',
+    href: '/laboratorio',
+    external: false,
+  },
+  {
+    num: '12',
+    nombre: 'Raíz y Acción',
+    tag: 'Mentoría · Emprender con propósito',
+    body: 'Comunidad de mentoría para construir desde la identidad propia, no desde la moda del mercado. Un proyecto de Mario Pablo Sánchez Barrón.',
+    url: 'mariopablo.es',
+    href: 'https://mariopablo.es',
+    external: true,
+    badge: 'Nuevo',
   },
 ];
 ---
@@ -90,10 +123,10 @@ const propiedades = [
       <div class="col-span-12 mt-6 lg:col-span-9 md:mt-0">
         <h2 class="font-display text-display-lg leading-[0.98] text-ink">
           Una casa.
-          <span class="block italic text-ink/55">Ocho voces que se hablan.</span>
+          <span class="block italic text-ink/55">Muchas voces que se hablan.</span>
         </h2>
         <p class="mt-6 max-w-measure text-lede text-ink/80">
-          Cuatro disciplinas internas que se contratan juntas o por separado, y cuatro propiedades digitales con vida propia. Todo bajo un mismo techo en Granada.
+          Cuatro disciplinas internas que se contratan juntas o por separado, y un ecosistema de marcas e iniciativas con vida propia. Todo bajo un mismo techo en Granada.
         </p>
       </div>
     </div>
@@ -111,7 +144,7 @@ const propiedades = [
           <a href={p.href} class="reveal group card-edit !pt-10">
             <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
               <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
-              <span class="label text-right">{p.tag}</span>
+              <span class="label text-right tracking-wide sm:tracking-widest">{p.tag}</span>
             </div>
             <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
               {p.nombre}
@@ -132,16 +165,16 @@ const propiedades = [
     <div class="mt-20">
       <div class="flex items-baseline gap-4 border-b border-ink/15 pb-4">
         <span class="num-edit text-3xl">·</span>
-        <span class="label">— Propiedades</span>
-        <span class="font-mono text-xs text-ink-mute">Sub-marcas con dominio propio · enlaces externos</span>
+        <span class="label">— Marcas e iniciativas</span>
+        <span class="font-mono text-xs text-ink-mute">Sub-marcas con dominio propio e iniciativas de Startidea</span>
       </div>
 
       <div class="mt-8 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {propiedades.map((p) => (
           <a
             href={p.href}
-            target="_blank"
-            rel="noopener"
+            target={p.external ? '_blank' : undefined}
+            rel={p.external ? 'noopener' : undefined}
             class:list={[
               'reveal group card-edit !pt-10 relative',
               p.badge && 'ring-1 ring-magenta/40',
@@ -154,7 +187,7 @@ const propiedades = [
             )}
             <div class="flex items-baseline justify-between border-b border-ink/15 pb-6">
               <span class="num-edit text-5xl md:text-6xl">{p.num}</span>
-              <span class="label text-right">{p.tag}</span>
+              <span class="label text-right tracking-wide sm:tracking-widest">{p.tag}</span>
             </div>
             <h3 class="mt-7 font-display text-3xl leading-tight text-ink transition-colors group-hover:text-magenta md:text-4xl">
               {p.nombre}
@@ -164,7 +197,7 @@ const propiedades = [
               <span class="font-mono text-[11px] uppercase tracking-widest text-ink/60 transition-colors group-hover:text-magenta">
                 {p.url}
               </span>
-              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">↗</span>
+              <span aria-hidden="true" class="font-mono text-sm text-ink/60 transition-transform group-hover:translate-x-1 group-hover:text-magenta">{p.external ? '↗' : '→'}</span>
             </div>
           </a>
         ))}

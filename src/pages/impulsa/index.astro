@@ -1,0 +1,372 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Startidea Impulsa', url: `${SITE_URL}/impulsa` },
+  ]),
+];
+
+const field = 'mt-2 w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none';
+const lbl = 'block font-display text-base text-ink';
+
+const pasos = [
+  { n: '01', t: 'Rellenas el diagnóstico', d: 'Un formulario de unos 15 minutos sobre tu entidad y su comunicación. Sin compromiso.' },
+  { n: '02', t: 'Recibes tu hoja de ruta', d: 'Toda entidad que se presenta recibe una valoración y una hoja de ruta de comunicación. El diagnóstico es tuyo, salgas o no seleccionada.' },
+  { n: '03', t: 'Ejecutamos el plan juntos', d: 'Las entidades seleccionadas reciben un paquete de servicios para ejecutar ese plan con Startidea.' },
+];
+
+const servicios = [
+  'Diagnóstico estratégico de comunicación',
+  'Hoja de ruta a 12 meses',
+  'Desarrollo web (nuevo o renovación)',
+  'Estrategia y gestión de redes sociales',
+  'Plan de comunicación interna y externa',
+  'Materiales audiovisuales (vídeo, foto, podcast)',
+  'Software de gestión',
+];
+---
+
+<Base
+  title="Startidea Impulsa — 80.000 € en comunicación para el tercer sector"
+  description="Programa de RSC de Startidea: diagnóstico estratégico gratuito y ejecución del plan de comunicación (web, redes, audiovisual, software de gestión) en especie para entidades sociales de toda España."
+  ogSlug="page/impulsa"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Startidea Impulsa · Programa de RSC</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        80.000 € en comunicación<br />
+        <em class="italic text-magenta">para el tercer sector.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        La comunicación no debería ser un lujo para quien dedica su trabajo a una causa. Startidea destina 80.000 € en servicios profesionales —en especie, valorados a precio de mercado— a entidades sociales de toda España: diagnóstico, web, redes, audiovisual y software de gestión.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="#solicitud" class="btn">Presentar mi entidad →</a>
+        <a href="/impulsa/bases" class="btn-ghost">Ver las bases</a>
+      </div>
+      <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink/50">No se entrega dinero · Se entrega trabajo · Se hace contigo</p>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3"><span class="label">— Cómo funciona</span></div>
+        <div class="col-span-12 lg:col-span-9">
+          <ol class="reveal-stagger divide-y divide-ink/15 border-y border-ink/15">
+            {pasos.map((p) => (
+              <li class="grid grid-cols-12 gap-x-8 py-8">
+                <div class="col-span-12 lg:col-span-2"><span class="font-mono text-sm text-ink/40">{p.n}</span></div>
+                <div class="col-span-12 mt-1 lg:col-span-10 lg:mt-0">
+                  <p class="font-display text-xl text-ink">{p.t}</p>
+                  <p class="mt-2 max-w-measure text-ink/70">{p.d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué incluye -->
+  <section class="border-y border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12">
+        <div class="col-span-12 lg:col-span-3"><span class="label">— Qué incluye</span></div>
+        <div class="col-span-12 lg:col-span-9">
+          <ul class="reveal-stagger grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {servicios.map((s) => (
+              <li class="flex items-start gap-3 border border-ink/10 bg-paper-warm p-4">
+                <span class="mt-0.5 text-magenta" aria-hidden="true">—</span>
+                <span class="text-ink/80">{s}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-6 max-w-measure text-sm text-ink/60">El alcance de cada paquete se define a partir del diagnóstico, según las necesidades de la entidad y la dotación disponible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quién puede presentarse -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3"><span class="label">— Quién puede presentarse</span></div>
+        <div class="col-span-12 lg:col-span-9">
+          <p class="max-w-measure text-lede text-ink/80">Entidades sin ánimo de lucro legalmente constituidas en España: asociaciones, fundaciones, ONG, federaciones y cooperativas de iniciativa social, con al menos un año de actividad y un fin de interés general.</p>
+          <p class="mt-4 text-ink/60">Consulta los requisitos completos, el baremo y las obligaciones en las <a href="/impulsa/bases" class="link-underline text-ink">bases del programa</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulario de diagnóstico -->
+  <section id="solicitud" class="border-t border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-narrow">
+      <span class="label">— Diagnóstico · ~15 minutos</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Presenta tu entidad</h2>
+      <p class="mt-4 max-w-measure text-ink/70">Cuéntanos cómo está hoy tu comunicación. Recibirás una valoración y una hoja de ruta, te seleccionen o no.</p>
+
+      <form id="imp-form" class="mt-12 space-y-8" novalidate>
+        <div class="hidden" aria-hidden="true"><label>No rellenar<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+
+        <fieldset class="space-y-6 border-t border-ink/15 pt-8">
+          <legend class="label">La entidad</legend>
+          <div>
+            <label class={lbl} for="org_nombre">Nombre de la entidad *</label>
+            <input id="org_nombre" type="text" maxlength="160" class={field} required />
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label class={lbl} for="org_tipo">Tipo de entidad *</label>
+              <select id="org_tipo" class={field} required>
+                <option value="">Selecciona…</option>
+                <option>Asociación</option>
+                <option>Fundación</option>
+                <option>Federación</option>
+                <option>ONG</option>
+                <option>Cooperativa de iniciativa social</option>
+              </select>
+            </div>
+            <div>
+              <label class={lbl} for="org_cif">CIF</label>
+              <input id="org_cif" type="text" maxlength="20" class={field} />
+            </div>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label class={lbl} for="web_actual">Web actual (si tenéis)</label>
+              <input id="web_actual" type="text" maxlength="200" placeholder="https://…" class={field} />
+            </div>
+            <div>
+              <label class={lbl} for="ambito">¿Dónde actuáis?</label>
+              <input id="ambito" type="text" maxlength="60" placeholder="CCAA o nacional" class={field} />
+            </div>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-3">
+            <div>
+              <label class={lbl} for="anio_constitucion">Año de constitución</label>
+              <input id="anio_constitucion" type="number" min="1900" max="2026" class={field} />
+            </div>
+            <div>
+              <label class={lbl} for="num_personas">Personas en el equipo</label>
+              <select id="num_personas" class={field}>
+                <option value="">—</option>
+                <option value="0">Solo voluntariado</option>
+                <option value="1-3">1 – 3</option>
+                <option value="4-10">4 – 10</option>
+                <option value=">10">Más de 10</option>
+              </select>
+            </div>
+            <div>
+              <label class={lbl} for="presupuesto">Presupuesto anual</label>
+              <select id="presupuesto" class={field}>
+                <option value="">—</option>
+                <option value="<50k">Menos de 50k €</option>
+                <option value="50-150k">50 – 150k €</option>
+                <option value="150-300k">150 – 300k €</option>
+                <option value="300k-1M">300k – 1M €</option>
+                <option value=">1M">Más de 1M €</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class={lbl} for="mision">¿Cuál es vuestra misión? *</label>
+            <textarea id="mision" rows="3" maxlength="1200" class={field} placeholder="Qué hacéis y para quién." required></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="space-y-6 border-t border-ink/15 pt-8">
+          <legend class="label">Vuestra comunicación hoy</legend>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label class={lbl} for="web_estado">Estado de la web</label>
+              <select id="web_estado" class={field}>
+                <option value="">—</option>
+                <option>No tenemos</option>
+                <option>Desactualizada</option>
+                <option>Aceptable</option>
+                <option>Buena</option>
+              </select>
+            </div>
+            <div>
+              <label class={lbl} for="redes_estado">Estado de las redes sociales</label>
+              <select id="redes_estado" class={field}>
+                <option value="">—</option>
+                <option>No tenemos</option>
+                <option>Desactualizada</option>
+                <option>Aceptable</option>
+                <option>Buena</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <span class={lbl}>¿Producís materiales audiovisuales?</span>
+              <div class="mt-3 flex gap-6">
+                <label class="flex items-center gap-2 text-ink/85"><input type="radio" name="audiovisual" value="si" class="accent-magenta" /> Sí</label>
+                <label class="flex items-center gap-2 text-ink/85"><input type="radio" name="audiovisual" value="no" class="accent-magenta" /> No</label>
+              </div>
+            </div>
+            <div>
+              <span class={lbl}>¿Usáis algún software de gestión?</span>
+              <div class="mt-3 flex gap-6">
+                <label class="flex items-center gap-2 text-ink/85"><input type="radio" name="software_gestion" value="si" class="accent-magenta" /> Sí</label>
+                <label class="flex items-center gap-2 text-ink/85"><input type="radio" name="software_gestion" value="no" class="accent-magenta" /> No</label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class={lbl} for="retos">¿Cuál es vuestro mayor reto de comunicación?</label>
+            <textarea id="retos" rows="3" maxlength="1500" class={field} placeholder="Lo que más os cuesta o lo que necesitáis resolver."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="space-y-6 border-t border-ink/15 pt-8">
+          <legend class="label">Qué necesitáis</legend>
+          <div>
+            <span class={lbl}>¿Qué servicios del programa os interesan? (marca los que apliquen)</span>
+            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2" id="servicios-wrap">
+              {['Web', 'Redes sociales', 'Plan de comunicación', 'Audiovisual', 'Software de gestión', 'Diagnóstico'].map((s) => (
+                <label class="flex items-center gap-2 border border-ink/10 bg-paper-warm p-3 text-ink/80">
+                  <input type="checkbox" name="servicios_interes" value={s} class="accent-magenta" /> {s}
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label class={lbl} for="objetivo">¿Qué querríais conseguir en 12 meses?</label>
+            <textarea id="objetivo" rows="3" maxlength="1500" class={field} placeholder="Vuestro objetivo si todo saliera bien."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="space-y-6 border-t border-ink/15 pt-8">
+          <legend class="label">Persona de contacto</legend>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label class={lbl} for="contacto_nombre">Nombre y apellidos *</label>
+              <input id="contacto_nombre" type="text" maxlength="120" class={field} required />
+            </div>
+            <div>
+              <label class={lbl} for="contacto_cargo">Cargo</label>
+              <input id="contacto_cargo" type="text" maxlength="120" class={field} />
+            </div>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label class={lbl} for="contacto_email">Email *</label>
+              <input id="contacto_email" type="email" maxlength="120" class={field} required />
+            </div>
+            <div>
+              <label class={lbl} for="contacto_telefono">Teléfono</label>
+              <input id="contacto_telefono" type="tel" maxlength="30" class={field} />
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="border-t border-ink/15 pt-8">
+          <label class="flex items-start gap-3 text-sm text-ink/80">
+            <input type="checkbox" id="consent" class="mt-1 accent-magenta" required />
+            <span>Acepto las <a href="/impulsa/bases" class="link-underline text-ink">bases del programa</a> y la <a href="/privacidad" class="link-underline text-ink">política de privacidad</a>. Autorizo a Startidea a evaluar mi solicitud, elaborar el diagnóstico y <strong>contactarme para ofrecerme sus servicios y futuras colaboraciones</strong>. (Responsable: Startidea, CIF B19583632. Puedes darte de baja escribiendo a hola@startidea.es.)</span>
+          </label>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <button type="submit" id="imp-submit" class="btn">Enviar solicitud →</button>
+          <p id="imp-msg" class="text-sm" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div id="imp-ok" class="hidden border-l-2 border-magenta bg-paper-warm p-8">
+        <p class="label text-magenta">— Solicitud recibida</p>
+        <p class="mt-3 max-w-measure text-lg text-ink/85">Gracias. Startidea revisará tu diagnóstico y te contactará con tu valoración y hoja de ruta. Recibirás noticias en el email que has indicado.</p>
+        <a href="/notas" class="btn-ghost mt-6 inline-block">Mientras tanto, lee nuestras notas</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // JavaScript puro — sin tipos, sin casts, sin "!".
+  const form = document.getElementById('imp-form');
+  const okBox = document.getElementById('imp-ok');
+  const msg = document.getElementById('imp-msg');
+  const submitBtn = document.getElementById('imp-submit');
+
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function radioVal(name) { const el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+  function checks(name) {
+    const out = [];
+    document.querySelectorAll('input[name="' + name + '"]:checked').forEach((el) => out.push(el.value));
+    return out;
+  }
+  function showErr(t) { if (msg) { msg.textContent = t; msg.className = 'text-sm text-magenta'; } }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const consent = document.getElementById('consent');
+      if (!consent || !consent.checked) { showErr('Marca la aceptación de las bases para enviar.'); return; }
+      if (!val('org_nombre') || !val('org_tipo') || !val('mision') || !val('contacto_nombre') || !val('contacto_email')) {
+        showErr('Completa los campos obligatorios (marcados con *).'); return;
+      }
+
+      const payload = {
+        website: val('website'),
+        org_nombre: val('org_nombre'),
+        org_tipo: val('org_tipo'),
+        org_cif: val('org_cif'),
+        web_actual: val('web_actual'),
+        ambito: val('ambito'),
+        anio_constitucion: val('anio_constitucion'),
+        num_personas: val('num_personas'),
+        presupuesto: val('presupuesto'),
+        mision: val('mision'),
+        web_estado: val('web_estado'),
+        redes_estado: val('redes_estado'),
+        audiovisual: radioVal('audiovisual'),
+        software_gestion: radioVal('software_gestion'),
+        retos: val('retos'),
+        servicios_interes: checks('servicios_interes'),
+        objetivo: val('objetivo'),
+        contacto_nombre: val('contacto_nombre'),
+        contacto_cargo: val('contacto_cargo'),
+        contacto_email: val('contacto_email'),
+        contacto_telefono: val('contacto_telefono'),
+        consent: true,
+      };
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando…'; }
+      if (msg) msg.textContent = '';
+
+      try {
+        const res = await fetch('/api/impulsa-solicitud', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          form.classList.add('hidden');
+          if (okBox) { okBox.classList.remove('hidden'); okBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        } else {
+          const map = { rate: 'Espera unos segundos antes de reenviar.', consent: 'Marca la aceptación de las bases.', email: 'Revisa el email.', fields: 'Faltan campos obligatorios.' };
+          showErr(map[data.error] || 'No se pudo enviar. Inténtalo de nuevo.');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Enviar solicitud →'; }
+        }
+      } catch (err) {
+        showErr('Error de conexión. Inténtalo de nuevo.');
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Enviar solicitud →'; }
+      }
+    });
+  }
+</script>

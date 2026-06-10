@@ -2,6 +2,8 @@
 title: 'Cómo producir un podcast para el tercer sector (sin que parezca un acta de junta)'
 description: 'La mayoría de los podcasts del tercer sector mueren en el episodio 3. Esta guía recoge el formato editorial, el equipo mínimo, el coste real y el calendario sostenible para que una ONG, fundación o institución pública produzca un podcast que la gente escuche más de una vez.'
 pubDate: 2026-05-24
+tldr: 'Un podcast del tercer sector sobrevive cuando tiene un formato editorial claro, un equipo técnico mínimo y una cadencia sostenible, no cuando se graba una junta. El presupuesto se va sobre todo en edición y constancia, no en equipo caro. Si no hay tiempo interno para mantener el ritmo, conviene apoyo externo.'
+category: 'Comunicación'
 audience: 'Tercer sector'
 tags: ['podcast', 'audiovisual', 'comunicación', 'tercer sector', 'producción']
 draft: false

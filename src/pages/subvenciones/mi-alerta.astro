@@ -34,10 +34,10 @@ import Base from '@/layouts/Base.astro';
 
 <script>
   const API_BASE =
-    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+    (import.meta as any).env?.PUBLIC_HUB_URL ?? 'https://hub.startidea.tech';
   const url = new URL(window.location.href);
   const token = url.searchParams.get('t');
-  const root = document.getElementById('mi-alerta-content')!;
+  const root = document.getElementById('mi-alerta-content');
 
   if (!token) {
     root.innerHTML = `
@@ -73,14 +73,14 @@ import Base from '@/layouts/Base.astro';
           </button>
         </div>
         <p id="del-result" class="mt-3 hidden text-xs"></p>`;
-      document.getElementById('del')!.addEventListener('click', async () => {
+      document.getElementById('del').addEventListener('click', async () => {
         if (!confirm('¿Borrar esta alerta? No podrás recuperarla.')) return;
         try {
           const r = await fetch(
             `${API_BASE}/api/public/subsidy-watch/${encodeURIComponent(t)}`,
             { method: 'DELETE' },
           );
-          const out = document.getElementById('del-result')!;
+          const out = document.getElementById('del-result');
           out.classList.remove('hidden');
           if (r.ok) {
             out.textContent = 'Alerta borrada. Redirigiendo…';

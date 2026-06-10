@@ -1,0 +1,472 @@
+---
+/**
+ * /portal — Portal de clientes de Startidea.
+ * Acceso por magic link o Google OAuth (sin contraseña).
+ * Si ya hay sesión activa, redirige al dashboard.
+ */
+import { getPortalSessionEmail } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+const COOKIE = 'startidea_portal';
+const session = Astro.cookies.get(COOKIE)?.value;
+if (session) {
+  const email = getPortalSessionEmail(session);
+  if (email) return Astro.redirect('/portal/dashboard');
+}
+
+// Mensajes de error del callback OAuth
+const OAUTH_MSG: Record<string, string> = {
+  oauth_denied:           'Acceso denegado por Google.',
+  oauth_error:            'Error al conectar con Google. Inténtalo de nuevo.',
+  oauth_not_configured:   'Google OAuth no está configurado en el servidor.',
+  oauth_unverified:       'La cuenta de Google no tiene el email verificado.',
+};
+const mParam   = Astro.url.searchParams.get('m') ?? '';
+const oauthMsg = OAUTH_MSG[mParam] ?? null;
+
+// ¿OAuth configurado? (para mostrar/ocultar el botón de Google)
+const googleConfigured = !!(
+  (import.meta as { env?: Record<string, string> }).env?.GOOGLE_ADMIN_CLIENT_ID ??
+  process.env.GOOGLE_ADMIN_CLIENT_ID
+);
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portal de clientes · Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: #ffffff;
+      color: #1f1f22;
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ─────────────────────────────────────── */
+    .topbar {
+      background: #1f1f22;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
+      font-family: monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+    }
+    .topbar-logo span { color: #e6356b; font-weight: 700; }
+    .topbar-link {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-decoration: none;
+    }
+    .topbar-link:hover { color: #e6356b; }
+
+    /* ── Hero ───────────────────────────────────────── */
+    .hero {
+      background: #1f1f22;
+      color: #fff;
+      padding: 56px 24px 48px;
+      text-align: center;
+    }
+    .hero-label {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e6356b;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 640px;
+      margin: 0 auto 14px;
+    }
+    .hero p {
+      font-size: 16px;
+      color: #aaa;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Benefits strip ─────────────────────────────── */
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .benefit {
+      padding: 24px 20px;
+      border-right: 1px solid #e5e7eb;
+    }
+    .benefit:last-child { border-right: none; }
+    .benefit-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .benefit h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #1f1f22;
+    }
+    .benefit p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* ── Main content: dual columns ─────────────────── */
+    .main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 640px) {
+      .main { grid-template-columns: 1fr; }
+      .benefits { grid-template-columns: 1fr; }
+      .benefit { border-right: none; border-bottom: 1px solid #e5e7eb; }
+      .benefit:last-child { border-bottom: none; }
+    }
+
+    /* ── Card base ───────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 28px 24px;
+    }
+    .card-title {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #888;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .card .sub {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* ── Login form ─────────────────────────────────── */
+    label.field-label {
+      display: block;
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin-bottom: 5px;
+    }
+    input[type="email"] {
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 10px 12px;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      color: #1f1f22;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="email"]:focus { border-color: #e6356b; }
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: #e6356b;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 12px;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: #1f1f22;
+      border: 2px solid #1f1f22;
+      padding: 11px 12px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-secondary:hover { background: #1f1f22; color: #fff; }
+
+    .msg {
+      margin-top: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      border: 1px solid;
+      display: none;
+      line-height: 1.5;
+    }
+    .msg.ok  { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; display: block; }
+    .msg.err { background: #fff7f8; border-color: #fca5a5; color: #7f1d1d; display: block; }
+    .msg.show { display: block; }
+
+    /* ── Google OAuth button ─────────────────────────── */
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #fff;
+      color: #1f1f22;
+      border: 1px solid #dadce0;
+      padding: 11px 12px;
+      font-family: 'Roboto', Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, box-shadow 0.15s;
+      margin-bottom: 16px;
+    }
+    .btn-google:hover { background: #f7f8fa; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .btn-google svg { flex-shrink: 0; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 16px;
+      color: #aaa;
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    /* ── Register card extras ────────────────────────── */
+    .register-features {
+      list-style: none;
+      margin: 16px 0 20px;
+    }
+    .register-features li {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .register-features li::before {
+      content: "✓";
+      color: #e6356b;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .register-note {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .foot {
+      text-align: center;
+      font-family: monospace;
+      font-size: 10px;
+      color: #ccc;
+      padding: 0 24px 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="/" class="topbar-logo">— <span>Startidea</span></a>
+    <a href="/contacto" class="topbar-link">¿Dudas? Escríbenos →</a>
+  </div>
+
+  <div class="hero">
+    <p class="hero-label">Portal de clientes</p>
+    <h1>Gestiona tus proyectos con Startidea desde un solo sitio</h1>
+    <p>Subvenciones, diagnósticos, formación y más — todo centralizado, sin contraseña.</p>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-icon">🎯</div>
+      <h3>Copiloto de Subvenciones</h3>
+      <p>Seguimiento en tiempo real de tus expedientes, contratos y resoluciones.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">📋</div>
+      <h3>Diagnóstico y consultoría</h3>
+      <p>Accede a los informes y propuestas de tu organización en cualquier momento.</p>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">🔒</div>
+      <h3>Sin contraseñas</h3>
+      <p>Acceso por enlace directo a tu email. Rápido, seguro y sin complicaciones.</p>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Columna izquierda: ya tengo cuenta -->
+    <div class="card">
+      <div class="card-title">Acceso</div>
+      <h2>Ya tengo cuenta</h2>
+      <p class="sub">Accede con Google o con un enlace por email. Sin contraseña.</p>
+
+      {/* Botón Google OAuth */}
+      {googleConfigured && (
+        <a href="/api/auth/portal-google" class="btn-google">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20" aria-hidden="true">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            <path fill="none" d="M0 0h48v48H0z"/>
+          </svg>
+          Acceder con Google
+        </a>
+      )}
+
+      {/* Error OAuth (viene de ?m=...) */}
+      {oauthMsg && (
+        <p style="margin-bottom:12px;padding:8px 12px;background:#fff7f8;border:1px solid #fca5a5;color:#7f1d1d;font-size:13px;line-height:1.5;">
+          {oauthMsg}
+        </p>
+      )}
+
+      {googleConfigured && (
+        <div class="divider">o con email</div>
+      )}
+
+      <form id="form-acceso">
+        <label class="field-label" for="email">Tu email</label>
+        <input type="email" id="email" name="email"
+          placeholder="tu@organizacion.es" required autocomplete="email">
+        <button type="submit" class="btn-primary" id="btn-submit">
+          Enviar enlace de acceso
+        </button>
+        <div id="msg" class="msg"></div>
+      </form>
+    </div>
+
+    <!-- Columna derecha: primera visita -->
+    <div class="card">
+      <div class="card-title">Registro gratuito</div>
+      <h2>Primera visita</h2>
+      <p class="sub">Crea tu cuenta en menos de 2 minutos y accede a todos los servicios de Startidea.</p>
+
+      <ul class="register-features">
+        <li>Seguimiento de expedientes de subvenciones</li>
+        <li>Firma electrónica del contrato de servicios</li>
+        <li>Documentos generados siempre disponibles</li>
+        <li>Notificaciones de resoluciones y plazos</li>
+      </ul>
+
+      <a href="/portal/registro" class="btn-secondary">Crear cuenta gratis →</a>
+
+      <p class="register-note">
+        Es gratuito y no requiere contraseña. Solo tu email y datos básicos de tu organización.
+      </p>
+      <p class="register-note" style="margin-top:12px;padding-top:10px;border-top:1px solid #f3f4f6;color:#999">
+        ¿Ya enviaste una solicitud de subvención? Tu cuenta ya está creada. Accede con tu email en el apartado de la izquierda.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="foot">Startidea Consulting, S.L. · CIF B19583632 · Granada</div>
+
+  <script>
+    document.getElementById('form-acceso')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn   = document.getElementById('btn-submit');
+      const msg   = document.getElementById('msg');
+      const email = (document.getElementById('email')).value.trim();
+
+      btn.disabled    = true;
+      btn.textContent = '⏳ Enviando...';
+      msg.className   = 'msg';
+
+      try {
+        const res = await fetch('/api/portal-acceso', {
+          method:  'POST',
+          headers: { 'content-type': 'application/json' },
+          body:    JSON.stringify({ email }),
+        });
+        const j = await res.json();
+
+        if (j.ok) {
+          msg.textContent = '✅ Enlace enviado. Revisa tu bandeja de entrada (y la carpeta de spam).';
+          msg.className   = 'msg ok';
+          btn.textContent = '✅ Enlace enviado';
+        } else if (j.needsRegistration) {
+          window.location.href = `/portal/registro?email=${encodeURIComponent(email)}`;
+        } else {
+          msg.textContent = 'Algo fue mal. Inténtalo de nuevo.';
+          msg.className   = 'msg err';
+          btn.disabled    = false;
+          btn.textContent = 'Enviar enlace de acceso';
+        }
+      } catch {
+        msg.textContent = 'Error de red. Inténtalo de nuevo.';
+        msg.className   = 'msg err';
+        btn.disabled    = false;
+        btn.textContent = 'Enviar enlace de acceso';
+      }
+    });
+  </script>
+
+</body>
+</html>

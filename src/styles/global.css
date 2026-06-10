@@ -13,6 +13,10 @@
     scroll-padding-top: 80px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Contiene desbordes horizontales puntuales en móvil (popovers placement="right",
+       transforms de .reveal-left/right, marquees) sin romper position:sticky.
+       'clip' no crea contenedor de scroll, a diferencia de 'hidden'. */
+    overflow-x: clip;
   }
   /* Respeta prefers-reduced-motion: sin smooth scroll forzado. */
   @media (prefers-reduced-motion: reduce) {

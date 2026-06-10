@@ -1,0 +1,737 @@
+---
+// /diagnostico/brief-web — Briefing de web.
+//
+// Formulario largo por secciones que el cliente rellena (objetivo, secciones,
+// tono, colores, referencias…) y donde sube archivos reales (logo, manual de
+// marca, fotos). Al terminar:
+//   - "Generar briefing" compila todo en un texto Markdown (textarea) que se
+//     puede COPIAR y pegar a Claude para que construya la web.
+//   - "Enviar a Startidea" hace POST multipart a /api/diagnosticos/brief-web
+//     del HUB (sube los archivos + el briefing) y avisa a Mario.
+//
+// Backend: HUB POST https://hub.startidea.tech/api/diagnosticos/brief-web
+
+import Base from "@/layouts/Base.astro";
+import { breadcrumbList, SITE_URL } from "@/lib/jsonld";
+
+const jsonLd = [
+  breadcrumbList([
+    { name: "Inicio", url: `${SITE_URL}/` },
+    { name: "Diagnóstico", url: `${SITE_URL}/diagnostico` },
+    { name: "Briefing de web", url: `${SITE_URL}/diagnostico/brief-web` },
+  ]),
+];
+
+const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/brief-web";
+
+// Helpers de render (en frontmatter, sin ambigüedad TS)
+const goals = [
+  ["captar-leads", "Captar clientes / contactos"],
+  ["vender", "Vender online"],
+  ["informar", "Informar / explicar lo que hacemos"],
+  ["credibilidad", "Dar credibilidad / imagen profesional"],
+  ["socios", "Captar socios o donantes"],
+  ["voluntariado", "Captar voluntariado"],
+];
+const pages = [
+  ["inicio", "Inicio"],
+  ["sobre", "Quiénes somos"],
+  ["servicios", "Servicios / qué hacemos"],
+  ["proyectos", "Proyectos / casos"],
+  ["blog", "Blog / actualidad"],
+  ["equipo", "Equipo"],
+  ["contacto", "Contacto"],
+  ["faq", "Preguntas frecuentes"],
+  ["tienda", "Tienda"],
+  ["donaciones", "Donaciones"],
+  ["area-privada", "Área privada"],
+];
+const tones = [
+  "Cercano",
+  "Institucional",
+  "Moderno",
+  "Sobrio",
+  "Cálido",
+  "Profesional",
+  "Atrevido",
+  "Minimalista",
+];
+const features = [
+  ["form-contacto", "Formulario de contacto"],
+  ["newsletter", "Newsletter / suscripción"],
+  ["reservas", "Reservas / citas"],
+  ["pago", "Pasarela de pago"],
+  ["multiidioma", "Multiidioma"],
+  ["blog-cms", "Blog autogestionable"],
+  ["mapa", "Mapa / ubicación"],
+  ["redes", "Enlaces a redes sociales"],
+  ["analitica", "Analítica de visitas"],
+  ["area-privada", "Acceso / área privada"],
+];
+---
+
+<Base
+  title="Briefing de web — Startidea"
+  description="Cuéntanos cómo quieres tu web: objetivo, secciones, tono, colores y archivos. Generamos un briefing listo para empezar."
+  ogSlug="page/diagnostico-brief-web"
+  noindex={true}
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <span class="label" data-full-only>— Diagnóstico · Briefing de web</span>
+      <span class="label hidden" data-lite-only>— Diagnóstico · Briefing rápido</span>
+      <h1 class="mt-4 font-display text-display-lg leading-[0.98] text-ink">
+        Cómo quieres tu <em class="italic text-magenta">web</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-ink/80">
+        Responde lo que puedas —no hace falta tenerlo todo claro— y sube tus
+        archivos (logo, colores, fotos). Al terminar generamos un briefing que
+        puedes copiar, y si quieres lo enviamos directamente a Startidea para
+        empezar a trabajar.
+      </p>
+      <p class="mt-3 max-w-measure text-sm text-ink-mute">
+        Los campos con <span class="text-magenta">*</span> son los únicos
+        imprescindibles. El resto, cuanto más rellenes, mejor saldrá la web.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <form id="brief-form" data-intake-url={INTAKE_URL} class="max-w-2xl space-y-12" novalidate>
+        <!-- honeypot anti-bot -->
+        <input
+          type="text"
+          name="honeypot"
+          tabindex="-1"
+          autocomplete="off"
+          class="absolute -left-[9999px]"
+          aria-hidden="true"
+        />
+
+        <!-- ===== 1. IDENTIDAD ===== -->
+        <fieldset class="space-y-5">
+          <legend class="font-display text-2xl text-ink">1 · Quiénes sois</legend>
+          <div class="space-y-2">
+            <label for="projectName" class="block text-sm font-medium text-ink">
+              Nombre del proyecto u organización <span class="text-magenta">*</span>
+            </label>
+            <input type="text" id="projectName" name="projectName" required maxlength="150"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+          <div class="space-y-2">
+            <label for="whatYouDo" class="block text-sm font-medium text-ink">
+              ¿A qué os dedicáis, en una o dos frases? <span class="text-magenta">*</span>
+            </label>
+            <textarea id="whatYouDo" name="whatYouDo" required maxlength="600" rows="3"
+              placeholder="Ej: Acompañamos a familias acogedoras en Granada con formación y apoyo psicológico."
+              class="w-full resize-y border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none"></textarea>
+          </div>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="space-y-2">
+              <label for="currentSite" class="block text-sm font-medium text-ink">Web actual (si tenéis)</label>
+              <input type="url" id="currentSite" name="currentSite" maxlength="200" placeholder="https://..."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="desiredDomain" class="block text-sm font-medium text-ink">Dominio que queréis (si lo sabéis)</label>
+              <input type="text" id="desiredDomain" name="desiredDomain" maxlength="120" placeholder="ej. miong.org"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- ===== 2. OBJETIVO ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">2 · Para qué sirve la web</legend>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Objetivos (marca los que apliquen)</span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {goals.map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="checkbox" name="goals" value={v} class="accent-magenta" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label for="mainAction" class="block text-sm font-medium text-ink">
+              ¿Qué quieres que haga el visitante? (acción principal)
+            </label>
+            <input type="text" id="mainAction" name="mainAction" maxlength="200"
+              placeholder="Ej: que rellene el formulario de contacto / que haga una donación"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+        </fieldset>
+
+        <!-- ===== 3. AUDIENCIA ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8" data-lite-hide>
+          <legend class="font-display text-2xl text-ink">3 · A quién va dirigida</legend>
+          <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+            {[
+              ["entidad-social", "Tercer sector"],
+              ["institucion", "Instituciones"],
+              ["empresa", "Empresas"],
+              ["particulares", "Particulares"],
+              ["mixto", "Mixto"],
+            ].map(([v, label]) => (
+              <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                <input type="radio" name="audienceWeb" value={v} class="sr-only" />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <div class="space-y-2">
+            <label for="audienceNote" class="block text-sm font-medium text-ink">Descríbelo un poco más (opcional)</label>
+            <input type="text" id="audienceNote" name="audienceNote" maxlength="200"
+              placeholder="Ej: familias jóvenes de la provincia, técnicos de administraciones públicas…"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+        </fieldset>
+
+        <!-- ===== 4. PÁGINAS ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">4 · Qué páginas necesita</legend>
+          <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+            {pages.map(([v, label]) => (
+              <label class="flex cursor-pointer items-center gap-2 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                <input type="checkbox" name="pages" value={v} class="accent-magenta" />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <div class="space-y-2">
+            <label for="pagesOther" class="block text-sm font-medium text-ink">Otras páginas (opcional)</label>
+            <input type="text" id="pagesOther" name="pagesOther" maxlength="200"
+              placeholder="Separadas por comas"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+        </fieldset>
+
+        <!-- ===== 5. TONO + REFERENCIAS ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">5 · Tono y referencias</legend>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿Cómo debe sentirse? (marca los que apliquen)</span>
+            <div class="flex flex-wrap gap-2">
+              {tones.map((t) => (
+                <label class="cursor-pointer border border-ink/20 px-3 py-2 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="checkbox" name="tone" value={t} class="sr-only" />
+                  <span>{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Webs que te gustan (y por qué)</span>
+            {[1, 2, 3].map((n) => (
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <input type="url" name={`ref${n}Url`} maxlength="200" placeholder={`Referencia ${n} — https://...`}
+                  class="w-full border border-ink/20 bg-paper px-4 py-2.5 text-sm text-ink focus:border-magenta focus:outline-none" />
+                <input type="text" name={`ref${n}Why`} maxlength="160" placeholder="¿Qué te gusta de ella?"
+                  class="w-full border border-ink/20 bg-paper px-4 py-2.5 text-sm text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            ))}
+          </div>
+        </fieldset>
+
+        <!-- ===== 6. IDENTIDAD VISUAL ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">6 · Identidad visual</legend>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿Tenéis logo?</span>
+            <div class="grid grid-cols-3 gap-2">
+              {[["si", "Sí, lo subo"], ["no", "No tenemos"], ["rehacer", "Hay que rehacerlo"]].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="hasLogo" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Colores de marca (si los tenéis)</span>
+            <div class="flex flex-wrap items-center gap-4">
+              {[1, 2, 3, 4].map((n) => (
+                <label class="flex items-center gap-2 text-sm text-ink-mute">
+                  <input type="color" name={`color${n}`} value="#ffffff"
+                    class="h-9 w-12 cursor-pointer border border-ink/20 bg-paper p-0.5" data-color />
+                  <span>Color {n}</span>
+                </label>
+              ))}
+            </div>
+            <p class="text-xs text-ink-mute">Deja en blanco los que no uses. Si no sabéis los códigos, no pasa nada.</p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="typography" class="block text-sm font-medium text-ink">Tipografía preferida (opcional)</label>
+            <input type="text" id="typography" name="typography" maxlength="120"
+              placeholder="Ej: algo serio con serifa / la que usa nuestra marca"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="space-y-2">
+            <label for="logoFiles" class="block text-sm font-medium text-ink">
+              Sube logo y/o manual de marca
+            </label>
+            <input type="file" id="logoFiles" name="logoFiles" multiple
+              accept=".png,.jpg,.jpeg,.webp,.gif,.avif,.pdf,image/png,image/jpeg,image/webp,image/gif,image/avif,application/pdf"
+              class="block w-full text-sm text-ink file:mr-4 file:border-0 file:bg-ink file:px-4 file:py-2 file:text-paper hover:file:bg-magenta" />
+            <p class="text-xs text-ink-mute">PNG, JPG, WEBP o PDF. Máx. 15 MB por archivo.</p>
+          </div>
+        </fieldset>
+
+        <!-- ===== 7. CONTENIDOS ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8" data-lite-hide>
+          <legend class="font-display text-2xl text-ink">7 · Contenidos</legend>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿Tenéis los textos y fotos?</span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+              {[
+                ["listo", "Listos para usar"],
+                ["parcial", "A medias"],
+                ["crear", "Hay que crearlos"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="contentReady" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label for="contentFiles" class="block text-sm font-medium text-ink">Sube fotos u otros archivos (opcional)</label>
+            <input type="file" id="contentFiles" name="contentFiles" multiple
+              accept=".png,.jpg,.jpeg,.webp,.gif,.avif,.pdf,image/png,image/jpeg,image/webp,image/gif,image/avif,application/pdf"
+              class="block w-full text-sm text-ink file:mr-4 file:border-0 file:bg-ink file:px-4 file:py-2 file:text-paper hover:file:bg-magenta" />
+            <p class="text-xs text-ink-mute">Imágenes o PDF. Máx. 15 MB por archivo, 8 archivos en total.</p>
+          </div>
+          <ul data-file-list class="hidden space-y-1 text-sm text-ink-mute"></ul>
+        </fieldset>
+
+        <!-- ===== 8. FUNCIONALIDADES ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">8 · Funcionalidades</legend>
+          <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+            {features.map(([v, label]) => (
+              <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                <input type="checkbox" name="features" value={v} class="accent-magenta" />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <div class="space-y-2">
+            <label for="featuresOther" class="block text-sm font-medium text-ink">Otras funcionalidades (opcional)</label>
+            <input type="text" id="featuresOther" name="featuresOther" maxlength="200"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+        </fieldset>
+
+        <!-- ===== 9. RECURSOS ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8" data-lite-hide>
+          <legend class="font-display text-2xl text-ink">9 · Plazo y presupuesto</legend>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Presupuesto orientativo</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {[["<1k", "< 1.000 €"], ["1k-5k", "1k - 5k"], ["5k-15k", "5k - 15k"], ["15k+", "15k +"]].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="budgetRange" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">¿Para cuándo?</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {[["asap", "Cuanto antes"], ["1-3m", "1 - 3 meses"], ["3-6m", "3 - 6 meses"], ["6m+", "6 meses +"]].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="timeframe" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label for="maintainer" class="block text-sm font-medium text-ink">¿Quién mantendrá la web después? (opcional)</label>
+            <input type="text" id="maintainer" name="maintainer" maxlength="120"
+              placeholder="Ej: nosotros mismos / Startidea / aún no lo sabemos"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+        </fieldset>
+
+        <!-- ===== 10. CONTACTO ===== -->
+        <fieldset class="space-y-5 border-t border-ink/15 pt-8">
+          <legend class="font-display text-2xl text-ink">10 · Tu contacto</legend>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre <span class="text-magenta">*</span></label>
+              <input type="text" id="name" name="name" required minlength="2" maxlength="100"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-medium text-ink">Tu email <span class="text-magenta">*</span></label>
+              <input type="email" id="email" name="email" required maxlength="200"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
+              <input type="text" id="role" name="role" maxlength="100"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
+              <input type="tel" id="phone" name="phone" maxlength="40"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- ===== ACCIONES ===== -->
+        <div class="space-y-4 border-t border-ink/15 pt-8">
+          <div class="flex flex-wrap gap-3">
+            <button type="button" data-generate class="btn">Generar briefing ↓</button>
+            <button type="button" data-copy class="btn-ghost hidden">Copiar al portapapeles</button>
+            <button type="submit" class="btn-ghost ml-auto">Enviar a Startidea →</button>
+          </div>
+
+          <div data-output-wrap class="hidden space-y-2">
+            <label for="brief-output" class="block text-sm font-medium text-ink">
+              Briefing generado — cópialo y pégalo donde quieras
+            </label>
+            <textarea id="brief-output" data-output readonly rows="16"
+              class="w-full resize-y border border-ink/20 bg-paper-warm px-4 py-3 font-mono text-xs text-ink focus:border-magenta focus:outline-none"></textarea>
+          </div>
+
+          <div data-status class="hidden border-l-2 border-magenta bg-paper-warm p-4 text-sm"></div>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById("brief-form");
+  if (!(form instanceof HTMLFormElement)) throw new Error("brief-form missing");
+
+  const intakeUrl = form.dataset.intakeUrl || "";
+  const statusBox = form.querySelector("[data-status]");
+  const output = form.querySelector("[data-output]");
+  const outputWrap = form.querySelector("[data-output-wrap]");
+  const copyBtn = form.querySelector("[data-copy]");
+  const fileList = form.querySelector("[data-file-list]");
+
+  // ─── Modo ligero (?lite): briefing corto, sin presupuesto ────────
+  // Pensado para mandar a clientes que piden algo concreto: oculta las
+  // secciones marcadas con data-lite-hide (audiencia, contenidos, plazo y
+  // presupuesto) y renumera las visibles para que no queden huecos.
+  const LITE = new URLSearchParams(location.search).has("lite");
+  if (LITE) {
+    document.documentElement.setAttribute("data-lite", "");
+    form.querySelectorAll("[data-lite-hide]").forEach((el) => el.classList.add("hidden"));
+    let n = 1;
+    form.querySelectorAll("legend").forEach((lg) => {
+      if (lg.closest(".hidden")) return;
+      lg.textContent = (lg.textContent || "").replace(/^\s*\d+\s*·\s*/, `${n} · `);
+      n++;
+    });
+    document.querySelectorAll("[data-full-only]").forEach((el) => el.classList.add("hidden"));
+    document.querySelectorAll("[data-lite-only]").forEach((el) => el.classList.remove("hidden"));
+  }
+
+  const MAX_BYTES = 15 * 1024 * 1024;
+  const MAX_FILES = 8;
+  const ALLOWED = [
+    "image/png", "image/jpeg", "image/webp", "image/gif", "image/avif", "application/pdf",
+  ];
+
+  function val(name) {
+    const el = form.elements.namedItem(name);
+    if (el && "value" in el) return String(el.value || "").trim();
+    return "";
+  }
+  function checked(name) {
+    const out = [];
+    form.querySelectorAll(`input[name='${name}']:checked`).forEach((el) => {
+      if (el instanceof HTMLInputElement) out.push(el.value);
+    });
+    return out;
+  }
+  function radio(name) {
+    const el = form.querySelector(`input[name='${name}']:checked`);
+    return el instanceof HTMLInputElement ? el.value : "";
+  }
+
+  // ─── Recolectar archivos de los dos inputs ──────────────────────
+  function gatherFiles() {
+    const files = [];
+    ["logoFiles", "contentFiles"].forEach((id) => {
+      const input = document.getElementById(id);
+      if (input instanceof HTMLInputElement && input.files) {
+        for (const f of Array.from(input.files)) files.push(f);
+      }
+    });
+    return files;
+  }
+
+  function validateFiles(files) {
+    if (files.length > MAX_FILES) return `Demasiados archivos (máx. ${MAX_FILES}).`;
+    for (const f of files) {
+      if (!ALLOWED.includes(f.type)) return `"${f.name}": tipo no permitido. Usa PNG, JPG, WEBP o PDF.`;
+      if (f.size > MAX_BYTES) return `"${f.name}" supera los 15 MB.`;
+    }
+    return null;
+  }
+
+  function renderFileList(files) {
+    if (!fileList) return;
+    if (!files.length) {
+      fileList.classList.add("hidden");
+      fileList.innerHTML = "";
+      return;
+    }
+    fileList.classList.remove("hidden");
+    fileList.innerHTML =
+      "<li class='font-medium text-ink'>Archivos seleccionados:</li>" +
+      files.map((f) => `<li>· ${f.name} (${(f.size / 1024 / 1024).toFixed(1)} MB)</li>`).join("");
+  }
+
+  form.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t instanceof HTMLInputElement && t.type === "file") {
+      renderFileList(gatherFiles());
+    }
+  });
+
+  // ─── Construir el briefing en Markdown ──────────────────────────
+  const LABELS = {
+    goals: { "captar-leads": "Captar clientes/contactos", vender: "Vender online", informar: "Informar", credibilidad: "Credibilidad/imagen", socios: "Captar socios/donantes", voluntariado: "Captar voluntariado" },
+    pages: { inicio: "Inicio", sobre: "Quiénes somos", servicios: "Servicios", proyectos: "Proyectos/casos", blog: "Blog", equipo: "Equipo", contacto: "Contacto", faq: "FAQ", tienda: "Tienda", donaciones: "Donaciones", "area-privada": "Área privada" },
+    features: { "form-contacto": "Formulario de contacto", newsletter: "Newsletter", reservas: "Reservas/citas", pago: "Pasarela de pago", multiidioma: "Multiidioma", "blog-cms": "Blog autogestionable", mapa: "Mapa", redes: "Redes sociales", analitica: "Analítica", "area-privada": "Área privada" },
+    audienceWeb: { "entidad-social": "Tercer sector", institucion: "Instituciones", empresa: "Empresas", particulares: "Particulares", mixto: "Mixto" },
+    hasLogo: { si: "Sí (adjunto)", no: "No tienen", rehacer: "Hay que rehacerlo" },
+    contentReady: { listo: "Listos", parcial: "A medias", crear: "Hay que crearlos" },
+    budgetRange: { "<1k": "< 1.000 €", "1k-5k": "1k–5k €", "5k-15k": "5k–15k €", "15k+": "15k+ €" },
+    timeframe: { asap: "Cuanto antes", "1-3m": "1–3 meses", "3-6m": "3–6 meses", "6m+": "6+ meses" },
+  };
+  function mapLabels(group, values) {
+    return values.map((v) => LABELS[group]?.[v] || v).join(", ");
+  }
+  function colors() {
+    const out = [];
+    for (let n = 1; n <= 4; n++) {
+      const v = val(`color${n}`).toLowerCase();
+      if (v && v !== "#ffffff" && v !== "#000000") out.push(v);
+    }
+    return out;
+  }
+  function refs() {
+    const out = [];
+    for (let n = 1; n <= 3; n++) {
+      const u = val(`ref${n}Url`);
+      const w = val(`ref${n}Why`);
+      if (u) out.push(`- ${u}${w ? ` — ${w}` : ""}`);
+    }
+    return out;
+  }
+
+  function buildBrief() {
+    const project = val("projectName") || "(sin nombre)";
+    const lines = [];
+    lines.push(`# Briefing de web — ${project}`, "");
+    lines.push("## Quiénes son");
+    lines.push(val("whatYouDo") || "—");
+    if (val("currentSite")) lines.push(`Web actual: ${val("currentSite")}`);
+    if (val("desiredDomain")) lines.push(`Dominio deseado: ${val("desiredDomain")}`);
+    lines.push("");
+
+    lines.push("## Objetivo de la web");
+    const g = checked("goals");
+    if (g.length) lines.push(`Objetivos: ${mapLabels("goals", g)}`);
+    if (val("mainAction")) lines.push(`Acción principal del visitante: ${val("mainAction")}`);
+    lines.push("");
+
+    if (radio("audienceWeb") || val("audienceNote")) {
+      lines.push("## Audiencia");
+      if (radio("audienceWeb")) lines.push(mapLabels("audienceWeb", [radio("audienceWeb")]));
+      if (val("audienceNote")) lines.push(val("audienceNote"));
+      lines.push("");
+    }
+
+    lines.push("## Páginas / secciones");
+    const p = checked("pages");
+    let pageLine = p.length ? mapLabels("pages", p) : "—";
+    if (val("pagesOther")) pageLine += `, ${val("pagesOther")}`;
+    lines.push(pageLine, "");
+
+    lines.push("## Tono y estilo");
+    const tone = checked("tone");
+    if (tone.length) lines.push(`Adjetivos: ${tone.join(", ")}`);
+    const r = refs();
+    if (r.length) {
+      lines.push("Referencias que le gustan:");
+      r.forEach((x) => lines.push(x));
+    }
+    lines.push("");
+
+    lines.push("## Identidad visual");
+    if (radio("hasLogo")) lines.push(`Logo: ${mapLabels("hasLogo", [radio("hasLogo")])}`);
+    const c = colors();
+    if (c.length) lines.push(`Colores: ${c.join(", ")}`);
+    if (val("typography")) lines.push(`Tipografía: ${val("typography")}`);
+    lines.push("");
+
+    if (radio("contentReady")) {
+      lines.push("## Contenidos");
+      lines.push(`Estado: ${mapLabels("contentReady", [radio("contentReady")])}`);
+      lines.push("");
+    }
+
+    lines.push("## Funcionalidades");
+    const f = checked("features");
+    let featLine = f.length ? mapLabels("features", f) : "—";
+    if (val("featuresOther")) featLine += `, ${val("featuresOther")}`;
+    lines.push(featLine, "");
+
+    if (radio("budgetRange") || radio("timeframe") || val("maintainer")) {
+      lines.push("## Plazo y presupuesto");
+      if (radio("budgetRange")) lines.push(`Presupuesto: ${mapLabels("budgetRange", [radio("budgetRange")])}`);
+      if (radio("timeframe")) lines.push(`Plazo: ${mapLabels("timeframe", [radio("timeframe")])}`);
+      if (val("maintainer")) lines.push(`Mantenimiento: ${val("maintainer")}`);
+      lines.push("");
+    }
+
+    lines.push("## Contacto");
+    lines.push(`${val("name")}${val("role") ? ` — ${val("role")}` : ""}`);
+    lines.push(`${val("email")}${val("phone") ? ` · ${val("phone")}` : ""}`);
+
+    const files = gatherFiles();
+    if (files.length) {
+      lines.push("", "## Archivos");
+      files.forEach((f) => lines.push(`- ${f.name}`));
+    }
+
+    return lines.join("\n");
+  }
+
+  // answers estructuradas para el backend (paralelo al markdown)
+  function buildAnswers() {
+    return {
+      whatYouDo: val("whatYouDo"),
+      currentSite: val("currentSite"),
+      desiredDomain: val("desiredDomain"),
+      goals: checked("goals"),
+      mainAction: val("mainAction"),
+      audienceWeb: radio("audienceWeb"),
+      audienceNote: val("audienceNote"),
+      pages: checked("pages"),
+      pagesOther: val("pagesOther"),
+      tone: checked("tone"),
+      refs: refs(),
+      hasLogo: radio("hasLogo"),
+      colors: colors(),
+      typography: val("typography"),
+      contentReady: radio("contentReady"),
+      features: checked("features"),
+      featuresOther: val("featuresOther"),
+      budgetRange: radio("budgetRange"),
+      timeframe: radio("timeframe"),
+      maintainer: val("maintainer"),
+    };
+  }
+
+  function showStatus(msg, isError) {
+    if (!statusBox) return;
+    statusBox.textContent = msg;
+    statusBox.className = `border-l-2 p-4 text-sm ${isError ? "border-magenta bg-paper-warm text-magenta" : "border-ink/30 bg-paper-warm text-ink"}`;
+    statusBox.classList.remove("hidden");
+  }
+  function hideStatus() {
+    statusBox?.classList.add("hidden");
+  }
+
+  function requireBasics() {
+    if (val("projectName").length < 2) return "Falta el nombre del proyecto u organización.";
+    if (val("whatYouDo").length < 10) return "Cuéntanos en una frase a qué os dedicáis.";
+    if (val("name").length < 2) return "Falta tu nombre.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email"))) return "El email no es válido.";
+    return null;
+  }
+
+  // ─── Generar ────────────────────────────────────────────────────
+  form.querySelector("[data-generate]")?.addEventListener("click", () => {
+    const err = requireBasics();
+    if (err) {
+      showStatus(err, true);
+      return;
+    }
+    const fileErr = validateFiles(gatherFiles());
+    if (fileErr) {
+      showStatus(fileErr, true);
+      return;
+    }
+    hideStatus();
+    if (output instanceof HTMLTextAreaElement) output.value = buildBrief();
+    outputWrap?.classList.remove("hidden");
+    copyBtn?.classList.remove("hidden");
+    output?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  // ─── Copiar ─────────────────────────────────────────────────────
+  copyBtn?.addEventListener("click", async () => {
+    if (!(output instanceof HTMLTextAreaElement) || !output.value) return;
+    try {
+      await navigator.clipboard.writeText(output.value);
+      showStatus("Briefing copiado al portapapeles.", false);
+    } catch {
+      output.select();
+      showStatus("Selecciónalo y copia con Ctrl/Cmd + C.", false);
+    }
+  });
+
+  // ─── Enviar a Startidea ─────────────────────────────────────────
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const err = requireBasics();
+    if (err) {
+      showStatus(err, true);
+      return;
+    }
+    const files = gatherFiles();
+    const fileErr = validateFiles(files);
+    if (fileErr) {
+      showStatus(fileErr, true);
+      return;
+    }
+    const brief = buildBrief();
+    showStatus("Enviando…", false);
+
+    const fd = new FormData();
+    fd.set("honeypot", val("honeypot"));
+    fd.set("name", val("name"));
+    fd.set("email", val("email"));
+    fd.set("organizationName", val("projectName"));
+    fd.set("phone", val("phone"));
+    fd.set("role", val("role"));
+    fd.set("website", val("currentSite"));
+    fd.set("audience", radio("audienceWeb") === "institucion" || radio("audienceWeb") === "entidad-social" ? radio("audienceWeb") : "empresa");
+    fd.set("brief", brief);
+    fd.set("answers", JSON.stringify(buildAnswers()));
+    files.forEach((f) => fd.append("files", f));
+
+    try {
+      const r = await fetch(intakeUrl, { method: "POST", body: fd });
+      const json = await r.json().catch(() => null);
+      if (r.ok && json?.ok) {
+        window.location.href = "/diagnostico/gracias";
+      } else {
+        showStatus(`No se pudo enviar (${json?.error ?? r.status}). Puedes copiar el briefing y enviárnoslo por email.`, true);
+      }
+    } catch {
+      showStatus("Error de red. Copia el briefing con el botón y mándanoslo por email.", true);
+    }
+  });
+</script>

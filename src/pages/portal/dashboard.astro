@@ -1,0 +1,847 @@
+---
+/**
+ * /portal/dashboard — Panel de cliente autenticado.
+ *
+ * Muestra todos los expedientes vinculados al email de la sesión:
+ *  - Estado con línea de progreso visual
+ *  - Contrato (firmar si pendiente)
+ *  - Documentos generados (lectura online)
+ *  - Factura (cuando proceda)
+ *  - Próximos pasos claros
+ */
+import {
+  getPortalSessionEmail,
+  getExpedientesByEmail,
+  getPortalUser,
+  getExpedienteMessages,
+  markMessagesRead,
+} from '@/lib/expedientes-db';
+import type { Expediente, PortalUser } from '@/lib/expedientes-db';
+import { getSolicitudesByEmail } from '@/lib/impulsa-db';
+
+export const prerender = false;
+
+const COOKIE = 'startidea_portal';
+const session = Astro.cookies.get(COOKIE)?.value;
+const email   = session ? getPortalSessionEmail(session) : null;
+
+if (!email) return Astro.redirect('/portal');
+
+const expedientes = getExpedientesByEmail(email);
+const user        = getPortalUser(email);
+
+// Módulo Startidea Impulsa: activo si el cliente presentó solicitud (por email).
+let impulsaSolicitud: { estado: string; org_nombre: string } | null = null;
+try {
+  const ss = getSolicitudesByEmail(email);
+  if (ss.length > 0) impulsaSolicitud = { estado: ss[0].estado, org_nombre: ss[0].org_nombre };
+} catch { /* sin BD impulsa */ }
+
+const IMPULSA_ESTADO_LABEL: Record<string, string> = {
+  recibida: 'Solicitud recibida · en evaluación',
+  diagnostico_enviado: 'Diagnóstico enviado',
+  seleccionada: '¡Entidad seleccionada! 🎉',
+  no_seleccionada: 'No seleccionada en esta edición',
+  contactada: 'En conversación con Startidea',
+  cliente: 'Cliente activo',
+  descartada: 'Solicitud cerrada',
+};
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+function fmtDate(ts: number | null): string {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+function fmtEur(amount: number): string {
+  return amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function calcularComision(importe: string | null): string {
+  if (!importe) return '—';
+  const n = parseFloat(importe.replace(/[.,\s€]/g, (c) => (c === ',' ? '.' : '')));
+  if (isNaN(n)) return '—';
+  return fmtEur(Math.round(n * 12) / 100);
+}
+
+type Step = { key: string; label: string; desc: string };
+const STEPS: Step[] = [
+  { key: 'recibido',      label: 'Recibida',        desc: 'Tu solicitud ha llegado al equipo de Startidea.' },
+  { key: 'analizando',    label: 'En preparación',   desc: 'El equipo de Startidea está preparando los documentos.' },
+  { key: 'contrato',      label: 'Contrato',         desc: 'El contrato de servicios está pendiente de firma.' },
+  { key: 'docs_listos',   label: 'Docs listos',      desc: 'La memoria, presupuesto y checklist están listos.' },
+  { key: 'entregado',     label: 'Enviados',         desc: 'Has recibido los documentos por email.' },
+  { key: 'presentado',    label: 'Presentada',       desc: 'La solicitud fue presentada ante el organismo.' },
+];
+
+function getStepIndex(status: string, contratoAt: number | null): number {
+  if (status === 'analizando_ia') return 1;
+  if (status === 'docs_listos')   return contratoAt ? 3 : 2;
+  if (status === 'entregado')     return 4;
+  if (status === 'presentado')    return 5;
+  if (status === 'rechazado')     return -1; // estado especial
+  return 0; // recibido
+}
+
+const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mi portal · Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: #ffffff;
+      color: #1f1f22;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─────────────────────────────────────────── */
+    .topbar {
+      background: #1f1f22;
+      color: #fff;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .topbar-logo span { color: #e6356b; }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: #aaa;
+    }
+    .topbar-right button {
+      background: none;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: 4px 12px;
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .topbar-right button:hover { border-color: #e6356b; color: #e6356b; }
+
+    /* ─── Contenido ──────────────────────────────────────── */
+    .wrap { max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+    .welcome { margin-bottom: 32px; }
+    .welcome h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .welcome p  { font-size: 14px; color: #666; }
+
+    /* ─── Tarjeta de expediente ─────────────────────────── */
+    .exp-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .exp-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .exp-id {
+      font-family: monospace;
+      font-size: 11px;
+      color: #e6356b;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .exp-conv { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .exp-conv-sub { font-size: 13px; color: #888; margin-top: 4px; }
+
+    /* Status badge */
+    .status-badge {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .status-recibido      { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+    .status-analizando_ia { background: #fefce8; border-color: #fde047; color: #854d0e; }
+    .status-docs_listos   { background: #faf5ff; border-color: #d8b4fe; color: #6d28d9; }
+    .status-entregado     { background: #f0fdf4; border-color: #86efac; color: #15803d; }
+    .status-presentado    { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .status-rechazado     { background: #fff1f2; border-color: #fda4af; color: #be123c; }
+
+    /* ─── Progress bar ──────────────────────────────────── */
+    .progress-wrap { padding: 20px 24px; background: #ffffff; border-bottom: 1px solid #f3f4f6; }
+    .progress-steps {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+    }
+    .progress-steps::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      height: 2px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+    .step-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #d1d5db;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .step-dot.done  { background: #e6356b; border-color: #e6356b; color: #fff; }
+    .step-dot.current { background: #fff; border-color: #e6356b; color: #e6356b; font-weight: 700; }
+    .step-dot.future { background: #fff; border-color: #d1d5db; color: #d1d5db; }
+    .step-label {
+      font-family: monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+      line-height: 1.3;
+      color: #aaa;
+      max-width: 70px;
+    }
+    .step-label.done    { color: #e6356b; }
+    .step-label.current { color: #1f1f22; font-weight: 700; }
+
+    /* ─── Secciones internas ────────────────────────────── */
+    .exp-body   { padding: 20px 24px; }
+    .sections   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .section-card {
+      border: 1px solid #e5e7eb;
+      padding: 16px;
+      background: #ffffff;
+    }
+    .section-title {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .section-val { font-size: 14px; font-weight: 600; color: #1f1f22; }
+    .section-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .action-link {
+      display: inline-block;
+      margin-top: 8px;
+      background: #e6356b;
+      color: #fff;
+      text-decoration: none;
+      padding: 7px 16px;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .action-link.outline {
+      background: transparent;
+      border: 1px solid #e6356b;
+      color: #e6356b;
+    }
+
+    /* ─── Documentos (accordion) ─────────────────────────── */
+    .docs-section { margin-top: 16px; }
+    .docs-section summary {
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid #e5e7eb;
+      user-select: none;
+    }
+    .docs-section summary::before { content: '▸'; color: #e6356b; }
+    details[open] summary::before { content: '▾'; }
+    .doc-content {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 16px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #444;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 8px;
+    }
+
+    /* ─── Próximos pasos ─────────────────────────────────── */
+    .next-steps {
+      margin-top: 16px;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 16px;
+    }
+    .next-steps h3 {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin-bottom: 10px;
+    }
+    .next-step-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f9fafb;
+      font-size: 13px;
+      color: #555;
+      align-items: flex-start;
+      line-height: 1.4;
+    }
+    .next-step-item:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: #1f1f22;
+      color: #fff;
+      font-family: monospace;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    /* ─── Sin expedientes ─────────────────────────────────── */
+    .empty {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .empty p { font-size: 15px; color: #888; margin-bottom: 16px; }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .sections { grid-template-columns: 1fr; }
+      .exp-header { flex-direction: column; }
+      .step-label { font-size: 8px; max-width: 52px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra superior -->
+  <div class="topbar">
+    <div class="topbar-logo"><span>Startidea</span> · Portal</div>
+    <div class="topbar-right">
+      <span>{email}</span>
+      <form action="/api/portal-logout" method="POST" style="display:inline">
+        <button type="submit">Salir</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- Bienvenida + Perfil + Servicios -->
+    <div class="welcome">
+      <h1>Hola, {primerNombre} 👋</h1>
+      <p>
+        {user
+          ? `Panel de ${user.org_nombre} · Gestiona tus servicios y expedientes.`
+          : 'Aquí tienes el seguimiento de tus expedientes gestionados por Startidea.'}
+      </p>
+    </div>
+
+    <!-- Tus módulos -->
+    <h2 style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:12px">
+      Tus módulos
+    </h2>
+    <!-- Panel de servicios / módulos -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:28px">
+
+      <!-- Subvenciones / Financiación — módulo que se ACTIVA al tener expediente -->
+      {expedientes.length > 0 ? (
+        <a href="#mis-expedientes"
+           style="background:#f0fdf4;border:2px solid #16a34a;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+          <div style="font-size:28px;margin-bottom:10px">📋</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#16a34a;margin-bottom:4px">✓ Activo</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Subvenciones</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">{expedientes.length} expediente{expedientes.length !== 1 ? 's' : ''} en curso con Startidea.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#16a34a;font-weight:700">Ver mis expedientes ↓</div>
+        </a>
+      ) : (
+        <a href="/copiloto-subvenciones" target="_blank"
+           style="background:#fff;border:2px solid #e6356b;padding:20px;text-decoration:none;color:#1f1f22;display:block;transition:box-shadow .15s"
+           onmouseover="this.style.boxShadow='0 4px 16px rgba(230,53,107,.15)'"
+           onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:28px;margin-bottom:10px">📋</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:4px">Disponible</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Copiloto de Subvenciones</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">El equipo prepara la memoria, presupuesto y guía de presentación. Comisión a éxito del 12%.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#e6356b;font-weight:700">Solicitar →</div>
+        </a>
+      )}
+
+      <!-- Startidea Impulsa — módulo que se ACTIVA al presentar solicitud RSC -->
+      {impulsaSolicitud ? (
+        <a href="/impulsa/bases" target="_blank"
+           style="background:#f0fdf4;border:2px solid #16a34a;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+          <div style="font-size:28px;margin-bottom:10px">🚀</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#16a34a;margin-bottom:4px">✓ Activo</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Startidea Impulsa</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">{IMPULSA_ESTADO_LABEL[impulsaSolicitud.estado] ?? 'Solicitud registrada'}.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#16a34a;font-weight:700">Ver bases →</div>
+        </a>
+      ) : (
+        <a href="/impulsa" target="_blank"
+           style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+          <div style="font-size:28px;margin-bottom:10px">🚀</div>
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible · RSC</div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Startidea Impulsa</div>
+          <div style="font-size:12px;color:#666;line-height:1.5">80.000 € en comunicación, web y audiovisual en especie para el tercer sector.</div>
+          <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#888;font-weight:700">Presentar entidad →</div>
+        </a>
+      )}
+
+      <!-- Diagnóstico de comunicación -->
+      <a href="/diagnostico" target="_blank"
+         style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+        <div style="font-size:28px;margin-bottom:10px">🎯</div>
+        <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px">Diagnóstico gratuito</div>
+        <div style="font-size:12px;color:#666;line-height:1.5">Evaluación express de comunicación, captación de fondos o impacto social.</div>
+        <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#888;font-weight:700">Solicitar →</div>
+      </a>
+
+      <!-- Formación / Lab -->
+      <a href="/laboratorio/cursos" target="_blank"
+         style="background:#fff;border:1px solid #e5e7eb;padding:20px;text-decoration:none;color:#1f1f22;display:block">
+        <div style="font-size:28px;margin-bottom:10px">🎓</div>
+        <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:4px">Disponible</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px">Formación — Startidea Lab</div>
+        <div style="font-size:12px;color:#666;line-height:1.5">Cursos y talleres sobre comunicación, fundraising e impacto para el tercer sector.</div>
+        <div style="margin-top:12px;font-family:monospace;font-size:11px;color:#888;font-weight:700">Ver catálogo →</div>
+      </a>
+
+      <!-- Próximamente -->
+      <div style="background:#ffffff;border:1px dashed #d1d5db;padding:20px;color:#aaa">
+        <div style="font-size:28px;margin-bottom:10px">🔜</div>
+        <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#ccc;margin-bottom:4px">Próximamente</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;color:#bbb">Más servicios</div>
+        <div style="font-size:12px;color:#ccc;line-height:1.5">Consultoría de comunicación, ASE, fundraising individual y otros servicios en breve.</div>
+      </div>
+
+    </div>
+
+    <!-- Perfil: banner CTA si no está registrado -->
+    {!user && (
+      <div style="background:#fff;border:1px solid #bae6fd;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <p style="font-size:14px;font-weight:600;color:#0369a1;margin-bottom:2px">Completa tu perfil</p>
+          <p style="font-size:13px;color:#0284c7">Regístrate para acceder a todas las funcionalidades del portal.</p>
+        </div>
+        <a href={`/portal/registro?email=${encodeURIComponent(email)}`}
+           style="flex-shrink:0;background:#0369a1;color:#fff;text-decoration:none;padding:8px 20px;font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">
+          Completar →
+        </a>
+      </div>
+    )}
+
+    <!-- Perfil si está registrado -->
+    {user && (
+      <details style="background:#fff;border:1px solid #e5e7eb;margin-bottom:24px">
+        <summary style="cursor:pointer;padding:14px 20px;font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#666;list-style:none;display:flex;justify-content:space-between;align-items:center">
+          <span>🏢 {user.org_nombre}</span>
+          <span style="color:#aaa;font-size:10px">Ver / editar perfil</span>
+        </summary>
+        <div style="padding:0 20px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;border-top:1px solid #f3f4f6;padding-top:16px">
+          {[
+            ['Representante', user.nombre],
+            ['Email', user.email],
+            ['CIF/NIF', user.org_cif || '—'],
+            ['Tipo entidad', user.org_tipo || '—'],
+            ['Teléfono', user.telefono || '—'],
+            ['Provincia', user.provincia || '—'],
+          ].map(([k, v]) => (
+            <div>
+              <div style="font-family:monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#aaa;margin-bottom:2px">{k}</div>
+              <div style="font-size:13px;color:#1f1f22">{v}</div>
+            </div>
+          ))}
+        </div>
+        <div style="padding:0 20px 16px">
+          <a href={`/portal/registro?email=${encodeURIComponent(email)}`}
+             style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#888;text-decoration:none">
+            ✏ Actualizar datos →
+          </a>
+        </div>
+      </details>
+    )}
+
+    <h2 id="mis-expedientes" style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:16px;scroll-margin-top:64px">
+      Mis expedientes ({expedientes.length})
+    </h2>
+
+    {expedientes.length === 0 ? (
+      <div style="background:#fff;border:1px solid #e5e7eb;padding:0;overflow:hidden">
+        <!-- Bienvenida onboarding -->
+        <div style="background:#1f1f22;color:#fff;padding:32px 28px">
+          <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#e6356b;margin-bottom:10px">Primeros pasos</div>
+          <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;line-height:1.2">Bienvenido al portal de Startidea</h2>
+          <p style="font-size:14px;color:#aaa;line-height:1.6">Tu cuenta está activa. Aquí podrás gestionar todos tus expedientes de subvenciones y otros servicios.</p>
+        </div>
+        <!-- Pasos de onboarding -->
+        <div style="padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+          <div style="border:2px solid #e6356b;padding:20px">
+            <div style="font-size:24px;margin-bottom:10px">📋</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#e6356b;margin-bottom:6px">Paso 1 — Disponible</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Solicita una subvención</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Rellena el formulario con los datos de tu organización y la convocatoria. El equipo prepara la documentación en 24–48h.</div>
+            <a href="/subvenciones/presentar/nuevo"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#e6356b;text-decoration:none;font-weight:700">
+              Iniciar solicitud →
+            </a>
+          </div>
+          <div style="border:1px solid #e5e7eb;padding:20px;background:#ffffff">
+            <div style="font-size:24px;margin-bottom:10px">🎯</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">Paso 2 — Opcional</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Diagnóstico gratuito</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">Evaluación express de tu comunicación, captación de fondos o impacto social. Completamente gratuito.</div>
+            <a href="/diagnostico" target="_blank"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#888;text-decoration:none;font-weight:700">
+              Hacer diagnóstico →
+            </a>
+          </div>
+          <div style="border:1px solid #e5e7eb;padding:20px;background:#ffffff">
+            <div style="font-size:24px;margin-bottom:10px">📞</div>
+            <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px">¿Tienes dudas?</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1f1f22">Habla con el equipo</div>
+            <div style="font-size:13px;color:#666;line-height:1.5;margin-bottom:14px">El equipo de Startidea está disponible para resolver cualquier pregunta sobre subvenciones o servicios.</div>
+            <a href="mailto:hola@startidea.es"
+               style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#888;text-decoration:none;font-weight:700">
+              hola@startidea.es →
+            </a>
+          </div>
+        </div>
+        <div style="padding:0 28px 28px">
+          <a href="/subvenciones/presentar/nuevo"
+             style="display:inline-block;background:#e6356b;color:#fff;text-decoration:none;padding:13px 28px;font-family:monospace;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">
+            Solicitar el Copiloto de Subvenciones →
+          </a>
+        </div>
+      </div>
+    ) : (
+      expedientes.map((exp: Expediente) => {
+        const stepIdx = getStepIndex(exp.status, exp.contrato_at);
+        const rechazado = exp.status === 'rechazado';
+        const tieneImporte = !!exp.importe_concedido;
+        const comision = calcularComision(exp.importe_concedido);
+        const contratoUrl = exp.contrato_token ? `/contrato/${exp.contrato_token}` : null;
+
+        return (
+          <div class="exp-card">
+            <!-- Cabecera -->
+            <div class="exp-header">
+              <div>
+                <div class="exp-id">{exp.id}</div>
+                <div class="exp-conv">
+                  {exp.convocatoria_title ?? 'Subvención sin identificar'}
+                </div>
+                <div class="exp-conv-sub">
+                  {exp.org_nombre} · Solicitado: {fmtDate(exp.created_at)}
+                </div>
+              </div>
+              <span class={`status-badge status-${exp.status}`}>
+                {exp.status === 'recibido'      && '📥 Recibida'}
+                {exp.status === 'analizando_ia' && '⏳ En preparación'}
+                {exp.status === 'docs_listos'   && '📄 Docs listos'}
+                {exp.status === 'entregado'     && '📬 Docs enviados'}
+                {exp.status === 'presentado'    && '✅ Presentada'}
+                {exp.status === 'rechazado'     && '❌ No concedida'}
+              </span>
+            </div>
+
+            <!-- Progress bar -->
+            {!rechazado && (
+              <div class="progress-wrap">
+                <div class="progress-steps">
+                  {STEPS.map((step, i) => {
+                    const state = i < stepIdx ? 'done' : i === stepIdx ? 'current' : 'future';
+                    return (
+                      <div class="step-item">
+                        <div class={`step-dot ${state}`}>
+                          {state === 'done' ? '✓' : (i + 1).toString()}
+                        </div>
+                        <div class={`step-label ${state}`}>{step.label}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {rechazado && (
+              <div style="padding:12px 24px;background:#fff1f2;border-bottom:1px solid #fda4af">
+                <p style="font-size:13px;color:#be123c;line-height:1.5">
+                  ❌ Esta subvención no fue concedida. El equipo de Startidea puede ayudarte a identificar
+                  otras convocatorias adecuadas — <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
+                </p>
+              </div>
+            )}
+
+            <!-- Cuerpo -->
+            <div class="exp-body">
+              <!-- Secciones informativas -->
+              <div class="sections">
+                <!-- Contrato -->
+                <div class="section-card">
+                  <div class="section-title">Contrato de servicios</div>
+                  {exp.contrato_at ? (
+                    <div>
+                      <div class="section-val" style="color:#16a34a">✅ Firmado</div>
+                      <div class="section-sub">{fmtDate(exp.contrato_at)}</div>
+                      {contratoUrl && (
+                        <a href={contratoUrl} target="_blank" class="action-link outline" style="margin-top:8px">
+                          Ver contrato →
+                        </a>
+                      )}
+                    </div>
+                  ) : exp.contrato_token ? (
+                    <div>
+                      <div class="section-val" style="color:#d97706">⏳ Pendiente de firma</div>
+                      <div class="section-sub">Necesitamos tu firma para continuar</div>
+                      {contratoUrl && (
+                        <a href={contratoUrl} class="action-link" style="margin-top:8px">
+                          Firmar contrato →
+                        </a>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <div class="section-val" style="color:#9ca3af">Pendiente de envío</div>
+                      <div class="section-sub">El equipo lo enviará próximamente</div>
+                    </div>
+                  )}
+                </div>
+
+                <!-- Resolución / Factura -->
+                <div class="section-card">
+                  <div class="section-title">Resolución y honorarios</div>
+                  {exp.factura_num ? (
+                    <div>
+                      <div class="section-val" style="color:#16a34a">🧾 Factura {exp.factura_num}</div>
+                      <div class="section-sub">Importe concedido: {exp.importe_concedido}</div>
+                      <div class="section-sub">Honorarios Startidea (12%): {comision}</div>
+                      <div class="section-sub" style="margin-top:6px;font-size:11px;color:#aaa">
+                        Plazo de pago: 30 días desde el cobro
+                      </div>
+                    </div>
+                  ) : exp.importe_concedido ? (
+                    <div>
+                      <div class="section-val" style="color:#d97706">Concedida — factura pendiente</div>
+                      <div class="section-sub">Importe: {exp.importe_concedido}</div>
+                      <div class="section-sub">Comisión estimada (12%): {comision}</div>
+                    </div>
+                  ) : exp.status === 'presentado' ? (
+                    <div>
+                      <div class="section-val">⏳ Pendiente de resolución</div>
+                      <div class="section-sub">La Administración aún no ha resuelto</div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div class="section-val" style="color:#9ca3af">Sin resolver aún</div>
+                      <div class="section-sub">0% hasta que se conceda · comisión a éxito</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <!-- Documentos generados — links descargables -->
+              {exp.ai_memoria && (
+                <div class="docs-section">
+                  <div style="padding:14px 0 0;border-top:1px solid #e5e7eb">
+                    <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
+                      📄 Documentos generados — guarda como PDF desde el navegador
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      {exp.ai_memoria && (
+                        <a href={`/portal/docs/${exp.id}/memoria`} target="_blank"
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          📝 Memoria →
+                        </a>
+                      )}
+                      {exp.ai_presupuesto && (
+                        <a href={`/portal/docs/${exp.id}/presupuesto`} target="_blank"
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          💶 Presupuesto →
+                        </a>
+                      )}
+                      {exp.ai_checklist && (
+                        <a href={`/portal/docs/${exp.id}/checklist`} target="_blank"
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          ✅ Checklist →
+                        </a>
+                      )}
+                      {exp.ai_guia && (
+                        <a href={`/portal/docs/${exp.id}/guia`} target="_blank"
+                           style="border:1px solid #e5e7eb;padding:6px 14px;font-family:monospace;font-size:11px;color:#1f1f22;text-decoration:none;background:#fff;text-transform:uppercase;letter-spacing:.06em">
+                          🗺 Guía →
+                        </a>
+                      )}
+                    </div>
+                    <p style="font-size:11px;color:#aaa;margin-top:8px">
+                      Abre cada documento y usa Ctrl+P (o Cmd+P) → Guardar como PDF para descargarlo.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <!-- Mensajes del equipo Startidea -->
+              {(() => {
+                const msgs = getExpedienteMessages(exp.id);
+                // Marcar mensajes del admin como leídos al cargar el portal
+                markMessagesRead(exp.id, 'client');
+                if (msgs.length === 0) return null;
+                return (
+                  <div style="margin-top:14px;border-top:1px solid #e5e7eb;padding-top:14px">
+                    <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:10px">
+                      💬 Mensajes de Startidea
+                    </div>
+                    <div style="space-y:8px">
+                      {msgs.map((m) => (
+                        <div style={`margin-bottom:10px;padding:12px 14px;font-size:13px;line-height:1.6;border-left:3px solid ${m.direction === 'admin' ? '#e6356b' : '#94a3b8'};background:${m.direction === 'admin' ? '#fff7f8' : '#f8fafc'};white-space:pre-wrap`}>
+                          <div style={`font-family:monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;color:${m.direction === 'admin' ? '#e6356b' : '#64748b'}`}>
+                            {m.direction === 'admin' ? 'Startidea' : 'Tú'} ·{' '}
+                            {new Date(m.created_at * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' } as any)}
+                          </div>
+                          {m.body}
+                        </div>
+                      ))}
+                    </div>
+                    <p style="font-size:12px;color:#aaa;margin-top:4px">
+                      Para responder escríbenos a <a href={`mailto:hola@startidea.es?subject=Expediente ${exp.id}`} style="color:#e6356b">hola@startidea.es</a>
+                    </p>
+                  </div>
+                );
+              })()}
+
+              <!-- Próximos pasos según estado -->
+              <div class="next-steps">
+                <h3>¿Qué pasa ahora?</h3>
+                {exp.status === 'recibido' && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>El equipo de Startidea está revisando tu solicitud y preparando el análisis de elegibilidad.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>El equipo de Startidea elaborará la memoria técnica, presupuesto y checklist adaptados a la convocatoria.</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Te enviaremos los documentos por email cuando estén listos. Recibirás también el contrato para firmar.</span></div>
+                  </div>
+                )}
+                {(exp.status === 'analizando_ia') && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>El equipo de Startidea está preparando los documentos. Recibirás un aviso por email en cuanto estén listos.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Recibirás un email con la memoria, presupuesto y guía de presentación.</span></div>
+                  </div>
+                )}
+                {exp.status === 'docs_listos' && !exp.contrato_at && contratoUrl && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span>
+                      <span>Firma el contrato de servicios → <a href={contratoUrl} style="color:#e6356b">Firmar ahora</a></span>
+                    </div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Revisa los documentos y completa los campos marcados con [COMPLETAR].</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Reúne la documentación del checklist adjunto.</span></div>
+                  </div>
+                )}
+                {exp.status === 'entregado' && exp.apoderamiento === 1 && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>Revisa los documentos recibidos y completa todos los campos [COMPLETAR] con datos reales de tu entidad.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Reúne los documentos del checklist adjunto (estatutos, certificados AEAT/SS, NIF, etc.).</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Startidea presentará el expediente en tu nombre en cuanto confirmes que está todo listo. Te avisaremos cuando esté presentado y te enviaremos el justificante CSV.</span></div>
+                  </div>
+                )}
+                {exp.status === 'entregado' && exp.apoderamiento !== 1 && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>Revisa los documentos recibidos por email y completa todos los campos [COMPLETAR] con datos reales.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Reúne los documentos del checklist (estatutos, certificados AEAT/SS, NIF, etc.).</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Sigue la guía de presentación paso a paso incluida en el email para presentar con tu certificado digital.</span></div>
+                    <div class="next-step-item"><span class="step-num">4</span><span>Cuando hayas presentado, avísanos → <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></span></div>
+                  </div>
+                )}
+                {exp.status === 'presentado' && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>La solicitud está presentada. La Administración tiene hasta el plazo marcado en las bases para resolver.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Cuando recibas la resolución (concedida o denegada), comunícanosla a <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Si se concede, cuando cobres el importe en tu cuenta, te enviaremos la factura de honorarios (12%, 30 días para pagar).</span></div>
+                  </div>
+                )}
+                {exp.factura_num && (
+                  <div>
+                    <div class="next-step-item"><span class="step-num">1</span><span>¡Enhorabuena por la subvención concedida! El equipo Startidea os ha ayudado a conseguirla.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Tienes 30 días desde el cobro de la subvención para abonar nuestra factura de honorarios.</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>¿Hay más convocatorias que os interesen? <a href="mailto:hola@startidea.es" style="color:#e6356b">Escribid a Startidea →</a></span></div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+        );
+      })
+    )}
+
+    <!-- Footer del portal -->
+    <div style="margin-top:40px;border-top:1px solid #e5e7eb;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12px;color:#aaa">
+      <div>
+        Startidea Consulting, S.L. · CIF B19583632 · Granada ·
+        <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a>
+      </div>
+      <div>
+        <a href="/subvenciones" style="color:#aaa;text-decoration:none;margin-right:12px">Ver convocatorias →</a>
+        <a href="/portal" style="color:#aaa;text-decoration:none">Volver al portal</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

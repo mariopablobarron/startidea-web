@@ -9,6 +9,37 @@
 
 export const SITE_URL = 'https://startidea.es';
 
+// Nombre canónico del fundador. Se compara contra nota.data.author para
+// decidir si el autor de un artículo es la misma entidad #founder.
+export const FOUNDER_NAME = 'Mario Pablo Sánchez Barrón';
+
+// Entidad Person del fundador, en una sola fuente. Se reutiliza en
+// ORG.founder Y como autor de las notas (mismo @id) para que buscadores y
+// LLMs reconcilien "Mario Pablo Sánchez Barrón" como una autoridad única
+// del tercer sector (señal E-E-A-T fuerte para GEO/AEO).
+const FOUNDER = {
+  '@type': 'Person',
+  '@id': `${SITE_URL}/#founder`,
+  name: FOUNDER_NAME,
+  jobTitle: 'Fundador y director',
+  description:
+    'Fundador y director de Startidea, agencia de innovación social y comunicación con sede en Granada. Especialista en comunicación estratégica, fundraising y consultoría para el tercer sector, instituciones y empresas con propósito.',
+  worksFor: { '@id': `${SITE_URL}/#organization` },
+  affiliation: [
+    { '@type': 'Organization', name: 'Asociación Católica de Propagandistas (ACdP)' },
+    { '@type': 'Organization', name: 'Acción Social Empresarial (ASE)' },
+  ],
+  knowsAbout: [
+    'Comunicación estratégica',
+    'Marketing social',
+    'Innovación social',
+    'Fundraising',
+    'Tercer sector',
+    'Subvenciones públicas',
+  ],
+  sameAs: ['https://es.linkedin.com/in/mariobarron'],
+};
+
 const ORG = {
   '@type': 'Organization',
   '@id': `${SITE_URL}/#organization`,
@@ -37,17 +68,7 @@ const ORG = {
     'Startidea es una agencia de innovación social y comunicación con sede en Granada, España, fundada en 2011. Consultora especializada en tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Servicios: comunicación estratégica y marketing social, consultoría e innovación social, fundraising para fundaciones y ONGs, producción audiovisual y podcast.',
   slogan: 'Innovación social que cambia la conversación',
   foundingDate: '2011-02',
-  founder: {
-    '@type': 'Person',
-    '@id': `${SITE_URL}/#founder`,
-    name: 'Mario Pablo Sánchez Barrón',
-    jobTitle: 'Fundador y director',
-    worksFor: { '@id': `${SITE_URL}/#organization` },
-    affiliation: [
-      { '@type': 'Organization', name: 'Asociación Católica de Propagandistas (ACdP)' },
-      { '@type': 'Organization', name: 'Acción Social Empresarial (ASE)' },
-    ],
-  },
+  founder: FOUNDER,
   taxID: 'B19583632',
   vatID: 'ESB19583632',
   email: 'hola@startidea.es',
@@ -296,11 +317,17 @@ export function blogPostingSchema(b: BlogPostingInput) {
     description: b.description,
     datePublished: b.datePublished.toISOString(),
     dateModified: (b.dateModified ?? b.datePublished).toISOString(),
-    author: {
-      '@type': 'Person',
-      name: b.authorName,
-      ...(b.authorRole ? { jobTitle: b.authorRole } : {}),
-    },
+    // Si el autor es el fundador, se emite la entidad completa #founder
+    // (con sameAs/knowsAbout) para que el artículo refuerce su autoridad.
+    // Para otros autores, un Person simple.
+    author:
+      b.authorName === FOUNDER_NAME
+        ? FOUNDER
+        : {
+            '@type': 'Person',
+            name: b.authorName,
+            ...(b.authorRole ? { jobTitle: b.authorRole } : {}),
+          },
     publisher: { '@id': `${SITE_URL}/#organization` },
     image: b.image ?? `${SITE_URL}/og/home.png`,
     inLanguage: 'es-ES',
@@ -359,6 +386,71 @@ export function faqPageSchema(items: FaqItem[]) {
  * Google lo procesa para rich snippets de servicio profesional, y los LLMs
  * lo usan como señal "Startidea ofrece exactamente esto".
  */
+/**
+ * DefinedTermSet / DefinedTerm — para un glosario. Los LLMs y motores de
+ * respuesta citan definiciones con mucha frecuencia: una página de términos
+ * bien estructurada se convierte en fuente para queries "qué es X". Alto
+ * valor GEO/AEO. Cada término queda asociado al set y a la organización.
+ */
+interface GlossaryTerm {
+  term: string;
+  definition: string;
+}
+
+export function definedTermSetSchema(name: string, url: string, terms: GlossaryTerm[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTermSet',
+    '@id': `${url}#glosario`,
+    name,
+    url,
+    inLanguage: 'es-ES',
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    hasDefinedTerm: terms.map((t) => ({
+      '@type': 'DefinedTerm',
+      name: t.term,
+      description: t.definition,
+      inDefinedTermSet: `${url}#glosario`,
+    })),
+  };
+}
+
+/**
+ * HowTo schema — para páginas que describen un proceso paso a paso
+ * (p.ej. "cómo presentar una subvención"). Los AI Overviews de Google y
+ * los motores de respuesta (Perplexity, ChatGPT) extraen los pasos
+ * literalmente para responder queries de tipo "cómo...". Alto valor GEO.
+ */
+interface HowToStep {
+  name: string;
+  text: string;
+  url?: string;
+}
+interface HowToInput {
+  name: string;
+  description: string;
+  steps: HowToStep[];
+  totalTime?: string; // ISO 8601 duration, p.ej. "P2D"
+}
+
+export function howToSchema(h: HowToInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: h.name,
+    description: h.description,
+    inLanguage: 'es-ES',
+    ...(h.totalTime ? { totalTime: h.totalTime } : {}),
+    step: h.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+      ...(s.url ? { url: s.url } : {}),
+    })),
+  };
+}
+
 interface ServiceInput {
   name: string;
   description: string;

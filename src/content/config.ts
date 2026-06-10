@@ -8,12 +8,17 @@ const notas = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     audience: z.enum(['Tercer sector', 'Instituciones', 'Empresas con propósito', 'Todas']).default('Todas'),
+    category: z.enum(['Comunicación', 'Financiación', 'Estrategia', 'Agencia']).optional(),
     tags: z.array(z.string()).default([]),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
     draft: z.boolean().default(false),
     author: z.string().default('Mario Pablo Sánchez Barrón'),
     authorRole: z.string().default('Fundador · Startidea'),
+    // Respuesta corta (TL;DR) opcional. Si se define, se renderiza
+    // destacada al inicio de la nota: es lo que los motores de IA
+    // (AI Overviews, Perplexity, ChatGPT) extraen como respuesta directa.
+    tldr: z.string().min(40).max(600).optional(),
     // FAQs opcionales. Si se definen, /notas/[slug] genera JSON-LD
     // FAQPage adicional → activa Featured Snippets en Google + sube CTR.
     faqs: z
@@ -72,4 +77,36 @@ const knowledge = defineCollection({
   schema: z.object({}).passthrough().optional(),
 });
 
-export const collections = { notas, diagnosticos, knowledge };
+const cursos = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    // Formato de impartición
+    formato: z.enum(['online', 'presencial', 'hibrido']),
+    // Tipo de formación
+    modalidad: z.enum(['taller', 'curso', 'masterclass', 'mentoria']),
+    // Duración legible ("4 horas", "6 semanas", "3 sesiones de 90 min")
+    duracion: z.string(),
+    // Precio base en euros (sin IVA)
+    precio: z.number().int().nonnegative(),
+    // Precio reducido para entidades sin ánimo de lucro (opcional)
+    precio_esfl: z.number().int().nonnegative().optional(),
+    // Estado de la convocatoria
+    estado: z.enum(['abierto', 'proximo', 'agotado', 'a-demanda']).default('proximo'),
+    // Fecha de la próxima edición (opcional, si ya está fijada)
+    proxima_edicion: z.coerce.date().optional(),
+    // Público objetivo
+    audience: z.string().default('Tercer sector y organizaciones con propósito'),
+    // Categoría temática
+    category: z.enum(['Comunicación', 'Financiación', 'Estrategia', 'Digital']).default('Comunicación'),
+    tags: z.array(z.string()).default([]),
+    // Imagen de portada (ruta desde /public)
+    cover: z.string().optional(),
+    coverAlt: z.string().optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
+export const collections = { notas, diagnosticos, knowledge, cursos };

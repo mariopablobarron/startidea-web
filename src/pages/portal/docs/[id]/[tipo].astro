@@ -1,0 +1,231 @@
+---
+/**
+ * /portal/docs/[id]/[tipo] — Documento descargable del expediente.
+ *
+ * Solo accesible para el propietario del expediente (email de sesión = email del expediente).
+ * Sirve el documento como página imprimible (el cliente la guarda como PDF desde el navegador).
+ *
+ * Tipos: memoria | presupuesto | checklist | guia
+ */
+import {
+  getPortalSessionEmail,
+  getExpediente,
+} from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+const COOKIE = 'startidea_portal';
+const session = Astro.cookies.get(COOKIE)?.value;
+const email   = session ? getPortalSessionEmail(session) : null;
+
+if (!email) return Astro.redirect('/portal');
+
+const { id, tipo } = Astro.params;
+const TIPOS_VALIDOS = ['memoria', 'presupuesto', 'checklist', 'guia'] as const;
+type TipoDoc = typeof TIPOS_VALIDOS[number];
+
+if (!id || !tipo || !TIPOS_VALIDOS.includes(tipo as TipoDoc)) {
+  return Astro.redirect('/portal/dashboard');
+}
+
+const exp = id ? getExpediente(id) : null;
+
+// Solo el propietario puede acceder
+if (!exp || exp.email.toLowerCase() !== email.toLowerCase()) {
+  return Astro.redirect('/portal/dashboard');
+}
+
+const tipedTipo = tipo as TipoDoc;
+
+const CAMPO_MAP: Record<TipoDoc, keyof typeof exp> = {
+  memoria:      'ai_memoria',
+  presupuesto:  'ai_presupuesto',
+  checklist:    'ai_checklist',
+  guia:         'ai_guia',
+};
+
+const TITULO_MAP: Record<TipoDoc, string> = {
+  memoria:      'Memoria justificativa',
+  presupuesto:  'Presupuesto desglosado',
+  checklist:    'Checklist de documentación',
+  guia:         'Guía de presentación',
+};
+
+const contenido = exp[CAMPO_MAP[tipedTipo]] as string | null;
+const titulo    = TITULO_MAP[tipedTipo];
+
+if (!contenido) {
+  return Astro.redirect('/portal/dashboard');
+}
+
+function escHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!,
+  );
+}
+
+const convNombre = exp.convocatoria_title ?? 'Subvención';
+const fechaDoc   = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{titulo} · {exp.id} · Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      color: #1f1f22;
+      background: #ffffff;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Barra superior (solo pantalla) */
+    .screen-bar {
+      background: #1f1f22;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .screen-bar-logo {
+      font-family: monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .screen-bar-logo span { color: #e6356b; }
+    .screen-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-print {
+      background: #e6356b;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .btn-back {
+      background: transparent;
+      color: #aaa;
+      border: 1px solid #555;
+      padding: 8px 14px;
+      font-family: monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-back:hover { color: #fff; border-color: #888; }
+
+    /* Documento */
+    .doc-wrap {
+      max-width: 820px;
+      margin: 24px auto;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 48px 56px;
+    }
+
+    .doc-header {
+      border-bottom: 2px solid #1f1f22;
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+    .doc-meta {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .doc-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .doc-subtitle {
+      font-size: 14px;
+      color: #555;
+    }
+    .doc-org {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .doc-body {
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #1f1f22;
+    }
+
+    .doc-footer {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media print {
+      .screen-bar, .btn-print, .btn-back { display: none !important; }
+      body { background: #fff; }
+      .doc-wrap { border: none; margin: 0; padding: 20px 32px; max-width: 100%; }
+    }
+
+    @media (max-width: 600px) {
+      .doc-wrap { padding: 24px 20px; margin: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="screen-bar">
+    <div class="screen-bar-logo"><span>Startidea</span> · Portal</div>
+    <div class="screen-actions">
+      <a href="/portal/dashboard" class="btn-back">← Volver</a>
+      <button class="btn-print" onclick="window.print()">🖨 Guardar PDF</button>
+    </div>
+  </div>
+
+  <div class="doc-wrap">
+    <div class="doc-header">
+      <div class="doc-meta">Startidea Consulting, S.L. · {exp.id} · {fechaDoc}</div>
+      <div class="doc-title">{titulo}</div>
+      <div class="doc-subtitle">{convNombre}</div>
+      <div class="doc-org">{exp.org_nombre}</div>
+    </div>
+
+    <div class="doc-body">{contenido}</div>
+
+    <div class="doc-footer">
+      <span>Startidea Consulting, S.L. · CIF B19583632</span>
+      <span>Confidencial · uso interno</span>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -33,12 +33,13 @@ const propiedades = [
   <div class="container-x flex items-center justify-between gap-4 py-2 md:py-2.5 lg:py-3">
     <Logo class="h-10 sm:h-11 md:h-12 lg:h-14" />
 
-    <!-- Nav desktop -->
-    <nav class="hidden xl:block" aria-label="Principal">
-      <ul class="flex items-center gap-6 2xl:gap-8">
+    <!-- Nav desktop — el bar inline solo aparece a partir de 1360px, donde caben
+         todos los enlaces sin partirse; por debajo se usa el menú "Menú". -->
+    <nav class="hidden min-[1360px]:block" aria-label="Principal">
+      <ul class="flex items-center gap-4">
         {links.map((l) => (
           <li>
-            <a href={l.href} class="link-underline text-sm text-ink/85 hover:text-ink">
+            <a href={l.href} class="link-underline whitespace-nowrap text-sm text-ink/85 hover:text-ink">
               {l.label}
             </a>
           </li>
@@ -48,7 +49,7 @@ const propiedades = [
         <li class="relative group">
           <button
             type="button"
-            class="link-underline flex items-center gap-1 text-sm text-ink/85 hover:text-ink"
+            class="link-underline flex items-center gap-1 whitespace-nowrap text-sm text-ink/85 hover:text-ink"
             aria-haspopup="true"
             aria-expanded="false"
           >
@@ -72,11 +73,11 @@ const propiedades = [
           </div>
         </li>
 
-        <li class="ml-2 flex items-center gap-2">
-          <a href="/presupuesto" class="btn-ghost !py-2.5 !px-4 text-[13px]">
+        <li class="ml-2 flex items-center gap-3">
+          <a href="/presupuesto" class="btn-ghost whitespace-nowrap !py-2.5 !px-4 text-[13px]">
             Presupuesto
           </a>
-          <a href="/contacto" class="btn !py-2.5 !px-4 text-[13px]">
+          <a href="/contacto" class="btn whitespace-nowrap !py-2.5 !px-4 text-[13px]">
             Reservar diagnóstico
             <span aria-hidden="true">→</span>
           </a>
@@ -88,7 +89,7 @@ const propiedades = [
     <button
       type="button"
       id="nav-toggle"
-      class="xl:hidden border border-ink px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
+      class="min-[1360px]:hidden border border-ink px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
       aria-label="Abrir menú"
       aria-expanded="false"
     >
@@ -97,7 +98,7 @@ const propiedades = [
   </div>
 
   <!-- Mobile / tablet / small desktop fullscreen menu -->
-  <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper xl:hidden">
+  <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper min-[1360px]:hidden">
     <div class="container-x py-5">
       <ul class="flex flex-col">
         {links.map((l) => (
@@ -134,6 +135,9 @@ const propiedades = [
       </div>
 
       <div class="mt-5 flex flex-col gap-2">
+        <a href="/portal" class="block py-2 text-center font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-magenta">
+          Acceso clientes →
+        </a>
         <a href="/presupuesto" class="btn-ghost w-full !py-2.5 text-sm text-center">
           Pedir presupuesto
         </a>

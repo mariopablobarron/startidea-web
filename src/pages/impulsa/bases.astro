@@ -1,0 +1,118 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Startidea Impulsa', url: `${SITE_URL}/impulsa` },
+    { name: 'Bases', url: `${SITE_URL}/impulsa/bases` },
+  ]),
+];
+---
+
+<Base
+  title="Bases del programa Startidea Impulsa — Startidea"
+  description="Bases del programa Startidea Impulsa: objeto, requisitos, dotación en especie, criterios de valoración y obligaciones del programa de comunicación con propósito para el tercer sector."
+  ogSlug="page/impulsa-bases"
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-narrow">
+      <nav class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute" aria-label="Migas">
+        <a href="/impulsa" class="link-underline hover:text-ink">Startidea Impulsa</a>
+        <span aria-hidden="true">/</span>
+        <span>Bases</span>
+      </nav>
+      <h1 class="mt-8 font-display text-display-lg leading-[1.0] text-ink md:text-display-xl">Bases del programa</h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">Startidea Impulsa — programa de comunicación con propósito para el tercer sector.</p>
+      <div class="mt-8 inline-flex flex-col gap-1.5 border-l-2 border-magenta bg-paper-warm px-5 py-4 text-sm">
+        <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Fechas clave · convocatoria 2026</span>
+        <span class="text-ink"><strong>Plazo de solicitud:</strong> hasta el 15 de agosto de 2026 (inclusive).</span>
+        <span class="text-ink"><strong>Resolución:</strong> antes del 15 de septiembre de 2026.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-narrow">
+      <div class="prose-editorial">
+        <h2>1. Objeto y finalidad</h2>
+        <p>Startidea convoca, en el marco de su compromiso de Responsabilidad Social Corporativa, el programa <strong>Startidea Impulsa</strong>, dirigido a entidades del tercer sector de toda España. El programa ofrece, en especie y sin coste para las entidades seleccionadas, un diagnóstico estratégico de comunicación y la ejecución total o parcial de un plan de mejora, con una dotación global de <strong>80.000 € en servicios</strong> valorados a precio de mercado. El objetivo es que organizaciones sociales con recursos limitados accedan a comunicación, tecnología y herramientas de gestión profesionales que de otro modo no podrían costear.</p>
+
+        <h2>2. Entidad convocante</h2>
+        <p>Startidea (CIF B19583632), con domicilio en C/ Conde Cifuentes, 33, 18005 Granada. Contacto del programa: <strong>hola@startidea.es</strong>.</p>
+
+        <h2>3. Dotación y naturaleza de la ayuda</h2>
+        <ul>
+          <li>Dotación global: <strong>80.000 €</strong> expresados como valor de mercado de servicios profesionales, a repartir entre las entidades seleccionadas.</li>
+          <li>La ayuda es <strong>en especie</strong> (prestación de servicios por Startidea), <strong>no dineraria</strong>: en ningún caso se entrega dinero ni es canjeable por su importe.</li>
+          <li>Cada entidad seleccionada recibe un paquete de servicios con un valor económico asignado por el comité, hasta agotar la dotación global.</li>
+          <li>Todos los servicios se prestan por o con Startidea.</li>
+        </ul>
+
+        <h2>4. Servicios incluidos</h2>
+        <p>A partir del diagnóstico, el plan de cada entidad podrá incluir, total o parcialmente: diagnóstico estratégico de comunicación (incluido siempre para las seleccionadas); hoja de ruta a 12 meses; desarrollo web; gestión y estrategia de redes sociales; plan de comunicación interna y externa; materiales audiovisuales; y software de gestión. El alcance concreto de cada paquete lo define Startidea según el diagnóstico, las necesidades de la entidad y la dotación disponible.</p>
+
+        <h2>5. Entidades beneficiarias — requisitos</h2>
+        <p>Pueden presentarse entidades que, a la fecha de solicitud, cumplan todos estos requisitos:</p>
+        <ul>
+          <li>Ser entidad sin ánimo de lucro legalmente constituida en España (asociación, fundación, federación, ONG o cooperativa de iniciativa social).</li>
+          <li>Estar inscrita en el registro público correspondiente.</li>
+          <li>Tener al menos un año de actividad acreditable.</li>
+          <li>Perseguir un fin de interés general o social.</li>
+          <li>Estar al corriente de sus obligaciones legales, fiscales y con la Seguridad Social.</li>
+          <li>Tener ámbito de actuación en España.</li>
+          <li>Aceptar íntegramente estas bases.</li>
+        </ul>
+
+        <h2>6. Exclusiones</h2>
+        <p>No pueden participar: entidades con ánimo de lucro; administraciones y organismos públicos; partidos políticos y entidades con fines principalmente partidistas; entidades sin actividad real acreditable; y aquellas cuyos fines sean contrarios a los valores de Startidea, a los derechos humanos o a la legalidad vigente.</p>
+
+        <h2>7. Presentación de solicitudes</h2>
+        <p>La solicitud se realiza rellenando el formulario de diagnóstico disponible en <a href="/impulsa">startidea.es/impulsa</a>. <strong>El plazo de presentación permanece abierto hasta el 15 de agosto de 2026, inclusive</strong>; las solicitudes recibidas se evalúan en conjunto tras el cierre del plazo. Cada entidad puede presentar una sola solicitud. La presentación es gratuita y no obliga a la entidad a contratar nada.</p>
+
+        <h2>8. Criterios de valoración</h2>
+        <p>El comité valora cada solicitud sobre 100 puntos: impacto social de la entidad y de su misión (30); necesidad comunicativa y margen de mejora (25); viabilidad de ejecutar el plan con Startidea (15); grado de dependencia de financiación y sostenibilidad (10); calidad y claridad de la información aportada (10); y alineación con las áreas de trabajo de Startidea (10). El comité podrá declarar desierta cualquier plaza si ninguna solicitud alcanza el mínimo de calidad.</p>
+
+        <h2>9. Selección y resolución</h2>
+        <p>La evaluación la realiza un comité de Startidea. La resolución se comunica <strong>antes del 15 de septiembre de 2026</strong> por email a todas las entidades participantes y se publica en la web del programa. Toda entidad participante recibe, como mínimo, una devolución de su diagnóstico con una valoración inicial y recomendaciones, participe o no entre las seleccionadas.</p>
+
+        <h2>10. Obligaciones de las entidades seleccionadas</h2>
+        <ul>
+          <li>Designar un interlocutor y colaborar activamente en la ejecución, aportando información, materiales y validaciones en plazo.</li>
+          <li>Ejecutar el trabajo con Startidea, en los plazos acordados en el plan.</li>
+          <li>Dar visibilidad al programa con la mención «Con el impulso de Startidea» en los materiales resultantes durante un periodo razonable.</li>
+          <li>Autorizar a Startidea a comunicar el caso con fines de difusión del programa, salvo datos confidenciales.</li>
+        </ul>
+        <p>El incumplimiento grave puede conllevar la baja del programa.</p>
+
+        <h2>11. Propiedad intelectual</h2>
+        <p>Los materiales y entregables creados se ceden a la entidad para el cumplimiento de sus fines. Startidea conserva el derecho a mostrarlos en su portfolio y comunicaciones del programa, citando la autoría.</p>
+
+        <h2>12. Protección de datos</h2>
+        <ul>
+          <li><strong>Responsable:</strong> Startidea (CIF B19583632), C/ Conde Cifuentes 33, 18005 Granada · hola@startidea.es.</li>
+          <li><strong>Finalidades:</strong> gestionar y evaluar la solicitud; elaborar y entregar el diagnóstico y la hoja de ruta; y contactar a la entidad para ofrecerle servicios de Startidea —incluidos los no cubiertos por el programa— y futuras colaboraciones. Esta última finalidad se acepta de forma expresa al enviar el formulario.</li>
+          <li><strong>Base jurídica:</strong> consentimiento del interesado y/o interés legítimo de Startidea.</li>
+          <li><strong>Conservación:</strong> mientras dure el programa y, para la finalidad comercial, hasta que la entidad solicite la baja.</li>
+          <li><strong>Derechos:</strong> acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a hola@startidea.es. Derecho a reclamar ante la AEPD.</li>
+          <li>No se ceden datos a terceros salvo obligación legal.</li>
+        </ul>
+
+        <h2>13. Aceptación, modificación y cancelación</h2>
+        <p>La participación implica la aceptación íntegra de estas bases. Startidea podrá modificar el calendario o cancelar el programa por causas justificadas, comunicándolo por los mismos medios de publicación.</p>
+
+        <h2>14. Naturaleza jurídica</h2>
+        <p>Este programa es una iniciativa privada de Responsabilidad Social Corporativa. No constituye una subvención pública ni genera derecho de crédito alguno. La valoración económica de los servicios es orientativa y no canjeable por dinero.</p>
+
+        <h2>15. Legislación aplicable</h2>
+        <p>Estas bases se rigen por la legislación española.</p>
+      </div>
+
+      <div class="mt-12 border-t border-ink/15 pt-8">
+        <a href="/impulsa#solicitud" class="btn">Presentar mi entidad →</a>
+      </div>
+    </div>
+  </section>
+</Base>

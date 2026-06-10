@@ -2,6 +2,8 @@
 title: 'Plan de comunicación para una ONG: estructura, pasos y errores frecuentes'
 description: 'Cómo construir un plan de comunicación real para una ONG, fundación o asociación. No el documento que nadie lee: el plan que orienta decisiones durante doce meses.'
 pubDate: 2026-05-26
+tldr: 'Un plan de comunicación útil para una ONG no es el documento que nadie lee, sino el que orienta decisiones durante doce meses. Se sostiene sobre seis elementos —objetivos, públicos, mensajes, canales, calendario y medición— y reconoce con honestidad lo que la comunicación no puede resolver por sí sola.'
+category: 'Comunicación'
 audience: 'Tercer sector'
 tags: ['plan de comunicación', 'ONG', 'fundación', 'comunicación', 'estrategia']
 draft: false
@@ -63,7 +65,7 @@ La narrativa es el relato que da sentido a todo lo que hace la organización: po
 
 No es el eslogan. Es la historia estructurada que puede contarse en dos minutos ante el patronato o en veinte ante una audiencia académica — con distinto nivel de detalle pero con la misma coherencia interna.
 
-De la narrativa se derivan los mensajes clave para cada audiencia:
+De la narrativa se derivan los mensajes clave para cada audience:
 - Para donantes individuales: qué hace con su dinero, qué resultado tienen sus 15€ al mes.
 - Para instituciones y patronato: qué impacto medible genera, cómo se gobierna, cómo rinde cuentas.
 - Para medios: qué historia única puede contar la organización que nadie más puede.

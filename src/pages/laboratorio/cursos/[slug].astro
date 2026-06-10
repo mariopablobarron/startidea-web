@@ -1,0 +1,257 @@
+---
+/**
+ * /laboratorio/cursos/[slug] — Página de detalle de un curso.
+ *
+ * Genera estáticamente una página por curso publicado.
+ * JSON-LD: Course schema + breadcrumbs.
+ */
+
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+export async function getStaticPaths() {
+  const cursos = await getCollection('cursos', (c) => !c.data.draft);
+  return cursos.map((c) => ({ params: { slug: c.slug }, props: { curso: c } }));
+}
+
+const { curso } = Astro.props;
+const { Content } = await render(curso);
+
+const ESTADO_LABEL: Record<string, string> = {
+  abierto: 'Inscripción abierta',
+  proximo: 'Próximamente',
+  'a-demanda': 'Bajo demanda',
+  agotado: 'Plazas agotadas',
+};
+const ESTADO_COLOR: Record<string, string> = {
+  abierto: 'text-green-700 bg-green-50 border-green-200',
+  proximo: 'text-magenta bg-magenta/8 border-magenta/20',
+  'a-demanda': 'text-ink/70 bg-ink/5 border-ink/15',
+  agotado: 'text-ink/40 bg-ink/5 border-ink/10',
+};
+const FORMATO_LABEL: Record<string, string> = {
+  online: 'Online en directo',
+  presencial: 'Presencial Granada',
+  hibrido: 'Híbrido',
+};
+const MODALIDAD_LABEL: Record<string, string> = {
+  taller: 'Taller',
+  curso: 'Curso',
+  masterclass: 'Masterclass',
+  mentoria: 'Mentoría',
+};
+
+const d = curso.data;
+
+// JSON-LD: Course (schema.org)
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'Cursos', url: `${SITE_URL}/laboratorio/cursos` },
+    { name: d.title.slice(0, 80), url: `${SITE_URL}/laboratorio/cursos/${curso.slug}` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: d.title,
+    description: d.description,
+    provider: {
+      '@type': 'Organization',
+      name: 'Startidea',
+      url: SITE_URL,
+    },
+    courseMode: d.formato === 'online' ? 'online' : d.formato === 'presencial' ? 'onsite' : 'blended',
+    audience: {
+      '@type': 'Audience',
+      audienceType: d.audience,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: d.precio,
+      priceCurrency: 'EUR',
+      availability:
+        d.estado === 'abierto'
+          ? 'https://schema.org/InStock'
+          : d.estado === 'agotado'
+            ? 'https://schema.org/SoldOut'
+            : 'https://schema.org/PreOrder',
+      ...(d.proxima_edicion ? { validFrom: d.proxima_edicion.toISOString().slice(0, 10) } : {}),
+    },
+  },
+];
+---
+
+<Base
+  title={`${d.title} · Startidea Lab`}
+  description={d.description}
+  ogSlug="page/laboratorio"
+  jsonLd={jsonLd}
+>
+  <!-- Breadcrumb -->
+  <section class="border-b border-ink/10 bg-paper-warm py-3">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/" class="hover:text-magenta">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/laboratorio" class="hover:text-magenta">Laboratorio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/laboratorio/cursos" class="hover:text-magenta">Cursos</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-ink/65">{MODALIDAD_LABEL[d.modalidad]}</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-7">
+        <!-- Meta chips -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class:list={['rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest', ESTADO_COLOR[d.estado]]}>
+            {ESTADO_LABEL[d.estado]}
+          </span>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+            {MODALIDAD_LABEL[d.modalidad]}
+          </span>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+            {FORMATO_LABEL[d.formato]}
+          </span>
+        </div>
+
+        <h1 class="mt-4 font-display text-display-lg leading-[1.05] text-ink">
+          {d.title}
+        </h1>
+        <p class="mt-4 text-lede italic text-ink/70">{d.audience}</p>
+      </div>
+
+      <!-- Ficha técnica + CTA -->
+      <aside class="col-span-12 mt-8 lg:col-span-4 lg:col-start-9 lg:mt-0">
+        <div class="border-l-2 border-magenta bg-paper-warm/40 p-5 space-y-4">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">— Ficha</p>
+
+          <dl class="grid gap-2.5 text-sm">
+            <div>
+              <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Precio</dt>
+              <dd class="font-display text-2xl text-ink">{d.precio} €</dd>
+              {d.precio_esfl && (
+                <dd class="text-xs text-ink/50">{d.precio_esfl} € para ESFL</dd>
+              )}
+            </div>
+            <div>
+              <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Duración</dt>
+              <dd class="text-ink">{d.duracion}</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Formato</dt>
+              <dd class="text-ink">{FORMATO_LABEL[d.formato]}</dd>
+            </div>
+            {d.proxima_edicion && (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Próxima edición</dt>
+                <dd class="text-ink">
+                  {d.proxima_edicion.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          {d.estado === 'agotado' ? (
+            <p class="rounded border border-ink/15 bg-ink/5 px-4 py-3 text-center text-sm text-ink/50">
+              Sin plazas disponibles
+            </p>
+          ) : (
+            <a
+              href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`}
+              class="btn mt-2 block text-center"
+            >
+              {d.estado === 'abierto' ? 'Inscribirme →' : 'Avísame cuando abra →'}
+            </a>
+          )}
+
+          <p class="text-[11px] text-ink/40 leading-snug">
+            {d.estado === 'a-demanda'
+              ? 'La edición se abre cuando hay 6+ inscritos. Te confirmamos fecha en 48h.'
+              : 'Plazas limitadas. Si tienes dudas antes de inscribirte, escríbenos.'}
+          </p>
+        </div>
+
+        {d.precio_esfl && (
+          <p class="mt-3 text-xs text-ink/45 leading-snug">
+            Precio reducido para asociaciones, fundaciones, ONGs y otras entidades sin ánimo de lucro registradas en España. Se verifica con la documentación de la entidad.
+          </p>
+        )}
+      </aside>
+    </div>
+  </section>
+
+  <!-- Contenido -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-7">
+          <div class="prose prose-startidea max-w-measure text-ink/85">
+            <Content />
+          </div>
+        </div>
+
+        <!-- Sidebar sticky con CTA -->
+        <aside class="col-span-12 mt-10 lg:col-span-3 lg:col-start-10 lg:mt-0">
+          <div class="sticky top-24 space-y-4">
+            <div class="border border-ink/15 bg-paper-warm/30 p-5">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">— ¿Dudas antes de inscribirte?</p>
+              <p class="mt-3 text-sm text-ink/70 leading-relaxed">
+                Llama o escribe sin compromiso. Si no encaja contigo, te lo decimos antes de cobrar.
+              </p>
+              <a href="/contacto" class="btn-ghost mt-4 block text-center text-sm">
+                Hablar con Startidea →
+              </a>
+              <a href="tel:+34958045789" class="mt-2 block text-center font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-ink">
+                958 045 789
+              </a>
+            </div>
+
+            <div class="border border-ink/15 bg-paper-warm/30 p-5">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">— Todos los cursos</p>
+              <a href="/laboratorio/cursos" class="mt-2 block text-sm text-magenta hover:underline">
+                Ver catálogo completo →
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-14 md:py-20 text-paper">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 items-center">
+        <div class="col-span-12 lg:col-span-7">
+          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— ¿Listo para apuntarte?</span>
+          <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
+            {d.estado === 'abierto' ? (
+              <>Plazas abiertas.<br /><em class="italic text-magenta">Reserva la tuya.</em></>
+            ) : d.estado === 'proximo' ? (
+              <>Próximamente.<br /><em class="italic text-magenta">Apúntate a la lista.</em></>
+            ) : d.estado === 'a-demanda' ? (
+              <>Bajo demanda.<br /><em class="italic text-magenta">Dinos cuándo te va bien.</em></>
+            ) : (
+              <>Sin plazas.<br /><em class="italic text-magenta">Avísame para la próxima.</em></>
+            )}
+          </h2>
+        </div>
+        <div class="col-span-12 mt-8 lg:col-span-4 lg:col-start-9 lg:mt-0 lg:text-right">
+          <a
+            href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso-footer`}
+            class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta inline-flex px-8 py-4 text-base"
+          >
+            {d.estado === 'abierto' ? 'Inscribirme →' : 'Avísame →'}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

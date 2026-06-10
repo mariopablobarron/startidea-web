@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
@@ -119,6 +120,17 @@ const areas = [
       { name: 'Estandarización de plantillas', desc: 'Plantillas reutilizables de seguimiento, justificación e informes — para que la organización gane velocidad año a año.' },
     ],
   },
+  {
+    num: '06',
+    title: 'Protección de datos y cumplimiento (RGPD)',
+    body: 'El tercer sector maneja datos sensibles: beneficiarios, menores, salud, situaciones de vulnerabilidad. Cumplir el RGPD no es burocracia: es proteger a las personas que confían en la entidad. Startidea pone orden, con apoyo de especialistas cuando el caso lo requiere.',
+    items: [
+      { name: 'Diagnóstico de protección de datos', desc: 'Qué datos se recogen, dónde viven, quién accede y con qué base legal. Un mapa claro del punto de partida.' },
+      { name: 'Política de privacidad, consentimientos y cláusulas', desc: 'Textos legales adaptados a la entidad: web, formularios, voluntariado y fotografías de actividades y menores.' },
+      { name: 'Registro de actividades y encargados de tratamiento', desc: 'El registro que exige el RGPD y los contratos con proveedores que tratan datos por cuenta de la entidad.' },
+      { name: 'Medidas de seguridad y formación del equipo', desc: 'Buenas prácticas razonables (accesos, copias, contraseñas, correo) y formación al equipo para que el cumplimiento se sostenga en el día a día.' },
+    ],
+  },
 ];
 
 const proceso = [
@@ -140,8 +152,8 @@ const proceso = [
     <div class="container-x">
       <span class="label">— Consultoría e Innovación Social</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Pensar mejor.<br/>
-        <em class="italic text-magenta">Decidir con criterio.</em>
+        Consultoría e innovación social.<br/>
+        <em class="italic text-magenta">Pensar mejor. Decidir con criterio.</em>
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
         Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido. Ordenamos la estrategia, diseñamos proyectos sólidos, fortalecemos la captación de recursos y ayudamos a demostrar resultados.
@@ -275,5 +287,6 @@ const proceso = [
     </div>
   </section>
 
+  <NotasRelacionadas category="Estrategia" />
   <OtrosServicios current="consultoria" />
 </Base>

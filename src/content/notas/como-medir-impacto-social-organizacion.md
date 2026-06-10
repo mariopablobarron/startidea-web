@@ -2,7 +2,9 @@
 title: 'Cómo medir el impacto social de una organización (sin que se convierta en burocracia)'
 description: 'Medir impacto en el tercer sector se ha convertido en un tema sobrecargado. Esta nota separa qué es impacto, qué no lo es, qué indicadores funcionan en una fundación pequeña y qué marcos usan las grandes — sin convertir la medición en un departamento entero.'
 pubDate: 2026-05-19
+tldr: 'Medir impacto es demostrar el cambio real atribuible a la organización, no contar actividades ni número de beneficiarios. Conviene no confundir tres niveles —actividad, resultado e impacto— y elegir pocos indicadores que de verdad informen decisiones. En una entidad pequeña, medirlo todo es el error: bastan unos pocos indicadores bien escogidos.'
 audience: 'Tercer sector'
+category: 'Estrategia'
 tags: ['impacto social', 'medición', 'tercer sector', 'consultoría', 'evaluación']
 draft: false
 faqs:

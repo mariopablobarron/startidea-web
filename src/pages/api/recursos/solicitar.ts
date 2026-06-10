@@ -11,6 +11,7 @@
  */
 import type { APIRoute } from 'astro';
 import { sendOwnerLeadEmail } from '@/lib/email-resend';
+import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
@@ -30,21 +31,6 @@ const RECURSOS: Record<string, { titulo: string; pdfUrl: string }> = {
     pdfUrl: '/recursos/diagnostico-modelo-fundraising.pdf',
   },
 };
-
-async function notifyTelegram(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chat = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chat) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ chat_id: chat, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-    });
-  } catch (err) {
-    console.error('[recursos] telegram fail', (err as Error).message);
-  }
-}
 
 async function buttondownSubscribe(email: string, tags: string[] = []): Promise<void> {
   const apiKey = process.env.BUTTONDOWN_API_KEY;
@@ -117,7 +103,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (organization) lines.push(`<b>Organización:</b> ${escapeHtml(organization)}`);
   lines.push(`<b>Newsletter:</b> ${newsletter ? 'sí' : 'no'}`);
 
-  await notifyTelegram(lines.join('\n'));
+  await sendTelegram(lines.join('\n'));
 
   // Email a Mario (no-bloqueante).
   sendOwnerLeadEmail({

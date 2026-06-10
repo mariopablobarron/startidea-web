@@ -1,0 +1,247 @@
+---
+import Base from '@/layouts/Base.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import { breadcrumbList, serviceSchema, howToSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Financiación', url: `${SITE_URL}/financiacion-empresas` },
+    { name: 'Presentar subvención', url: `${SITE_URL}/subvenciones/presentar` },
+  ]),
+  // HowTo: los AI Overviews / motores de respuesta extraen estos 4 pasos
+  // literalmente para "cómo presentar una subvención".
+  howToSchema({
+    name: 'Cómo presentar una subvención para una entidad social',
+    description:
+      'Proceso para tramitar y presentar una subvención: diagnóstico de encaje, construcción del expediente, firma con certificado digital y presentación electrónica.',
+    totalTime: 'P2D',
+    steps: [
+      { name: 'Rellenar el formulario', text: 'Datos de la entidad, la convocatoria a la que se quiere presentar y la documentación disponible. Unos 10 minutos.', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+      { name: 'Analizar el encaje', text: 'En 24–48h se recibe el diagnóstico de encaje: si tiene sentido presentarse, qué puntuación máxima alcanzable tiene el proyecto y qué documentación hace falta.' },
+      { name: 'Construir el expediente', text: 'Memoria técnica, presupuesto justificado, declaraciones responsables y documentación administrativa completa.' },
+      { name: 'Firmar y presentar', text: 'El representante legal introduce su certificado digital para firmar. Startidea presenta electrónicamente y entrega el justificante con código CSV.' },
+    ],
+  }),
+  // FAQPage con las preguntas frecuentes de la página → Featured Snippets.
+  faqPageSchema([
+    { q: '¿Puedo presentarme si no tengo todos los documentos?', a: 'Sí. Rellena el formulario con lo que tengas. En el diagnóstico se indica qué falta y cuánto tiempo se necesita para conseguirlo antes del plazo de la convocatoria.' },
+    { q: '¿Necesito certificado digital?', a: 'Sí, para la presentación electrónica el representante legal de la entidad necesita certificado digital (FNMT de persona física o de representante de persona jurídica). Si no se tiene, en el diagnóstico se explica cómo obtenerlo.' },
+    { q: '¿Qué pasa si la subvención no se concede?', a: 'No se paga nada. El servicio funciona estrictamente a comisión de éxito: si la Administración deniega la subvención, Startidea no cobra. Sin facturas ni penalizaciones.' },
+    { q: '¿Puede Startidea presentar en mi nombre sin que yo esté?', a: 'Para eso se otorga un apoderamiento electrónico en el REA (Registro Electrónico de Apoderamientos) que habilita a Startidea a actuar en nombre de la entidad. Si se quiere esta modalidad, se indica en el formulario.' },
+    { q: '¿Cuánto tiempo antes del plazo hay que contactar?', a: 'Para convocatorias básicas, con 5 días hábiles es suficiente. Para estándar, 2 semanas. Para complejas, mínimo 4 semanas.' },
+  ]),
+  serviceSchema({
+    name: 'Presentación de subvenciones para empresas y entidades',
+    description: 'Startidea gestiona el expediente completo: diagnóstico de encaje, memoria técnica, presupuesto justificado y presentación electrónica con certificado digital.',
+    serviceType: 'Tramitación de subvenciones',
+    url: `${SITE_URL}/subvenciones/presentar`,
+    audience: ['Empresa', 'ONG', 'Fundación', 'Asociación', 'Cooperativa'],
+    offers: [
+      { name: 'Tramitación básica', description: 'Convocatorias con formulario online simple. Sin memoria técnica extensa.', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+      { name: 'Tramitación estándar', description: 'Convocatorias con memoria técnica, presupuesto justificado y documentación administrativa completa.', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+      { name: 'Tramitación compleja', description: 'Fondos europeos, CDTI, ENISA. Mayor complejidad documental y justificación de impacto.', url: `${SITE_URL}/subvenciones/presentar/nuevo` },
+    ],
+  }),
+];
+---
+
+<Base
+  title="Tramitación de subvenciones para entidades sociales — Startidea"
+  description="Gestión completa del expediente de subvención: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. Tú firmas, Startidea hace el resto."
+  ogSlug="page/subvenciones-presentar"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Presentación de subvenciones</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Presentamos tu subvención.<br />
+        <em class="italic text-magenta">Tú firmas.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Gestión completa del expediente: diagnóstico de encaje, memoria técnica, presupuesto justificado y tramitación electrónica. Sin burocracia por tu parte.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/subvenciones/presentar/nuevo" class="btn">
+          Empezar ahora →
+        </a>
+        <a href="/subvenciones" class="btn-ghost">
+          Ver convocatorias abiertas
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo funciona</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Del formulario al<br />
+            <em class="italic text-magenta">justificante de presentación.</em>
+          </h2>
+          <ol class="reveal-stagger mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {[
+              { n: '01', title: 'Rellenas el formulario', desc: 'Datos de tu entidad, la convocatoria a la que quieres presentarte y los documentos que tengas disponibles. 10 minutos.' },
+              { n: '02', title: 'Analizamos el encaje', desc: 'En 24–48h recibes el diagnóstico de encaje: si tiene sentido presentarse, qué puntuación máxima alcanzable tiene el proyecto y qué documentación hace falta.' },
+              { n: '03', title: 'Construimos el expediente', desc: 'Memoria técnica, presupuesto justificado, declaraciones responsables y toda la documentación administrativa. Lo preparamos todo.' },
+              { n: '04', title: 'Tú firmas, Startidea tramita', desc: 'Cuando el expediente está listo, te avisamos. Solo tienes que introducir tu certificado digital para firmar. Startidea presenta y te envía el justificante CSV.' },
+            ].map((step) => (
+              <li class="grid grid-cols-12 gap-x-8 py-8">
+                <div class="col-span-12 lg:col-span-2">
+                  <span class="font-mono text-sm text-ink/40">{step.n}</span>
+                </div>
+                <div class="col-span-12 mt-1 lg:col-span-10 lg:mt-0">
+                  <p class="font-display text-xl text-ink">{step.title}</p>
+                  <p class="mt-2 max-w-measure text-ink/70">{step.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué incluye -->
+  <section class="border-y border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <ul class="reveal-stagger grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[
+              'Diagnóstico de encaje con la convocatoria',
+              'Revisión o redacción de la memoria técnica',
+              'Construcción del presupuesto justificado',
+              'Documentación administrativa completa',
+              'Presentación electrónica con certificado digital',
+              'Justificante de presentación con código CSV',
+              'Seguimiento del expediente hasta resolución',
+              'Consultas durante el proceso sin coste adicional',
+            ].map((item) => (
+              <li class="flex items-start gap-3 border border-ink/10 bg-paper-warm p-4">
+                <span class="mt-0.5 text-magenta" aria-hidden="true">—</span>
+                <span class="text-ink/80">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honorarios: comisión a éxito -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Honorarios</span>
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+          <div class="border border-ink/15 bg-paper p-8 md:p-10">
+            <p class="font-display text-5xl font-bold text-magenta">12%</p>
+            <p class="mt-1 font-mono text-xs uppercase tracking-widest text-ink/50">Comisión a éxito</p>
+            <p class="mt-5 max-w-measure text-ink/70">
+              Solo se paga el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste: ni honorarios, ni penalización, ni factura.
+            </p>
+            <ul class="reveal-stagger mt-6 space-y-2">
+              {[
+                'Sin pago inicial',
+                'Sin cuota mensual',
+                'Sin permanencia',
+                'Si no se concede, no se cobra',
+              ].map((item) => (
+                <li class="flex items-center gap-2 text-sm text-ink/70">
+                  <span class="font-bold text-magenta">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p class="mt-8 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+              La comisión se factura cuando la Administración notifica la resolución favorable y el importe es firme. Pago por transferencia bancaria en los términos del contrato de servicios.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ rápido -->
+  <section class="border-t border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 lg:col-span-8">
+          <dl class="reveal-stagger divide-y divide-ink/10">
+            {[
+              {
+                q: '¿Puedo presentarme si no tengo todos los documentos?',
+                a: 'Sí. Rellena el formulario con lo que tengas. En el diagnóstico te indicamos qué falta y cuánto tiempo necesitas para conseguirlo antes del plazo de la convocatoria.',
+              },
+              {
+                q: '¿Necesito certificado digital?',
+                a: 'Sí, para la presentación electrónica el representante legal de la entidad necesita certificado digital (FNMT de persona física o de representante de persona jurídica). Si no lo tienes, en el diagnóstico te explicamos cómo obtenerlo.',
+              },
+              {
+                q: '¿Qué pasa si la subvención no se concede?',
+                a: 'No pagas nada. El servicio funciona estrictamente a comisión de éxito: si la Administración deniega la subvención, Startidea no cobra. Sin facturas, sin penalizaciones. El diagnóstico previo sirve precisamente para no presentarse cuando el encaje no existe.',
+              },
+              {
+                q: '¿Puede Startidea presentar en mi nombre sin que yo esté?',
+                a: 'Para eso necesitas otorgar un apoderamiento electrónico en el REA (Registro Electrónico de Apoderamientos) que habilita a Startidea a actuar en tu nombre. Si quieres esta modalidad, indícalo en el formulario y te explicamos el proceso.',
+              },
+              {
+                q: '¿Cuánto tiempo antes del plazo tengo que contactaros?',
+                a: 'Para convocatorias básicas, con 5 días hábiles es suficiente. Para estándar, 2 semanas. Para complejas, mínimo 4 semanas. Contactar el día antes del plazo no deja margen para un buen expediente.',
+              },
+            ].map((faq) => (
+              <div class="py-6">
+                <dt class="font-display text-lg text-ink">{faq.q}</dt>
+                <dd class="mt-2 text-ink/70">{faq.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notas relacionadas (silo pilar ↔ cluster) -->
+  <NotasRelacionadas category="Financiación" limit={3} />
+
+  <!-- CTA final -->
+  <section class="bg-ink py-16 md:py-24">
+    <div class="container-x">
+      <div class="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            ¿Hay una convocatoria<br />
+            <em class="italic text-magenta">abierta ahora mismo?</em>
+          </h2>
+          <p class="mt-4 max-w-prose text-paper/70">
+            Rellena el formulario en 10 minutos. En 24–48h tienes el diagnóstico de encaje. Sin coste inicial.
+          </p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a href="/subvenciones/presentar/nuevo" class="btn bg-paper text-ink hover:bg-paper-warm">
+            Empezar →
+          </a>
+          <a href="/contacto" class="btn-ghost border-paper/30 text-paper hover:border-paper hover:text-paper">
+            Prefiero hablar primero
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

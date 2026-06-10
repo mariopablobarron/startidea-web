@@ -47,3 +47,7 @@ video/
 data/*.db
 data/*.db-shm
 data/*.db-wal
+
+# Claves de cuenta de servicio de Google Cloud / secretos — NUNCA commitear
+startidea-*.json
+*-service-account*.json

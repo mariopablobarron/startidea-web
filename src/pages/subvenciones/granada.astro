@@ -1,0 +1,138 @@
+---
+// /subvenciones/granada — Landing dedicada a Granada (sede de Startidea).
+//
+// A diferencia de /territorio/[ccaa] (que filtra por CCAA), esta reúne TODO lo
+// que aplica a una organización de Granada en tres bloques: convocatorias
+// específicas de la provincia (Diputación, Ayuntamiento, Universidad de
+// Granada), las autonómicas de Andalucía (Junta) y las estatales. El filtro
+// `province=granada` del HUB excluye los falsos positivos de "La Granada"
+// (municipio de Cataluña).
+
+import Base from '@/layouts/Base.astro';
+import SubsidyCard from '@/components/SubsidyCard.astro';
+import { fetchSubsidies } from '@/lib/subsidies-api';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const [granada, andalucia, estatal] = await Promise.all([
+  fetchSubsidies({ province: 'granada', status: 'abierto', pageSize: 50, sort: 'recent' }),
+  fetchSubsidies({ ccaa: 'andalucia', status: 'abierto', pageSize: 12, sort: 'recent' }),
+  fetchSubsidies({ geo: 'ESTATAL', status: 'abierto', pageSize: 12, sort: 'recent' }),
+]);
+
+const totalGranada = granada.total + andalucia.total + estatal.total;
+
+const title = 'Subvenciones para Granada · Buscador Startidea';
+const description = `${granada.total} convocatorias propias de Granada (Diputación, Ayuntamiento, Universidad) más ${andalucia.total} de Andalucía y ${estatal.total} estatales abiertas. Para tercer sector, instituciones y empresas con propósito de Granada.`;
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Granada', url: `${SITE_URL}/subvenciones/granada` },
+  ]),
+];
+---
+
+<Base title={title} description={description} ogSlug="page/subvenciones" jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+        <a href="/subvenciones" class="hover:text-magenta">← Buscador</a>
+      </nav>
+      <span class="label mt-4">— Granada</span>
+      <h1 class="mt-3 font-display text-display-xl leading-[0.96] text-ink">
+        Subvenciones para<br />
+        <em class="italic text-magenta">Granada</em>.
+      </h1>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">
+        Todo lo que una organización de Granada puede solicitar, en un sitio:
+        las convocatorias propias de la provincia, las de la Junta de Andalucía
+        y las estatales. Startidea es de aquí — esta vista es la que usamos
+        cada semana.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-6 font-mono text-[11px] uppercase tracking-widest text-ink/50">
+        <span><strong class="text-magenta">{granada.total}</strong> de Granada</span>
+        <span><strong class="text-magenta">{andalucia.total}</strong> de Andalucía</span>
+        <span><strong class="text-magenta">{estatal.total}</strong> estatales</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloque 1: Granada provincia -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mb-8 border-t border-ink/15 pt-6">
+        <span class="label">— Propias de Granada</span>
+        <p class="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+          Diputación, Ayuntamiento y Universidad de Granada · {granada.total} abiertas
+        </p>
+      </div>
+      {granada.items.length === 0 ? (
+        <p class="py-12 text-center text-ink-mute">
+          Sin convocatorias propias de Granada abiertas ahora mismo. Vuelve pronto
+          o crea una alerta abajo.
+        </p>
+      ) : (
+        granada.items.map((item) => <SubsidyCard item={item} />)
+      )}
+    </div>
+  </section>
+
+  <!-- Bloque 2: Andalucía -->
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x">
+      <div class="mb-8 border-t border-ink/15 pt-6">
+        <span class="label">— Andalucía (Junta)</span>
+        <p class="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+          Aplican a entidades de Granada · {andalucia.total} abiertas
+        </p>
+      </div>
+      {andalucia.items.map((item) => <SubsidyCard item={item} />)}
+      {andalucia.totalPages > 1 && (
+        <div class="mt-8 text-center">
+          <a href="/subvenciones?ccaa=andalucia" class="btn">
+            Ver todas las {andalucia.total.toLocaleString('es-ES')} de Andalucía →
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Bloque 3: Estatales -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mb-8 border-t border-ink/15 pt-6">
+        <span class="label">— Estatales</span>
+        <p class="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+          Convocatorias de ámbito nacional · {estatal.total} abiertas
+        </p>
+      </div>
+      {estatal.items.map((item) => <SubsidyCard item={item} />)}
+      {estatal.totalPages > 1 && (
+        <div class="mt-8 text-center">
+          <a href="/subvenciones?geo=ESTATAL" class="btn">
+            Ver todas las {estatal.total.toLocaleString('es-ES')} estatales →
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA alerta -->
+  <section class="border-t border-ink/15 bg-ink py-14 text-paper md:py-20">
+    <div class="container-x text-center">
+      <span class="label !text-paper/60">— Alerta</span>
+      <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
+        Alerta de subvenciones de <em class="italic text-magenta">Granada</em>.
+      </h2>
+      <p class="mx-auto mt-4 max-w-measure text-paper/80">
+        Avisamos cuando aparece una convocatoria nueva —de la provincia, de la
+        Junta o estatal— que encaja con tu organización. Gratis.
+      </p>
+      <a href="/subvenciones/crear-alerta?territorio=andalucia" class="btn mt-6 inline-flex">
+        Crear alerta →
+      </a>
+    </div>
+  </section>
+</Base>

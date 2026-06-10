@@ -1,0 +1,415 @@
+---
+/**
+ * /subvenciones/catalogo/[slug] — Landing SSR por convocatoria del catálogo propio.
+ *
+ * Lee la convocatoria del SQLite local (no del HUB externo).
+ * SEO: title único + meta + JSON-LD GovernmentService + BreadcrumbList.
+ * CTA: enlaza directamente al wizard con ?slug=SLUG pre-seleccionado.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { getConvocatoria } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+const { slug } = Astro.params as { slug: string };
+
+let conv = null;
+try { conv = getConvocatoria(slug); } catch {}
+
+// 404 si no existe o no está activa (si viene directamente sin pasar por admin)
+if (!conv || !conv.activa) {
+  return Astro.redirect('/subvenciones/catalogo', 302);
+}
+
+// ─── JSON-LD ──────────────────────────────────────────────────────────────────
+const pageUrl = `${SITE_URL}/subvenciones/catalogo/${slug}`;
+
+const governmentServiceLd = {
+  '@context': 'https://schema.org',
+  '@type':    'GovernmentService',
+  '@id':      pageUrl,
+  name:       conv.tituloFull || conv.titulo,
+  description: [
+    `Convocatoria de subvenciones: ${conv.titulo}.`,
+    conv.organo ? `Convocada por ${conv.organo}.` : '',
+    conv.tipoEntidades ? `Para: ${conv.tipoEntidades}.` : '',
+    conv.importeRange  ? `Importe: ${conv.importeRange}.` : '',
+    `Plazo: ${conv.deadline}.`,
+  ].filter(Boolean).join(' '),
+  provider: {
+    '@type': 'GovernmentOrganization',
+    name:    conv.organo || 'Junta de Andalucía',
+  },
+  audience: {
+    '@type': 'Audience',
+    audienceType: conv.tipoEntidades || conv.beneficiarioLabel,
+  },
+  url: conv.bojaUrl ?? conv.basesUrl ?? pageUrl,
+  ...(conv.deadlineIso ? {
+    availabilityEnds: conv.deadlineIso,
+  } : {}),
+  ...(conv.importeMax ? {
+    offers: {
+      '@type': 'Offer',
+      price:   conv.importeMax,
+      priceCurrency: 'EUR',
+    },
+  } : {}),
+};
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio',       url: `${SITE_URL}/` },
+    { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
+    { name: 'Catálogo',     url: `${SITE_URL}/subvenciones/catalogo` },
+    { name: conv.codigo,    url: pageUrl },
+  ]),
+  governmentServiceLd,
+];
+
+// Título y meta SEO
+const metaTitle = `${conv.titulo} — ${conv.codigo} | Startidea`;
+const metaDesc = [
+  `Convocatoria ${conv.codigo}: ${conv.titulo.slice(0, 80)}.`,
+  conv.importeRange ? ` Importe: ${conv.importeRange}.` : '',
+  ` Plazo: ${conv.deadline}.`,
+  ' Startidea tramita el expediente a comisión de éxito.',
+].join('');
+
+const TIPO_LABEL: Record<string, string> = {
+  privada: 'Tercer sector',
+  local:   'Entidades locales',
+  empresa: 'Empresas',
+  mixto:   'Mixto',
+};
+
+// ─── Cálculo de urgencia ───────────────────────────────────────────────────
+// Si el plazo está a < 14 días → banner amarillo de aviso.
+// Si está a < 3 días → banner rojo crítico.
+// Si ya pasó → tratamos como inactiva (debería haberse desactivado, pero defensivo).
+let diasParaPlazo: number | null = null;
+let urgencyLevel: 'critical' | 'urgent' | 'soon' | null = null;
+if (conv.deadlineIso) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const deadline = new Date(conv.deadlineIso + 'T23:59:59');
+  const diffMs = deadline.getTime() - today.getTime();
+  diasParaPlazo = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  if (diasParaPlazo <= 0) urgencyLevel = null;
+  else if (diasParaPlazo <= 3) urgencyLevel = 'critical';
+  else if (diasParaPlazo <= 7) urgencyLevel = 'urgent';
+  else if (diasParaPlazo <= 14) urgencyLevel = 'soon';
+}
+---
+
+<Base
+  title={metaTitle}
+  description={metaDesc.slice(0, 160)}
+  jsonLd={jsonLd}
+>
+  <!-- Breadcrumb -->
+  <div class="border-b border-ink/10 bg-paper-warm py-3">
+    <div class="container-x flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+      <a href="/subvenciones" class="hover:text-magenta">Subvenciones</a>
+      <span>/</span>
+      <a href="/subvenciones/catalogo" class="hover:text-magenta">Catálogo</a>
+      <span>/</span>
+      <span class="text-magenta">{conv.codigo}</span>
+    </div>
+  </div>
+
+  <!-- Banner de urgencia por plazo (solo si <14 días) -->
+  {urgencyLevel && diasParaPlazo !== null && (
+    <div class:list={[
+      'border-b py-4',
+      urgencyLevel === 'critical' ? 'bg-red-600 border-red-700 text-paper'
+        : urgencyLevel === 'urgent' ? 'bg-amber-500 border-amber-600 text-ink'
+        : 'bg-amber-50 border-amber-200 text-amber-900',
+    ]}>
+      <div class="container-x flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="text-2xl shrink-0" aria-hidden="true">
+            {urgencyLevel === 'critical' ? '🚨' : urgencyLevel === 'urgent' ? '⏰' : '📅'}
+          </span>
+          <div class="min-w-0">
+            <p class:list={[
+              'font-display text-lg sm:text-xl leading-tight',
+              urgencyLevel === 'critical' ? 'text-paper' : 'text-ink',
+            ]}>
+              {urgencyLevel === 'critical'
+                ? (diasParaPlazo === 1 ? '¡Último día!' : `Solo quedan ${diasParaPlazo} días para presentar`)
+                : urgencyLevel === 'urgent'
+                ? `Quedan ${diasParaPlazo} días para el cierre del plazo`
+                : `Plazo próximo: quedan ${diasParaPlazo} días`}
+            </p>
+            <p class:list={[
+              'text-xs sm:text-sm mt-0.5',
+              urgencyLevel === 'critical' ? 'text-paper/85'
+                : urgencyLevel === 'urgent' ? 'text-ink/75'
+                : 'text-amber-800/80',
+            ]}>
+              {urgencyLevel === 'critical'
+                ? 'Para no perder esta convocatoria, contacta hoy con Startidea — empezamos a preparar el expediente de inmediato.'
+                : urgencyLevel === 'urgent'
+                ? 'Si aún no has empezado, hay tiempo: 7-10 días bastan para preparar bien una memoria si arrancamos ya.'
+                : 'Buen momento para evaluar si encaja y arrancar sin prisa.'}
+            </p>
+          </div>
+        </div>
+        <a
+          href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=urgency-banner&utm_campaign=deadline-${urgencyLevel}`}
+          class:list={[
+            'shrink-0 inline-block px-4 py-2 font-mono text-[11px] uppercase tracking-widest border-2 transition-colors',
+            urgencyLevel === 'critical'
+              ? 'bg-paper text-red-700 border-paper hover:bg-red-700 hover:text-paper'
+              : 'bg-ink text-paper border-ink hover:bg-paper hover:text-ink',
+          ]}
+        >
+          {urgencyLevel === 'critical' ? 'Empezar ahora →' : 'Pedir presupuesto →'}
+        </a>
+      </div>
+    </div>
+  )}
+
+  <!-- Hero de la convocatoria -->
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl">
+
+        <!-- Badge estado + tipo -->
+        <div class="mb-4 flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1.5 border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-emerald-700">
+            ● Abierta
+          </span>
+          <span class:list={[
+            'inline-flex items-center px-2.5 py-1 border font-mono text-[9px] uppercase tracking-widest',
+            conv.beneficiario === 'local'
+              ? 'border-blue-200 bg-blue-50 text-blue-700'
+              : 'border-purple-200 bg-purple-50 text-purple-700',
+          ]}>
+            {TIPO_LABEL[conv.beneficiario] ?? conv.beneficiario}
+          </span>
+          {conv.destacada && (
+            <span class="inline-flex items-center px-2.5 py-1 border border-yellow-200 bg-yellow-50 font-mono text-[9px] uppercase tracking-widest text-yellow-700">
+              ★ Destacada
+            </span>
+          )}
+        </div>
+
+        <!-- Código + Título -->
+        <div class="flex items-start gap-4">
+          <span class="shrink-0 flex items-center justify-center w-14 h-14 border-2 border-magenta/40 font-mono text-sm font-bold text-magenta bg-magenta/5">
+            {conv.codigo}
+          </span>
+          <div>
+            <h1 class="font-display text-display-sm leading-tight text-ink">
+              {conv.tituloFull || conv.titulo}
+            </h1>
+            {conv.organo && (
+              <p class="mt-2 text-sm text-ink/55">{conv.organo}</p>
+            )}
+          </div>
+        </div>
+
+        <!-- Resumen de datos clave -->
+        <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 border border-ink/10 bg-paper-warm p-5">
+          <div>
+            <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40">Plazo</p>
+            <p class="mt-1 text-sm font-medium text-amber-600">⏰ {conv.deadlineShort || '—'}</p>
+            {conv.deadlineNote && <p class="text-[10px] text-ink/40 mt-0.5">{conv.deadlineNote}</p>}
+          </div>
+          <div>
+            <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40">Importe</p>
+            <p class="mt-1 text-sm font-medium text-ink">{conv.importeRange || '—'}</p>
+          </div>
+          <div>
+            <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40">Para</p>
+            <p class="mt-1 text-sm text-ink">{TIPO_LABEL[conv.beneficiario] ?? conv.beneficiario}</p>
+          </div>
+          <div>
+            <p class="font-mono text-[9px] uppercase tracking-widest text-ink/40">Tramitación</p>
+            <p class="mt-1 text-sm text-ink">A comisión de éxito</p>
+          </div>
+        </div>
+
+        <!-- CTA principal -->
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a
+            href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=hero&utm_campaign=detail-${conv.slug}`}
+            class="btn text-base py-3 px-6"
+          >
+            Tramitar con Startidea →
+          </a>
+          {conv.bojaUrl && (
+            <a
+              href={conv.bojaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-ghost text-sm"
+            >
+              Ver en BOJA ↗
+            </a>
+          )}
+          {conv.basesUrl && !conv.bojaUrl && (
+            <a
+              href={conv.basesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-ghost text-sm"
+            >
+              Bases reguladoras ↗
+            </a>
+          )}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Cuerpo — detalles de la convocatoria -->
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl space-y-8">
+
+        <!-- Quién puede solicitar -->
+        <div class="border border-ink/10 p-6">
+          <h2 class="font-mono text-[11px] uppercase tracking-widest text-magenta mb-3">
+            ¿Quién puede solicitarla?
+          </h2>
+          <p class="text-ink/80 leading-relaxed">{conv.tipoEntidades}</p>
+        </div>
+
+        <!-- Qué financia + gastos OK/NOK -->
+        <div class="grid gap-4 sm:grid-cols-2">
+          {conv.financiaResumen.length > 0 && (
+            <div class="border border-ink/10 p-5">
+              <h2 class="font-mono text-[11px] uppercase tracking-widest text-ink/50 mb-3">
+                Qué se puede subvencionar
+              </h2>
+              <ul class="space-y-2">
+                {conv.financiaResumen.map(b => (
+                  <li class="flex items-start gap-2 text-sm text-ink/75">
+                    <span class="shrink-0 text-green-600 mt-0.5 text-xs leading-none">▸</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {conv.gastosOk.length > 0 && (
+            <div class="border border-ink/10 p-5">
+              <h2 class="font-mono text-[11px] uppercase tracking-widest text-ink/50 mb-3">
+                ✅ Gastos elegibles
+              </h2>
+              <ul class="space-y-2">
+                {conv.gastosOk.map(g => (
+                  <li class="flex items-start gap-2 text-sm text-ink/75">
+                    <span class="shrink-0 text-green-600 mt-0.5 text-xs leading-none">✓</span>
+                    <span>{g}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {conv.gastosNo.length > 0 && (
+          <div class="border border-red-100 bg-red-50/40 p-5">
+            <h2 class="font-mono text-[11px] uppercase tracking-widest text-red-400 mb-3">
+              ❌ Gastos NO elegibles
+            </h2>
+            <ul class="space-y-1.5">
+              {conv.gastosNo.map(g => (
+                <li class="flex items-start gap-2 text-sm text-ink/60">
+                  <span class="shrink-0 text-red-400 mt-0.5 text-xs leading-none">✗</span>
+                  <span>{g}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Requisitos -->
+        {conv.requisitos.length > 0 && (
+          <div class="border border-ink/10 p-5">
+            <h2 class="font-mono text-[11px] uppercase tracking-widest text-ink/50 mb-3">
+              Condiciones para solicitar
+            </h2>
+            <ul class="space-y-2">
+              {conv.requisitos.map(r => (
+                <li class="flex items-start gap-2 text-sm text-ink/75">
+                  <span class="shrink-0 text-magenta mt-0.5 leading-none">·</span>
+                  <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Importe detalle + plazo -->
+        <div class="grid gap-4 sm:grid-cols-2">
+          {conv.importe && (
+            <div class="border border-ink/10 bg-paper-warm p-5">
+              <h2 class="font-mono text-[11px] uppercase tracking-widest text-ink/50 mb-2">€ Orientación de importe</h2>
+              <p class="text-sm text-ink/75 leading-relaxed">{conv.importe}</p>
+            </div>
+          )}
+          <div class="border border-amber-200 bg-amber-50 p-5">
+            <h2 class="font-mono text-[11px] uppercase tracking-widest text-amber-600 mb-2">⏰ Plazo de presentación</h2>
+            <p class="text-sm font-semibold text-amber-800">{conv.deadline}</p>
+            {conv.nota && <p class="mt-2 text-xs text-amber-700">{conv.nota}</p>}
+          </div>
+        </div>
+
+        <!-- CTA final: 2 vías de servicio -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- Vía premium: Servicio gestionado -->
+          <div class="border-2 border-magenta bg-ink p-6 text-paper relative">
+            <span class="absolute top-0 right-0 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+              Recomendado
+            </span>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Servicio gestionado · 12% éxito</p>
+            <h2 class="font-display text-xl text-paper mb-2">Que Startidea lo presente</h2>
+            <p class="text-sm text-paper/70 leading-relaxed mb-4">
+              Análisis de encaje sin coste, memoria adaptada al baremo, presentación
+              en sede electrónica gestionada y seguimiento hasta resolución.
+              <strong class="text-paper">Sin coste si no se concede.</strong>
+            </p>
+            <a
+              href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=cta-final&utm_campaign=detail-${conv.slug}`}
+              class="inline-block bg-magenta text-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors"
+            >
+              Pedir presupuesto →
+            </a>
+          </div>
+
+          <!-- Vía gratis: Copiloto Autónomo -->
+          <div class="border-2 border-ink/15 bg-paper-warm p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Copiloto Autónomo · Gratis</p>
+            <h2 class="font-display text-xl text-ink mb-2">¿Prefieres hacerlo tú?</h2>
+            <p class="text-sm text-ink/65 leading-relaxed mb-4">
+              Crea un perfil y recibirás por email los documentos preliminares
+              generados con IA cada vez que aparezca una convocatoria que encaje.
+              Tú presentas, sin coste.
+            </p>
+            <a href="/subvenciones/crear-alerta?utm_source=catalogo&utm_medium=cta-final&utm_campaign=copiloto-gratis"
+               class="btn-ghost inline-block">
+              Activar Copiloto gratis →
+            </a>
+          </div>
+
+        </div>
+
+        <div class="mt-4 text-center">
+          <a href="/subvenciones/catalogo" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            ← Ver otras convocatorias del catálogo
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</Base>

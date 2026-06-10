@@ -26,6 +26,11 @@ const initial = await fetchSubsidies({
   sort: 'recent',
 });
 
+// Destacado manual de la Convocatoria 2026 Agenda 2030 (estatal). El buscador
+// aún no la indexa desde BDNS, así que se enlaza a mano a su ficha. Se auto-
+// oculta tras el cierre (SSR evalúa la fecha en cada petición).
+const showAgenda2030 = new Date() <= new Date('2026-06-20T23:59:59+02:00');
+
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
@@ -76,6 +81,65 @@ const jsonLd = [
       </p>
     </div>
   </section>
+
+  {showAgenda2030 && (
+    <a
+      href="/subvenciones/agenda-2030-2026"
+      class="block border-b border-ink/10 bg-magenta/5 py-4 transition-colors hover:bg-magenta/10"
+    >
+      <div class="container-x flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="rounded-full bg-magenta px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-paper">
+            Destacada
+          </span>
+          <span class="text-sm text-ink md:text-base">
+            <strong class="font-display">Convocatoria 2026 Agenda 2030</strong> — estatal, hasta 300.000 € a fondo perdido para entidades del tercer sector.
+          </span>
+        </div>
+        <span class="whitespace-nowrap font-mono text-[11px] uppercase tracking-widest text-magenta">
+          Cierra 20 jun · ver ficha →
+        </span>
+      </div>
+    </a>
+  )}
+
+  <!-- Destacado Granada (sede de Startidea) -->
+  <div class="border-b border-ink/10 bg-ink py-4 text-paper">
+    <div class="container-x flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm text-paper/90">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">— Granada</span>
+        {' '}¿Eres de aquí? Reunimos lo propio de la provincia (Diputación,
+        Ayuntamiento, Universidad), lo de la Junta y lo estatal en una vista.
+      </p>
+      <a
+        href="/subvenciones/granada"
+        class="shrink-0 border border-paper/40 text-paper font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-paper hover:text-ink transition-colors"
+      >
+        Ver todo lo de Granada →
+      </a>
+    </div>
+  </div>
+
+  <!-- Banner BOJA 2026 — Inclusión Social (eliminar cuando cierre el plazo: 16-jun-2026) -->
+  <div class="border-b border-magenta/20 bg-magenta/5 py-4">
+    <div class="container-x flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <span class="shrink-0 font-mono text-[10px] uppercase tracking-widest text-magenta bg-magenta/10 border border-magenta/20 px-2 py-1">
+          ⚡ Plazo abierto
+        </span>
+        <p class="text-sm text-ink">
+          <strong>15 líneas BOJA 2026 · Consejería de Inclusión Social.</strong>
+          {' '}Entidades privadas, locales y particulares. Cierre general: <strong>16 junio</strong>.
+        </p>
+      </div>
+      <a
+        href="/subvenciones/boja-2026-inclusion-social"
+        class="shrink-0 bg-magenta text-paper font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-magenta/90 transition-colors"
+      >
+        Ver las 15 líneas →
+      </a>
+    </div>
+  </div>
 
   <!-- Tabs -->
   <SubvencionesTabs active="lista" />
@@ -204,19 +268,42 @@ const jsonLd = [
 
         <!-- Resultados -->
         <div>
-          <div class="flex items-baseline justify-between border-b border-ink/15 pb-3">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-ink/15 pb-3">
             <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
               <span id="subv-count">{initial.total.toLocaleString('es-ES')}</span>
-              {' '}convocatorias abiertas
+              {' '}<span id="subv-status-label">convocatorias abiertas</span>
             </p>
-            <select
-              id="subv-sort"
-              class="border border-ink/25 bg-paper px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-ink"
-            >
-              <option value="recent">Más recientes</option>
-              <option value="deadline">Próximas a cerrar</option>
-              <option value="amount">Mayor dotación</option>
-            </select>
+            <div class="flex items-center gap-3">
+              <!-- Toggle abiertas/cerradas -->
+              <div class="flex items-center rounded-full border border-ink/20 p-0.5">
+                <button
+                  type="button"
+                  id="subv-toggle-abierto"
+                  data-status="abierto"
+                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors bg-ink text-paper"
+                  aria-pressed="true"
+                >
+                  Abiertas
+                </button>
+                <button
+                  type="button"
+                  id="subv-toggle-cerrado"
+                  data-status="cerrado"
+                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors text-ink/60 hover:text-ink"
+                  aria-pressed="false"
+                >
+                  Cerradas
+                </button>
+              </div>
+              <select
+                id="subv-sort"
+                class="border border-ink/25 bg-paper px-2 py-1 font-mono text-[11px] uppercase tracking-widest text-ink"
+              >
+                <option value="recent">Más recientes</option>
+                <option value="deadline">Por plazo</option>
+                <option value="amount">Mayor dotación</option>
+              </select>
+            </div>
           </div>
 
           <div id="subv-results">
@@ -251,6 +338,34 @@ const jsonLd = [
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA presentar subvención -->
+  <section class="border-y border-ink/15 bg-ink py-12 md:py-16">
+    <div class="container-x">
+      <div class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+        <div>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— ¿La tienes ya?</span>
+          <h2 class="mt-2 font-display text-2xl leading-tight text-paper md:text-3xl">
+            Startidea la presenta por ti.<br />
+            <em class="italic text-magenta">Tú solo firmas.</em>
+          </h2>
+          <p class="mt-3 max-w-prose text-sm text-paper/70">
+            Expediente completo: diagnóstico de encaje, memoria técnica, presupuesto y tramitación electrónica. 12% comisión a éxito — sin coste si no se concede.
+          </p>
+          <a
+            href="/financiacion-empresas"
+            class="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-paper/55 underline-offset-4 transition-colors hover:text-magenta hover:underline"
+          >
+            ¿Empresa? Servicio completo de financiación: CDTI, ENISA, IDAE y más
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <a href="/subvenciones/presentar" class="shrink-0 btn bg-paper text-ink hover:bg-paper-warm">
+          Presentar subvención →
+        </a>
       </div>
     </div>
   </section>
@@ -318,7 +433,7 @@ const jsonLd = [
   // compartibles y back/forward del navegador.
 
   const API_BASE =
-    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+    (import.meta as any).env?.PUBLIC_HUB_URL ?? 'https://hub.startidea.tech';
 
   interface Item {
     id: number;
@@ -346,6 +461,7 @@ const jsonLd = [
     page: 0,
     pageSize: 20,
     sort: 'recent',
+    statusFilter: 'abierto' as 'abierto' | 'cerrado',
     total: 0,
     totalPages: 0,
   };
@@ -358,6 +474,8 @@ const jsonLd = [
   }
   const p = url.searchParams.get('page');
   if (p) state.page = Math.max(0, Number(p));
+  const sv = url.searchParams.get('status');
+  if (sv === 'cerrado') state.statusFilter = 'cerrado';
 
   function fmtAmount(eur: number | null): string {
     if (!eur) return '—';
@@ -426,7 +544,7 @@ const jsonLd = [
 
   async function loadResults() {
     const qs = new URLSearchParams({
-      status: 'abierto',
+      status: state.statusFilter,
       pageSize: String(state.pageSize),
       page: String(state.page),
       sort: state.sort,
@@ -447,11 +565,11 @@ const jsonLd = [
       qs.set('geo', 'EUROPA');
     }
 
-    const resultsEl = document.getElementById('subv-results')!;
-    const countEl = document.getElementById('subv-count')!;
-    const pageInfoEl = document.getElementById('subv-page-info')!;
-    const prevBtn = document.getElementById('subv-prev') as HTMLButtonElement;
-    const nextBtn = document.getElementById('subv-next') as HTMLButtonElement;
+    const resultsEl = document.getElementById('subv-results');
+    const countEl = document.getElementById('subv-count');
+    const pageInfoEl = document.getElementById('subv-page-info');
+    const prevBtn = document.getElementById('subv-prev');
+    const nextBtn = document.getElementById('subv-next');
 
     resultsEl.style.opacity = '0.5';
     try {
@@ -473,10 +591,18 @@ const jsonLd = [
         resultsEl.innerHTML = j.items.map(renderCard).join('');
       }
 
+      // Sync label contador
+      const statusLabelEl = document.getElementById('subv-status-label');
+      if (statusLabelEl) {
+        statusLabelEl.textContent = state.statusFilter === 'cerrado'
+          ? 'convocatorias cerradas'
+          : 'convocatorias abiertas';
+      }
+
       // Sync URL
       const newUrl = new URL(window.location.href);
       newUrl.search = '';
-      for (const [k, v] of qs) if (k !== 'status' && k !== 'pageSize') newUrl.searchParams.set(k, v);
+      for (const [k, v] of qs) if (k !== 'pageSize') newUrl.searchParams.set(k, v);
       window.history.replaceState({}, '', newUrl.toString());
     } catch (err) {
       resultsEl.innerHTML = `
@@ -490,10 +616,10 @@ const jsonLd = [
 
   function refreshChipStates() {
     document.querySelectorAll('[data-filter-group]').forEach((group) => {
-      const groupName = (group as HTMLElement).dataset.filterGroup!;
+      const groupName = (group).dataset.filterGroup;
       const active = (state as any)[groupName];
       group.querySelectorAll('button').forEach((btn) => {
-        const value = (btn as HTMLElement).dataset.filterValue;
+        const value = (btn).dataset.filterValue;
         const isActive = value === active;
         btn.classList.toggle('!bg-ink', isActive);
         btn.classList.toggle('!text-paper', isActive);
@@ -503,8 +629,8 @@ const jsonLd = [
   }
 
   // Wire up
-  const form = document.getElementById('subv-search') as HTMLFormElement;
-  const qInput = form.querySelector('input[name="q"]') as HTMLInputElement;
+  const form = document.getElementById('subv-search');
+  const qInput = form.querySelector('input[name="q"]');
   qInput.value = state.q;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -514,10 +640,10 @@ const jsonLd = [
   });
 
   document.querySelectorAll('[data-filter-group]').forEach((group) => {
-    const groupName = (group as HTMLElement).dataset.filterGroup!;
+    const groupName = (group).dataset.filterGroup;
     group.querySelectorAll('button').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const value = (btn as HTMLElement).dataset.filterValue!;
+        const value = (btn).dataset.filterValue;
         (state as any)[groupName] = (state as any)[groupName] === value ? null : value;
         state.page = 0;
         refreshChipStates();
@@ -526,7 +652,7 @@ const jsonLd = [
     });
   });
 
-  document.getElementById('subv-clear')!.addEventListener('click', () => {
+  document.getElementById('subv-clear').addEventListener('click', () => {
     state.q = '';
     state.ccaa = null;
     state.beneficiary = null;
@@ -538,32 +664,56 @@ const jsonLd = [
     void loadResults();
   });
 
-  document.getElementById('subv-sort')!.addEventListener('change', (e) => {
-    state.sort = (e.target as HTMLSelectElement).value;
+  document.getElementById('subv-sort').addEventListener('change', (e) => {
+    state.sort = (e.target).value;
     state.page = 0;
     void loadResults();
   });
 
-  document.getElementById('subv-prev')!.addEventListener('click', () => {
+  document.getElementById('subv-prev').addEventListener('click', () => {
     if (state.page > 0) {
       state.page -= 1;
       void loadResults();
     }
   });
-  document.getElementById('subv-next')!.addEventListener('click', () => {
+  document.getElementById('subv-next').addEventListener('click', () => {
     if (state.page < state.totalPages - 1) {
       state.page += 1;
       void loadResults();
     }
   });
 
+  // Toggle abiertas/cerradas
+  function refreshStatusToggle() {
+    document.querySelectorAll('.subv-status-btn').forEach((btn) => {
+      const isActive = btn.dataset.status === state.statusFilter;
+      btn.setAttribute('aria-pressed', String(isActive));
+      btn.classList.toggle('bg-ink', isActive);
+      btn.classList.toggle('text-paper', isActive);
+      btn.classList.toggle('text-ink/60', !isActive);
+    });
+  }
+
+  document.querySelectorAll('.subv-status-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const newStatus = btn.dataset.status as 'abierto' | 'cerrado';
+      if (newStatus === state.statusFilter) return;
+      state.statusFilter = newStatus;
+      state.page = 0;
+      refreshStatusToggle();
+      void loadResults();
+    });
+  });
+
   // Si hay filtros en URL al cargar, recargar (la página servida tiene
   // top recent sin filtros). Si no, mantenemos el contenido del servidor.
-  if (state.q || state.ccaa || state.beneficiary || state.finalidad || state.instrument || state.page > 0 || state.sort !== 'recent') {
+  if (state.q || state.ccaa || state.beneficiary || state.finalidad || state.instrument || state.page > 0 || state.sort !== 'recent' || state.statusFilter !== 'abierto') {
     refreshChipStates();
+    refreshStatusToggle();
     void loadResults();
   } else {
     refreshChipStates();
+    refreshStatusToggle();
   }
 
   // ─── Banner contextual ────────────────────────────────────────
@@ -648,7 +798,7 @@ const jsonLd = [
   function refreshBanner() {
     const wrap = document.getElementById('subv-banner');
     const text = document.getElementById('subv-banner-text');
-    const cta = document.getElementById('subv-banner-cta') as HTMLAnchorElement | null;
+    const cta = document.getElementById('subv-banner-cta');
     if (!wrap || !text || !cta) return;
     const b = pickBanner();
     if (!b) {

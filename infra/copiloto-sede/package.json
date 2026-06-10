@@ -1,0 +1,13 @@
+{
+  "name": "copiloto-sede",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Servicio Playwright para la guia visual de sedes electronicas (Copiloto de Subvenciones, Fase 2a). Tramitacion ASISTIDA: solo navega y captura, NUNCA firma ni presenta.",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.48.0"
+  }
+}

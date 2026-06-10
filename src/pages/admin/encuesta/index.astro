@@ -1,0 +1,143 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getAllRespuestas } from '@/lib/encuesta-db';
+import type { RespuestaEncuesta } from '@/lib/encuesta-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect('/admin/login?next=' + encodeURIComponent('/admin/encuesta'));
+}
+
+let rows: RespuestaEncuesta[] = [];
+try { rows = getAllRespuestas(); } catch { /* sin respuestas aún */ }
+const n = rows.length;
+
+// ─── Agregados en vivo (preview del informe) ───
+function pct(part: number): string { return n ? Math.round((part / n) * 100) + '%' : '—'; }
+function avg(getter: (r: RespuestaEncuesta) => number): string {
+  if (!n) return '—';
+  return Math.round(rows.reduce((s, r) => s + (getter(r) || 0), 0) / n) + '%';
+}
+function dist(getter: (r: RespuestaEncuesta) => string): Array<[string, number]> {
+  const m: Record<string, number> = {};
+  for (const r of rows) { const k = getter(r) || '—'; m[k] = (m[k] ?? 0) + 1; }
+  return Object.entries(m).sort((a, b) => b[1] - a[1]);
+}
+
+const avgPublico = avg((r) => r.pct_publico);
+const conBaseSocial = pct(rows.filter((r) => r.base_social === 1).length);
+const conTesoreria = pct(rows.filter((r) => r.problema_tesoreria === 1).length);
+// "Frágiles": aguantarían <3 meses sin su mayor fuente
+const fragiles = pct(rows.filter((r) => r.meses_aguante === '<1' || r.meses_aguante === '1-3').length);
+
+const distTipo = dist((r) => r.tipo_entidad);
+const distPresupuesto = dist((r) => r.presupuesto);
+const distMeses = dist((r) => r.meses_aguante);
+
+function fmt(ts: number): string {
+  return new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+---
+
+<Base title="Admin · Encuesta de fundraising" noindex={true}>
+  <section class="bg-paper py-12">
+    <div class="container-x">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+          <h1 class="mt-1 font-display text-3xl text-ink">Encuesta de fundraising — {n} respuesta{n !== 1 ? 's' : ''}</h1>
+        </div>
+        {n > 0 && <a href="/admin/encuesta/export.csv" class="btn-ghost">Exportar CSV ↓</a>}
+      </div>
+
+      {n === 0 && (
+        <p class="mt-8 text-ink/60">Aún no hay respuestas. Difunde <code>/encuesta-fundraising</code> (copy en <code>reports/encuesta-difusion-copy.md</code>). Objetivo: n ≥ 50 para construir el informe.</p>
+      )}
+
+      {n > 0 && (
+        <>
+          <!-- KPIs titulares del informe -->
+          <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { v: avgPublico, l: 'Media de dependencia pública' },
+              { v: fragiles, l: 'Aguantarían <3 meses sin su mayor fuente' },
+              { v: conBaseSocial, l: 'Tienen base social (socios)' },
+              { v: conTesoreria, l: 'Han tenido problemas de tesorería' },
+            ].map((k) => (
+              <div class="border border-ink/15 bg-paper-warm p-5">
+                <p class="font-display text-3xl text-magenta">{k.v}</p>
+                <p class="mt-1 text-xs text-ink/60 leading-snug">{k.l}</p>
+              </div>
+            ))}
+          </div>
+          <p class="mt-2 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+            Muestra: {n} (no probabilística). Declarar n y método al publicar.
+          </p>
+
+          <!-- Distribuciones -->
+          <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {[
+              { t: 'Tipo de entidad', d: distTipo },
+              { t: 'Presupuesto anual', d: distPresupuesto },
+              { t: 'Meses de aguante', d: distMeses },
+            ].map((g) => (
+              <div class="border border-ink/15 bg-paper p-5">
+                <h2 class="label">— {g.t}</h2>
+                <ul class="mt-3 space-y-1.5">
+                  {g.d.map(([k, c]) => (
+                    <li class="flex items-center justify-between text-sm text-ink/75">
+                      <span>{k}</span>
+                      <span class="font-mono text-ink/50">{c} · {pct(c)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <!-- Retos (cualitativo) -->
+          <div class="mt-8">
+            <h2 class="label">— Mayores retos (citas para el informe)</h2>
+            <ul class="mt-3 space-y-2">
+              {rows.filter((r) => r.mayor_reto).slice(0, 30).map((r) => (
+                <li class="border-l-2 border-magenta/40 bg-paper-warm px-4 py-2 text-sm text-ink/80">
+                  “{r.mayor_reto}” <span class="text-ink/40">— {r.tipo_entidad}, {r.presupuesto || 's/d'}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Tabla cruda -->
+          <details class="mt-8">
+            <summary class="cursor-pointer font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">Ver todas las respuestas ({n})</summary>
+            <div class="mt-4 overflow-x-auto">
+              <table class="w-full border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-ink/20 text-left text-ink/50">
+                    <th class="py-2 pr-3">Fecha</th><th class="py-2 pr-3">Tipo</th><th class="py-2 pr-3">Presup.</th>
+                    <th class="py-2 pr-3">% púb.</th><th class="py-2 pr-3">Aguante</th><th class="py-2 pr-3">Base soc.</th><th class="py-2 pr-3">Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr class="border-b border-ink/10 text-ink/75">
+                      <td class="py-1.5 pr-3 whitespace-nowrap">{fmt(r.created_at)}</td>
+                      <td class="py-1.5 pr-3">{r.tipo_entidad}</td>
+                      <td class="py-1.5 pr-3">{r.presupuesto || '—'}</td>
+                      <td class="py-1.5 pr-3 font-mono">{r.pct_publico}%</td>
+                      <td class="py-1.5 pr-3">{r.meses_aguante || '—'}</td>
+                      <td class="py-1.5 pr-3">{r.base_social ? 'Sí' : 'No'}</td>
+                      <td class="py-1.5 pr-3">{r.email || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

@@ -1,9 +1,12 @@
 import type { APIRoute } from 'astro';
+import { sendTelegram } from '@/lib/telegram';
 import { getCollection } from 'astro:content';
+import { pickModel } from '@/lib/model-router';
+import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
 
 export const prerender = false;
 
-const MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-haiku-4.5';
+const MODEL = process.env.OPENROUTER_MODEL || pickModel('default');
 const MAX_OUTPUT_TOKENS = parseInt(process.env.OPENROUTER_MAX_TOKENS || '600', 10);
 const SITE_URL = 'https://startidea.es';
 
@@ -67,22 +70,6 @@ function sanitizeHistory(raw: unknown): Msg[] {
   return out;
 }
 
-// ─── Notificación a Telegram cuando hay leads/intentos relevantes ───────
-async function notifyTelegram(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chat = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chat) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ chat_id: chat, text, disable_web_page_preview: true }),
-    });
-  } catch (err) {
-    console.error('[chat] telegram notify failed', err);
-  }
-}
-
 // ─── Endpoint POST ──────────────────────────────────────────────────────
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   const apiKey = process.env.OPENROUTER_API_KEY;
@@ -118,7 +105,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const systemPrompt = await buildSystemPrompt();
   const messages = [
-    { role: 'system' as const, content: systemPrompt },
+    { role: 'system' as const, content: `${systemPrompt}\n\n${BRAND_CONSTITUTION}` },
     ...history,
   ];
 
@@ -159,7 +146,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // Notificación silenciosa a Telegram para que veas conversaciones que llegan
-  notifyTelegram(`💬 Chat web · ${meta || ip}\n\n→ ${lastUser.slice(0, 240)}`);
+  void sendTelegram(`💬 Chat web · ${meta || ip}\n\n→ ${lastUser.slice(0, 240)}`, { parseMode: null });
 
   // Reenvío del SSE tal cual al cliente
   return new Response(upstream.body, {

@@ -2,7 +2,9 @@
 title: 'Cómo conseguir subvenciones para una ONG: guía práctica sin atajos'
 description: 'Qué hace falta para que una ONG, fundación o asociación consiga subvenciones públicas en España. Fuentes, requisitos, errores frecuentes y el proceso real paso a paso.'
 pubDate: 2026-05-26
+tldr: 'Conseguir subvenciones no empieza buscando convocatorias, sino poniendo la entidad en regla —forma jurídica, registros, estar al corriente con Hacienda y la Seguridad Social— y ordenando los proyectos. Después se buscan convocatorias en fuentes oficiales como la BDNS, se valora el encaje y se presenta con tiempo. La justificación posterior es parte del trabajo, no un trámite menor.'
 audience: 'Tercer sector'
+category: 'Financiación'
 tags: ['subvenciones', 'ONG', 'fundaciones', 'BDNS', 'financiación pública', 'tercer sector']
 draft: false
 faqs:
@@ -120,4 +122,4 @@ Planificar la justificación desde el inicio del proyecto, no al final, es la di
 
 ---
 
-Si tu organización está ante una convocatoria abierta o quiere saber qué hay disponible ahora mismo, el [buscador de subvenciones de Startidea](/subvenciones) agrega más de 1.900 convocatorias en tiempo real. Y si necesitas que alguien construya y presente el expediente por ti, [la primera llamada es sin coste](/contacto).
+Si tu organización está ante una convocatoria abierta o quiere saber qué hay disponible ahora mismo, el [buscador de subvenciones de Startidea](/subvenciones) agrega más de 1.900 convocatorias en tiempo real. Para el tercer sector y entidades locales en Andalucía, el [catálogo propio de Startidea](/subvenciones/catalogo) muestra solo las convocatorias que el equipo ha revisado y está tramitando activamente. Y si necesitas que alguien construya y presente el expediente por ti, [la primera llamada es sin coste](/contacto).

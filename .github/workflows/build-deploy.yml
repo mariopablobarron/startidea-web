@@ -1,0 +1,98 @@
+# Build de la imagen startidea-web EN GITHUB ACTIONS + deploy por PULL (Watchtower).
+#
+# Por qué: el deploy actual (deploy.yml) entra por SSH al VPS y construye ahí.
+# Eso falla de dos formas recurrentes:
+#   1. la sesión SSH se cae a mitad del build ("broken pipe"), y
+#   2. el firewall/fail2ban del VPS banea las IPs efímeras de los runners de
+#      GitHub → "Connection timed out" en el puerto 22 (incidente 2026-06-04).
+#
+# Solución (idéntica a la del HUB): construir la imagen en el runner y
+# publicarla en ghcr.io/<owner>/startidea-web. Watchtower (ya corriendo en el
+# VPS para el HUB) detecta el nuevo digest en su próximo poll (~60s) y hace
+# `docker pull` + recreate. CERO conexiones SSH entrantes desde GitHub.
+#
+# ─── ESTADO: INACTIVO POR DEFECTO ────────────────────────────────────────
+# Arranca solo en modo manual (workflow_dispatch) para no chocar con el
+# deploy SSH actual. CUTOVER cuando el VPS apunte a la imagen ghcr:
+#   1. Descomenta el bloque `push:` de abajo.
+#   2. Neutraliza deploy.yml (quita su trigger `push:` o bórralo).
+# Ver infra/MIGRACION-DEPLOY-WATCHTOWER.md para el paso a paso completo.
+
+name: build-deploy
+
+on:
+  workflow_dispatch:
+  # ─── CUTOVER: descomenta esto y desactiva deploy.yml ───
+  # push:
+  #   branches: [main]
+  #   paths-ignore:
+  #     - "docs/**"
+  #     - "reports/**"
+  #     - "infra/**"
+  #     - "README.md"
+  #     - ".gitignore"
+
+concurrency:
+  group: build-deploy-startidea-web
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/startidea-web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # historial completo: /changelog lo lee en build time
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login a ghcr.io
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push imagen
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          build-args: |
+            PUBLIC_GTM_ID=${{ vars.PUBLIC_GTM_ID || 'GTM-N3SR8J' }}
+            PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+
+  # El deploy NO usa SSH: cuando build empuja la nueva imagen a ghcr.io,
+  # Watchtower en el VPS la detecta en su próximo poll (≤60s) y hace pull +
+  # recreate. Este job solo confirma que el sitio responde 200 después.
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify startidea.es responde tras watchtower-poll
+        shell: bash {0}
+        run: |
+          # Watchtower poll = 60s. Margen generoso: detección + recreate +
+          # start_period del healthcheck. Hasta ~10 min en el peor caso.
+          for i in $(seq 1 75); do
+            code=$(curl -sk -o /dev/null -w "%{http_code}" --max-time 10 https://startidea.es/ 2>/dev/null || echo "000")
+            [ "$code" = "200" ] && { echo "✓ startidea.es responde 200 (tras $((i*8))s)"; exit 0; }
+            echo "esperando watchtower-deploy... ($i/75, last=$code)"; sleep 8
+          done
+          echo "::warning::startidea.es no respondió 200 en ~10 min — comprueba logs de watchtower en el VPS"; exit 1

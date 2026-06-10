@@ -1,0 +1,311 @@
+---
+/**
+ * /admin/convocatorias — listado y gestión de convocatorias
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { listConvocatoriasAll } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin/convocatorias')}`);
+}
+
+let convs: ReturnType<typeof listConvocatoriasAll> = [];
+try { convs = listConvocatoriasAll(); } catch { /* DB vacía */ }
+
+const pendingBdns = convs.filter(c => !c.activa && c.fuente === 'bdns');
+
+const TIPO_LABEL: Record<string, string> = {
+  privada:  'Tercer sector',
+  local:    'Entidades locales',
+  empresa:  'Empresa',
+  mixto:    'Mixto',
+};
+
+function fmtDate(ts: number): string {
+  return new Date(ts * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+---
+
+<Base title="Convocatorias · Admin Startidea" description="">
+  <div class="min-h-screen bg-paper-warm">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-8 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div class="flex items-center gap-3 mb-1">
+            <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+              ← Admin
+            </a>
+          </div>
+          <h1 class="font-display text-4xl text-ink">Convocatorias</h1>
+          <p class="mt-1 text-sm text-ink/50">
+            {convs.filter(c => c.activa).length} activas · {convs.filter(c => !c.activa).length} inactivas
+          </p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <button
+            id="btn-scraper"
+            type="button"
+            class="inline-flex items-center gap-2 border-2 border-ink/40 bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/70 hover:border-ink hover:text-ink transition-colors"
+          >
+            ⟳ Scraper BDNS
+            {pendingBdns.length > 0 && (
+              <span class="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-400 text-ink font-bold text-[9px]">
+                {pendingBdns.length}
+              </span>
+            )}
+          </button>
+          <a
+            href="/admin/convocatorias/nueva"
+            class="inline-flex items-center gap-2 border-2 border-ink bg-ink px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-paper hover:bg-magenta hover:border-magenta transition-colors"
+          >
+            + Nueva convocatoria
+          </a>
+        </div>
+      </div>
+
+      <!-- Cola de revisión BDNS -->
+      {pendingBdns.length > 0 && (
+        <div class="mb-6 border-2 border-amber-300 bg-amber-50 p-5">
+          <div class="flex items-center justify-between gap-4 mb-3">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-amber-700 font-bold">
+              ⚠ {pendingBdns.length} convocatoria{pendingBdns.length > 1 ? 's' : ''} pendiente{pendingBdns.length > 1 ? 's' : ''} de revisión (BDNS)
+            </p>
+            <span class="font-mono text-[10px] text-amber-600">Actívalas tras revisar los datos</span>
+          </div>
+          <div class="space-y-1">
+            {pendingBdns.slice(0, 6).map(c => (
+              <div class="flex items-center justify-between gap-4 py-1 border-b border-amber-200 last:border-0">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="font-mono text-[9px] text-amber-700 shrink-0">{c.codigo}</span>
+                  <span class="text-sm text-ink leading-snug truncate">{c.titulo}</span>
+                </div>
+                <a
+                  href={`/admin/convocatorias/${c.slug}`}
+                  class="shrink-0 font-mono text-[10px] uppercase tracking-widest text-amber-700 hover:text-magenta"
+                >
+                  Revisar →
+                </a>
+              </div>
+            ))}
+            {pendingBdns.length > 6 && (
+              <p class="pt-1 font-mono text-[10px] text-amber-600">…y {pendingBdns.length - 6} más (ver tabla)</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Scraper status (oculto, se muestra al ejecutar) -->
+      <div id="scraper-status" class="hidden mb-6 border border-ink/10 bg-paper p-4">
+        <p id="scraper-msg" class="font-mono text-sm text-ink/70"></p>
+      </div>
+
+      <!-- Tabla -->
+      {convs.length === 0 ? (
+        <div class="border border-ink/10 bg-paper p-12 text-center">
+          <p class="text-ink/40 font-mono text-sm">No hay convocatorias todavía.</p>
+        </div>
+      ) : (
+        <div class="overflow-x-auto">
+          <table class="w-full border border-ink/15 bg-paper text-sm">
+            <thead class="border-b border-ink/15 bg-paper-warm">
+              <tr>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Código</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Título</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Tipo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Plazo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Importe</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Estado</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink/8">
+              {convs.map((c) => (
+                <tr class:list={[
+                  'hover:bg-paper-warm transition-colors',
+                  !c.activa && c.fuente === 'bdns' ? 'bg-amber-50/60' : (!c.activa && 'opacity-50'),
+                ]}>
+                  <td class="px-4 py-3">
+                    <span class:list={['font-mono text-xs font-bold', c.fuente === 'bdns' ? 'text-amber-600' : 'text-magenta']}>
+                      {c.codigo}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 max-w-xs">
+                    <p class="font-medium text-ink leading-snug">{c.titulo}</p>
+                    {c.destacada && (
+                      <span class="mt-1 inline-block font-mono text-[9px] uppercase tracking-widest bg-yellow-100 text-yellow-700 px-1.5 py-0.5">
+                        ★ Destacada
+                      </span>
+                    )}
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class:list={[
+                      'inline-block rounded-none px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest',
+                      c.beneficiario === 'local'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-purple-50 text-purple-700 border border-purple-200',
+                    ]}>
+                      {TIPO_LABEL[c.beneficiario] ?? c.beneficiario}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-ink/70">{c.deadlineShort || '—'}</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-ink/70">{c.importeRange || '—'}</td>
+                  <td class="px-4 py-3">
+                    <span class:list={[
+                      'inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border',
+                      c.activa
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-red-50 text-red-700 border-red-200',
+                    ]}>
+                      {c.activa ? '● Activa' : '○ Inactiva'}
+                    </span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <a
+                        href={`/admin/convocatorias/${c.slug}`}
+                        class="font-mono text-[10px] uppercase tracking-widest text-ink/60 hover:text-magenta"
+                      >
+                        Editar
+                      </a>
+                      {c.activa && (
+                        <a
+                          href={`/subvenciones/catalogo/${c.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="font-mono text-[10px] uppercase tracking-widest text-emerald-600 hover:text-magenta"
+                        >
+                          Ver ↗
+                        </a>
+                      )}
+                      <button
+                        type="button"
+                        data-slug={c.slug}
+                        data-activa={c.activa ? '1' : '0'}
+                        class="toggle-btn font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta"
+                      >
+                        {c.activa ? 'Desactivar' : 'Activar'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <!-- Info del sistema -->
+      <div class="mt-8 border border-ink/10 bg-paper p-5">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">Cómo funciona el Copiloto Autónomo</p>
+        <ul class="space-y-1 text-sm text-ink/60">
+          <li>✅ Al <strong>activar</strong> una convocatoria, el sistema notifica automáticamente a los perfiles del Copiloto que encajan.</li>
+          <li>✅ El cron diario detecta convocatorias nuevas del HUB externo y procesa matches.</li>
+          <li>✅ Scraper BDNS: ejecutar manualmente o con cron <code class="font-mono text-[11px] bg-paper-warm px-1">subvenciones-scraper-startidea.sh</code> en el VPS.</li>
+          <li>⏳ S6: Playwright sede electrónica (container separado — pendiente).</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script>
+  const ADMIN_TOKEN = (document.cookie.match(/startidea_admin=([^;]+)/) ?? [])[1] ?? '';
+
+  // ── Scraper BDNS ──────────────────────────────────────────────────────
+  const btnScraper = document.getElementById('btn-scraper');
+  const scraperStatus = document.getElementById('scraper-status');
+  const scraperMsg = document.getElementById('scraper-msg');
+
+  btnScraper?.addEventListener('click', async () => {
+    if (!confirm('¿Ejecutar scraper BDNS ahora? Tardará unos segundos.')) return;
+
+    btnScraper.disabled = true;
+    btnScraper.textContent = '⟳ Scrapeando…';
+    if (scraperStatus && scraperMsg) {
+      scraperStatus.classList.remove('hidden');
+      scraperMsg.textContent = 'Conectando con la API de infosubvenciones.es…';
+    }
+
+    try {
+      const res = await fetch('/api/admin/scraper-bdns', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: '{}',
+      });
+
+      const data = await res.json();
+
+      if (scraperMsg) {
+        if (data.ok) {
+          const txt = data.inserted && data.inserted > 0
+            ? `✅ ${data.inserted} convocatoria${data.inserted > 1 ? 's' : ''} nueva${data.inserted > 1 ? 's' : ''} añadida${data.inserted > 1 ? 's' : ''} para revisión. Recargando…`
+            : `ℹ Sin novedades (${data.fetched ?? 0} consultadas, ${data.skipped ?? 0} ya existentes).`;
+          scraperMsg.textContent = txt;
+        } else {
+          scraperMsg.textContent = `⚠ Error: ${data.errors?.[0] ?? 'desconocido'}`;
+        }
+      }
+
+      if (data.ok && data.inserted && data.inserted > 0) {
+        setTimeout(() => window.location.reload(), 1800);
+      }
+    } catch (e) {
+      if (scraperMsg) scraperMsg.textContent = `⚠ Error de conexión: ${e instanceof Error ? e.message : String(e)}`;
+    } finally {
+      btnScraper.disabled = false;
+      btnScraper.textContent = '⟳ Scraper BDNS';
+    }
+  });
+
+  // ── Toggle activa/inactiva via PATCH /api/admin/convocatorias ─────────
+
+  document.querySelectorAll('.toggle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const slug = btn.dataset.slug ?? '';
+      const wasActiva = btn.dataset.activa === '1';
+      if (!slug) return;
+      btn.disabled = true;
+      btn.textContent = '…';
+      try {
+        const res = await fetch('/api/admin/convocatorias', {
+          method: 'PATCH',
+          headers: {
+            'content-type': 'application/json',
+            'x-admin-token': ADMIN_TOKEN,
+          },
+          body: JSON.stringify({ slug }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          if (data.activa) {
+            // Activada → informar que el matching corre en background
+            if (scraperStatus && scraperMsg) {
+              scraperStatus.classList.remove('hidden');
+              scraperMsg.textContent = `✅ Convocatoria "${slug}" activada. Notificando perfiles del Copiloto Autónomo en segundo plano…`;
+            }
+            setTimeout(() => window.location.reload(), 2000);
+          } else {
+            window.location.reload();
+          }
+        } else {
+          alert('Error al cambiar estado');
+          btn.disabled = false;
+          btn.textContent = wasActiva ? 'Desactivar' : 'Activar';
+        }
+      } catch {
+        alert('Error de conexión');
+        btn.disabled = false;
+        btn.textContent = wasActiva ? 'Desactivar' : 'Activar';
+      }
+    });
+  });
+</script>

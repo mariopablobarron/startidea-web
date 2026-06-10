@@ -6,8 +6,7 @@
 // `Cache-Control: s-maxage=300` desde el HUB. Aquí dentro tipamos las
 // respuestas para que TS no se queje en las páginas Astro.
 
-const HUB_BASE =
-  import.meta.env.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+import { HUB_URL } from '@/lib/hub';
 
 export const SUBSIDY_API = {
   list: (params: Record<string, string | number | undefined> = {}) => {
@@ -16,13 +15,13 @@ export const SUBSIDY_API = {
       if (v === undefined || v === null || v === '') continue;
       qs.set(k, String(v));
     }
-    return `${HUB_BASE}/api/public/subsidies?${qs.toString()}`;
+    return `${HUB_URL}/api/public/subsidies?${qs.toString()}`;
   },
   detail: (slug: string) =>
-    `${HUB_BASE}/api/public/subsidies/${encodeURIComponent(slug)}`,
-  createWatch: () => `${HUB_BASE}/api/public/subsidy-watch`,
+    `${HUB_URL}/api/public/subsidies/${encodeURIComponent(slug)}`,
+  createWatch: () => `${HUB_URL}/api/public/subsidy-watch`,
   manageWatch: (token: string) =>
-    `${HUB_BASE}/api/public/subsidy-watch/${encodeURIComponent(token)}`,
+    `${HUB_URL}/api/public/subsidy-watch/${encodeURIComponent(token)}`,
 };
 
 export interface SubsidyListItem {

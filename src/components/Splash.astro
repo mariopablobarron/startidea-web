@@ -13,7 +13,7 @@
 
 <div
   id="splash"
-  class="fixed inset-0 z-[100] flex items-center justify-center bg-paper transition-opacity duration-700 ease-out"
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-paper transition-opacity duration-200 ease-out"
   style="opacity:0; pointer-events:none;"
   aria-hidden="true"
 >
@@ -28,8 +28,8 @@
 </div>
 
 <script>
-  const splash = document.getElementById('splash') as HTMLDivElement | null;
-  const video = document.getElementById('splash-video') as HTMLVideoElement | null;
+  const splash = document.getElementById('splash');
+  const video = document.getElementById('splash-video');
 
   function teardown() {
     if (splash) splash.remove();
@@ -75,19 +75,20 @@
           splash.style.opacity = '0';
           document.documentElement.style.overflow = '';
           try { sessionStorage.setItem(KEY, '1'); } catch (_) {}
-          setTimeout(() => splash.remove(), 800);
+          setTimeout(() => splash.remove(), 240);
         };
 
         video.addEventListener('ended', finish);
-        setTimeout(finish, 5000);
+        // Tope corto: aunque el vídeo sea largo, no se queda más de ~1.8s.
+        setTimeout(finish, 1800);
       };
 
       // requestIdleCallback ejecuta cuando el browser está libre — después
       // de paint inicial y LCP. Fallback a setTimeout en navegadores viejos.
       if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(start, { timeout: 1200 });
+        (window as any).requestIdleCallback(start, { timeout: 250 });
       } else {
-        setTimeout(start, 200);
+        setTimeout(start, 100);
       }
     }
   }

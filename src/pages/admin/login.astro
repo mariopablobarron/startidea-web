@@ -1,9 +1,9 @@
 ---
 // /admin/login — Punto de entrada del admin overlay de startidea.es.
 //
-// Pegas el ADMIN_TOKEN (el mismo del .env del container, también usado
-// por los endpoints /api/admin/*) y te setea cookie HTTP-only de 30 días.
-// Después, AdminBar aparece arriba en todas las páginas.
+// Dos métodos de acceso:
+//   1. Google OAuth  → "Entrar con Google" (mariopablobarron@gmail.com)
+//   2. ADMIN_TOKEN   → campo manual (fallback / acceso sin Google)
 
 import Base from "@/layouts/Base.astro";
 import { setAdminSession, isAdminLoggedIn } from "@/lib/admin-session";
@@ -11,6 +11,19 @@ import { setAdminSession, isAdminLoggedIn } from "@/lib/admin-session";
 export const prerender = false;
 
 let error: string | null = null;
+
+// Mensajes de error legibles para los códigos que devuelve google-callback
+const OAUTH_ERRORS: Record<string, string> = {
+  oauth_denied:          'Acceso denegado por Google.',
+  oauth_not_configured:  'Google OAuth no configurado en el servidor.',
+  token_exchange_failed: 'Error al intercambiar el código con Google.',
+  token_exchange_error:  'Error de red al contactar con Google.',
+  no_access_token:       'Google no devolvió un token válido.',
+  userinfo_failed:       'No se pudo obtener el perfil de Google.',
+  userinfo_error:        'Error de red al obtener el perfil de Google.',
+  unauthorized_email:    'Esta cuenta de Google no tiene acceso al panel.',
+  admin_token_missing:   'ADMIN_TOKEN no configurado en el servidor.',
+};
 
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
@@ -24,10 +37,24 @@ if (Astro.request.method === "POST") {
     return Astro.redirect(next.startsWith("/") ? next : "/");
   }
 } else if (isAdminLoggedIn(Astro.cookies)) {
-  return Astro.redirect("/");
+  return Astro.redirect("/admin");
 }
 
-const nextParam = Astro.url.searchParams.get("next") ?? "/";
+// Error procedente del callback OAuth (query param)
+const oauthErrorCode = Astro.url.searchParams.get("error");
+if (oauthErrorCode && !error) {
+  error = OAUTH_ERRORS[oauthErrorCode] ?? `Error OAuth: ${oauthErrorCode}`;
+}
+
+const nextParam = Astro.url.searchParams.get("next") ?? "/admin";
+const googleOauthUrl = `/api/auth/google?next=${encodeURIComponent(nextParam)}`;
+
+// ¿Está Google OAuth configurado en este entorno?
+const _env = (import.meta as { env?: Record<string, string> }).env ?? {};
+const googleConfigured = !!(
+  _env.GOOGLE_ADMIN_CLIENT_ID ?? process.env.GOOGLE_ADMIN_CLIENT_ID ??
+  _env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID
+);
 ---
 
 <Base
@@ -48,7 +75,41 @@ const nextParam = Astro.url.searchParams.get("next") ?? "/";
           Si no eres Mario, <a href="/contacto" class="text-magenta hover:underline">contacta primero</a>.
         </p>
 
-        <form method="POST" class="mt-10 space-y-5" autocomplete="off">
+        <!-- ── Google OAuth ─────────────────────────────────────────── -->
+        {googleConfigured ? (
+          <div class="mt-10">
+            <a
+              href={googleOauthUrl}
+              class="flex w-full items-center justify-center gap-3 border border-ink/20 bg-paper px-5 py-3.5 text-sm font-medium text-ink transition hover:border-magenta hover:text-magenta"
+            >
+              <!-- Google "G" SVG (colores oficiales) -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-5 w-5 shrink-0" aria-hidden="true">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                <path fill="none" d="M0 0h48v48H0z"/>
+              </svg>
+              Entrar con Google
+            </a>
+          </div>
+        ) : (
+          <!-- Aviso si el OAuth no está configurado en este entorno -->
+          <div class="mt-10 border border-ink/15 bg-paper-warm/40 px-4 py-3 font-mono text-[11px] text-ink/50">
+            Google OAuth no configurado.<br />
+            Añade <code>GOOGLE_ADMIN_CLIENT_ID</code> y <code>GOOGLE_ADMIN_CLIENT_SECRET</code> en Coolify Secrets.
+          </div>
+        )}
+
+        <!-- ── Separador ────────────────────────────────────────────── -->
+        <div class="relative my-8 flex items-center gap-3">
+          <div class="h-px flex-1 bg-ink/15" />
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">o con token</span>
+          <div class="h-px flex-1 bg-ink/15" />
+        </div>
+
+        <!-- ── Token manual (fallback) ──────────────────────────────── -->
+        <form method="POST" class="space-y-5" autocomplete="off">
           <input type="hidden" name="next" value={nextParam} />
           <div>
             <label
@@ -62,13 +123,13 @@ const nextParam = Astro.url.searchParams.get("next") ?? "/";
               type="password"
               name="token"
               required
-              autofocus
+              autofocus={!googleConfigured}
               class="mt-2 block w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
               placeholder="••••••••••••••••••••"
             />
           </div>
           <button type="submit" class="btn w-full">
-            Entrar al panel <span aria-hidden="true">→</span>
+            Entrar con token <span aria-hidden="true">→</span>
           </button>
         </form>
 
@@ -79,7 +140,7 @@ const nextParam = Astro.url.searchParams.get("next") ?? "/";
         )}
 
         <p class="mt-10 border-t border-ink/15 pt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
-          El token vive en el .env del container.<br />
+          El acceso con Google funciona con mariopablobarron@gmail.com y mario@startidea.es.<br />
           La cookie es HTTP-only y dura 30 días.
         </p>
       </div>

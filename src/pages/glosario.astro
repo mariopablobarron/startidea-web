@@ -1,0 +1,226 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, definedTermSetSchema, SITE_URL } from '@/lib/jsonld';
+
+const pageUrl = `${SITE_URL}/glosario`;
+
+// Términos agrupados por área. El orden visual sigue los grupos; el schema
+// DefinedTermSet recibe todos los términos en plano.
+const grupos = [
+  {
+    titulo: 'Fundraising y financiación',
+    terminos: [
+      {
+        term: 'Fundraising',
+        definition:
+          'Gestión activa y sistemática de todas las fuentes de financiación de una organización: socios individuales, donantes puntuales, grandes donantes, alianzas con empresas, herencias y legados, subvenciones públicas y fondos europeos. No es sinónimo de pedir subvenciones: las subvenciones son una fuente dentro del fundraising.',
+      },
+      {
+        term: 'Base social',
+        definition:
+          'Conjunto de personas que sostienen una organización con una aportación recurrente, normalmente una cuota mensual o trimestral. Es la fuente de financiación más estable y libre, porque no se justifica ante una administración ni caduca con una convocatoria.',
+      },
+      {
+        term: 'Captación de fondos',
+        definition:
+          'Conjunto de acciones para conseguir recursos económicos para una causa: captación de socios, campañas de donativos, grandes donantes, alianzas con empresas y solicitud de ayudas. Equivale en castellano al término fundraising.',
+      },
+      {
+        term: 'Diversificación de ingresos',
+        definition:
+          'Estrategia para que ninguna fuente de financiación supere un porcentaje crítico del presupuesto (referencia habitual: el 40%). Reduce el riesgo de que la pérdida de una sola fuente —por ejemplo, una subvención— ponga en peligro a la organización.',
+      },
+      {
+        term: 'Churn (tasa de bajas)',
+        definition:
+          'Porcentaje de socios o donantes recurrentes que se dan de baja en un periodo, normalmente un año. Por debajo del 10% anual se considera saludable; por encima del 20% indica un problema de fidelización que la captación no compensa.',
+      },
+    ],
+  },
+  {
+    titulo: 'Subvenciones y ayudas públicas',
+    terminos: [
+      {
+        term: 'Subvención',
+        definition:
+          'Entrega de dinero público a una entidad para un fin concreto, sin contraprestación directa, sujeta a que se cumplan los requisitos de la convocatoria y a la justificación del gasto. Es una fuente finalista, temporal y de decisión ajena a la entidad.',
+      },
+      {
+        term: 'Convocatoria',
+        definition:
+          'Acto administrativo que abre un plazo concreto para solicitar una línea de ayuda: fija el importe disponible, las fechas y, a veces, criterios específicos. Remite a las bases reguladoras, donde están las reglas generales y estables de la ayuda.',
+      },
+      {
+        term: 'Bases reguladoras',
+        definition:
+          'Normativa que fija las reglas generales y estables de una línea de subvención: quién puede ser beneficiario, qué gastos son elegibles y cómo se justifica. Se publican antes que la convocatoria, que las desarrolla y concreta.',
+      },
+      {
+        term: 'Criterios de valoración',
+        definition:
+          'Tabla con la que el órgano gestor puntúa cada solicitud y reparte el dinero en concurrencia competitiva. Determinan qué se valora y con cuántos puntos; la memoria del proyecto debe escribirse en su orden y lenguaje.',
+      },
+      {
+        term: 'Concurrencia competitiva',
+        definition:
+          'Procedimiento por el que las solicitudes compiten entre sí y se ordenan por puntuación según los criterios de valoración, repartiendo el presupuesto disponible de mayor a menor puntuación hasta agotarlo. No gana el mejor proyecto en abstracto, sino el que más puntúa.',
+      },
+      {
+        term: 'Declaración responsable',
+        definition:
+          'Documento en el que el representante legal de una entidad afirma, bajo su responsabilidad, que cumple determinados requisitos (estar al corriente con Hacienda y la Seguridad Social, no incurrir en prohibiciones, etc.). Declarar datos falsos puede constituir fraude de subvenciones.',
+      },
+      {
+        term: 'Justificación de subvención',
+        definition:
+          'Proceso posterior a la concesión por el que la entidad acredita que ha ejecutado el proyecto y gastado el dinero conforme a lo aprobado, aportando facturas, memorias y documentación. Una justificación deficiente puede obligar a devolver la ayuda.',
+      },
+      {
+        term: 'BDNS',
+        definition:
+          'Base de Datos Nacional de Subvenciones: registro público estatal donde se publican las convocatorias de subvenciones y ayudas de todas las administraciones españolas. Es la fuente oficial para localizar convocatorias abiertas.',
+      },
+      {
+        term: 'Certificado digital',
+        definition:
+          'Credencial electrónica que identifica a una persona o entidad ante la Administración y permite firmar y presentar trámites por vía electrónica. Para presentar subvenciones suele necesitarse el certificado FNMT de persona física o de representante de persona jurídica.',
+      },
+      {
+        term: 'Apoderamiento electrónico (REA)',
+        definition:
+          'Autorización inscrita en el Registro Electrónico de Apoderamientos que habilita a una persona o entidad a actuar en nombre de otra ante la Administración. Permite, por ejemplo, que un tercero presente trámites por la entidad sin que el representante legal tenga que estar presente.',
+      },
+    ],
+  },
+  {
+    titulo: 'Comunicación',
+    terminos: [
+      {
+        term: 'Comunicación estratégica',
+        definition:
+          'Comunicación alineada con los objetivos de la organización y planificada para conseguirlos, no decorativa ni reactiva. Define qué se cuenta, a quién, por qué canales y con qué fin medible.',
+      },
+      {
+        term: 'Marketing social',
+        definition:
+          'Aplicación de técnicas de marketing para promover causas, cambios de comportamiento o el trabajo de entidades sin ánimo de lucro, situando el impacto social —no la venta— como objetivo.',
+      },
+      {
+        term: 'Pornomiseria',
+        definition:
+          'Uso del sufrimiento ajeno como recurso para conmover y captar fondos: imágenes de personas en su peor momento y relatos centrados en la carencia. Funciona a corto plazo por la lástima, pero cosifica a las personas y erosiona la confianza a medio plazo.',
+      },
+    ],
+  },
+  {
+    titulo: 'Tercer sector y organización',
+    terminos: [
+      {
+        term: 'Tercer sector',
+        definition:
+          'Conjunto de organizaciones privadas sin ánimo de lucro que actúan en el ámbito social: ONG, fundaciones, asociaciones y cooperativas de iniciativa social. Se distingue del sector público (primer sector) y del mercado (segundo sector).',
+      },
+      {
+        term: 'ESFL (Entidad Sin Fines Lucrativos)',
+        definition:
+          'Entidad cuyo objeto no es repartir beneficios entre socios o propietarios, sino destinar sus excedentes a su fin social. Incluye asociaciones, fundaciones y otras figuras acogidas a la normativa de entidades sin fines lucrativos.',
+      },
+      {
+        term: 'Innovación social',
+        definition:
+          'Desarrollo de nuevas soluciones —ideas, servicios, modelos de organización— que responden mejor a necesidades sociales que las alternativas existentes y que, además, refuerzan la capacidad de la sociedad para actuar.',
+      },
+      {
+        term: 'Impacto social',
+        definition:
+          'Cambio real y atribuible que una organización produce en las personas o el entorno, más allá de las actividades realizadas o del número de beneficiarios atendidos. Su medición busca demostrar resultados, no solo actividad.',
+      },
+      {
+        term: 'ASE (Acción Social Empresarial)',
+        definition:
+          'Organización empresarial española de inspiración cristiana centrada en la responsabilidad social de la empresa y la dimensión ética de la economía.',
+      },
+    ],
+  },
+];
+
+// Aplanar para el schema DefinedTermSet
+const todosLosTerminos = grupos.flatMap((g) => g.terminos);
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Glosario', url: pageUrl },
+  ]),
+  definedTermSetSchema('Glosario del tercer sector — Startidea', pageUrl, todosLosTerminos),
+];
+---
+
+<Base
+  title="Glosario del tercer sector: fundraising, subvenciones y comunicación social — Startidea"
+  description="Definiciones claras y sin jerga de los términos clave del tercer sector: fundraising, base social, concurrencia competitiva, BDNS, declaración responsable, impacto social y más."
+  ogSlug="page/glosario"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Glosario del tercer sector</span>
+      <h1 class="reveal mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Los términos,<br />
+        <em class="italic text-magenta">sin jerga.</em>
+      </h1>
+      <p class="reveal reveal-slow mt-8 max-w-measure text-lede text-ink/80">
+        Definiciones claras de las palabras que se repiten en comunicación social, fundraising y subvenciones. Lo que significan de verdad, sin adornos.
+      </p>
+    </div>
+  </section>
+
+  <!-- Términos por grupo -->
+  {grupos.map((grupo) => (
+    <section class="border-b border-ink/15 bg-paper py-12 md:py-16 last:border-b-0">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 gap-y-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <h2 class="font-display text-display-md leading-tight text-ink">{grupo.titulo}</h2>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <dl class="divide-y divide-ink/10">
+              {grupo.terminos.map((t) => (
+                <div class="py-6">
+                  <dt class="font-display text-xl text-ink">{t.term}</dt>
+                  <dd class="mt-2 max-w-measure text-ink/75">{t.definition}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- CTA -->
+  <section class="bg-ink py-16 md:py-24">
+    <div class="container-x">
+      <div class="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 class="font-display text-display-md leading-tight text-paper">
+            ¿Hablamos del término<br />
+            <em class="italic text-magenta">y de tu proyecto?</em>
+          </h2>
+          <p class="mt-4 max-w-prose text-paper/70">
+            Una llamada de 30 minutos, sin compromiso. Cuentas el reto y Startidea dice honestamente si encaja.
+          </p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a href="/contacto" class="btn bg-paper text-ink hover:bg-paper-warm">
+            Hablemos →
+          </a>
+          <a href="/notas" class="btn-ghost border-paper/30 text-paper hover:border-paper hover:text-paper">
+            Ver las notas
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

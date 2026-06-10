@@ -1,0 +1,280 @@
+---
+/**
+ * /admin/funnel — Embudo de conversión completo del negocio Subvenciones.
+ *
+ * Visualiza las etapas desde captación (perfiles del Copiloto Autónomo) hasta
+ * facturación final, con conversion rates entre cada nivel.
+ *
+ * Fuente de datos: expedientes-db + auto-copiloto-db (todas internas, sin GA4).
+ * GA4 podría aportar el TOP del embudo (visitas → diagnósticos) pero eso
+ * requeriría rehidratar seo.db que está dormido. Para una primera versión,
+ * empezamos el embudo en "perfiles registrados" donde sí tenemos datos.
+ */
+
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import {
+  statsExpedientes,
+  statsContratos,
+  statsEconomico,
+  statsCopilotoConversion,
+  statsGa4,
+} from '@/lib/expedientes-db';
+import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin/funnel')}`);
+}
+
+let stats       = { total: 0, recibido: 0, analizando_ia: 0, docs_listos: 0, entregado: 0, presentado: 0, rechazado: 0 };
+let contratos   = { sinEnviar: 0, enviados: 0, aceptados: 0 };
+let economico   = { facturadoTotal: 0, pipelineTotal: 0, pendienteFacturar: 0 };
+let acProfiles  = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
+let acLog       = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
+let conversion  = { perfilesActivos: 0 as number | null, expedientesAutogenerados: 0, expedientesConversion: 0, conversionContratoFirmado: 0, conversionPresentados: 0, facturadoConversion: 0 };
+let ga4 = { days_covered: 0, sessions_total: 0, page_views_total: 0, sessions_subvenciones: 0, sessions_diagnostico: 0, sessions_presentar: 0, sessions_catalogo: 0, last_synced_at: null as number | null, last_date: null as string | null };
+
+try {
+  stats        = statsExpedientes() as typeof stats;
+  contratos    = statsContratos();
+  economico    = statsEconomico();
+  acProfiles   = statsProfiles();
+  acLog        = statsLog();
+  conversion   = statsCopilotoConversion();
+  ga4          = statsGa4(30);
+} catch { /* BD vacía */ }
+
+function fmtEur(n: number): string {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+}
+
+function pct(a: number, b: number): string {
+  if (b === 0) return '—';
+  return `${((a / b) * 100).toFixed(1)} %`;
+}
+
+// ─── Embudo principal ──────────────────────────────────────────────────────
+// Etapas pensadas como "funnel del negocio", no como "estado del expediente".
+// Cada etapa es un SUPERSET de la siguiente (cohorte que avanza).
+
+// Si hay datos GA4 sincronizados, anteponemos 2 etapas al embudo (visitas
+// globales → visitas a subvenciones). Si la BD del snapshot está vacía
+// (cron no implementado aún), arrancamos directamente en "perfiles".
+const etapasGa4 = ga4.days_covered > 0 ? [
+  {
+    nombre:   `Visitas web (últimos ${ga4.days_covered} d)`,
+    valor:    ga4.sessions_total,
+    detalle:  `${ga4.page_views_total} páginas vistas · top: ${ga4.last_date ?? '—'}`,
+    desde:    '/admin',
+  },
+  {
+    nombre:   'Visitas a /subvenciones/*',
+    valor:    ga4.sessions_subvenciones,
+    detalle:  `Catálogo ${ga4.sessions_catalogo} · Diagnóstico ${ga4.sessions_diagnostico} · Wizard ${ga4.sessions_presentar}`,
+    desde:    '/admin',
+  },
+] : [];
+
+const etapas = [
+  ...etapasGa4,
+  {
+    nombre:   'Perfiles registrados',
+    valor:    acProfiles.total,
+    detalle:  `${acProfiles.confirmed} confirmados · ${acProfiles.pendingConfirm} pendientes de confirmar`,
+    desde:    '/admin/auto-copiloto',
+  },
+  {
+    nombre:   'Perfiles activos (recibiendo matches)',
+    valor:    acProfiles.active,
+    detalle:  acLog.total > 0
+      ? `${acLog.enviados} envíos totales · ${acLog.ultimas_24h} en las últimas 24 h`
+      : 'Sin envíos del Copiloto aún',
+    desde:    '/admin/auto-copiloto',
+  },
+  {
+    nombre:   'Expedientes abiertos (todos los canales)',
+    valor:    stats.total,
+    detalle:  `${stats.recibido} sin procesar · ${stats.analizando_ia} con IA · ${stats.docs_listos} listos`,
+    desde:    '/admin/expedientes',
+  },
+  {
+    nombre:   'Contratos enviados',
+    valor:    contratos.enviados + contratos.aceptados,
+    detalle:  `${contratos.sinEnviar} pendientes de enviar`,
+    desde:    '/admin/expedientes?status=docs_listos',
+  },
+  {
+    nombre:   'Contratos firmados',
+    valor:    contratos.aceptados,
+    detalle:  'Aceptados electrónicamente por el cliente',
+    desde:    '/admin/expedientes?status=entregado',
+  },
+  {
+    nombre:   'Presentados (sede electrónica)',
+    valor:    stats.presentado,
+    detalle:  'Con justificante administrativo',
+    desde:    '/admin/expedientes?status=presentado',
+  },
+  {
+    nombre:   'Facturado',
+    valor:    economico.pendienteFacturar + (economico.facturadoTotal > 0 ? 1 : 0),
+    detalle:  `${fmtEur(economico.facturadoTotal)} cobrado · ${fmtEur(economico.pipelineTotal)} por facturar`,
+    desde:    '/admin/expedientes',
+    revenue:  true,
+  },
+];
+
+const maxValor = Math.max(...etapas.map((e) => e.valor), 1);
+
+// Tasas clave entre etapas
+const tasaPerfilToExp = pct(stats.total, acProfiles.total);
+const tasaExpToFirma  = pct(contratos.aceptados, stats.total);
+const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.aceptados);
+---
+
+<Base title="Embudo de conversión · Admin · Startidea" description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-8 flex items-center justify-between">
+        <div>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            ← Admin
+          </a>
+          <h1 class="mt-1 font-display text-4xl text-ink">Embudo de conversión</h1>
+          <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink/40">
+            Subvenciones — Captación → Facturación
+          </p>
+        </div>
+      </div>
+
+      <!-- Tasas clave en cabecera -->
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-8">
+        <div class="border border-ink/15 bg-paper p-4">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Conversión total</p>
+          <p class="mt-2 font-display text-2xl text-ink">{tasaPerfilToExp}</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/40">Perfiles → expediente abierto</p>
+        </div>
+        <div class="border border-ink/15 bg-paper p-4">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Cierre</p>
+          <p class="mt-2 font-display text-2xl text-ink">{tasaExpToFirma}</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/40">Expediente → contrato firmado</p>
+        </div>
+        <div class="border-2 border-magenta/30 bg-paper p-4">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Revenue</p>
+          <p class="mt-2 font-display text-2xl text-magenta">{fmtEur(economico.facturadoTotal)}</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/40">{tasaFirmaToFact} firma → factura</p>
+        </div>
+      </div>
+
+      <!-- Embudo visual -->
+      <div class="border border-ink/15 bg-paper">
+        <div class="border-b border-ink/10 px-5 py-3">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+            Etapas del embudo (anchos proporcionales)
+          </p>
+        </div>
+        <ol class="divide-y divide-ink/8">
+          {etapas.map((etapa, idx) => {
+            const widthPct = Math.max((etapa.valor / maxValor) * 100, 2);
+            const prevValor = idx === 0 ? null : etapas[idx - 1].valor;
+            const dropRate = prevValor && prevValor > 0
+              ? ((1 - etapa.valor / prevValor) * 100).toFixed(0)
+              : null;
+            return (
+              <li class="px-5 py-4 hover:bg-paper-warm/40 transition-colors">
+                <div class="flex items-baseline justify-between gap-4 mb-2">
+                  <div class="flex items-baseline gap-3 min-w-0">
+                    <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30 w-4">
+                      {idx + 1}
+                    </span>
+                    <a href={etapa.desde} class="font-medium text-ink hover:text-magenta truncate">
+                      {etapa.nombre}
+                    </a>
+                  </div>
+                  <span class:list={[
+                    'font-display flex-shrink-0',
+                    etapa.revenue ? 'text-2xl text-magenta' : 'text-2xl text-ink',
+                  ]}>
+                    {etapa.valor}
+                  </span>
+                </div>
+                <!-- Barra proporcional -->
+                <div class="relative h-1.5 bg-ink/5 rounded-sm overflow-hidden">
+                  <div
+                    class:list={[
+                      'absolute left-0 top-0 bottom-0 transition-all',
+                      etapa.revenue ? 'bg-magenta' : 'bg-ink/40',
+                    ]}
+                    style={`width:${widthPct}%`}
+                  ></div>
+                </div>
+                <div class="mt-2 flex items-baseline justify-between gap-3 text-[11px]">
+                  <p class="font-mono text-ink/40 truncate">{etapa.detalle}</p>
+                  {dropRate !== null && Number(dropRate) > 0 && (
+                    <p class="font-mono text-ink/40 flex-shrink-0">
+                      −{dropRate} % drop
+                    </p>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      <!-- Embudo específico Copiloto Autónomo -->
+      {(conversion.expedientesConversion + conversion.expedientesAutogenerados) > 0 && (
+        <div class="mt-8 border border-magenta/20 bg-paper">
+          <div class="border-b border-ink/10 px-5 py-3 flex items-baseline justify-between">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">
+              Sub-embudo · Copiloto Autónomo
+            </p>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+              Lead magnet → cliente premium
+            </span>
+          </div>
+          <div class="px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+            <div>
+              <p class="font-display text-2xl text-ink">{conversion.expedientesConversion}</p>
+              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Expedientes conversión</p>
+            </div>
+            <div>
+              <p class="font-display text-2xl text-ink">{conversion.conversionContratoFirmado}</p>
+              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Contratos firmados</p>
+            </div>
+            <div>
+              <p class="font-display text-2xl text-ink">{conversion.conversionPresentados}</p>
+              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Presentados</p>
+            </div>
+            <div>
+              <p class="font-display text-2xl text-magenta">{fmtEur(conversion.facturadoConversion)}</p>
+              <p class="font-mono text-[10px] uppercase text-magenta/70 mt-1">Facturado de copiloto</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- Nota metodológica -->
+      <div class="mt-8 border border-ink/10 bg-paper/50 p-4">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
+          Notas metodológicas
+        </p>
+        <ul class="text-[12px] text-ink/60 space-y-1.5 leading-relaxed">
+          {ga4.days_covered > 0 ? (
+            <li>• Datos GA4 sincronizados desde el HUB via cron 06:00 UTC. Cobertura: {ga4.days_covered} días con datos hasta {ga4.last_date}.</li>
+          ) : (
+            <li>• Esperando primer snapshot GA4 del cron. El embudo arranca en "perfiles del Copiloto Autónomo" mientras tanto.</li>
+          )}
+          <li>• "Expedientes abiertos" incluye todos los canales (buscador, catálogo, copiloto, recomendación). El sub-embudo Copiloto Autónomo aísla solo los que vinieron del lead magnet.</li>
+          <li>• "Drop %" es la caída desde la etapa anterior. Un drop alto en un escalón concreto es el primer sitio donde mirar para optimizar.</li>
+          <li>• Facturado se calcula a partir de expedientes con <code>factura_num</code> emitido. Pipeline = importe_concedido sin factura aún.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</Base>

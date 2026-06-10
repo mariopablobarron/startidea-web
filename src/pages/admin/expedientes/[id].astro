@@ -1,0 +1,842 @@
+---
+/**
+ * /admin/expedientes/[id] — Detalle de expediente + acciones del Copiloto.
+ *
+ * Acciones disponibles:
+ *   1. Generar documentos con IA (→ POST /api/generar-expediente)
+ *   2. Cambiar estado manualmente
+ *   3. Enviar documentos al cliente (→ POST /api/entregar-expediente)
+ *   4. Ver/copiar cada documento generado
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getExpediente, getExpedienteMessages, markMessagesRead } from '@/lib/expedientes-db';
+import { detectSede } from '@/lib/sedes-map';
+import { parseEligibility } from '@/lib/copiloto-engine';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent(Astro.url.pathname)}`);
+}
+
+const { id } = Astro.params;
+const exp = id ? getExpediente(id) : null;
+
+if (!exp) {
+  return Astro.redirect('/admin/expedientes?notfound=1');
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  recibido:      '📥 Recibido',
+  analizando_ia: '🤖 Analizando IA...',
+  docs_listos:   '📄 Documentos listos',
+  entregado:     '📬 Entregado al cliente',
+  presentado:    '✅ Presentado',
+  rechazado:     '❌ Rechazado',
+};
+
+function fmtDate(ts: number | null): string {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+
+const docs = JSON.parse(exp.docs_adjuntos || '[]') as string[];
+
+// Mensajes del expediente (marcar como leídos al abrir admin)
+const mensajes = getExpedienteMessages(exp.id);
+markMessagesRead(exp.id, 'admin'); // el admin ha leído los mensajes del cliente
+
+// Parsear elegibilidad guardada en BD
+const eligibilidad = exp.ai_elegibilidad ? parseEligibility(exp.ai_elegibilidad) : null;
+const eligColor = eligibilidad
+  ? eligibilidad.bloqueante ? '#dc2626'
+    : eligibilidad.score >= 70 ? '#16a34a'
+    : '#d97706'
+  : '#9ca3af';
+
+// Detectar sede electrónica del expediente
+const sedeDetectada = detectSede({
+  convocatoriaUrl: exp.convocatoria_url,
+  convocatoriaTitle: exp.convocatoria_title,
+});
+
+// URL de la ficha de convocatoria (resolución fuera del JSX para evitar
+// que esbuild interprete la regex literal como divisor en contexto JSX,
+// lo que provoca "Unterminated regular expression" en build).
+function buildConvocatoriaFichaUrl(slug: string | null | undefined): string | null {
+  if (!slug) return null;
+  const bojaMatch = slug.match(/^(boja-\d{4}-inclusion)(?:-l\d+)?$/);
+  return bojaMatch
+    ? `/subvenciones/${bojaMatch[1]}-social`
+    : `/subvenciones/catalogo/${slug}`;
+}
+const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
+---
+
+<Base title={`Expediente ${exp.id} · Admin · Startidea`} description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <a href="/admin/expedientes" class="font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">← Expedientes</a>
+          <h1 class="mt-2 font-display text-3xl text-ink">
+            Expediente <span class="text-magenta font-mono">{exp.id}</span>
+          </h1>
+          <p class="mt-1 text-sm text-ink/60">
+            Recibido: {fmtDate(exp.created_at)}
+            {exp.convocatoria_title && ` · ${exp.convocatoria_title}`}
+          </p>
+        </div>
+        <span class="shrink-0 border px-3 py-1.5 font-mono text-sm text-ink/70 border-ink/20">
+          {STATUS_LABELS[exp.status] ?? exp.status}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Col izquierda: datos del expediente -->
+        <div class="space-y-5 lg:col-span-1">
+
+          <!-- Contrato de comisión a éxito -->
+          <div class:list={[
+            'border p-5',
+            exp.contrato_at ? 'border-green-300 bg-green-50/40' : exp.contrato_sent_at ? 'border-yellow-300 bg-yellow-50/40' : 'border-ink/15 bg-paper',
+          ]}>
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Contrato de servicios</h2>
+            {exp.contrato_at ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-green-700">✅ Aceptado por el cliente</p>
+                <p class="text-xs text-ink/50">{fmtDate(exp.contrato_at)}</p>
+                {exp.contrato_ip && <p class="font-mono text-[10px] text-ink/40">IP: {exp.contrato_ip}</p>}
+              </div>
+            ) : exp.contrato_sent_at ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-yellow-700">⏳ Enviado, pendiente de firma</p>
+                <p class="text-xs text-ink/50">Enviado: {fmtDate(exp.contrato_sent_at)}</p>
+                <a href={`https://startidea.es/contrato/${exp.contrato_token}`} target="_blank"
+                   class="font-mono text-[10px] text-magenta hover:underline break-all block">
+                  Ver enlace del contrato ↗
+                </a>
+              </div>
+            ) : (
+              <p class="text-sm text-ink/50 mb-3">Sin contrato enviado todavía.</p>
+            )}
+            <button
+              id="btn-enviar-contrato"
+              type="button"
+              class="mt-3 w-full border border-ink/25 px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-ink hover:border-magenta hover:text-magenta transition-colors text-center"
+              data-id={exp.id}
+            >
+              {exp.contrato_sent_at ? '↻ Reenviar contrato' : '📝 Enviar contrato al cliente'}
+            </button>
+            <p id="contrato-msg" class="mt-2 hidden text-xs"></p>
+          </div>
+
+          <!-- Datos de la entidad -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Entidad solicitante</h2>
+            <dl class="space-y-2 text-sm">
+              <div><dt class="text-ink/50">Nombre</dt><dd class="font-medium text-ink">{exp.org_nombre}</dd></div>
+              <div><dt class="text-ink/50">CIF</dt><dd class="font-mono text-ink">{exp.org_cif}</dd></div>
+              <div><dt class="text-ink/50">Tipo</dt><dd class="text-ink">{exp.org_tipo || '—'}</dd></div>
+              <div><dt class="text-ink/50">Representante</dt><dd class="text-ink">{exp.representante}</dd></div>
+              <div><dt class="text-ink/50">Email</dt>
+                <dd><a href={`mailto:${exp.email}`} class="text-magenta hover:underline">{exp.email}</a></dd>
+              </div>
+              {exp.telefono && <div><dt class="text-ink/50">Teléfono</dt><dd class="text-ink">{exp.telefono}</dd></div>}
+              <div><dt class="text-ink/50">Provincia</dt><dd class="text-ink">{exp.provincia}</dd></div>
+              <div><dt class="text-ink/50">Apoderamiento REA</dt>
+                <dd class:list={['font-medium', exp.apoderamiento ? 'text-green-700' : 'text-ink/40']}>
+                  {exp.apoderamiento ? '✅ Solicitado' : 'No'}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <!-- Convocatoria -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Convocatoria</h2>
+            {exp.convocatoria_slug || exp.convocatoria_url ? (
+              <div class="space-y-2 text-sm">
+                <p class="font-medium text-ink">{exp.convocatoria_title ?? exp.convocatoria_slug ?? '—'}</p>
+                {exp.convocatoria_url ? (
+                  <a href={exp.convocatoria_url} target="_blank" rel="noopener noreferrer"
+                     class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline break-all">
+                    Ver en origen ↗
+                  </a>
+                ) : convocatoriaFichaUrl ? (
+                  <a href={convocatoriaFichaUrl} target="_blank"
+                     class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+                    Ver ficha →
+                  </a>
+                ) : null}
+              </div>
+            ) : (
+              <p class="text-sm text-ink/40 italic">Sin convocatoria identificada</p>
+            )}
+            {exp.importe_solicitado && (
+              <p class="mt-2 text-sm"><span class="text-ink/50">Importe solicitado:</span> <strong class="text-ink">{exp.importe_solicitado}</strong></p>
+            )}
+          </div>
+
+          <!-- Documentos adjuntos -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Documentos adjuntos ({docs.length})</h2>
+            {docs.length === 0 ? (
+              <p class="text-sm text-ink/40 italic">Ninguno</p>
+            ) : (
+              <ul class="space-y-1.5 text-xs text-ink/70">
+                {docs.map((d, i) => (
+                  <li class="font-mono">
+                    ·{' '}
+                    <a
+                      href={`/api/admin/expediente-doc?id=${encodeURIComponent(exp.id)}&i=${i}`}
+                      target="_blank"
+                      rel="noopener"
+                      class="text-magenta underline-offset-2 hover:underline"
+                    >{d}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <!-- Cambiar estado -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Cambiar estado</h2>
+            <div id="status-actions" class="flex flex-wrap gap-2">
+              {(['recibido', 'docs_listos', 'entregado', 'presentado', 'rechazado'] as const).map((s) => (
+                <button
+                  type="button"
+                  class="status-change-btn border border-ink/25 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-colors hover:border-magenta hover:text-magenta"
+                  data-status={s}
+                  data-id={exp.id}
+                >
+                  {s.replace('_', ' ')}
+                </button>
+              ))}
+            </div>
+            <p id="status-msg" class="mt-2 hidden text-xs text-green-700"></p>
+          </div>
+        </div>
+
+        <!-- Col derecha: proyecto + documentos generados -->
+        <div class="space-y-5 lg:col-span-2">
+
+          <!-- Descripción del proyecto -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-3">Descripción del proyecto</h2>
+            <p class="whitespace-pre-wrap text-sm leading-relaxed text-ink">{exp.descripcion_proyecto}</p>
+            {exp.comentarios && (
+              <div class="mt-4 border-t border-ink/10 pt-4">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1">Comentarios adicionales</p>
+                <p class="text-sm text-ink/70">{exp.comentarios}</p>
+              </div>
+            )}
+          </div>
+
+          <!-- Análisis de elegibilidad (si ya se generó) -->
+          {eligibilidad && (
+            <div class:list={[
+              'border p-5 space-y-3',
+              eligibilidad.bloqueante ? 'border-red-300 bg-red-50/50' : 'border-ink/15 bg-paper',
+            ]}>
+              <div class="flex items-center justify-between gap-3">
+                <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                  🔍 Análisis de elegibilidad
+                </h2>
+                <div class="flex items-center gap-3">
+                  {eligibilidad.bloqueante && (
+                    <span class="font-mono text-xs font-bold text-red-700 uppercase tracking-wider">
+                      ⛔ Bloqueante
+                    </span>
+                  )}
+                  <span class="font-mono text-sm font-bold" style={`color:${eligColor}`}>
+                    {eligibilidad.score}/100
+                  </span>
+                </div>
+              </div>
+
+              {eligibilidad.resumen && (
+                <p class="text-sm text-ink/70 italic">{eligibilidad.resumen}</p>
+              )}
+
+              <table class="w-full text-xs">
+                {eligibilidad.checks.map((c) => {
+                  const color = c.emoji === '✅' ? '#16a34a'
+                    : c.emoji === '❌' ? '#dc2626'
+                    : c.emoji === '⚠️' ? '#d97706'
+                    : '#9ca3af';
+                  const parts = c.texto.split(' — ');
+                  return (
+                    <tr class="border-b border-ink/5">
+                      <td class="py-1.5 pr-2 font-mono font-bold" style={`color:${color};white-space:nowrap`}>
+                        {parts[0]}
+                      </td>
+                      <td class="py-1.5 text-ink/60">{parts.slice(1).join(' — ')}</td>
+                    </tr>
+                  );
+                })}
+              </table>
+
+              {exp.ai_datos_faltantes && exp.ai_datos_faltantes !== 'Ninguno' && (
+                <details class="border border-yellow-200 bg-yellow-50/50 p-3">
+                  <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-yellow-700">
+                    ⚠ Datos faltantes para confirmar elegibilidad
+                  </summary>
+                  <div class="mt-2 whitespace-pre-wrap text-xs text-yellow-800">
+                    {exp.ai_datos_faltantes}
+                  </div>
+                </details>
+              )}
+            </div>
+          )}
+
+          <!-- Acción principal: Generar con IA -->
+          <div class:list={[
+            'border-2 p-5',
+            exp.status === 'docs_listos' || exp.status === 'entregado'
+              ? 'border-green-300 bg-green-50'
+              : 'border-magenta/30 bg-paper',
+          ]}>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="font-display text-lg text-ink">
+                  {exp.ai_memoria ? '✅ Documentos generados' : '🤖 Generar documentos con IA'}
+                </h2>
+                <p class="mt-1 text-sm text-ink/60">
+                  {exp.ai_memoria
+                    ? `Generados el ${fmtDate(exp.ai_at)} · Memoria, presupuesto, checklist y guía listos.`
+                    : 'El agente leerá las bases de la convocatoria y los datos del proyecto para generar los 4 documentos.'}
+                </p>
+              </div>
+              <button
+                id="btn-generar"
+                type="button"
+                class="shrink-0 btn text-sm"
+                data-id={exp.id}
+              >
+                {exp.ai_memoria ? 'Regenerar' : 'Generar →'}
+              </button>
+            </div>
+            <div id="generar-status" class="mt-3 hidden">
+              <div class="flex items-center gap-2 text-sm text-yellow-800">
+                <span class="animate-spin">⏳</span>
+                <span>Analizando convocatoria y generando documentos... (puede tardar 30-60 seg)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acción: Entregar al cliente -->
+          {exp.ai_memoria && (
+            <div class="border border-ink/15 bg-paper p-5">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="font-display text-lg text-ink">📬 Entregar al cliente</h2>
+                  <p class="mt-1 text-sm text-ink/60">
+                    Envía los documentos por email a <strong>{exp.email}</strong> con instrucciones de presentación.
+                    {exp.delivered_at && ` Ya entregado el ${fmtDate(exp.delivered_at)}.`}
+                  </p>
+                </div>
+                <button
+                  id="btn-entregar"
+                  type="button"
+                  class="shrink-0 btn-ghost text-sm"
+                  data-id={exp.id}
+                >
+                  {exp.delivered_at ? 'Reenviar' : 'Entregar →'}
+                </button>
+              </div>
+              <p id="entregar-status" class="mt-2 hidden text-sm"></p>
+            </div>
+          )}
+
+          <!-- Resolución y factura -->
+          <div class:list={[
+            'border p-5',
+            exp.factura_num ? 'border-emerald-300 bg-emerald-50/40' : exp.importe_concedido ? 'border-blue-200 bg-blue-50/40' : 'border-ink/15 bg-paper',
+          ]}>
+            <h2 class="font-display text-lg text-ink mb-1">
+              {exp.factura_num ? '🧾 Factura generada' : '💶 Resolución y factura'}
+            </h2>
+            <p class="text-sm text-ink/60 mb-4">
+              {exp.factura_num
+                ? `Factura ${exp.factura_num} · Importe concedido: ${exp.importe_concedido ?? '—'}`
+                : 'Cuando se resuelva la subvención, introduce el importe concedido y genera la factura.'}
+            </p>
+
+            {!exp.factura_num && (
+              <div class="space-y-3">
+                <div>
+                  <label class="font-mono text-[10px] uppercase tracking-widest text-ink/50 block mb-1">
+                    Importe concedido (€, sin IVA)
+                  </label>
+                  <input
+                    id="input-importe"
+                    type="text"
+                    placeholder="ej. 15000"
+                    value={exp.importe_concedido ?? ''}
+                    class="w-full border border-ink/25 bg-white px-3 py-2 font-mono text-sm text-ink focus:border-magenta focus:outline-none"
+                  />
+                </div>
+                <button
+                  id="btn-generar-factura"
+                  type="button"
+                  class="w-full btn text-sm"
+                  data-id={exp.id}
+                >
+                  Generar factura →
+                </button>
+                <p id="factura-msg" class="hidden text-xs"></p>
+              </div>
+            )}
+
+            {exp.factura_num && (
+              <div class="flex gap-3 flex-wrap">
+                <a
+                  href={`/admin/factura/${exp.factura_num}`}
+                  target="_blank"
+                  class="btn text-sm"
+                >
+                  Ver factura ↗
+                </a>
+                <button
+                  id="btn-generar-factura"
+                  type="button"
+                  class="btn-ghost text-sm"
+                  data-id={exp.id}
+                >
+                  Regenerar
+                </button>
+                <p id="factura-msg" class="hidden text-xs w-full"></p>
+              </div>
+            )}
+          </div>
+
+          <!-- Documentos generados -->
+          {exp.ai_memoria && (
+            <div class="space-y-4">
+              {([
+                ['📄 Memoria técnica', exp.ai_memoria],
+                ['💶 Presupuesto', exp.ai_presupuesto],
+                ['📋 Checklist', exp.ai_checklist],
+                ['🗺️ Guía de presentación', exp.ai_guia],
+              ] as [string, string | null][]).filter(([, content]) => content).map(([title, content]) => (
+                <details class="border border-ink/15 bg-paper">
+                  <summary class="cursor-pointer border-b border-ink/10 px-5 py-3 font-display text-base text-ink hover:bg-paper-warm/30">
+                    {title}
+                  </summary>
+                  <div class="relative p-5">
+                    <button
+                      class="copy-btn absolute right-4 top-4 border border-ink/20 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-ink/50 hover:border-magenta hover:text-magenta"
+                      data-content={content!}
+                    >
+                      Copiar
+                    </button>
+                    <div class="prose prose-sm max-w-none text-ink/80 whitespace-pre-wrap font-mono text-xs leading-relaxed overflow-auto max-h-96">
+                      {content}
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
+          )}
+
+          <!-- Mensajes con el cliente -->
+          <div class="border border-ink/15 bg-paper p-5">
+            <h2 class="font-display text-lg text-ink mb-4">💬 Mensajes con el cliente</h2>
+
+            <!-- Hilo de mensajes -->
+            <div class="space-y-3 mb-4 max-h-80 overflow-y-auto" id="msg-thread">
+              {mensajes.length === 0 ? (
+                <p class="text-sm text-ink/40 italic">Sin mensajes aún.</p>
+              ) : mensajes.map((m) => (
+                <div class:list={[
+                  'p-3 text-sm leading-relaxed whitespace-pre-wrap',
+                  m.direction === 'admin'
+                    ? 'bg-magenta/5 border-l-2 border-magenta ml-8'
+                    : 'bg-blue-50 border-l-2 border-blue-300 mr-8',
+                ]}>
+                  <div class="font-mono text-[10px] uppercase tracking-widest mb-1"
+                       class:list={[m.direction === 'admin' ? 'text-magenta' : 'text-blue-500']}>
+                    {m.direction === 'admin' ? 'Tú (Startidea)' : `${exp.representante} (cliente)`}
+                    · {new Date(m.created_at * 1000).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    {m.direction === 'client' && !m.leido && (
+                      <span class="ml-2 bg-blue-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">NUEVO</span>
+                    )}
+                  </div>
+                  <div>{m.body}</div>
+                </div>
+              ))}
+            </div>
+
+            <!-- Enviar mensaje -->
+            <div class="border-t border-ink/10 pt-4 space-y-2">
+              <label class="font-mono text-[10px] uppercase tracking-widest text-ink/50 block">Mensaje al cliente</label>
+              <textarea
+                id="msg-body"
+                rows="3"
+                placeholder="Escribe un mensaje para el cliente..."
+                class="w-full border border-ink/25 bg-white px-3 py-2 text-sm text-ink focus:border-magenta focus:outline-none resize-none"
+              ></textarea>
+              <button
+                id="btn-send-msg"
+                type="button"
+                class="btn text-sm"
+                data-id={exp.id}
+              >
+                Enviar mensaje y notificar →
+              </button>
+              <p id="msg-send-status" class="hidden text-xs"></p>
+            </div>
+          </div>
+
+          <!-- Fase 2: Sede electrónica -->
+          <div class:list={[
+            'border p-5',
+            sedeDetectada ? 'border-blue-200 bg-blue-50/40' : 'border-dashed border-ink/25 bg-paper/50',
+          ]}>
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
+              {sedeDetectada ? '🏛️ Sede electrónica detectada' : '⚗️ Fase 2 — Sede electrónica'}
+            </h2>
+            {sedeDetectada ? (
+              <div class="space-y-3">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="font-display text-base text-ink">{sedeDetectada.nombre}</p>
+                    <p class="mt-1 text-xs text-ink/60">{sedeDetectada.tramiteHint.slice(0, 120)}…</p>
+                  </div>
+                  <a
+                    href={sedeDetectada.urlTramite ?? sedeDetectada.url}
+                    target="_blank"
+                    rel="noopener"
+                    class="shrink-0 border border-blue-300 bg-blue-600 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-white hover:bg-blue-700"
+                  >
+                    Abrir sede ↗
+                  </a>
+                </div>
+                {sedeDetectada.autofirmaRequired && (
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-yellow-700">
+                    ⚠ Requiere Autofirma instalado
+                  </p>
+                )}
+                {sedeDetectada.key && (
+                  <div class="border-t border-blue-200 pt-3">
+                    <button
+                      id="btn-tramitar-sede"
+                      data-expid={exp.id}
+                      class="border border-blue-300 bg-white px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-blue-700 hover:bg-blue-600 hover:text-white disabled:opacity-50"
+                    >
+                      ⚙ Tramitación asistida (Fase 2)
+                    </button>
+                    <p class="mt-1 text-[10px] text-ink/40">
+                      Prepara el trámite en la sede hasta la firma. El cliente firma con su certificado.
+                    </p>
+                    <p id="tramitar-sede-result" class="mt-2 text-xs leading-relaxed"></p>
+                  </div>
+                )}
+                {sedeDetectada.notasEspeciales && (
+                  <details class="mt-2">
+                    <summary class="cursor-pointer font-mono text-[10px] uppercase tracking-widest text-ink/50 hover:text-ink">
+                      Ver notas específicas de esta sede
+                    </summary>
+                    <p class="mt-2 text-xs text-ink/70 leading-relaxed whitespace-pre-line">
+                      {sedeDetectada.notasEspeciales}
+                    </p>
+                  </details>
+                )}
+                <p class="text-[11px] text-ink/40">
+                  La guía de presentación generada por IA ya incluye las instrucciones específicas de esta sede.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p class="text-sm text-ink/50">
+                  No se ha detectado la sede automáticamente. La URL de la convocatoria o el nombre del organismo
+                  no coincide con ninguna sede conocida. La guía generada usará instrucciones genéricas.
+                </p>
+                {(exp.convocatoria_url || exp.convocatoria_title) && (
+                  <div class="mt-3 space-y-1 font-mono text-xs text-ink/40">
+                    {exp.convocatoria_url && <p>URL: {exp.convocatoria_url}</p>}
+                    {exp.convocatoria_title && <p>Organismo: {exp.convocatoria_title}</p>}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script lang="ts">
+  const ADMIN_TOKEN = document.cookie
+    .split('; ')
+    .find((r) => r.startsWith('startidea_admin='))
+    ?.split('=')[1] ?? '';
+
+  // Tramitación asistida en sede (Fase 2 — container copiloto-sede)
+  document.getElementById('btn-tramitar-sede')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.expid!;
+    const out = document.getElementById('tramitar-sede-result')!;
+    btn.disabled = true;
+    out.textContent = 'Preparando el trámite en la sede…';
+    out.className = 'mt-2 text-xs leading-relaxed text-ink/60';
+    try {
+      const res = await fetch('/api/admin/tramitar-sede', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        out.className = 'mt-2 text-xs leading-relaxed text-green-700';
+        out.innerHTML = `✅ ${data.message ?? 'Trámite preparado.'}` +
+          (data.sedeUrl ? ` <a href="${data.sedeUrl}" target="_blank" rel="noopener" class="underline">Abrir sede ↗</a>` : '') +
+          (data.siguientePaso ? `<br><span class="text-ink/50">${data.siguientePaso}</span>` : '');
+      } else {
+        out.className = 'mt-2 text-xs leading-relaxed text-red-600';
+        out.textContent = `⚠ ${data.detail ?? data.error ?? 'Error desconocido'}`;
+      }
+    } catch (err) {
+      out.className = 'mt-2 text-xs leading-relaxed text-red-600';
+      out.textContent = `⚠ ${(err as Error).message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // Generar con IA
+  document.getElementById('btn-generar')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const orig = btn.textContent;
+    const statusEl = document.getElementById('generar-status')!;
+    btn.disabled = true;
+    btn.textContent = '⏳ Generando…';
+    btn.classList.add('opacity-60', 'cursor-wait');
+    statusEl.classList.remove('hidden');
+
+    const restore = () => {
+      btn.disabled = false;
+      btn.textContent = orig;
+      btn.classList.remove('opacity-60', 'cursor-wait');
+    };
+
+    try {
+      const res = await fetch('/api/generar-expediente', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      if (j.ok) {
+        statusEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-green-700"><span>✅</span><span>Documentos generados. Recargando…</span></div>';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        statusEl.innerHTML = `<div class="text-sm text-red-700">❌ Error: ${j.error ?? 'desconocido'}. Inténtalo de nuevo.</div>`;
+        restore();
+      }
+    } catch {
+      statusEl.innerHTML = '<div class="text-sm text-red-700">❌ Error de red. Inténtalo de nuevo.</div>';
+      restore();
+    }
+  });
+
+  // Entregar al cliente
+  document.getElementById('btn-entregar')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const statusEl = document.getElementById('entregar-status')!;
+    btn.disabled = true;
+    statusEl.textContent = '⏳ Enviando email al cliente...';
+    statusEl.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/entregar-expediente', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN,
+        },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      statusEl.textContent = j.ok ? '✅ Email enviado al cliente.' : `❌ ${j.error}`;
+      if (j.ok) setTimeout(() => window.location.reload(), 2000);
+      else btn.disabled = false;
+    } catch {
+      statusEl.textContent = '❌ Error de red.';
+      btn.disabled = false;
+    }
+  });
+
+  // Cambiar estado
+  document.querySelectorAll<HTMLButtonElement>('.status-change-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const { id, status } = btn.dataset;
+      if (!id || !status) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/status-expediente', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+          body: JSON.stringify({ id, status }),
+        });
+        const j = await res.json();
+        const msg = document.getElementById('status-msg')!;
+        msg.textContent = j.ok ? `✅ Estado cambiado a "${status}"` : `❌ ${j.error}`;
+        msg.classList.remove('hidden');
+        if (j.ok) setTimeout(() => window.location.reload(), 1200);
+        else btn.disabled = false;
+      } catch {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  // Copiar documentos
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(btn.dataset.content ?? '').then(() => {
+        btn.textContent = '✅ Copiado';
+        setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+      });
+    });
+  });
+
+  // Enviar contrato al cliente
+  document.getElementById('btn-enviar-contrato')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const msg = document.getElementById('contrato-msg')!;
+    if (!confirm(`¿Enviar el contrato de comisión a éxito al cliente (${id})?`)) return;
+    btn.disabled = true;
+    btn.textContent = '⏳ Enviando...';
+    msg.classList.add('hidden');
+    try {
+      const res = await fetch('/api/enviar-contrato', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      msg.classList.remove('hidden');
+      if (j.ok) {
+        msg.textContent = '✅ Contrato enviado al cliente por email.';
+        msg.style.color = '#16a34a';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        msg.textContent = `❌ ${j.error ?? 'Error desconocido'}`;
+        msg.style.color = '#dc2626';
+        btn.disabled = false;
+        btn.textContent = '📝 Enviar contrato al cliente';
+      }
+    } catch {
+      msg.classList.remove('hidden');
+      msg.textContent = '❌ Error de red.';
+      msg.style.color = '#dc2626';
+      btn.disabled = false;
+      btn.textContent = '📝 Enviar contrato al cliente';
+    }
+  });
+
+  // Generar factura
+  document.getElementById('btn-generar-factura')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.id!;
+    const msg = document.getElementById('factura-msg')!;
+    const importeInput = document.getElementById('input-importe') as HTMLInputElement | null;
+    const importe = importeInput?.value.trim() ?? '';
+    if (!importe) {
+      alert('Introduce el importe concedido antes de generar la factura.');
+      importeInput?.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = '⏳ Generando...';
+    msg.classList.add('hidden');
+    try {
+      const res = await fetch('/api/generar-factura', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id, importeConcedido: importe }),
+      });
+      const j = await res.json();
+      msg.classList.remove('hidden');
+      if (j.ok) {
+        msg.textContent = `✅ Factura ${j.facturaNum} generada. Abriendo...`;
+        msg.style.color = '#16a34a';
+        setTimeout(() => {
+          window.open(`/admin/factura/${j.facturaNum}`, '_blank');
+          window.location.reload();
+        }, 1000);
+      } else {
+        msg.textContent = `❌ ${j.error === 'importe_required' ? 'El importe es obligatorio.' : j.error === 'importe_invalid' ? 'El importe no es válido.' : j.error ?? 'Error'}`;
+        msg.style.color = '#dc2626';
+        btn.disabled = false;
+        btn.textContent = 'Generar factura →';
+      }
+    } catch {
+      msg.classList.remove('hidden');
+      msg.textContent = '❌ Error de red.';
+      msg.style.color = '#dc2626';
+      btn.disabled = false;
+      btn.textContent = 'Generar factura →';
+    }
+  });
+
+  // Enviar mensaje al cliente
+  document.getElementById('btn-send-msg')?.addEventListener('click', async (e) => {
+    const btn    = e.currentTarget as HTMLButtonElement;
+    const expId  = btn.dataset.id!;
+    const ta     = document.getElementById('msg-body') as HTMLTextAreaElement;
+    const status = document.getElementById('msg-send-status')!;
+    const body   = ta.value.trim();
+    if (!body) { ta.focus(); return; }
+    btn.disabled    = true;
+    btn.textContent = '⏳ Enviando...';
+    status.classList.add('hidden');
+    try {
+      const res = await fetch('/api/admin/mensaje-expediente', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body:    JSON.stringify({ expId, body }),
+      });
+      const j = await res.json();
+      status.classList.remove('hidden');
+      if (j.ok) {
+        status.textContent  = '✅ Mensaje enviado y email notificado al cliente.';
+        status.style.color  = '#16a34a';
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        status.textContent  = `❌ ${j.error ?? 'Error'}`;
+        status.style.color  = '#dc2626';
+        btn.disabled        = false;
+        btn.textContent     = 'Enviar mensaje y notificar →';
+      }
+    } catch {
+      status.classList.remove('hidden');
+      status.textContent  = '❌ Error de red.';
+      status.style.color  = '#dc2626';
+      btn.disabled        = false;
+      btn.textContent     = 'Enviar mensaje y notificar →';
+    }
+  });
+
+  // Auto-scroll al final del hilo de mensajes
+  const thread = document.getElementById('msg-thread');
+  if (thread) thread.scrollTop = thread.scrollHeight;
+</script>

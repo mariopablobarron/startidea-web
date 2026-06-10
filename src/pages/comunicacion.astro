@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
@@ -168,7 +169,7 @@ const proceso = [
     <div class="container-x">
       <span class="label">— Comunicación Estratégica y Marketing Social</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Comunicar mejor.<br/>
+        Comunicación estratégica.<br/>
         <em class="italic text-magenta">Comunicar para algo</em>.
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
@@ -298,5 +299,6 @@ const proceso = [
     </div>
   </section>
 
+  <NotasRelacionadas category="Comunicación" />
   <OtrosServicios current="comunicacion" />
 </Base>

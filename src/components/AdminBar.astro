@@ -120,6 +120,22 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
         cargando…
       </span>
 
+      <!-- Notificaciones -->
+      <button
+        id="admin-notif-btn"
+        type="button"
+        class="relative shrink-0 hover:text-magenta"
+        title="Notificaciones"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span aria-hidden="true">🔔</span>
+        <span
+          id="admin-notif-badge"
+          class="absolute -right-2 -top-1.5 hidden min-w-[15px] rounded-full bg-magenta px-1 text-center text-[9px] font-bold leading-[15px] text-paper"
+        >0</span>
+      </button>
+
       <!-- Quick links -->
       <a
         href="/admin/leads"
@@ -148,6 +164,21 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
       </a>
     </div>
 
+    <!-- Panel de notificaciones -->
+    <div
+      id="admin-notif-panel"
+      class="fixed right-2 top-[42px] z-[101] hidden w-[340px] max-w-[92vw] border border-magenta bg-ink text-paper shadow-2xl"
+      role="dialog"
+      aria-label="Notificaciones"
+    >
+      <div class="border-b border-paper/15 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-paper/60">
+        Notificaciones
+      </div>
+      <ul id="admin-notif-list" class="max-h-[60vh] overflow-y-auto">
+        <li class="px-4 py-3 text-[11px] text-paper/50">Cargando…</li>
+      </ul>
+    </div>
+
     <style is:global>
       /* Empuja todo el contenido y los headers sticky 38px hacia abajo. */
       body { padding-top: 38px; }
@@ -156,7 +187,25 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
     </style>
 
     <script>
-      // Carga KPIs ligeros en background. Si falla, la barra sigue siendo útil.
+      // Toggle del panel de notificaciones (funciona aunque el fetch tarde).
+      const notifBtn = document.getElementById("admin-notif-btn");
+      const notifPanel = document.getElementById("admin-notif-panel");
+      notifBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = notifPanel?.classList.toggle("hidden") === false;
+        notifBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      document.addEventListener("click", (e) => {
+        if (!notifPanel || notifPanel.classList.contains("hidden")) return;
+        if (notifPanel.contains(e.target as Node) || notifBtn?.contains(e.target as Node)) return;
+        notifPanel.classList.add("hidden");
+        notifBtn?.setAttribute("aria-expanded", "false");
+      });
+
+      const esc = (s: unknown) =>
+        String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
+
+      // Carga KPIs + notificaciones en background. Si falla, la barra sigue útil.
       (async () => {
         try {
           const r = await fetch("/api/admin/bar-data", { credentials: "same-origin" });
@@ -167,13 +216,33 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
           }
           const data = await r.json();
           const el = document.getElementById("admin-kpis");
-          if (!el) return;
-          const parts: string[] = [];
-          if (data.leads_new != null) parts.push(`Nuevos ${data.leads_new}`);
-          if (data.leads_7d != null) parts.push(`Leads 7d ${data.leads_7d}`);
-          if (data.subsidies_total != null)
-            parts.push(`Subv ${data.subsidies_total.toLocaleString("es-ES")}`);
-          el.textContent = parts.length ? parts.join(" · ") : "kpis: —";
+          if (el) {
+            const parts: string[] = [];
+            if (data.leads_new != null) parts.push(`Nuevos ${data.leads_new}`);
+            if (data.leads_7d != null) parts.push(`Leads 7d ${data.leads_7d}`);
+            if (data.subsidies_total != null)
+              parts.push(`Subv ${data.subsidies_total.toLocaleString("es-ES")}`);
+            el.textContent = parts.length ? parts.join(" · ") : "kpis: —";
+          }
+
+          // Notificaciones
+          const notifs = Array.isArray(data.notifications) ? data.notifications : [];
+          const badge = document.getElementById("admin-notif-badge");
+          if (badge && notifs.length > 0) {
+            badge.textContent = notifs.length > 99 ? "99+" : String(notifs.length);
+            badge.classList.remove("hidden");
+          }
+          const list = document.getElementById("admin-notif-list");
+          if (list) {
+            list.innerHTML = notifs.length
+              ? notifs
+                  .map(
+                    (it: { icon: string; text: string; href: string }) =>
+                      `<li><a href="${esc(it.href)}" class="flex items-start gap-2 border-b border-paper/10 px-4 py-2.5 text-[11px] leading-snug text-paper/85 hover:bg-paper/5 hover:text-magenta"><span>${esc(it.icon)}</span><span>${esc(it.text)}</span></a></li>`,
+                  )
+                  .join("")
+              : `<li class="px-4 py-3 text-[11px] text-paper/50">Sin notificaciones. Todo al día ✅</li>`;
+          }
         } catch {
           const el = document.getElementById("admin-kpis");
           if (el) el.textContent = "kpis: —";

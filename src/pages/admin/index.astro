@@ -1,0 +1,937 @@
+---
+/**
+ * /admin — Dashboard principal de administración.
+ * Auth: cookie startidea_admin
+ */
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import {
+  statsExpedientes,
+  statsContratos,
+  statsEconomico,
+  statsPortalUsers,
+  statsCRMContacts,
+  statsCatalogo,
+  statsCopilotoConversion,
+  getExpedientesRecibidosSinProcesar,
+  getExpedientesRecientes,
+} from '@/lib/expedientes-db';
+import { statsProfiles, statsLog } from '@/lib/auto-copiloto-db';
+import { statsImpulsa, countSolicitudes, getAllSolicitudes } from '@/lib/impulsa-db';
+import { countRespuestas, getAllRespuestas } from '@/lib/encuesta-db';
+import { getCollection } from 'astro:content';
+import { recentScraperRuns } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin')}`);
+}
+
+let stats       = { total: 0, recibido: 0, analizando_ia: 0, docs_listos: 0, entregado: 0, presentado: 0, rechazado: 0 };
+let contratos   = { sinEnviar: 0, enviados: 0, aceptados: 0 };
+let economico   = { facturadoTotal: 0, pipelineTotal: 0, pendienteFacturar: 0 };
+let nPortalUsers = 0;
+let nCRMContacts = 0;
+let urgentes: ReturnType<typeof getExpedientesRecibidosSinProcesar> = [];
+let recientes:  ReturnType<typeof getExpedientesRecientes> = [];
+
+// ─── Sistema Operativo de Subvenciones (SOS) ────────────────────────────────
+// Métricas agregadas que dan visión de "centro de mando" en un solo sitio.
+// Cada bloque es defensivo: si la BD no tiene la tabla aún, devuelve neutro.
+let catalogo    = { total: 0, activas: 0, urgentes: 0, expiradas: 0, nuevasUltimos7d: 0, porFuente: {} as Record<string, number>, ultimaIngesta: null as number | null };
+let acProfiles  = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
+let acLog       = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
+let conversion  = { perfilesActivos: 0 as number | null, expedientesAutogenerados: 0, expedientesConversion: 0, conversionContratoFirmado: 0, conversionPresentados: 0, facturadoConversion: 0 };
+
+try {
+  stats         = statsExpedientes() as typeof stats;
+  contratos     = statsContratos();
+  economico     = statsEconomico();
+  nPortalUsers  = statsPortalUsers();
+  nCRMContacts  = statsCRMContacts();
+  urgentes      = getExpedientesRecibidosSinProcesar();
+  recientes     = getExpedientesRecientes(6);
+  catalogo      = statsCatalogo();
+  acProfiles    = statsProfiles();
+  acLog         = statsLog();
+  conversion    = statsCopilotoConversion();
+} catch { /* DB vacía todavía */ }
+
+let scraperRuns: ReturnType<typeof recentScraperRuns> = [];
+try {
+  scraperRuns = recentScraperRuns(5);
+} catch { /* tabla no migrada aún */ }
+
+// Startidea Impulsa (programa RSC) + Encuesta de fundraising — BDs propias.
+let impulsaTotal = 0;
+let impulsaStats: Record<string, number> = {};
+let encuestaTotal = 0;
+try { impulsaTotal = countSolicitudes(); impulsaStats = statsImpulsa(); } catch { /* sin solicitudes */ }
+try { encuestaTotal = countRespuestas(); } catch { /* sin respuestas */ }
+const impulsaNuevas = impulsaStats['recibida'] ?? 0;
+
+// Notas / contenido (content collection)
+let notasPublicadas = 0;
+let notasBorradores = 0;
+try {
+  const ns = await getCollection('notas');
+  notasPublicadas = ns.filter((n) => !n.data.draft).length;
+  notasBorradores = ns.length - notasPublicadas;
+} catch { /* sin colección */ }
+
+// ─── Bandeja de pendientes (acción requerida, fuentes locales rápidas) ───
+const pendientes = [
+  { n: stats.recibido ?? 0,      label: 'Expedientes sin procesar',     href: '/admin/expedientes?status=recibido' },
+  { n: contratos.sinEnviar ?? 0, label: 'Contratos sin enviar',          href: '/admin/expedientes' },
+  { n: impulsaNuevas,            label: 'Solicitudes Impulsa sin revisar', href: '/admin/impulsa?estado=recibida' },
+].filter((p) => p.n > 0);
+const totalPendientes = pendientes.reduce((s, p) => s + p.n, 0);
+
+// ─── Feed de actividad reciente (unificado, multi-subsistema) ───
+// OJO: expedientes guarda created_at en SEGUNDOS; impulsa/encuesta en MS.
+type Act = { ts: number; tipo: string; label: string; href: string };
+let actividad: Act[] = [];
+try {
+  for (const e of recientes) {
+    actividad.push({ ts: (e.created_at ?? 0) * 1000, tipo: 'Expediente', label: e.org_nombre || 'Expediente', href: `/admin/expedientes/${e.id}` });
+  }
+  for (const s of getAllSolicitudes().slice(0, 10)) {
+    actividad.push({ ts: s.created_at, tipo: 'Impulsa', label: s.org_nombre, href: '/admin/impulsa' });
+  }
+  for (const r of getAllRespuestas().slice(0, 10)) {
+    actividad.push({ ts: r.created_at, tipo: 'Encuesta', label: `${r.tipo_entidad} · ${r.pct_publico}% público`, href: '/admin/encuesta' });
+  }
+  actividad.sort((a, b) => b.ts - a.ts);
+  actividad = actividad.slice(0, 12);
+} catch { /* sin datos */ }
+
+function fmtActAgo(ms: number): string {
+  const mins = Math.floor((Date.now() - ms) / 60000);
+  if (mins < 1) return 'ahora';
+  if (mins < 60) return `hace ${mins} min`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `hace ${h} h`;
+  const d = Math.floor(h / 24);
+  return d === 1 ? 'ayer' : `hace ${d} d`;
+}
+const TIPO_COLOR: Record<string, string> = {
+  Expediente: 'text-magenta',
+  Impulsa: 'text-blue-700',
+  Encuesta: 'text-emerald-700',
+};
+
+// Formatea "hace X días" desde un epoch (segundos)
+function fmtAgo(ts: number | null): string {
+  if (!ts) return '—';
+  const days = Math.floor((Date.now() / 1000 - ts) / 86400);
+  if (days === 0)  return 'hoy';
+  if (days === 1)  return 'ayer';
+  if (days < 30)   return `hace ${days} d`;
+  if (days < 365)  return `hace ${Math.floor(days / 30)} m`;
+  return `hace ${Math.floor(days / 365)} a`;
+}
+
+// Fuentes ordenadas para mostrar (las que no estén en porFuente salen 0)
+const fuentesOrden = ['boja', 'bdns', 'idae', 'manual'];
+
+const enProceso = (stats.analizando_ia ?? 0) + (stats.docs_listos ?? 0) + (stats.entregado ?? 0);
+const concedidos = stats.presentado ?? 0;
+
+function fmtEur(n: number): string {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+}
+
+function fmtDate(ts: number): string {
+  return new Date(ts * 1000).toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'short', year: 'numeric',
+  });
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  recibido:      '📥 Recibido',
+  analizando_ia: '🤖 Analizando',
+  docs_listos:   '📄 Docs listos',
+  entregado:     '📬 Entregado',
+  presentado:    '✅ Presentado',
+  rechazado:     '❌ Rechazado',
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  recibido:      'bg-blue-50 text-blue-800 border-blue-200',
+  analizando_ia: 'bg-yellow-50 text-yellow-800 border-yellow-200',
+  docs_listos:   'bg-purple-50 text-purple-800 border-purple-200',
+  entregado:     'bg-green-50 text-green-800 border-green-200',
+  presentado:    'bg-emerald-50 text-emerald-800 border-emerald-200',
+  rechazado:     'bg-red-50 text-red-800 border-red-200',
+};
+---
+
+<Base title="Admin · Startidea" description="">
+  <div class="bg-paper-warm min-h-screen">
+    <div class="container-x py-10">
+
+      <!-- Header -->
+      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">— Startidea</span>
+          <h1 class="mt-1 font-display text-4xl text-ink">Panel de admin</h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <form method="get" action="/admin/buscar" class="hidden sm:flex">
+            <input type="search" name="q" placeholder="Buscar contacto / entidad…"
+                   class="w-56 border border-ink/20 bg-paper px-3 py-2 text-sm text-ink focus:border-magenta focus:outline-none" />
+          </form>
+          <a href="/admin/logout" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            Cerrar sesión →
+          </a>
+        </div>
+      </div>
+
+      <!-- ─── Bandeja de pendientes ───────────────────────── -->
+      <div class="mb-8 border-2 border-ink/15 bg-paper p-5">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl" aria-hidden="true">{totalPendientes > 0 ? '🔔' : '✅'}</span>
+          <h2 class="font-display text-lg text-ink">
+            {totalPendientes > 0 ? `${totalPendientes} acciones pendientes` : 'Todo al día — sin pendientes'}
+          </h2>
+        </div>
+        {pendientes.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-3">
+            {pendientes.map((p) => (
+              <a href={p.href} class="flex items-center gap-2 border border-yellow-300 bg-yellow-50/60 px-4 py-2 text-sm text-yellow-800 transition-colors hover:border-magenta hover:text-magenta">
+                <span class="font-display text-lg">{p.n}</span>
+                <span>{p.label}</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- ─── Feed de actividad reciente ──────────────────── -->
+      {actividad.length > 0 && (
+        <div class="mb-8 border border-ink/15 bg-paper p-5">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Actividad reciente</p>
+          <ul class="divide-y divide-ink/10">
+            {actividad.map((a) => (
+              <li>
+                <a href={a.href} class="flex items-center justify-between gap-3 py-2 text-sm hover:text-magenta">
+                  <span class="flex items-center gap-2 truncate">
+                    <span class={`font-mono text-[10px] uppercase tracking-widest ${TIPO_COLOR[a.tipo] ?? 'text-ink/50'}`}>{a.tipo}</span>
+                    <span class="truncate text-ink/80">{a.label}</span>
+                  </span>
+                  <span class="shrink-0 font-mono text-[10px] text-ink/40">{fmtActAgo(a.ts)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- ─── KPIs del Copiloto ──────────────────────────── -->
+      {stats.total > 0 && (
+        <div class="mb-8 space-y-6">
+
+          <!-- KPIs expedientes -->
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+              Copiloto de Subvenciones — Expedientes
+            </p>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div class="border border-ink/15 bg-paper p-4">
+                <p class="font-display text-3xl text-ink">{stats.total}</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">Total</p>
+              </div>
+              <div class="border border-yellow-200 bg-yellow-50/40 p-4">
+                <p class="font-display text-3xl text-yellow-700">{enProceso}</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-yellow-600">En proceso</p>
+              </div>
+              <div class="border border-emerald-200 bg-emerald-50/40 p-4">
+                <p class="font-display text-3xl text-emerald-700">{concedidos}</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-emerald-600">Presentados</p>
+              </div>
+              <div class="border border-ink/15 bg-paper p-4">
+                <p class="font-display text-3xl text-ink">{stats.rechazado ?? 0}</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">No concedidos</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pipeline económico -->
+          {(economico.facturadoTotal > 0 || economico.pipelineTotal > 0) && (
+            <div>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+                Pipeline económico (comisión 12%)
+              </p>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div class="border-2 border-magenta/30 bg-paper p-4">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1">Facturado</p>
+                  <p class="font-display text-2xl text-magenta">{fmtEur(economico.facturadoTotal)}</p>
+                  <p class="mt-1 font-mono text-[10px] text-ink/40">Facturas emitidas</p>
+                </div>
+                <div class="border border-blue-200 bg-blue-50/30 p-4">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-blue-600 mb-1">Por facturar</p>
+                  <p class="font-display text-2xl text-blue-700">{fmtEur(economico.pipelineTotal)}</p>
+                  <p class="mt-1 font-mono text-[10px] text-blue-500">{economico.pendienteFacturar} expediente{economico.pendienteFacturar !== 1 ? 's' : ''} con importe concedido</p>
+                </div>
+                <div class="border border-ink/10 bg-paper/50 p-4">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">Total potencial</p>
+                  <p class="font-display text-2xl text-ink">{fmtEur(economico.facturadoTotal + economico.pipelineTotal)}</p>
+                  <p class="mt-1 font-mono text-[10px] text-ink/40">Facturado + por facturar</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <!-- Acciones pendientes -->
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+              Acciones pendientes
+            </p>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {urgentes.length > 0 && (
+                <a href="/admin/expedientes?status=recibido"
+                   class="border border-red-200 bg-red-50/50 p-4 hover:border-magenta transition-colors">
+                  <p class="font-display text-2xl text-red-700">{urgentes.length}</p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-red-600">
+                    ⚠ Sin procesar ({'>'}24h)
+                  </p>
+                  <p class="mt-1 text-xs text-red-500">Requieren generación con IA</p>
+                </a>
+              )}
+              {contratos.enviados > 0 && (
+                <div class="border border-yellow-200 bg-yellow-50/40 p-4">
+                  <p class="font-display text-2xl text-yellow-700">{contratos.enviados}</p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-yellow-600">Contratos pendientes</p>
+                  <p class="mt-1 text-xs text-yellow-500">Enviados pero no firmados</p>
+                </div>
+              )}
+              {economico.pendienteFacturar > 0 && (
+                <a href="/admin/expedientes?status=presentado"
+                   class="border border-blue-200 bg-blue-50/30 p-4 hover:border-magenta transition-colors">
+                  <p class="font-display text-2xl text-blue-700">{economico.pendienteFacturar}</p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-blue-600">Facturas por emitir</p>
+                  <p class="mt-1 text-xs text-blue-500">Importe concedido sin factura</p>
+                </a>
+              )}
+              {urgentes.length === 0 && contratos.enviados === 0 && economico.pendienteFacturar === 0 && (
+                <div class="border border-green-200 bg-green-50/40 p-4">
+                  <p class="font-display text-2xl text-green-700">✓</p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-green-600">Todo al día</p>
+                  <p class="mt-1 text-xs text-green-500">No hay acciones pendientes urgentes</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- ─── Sistema Operativo de Subvenciones (SOS) ───────────────── -->
+          {/*
+            Centro de mando: catálogo + auto-copiloto + conversión.
+            Cada widget enlaza a su módulo correspondiente para profundizar.
+          */}
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                Sistema operativo — Subvenciones
+              </p>
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                Snapshot
+              </span>
+            </div>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+
+              <!-- 1) Catálogo -->
+              <a href="/admin/convocatorias"
+                 class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Catálogo activo
+                  </p>
+                  <span class="font-mono text-[10px] text-ink/30">
+                    {catalogo.total} total
+                  </span>
+                </div>
+                <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
+                  {catalogo.activas}
+                </p>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <p class:list={[
+                      'font-mono uppercase tracking-wider',
+                      catalogo.urgentes > 0 ? 'text-yellow-700' : 'text-ink/40',
+                    ]}>
+                      {catalogo.urgentes} urgente{catalogo.urgentes !== 1 ? 's' : ''}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Cierran en {'<'} 14 d</p>
+                  </div>
+                  <div>
+                    <p class:list={[
+                      'font-mono uppercase tracking-wider',
+                      catalogo.nuevasUltimos7d > 0 ? 'text-emerald-700' : 'text-ink/40',
+                    ]}>
+                      +{catalogo.nuevasUltimos7d} 7d
+                    </p>
+                    <p class="text-[10px] text-ink/40">Última: {fmtAgo(catalogo.ultimaIngesta)}</p>
+                  </div>
+                </div>
+                {catalogo.expiradas > 0 && (
+                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-red-600">
+                    {catalogo.expiradas} con plazo vencido — revisar
+                  </p>
+                )}
+                <p class="mt-3 font-mono text-[10px] uppercase tracking-wider text-ink/30">
+                  {fuentesOrden.filter(f => (catalogo.porFuente[f] ?? 0) > 0).map(f => `${f} ${catalogo.porFuente[f]}`).join(' · ') || 'Sin convocatorias'}
+                </p>
+              </a>
+
+              <!-- 2) Copiloto Autónomo -->
+              <a href="/admin/auto-copiloto"
+                 class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Copiloto autónomo
+                  </p>
+                  <span class:list={[
+                    'font-mono text-[10px] uppercase tracking-widest',
+                    acLog.errores > 0 ? 'text-red-600' : 'text-ink/30',
+                  ]}>
+                    {acLog.errores > 0 ? `${acLog.errores} errores` : 'OK'}
+                  </span>
+                </div>
+                <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
+                  {acProfiles.active}
+                </p>
+                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                  Perfiles activos
+                </p>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                  <div>
+                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                      {acLog.ultimas_24h}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Envíos 24 h</p>
+                  </div>
+                  <div>
+                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                      {acProfiles.pendingConfirm}
+                    </p>
+                    <p class="text-[10px] text-ink/40">Sin confirmar</p>
+                  </div>
+                </div>
+                {acProfiles.paused > 0 && (
+                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                    {acProfiles.paused} pausados
+                  </p>
+                )}
+              </a>
+
+              <!-- 3) Embudo de conversión -->
+              <a href="/admin/funnel" class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Conversión copiloto → cliente
+                  </p>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30 group-hover:text-magenta">
+                    Funnel →
+                  </span>
+                </div>
+                {(conversion.expedientesConversion + conversion.expedientesAutogenerados) > 0 ? (
+                  <>
+                    <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
+                      {conversion.expedientesConversion}
+                    </p>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                      Expedientes desde el copiloto
+                    </p>
+                    <div class="mt-3 space-y-1 text-[11px]">
+                      <div class="flex items-baseline justify-between">
+                        <span class="font-mono uppercase text-ink/60">Firmados</span>
+                        <span class="font-mono text-ink">{conversion.conversionContratoFirmado}</span>
+                      </div>
+                      <div class="flex items-baseline justify-between">
+                        <span class="font-mono uppercase text-ink/60">Presentados</span>
+                        <span class="font-mono text-ink">{conversion.conversionPresentados}</span>
+                      </div>
+                      <div class="flex items-baseline justify-between border-t border-ink/10 pt-1 mt-1">
+                        <span class="font-mono uppercase text-magenta">Facturado</span>
+                        <span class="font-mono text-magenta font-bold">{fmtEur(conversion.facturadoConversion)}</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p class="mt-2 font-display text-3xl text-ink/30">0</p>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                      Sin conversiones todavía
+                    </p>
+                    <p class="mt-3 font-mono text-[10px] text-ink/40 leading-relaxed">
+                      El embudo se llena cuando un perfil del Copiloto Autónomo abre un expediente con Startidea.
+                    </p>
+                  </>
+                )}
+              </a>
+
+            </div>
+
+            <!-- ─── Fila 2: Estado de servicios + Scrapers ──────────────────── -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 mt-3">
+
+              <!-- 4) Estado de servicios (carga client-side) -->
+              <div id="sos-health" class="block border border-ink/15 bg-paper p-4" data-health-widget>
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Estado de servicios
+                  </p>
+                  <span id="sos-health-status" class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                    Comprobando…
+                  </span>
+                </div>
+                <ul id="sos-health-list" class="mt-3 space-y-1.5 text-[11px]">
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">HUB chat IA</span>
+                    <span class="font-mono text-ink/30" data-probe="hub_voice">— ms</span>
+                  </li>
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">OpenRouter</span>
+                    <span class="font-mono text-ink/30" data-probe="openrouter">— ms</span>
+                  </li>
+                  <li class="flex items-baseline justify-between">
+                    <span class="font-mono uppercase text-ink/60">BD tamaño</span>
+                    <span class="font-mono text-ink/30" data-probe="db">—</span>
+                  </li>
+                  <li class="flex items-baseline justify-between border-t border-ink/10 pt-1.5 mt-1.5">
+                    <span class="font-mono uppercase text-ink/60">Último expediente</span>
+                    <span class="font-mono text-ink/30" data-probe="last_exp">—</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 5) Scrapers — últimas ejecuciones -->
+              <div class="block border border-ink/15 bg-paper p-4">
+                <div class="flex items-baseline justify-between">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                    Scrapers
+                  </p>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
+                    Últimas {scraperRuns.length} ejec.
+                  </span>
+                </div>
+                {scraperRuns.length === 0 ? (
+                  <p class="mt-3 font-mono text-[11px] text-ink/40 leading-relaxed">
+                    Sin ejecuciones registradas todavía. Se rellenará cuando corra el cron diario de BDNS (06:00 UTC) o cuando dispares manualmente desde /admin/convocatorias.
+                  </p>
+                ) : (
+                  <ul class="mt-3 space-y-1.5 text-[11px]">
+                    {scraperRuns.map((run) => (
+                      <li class="flex items-baseline justify-between gap-2">
+                        <div class="flex items-baseline gap-2 min-w-0">
+                          <span class:list={[
+                            'inline-block w-2 h-2 rounded-full flex-shrink-0',
+                            run.ok === 1 ? 'bg-emerald-500' : 'bg-red-500',
+                          ]}></span>
+                          <span class="font-mono uppercase text-ink/70 flex-shrink-0">{run.scraper}</span>
+                          <span class="font-mono text-[10px] text-ink/40 truncate">
+                            {fmtAgo(run.started_at)}
+                            {run.duration_ms ? ` · ${Math.round(run.duration_ms / 1000)}s` : ''}
+                          </span>
+                        </div>
+                        <span class="font-mono text-ink/60 flex-shrink-0">
+                          {run.total_new > 0 ? <span class="text-emerald-700">+{run.total_new}</span> : '0'}
+                          {run.error && <span class="text-red-600 ml-1" title={run.error}>!</span>}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Expedientes recientes -->
+          {recientes.length > 0 && (
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  Expedientes recientes
+                </p>
+                <a href="/admin/expedientes" class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+                  Ver todos →
+                </a>
+              </div>
+              <div class="border border-ink/15 bg-paper overflow-hidden">
+                <table class="w-full text-sm">
+                  <tbody class="divide-y divide-ink/8">
+                    {recientes.map((exp) => (
+                      <tr class="hover:bg-paper-warm/50 transition-colors">
+                        <td class="px-4 py-2.5">
+                          <a href={`/admin/expedientes/${exp.id}`} class="font-mono text-xs font-bold text-magenta hover:underline">
+                            {exp.id}
+                          </a>
+                        </td>
+                        <td class="px-4 py-2.5 max-w-[200px]">
+                          <p class="font-medium text-ink truncate text-xs">{exp.org_nombre}</p>
+                          <p class="text-[10px] text-ink/40 truncate">{exp.convocatoria_title ?? 'Sin convocatoria'}</p>
+                        </td>
+                        <td class="px-4 py-2.5">
+                          <span class:list={[
+                            'border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider',
+                            STATUS_COLORS[exp.status] ?? 'bg-paper border-ink/20 text-ink',
+                          ]}>
+                            {STATUS_LABELS[exp.status] ?? exp.status}
+                          </span>
+                        </td>
+                        <td class="px-4 py-2.5 text-[11px] text-ink/40 whitespace-nowrap hidden sm:table-cell">
+                          {fmtDate(exp.created_at)}
+                        </td>
+                        <td class="px-4 py-2.5 text-right">
+                          <a href={`/admin/expedientes/${exp.id}`}
+                             class="font-mono text-[10px] uppercase tracking-wider text-ink/40 hover:text-magenta">
+                            Ver →
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
+      <!-- ─── Módulos ─────────────────────────────────────── -->
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+        <!-- CRM — destacado al principio -->
+        <a href="/admin/crm"
+           class="group block border-2 border-ink/20 bg-paper p-6 transition-colors hover:border-magenta sm:col-span-2 lg:col-span-1">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">👥</span>
+            {nCRMContacts > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {nCRMContacts} contactos
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">CRM de clientes</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Vista unificada de todos los contactos: portal, copiloto de subvenciones, auto-copiloto y diagnósticos.
+          </p>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta">
+            Ver todos los contactos →
+          </p>
+        </a>
+
+        <!-- Copiloto de Subvenciones -->
+        <a href="/admin/expedientes"
+           class="group block border-2 border-magenta/30 bg-paper p-6 transition-colors hover:border-magenta">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">📋</span>
+            {stats.total > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">
+                {stats.total} expedientes
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Copiloto de Subvenciones</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Expedientes, documentos IA, contratos y facturas.
+          </p>
+          {stats.recibido > 0 && (
+            <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-yellow-700">
+              ⚠ {stats.recibido} pendiente{stats.recibido > 1 ? 's' : ''} de procesar
+            </p>
+          )}
+        </a>
+
+        <!-- Portal de clientes -->
+        <div class="group block border border-ink/15 bg-paper p-6">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-3xl" aria-hidden="true">🏠</span>
+            {nPortalUsers > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                {nPortalUsers} usuario{nPortalUsers !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink">Portal de clientes</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Registro, acceso, expedientes y servicios para clientes.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href="/admin/portal-usuarios"
+               class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
+              Usuarios →
+            </a>
+            <a href="/portal" target="_blank"
+               class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+              Ver portal ↗
+            </a>
+            <a href="/api/admin/backup-db" id="backup-link"
+               class="font-mono text-[11px] uppercase tracking-widest text-ink/30 hover:text-magenta"
+               title="Descarga la base de datos completa">
+              💾 Backup BD →
+            </a>
+          </div>
+        </div>
+
+        <!-- Auto-copiloto -->
+        <a href="/admin/auto-copiloto"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">🤖</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Auto-copiloto</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Perfiles registrados, campañas manuales y recordatorios de plazo.
+          </p>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta">
+            ⚡ Campaña BOJA 2026 disponible →
+          </p>
+        </a>
+
+        <!-- Catálogo de convocatorias -->
+        <a href="/admin/convocatorias"
+           class="group block border-2 border-emerald-200 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">🗃️</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Catálogo de convocatorias</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Gestiona el catálogo dinámico: activa/desactiva, edita requisitos, importes y plazos sin tocar código.
+          </p>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-emerald-600 group-hover:text-magenta">
+            ✦ Nuevo — Fase 1 Escalabilidad →
+          </p>
+        </a>
+
+        <!-- Stats convocatorias -->
+        <a href="/admin/convocatorias-stats"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">📊</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Estadísticas convocatorias</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Consultas al widget BOJA · expedientes por convocatoria · copiloto · tráfico GSC.
+          </p>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink/40 group-hover:text-magenta">
+            Ver estadísticas →
+          </p>
+        </a>
+
+        <!-- Leads y diagnósticos -->
+        <a href="/admin/leads"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">🎯</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Leads y diagnósticos</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Formularios de diagnóstico y presupuestos recibidos.
+          </p>
+        </a>
+
+        <!-- Startidea Impulsa -->
+        <a href="/admin/impulsa"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">🚀</span>
+            {impulsaTotal > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {impulsaTotal} solicitud{impulsaTotal !== 1 ? 'es' : ''}
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Startidea Impulsa</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Solicitudes del programa RSC: estados, notas y export CSV.
+          </p>
+          {impulsaNuevas > 0 && (
+            <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-yellow-700">
+              ⚠ {impulsaNuevas} sin revisar
+            </p>
+          )}
+        </a>
+
+        <!-- Encuesta de fundraising (informe original) -->
+        <a href="/admin/encuesta"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">📊</span>
+            {encuestaTotal > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {encuestaTotal} respuesta{encuestaTotal !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Encuesta · Informe</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Respuestas de /encuesta-fundraising: agregados para el informe y export CSV.
+          </p>
+        </a>
+
+        <!-- Notas / contenido -->
+        <a href="/admin/notas"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-3xl" aria-hidden="true">📝</span>
+            {notasPublicadas > 0 && (
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {notasPublicadas} publicadas
+              </span>
+            )}
+          </div>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Notas / contenido</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Control editorial del blog: categorías, estado SEO/GEO y borradores.
+          </p>
+          {notasBorradores > 0 && (
+            <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-amber-700">
+              {notasBorradores} borrador{notasBorradores !== 1 ? 'es' : ''}
+            </p>
+          )}
+        </a>
+
+        <!-- Knowledge base -->
+        <a href="/admin/knowledge"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">🧠</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Knowledge base</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            Base de conocimiento interna del chat IA.
+          </p>
+        </a>
+
+        <!-- SEO (HUB) -->
+        <a href="https://hub.startidea.tech/startidea/admin/seo" target="_blank" rel="noopener"
+           class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
+          <span class="text-3xl" aria-hidden="true">📈</span>
+          <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">SEO Dashboard ↗</h2>
+          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+            GA4 + Search Console + agentes IA. En el HUB.
+          </p>
+        </a>
+
+        <!-- Accesos rápidos -->
+        <div class="border border-ink/10 bg-paper/50 p-6">
+          <span class="text-3xl" aria-hidden="true">⚡</span>
+          <h2 class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink/50">Accesos rápidos</h2>
+          <ul class="mt-3 space-y-2 text-sm">
+            <li>
+              <a href="/subvenciones/presentar/nuevo" target="_blank"
+                 class="text-magenta hover:underline">+ Nuevo expediente →</a>
+            </li>
+            <li>
+              <a href="/subvenciones" target="_blank"
+                 class="text-ink/60 hover:text-magenta">Buscador de subvenciones →</a>
+            </li>
+            <li>
+              <a href="/portal" target="_blank"
+                 class="text-ink/60 hover:text-magenta">Portal de clientes →</a>
+            </li>
+            <li>
+              <a href="https://coolify.startidea.es" target="_blank" rel="noopener"
+                 class="text-ink/60 hover:text-magenta">Coolify panel ↗</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</Base>
+
+<script>
+  // ─── Estado de servicios — carga async vía /api/admin/health ──────────────
+  // Se ejecuta tras pintar la página para no bloquear el render. Si algún
+  // probe tarda 4s o falla, el endpoint lo reporta como down y el badge
+  // queda rojo. Cache 10s en cliente para no martillar OpenRouter en refrescos.
+  (async () => {
+    const widget = document.getElementById('sos-health');
+    if (!widget) return;
+    const statusEl = document.getElementById('sos-health-status');
+
+    function fmtAgo(epochSec) {
+      const days = Math.floor((Date.now() / 1000 - epochSec) / 86400);
+      if (days === 0)  return 'hoy';
+      if (days === 1)  return 'ayer';
+      if (days < 30)   return `hace ${days} d`;
+      if (days < 365)  return `hace ${Math.floor(days / 30)} m`;
+      return `hace ${Math.floor(days / 365)} a`;
+    }
+
+    function setProbe(name, ok, text, errClass) {
+      const el = widget.querySelector(`[data-probe="${name}"]`);
+      if (!el) return;
+      el.textContent = text;
+      el.className = ok
+        ? 'font-mono text-emerald-700'
+        : (errClass ?? 'font-mono text-red-600');
+    }
+
+    try {
+      const r = await fetch('/api/admin/health', { credentials: 'same-origin' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      if (!data.ok) throw new Error('unauthorized');
+
+      const { probes, activity } = data;
+      const allOk =
+        probes.hub_voice?.ok &&
+        probes.openrouter?.ok &&
+        probes.db?.ok;
+
+      if (statusEl) {
+        statusEl.textContent = allOk ? '● Todo OK' : '● Incidencia';
+        statusEl.className = allOk
+          ? 'font-mono text-[10px] uppercase tracking-widest text-emerald-700'
+          : 'font-mono text-[10px] uppercase tracking-widest text-red-600';
+      }
+
+      setProbe('hub_voice',
+        probes.hub_voice?.ok,
+        probes.hub_voice?.ok
+          ? `${probes.hub_voice.latency_ms} ms`
+          : `down · ${probes.hub_voice?.detail ?? '?'}`);
+
+      setProbe('openrouter',
+        probes.openrouter?.ok,
+        probes.openrouter?.ok
+          ? `${probes.openrouter.latency_ms} ms`
+          : `down · ${probes.openrouter?.detail ?? '?'}`);
+
+      setProbe('db',
+        probes.db?.ok,
+        probes.db?.ok
+          ? `${probes.db.size_mb} MB`
+          : `error · ${probes.db?.detail ?? '?'}`);
+
+      if (activity?.last_expediente_at) {
+        setProbe('last_exp', true, fmtAgo(activity.last_expediente_at), 'font-mono text-ink/70');
+      } else {
+        setProbe('last_exp', true, 'sin datos', 'font-mono text-ink/40');
+      }
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = '● Error';
+        statusEl.className = 'font-mono text-[10px] uppercase tracking-widest text-red-600';
+      }
+      widget.querySelectorAll('[data-probe]').forEach((el) => {
+        el.textContent = '—';
+        el.className = 'font-mono text-ink/30';
+      });
+      console.error('[sos-health]', err);
+    }
+  })();
+
+  // Backup BD — descarga con autenticación
+  document.getElementById('backup-link')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const token = document.cookie.split('; ').find(r => r.startsWith('startidea_admin='))?.split('=')[1] ?? '';
+    const res = await fetch('/api/admin/backup-db', { headers: { 'x-admin-token': token } });
+    if (!res.ok) { alert('Error al generar el backup. ¿Estás autenticado?'); return; }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `expedientes-${new Date().toISOString().slice(0,10)}.db`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>

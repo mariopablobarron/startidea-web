@@ -2,7 +2,9 @@
 title: 'Cómo elegir agencia de comunicación para tu organización social'
 description: 'Una guía honesta para fundaciones, ONG e instituciones que están a punto de contratar agencia. Qué preguntar, qué señales mirar y qué errores evitar — escrita por quienes están al otro lado de esa decisión.'
 pubDate: 2026-05-13
+tldr: 'Elegir bien una agencia empieza por ordenar la propia casa: saber qué se necesita antes de pedir presupuestos. Las buenas señales son que la agencia pregunte antes de proponer, hable de objetivos y no solo de entregables, y muestre trabajo real. Los errores típicos: elegir por precio, por tamaño o por la propuesta más vistosa.'
 audience: 'Tercer sector'
+category: 'Agencia'
 tags: ['agencia', 'contratación', 'tercer sector', 'comunicación', 'diagnóstico']
 draft: false
 faqs:

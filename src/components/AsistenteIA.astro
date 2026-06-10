@@ -4,14 +4,14 @@
 // Si no hay API key configurada, muestra fallback con email/Telegram.
 ---
 
-<!-- Botón flotante (chip texto en md+, círculo en mobile) -->
+<!-- Botón flotante (chip texto en xl+, círculo en mobile/tablet) -->
 <button
   type="button"
   id="ai-chip"
   data-track="cta"
   data-track-id="ai_chip_open_desktop"
   data-track-text="Pregunta lo que sea"
-  class="fixed bottom-6 right-6 z-50 hidden md:inline-flex flex-col items-start gap-0.5 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
+  class="fixed bottom-6 right-6 z-50 hidden xl:inline-flex flex-col items-start gap-0.5 border-2 border-ink bg-ink px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:border-magenta"
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"
@@ -32,7 +32,7 @@
   data-track="cta"
   data-track-id="ai_chip_open_mobile"
   data-track-text="Pregunta lo que sea"
-  class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:border-magenta md:hidden"
+  class="fixed bottom-[88px] right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:border-magenta xl:hidden"
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"

@@ -1,0 +1,260 @@
+---
+/**
+ * /portal/enviado — Confirmación tras el registro o solicitud de acceso.
+ * No requiere autenticación.
+ */
+export const prerender = false;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Enlace enviado · Portal Startidea</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: #ffffff;
+      color: #1f1f22;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: #1f1f22;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .topbar-logo {
+      font-family: monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+    }
+    .topbar-logo span { color: #e6356b; font-weight: 700; }
+
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .label {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #e6356b;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .steps {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 16px 18px;
+      margin: 20px 0 24px;
+    }
+    .steps-title {
+      font-family: monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 10px;
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.5;
+      padding: 5px 0;
+    }
+    .step-num {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #e6356b;
+      flex-shrink: 0;
+      width: 18px;
+      margin-top: 1px;
+    }
+
+    .btn-resend {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: #1f1f22;
+      border: 1px solid #ccc;
+      padding: 11px;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .btn-resend:hover { border-color: #1f1f22; background: #1f1f22; color: #fff; }
+    .btn-resend:disabled { border-color: #ddd; color: #aaa; cursor: not-allowed; }
+
+    .link-volver {
+      display: block;
+      text-align: center;
+      font-family: monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      text-decoration: none;
+    }
+    .link-volver:hover { color: #e6356b; }
+
+    .msg-resend {
+      font-size: 13px;
+      text-align: center;
+      margin: 10px 0;
+      min-height: 20px;
+      color: #065f46;
+    }
+
+    .foot {
+      text-align: center;
+      font-family: monospace;
+      font-size: 10px;
+      color: #ccc;
+      padding: 20px 24px 28px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="/" class="topbar-logo">— <span>Startidea</span></a>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <span class="icon">📬</span>
+      <p class="label">Cuenta creada</p>
+      <h1>Revisa tu bandeja de entrada</h1>
+      <p>
+        Te hemos enviado un enlace de acceso al email indicado.
+        Solo tienes que hacer clic en él para entrar al portal — sin contraseña.
+      </p>
+
+      <div class="steps">
+        <div class="steps-title">Próximos pasos</div>
+        <div class="step-item">
+          <span class="step-num">1.</span>
+          <span>Abre el email de <strong>hola@startidea.es</strong> (puede tardar un par de minutos)</span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">2.</span>
+          <span>Si no lo ves, revisa la carpeta de <strong>spam o correo no deseado</strong></span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">3.</span>
+          <span>Haz clic en "Acceder al portal" — el enlace caduca en <strong>1 hora</strong></span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">4.</span>
+          <span>Una vez dentro, podrás gestionar tus expedientes y servicios de Startidea</span>
+        </div>
+      </div>
+
+      <p id="msg-resend" class="msg-resend"></p>
+
+      <button class="btn-resend" id="btn-resend">
+        Reenviar enlace
+      </button>
+
+      <a href="/portal" class="link-volver">← Volver al portal</a>
+    </div>
+  </div>
+
+  <div class="foot">Startidea Consulting, S.L. · CIF B19583632 · Granada</div>
+
+  <script>
+    // Recuperar email del sessionStorage (lo guardaremos desde el registro)
+    const storedEmail = sessionStorage.getItem('portal_reg_email') ?? '';
+
+    document.getElementById('btn-resend').addEventListener('click', async () => {
+      const btn = document.getElementById('btn-resend');
+      const msg = document.getElementById('msg-resend');
+
+      if (!storedEmail) {
+        window.location.href = '/portal';
+        return;
+      }
+
+      btn.disabled    = true;
+      btn.textContent = '⏳ Enviando...';
+      msg.textContent = '';
+
+      try {
+        const res = await fetch('/api/portal-acceso', {
+          method:  'POST',
+          headers: { 'content-type': 'application/json' },
+          body:    JSON.stringify({ email: storedEmail }),
+        });
+        const j = await res.json();
+        if (j.ok || j.needsRegistration === false) {
+          msg.textContent  = '✅ Enlace reenviado. Revisa tu email.';
+          msg.style.color  = '#065f46';
+        } else {
+          msg.textContent  = 'No hemos podido reenviar el enlace. Vuelve al portal e inténtalo de nuevo.';
+          msg.style.color  = '#7f1d1d';
+        }
+      } catch {
+        msg.textContent  = 'Error de red. Inténtalo desde el portal.';
+        msg.style.color  = '#7f1d1d';
+      }
+      btn.textContent = 'Reenviar enlace';
+      btn.disabled    = false;
+    });
+  </script>
+
+</body>
+</html>

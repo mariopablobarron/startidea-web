@@ -23,7 +23,7 @@
 <button
   type="button"
   id="voice-chip"
-  class="fixed bottom-6 right-[200px] z-40 hidden md:inline-flex items-center gap-2 border-2 border-magenta bg-paper px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-magenta shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:text-paper"
+  class="fixed bottom-6 right-[200px] z-40 hidden xl:inline-flex items-center gap-2 border-2 border-magenta bg-paper px-5 py-3 font-mono text-[12px] uppercase tracking-widest text-magenta shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-magenta hover:text-paper"
   aria-haspopup="dialog"
   aria-controls="voice-panel"
   aria-expanded="false"
@@ -39,7 +39,7 @@
 <button
   type="button"
   id="voice-chip-mobile"
-  class="fixed bottom-[80px] right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-magenta bg-paper text-magenta shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:text-paper md:hidden"
+  class="hidden"
   aria-haspopup="dialog"
   aria-controls="voice-panel"
   aria-expanded="false"
@@ -196,7 +196,7 @@
 <script>
   // ─── State ──────────────────────────────────────────────────────────
   const HUB_API =
-    (import.meta as any).env?.PUBLIC_HUB_BASE_URL ?? 'https://hub.startidea.tech';
+    (import.meta as any).env?.PUBLIC_HUB_URL ?? 'https://hub.startidea.tech';
 
   type Msg = { role: 'system' | 'user' | 'assistant'; content: string };
   type State = {
@@ -219,28 +219,28 @@
   };
 
   // ─── DOM refs ───────────────────────────────────────────────────────
-  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
-  const chip = $<HTMLButtonElement>('voice-chip');
-  const chipMobile = $<HTMLButtonElement>('voice-chip-mobile');
-  const panel = $<HTMLDivElement>('voice-panel');
-  const closeBtn = $<HTMLButtonElement>('voice-close');
-  const stopSpeechBtn = $<HTMLButtonElement>('voice-stop-speech');
-  const consentDiv = $<HTMLDivElement>('voice-consent');
-  const consentOk = $<HTMLButtonElement>('voice-consent-ok');
-  const consentNo = $<HTMLButtonElement>('voice-consent-no');
-  const chatDiv = $<HTMLDivElement>('voice-chat');
-  const transcript = $<HTMLDivElement>('voice-transcript');
-  const suggestionsDiv = $<HTMLDivElement>('voice-suggestions');
-  const leadOk = $<HTMLDivElement>('voice-lead-ok');
-  const footer = $<HTMLDivElement>('voice-footer');
-  const talkBtn = $<HTMLButtonElement>('voice-talk');
-  const talkLabel = $<HTMLSpanElement>('voice-talk-label');
-  const textForm = $<HTMLFormElement>('voice-text-form');
-  const textInput = $<HTMLInputElement>('voice-text-input');
-  const textSendBtn = $<HTMLButtonElement>('voice-text-send');
-  const statusEl = $<HTMLParagraphElement>('voice-status');
-  const audio = $<HTMLAudioElement>('voice-audio');
-  const pulse = $<HTMLSpanElement>('voice-pulse');
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id);
+  const chip = $('voice-chip');
+  const chipMobile = $('voice-chip-mobile');
+  const panel = $('voice-panel');
+  const closeBtn = $('voice-close');
+  const stopSpeechBtn = $('voice-stop-speech');
+  const consentDiv = $('voice-consent');
+  const consentOk = $('voice-consent-ok');
+  const consentNo = $('voice-consent-no');
+  const chatDiv = $('voice-chat');
+  const transcript = $('voice-transcript');
+  const suggestionsDiv = $('voice-suggestions');
+  const leadOk = $('voice-lead-ok');
+  const footer = $('voice-footer');
+  const talkBtn = $('voice-talk');
+  const talkLabel = $('voice-talk-label');
+  const textForm = $('voice-text-form');
+  const textInput = $('voice-text-input');
+  const textSendBtn = $('voice-text-send');
+  const statusEl = $('voice-status');
+  const audio = $('voice-audio');
+  const pulse = $('voice-pulse');
 
   // ─── Open / close ───────────────────────────────────────────────────
   // Refs a los chips del AsistenteIA (texto) — los ocultamos cuando el
@@ -462,17 +462,29 @@
         method: 'POST',
         body: fd,
       });
+      // El HUB puede devolver HTML de nginx ante errores upstream (503, 502...).
+      // Parsear como JSON sin verificar content-type tiraba al catch genérico,
+      // mostrando "Error de red" engañoso al usuario. Discriminamos primero:
+      const ct = res.headers.get('content-type') ?? '';
+      if (!ct.includes('application/json')) {
+        // Respuesta no-JSON = upstream caído o mal configurado en el HUB
+        setStatus(`Servicio de transcripción no disponible (${res.status}). Usa el campo de texto.`);
+        setBusy(false);
+        return;
+      }
       const j = await res.json();
       if (!res.ok || !j.ok) {
         setStatus(j.error === 'voice_not_configured'
           ? 'Voz no configurada — usa el campo de texto.'
-          : `Error transcribiendo (${j.error ?? res.status}).`);
+          : `Error transcribiendo (${j.error ?? res.status}). Usa el campo de texto.`);
         setBusy(false);
         return;
       }
       userText = (j.text ?? '').trim();
-    } catch {
-      setStatus('Error de red al transcribir.');
+    } catch (err) {
+      // Solo cae aquí en error de red real (offline, DNS, TLS, abort).
+      console.error('[VoiceAgent] transcribe network error:', err);
+      setStatus('Error de red al transcribir. Usa el campo de texto.');
       setBusy(false);
       return;
     }

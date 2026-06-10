@@ -2,7 +2,9 @@
 title: 'Cultura participativa en el tercer sector: cómo se construye desde adentro'
 description: 'Qué es la cultura participativa en organizaciones sociales, por qué funciona y cómo implementarla sin que se quede en buenas intenciones. Con un caso real anonimizado.'
 pubDate: 2026-05-05
+tldr: 'La cultura participativa no es consultar de vez en cuando, sino que las personas de la organización influyan de verdad en las decisiones. Se construye desde dentro y con dirección: sin un marco claro, la participación se colapsa o se vuelve simbólica. Funciona cuando combina voz real con responsabilidad definida.'
 audience: 'Tercer sector'
+category: 'Estrategia'
 tags: ['cultura organizacional', 'participación', 'tercer sector', 'gestión', 'estrategia']
 draft: false
 faqs:

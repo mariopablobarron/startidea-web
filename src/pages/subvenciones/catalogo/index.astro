@@ -1,0 +1,278 @@
+---
+/**
+ * /subvenciones/catalogo — Catálogo propio de convocatorias de Startidea.
+ *
+ * Lista las convocatorias activas del SQLite propio (BOJA + BDNS revisadas).
+ * SSR (prerender=false) para que se actualice sin rebuild.
+ * SEO: index/follow, BreadcrumbList, descripción diferenciada.
+ */
+import Base from '@/layouts/Base.astro';
+import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import { listConvocatoriasActivas } from '@/lib/expedientes-db';
+
+export const prerender = false;
+
+let convs: ReturnType<typeof listConvocatoriasActivas> = [];
+try { convs = listConvocatoriasActivas(); } catch { convs = []; }
+
+const total = convs.length;
+const totalPrivada = convs.filter(c => c.beneficiario === 'privada').length;
+const totalLocal   = convs.filter(c => c.beneficiario === 'local').length;
+
+const TIPO_LABEL: Record<string, string> = {
+  privada: 'Tercer sector',
+  local:   'Entidades locales',
+  empresa: 'Empresas',
+  mixto:   'Mixto',
+};
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio',        url: `${SITE_URL}/` },
+    { name: 'Subvenciones',  url: `${SITE_URL}/subvenciones` },
+    { name: 'Catálogo',      url: `${SITE_URL}/subvenciones/catalogo` },
+  ]),
+  faqPageSchema([
+    {
+      q: '¿Para qué tipo de entidades son estas convocatorias?',
+      a: 'El catálogo incluye convocatorias para dos perfiles principales: entidades privadas sin ánimo de lucro (asociaciones, fundaciones, tercer sector de acción social) y entidades de la administración local (ayuntamientos, mancomunidades, diputaciones). Algunas convocatorias son mixtas y admiten ambos tipos.',
+    },
+    {
+      q: '¿Cuánto cuesta tramitar con Startidea?',
+      a: 'Startidea trabaja a comisión de éxito: cobra el 12% del importe concedido solo si la subvención se concede. El análisis de encaje previo no tiene coste. Si la subvención no se concede, no hay ningún coste.',
+    },
+    {
+      q: '¿En qué se diferencia este catálogo del buscador BDNS?',
+      a: 'El buscador BDNS muestra miles de convocatorias sin filtrar. Este catálogo solo incluye convocatorias que Startidea ha revisado manualmente: verifica que las bases son claras, que los plazos son reales y que hay probabilidad razonable de éxito para entidades del tercer sector o locales en Andalucía.',
+    },
+    {
+      q: '¿Qué documentos genera Startidea para cada convocatoria?',
+      a: 'Para cada expediente Startidea prepara: memoria técnica adaptada a los criterios de valoración, presupuesto con los conceptos elegibles según las bases, checklist de documentación formal, y guía de presentación electrónica paso a paso.',
+    },
+    {
+      q: '¿Puedo presentarme a una convocatoria aunque no tenga toda la documentación preparada?',
+      a: 'Sí. El análisis de encaje inicial solo requiere información básica de la organización y una descripción del proyecto. La documentación formal se reúne durante la preparación del expediente, que tiene lugar antes del cierre del plazo de la convocatoria.',
+    },
+  ]),
+];
+---
+
+<Base
+  title={`Convocatorias de subvenciones 2026 — Catálogo Startidea (${total} activas)`}
+  description={`Catálogo curado de ${total} convocatorias de subvenciones activas para el tercer sector, entidades locales y empresas en Andalucía. Startidea revisa cada convocatoria y tramita el expediente a comisión de éxito.`}
+  jsonLd={jsonLd}
+>
+  <!-- Tabs de navegación -->
+  <SubvencionesTabs active="catalogo" />
+
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper-warm py-14 md:py-18">
+    <div class="container-x">
+      <span class="label">— Catálogo propio</span>
+      <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+        Convocatorias que tramita<br />
+        <em class="italic text-magenta">Startidea ahora mismo.</em>
+      </h1>
+      <p class="mt-4 max-w-measure text-ink/70">
+        {total} convocatoria{total !== 1 ? 's' : ''} activa{total !== 1 ? 's' : ''} —
+        revisadas y con expediente en marcha. Sin burocracia: en 24–48h diagnóstico de encaje y,
+        si procede, Startidea prepara el expediente completo a comisión de éxito (12% solo si se concede).
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href="/subvenciones/presentar/nuevo"
+          class="btn"
+        >
+          Empezar expediente →
+        </a>
+        <a href="/subvenciones" class="btn-ghost">
+          Ver buscador completo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estadísticas rápidas -->
+  <section class="border-b border-ink/15 bg-paper py-6">
+    <div class="container-x">
+      <div class="flex flex-wrap gap-6 md:gap-10">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Total activas</p>
+          <p class="mt-0.5 font-display text-3xl text-ink">{total}</p>
+        </div>
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Tercer sector</p>
+          <p class="mt-0.5 font-display text-3xl text-ink">{totalPrivada}</p>
+        </div>
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Entidades locales</p>
+          <p class="mt-0.5 font-display text-3xl text-ink">{totalLocal}</p>
+        </div>
+        <div class="ml-auto hidden sm:block self-center">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 text-right">Sin coste hasta concesión</p>
+          <p class="mt-0.5 text-sm text-ink/60 text-right">Comisión 12% solo si se concede</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Listado por tipo -->
+  <section class="bg-paper py-14 md:py-20">
+    <div class="container-x">
+
+      <!-- Filtros -->
+      <div class="mb-8 flex flex-wrap gap-2">
+        <button type="button" data-filter="all"     class="cat-filter-btn is-active px-4 py-2 border font-mono text-[11px] uppercase tracking-wider transition-colors border-ink bg-ink text-paper">
+          Todas ({total})
+        </button>
+        {totalPrivada > 0 && (
+          <button type="button" data-filter="privada" class="cat-filter-btn px-4 py-2 border font-mono text-[11px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">
+            Tercer sector ({totalPrivada})
+          </button>
+        )}
+        {totalLocal > 0 && (
+          <button type="button" data-filter="local" class="cat-filter-btn px-4 py-2 border font-mono text-[11px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">
+            Entidades locales ({totalLocal})
+          </button>
+        )}
+      </div>
+
+      <!-- Grid de tarjetas -->
+      {convs.length === 0 ? (
+        <div class="border border-ink/10 bg-paper-warm p-12 text-center">
+          <p class="text-ink/40 font-mono text-sm">No hay convocatorias activas en este momento.</p>
+          <p class="mt-2 text-sm text-ink/60">
+            <a href="/subvenciones/crear-alerta" class="underline hover:text-magenta">Crea una alerta</a> para saber cuándo aparezcan.
+          </p>
+        </div>
+      ) : (
+        <div id="cat-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {convs.map(conv => (
+            <a
+              href={`/subvenciones/catalogo/${conv.slug}`}
+              data-tipo={conv.beneficiario}
+              class="cat-card group border border-ink/15 bg-paper hover:border-ink/40 hover:shadow-sm transition-all flex flex-col"
+            >
+              <!-- Cabecera -->
+              <div class="border-b border-ink/8 px-5 py-4 flex items-start justify-between gap-3">
+                <span class="font-mono text-xs font-bold text-magenta">{conv.codigo}</span>
+                <span class:list={[
+                  'shrink-0 font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 border',
+                  conv.beneficiario === 'local'
+                    ? 'border-blue-200 text-blue-600 bg-blue-50'
+                    : 'border-purple-200 text-purple-600 bg-purple-50',
+                ]}>
+                  {TIPO_LABEL[conv.beneficiario] ?? conv.beneficiario}
+                </span>
+              </div>
+
+              <!-- Cuerpo -->
+              <div class="flex-1 px-5 py-4">
+                <h2 class="font-medium text-ink text-sm leading-snug group-hover:text-magenta transition-colors">
+                  {conv.titulo}
+                </h2>
+                <p class="mt-2 text-xs text-ink/50 leading-relaxed line-clamp-2">
+                  {conv.tipoEntidades}
+                </p>
+
+                <!-- Bullets -->
+                {conv.financiaResumen.length > 0 && (
+                  <ul class="mt-3 space-y-1">
+                    {conv.financiaResumen.slice(0, 2).map(b => (
+                      <li class="flex items-start gap-1.5 text-xs text-ink/60">
+                        <span class="shrink-0 text-green-600 mt-0.5 leading-none text-[10px]">▸</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <!-- Footer -->
+              <div class="border-t border-ink/8 px-5 py-3 flex items-center justify-between gap-3">
+                <div>
+                  {conv.importeRange && (
+                    <p class="font-mono text-[10px] text-ink/50">{conv.importeRange}</p>
+                  )}
+                </div>
+                <div class="text-right">
+                  <p class="font-mono text-[10px] text-amber-600">⏰ {conv.deadlineShort || conv.deadline.slice(0, 15)}</p>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <!-- ─── Doble CTA: Copiloto gratis vs Servicio gestionado ────────── -->
+      <div class="mt-14 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Opción 1: Copiloto Autónomo gratis -->
+        <div class="border-2 border-ink/15 bg-paper-warm p-7 flex flex-col">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Opción 1 · Gratis</p>
+          <h3 class="font-display text-2xl text-ink mb-2">Copiloto Autónomo</h3>
+          <p class="text-sm text-ink/70 leading-relaxed mb-5">
+            Crea un perfil con tus datos y palabras clave. Cuando aparece una
+            convocatoria que encaja, recibes por email <strong>memoria técnica,
+            presupuesto, checklist y guía de presentación</strong> generados
+            automáticamente con IA.
+          </p>
+          <ul class="text-sm text-ink/70 mb-5 space-y-1.5">
+            <li>✓ Alertas automáticas + documentación IA</li>
+            <li>✓ Tú presentas en la sede electrónica</li>
+            <li>✓ Sin coste, cancelas cuando quieras</li>
+          </ul>
+          <a href="/subvenciones/crear-alerta" class="btn-ghost mt-auto self-start">
+            Activar Copiloto gratis →
+          </a>
+        </div>
+
+        <!-- Opción 2: Servicio gestionado (premium) -->
+        <div class="border-2 border-magenta bg-ink p-7 flex flex-col text-paper relative">
+          <span class="absolute top-0 right-0 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+            Cero riesgo
+          </span>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-2">Opción 2 · 12% solo al éxito</p>
+          <h3 class="font-display text-2xl text-paper mb-2">Que Startidea lo presente</h3>
+          <p class="text-sm text-paper/75 leading-relaxed mb-5">
+            Startidea adapta la memoria al proyecto real, revisa la elegibilidad
+            con criterio legal y presenta el expediente en la sede electrónica.
+            <strong class="text-paper">Solo cobra si la subvención se concede.</strong>
+          </p>
+          <ul class="text-sm text-paper/75 mb-5 space-y-1.5">
+            <li class="text-paper/90">✓ Memoria adaptada al baremo</li>
+            <li class="text-paper/90">✓ Presentación gestionada (Autofirma incluido)</li>
+            <li class="text-paper/90">✓ Seguimiento hasta resolución</li>
+          </ul>
+          <a href="/subvenciones/presentar/nuevo?utm_source=catalogo&utm_medium=cta&utm_campaign=premium-block"
+             class="inline-block bg-magenta text-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest hover:bg-paper hover:text-ink transition-colors mt-auto self-start">
+            Pedir presupuesto →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Filtro client-side por tipo
+  document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'all';
+      document.querySelectorAll('.cat-filter-btn').forEach(b =>
+        b.classList.toggle('is-active', b.dataset.filter === filter)
+      );
+      document.querySelectorAll('.cat-card').forEach(card => {
+        const tipo = card.dataset.tipo ?? '';
+        card.style.display = (filter === 'all' || tipo === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<style>
+  .cat-filter-btn.is-active {
+    @apply border-ink bg-ink text-paper;
+  }
+</style>

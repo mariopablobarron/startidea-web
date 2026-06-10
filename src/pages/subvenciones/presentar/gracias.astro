@@ -1,0 +1,234 @@
+---
+import Base from '@/layouts/Base.astro';
+
+export const prerender = false;
+---
+
+<Base
+  title="Expediente recibido — Startidea"
+  description="Hemos recibido tu solicitud. Revisa tu email para acceder al portal de seguimiento."
+  ogSlug="page/subvenciones-presentar"
+>
+  <section class="border-b border-ink/15 bg-paper py-20">
+    <div class="container-x max-w-2xl">
+
+      <!-- Confirmación principal -->
+      <div class="mb-10 border-b border-ink/15 pb-10">
+        <span class="label">— Expediente recibido</span>
+        <h1 class="mt-4 font-display text-display-lg leading-tight text-ink">
+          Solicitud enviada.<br />
+          <em class="italic text-magenta">La IA está trabajando.</em>
+        </h1>
+        <p class="mt-5 max-w-prose text-ink/70">
+          Hemos recibido todos los datos y el sistema ya está analizando el encaje y generando los documentos de tu expediente.
+        </p>
+      </div>
+
+      <!-- Estado en vivo (visible si viene con ?id=) -->
+      <div id="status-live" class="mb-10 border-2 border-magenta/30 bg-paper hidden">
+        <div class="border-b border-magenta/20 bg-magenta/5 px-5 py-3 flex items-center justify-between gap-3">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Estado del expediente — en vivo</p>
+          <span id="status-id" class="font-mono text-[10px] text-ink/40"></span>
+        </div>
+        <div class="px-5 py-5">
+          <!-- Barra de progreso -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <p id="status-label" class="text-sm font-medium text-ink">Iniciando…</p>
+              <span id="status-spinner" class="font-mono text-xs text-magenta animate-pulse">●</span>
+            </div>
+            <div class="h-1.5 bg-ink/10 w-full">
+              <div id="status-bar" class="h-full bg-magenta transition-all duration-700" style="width:15%"></div>
+            </div>
+          </div>
+
+          <!-- Steps visuales -->
+          <ol id="status-steps" class="space-y-0 divide-y divide-ink/8 border-y border-ink/8">
+            {[
+              { key: 'recibido',      label: 'Expediente recibido',              pct: 15 },
+              { key: 'analizando_ia', label: 'Generando documentos con IA…',     pct: 55 },
+              { key: 'docs_listos',   label: 'Documentos preparados',            pct: 85 },
+              { key: 'entregado',     label: 'Documentos enviados por email',    pct: 100 },
+            ].map((s, i) => (
+              <li class="flex items-center gap-3 py-3" data-step-key={s.key} data-step-pct={s.pct}>
+                <span class="step-dot shrink-0 flex h-6 w-6 items-center justify-center font-mono text-xs border border-ink/15 text-ink/30">
+                  {i + 1}
+                </span>
+                <span class="step-label text-sm text-ink/50">{s.label}</span>
+              </li>
+            ))}
+          </ol>
+
+          <p id="status-done-msg" class="hidden mt-4 border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800">
+            ✅ Los documentos están listos. Te los hemos enviado por email. Accede al portal para verlos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Caja de acceso al portal -->
+      <div class="mb-10 border-2 border-ink bg-ink p-6 text-paper">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-magenta mb-3">Paso siguiente — Importante</p>
+        <h2 class="font-display text-xl text-paper mb-3">Accede a tu portal de seguimiento</h2>
+        <p class="text-sm text-paper/75 leading-relaxed mb-5">
+          Acabas de recibir un email con un <strong class="text-paper">enlace de acceso directo</strong> a tu portal de cliente. Sin contraseña: un solo clic y estás dentro. El enlace es válido durante 1 hora.
+        </p>
+        <p class="text-xs text-paper/50 leading-relaxed">
+          Si no lo ves en unos minutos, revisa la carpeta de spam. También puedes solicitar un nuevo acceso en{' '}
+          <a href="/portal" class="text-magenta hover:underline">startidea.es/portal</a>.
+        </p>
+      </div>
+
+      <!-- Qué pasa ahora -->
+      <div class="mb-10">
+        <h2 class="font-display text-xl text-ink mb-6">¿Qué pasa ahora?</h2>
+        <ol class="space-y-0 divide-y divide-ink/10 border-y border-ink/10">
+          {[
+            {
+              n: '01',
+              t: 'La IA genera los documentos',
+              d: 'En los próximos minutos el sistema genera automáticamente la memoria técnica, el presupuesto y el checklist adaptados a la convocatoria elegida.',
+            },
+            {
+              n: '02',
+              t: 'Startidea los revisa',
+              d: 'El equipo revisa y completa los documentos generados con información real de vuestra organización. Normalmente tarda entre unas horas y 24h.',
+            },
+            {
+              n: '03',
+              t: 'Recibes los documentos por email',
+              d: 'Los documentos finales llegan a tu email con instrucciones claras para la presentación. Sin coste hasta la concesión.',
+            },
+            {
+              n: '04',
+              t: 'Presentación de la solicitud',
+              d: 'Startidea presenta (con apoderamiento REA) o vosotros con vuestro certificado, según lo indicado. El plazo de resolución depende de cada convocatoria.',
+            },
+          ].map((step) => (
+            <li class="grid grid-cols-12 gap-x-4 py-5">
+              <span class="col-span-2 font-mono text-sm text-magenta">{step.n}</span>
+              <div class="col-span-10">
+                <p class="font-medium text-ink">{step.t}</p>
+                <p class="mt-1 text-sm text-ink/60 leading-relaxed">{step.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <!-- Honorarios -->
+      <div class="mb-10 border border-ink/10 bg-paper-warm p-5">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Modelo de honorarios</p>
+        <p class="text-sm text-ink/70 leading-relaxed">
+          Comisión a éxito del <strong class="text-ink">12%</strong> sobre el importe concedido por la Administración. Si la subvención no se concede, no hay ningún coste. La factura se emite cuando la resolución favorable es firme.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <a href="/portal" class="btn">
+          Acceder al portal →
+        </a>
+        <a href="/subvenciones" class="btn-ghost">
+          Ver otras convocatorias
+        </a>
+      </div>
+
+      <p class="mt-8 text-sm text-ink/40">
+        ¿Alguna duda? Escríbenos a{' '}
+        <a href="mailto:hola@startidea.es" class="underline hover:text-magenta">hola@startidea.es</a>{' '}
+        indicando el nombre de tu entidad.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Leer ?id= de la URL
+  const params = new URLSearchParams(location.search);
+  const expId  = (params.get('id') ?? '').trim().toUpperCase();
+
+  if (!expId) {
+    // Sin ID → no mostramos el estado en vivo
+    document.getElementById('status-live')?.remove();
+  } else {
+    const liveBox  = document.getElementById('status-live');
+    const label    = document.getElementById('status-label');
+    const bar      = document.getElementById('status-bar');
+    const spinner  = document.getElementById('status-spinner');
+    const doneMsg  = document.getElementById('status-done-msg');
+    const idLabel  = document.getElementById('status-id');
+
+    liveBox.classList.remove('hidden');
+    idLabel.textContent = `ID: ${expId}`;
+
+    const PCT: Record<string, number> = {
+      recibido: 15, analizando_ia: 55, docs_listos: 85, entregado: 100,
+    };
+
+    function updateStep(status: string) {
+      const steps = document.querySelectorAll('[data-step-key]');
+      steps.forEach(el => {
+        const key = el.getAttribute('data-step-key') ?? '';
+        const dot = el.querySelector('.step-dot');
+        const lbl = el.querySelector('.step-label');
+
+        const isActive = key === status;
+        const isDone   = PCT[key] <= PCT[status];
+
+        dot.className = [
+          'step-dot shrink-0 flex h-6 w-6 items-center justify-center font-mono text-xs border transition-colors',
+          isDone && !isActive ? 'border-ink bg-ink text-paper'
+            : isActive       ? 'border-magenta bg-magenta text-paper'
+            : 'border-ink/15 text-ink/30',
+        ].join(' ');
+        lbl.className = [
+          'step-label text-sm transition-colors',
+          isActive ? 'text-magenta font-medium'
+            : isDone ? 'text-ink'
+            : 'text-ink/40',
+        ].join(' ');
+        if (isDone && !isActive) { lbl.textContent = `${lbl.textContent?.replace(/^✓ /, '')} ✓`; }
+      });
+    }
+
+    let done = false;
+    let failCount = 0;
+
+    async function poll() {
+      if (done) return;
+      try {
+        const res  = await fetch(`/api/expediente-status/${expId}`, { cache: 'no-store' });
+        const data = await res.json();
+        if (!data.ok) { failCount++; if (failCount > 5) done = true; return; }
+        failCount = 0;
+
+        label.textContent = data.label;
+        const pct = PCT[data.status] ?? 15;
+        bar.style.width   = `${pct}%`;
+
+        updateStep(data.status);
+
+        if (data.done || data.status === 'docs_listos' || data.status === 'entregado') {
+          done = true;
+          spinner.classList.remove('animate-pulse');
+          spinner.textContent = '✓';
+          spinner.classList.add('text-green-600');
+          if (data.status === 'docs_listos' || data.status === 'entregado') {
+            doneMsg.classList.remove('hidden');
+          }
+        }
+      } catch {
+        failCount++;
+        if (failCount > 8) done = true;
+      }
+    }
+
+    // Polling: cada 5s durante los primeros 3 minutos, luego cada 15s
+    poll();
+    let interval = setInterval(poll, 5000);
+    setTimeout(() => {
+      clearInterval(interval);
+      if (!done) interval = setInterval(poll, 15000);
+    }, 3 * 60 * 1000);
+  }
+</script>

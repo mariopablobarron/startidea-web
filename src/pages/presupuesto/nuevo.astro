@@ -226,14 +226,14 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 </Base>
 
 <script>
-  const form = document.getElementById("presu-form") as HTMLFormElement | null;
+  const form = document.getElementById("presu-form");
   if (!form) throw new Error("form missing");
 
-  const intakeUrl = form.dataset.intakeUrl!;
-  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-step]"));
-  const stepLabel = document.querySelector("[data-step-label]") as HTMLElement | null;
-  const progress = document.querySelector("[data-progress]") as HTMLElement | null;
-  const statusBox = form.querySelector("[data-status]") as HTMLElement | null;
+  const intakeUrl = form.dataset.intakeUrl;
+  const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
+  const stepLabel = document.querySelector("[data-step-label]");
+  const progress = document.querySelector("[data-progress]");
+  const statusBox = form.querySelector("[data-status]");
 
   let current = 0;
   const total = steps.length;
@@ -248,14 +248,14 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
   function validateStep(): string | null {
     const fs = steps[current];
-    const required = Array.from(fs.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[required]"));
+    const required = Array.from(fs.querySelectorAll("[required]"));
     for (const el of required) {
       if (el instanceof HTMLInputElement && el.type === "radio") {
         const groupName = el.name;
         if (!form.querySelector(`input[name='${groupName}']:checked`)) return `Falta elegir: ${groupName}`;
       } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
         return `Falta o no es válido: ${el.name || el.id}`;
-      } else if ((el as HTMLInputElement).minLength && el.value.length < (el as HTMLInputElement).minLength) {
+      } else if ((el).minLength && el.value.length < (el).minLength) {
         return `Muy corto: ${el.name || el.id}`;
       }
     }
@@ -263,7 +263,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
   }
 
   form.addEventListener("click", (e) => {
-    const t = e.target as HTMLElement;
+    const t = e.target;
     if (t.matches("[data-next]")) {
       const err = validateStep();
       if (err) { showStatus(err, true); return; }
