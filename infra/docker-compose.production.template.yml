@@ -1,47 +1,42 @@
-# Template del docker-compose de producción para startidea-web.
+# docker-compose de PRODUCCIÓN de startidea.es  (copia versionada — fuente de verdad)
 #
-# Este archivo se renderiza en el VPS sustituyendo las variables ${...}
-# con los valores de `infra/.env.production` (no versionado). El archivo
-# resultante vive en `/docker/startidea-web-traefik/docker-compose.yml`.
+# El archivo VIVO está en el VPS: /docker/startidea-web-traefik/docker-compose.yml
+# Este es su espejo para control de versiones. Mantener ambos en sync a mano.
 #
-# Para regenerar tras cambiar variables:
-#   ssh startidea-vps2
-#   cd /docker/startidea-web-traefik
-#   # editar .env.production o copiar uno nuevo
-#   docker compose --env-file .env.production up -d --force-recreate startidea-web
+# ── Arquitectura real (2026-06-11) ───────────────────────────────────────────
+# • startidea.es lo sirve ESTE contenedor manual (NO la app de Coolify).
+#   La app de Coolify `cmoh7d8hi001bp2a4qwjobhzy` es un HUÉRFANO sin etiquetas
+#   traefik → coolify-proxy la ignora. No tocar el panel de Coolify para deployar.
+# • El proxy es coolify-proxy (traefik:v2.11, solo --providers.docker). Enruta por
+#   las `labels:` de este contenedor. La red `coolify` es externa y compartida.
 #
-# (Hoy el compose en el VPS tiene los valores hardcoded en lugar de ${VAR}
-# — pendiente migrar a este formato; ver INFRA.md → Deuda técnica.)
+# ── Deploy (cron-pull, sin SSH entrante) ─────────────────────────────────────
+#   VPS:/root/startidea-web-autodeploy.sh  (cron */2): compara sha de origin/main
+#     con el tag de la imagen en curso y, si difiere, lanza:
+#   VPS:/root/deploy-startidea-web.sh → deploy-startidea-web.real.sh:
+#     git reset --hard origin/main · docker build -t cmoh7d8...:<SHA> ·
+#     backup del compose · `sed -i` SOLO de la línea `image:` (NO toca labels) ·
+#     docker compose up -d --force-recreate startidea-web · espera healthy.
+#   ⇒ Editar `labels:` aquí (y en el VPS) SOBREVIVE a los deploys: el sed solo
+#     cambia el tag de imagen.
+#
+# Secrets: viven en /docker/startidea-web-traefik/.env del VPS (NUNCA en el repo).
 
 services:
   startidea-web:
-    # Imagen publicada por .github/workflows/build-deploy.yml en ghcr.io.
-    # Watchtower (en el VPS) vigila el tag :latest y, al detectar nuevo digest,
-    # hace pull + recreate automáticamente — sin SSH entrante. Ver
-    # infra/MIGRACION-DEPLOY-WATCHTOWER.md.
-    # (Imagen vieja construida por Coolify en el VPS: cmoh7d8hi001bp2a4qwjobhzy)
-    image: ghcr.io/mariopablobarron/startidea-web:latest
+    # El deploy real sustituye este tag por el SHA del commit
+    # (sed "cmoh7d8hi001bp2a4qwjobhzy:[a-z0-9-]*" → :<SHA> en deploy-startidea-web.real.sh).
+    image: cmoh7d8hi001bp2a4qwjobhzy:latest
     container_name: startidea-web
     restart: unless-stopped
-    environment:
-      ADMIN_TOKEN: "${ADMIN_TOKEN}"
-      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
-      OPENROUTER_MODEL: "${OPENROUTER_MODEL:-anthropic/claude-haiku-4.5}"
-      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
-      TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID}"
-      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
-      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
-      GOOGLE_REDIRECT_URI: "${GOOGLE_REDIRECT_URI:-https://startidea.es/admin/google/callback}"
-      APP_ENCRYPTION_KEY: "${APP_ENCRYPTION_KEY}"
-      SEO_DB_PATH: "${SEO_DB_PATH:-/app/data/seo.db}"
+    env_file:
+      - /docker/startidea-web-traefik/.env
     volumes:
       - /docker/startidea-web-traefik/data:/app/data
+      - /docker/startidea-web-traefik/expedientes:/data/expedientes
     networks:
       - coolify
     labels:
-      # Watchtower: vigilar este contenedor y auto-actualizarlo cuando cambie
-      # el digest de ghcr.io/.../startidea-web:latest.
-      com.centurylinklabs.watchtower.enable: "true"
       traefik.enable: "true"
       traefik.docker.network: coolify
       traefik.http.routers.startidea-web.rule: "Host(`startidea.es`)"
@@ -49,11 +44,35 @@ services:
       traefik.http.routers.startidea-web.tls: "true"
       traefik.http.routers.startidea-web.tls.certresolver: letsencrypt
       traefik.http.routers.startidea-web.service: startidea-web
+      traefik.http.routers.startidea-web.middlewares: startidea-sec
       traefik.http.services.startidea-web.loadbalancer.server.port: "4321"
       traefik.http.routers.startidea-web-http.rule: "Host(`startidea.es`)"
       traefik.http.routers.startidea-web-http.entrypoints: web
       traefik.http.routers.startidea-web-http.middlewares: startidea-web-redirect
       traefik.http.middlewares.startidea-web-redirect.redirectscheme.scheme: https
+      traefik.http.middlewares.startidea-sec.headers.stsSeconds: "31536000"
+      traefik.http.middlewares.startidea-sec.headers.stsIncludeSubdomains: "true"
+      traefik.http.middlewares.startidea-sec.headers.contentTypeNosniff: "true"
+      traefik.http.middlewares.startidea-sec.headers.customFrameOptionsValue: "SAMEORIGIN"
+      traefik.http.middlewares.startidea-sec.headers.referrerPolicy: "strict-origin-when-cross-origin"
+      traefik.http.middlewares.startidea-sec.headers.customResponseHeaders.Content-Security-Policy: "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://buttondown.email; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://analytics.hubstartidea.es https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.clarity.ms; font-src 'self' data:; connect-src 'self' https://analytics.hubstartidea.es https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://analytics.google.com https://*.clarity.ms https://hub.startidea.tech; media-src 'self' data: blob:; worker-src 'self' blob:; frame-src 'self' https://www.googletagmanager.com; manifest-src 'self'"
+      traefik.http.middlewares.startidea-sec.headers.customResponseHeaders.Permissions-Policy: "geolocation=(), camera=(), microphone=(self), payment=()"
+      # --- www -> apex 301 permanente (SEO: recuperar clics perdidos en www 404) ---
+      # OJO escape: en el compose va `$${1}` para que tras la interpolación de
+      # compose Traefik reciba `${1}` (grupo de captura). Con `${1}` a secas,
+      # compose lo vaciaría.
+      traefik.http.routers.startidea-www.rule: "Host(`www.startidea.es`)"
+      traefik.http.routers.startidea-www.entrypoints: websecure
+      traefik.http.routers.startidea-www.tls: "true"
+      traefik.http.routers.startidea-www.tls.certresolver: letsencrypt
+      traefik.http.routers.startidea-www.service: startidea-web
+      traefik.http.routers.startidea-www.middlewares: startidea-wwwredir
+      traefik.http.routers.startidea-www-http.rule: "Host(`www.startidea.es`)"
+      traefik.http.routers.startidea-www-http.entrypoints: web
+      traefik.http.routers.startidea-www-http.middlewares: startidea-wwwredir
+      traefik.http.middlewares.startidea-wwwredir.redirectregex.regex: "^https?://www\\.startidea\\.es/(.*)"
+      traefik.http.middlewares.startidea-wwwredir.redirectregex.replacement: "https://startidea.es/$${1}"
+      traefik.http.middlewares.startidea-wwwredir.redirectregex.permanent: "true"
 
 networks:
   coolify:
