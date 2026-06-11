@@ -1,0 +1,21 @@
+src/components/Nav.astro
+  s_0ab79ba551035b::t_cc0f173f452a59 27
+src/components/Footer.astro
+  s_0ab79ba551035b::t_2f3e9b25096676 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a0b5b0a0dbce269d3576aa48f8d88f7024b461c5",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
