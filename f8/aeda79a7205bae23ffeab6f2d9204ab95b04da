@@ -1,0 +1,21 @@
+src/pages/subvenciones/catalogo/[slug].astro
+  s_0ab79ba551035b::t_296d8ec47f4cd3 115,117,120
+  s_0ab79ba551035b::t_ab7b35145d00ff 61-102,111
+  s_0ab79ba551035b::t_02551254936dc0 449-467
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f8aeda79a7205bae23ffeab6f2d9204ab95b04da",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
