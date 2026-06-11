@@ -1,0 +1,19 @@
+infra/docker-compose.production.template.yml
+  s_0ab79ba551035b::t_3af4acfda90b96 1,3-4,6-11,13-23,27-29,32-33,36,47,53-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b47e6a31d4c3ac651720157bb9635e091d66a9a1",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
