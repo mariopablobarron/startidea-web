@@ -48,8 +48,11 @@ export default defineConfig({
     // Mapa de subvenciones migrado de /laboratorio/ a /subvenciones/
     '/laboratorio/mapa-subvenciones':                     '/subvenciones/mapa',
 
-    // Posts antiguos del blog WP que aún ranquean en GSC
-    '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas',
+    // Posts antiguos del blog WP que aún ranquean en GSC → al artículo equivalente
+    // (NO al índice /notas: redirigir una página que rankea a un índice no
+    // relacionado = soft-404 y Google acaba tirando el ranking). La de cultura
+    // participativa es la mejor página no-marca: 185 impr / 6 clics / pos 9.1.
+    '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas/cultura-participativa-tercer-sector',
     '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':                   '/notas',
 
     // Categorías de WP — redirigir a /notas
