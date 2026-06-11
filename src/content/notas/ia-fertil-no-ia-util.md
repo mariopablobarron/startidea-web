@@ -4,7 +4,7 @@ description: 'La mayoría de los proyectos con IA buscan productividad. Pocos pr
 pubDate: 2026-06-10
 audience: 'Todas'
 tags: ['inteligencia artificial', 'IA', 'ética', 'pedagogía', 'pensamiento crítico', 'facilitación', 'innovación social']
-draft: true
+draft: false
 faqs:
   - question: '¿Qué es una IA fértil y en qué se diferencia de una IA útil?'
     answer: 'Una IA útil cierra: te da una respuesta, una acción, un siguiente paso. Una IA fértil abre: te ayuda a ver lo que aún no estaba a la vista, a sostener una pregunta, a llegar a un sitio donde no habrías llegado por tu cuenta ni con su respuesta literal. La utilidad optimiza; la fertilidad revela. La mayoría de las herramientas actuales están diseñadas para utilidad, porque la métrica del producto es engagement y velocidad de respuesta. La fertilidad requiere otro diseño y otro uso: prompts que provoquen, no que pidan; ciclos de varias vueltas; capacidad de no aceptar la primera respuesta del modelo cuando no toca aceptarla.'
