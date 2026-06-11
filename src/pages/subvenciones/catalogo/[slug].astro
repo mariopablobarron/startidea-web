@@ -58,6 +58,48 @@ const governmentServiceLd = {
   } : {}),
 };
 
+// ─── FAQ (visible + FAQPage JSON-LD para rich snippets) ─────────────────────
+// Preguntas que la gente busca de verdad ("[X] requisitos / plazo / cómo
+// solicitar"), respondidas con los datos de la convocatoria. La sección
+// visible (abajo) usa este mismo array → cumple la política de Google.
+const faqs = ([
+  (conv.tipoEntidades || conv.beneficiarioLabel)
+    ? {
+        q: `¿Quién puede solicitar ${conv.titulo}?`,
+        a: `Pueden solicitarla ${conv.tipoEntidades || conv.beneficiarioLabel}.` +
+          (conv.requisitos.length ? ` Requisitos principales: ${conv.requisitos.slice(0, 3).join('; ')}.` : ''),
+      }
+    : null,
+  conv.deadline
+    ? {
+        q: `¿Cuál es el plazo para presentar ${conv.titulo}?`,
+        a: `El plazo de presentación es: ${conv.deadline}.` + (conv.nota ? ` ${conv.nota}` : ''),
+      }
+    : null,
+  (conv.importeRange || conv.importe)
+    ? {
+        q: `¿Cuánto se puede solicitar en esta convocatoria?`,
+        a: `${conv.importeRange ? `Importe orientativo: ${conv.importeRange}. ` : ''}${conv.importe || ''}`.trim(),
+      }
+    : null,
+  {
+    q: `¿Cómo se solicita ${conv.titulo}?`,
+    a: `La solicitud se presenta en la sede electrónica de ${conv.organo || 'el organismo convocante'} con certificado digital, dentro del plazo. Startidea puede preparar la memoria adaptada al baremo y presentar el expediente en tu nombre, sin coste si no se concede.`,
+  },
+].filter(Boolean)) as { q: string; a: string }[];
+
+const faqLd = faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
+
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio',       url: `${SITE_URL}/` },
@@ -66,15 +108,16 @@ const jsonLd = [
     { name: conv.codigo,    url: pageUrl },
   ]),
   governmentServiceLd,
+  ...(faqLd ? [faqLd] : []),
 ];
 
 // Título y meta SEO
-const metaTitle = `${conv.titulo} — ${conv.codigo} | Startidea`;
+const metaTitle = `${conv.titulo} — requisitos, plazo y cómo solicitarla | Startidea`;
 const metaDesc = [
-  `Convocatoria ${conv.codigo}: ${conv.titulo.slice(0, 80)}.`,
+  conv.tipoEntidades ? `Para ${conv.tipoEntidades}.` : `Convocatoria ${conv.codigo}.`,
   conv.importeRange ? ` Importe: ${conv.importeRange}.` : '',
   ` Plazo: ${conv.deadline}.`,
-  ' Startidea tramita el expediente a comisión de éxito.',
+  ' Requisitos, gastos elegibles y cómo presentarla paso a paso, explicado por Startidea.',
 ].join('');
 
 const TIPO_LABEL: Record<string, string> = {
@@ -403,7 +446,25 @@ if (conv.deadlineIso) {
 
         </div>
 
-        <div class="mt-4 text-center">
+        <!-- Preguntas frecuentes (visible + FAQPage JSON-LD → rich snippets) -->
+        {faqs.length > 0 && (
+          <div class="mt-12 border-t border-ink/10 pt-8">
+            <h2 class="font-display text-2xl text-ink mb-5">Preguntas frecuentes</h2>
+            <div class="space-y-3">
+              {faqs.map((f) => (
+                <details class="group border border-ink/10 p-4">
+                  <summary class="cursor-pointer list-none font-semibold text-ink flex items-start justify-between gap-3">
+                    <span>{f.q}</span>
+                    <span aria-hidden="true" class="shrink-0 text-magenta transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p class="mt-3 text-sm leading-relaxed text-ink/75">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div class="mt-8 text-center">
           <a href="/subvenciones/catalogo" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
             ← Ver otras convocatorias del catálogo
           </a>
