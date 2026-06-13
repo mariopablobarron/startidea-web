@@ -73,6 +73,13 @@ export default defineConfig({
         if (page.includes('/diagnostico/'))        return false;
         if (page.includes('/presupuesto/nuevo'))   return false;
         if (page.includes('/encuesta-fundraising')) return false;
+        // Portal privado: dashboard (302 a /portal) y confirmación de envío.
+        // Estaban filtrándose al índice de Google. Se conservan /portal/ y
+        // /portal/registro/ (landing + alta públicas).
+        if (page.includes('/portal/dashboard'))    return false;
+        if (page.includes('/portal/enviado'))      return false;
+        // Preview interna del laboratorio inmersivo (sin contenido indexable).
+        if (page.includes('/lab/inmersivo'))       return false;
         // Subvenciones: excluir páginas individuales del scraper BDNS (~2100 URLs)
         // Solo conservar: index · curated landings (boja-2026-*) · mapa
         if (page.includes('/subvenciones/')) {
