@@ -1,0 +1,22 @@
+src/lib/scrapers/bdns.ts
+  s_0ab79ba551035b::t_a39514cc2fb5d3 114-118
+  s_0ab79ba551035b::t_cb42852e1f3544 166-172
+src/pages/api/admin/scraper-bdns.ts
+  s_0ab79ba551035b::t_362c50ba7939ff 44-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "45aa370e6699cc35facbf686c34e32df8f52a5ea",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
