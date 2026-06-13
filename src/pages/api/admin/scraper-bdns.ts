@@ -41,7 +41,11 @@ export const POST: APIRoute = async ({ request }) => {
   const scrapeOpts: ScrapeOptions = {
     search:         opts.search,
     soloAbiertas:   opts.soloAbiertas ?? true,
-    includeEstatal: opts.includeEstatal ?? false,
+    // Default nacional (2026-06-13): Startidea trabaja con toda España, así que
+    // el catálogo ingiere también convocatorias estatales, no solo Andalucía.
+    // El filtro de relevancia social (SOCIAL_KEYWORDS) sigue aplicando, y todo
+    // entra como activa=0 para revisión humana antes de publicarse.
+    includeEstatal: opts.includeEstatal ?? true,
     maxPerTerm:     30,
     maxDetails:     60,
     timeoutMs:      15000,

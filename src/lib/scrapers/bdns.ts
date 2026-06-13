@@ -111,6 +111,11 @@ export const BDNS_SEARCH_TERMS = [
   'voluntariado',
   'entidades locales',
   'desarrollo local',
+  // Ampliación nacional 2026-06-13 (áreas de tercer sector que faltaban)
+  'personas mayores',
+  'cooperación al desarrollo',
+  'salud mental',
+  'cultura',
 ];
 
 /** Keywords para filtrar la relevancia social del detalle (fase 2). */
@@ -158,6 +163,13 @@ export const SOCIAL_KEYWORDS = [
   'dinamización local',
   'desarrollo local',
   'cultura local',
+  // Ampliación nacional 2026-06-13
+  'personas mayores',
+  'envejecimiento',
+  'cultura',
+  'patrimonio cultural',
+  'cooperación al desarrollo',
+  'ayuda humanitaria',
 ];
 
 // ─── Utilidades ───────────────────────────────────────────────────────────
