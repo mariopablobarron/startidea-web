@@ -1,0 +1,20 @@
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_0ab79ba551035b::t_a556a78bf1fdc4 19-20
+  s_0ab79ba551035b::t_d632343c623db2 97-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dcca7a6736d6769592e1a90cea74c1877263b515",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
