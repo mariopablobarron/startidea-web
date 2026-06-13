@@ -16,6 +16,8 @@ faqs:
     answer: 'ENISA conviene cuando la empresa necesita crecer pero no quiere diluir capital, cuando tiene proyecciones de caja realistas que permiten devolver el préstamo en 5-9 años, y cuando los socios mantienen el control estratégico de la empresa. Una ronda conviene cuando el crecimiento exige inversión que ENISA no cubre (>1,5M€), cuando los inversores aportan red comercial o conocimiento sectorial estratégico, o cuando la empresa necesita capital para validar un modelo que aún no genera caja. Las dos opciones son compatibles: muchas startups combinan ENISA + ronda en distintas fases.'
   - question: '¿Qué pide ENISA en su análisis para aprobar un préstamo?'
     answer: 'Plan de negocio con proyecciones financieras a 5 años justificadas, modelo de negocio escalable y diferenciado, equipo emprendedor con experiencia y dedicación exclusiva, capacidad de devolución demostrable con escenario conservador, contraste técnico del producto/servicio (especialmente si es innovador), y declaración de no estar en sectores excluidos (inmobiliaria, financiero, juegos de azar). El proceso completo —desde envío hasta resolución— suele tardar 4-6 meses.'
+  - question: '¿Cómo se solicita un préstamo ENISA?'
+    answer: 'La solicitud es 100% telemática en la sede electrónica de ENISA: alta en el portal, formulario online (empresa, línea, importe y destino de los fondos) y documentación adjunta (plan de negocio, proyecciones financieras, últimas cuentas, escrituras y CV del equipo). Tras el envío, ENISA analiza el expediente —casi siempre pide alguna aclaración— en un plazo de 4-6 meses; si la resolución es favorable, el préstamo se formaliza ante notario y se desembolsa. ENISA no funciona por convocatorias con plazo: las líneas están abiertas de forma continua mientras haya presupuesto anual.'
   - question: '¿Startidea ayuda a presentar la solicitud ENISA?'
     answer: 'Sí. Startidea acompaña en la preparación del expediente completo: plan de negocio adaptado al lenguaje y los criterios de ENISA, proyecciones financieras realistas y justificables, memoria técnica del proyecto, dossier del equipo, y revisión cruzada por un segundo redactor antes del envío. Para startups y PYMES con proyecto definido, el tiempo de preparación es 3-5 semanas. Si el proyecto aún no está cerrado, lo trabajamos primero en una sesión de diagnóstico para que el plan que se presenta a ENISA sea consistente con la realidad operativa de la empresa.'
 ---
@@ -91,6 +93,18 @@ El expediente que ENISA evalúa tiene cinco bloques que conviene preparar bien:
 5. **Sectores excluidos**: ENISA no financia inmobiliario, financiero, juegos de azar, sectores en crisis estructural ni proyectos contrarios a los criterios ESG básicos.
 
 El proceso completo desde envío hasta resolución suele tardar **4-6 meses**. Hay que contarlo: si tu empresa necesita liquidez en 60 días, ENISA no es la respuesta — entonces conviene una línea de crédito bancaria puente.
+
+## Cómo solicitar un préstamo ENISA, paso a paso
+
+La solicitud es **100% telemática** a través de la sede electrónica de ENISA. El recorrido, en orden:
+
+1. **Alta en el portal de ENISA** y selección de la línea —Jóvenes Emprendedores, Emprendedores o Crecimiento— que encaja con la empresa.
+2. **Formulario de solicitud online**: datos de la empresa, importe solicitado, destino de los fondos y resumen del proyecto.
+3. **Documentación adjunta**: plan de negocio, proyecciones financieras justificadas, últimas cuentas depositadas (si las hay), escrituras y composición societaria, y CV del equipo.
+4. **Envío y análisis**: ENISA revisa el expediente y casi siempre emite un requerimiento de aclaración o documentación adicional, que hay que atender en plazo. El análisis completo lleva **4-6 meses**.
+5. **Resolución**: si es favorable, se formaliza el préstamo (con intervención notarial) y se desembolsa. Si es denegatoria, ENISA indica el motivo y cabe volver a presentar más adelante con el expediente corregido.
+
+A diferencia de las subvenciones, ENISA **no funciona por convocatorias con plazo cerrado**: las líneas están abiertas de forma continua mientras haya presupuesto anual disponible, así que el momento de solicitar lo marca la empresa, no el calendario. La línea de **Jóvenes Emprendedores** suele ser la puerta de entrada para empresas de menos de 24 meses con socios menores de 40 años.
 
 ## Cómo lo aborda Startidea
 
