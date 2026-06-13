@@ -57,7 +57,8 @@ if [ -n "$running" ]; then
     while IFS= read -r f; do
       [ -z "$f" ] && continue
       case "$f" in
-        docs/*|reports/*|infra/*|.github/*|*.md|.gitignore) : ;;  # ignorable
+        src/*) deployable=1 ;;                                    # código/contenido (incl. src/content/*.md) SIEMPRE despliega
+        docs/*|reports/*|infra/*|.github/*|*.md|.gitignore) : ;;  # ignorable (solo *.md de raíz/docs)
         *) deployable=1 ;;                                        # toca algo desplegable
       esac
     done <<INNER_EOF
