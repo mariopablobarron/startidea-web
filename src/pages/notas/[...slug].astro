@@ -36,6 +36,18 @@ const isFinanciacion =
     ['subvenciones', 'financiación', 'fondos', 'BDNS', 'ayudas'].includes(t),
   );
 
+// Enlazado interno hacia páginas-dinero: cada nota (no-financiación) apunta a su
+// servicio relacionado según categoría. Refuerza la autoridad temática hacia
+// donde se convierte y da al lector el siguiente paso natural.
+const SERVICIO_POR_CATEGORIA: Record<string, { label: string; href: string }> = {
+  'Comunicación': { label: 'Comunicación estratégica y marketing social', href: '/comunicacion' },
+  'Estrategia':   { label: 'Consultoría e innovación social', href: '/consultoria' },
+  'Agencia':      { label: 'Consultoría e innovación social', href: '/consultoria' },
+};
+const servicioRel = !isFinanciacion
+  ? (SERVICIO_POR_CATEGORIA[nota.data.category ?? ''] ?? null)
+  : null;
+
 const fmtDate = new Intl.DateTimeFormat('es-ES', {
   year: 'numeric',
   month: 'long',
@@ -206,6 +218,22 @@ const jsonLd = [
               </a>
             </div>
           </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Servicio relacionado (enlazado interno → página-dinero) para notas no-financiación -->
+    {servicioRel && (
+      <section class="border-y border-ink/15 bg-paper-warm py-12">
+        <div class="container-narrow flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-magenta">— Servicio relacionado</span>
+            <p class="mt-2 font-display text-xl leading-tight text-ink md:text-2xl">{servicioRel.label}</p>
+          </div>
+          <a href={servicioRel.href}
+             class="inline-block self-start whitespace-nowrap border-2 border-ink bg-paper px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-ink transition-colors hover:border-magenta hover:text-magenta md:self-auto">
+            Ver el servicio →
+          </a>
         </div>
       </section>
     )}
