@@ -1,0 +1,5 @@
+Contact: mailto:hola@startidea.es
+Preferred-Languages: es, en
+Canonical: https://startidea.es/.well-known/security.txt
+Policy: https://startidea.es/aviso-legal/
+Expires: 2027-06-11T23:59:59Z

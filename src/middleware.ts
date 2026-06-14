@@ -30,6 +30,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
       'geolocation=(), camera=(), microphone=(self), payment=()',
     );
   }
+  // Aisla la ventana de otros orígenes (COOP) y declara explícitamente la
+  // política de reutilización de recursos (CORP). No se añade
+  // Cross-Origin-Embedder-Policy: requiere auditoría de todos los recursos
+  // externos y puede romper analítica/embeds si se activa sin más.
+  if (!headers.has('cross-origin-opener-policy')) {
+    headers.set('cross-origin-opener-policy', 'same-origin');
+  }
+  // CORP 'cross-origin' (no 'same-origin'): mantiene la cabecera como postura
+  // explícita pero permite que el hub y las webs cliente sigan embebiendo
+  // recursos legítimos de startidea.es (logo, OG images). 'same-origin' los
+  // bloquearía en el navegador.
+  if (!headers.has('cross-origin-resource-policy')) {
+    headers.set('cross-origin-resource-policy', 'cross-origin');
+  }
 
   // Content-Security-Policy — defensa XSS + clickjacking + data exfiltration.
   //

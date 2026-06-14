@@ -51,3 +51,7 @@ data/*.db-wal
 # Claves de cuenta de servicio de Google Cloud / secretos — NUNCA commitear
 startidea-*.json
 *-service-account*.json
+
+# Informes internos — REPO PÚBLICO. No publicar prospección, auditorías de
+# costes/competencia ni estrategia. Lo que SÍ quieras publicar: `git add -f`.
+reports/
