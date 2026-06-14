@@ -1,0 +1,26 @@
+src/pages/sobre.astro
+  s_0ab79ba551035b::t_c23e3f1dc40248 114-115
+src/pages/precios.astro
+  s_0ab79ba551035b::t_58bf7677a283dd 327-342
+src/pages/que-hacemos.astro
+  s_0ab79ba551035b::t_3120c815a3d60c 269
+src/components/Nav.astro
+  s_0ab79ba551035b::t_5b2ba370da766e 37-41
+  s_0ab79ba551035b::t_5f4b6dd0b340ac 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "beecd57a75032287d244de1a0588924c37d3e4f1",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
