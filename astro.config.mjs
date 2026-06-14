@@ -2,6 +2,25 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import node from '@astrojs/node';
+import { readdirSync, readFileSync } from 'node:fs';
+
+// Mapa slug→fecha de las notas (updatedDate || pubDate) para emitir <lastmod>
+// en el sitemap. Frescura = re-crawl más rápido de Google/Bing y mejor señal
+// para AI Overviews. Defensivo: si algo falla, se queda vacío y no rompe build.
+const notaLastmod = {};
+try {
+  const dir = new URL('./src/content/notas/', import.meta.url);
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith('.md')) continue;
+    const fm = (readFileSync(new URL(file, dir), 'utf8').split('---')[1]) || '';
+    const upd = fm.match(/updatedDate:\s*['"]?(\d{4}-\d{2}-\d{2})/);
+    const pub = fm.match(/pubDate:\s*['"]?(\d{4}-\d{2}-\d{2})/);
+    const date = (upd && upd[1]) || (pub && pub[1]);
+    if (date) notaLastmod[file.replace(/\.md$/, '')] = date;
+  }
+} catch {
+  /* sin lastmod si no se puede leer */
+}
 
 export default defineConfig({
   site: 'https://startidea.es',
@@ -63,6 +82,12 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     sitemap({
+      serialize(item) {
+        // Inyecta <lastmod> en las notas a partir de su fecha de frontmatter.
+        const m = item.url.match(/\/notas\/([^/]+)\/?$/);
+        if (m && notaLastmod[m[1]]) item.lastmod = notaLastmod[m[1]];
+        return item;
+      },
       filter: (page) => {
         // Excluir siempre rutas internas/admin/utilidad
         if (page.includes('/admin/'))              return false;
