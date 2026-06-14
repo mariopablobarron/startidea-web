@@ -1,0 +1,67 @@
+src/pages/subvenciones/index.astro
+  s_0ab79ba551035b::t_0b479c64ce2f9d 419
+src/pages/merchandising.astro
+  s_0ab79ba551035b::t_da8a13888e3ef7 93
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_a9e5bd7bbda744 209
+src/pages/consultoria.astro
+  s_0ab79ba551035b::t_bd28552fd06098 179
+src/pages/presupuesto/index.astro
+  s_0ab79ba551035b::t_2c113c0c221c34 28
+  s_0ab79ba551035b::t_3094e979c64752 25
+  s_0ab79ba551035b::t_04cb08e0032adc 15
+src/pages/financiacion-empresas.astro
+  s_0ab79ba551035b::t_a9151931e636c7 378
+  s_0ab79ba551035b::t_6fd8724fe635fd 148
+  s_0ab79ba551035b::t_71733ee8bf14ae 381
+src/pages/copiloto-subvenciones.astro
+  s_0ab79ba551035b::t_ea21c5c53e3e0d 600
+  s_0ab79ba551035b::t_2d03918e1c4f61 8
+  s_0ab79ba551035b::t_df33bad9272f7b 527
+  s_0ab79ba551035b::t_c55c0ee3101d99 607
+  s_0ab79ba551035b::t_149cd0aabdc14a 9-10
+  s_0ab79ba551035b::t_267a64956074f5 52
+  s_0ab79ba551035b::t_988b5cc7667a66 614
+src/pages/presupuesto/nuevo.astro
+  s_0ab79ba551035b::t_6a5bb3083b828b 22
+src/pages/subvenciones/mi-copiloto.astro
+  s_0ab79ba551035b::t_0b24788eff2409 90
+src/pages/subvenciones/presentar/index.astro
+  s_0ab79ba551035b::t_29d821d95c7278 93
+  s_0ab79ba551035b::t_23d26ecc91a49b 92
+  s_0ab79ba551035b::t_540a05ed116c59 60
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_f6d8b1aca6fc40 163,170
+src/pages/notas.astro
+  s_0ab79ba551035b::t_6f77c5418f829e 341
+  s_0ab79ba551035b::t_c87620c3d05fc8 353
+src/pages/audiovisual.astro
+  s_0ab79ba551035b::t_c0ce4a8ce7fbaf 198
+src/pages/contacto.astro
+  s_0ab79ba551035b::t_ce2956e33ca627 12
+  s_0ab79ba551035b::t_b92ce72510bebb 244
+src/components/Casos.astro
+  s_0ab79ba551035b::t_c8baf35a5fecf6 14
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_00cb6f20bf6ebe 202
+  s_0ab79ba551035b::t_6bf66ae820a938 71
+src/pages/subvenciones/auto-copiloto.astro
+  s_0ab79ba551035b::t_4cd6e7b88895d9 38-39
+  s_0ab79ba551035b::t_15988899945227 200
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dc18f6f6a3abc81c9719dd16d1dcdef20d8c961c",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
