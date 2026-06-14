@@ -97,11 +97,14 @@
   .jny__hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 3;
     font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: rgba(255,255,255,.55); transition: opacity .4s; }
 
-  /* Reduce-motion / sin WebGL: hero estático con el H1, en flujo normal. */
-  .jny.is-static { height: auto; }
-  .jny.is-static .jny__layer { position: relative; min-height: 100svh; display: flex; align-items: center; opacity: 1 !important; }
-  .jny.is-static #jny-canvas, .jny.is-static .jny__intro, .jny.is-static .jny__mid, .jny.is-static .jny__hint { display: none; }
-  .jny.is-static .jny__end { position: relative; opacity: 1; transform: none; }
+  /* Reduce-motion / sin WebGL: hero estático con el H1, en flujo normal.
+     is-arrived: mismo estado limpio, al que se "asienta" el hero tras
+     completar el viaje una vez (ver script — evita el túnel vacío al subir). */
+  .jny.is-static, .jny.is-arrived { height: auto; }
+  .jny.is-static .jny__layer, .jny.is-arrived .jny__layer { position: relative; min-height: 100svh; display: flex; align-items: center; opacity: 1 !important; }
+  .jny.is-static #jny-canvas, .jny.is-static .jny__intro, .jny.is-static .jny__mid, .jny.is-static .jny__hint,
+  .jny.is-arrived #jny-canvas, .jny.is-arrived .jny__intro, .jny.is-arrived .jny__mid, .jny.is-arrived .jny__hint { display: none; }
+  .jny.is-static .jny__end, .jny.is-arrived .jny__end { position: relative; opacity: 1; transform: none; }
 </style>
 
 <style is:global>
@@ -192,12 +195,36 @@
       const hint = section.querySelector('[data-hint]');
       const show = (n, on) => { const e = stages.find(s => s.dataset.stage === n); if (e) e.classList.toggle('show', on); };
 
-      let prog = 0, target = 0, t = 0, paused = false;
-      const onScroll = () => { target = progAt(); };
+      let prog = 0, target = 0, t = 0, paused = false, done = false, completedOnce = false, settled = false;
+
+      // Tras completar el viaje UNA vez, cuando el usuario ya ha pasado el hero
+      // entero hacia el contenido, el hero se "asienta" en su estado limpio
+      // (igual que reduce-motion: H1 + identidad + CTA, nav visible). Así, al
+      // volver arriba NO reaparece el túnel vacío "Entra en la idea". Sin salto:
+      // el hero queda por encima del viewport y compensamos el scroll al colapsar.
+      const settle = () => {
+        if (settled) return;
+        settled = true; done = true;
+        const before = section.offsetHeight;
+        section.classList.add('is-arrived');
+        const after = section.offsetHeight;
+        const html = document.documentElement;
+        const prevSB = html.style.scrollBehavior;
+        html.style.scrollBehavior = 'auto';
+        scrollBy(0, after - before); // colapso compensado: el contenido no se mueve
+        html.style.scrollBehavior = prevSB;
+        setChrome(false); // nav y chips vuelven
+      };
+
+      const onScroll = () => {
+        target = progAt();
+        if (completedOnce && !settled && scrollY > section.offsetHeight + 1) settle();
+      };
       addEventListener('scroll', onScroll, { passive: true }); onScroll();
       document.addEventListener('visibilitychange', () => { paused = document.hidden; });
 
       const loop = () => {
+        if (done) return;
         if (!paused) {
           t += 0.016; prog += (target - prog) * 0.08;
           cam.position.z = 60 + prog * (ISO_Z - 60 + 30);
@@ -214,6 +241,7 @@
           show('intro', prog < 0.16);
           show('mid', prog > 0.34 && prog < 0.6);
           show('end', prog > 0.82);
+          if (prog > 0.98) completedOnce = true;
           if (hint) hint.style.opacity = prog > 0.05 ? '0' : '0.55';
           // Capa: visible durante el viaje, se desvanece al llegar al contenido.
           const fade = prog < 0.86 ? 1 : Math.max(0, (1 - prog) / 0.14);
