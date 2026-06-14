@@ -30,11 +30,26 @@ const { Content } = await nota.render();
 // ─── Detección de tema "financiación/subvenciones" ───────────────────────
 // Para mostrar un CTA comercial específico antes del newsletter (más
 // relevante que el genérico y mejor conversión que "suscríbete").
+// Notas de fundraising privado (socios, donantes, base social): aunque su
+// categoría sea "Financiación", su siguiente paso natural es el servicio
+// /fundraising, NO el CTA de tramitación de subvenciones. Se detectan por tag
+// de captación y tienen prioridad sobre isFinanciacion.
+const isFundraising = (nota.data.tags ?? []).some(t =>
+  ['fundraising', 'captación de fondos', 'captación', 'base social', 'socios', 'donaciones'].includes(t),
+);
+
+// Notas de producción audiovisual (vídeo, documental, podcast): su siguiente paso
+// natural es el servicio /audiovisual, aunque su categoría sea "Comunicación".
+const isAudiovisual = (nota.data.tags ?? []).some(t =>
+  ['audiovisual', 'vídeo', 'video', 'documental', 'podcast', 'producción audiovisual'].includes(t),
+);
+
 const isFinanciacion =
-  nota.data.category === 'Financiación' ||
-  (nota.data.tags ?? []).some(t =>
-    ['subvenciones', 'financiación', 'fondos', 'BDNS', 'ayudas'].includes(t),
-  );
+  !isFundraising && !isAudiovisual &&
+  (nota.data.category === 'Financiación' ||
+    (nota.data.tags ?? []).some(t =>
+      ['subvenciones', 'financiación', 'fondos', 'BDNS', 'ayudas'].includes(t),
+    ));
 
 // Enlazado interno hacia páginas-dinero: cada nota (no-financiación) apunta a su
 // servicio relacionado según categoría. Refuerza la autoridad temática hacia
@@ -44,9 +59,15 @@ const SERVICIO_POR_CATEGORIA: Record<string, { label: string; href: string }> = 
   'Estrategia':   { label: 'Consultoría e innovación social', href: '/consultoria' },
   'Agencia':      { label: 'Consultoría e innovación social', href: '/consultoria' },
 };
-const servicioRel = !isFinanciacion
-  ? (SERVICIO_POR_CATEGORIA[nota.data.category ?? ''] ?? null)
-  : null;
+const FUNDRAISING_SERVICE = { label: 'Fundraising para ONG y entidades sociales', href: '/fundraising' };
+const AUDIOVISUAL_SERVICE = { label: 'Producción audiovisual y podcast', href: '/audiovisual' };
+const servicioRel = isFundraising
+  ? FUNDRAISING_SERVICE
+  : isAudiovisual
+    ? AUDIOVISUAL_SERVICE
+    : !isFinanciacion
+      ? (SERVICIO_POR_CATEGORIA[nota.data.category ?? ''] ?? null)
+      : null;
 
 const fmtDate = new Intl.DateTimeFormat('es-ES', {
   year: 'numeric',

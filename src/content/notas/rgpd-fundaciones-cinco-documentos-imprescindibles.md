@@ -3,6 +3,7 @@ title: 'RGPD para fundaciones: los 5 documentos que sí o sí'
 description: 'Qué papeles tiene que tener archivados una fundación o asociación para cumplir el RGPD sin gastar lo que no toca. Plantillas oficiales, errores frecuentes y orden realista de prioridades.'
 pubDate: 2026-05-26
 audience: 'Tercer sector'
+category: 'Estrategia'
 tags: ['RGPD', 'protección de datos', 'fundaciones', 'ONG', 'AEPD', 'cumplimiento normativo', 'tercer sector']
 draft: false
 faqs:
