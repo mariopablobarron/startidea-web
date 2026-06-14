@@ -1,0 +1,26 @@
+src/pages/index.astro
+  s_0ab79ba551035b::t_fc636390d24a29 42-47,53
+  s_0ab79ba551035b::t_5a0654206f16fa 18
+src/components/CtaConversion.astro
+  s_0ab79ba551035b::t_2441385f3a6fc4 162
+src/components/TesisImpacto.astro
+  s_0ab79ba551035b::t_6a7d8311ee57d1 1-42,50-68,72-74,76-77,79-88,90-98
+  s_0ab79ba551035b::t_9ef93689bafb72 43-49
+  s_0ab79ba551035b::t_263fa6b9e75ec9 69-71,75,78,89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c2f632d7b1f5aa372e8cc07084280f7d3ae36389",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
