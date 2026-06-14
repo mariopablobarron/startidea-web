@@ -1,0 +1,20 @@
+src/components/AsistenteIA.astro
+  s_0ab79ba551035b::t_99406485206fc1 145,149-150,155,165-166
+  s_0ab79ba551035b::t_61d84d9c203eda 146-148,151-154,156-164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8b1e46e393c179ee1af893c78865c14e16edf676",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
