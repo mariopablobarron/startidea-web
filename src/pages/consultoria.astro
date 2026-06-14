@@ -7,19 +7,19 @@ import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/js
 const faqs = [
   {
     question: '¿En qué se diferencia la consultoría de Startidea de una consultoría de gestión convencional?',
-    answer: 'En el foco sectorial y el alcance. Una consultoría convencional aplica marcos genéricos (Balanced Scorecard, Lean, OKRs) a cualquier organización. Startidea aplica metodología estratégica específica al tercer sector, instituciones y empresas con propósito: entiende la lógica del patronato, el ciclo de financiación pública, la relación con comunidades de base y la rendición de cuentas a múltiples stakeholders. No reinventamos el marco: lo ajustamos al contexto real.',
+    answer: 'En el foco sectorial y el alcance. Una consultoría convencional aplica marcos genéricos (Balanced Scorecard, Lean, OKRs) a cualquier organización. Startidea aplica metodología estratégica específica al tercer sector, instituciones y empresas con propósito: entiende la lógica del patronato, el ciclo de financiación pública, la relación con comunidades de base y la rendición de cuentas a múltiples stakeholders. Startidea no reinventa el marco: lo ajusta al contexto real.',
   },
   {
     question: '¿Cuánto dura un proceso de consultoría estratégica con Startidea?',
-    answer: 'Depende del alcance. Un diagnóstico organizacional completo dura 4-6 semanas. Un plan estratégico plurianual con la organización, de 3 a 5 meses. Un acompañamiento de implementación puede extenderse 12-24 meses con sesiones quincenales o mensuales. Lo determinamos en la primera sesión de diagnóstico sin coste.',
+    answer: 'Depende del alcance. Un diagnóstico organizacional completo dura 4-6 semanas. Un plan estratégico plurianual con la organización, de 3 a 5 meses. Un acompañamiento de implementación puede extenderse 12-24 meses con sesiones quincenales o mensuales. Se determina en la primera sesión de diagnóstico sin coste.',
   },
   {
     question: '¿Puede Startidea ayudar con la presentación de proyectos ante el patronato o el consejo?',
-    answer: 'Sí. Es parte habitual del proceso: además de construir el plan, acompañamos la presentación ante los órganos de gobierno. Preparamos el narrative, los soportes visuales, los argumentos para preguntas difíciles y la hoja de ruta de implementación que el patronato pueda aprobar con confianza. Un plan que no se aprueba internamente no existe.',
+    answer: 'Sí. Es parte habitual del proceso: además de construir el plan, Startidea acompaña la presentación ante los órganos de gobierno. Prepara el narrative, los soportes visuales, los argumentos para preguntas difíciles y la hoja de ruta de implementación que el patronato pueda aprobar con confianza. Un plan que no se aprueba internamente no existe.',
   },
   {
     question: '¿Trabaja Startidea con organizaciones que están en crisis o en procesos de reestructuración?',
-    answer: 'Sí, con condiciones. La consultoría en situación de crisis requiere rapidez diagnóstica (1-2 semanas), capacidad de decisión real del equipo directivo y voluntad de tomar decisiones difíciles. No acompañamos procesos donde la decisión ya está tomada y se busca legitimación externa. Si hay voluntad real de cambio, trabajamos.',
+    answer: 'Sí, con condiciones. La consultoría en situación de crisis requiere rapidez diagnóstica (1-2 semanas), capacidad de decisión real del equipo directivo y voluntad de tomar decisiones difíciles. Startidea no acompaña procesos donde la decisión ya está tomada y se busca legitimación externa. Si hay voluntad real de cambio, se trabaja.',
   },
   {
     question: '¿Qué entregables produce un proceso de consultoría de Startidea?',
@@ -52,15 +52,15 @@ const jsonLd = [
 const pilares = [
   {
     title: 'Claridad y dirección',
-    body: 'Convertimos ideas dispersas en una hoja de ruta clara y realista. Si no se entiende en cinco minutos, no se ejecuta.',
+    body: 'Startidea convierte ideas dispersas en una hoja de ruta clara y realista. Si no se entiende en cinco minutos, no se ejecuta.',
   },
   {
     title: 'Proyectos con base',
-    body: 'Diseñamos proyectos bien formulados, financiables y ejecutables. Que aguanten una conversación incómoda con un patronato o una administración.',
+    body: 'Startidea diseña proyectos bien formulados, financiables y ejecutables. Que aguanten una conversación incómoda con un patronato o una administración.',
   },
   {
     title: 'Orden y sostenibilidad',
-    body: 'Mejoramos procesos internos para captar más recursos con menos fricción. La consultoría que no deja la organización mejor de cómo la encontró no sirve.',
+    body: 'Startidea mejora procesos internos para captar más recursos con menos fricción. La consultoría que no deja la organización mejor de cómo la encontró no sirve.',
   },
 ];
 
@@ -68,9 +68,9 @@ const areas = [
   {
     num: '01',
     title: 'Estrategia y fortalecimiento organizativo',
-    body: 'Trabajamos con dirección, patronato y equipo técnico para alinear propósito, estrategia y operación. La organización que sabe qué quiere mover en 12 meses ejecuta diferente.',
+    body: 'Startidea trabaja con dirección, patronato y equipo técnico para alinear propósito, estrategia y operación. La organización que sabe qué quiere mover en 12 meses ejecuta diferente.',
     items: [
-      { name: 'Diagnóstico estratégico de la entidad', desc: 'Foto-fija organizativa: estructura, recursos, procesos, comunicación, captación. Identificamos lo que sostiene y lo que frena.' },
+      { name: 'Diagnóstico estratégico de la entidad', desc: 'Foto-fija organizativa: estructura, recursos, procesos, comunicación, captación. Se identifica lo que sostiene y lo que frena.' },
       { name: 'Planificación estratégica y anual', desc: 'Plan a 3-5 años con prioridades claras + plan operativo anual con responsables y KPIs.' },
       { name: 'Optimización de procesos internos', desc: 'Mapeo de procesos, identificación de fricciones, rediseño con criterio. Que el equipo dedique su tiempo a lo que importa.' },
       { name: 'Acompañamiento a equipos directivos', desc: 'Sparring sostenido a dirección y juntas en decisiones estratégicas, conflictos y pivotes organizativos.' },
@@ -82,7 +82,7 @@ const areas = [
     body: 'De la idea al expediente listo para presentar. Marco lógico, indicadores, presupuesto y narrativa. Convocatorias públicas, privadas y cooperación internacional.',
     items: [
       { name: 'Formulación y diseño de proyectos sociales', desc: 'Estructura completa: justificación, objetivos, actividades, cronograma, presupuesto, sistema de seguimiento.' },
-      { name: 'Formulación de proyectos de cooperación internacional', desc: 'Especialidad en convocatorias AECID, UE y agencias multilaterales. Cumplimos los formatos al milímetro.' },
+      { name: 'Formulación de proyectos de cooperación internacional', desc: 'Especialidad en convocatorias AECID, UE y agencias multilaterales. Se cumplen los formatos al milímetro.' },
       { name: 'Marco lógico, teoría del cambio e indicadores', desc: 'La columna vertebral del proyecto. Sin ella, la justificación posterior se complica el doble.' },
       { name: 'Diseño de planes de trabajo y sistemas de seguimiento', desc: 'Cómo se operará el proyecto: hitos, responsables, herramientas de gestión y reporting interno.' },
     ],
@@ -93,7 +93,7 @@ const areas = [
     body: 'Diversificación real de ingresos: convocatorias, donantes, partnerships, crowdfunding, eventos. Plan de fundraising y arquitectura del relato.',
     items: [
       { name: 'Mapeo de convocatorias públicas y privadas', desc: 'Calendario anual con plazos, requisitos y compatibilidades. La convocatoria adecuada a la entidad adecuada.' },
-      { name: 'Estrategia de financiación y priorización', desc: 'No todas las oportunidades suman. Decidimos a qué presentarse y a qué no — con criterio de coste-oportunidad.' },
+      { name: 'Estrategia de financiación y priorización', desc: 'No todas las oportunidades suman. Startidea decide a qué presentarse y a qué no — con criterio de coste-oportunidad.' },
       { name: 'Preparación técnica de candidaturas', desc: 'Acompañamiento en redacción, presupuesto, anexos y revisión final antes de presentar.' },
       { name: 'Diseño de alianzas y colaboraciones', desc: 'Partnerships con sentido — entre entidades del tercer sector, con empresas y con instituciones públicas.' },
     ],
@@ -101,11 +101,11 @@ const areas = [
   {
     num: '04',
     title: 'Gestión técnica, documental y justificación',
-    body: 'Acompañamos durante la vida del proyecto: justificación técnica y económica, documentación, reporting a financiadores. Que no se pierda dinero por un papel mal presentado.',
+    body: 'Startidea acompaña durante la vida del proyecto: justificación técnica y económica, documentación, reporting a financiadores. Que no se pierda dinero por un papel mal presentado.',
     items: [
       { name: 'Gestión documental y revisión técnica', desc: 'Sistema de archivo, control de versiones, validación cruzada de entregables.' },
       { name: 'Supervisión de ejecución y cumplimiento', desc: 'Revisión periódica del cumplimiento de hitos, gasto y procedimientos pactados con el financiador.' },
-      { name: 'Acompañamiento en justificaciones técnicas y económicas', desc: 'Memoria, anexos, informes intermedios y finales. Trabajamos a cuatro manos con vuestra administración.' },
+      { name: 'Acompañamiento en justificaciones técnicas y económicas', desc: 'Memoria, anexos, informes intermedios y finales. Startidea trabaja a cuatro manos con vuestra administración.' },
       { name: 'Preparación para auditorías', desc: 'Pre-auditoría interna, simulacros y preparación documental antes de la visita oficial.' },
     ],
   },
@@ -134,9 +134,9 @@ const areas = [
 ];
 
 const proceso = [
-  { step: '01', title: 'Diagnóstico (gratuito)', body: '30 minutos. Tú cuentas el reto y te decimos honestamente si encajamos.' },
+  { step: '01', title: 'Diagnóstico (gratuito)', body: '30 minutos. Tú cuentas el reto y Startidea te dice honestamente si encaja.' },
   { step: '02', title: 'Propuesta cerrada', body: 'En una semana: alcance, plazos, equipo, presupuesto. Sin "depende".' },
-  { step: '03', title: 'Co-construcción', body: 'Trabajamos con tu equipo, no en sustitución. La consultoría que monopoliza el conocimiento se rompe cuando se va.' },
+  { step: '03', title: 'Co-construcción', body: 'Startidea trabaja con tu equipo, no en sustitución. La consultoría que monopoliza el conocimiento se rompe cuando se va.' },
   { step: '04', title: 'Entrega + acompañamiento', body: 'Documentación, capacitación, hand-off. Y un check-in a los 6 meses para ver qué se mantuvo y qué necesita ajuste.' },
 ];
 ---
@@ -144,7 +144,7 @@ const proceso = [
 <Base
   jsonLd={jsonLd}
   title="Consultoría e Innovación Social — Startidea"
-  description="Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido."
+  description="Startidea acompaña a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido."
   ogSlug="page/consultoria"
 >
   <!-- Hero -->
@@ -156,7 +156,7 @@ const proceso = [
         <em class="italic text-magenta">Pensar mejor. Decidir con criterio.</em>
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Acompañamos a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido. Ordenamos la estrategia, diseñamos proyectos sólidos, fortalecemos la captación de recursos y ayudamos a demostrar resultados.
+        Startidea acompaña a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido. Ordena la estrategia, diseña proyectos sólidos, fortalece la captación de recursos y ayuda a demostrar resultados.
       </p>
       <div class="mt-10">
         <a href="/contacto" class="btn">
@@ -239,7 +239,7 @@ const proceso = [
         </div>
         <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
           <h2 class="font-display text-display-lg leading-[1.02] text-paper">
-            Cómo trabajamos<em class="italic text-magenta"> contigo</em>.
+            Cómo se trabaja<em class="italic text-magenta"> contigo</em>.
           </h2>
 
           <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
