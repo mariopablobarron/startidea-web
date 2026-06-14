@@ -1,0 +1,146 @@
+src/pages/laboratorio/fundraising/index.astro
+  s_0ab79ba551035b::t_d880fbe756671d 29
+  s_0ab79ba551035b::t_1aa38879ee652d 112
+  s_0ab79ba551035b::t_03c885937f892b 136
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_89578bdb41f3d2 160
+  s_0ab79ba551035b::t_4dc7411f529779 14
+  s_0ab79ba551035b::t_a263078a42100b 162
+  s_0ab79ba551035b::t_7d24e6275d27bd 130
+  s_0ab79ba551035b::t_37592e1406933d 293
+src/pages/diagnostico/brief-web.astro
+  s_0ab79ba551035b::t_bf13e6dba0682f 89-90
+src/pages/audiovisual.astro
+  s_0ab79ba551035b::t_a81e5ab955049c 152-155
+  s_0ab79ba551035b::t_b502c7f832e83b 256
+  s_0ab79ba551035b::t_005ed9932dc1cb 14
+  s_0ab79ba551035b::t_e7bd34a02c51aa 82
+  s_0ab79ba551035b::t_088bd2b6b671c1 123
+  s_0ab79ba551035b::t_bab2d1bc0297a7 55
+  s_0ab79ba551035b::t_de7fcc7fb29fb5 71
+  s_0ab79ba551035b::t_ed8e646e144d56 146
+  s_0ab79ba551035b::t_3d2474d319f139 129
+  s_0ab79ba551035b::t_29e2e3be9d93d2 26
+src/pages/precios.astro
+  s_0ab79ba551035b::t_1e8f45fdda5a63 301
+  s_0ab79ba551035b::t_3da41f96ebf159 229
+  s_0ab79ba551035b::t_d291504adc4dd0 239
+  s_0ab79ba551035b::t_d6e0b4c6597983 305
+  s_0ab79ba551035b::t_3d31acd3d8f97c 334
+  s_0ab79ba551035b::t_a98b299da3e4d3 94
+  s_0ab79ba551035b::t_88fe8b858713fc 309
+  s_0ab79ba551035b::t_9acde84e9c17fc 265
+src/pages/contacto.astro
+  s_0ab79ba551035b::t_f93807dc792794 190
+  s_0ab79ba551035b::t_c86fe6d5191124 182
+  s_0ab79ba551035b::t_7d9039870083c8 186
+  s_0ab79ba551035b::t_c65b2f3f185cc5 84
+  s_0ab79ba551035b::t_c5fe4befa098ea 16
+  s_0ab79ba551035b::t_9849e2ae42b25e 65
+  s_0ab79ba551035b::t_6f81e7c68e4912 194
+  s_0ab79ba551035b::t_74afaaebf563ce 62
+  s_0ab79ba551035b::t_735c45d52ce2be 8
+  s_0ab79ba551035b::t_b7bfc81b9d9453 49
+src/pages/para-quien.astro
+  s_0ab79ba551035b::t_79d66ec10cd60f 153
+src/components/DiagnosticosHome.astro
+  s_0ab79ba551035b::t_806c5f90447126 23
+src/components/Casos.astro
+  s_0ab79ba551035b::t_2248a379d9393f 18
+  s_0ab79ba551035b::t_cc2cb7e57a455e 132-133
+src/pages/hub.astro
+  s_0ab79ba551035b::t_512e106db3611b 133
+  s_0ab79ba551035b::t_6a391a2c531f5a 19
+src/pages/diagnostico/nuevo.astro
+  s_0ab79ba551035b::t_2328225e816580 45
+src/pages/impulsa/index.astro
+  s_0ab79ba551035b::t_c4363a3641a1dc 292
+  s_0ab79ba551035b::t_1d8550cb57abb7 18
+src/pages/financiacion-empresas.astro
+  s_0ab79ba551035b::t_81076ae111bf4b 142
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_46ce697d2453b1 137
+  s_0ab79ba551035b::t_3c2eab6c31d059 124
+  s_0ab79ba551035b::t_16f2a62534f746 68
+  s_0ab79ba551035b::t_6eb7c245d73cfc 14
+  s_0ab79ba551035b::t_0bb6f4ec22b553 18
+  s_0ab79ba551035b::t_551f7b433c4e6b 144
+  s_0ab79ba551035b::t_9395b15067cb1b 108
+  s_0ab79ba551035b::t_2f3aa23c88e5cb 146
+  s_0ab79ba551035b::t_6f3e3b9b870239 84
+  s_0ab79ba551035b::t_5682fc85ba083f 96
+  s_0ab79ba551035b::t_6fb8fcbc477714 132
+  s_0ab79ba551035b::t_b235039b1c5ad0 267
+  s_0ab79ba551035b::t_84d0ddc8a04447 72
+  s_0ab79ba551035b::t_9986a285075019 167
+src/components/Membresias.astro
+  s_0ab79ba551035b::t_ce0c30c8d2c361 81
+  s_0ab79ba551035b::t_8993fcb91d6a35 88
+src/pages/sobre.astro
+  s_0ab79ba551035b::t_2e8777e80401e6 218
+  s_0ab79ba551035b::t_f794fb0732854f 33
+  s_0ab79ba551035b::t_f83a24ff4c9561 177
+src/pages/consultoria.astro
+  s_0ab79ba551035b::t_6dc44a95ecdd68 10
+  s_0ab79ba551035b::t_3fc6c05ccba2b6 59
+  s_0ab79ba551035b::t_7b8a9337d2fb64 55
+  s_0ab79ba551035b::t_6f922159b3d203 71
+  s_0ab79ba551035b::t_56a30b63c195b6 73
+  s_0ab79ba551035b::t_3e1e5dd9cab572 137
+  s_0ab79ba551035b::t_6a81b18d648409 96
+  s_0ab79ba551035b::t_f2cb0b19f91fb5 139
+  s_0ab79ba551035b::t_b3ee5e4b671046 159
+  s_0ab79ba551035b::t_3d2ca5d18edee1 108
+  s_0ab79ba551035b::t_28e220ec37cb3c 18
+  s_0ab79ba551035b::t_49434642253b1a 63
+  s_0ab79ba551035b::t_b872d62356d870 22
+  s_0ab79ba551035b::t_f25ae47dea55f5 242
+  s_0ab79ba551035b::t_e09ccd1b6ec05b 147
+  s_0ab79ba551035b::t_f6487152037ebe 14
+  s_0ab79ba551035b::t_5601e790fb8da8 85
+  s_0ab79ba551035b::t_360603b9be17dd 104
+src/pages/casos.astro
+  s_0ab79ba551035b::t_8b7a364a917a83 47
+  s_0ab79ba551035b::t_10a89cbaa96b05 153
+  s_0ab79ba551035b::t_07c84393ff6a80 43
+src/pages/recursos/diagnostico-modelo-fundraising.astro
+  s_0ab79ba551035b::t_3fc1a24d943b5e 26
+  s_0ab79ba551035b::t_adeca4fc24f6a9 117
+src/pages/tecnologia.astro
+  s_0ab79ba551035b::t_2cd1fc860e3511 147
+  s_0ab79ba551035b::t_88b132944da2f1 228
+  s_0ab79ba551035b::t_c85400fb1cb65b 72
+  s_0ab79ba551035b::t_1448731bebe68f 108
+  s_0ab79ba551035b::t_89e9715ee49eb7 171
+  s_0ab79ba551035b::t_e659833bc058b5 31-32
+  s_0ab79ba551035b::t_e381b3f21f34f7 231
+src/pages/que-hacemos.astro
+  s_0ab79ba551035b::t_d156034aa9724b 293
+  s_0ab79ba551035b::t_5128b1f8eff845 167
+src/pages/google-ad-grants.astro
+  s_0ab79ba551035b::t_ae8ea5d0348913 163
+  s_0ab79ba551035b::t_ed1e234a4b62df 291
+  s_0ab79ba551035b::t_fe08956477aec7 173
+  s_0ab79ba551035b::t_2e9fece27f2762 178
+  s_0ab79ba551035b::t_1397dda1359e49 168
+  s_0ab79ba551035b::t_614de5e6a729cf 335
+src/pages/diagnostico/gracias.astro
+  s_0ab79ba551035b::t_ce12cb78f9dea0 70
+  s_0ab79ba551035b::t_420442a50bec30 92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c29405adc566dc0e7cc8c69953816e378d449979",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
