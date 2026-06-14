@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
-import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
@@ -45,6 +45,18 @@ const jsonLd = [
       { name: 'Captación de socios y donantes', description: 'Campañas, formularios, CRM y secuencia de fidelización.' },
       { name: 'Alianzas con empresas', description: 'Identificación, propuestas a medida y gestión de la relación con departamentos RSC.' },
       { name: 'Tramitación de subvenciones', description: 'Identificación + redacción + presentación con certificado digital + justificación.', url: `${SITE_URL}/financiacion-empresas` },
+    ],
+  }),
+  howToSchema({
+    name: 'Cómo crear un plan de captación de fondos (fundraising) para una ONG',
+    description:
+      'Los pasos para que una entidad del tercer sector diseñe un plan de captación de fondos diversificado y deje de depender de una sola fuente, desde el diagnóstico hasta la rendición de cuentas.',
+    steps: [
+      { name: 'Diagnóstico de la mezcla de ingresos', text: 'Analizar de dónde viene hoy el dinero y detectar la dependencia de una sola fuente. Una entidad que depende de una convocatoria está a una decisión administrativa de pararse.' },
+      { name: 'Mapa de fuentes posibles', text: 'Identificar las vías realistas: socios y cuota recurrente, donantes individuales, grandes donantes, alianzas con empresas (RSC), subvenciones públicas y fondos europeos.' },
+      { name: 'Priorización y roadmap', text: 'Elegir 2-3 fuentes alcanzables según el tamaño, la base social y la capacidad del equipo. Diversificar de forma ordenada, no todo a la vez.' },
+      { name: 'Materiales y campañas', text: 'Preparar lo que cada fuente necesita: narrativa de captación, formularios y CRM para socios, propuestas a medida para empresas y expedientes para las convocatorias que encajen.' },
+      { name: 'Medición y rendición de cuentas', text: 'Hacer seguimiento de socios y donantes, e informar con transparencia al patronato y a los financiadores. La confianza es lo que sostiene la captación en el tiempo.' },
     ],
   }),
 ];

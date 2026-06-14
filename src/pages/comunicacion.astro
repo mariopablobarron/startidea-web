@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
-import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
@@ -45,6 +45,19 @@ const jsonLd = [
       { name: 'Contenidos editoriales', description: 'Notas, reportajes, memoria anual, newsletters y guiones.' },
       { name: 'Identidad y marca', description: 'Naming, logotipo, sistema visual y manual de marca.' },
       { name: 'Campañas de captación', description: 'Campañas para socios, donantes y voluntariado con medición.' },
+    ],
+  }),
+  howToSchema({
+    name: 'Cómo hacer un plan de comunicación para una entidad social',
+    description:
+      'Los pasos para que una ONG, fundación o institución con propósito construya un plan de comunicación que funcione, desde el diagnóstico hasta la medición.',
+    steps: [
+      { name: 'Diagnóstico', text: 'Auditar la situación actual: mensajes, audiencias, canales y reputación. Saber de dónde se parte antes de proponer nada.' },
+      { name: 'Narrativa y posicionamiento', text: 'Definir el relato de la organización y el lugar que quiere ocupar en su sector. Qué se cuenta, a quién y por qué importa.' },
+      { name: 'Plan editorial', text: 'Fijar temas, formatos y frecuencia por audiencia, con un calendario realista que el equipo pueda sostener.' },
+      { name: 'Producción de contenidos', text: 'Crear las piezas: notas, reportajes, newsletters, memoria anual, audiovisual y redes, con criterio editorial y no por inercia.' },
+      { name: 'Relación con medios y difusión', text: 'Llevar el mensaje a los canales y medios donde está la audiencia objetivo, con relaciones de prensa cuando aplica.' },
+      { name: 'Medición', text: 'Evaluar con métricas acordadas de antemano (reputación, captación, visibilidad) y ajustar. Si no movió algo, se corrige.' },
     ],
   }),
 ];
