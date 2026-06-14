@@ -1,6 +1,30 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { breadcrumbList, serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Tecnología', url: `${SITE_URL}/tecnologia` },
+  ]),
+  serviceSchema({
+    name: 'Tecnología y plataformas digitales',
+    description:
+      'Desarrollo de webs editoriales e institucionales, producto digital a medida (con IA), migraciones tecnológicas sin pérdida de SEO, auditorías de producto y accesibilidad WCAG 2.1 AA, para entidades del tercer sector, instituciones y empresas con propósito. Stack moderno (Astro, Next.js, React, TypeScript) o WordPress profesional según el problema.',
+    serviceType: 'Desarrollo web y producto digital',
+    url: `${SITE_URL}/tecnologia`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Webs editoriales e institucionales', description: 'Webs que aguantan tráfico, editables por el equipo sin tocar código. Astro, Next.js, headless CMS o WordPress profesional.' },
+      { name: 'Plataformas a medida', description: 'Producto digital y plataformas hechas a medida del problema, no del currículum del equipo.' },
+      { name: 'Producto digital con IA', description: 'Integración de inteligencia artificial en producto y procesos cuando aporta valor real.' },
+      { name: 'Migraciones tecnológicas sin pérdida SEO', description: 'Cambio de plataforma conservando posicionamiento, URLs y tráfico.' },
+      { name: 'Auditorías de producto digital', description: 'Diagnóstico de rendimiento, accesibilidad y SEO técnico.' },
+      { name: 'Accesibilidad WCAG 2.1 AA', description: 'Accesibilidad por defecto, no como extra.' },
+    ],
+  }),
+];
 
 const principios = [
   {
@@ -109,6 +133,7 @@ const stack = [
   title="Tecnología — Startidea"
   description="Plataformas que aguantan. Webs editoriales, producto digital a medida con IA, migraciones sin pérdida SEO y accesibilidad AA por defecto."
   ogSlug="page/tecnologia"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
