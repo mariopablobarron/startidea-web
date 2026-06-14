@@ -1,0 +1,23 @@
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_0357152893b62d 50-61
+  s_0ab79ba551035b::t_703c8967ec8641 5
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_1ab7a428b13282 5
+  s_0ab79ba551035b::t_ce824543721268 50-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "7f3db83a0a5df6f6562b1cc82fe4bb15da29d723",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
