@@ -1,0 +1,97 @@
+---
+/**
+ * Lanzador flotante ÚNICO — consolida los 3 canales (Asistente IA, WhatsApp,
+ * Voz) en un solo FAB para no saturar la esquina con botones que se solapan
+ * (petición Mario 2026-06-14). Al pulsar, despliega las opciones hacia arriba.
+ *
+ * Reutiliza los paneles existentes sin reescribirlos: los chips originales
+ * (#ai-chip / #voice-chip) quedan ocultos pero en el DOM, y aquí se disparan
+ * con un click programático. WhatsApp es un enlace directo.
+ *
+ * Móvil: aparece solo tras el hero (IntersectionObserver) para no taparlo, y
+ * se sitúa por encima de la barra inferior. Home: se oculta durante el viaje
+ * inmersivo (regla html.journey-immersive en HeroJourney).
+ */
+const WA = 'https://wa.me/34958045789?text=' + encodeURIComponent('Hola, quería preguntar por Startidea.');
+---
+
+<div id="hub-flotante" class="fixed bottom-[104px] right-5 z-50 flex flex-col items-end gap-3 xl:bottom-6 xl:right-6">
+  <!-- Menú de canales (oculto hasta abrir) -->
+  <div id="hub-menu" class="pointer-events-none flex translate-y-2 flex-col items-end gap-2 opacity-0 transition-all duration-200">
+    <button type="button" data-hub="ai" class="hub-item">
+      <span>Asistente IA</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+    <a href={WA} target="_blank" rel="noopener" data-track="cta" data-track-id="float_whatsapp_hub" data-track-text="Hub WhatsApp" class="hub-item">
+      <span>WhatsApp</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.464 3.488"/></svg>
+    </a>
+    <button type="button" data-hub="voz" class="hub-item">
+      <span>Hablar (voz)</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+    </button>
+  </div>
+
+  <!-- FAB -->
+  <button id="hub-fab" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Habla con Startidea"
+    class="group inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-ink bg-ink text-paper shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-colors hover:bg-magenta hover:border-magenta">
+    <svg id="hub-ic-chat" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <svg id="hub-ic-close" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
+<style>
+  .hub-item { display: inline-flex; align-items: center; gap: 10px; border: 2px solid var(--ink, #14121a);
+    background: var(--paper, #fff); color: var(--ink, #14121a); padding: 9px 14px;
+    font-family: ui-monospace, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .18em;
+    text-decoration: none; white-space: nowrap; cursor: pointer;
+    box-shadow: 0 8px 24px -8px rgba(0,0,0,.25); transition: background .18s, color .18s, border-color .18s; }
+  .hub-item:hover, .hub-item:focus-visible { background: #e6356b; color: #fff; border-color: #e6356b; outline: none; }
+  #hub-menu.open { pointer-events: auto; opacity: 1; transform: none; }
+</style>
+
+<script>
+  (function () {
+    var wrap = document.getElementById('hub-flotante');
+    var fab = document.getElementById('hub-fab');
+    var menu = document.getElementById('hub-menu');
+    var icChat = document.getElementById('hub-ic-chat');
+    var icClose = document.getElementById('hub-ic-close');
+    if (!wrap || !fab || !menu) return;
+
+    function setOpen(o) {
+      menu.classList.toggle('open', o);
+      fab.setAttribute('aria-expanded', o ? 'true' : 'false');
+      if (icChat) icChat.classList.toggle('hidden', o);
+      if (icClose) icClose.classList.toggle('hidden', !o);
+    }
+    fab.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!menu.classList.contains('open')); });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+
+    menu.querySelectorAll('[data-hub]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-hub');
+        setOpen(false);
+        if (k === 'ai') { var a = document.getElementById('ai-chip') || document.getElementById('ai-chip-mobile'); if (a) a.click(); }
+        else if (k === 'voz') { var v = document.getElementById('voice-chip') || document.getElementById('voice-chip-mobile'); if (v) v.click(); }
+      });
+    });
+
+    // En móvil aparece solo tras superar el hero (evita taparlo si el CTA es a
+    // ancho completo). IntersectionObserver: el sitio scrollea en <body>.
+    if (window.matchMedia('(max-width: 759px)').matches) {
+      var hero = document.querySelector('main section') || document.querySelector('section');
+      if (hero && 'IntersectionObserver' in window) {
+        wrap.style.transition = 'opacity .25s ease, transform .25s ease';
+        var setVis = function (show) {
+          wrap.style.opacity = show ? '1' : '0';
+          wrap.style.transform = show ? 'none' : 'translateY(10px)';
+          wrap.style.pointerEvents = show ? 'auto' : 'none';
+        };
+        setVis(false);
+        new IntersectionObserver(function (es) { setVis(!es[0].isIntersecting); }, { threshold: 0 }).observe(hero);
+      }
+    }
+  })();
+</script>
