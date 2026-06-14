@@ -1,0 +1,33 @@
+src/content/notas/rgpd-fundaciones-cinco-documentos-imprescindibles.md
+  s_0ab79ba551035b::t_ff067912180da7 6
+src/content/notas/licitar-comunicacion-administracion-publica.md
+  s_0ab79ba551035b::t_14082a78a59e97 6
+src/pages/notas/[...slug].astro
+  s_0ab79ba551035b::t_40b7ac1924716b 41-46,48
+  s_0ab79ba551035b::t_1ac90469bf3f94 33-40,49-52,62,64-65
+  s_0ab79ba551035b::t_5ff931796ce97d 63,66-70
+src/content/notas/ciberseguridad-entidades-sociales-que-proteger-primero.md
+  s_0ab79ba551035b::t_4c2d0c85d2529b 6
+src/pages/sobre.astro
+  s_0ab79ba551035b::t_af4fb1f9fc9512 49-50
+src/content/notas/ia-fertil-no-ia-util.md
+  s_0ab79ba551035b::t_c44a06aefcb35b 6
+src/content/notas/produccion-documentales-podcast-tercer-sector.md
+  s_0ab79ba551035b::t_69ae7beb810434 1-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "246b9ea282c37abe29d10380aee45b1dca973657",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
