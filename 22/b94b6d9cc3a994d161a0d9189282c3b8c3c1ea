@@ -1,0 +1,28 @@
+reports/geo-wikidata-y-offsite-2026-06-14.md
+  s_0ab79ba551035b::t_12b101d4f3ef0b 1-70
+src/pages/llms-full.txt.ts
+  s_0ab79ba551035b::t_f3c9464f317469 1-59
+infra/geo-monitor/geo-monitor-startidea.sh
+  s_0ab79ba551035b::t_efb96b228bab8c 1-83
+public/robots.txt
+  s_0ab79ba551035b::t_3ebfa3d291d100 1-61
+astro.config.mjs
+  s_0ab79ba551035b::t_34ff40342e7a8f 85-90
+  s_0ab79ba551035b::t_b71670026193cb 5-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "22b94b6d9cc3a994d161a0d9189282c3b8c3c1ea",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
