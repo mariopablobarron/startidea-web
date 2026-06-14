@@ -53,7 +53,7 @@ import Base from '@/layouts/Base.astro';
       );
       if (!res.ok) {
         root.innerHTML = `
-          <p class="text-magenta">No encontramos esa alerta. Tal vez ya la borraste.</p>`;
+          <p class="text-magenta">No se encuentra esa alerta. Tal vez ya la borraste.</p>`;
         return;
       }
       const j = await res.json();

@@ -653,7 +653,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                   ) : exp.contrato_token ? (
                     <div>
                       <div class="section-val" style="color:#d97706">⏳ Pendiente de firma</div>
-                      <div class="section-sub">Necesitamos tu firma para continuar</div>
+                      <div class="section-sub">Startidea necesita tu firma para continuar</div>
                       {contratoUrl && (
                         <a href={contratoUrl} class="action-link" style="margin-top:8px">
                           Firmar contrato →
@@ -776,7 +776,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>El equipo de Startidea está revisando tu solicitud y preparando el análisis de elegibilidad.</span></div>
                     <div class="next-step-item"><span class="step-num">2</span><span>El equipo de Startidea elaborará la memoria técnica, presupuesto y checklist adaptados a la convocatoria.</span></div>
-                    <div class="next-step-item"><span class="step-num">3</span><span>Te enviaremos los documentos por email cuando estén listos. Recibirás también el contrato para firmar.</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Startidea te enviará los documentos por email cuando estén listos. Recibirás también el contrato para firmar.</span></div>
                   </div>
                 )}
                 {(exp.status === 'analizando_ia') && (
@@ -798,7 +798,7 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>Revisa los documentos recibidos y completa todos los campos [COMPLETAR] con datos reales de tu entidad.</span></div>
                     <div class="next-step-item"><span class="step-num">2</span><span>Reúne los documentos del checklist adjunto (estatutos, certificados AEAT/SS, NIF, etc.).</span></div>
-                    <div class="next-step-item"><span class="step-num">3</span><span>Startidea presentará el expediente en tu nombre en cuanto confirmes que está todo listo. Te avisaremos cuando esté presentado y te enviaremos el justificante CSV.</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Startidea presentará el expediente en tu nombre en cuanto confirmes que está todo listo. Startidea te avisará cuando esté presentado y te enviará el justificante CSV.</span></div>
                   </div>
                 )}
                 {exp.status === 'entregado' && exp.apoderamiento !== 1 && (
@@ -813,13 +813,13 @@ const primerNombre = user?.nombre?.split(' ')[0] ?? email.split('@')[0];
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>La solicitud está presentada. La Administración tiene hasta el plazo marcado en las bases para resolver.</span></div>
                     <div class="next-step-item"><span class="step-num">2</span><span>Cuando recibas la resolución (concedida o denegada), comunícanosla a <a href="mailto:hola@startidea.es" style="color:#e6356b">hola@startidea.es</a></span></div>
-                    <div class="next-step-item"><span class="step-num">3</span><span>Si se concede, cuando cobres el importe en tu cuenta, te enviaremos la factura de honorarios (12%, 30 días para pagar).</span></div>
+                    <div class="next-step-item"><span class="step-num">3</span><span>Si se concede, cuando cobres el importe en tu cuenta, Startidea te enviará la factura de honorarios (12%, 30 días para pagar).</span></div>
                   </div>
                 )}
                 {exp.factura_num && (
                   <div>
                     <div class="next-step-item"><span class="step-num">1</span><span>¡Enhorabuena por la subvención concedida! El equipo Startidea os ha ayudado a conseguirla.</span></div>
-                    <div class="next-step-item"><span class="step-num">2</span><span>Tienes 30 días desde el cobro de la subvención para abonar nuestra factura de honorarios.</span></div>
+                    <div class="next-step-item"><span class="step-num">2</span><span>Tienes 30 días desde el cobro de la subvención para abonar la factura de honorarios de Startidea.</span></div>
                     <div class="next-step-item"><span class="step-num">3</span><span>¿Hay más convocatorias que os interesen? <a href="mailto:hola@startidea.es" style="color:#e6356b">Escribid a Startidea →</a></span></div>
                   </div>
                 )}

@@ -50,10 +50,10 @@
 
   <div class="px-5 py-5">
     <p class="font-display text-xl leading-tight text-ink">
-      Cuéntanos en una línea. <em class="italic text-magenta">Te respondemos al rato</em>.
+      Cuéntanos en una línea. <em class="italic text-magenta">Startidea te responde al rato</em>.
     </p>
     <p class="mt-2 text-xs leading-relaxed text-ink-mute">
-      Llega directo a nuestro Telegram. Sin tracking. Sin cookies de terceros.
+      Llega directo al Telegram de Startidea. Sin tracking. Sin cookies de terceros.
     </p>
 
     <form id="chat-form" class="mt-4 space-y-3" novalidate>
@@ -99,7 +99,7 @@
           required
           maxlength="2000"
           rows="4"
-          placeholder="¿En qué podemos ayudarte?"
+          placeholder="¿En qué puede ayudarte Startidea?"
           class="w-full resize-none border border-ink bg-paper px-3 py-2.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
         ></textarea>
       </div>
@@ -180,7 +180,7 @@
         if (r.ok && json.ok) {
           form.reset();
           status.style.color = '#1a7f37';
-          status.textContent = 'Enviado. Te contestamos al rato por email.';
+          status.textContent = 'Enviado. Startidea te contesta al rato por email.';
           setTimeout(function () { setOpen(false); status.textContent = ''; }, 2500);
         } else {
           var msg = 'No se pudo enviar. Escríbenos a hola@startidea.es.';

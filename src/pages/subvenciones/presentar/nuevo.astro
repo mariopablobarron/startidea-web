@@ -339,7 +339,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                     <!-- CTA dentro del panel de detalles -->
                     <div class="border-t border-magenta/20 bg-magenta/5 px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <p class="text-xs text-ink/60 leading-relaxed">
-                        Startidea verifica el encaje real en el diagnóstico (24–48h). Si no encaja al 100 %, te lo decimos antes de seguir.
+                        Startidea verifica el encaje real en el diagnóstico (24–48h). Si no encaja al 100 %, Startidea te lo dice antes de seguir.
                       </p>
                       <button type="button" class="conv-select-btn shrink-0 btn text-sm">
                         Me interesa — continuar →
@@ -449,7 +449,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   <p>1. ¿A quién ayuda vuestra entidad y cómo? (colectivo y tipo de servicio)</p>
                   <p>2. ¿Qué proyecto o programa queréis hacer con la subvención?</p>
                   <p>3. ¿Cuántas personas se beneficiarán y en qué plazo?</p>
-                  <p class="mt-2 text-ink/40">No hace falta que sea largo. Si luego necesitamos más datos, os los pedimos.</p>
+                  <p class="mt-2 text-ink/40">No hace falta que sea largo. Si luego Startidea necesita más datos, os los pide.</p>
                 </div>
               </details>
               <p class="text-xs text-ink/30">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
@@ -513,7 +513,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   <input type="radio" name="apoderamiento" value="no" class="accent-magenta mt-0.5 shrink-0" />
                   <div>
                     <span class="text-sm font-medium text-ink">Preferimos firmar nosotros</span>
-                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara el expediente completo. Cuando dais el visto bueno, os enviamos las instrucciones para que firmáis y presentéis con vuestro certificado (menos de 10 minutos).</p>
+                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara el expediente completo. Cuando dais el visto bueno, Startidea os envía las instrucciones para que firmáis y presentéis con vuestro certificado (menos de 10 minutos).</p>
                   </div>
                 </label>
               </div>
@@ -526,7 +526,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           <fieldset id="step-3" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Documentos disponibles</legend>
             <p class="text-sm text-ink/60">
-              Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico te decimos qué falta y cómo conseguirlo.
+              Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico Startidea te dice qué falta y cómo conseguirlo.
             </p>
 
             <!-- ─── Generador IA de memoria técnica ───────────────────── -->
@@ -619,7 +619,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               {[
                 { id: 'doc-memoria-anual',  name: 'docMemoriaAnual',  label: '⭐ Memoria de actividades del año anterior',          hint: 'El documento más valioso para el expediente. Permite incluir tu historial, indicadores de impacto, beneficiarios y proyectos.', badge: 'MUY RECOMENDADO' },
                 { id: 'doc-estatutos',      name: 'docEstatutos',     label: '⭐ Estatutos de la entidad',                          hint: 'Permite verificar que el objeto social encaja con la convocatoria y documentar la presentación. Con sello de inscripción.', badge: 'MUY RECOMENDADO' },
-                { id: 'doc-memoria',        name: 'docMemoria',       label: 'Borrador de memoria técnica del proyecto',           hint: 'Si tienes un borrador, el equipo lo mejora y adapta a la convocatoria. Si no tienes, lo elaboramos desde cero.' },
+                { id: 'doc-memoria',        name: 'docMemoria',       label: 'Borrador de memoria técnica del proyecto',           hint: 'Si tienes un borrador, el equipo lo mejora y adapta a la convocatoria. Si no tienes, Startidea lo elabora desde cero.' },
                 { id: 'doc-presupuesto',    name: 'docPresupuesto',   label: 'Presupuesto estimado del proyecto',                  hint: 'Si tienes un presupuesto previo (Word, Excel o PDF), el equipo lo reformatea según las partidas que pide la convocatoria.' },
                 { id: 'doc-hacienda',       name: 'docHacienda',      label: 'Certificado AEAT (Hacienda)',                        hint: 'Al corriente de obligaciones tributarias. Válido 6 meses desde la fecha de emisión.' },
                 { id: 'doc-ss',             name: 'docSS',            label: 'Certificado TGSS (Seguridad Social)',                hint: 'Al corriente de pagos a la Seguridad Social. Válido 6 meses. Se puede solicitar justo antes de presentar.' },
@@ -797,7 +797,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
         ⚡ Viniendo desde el Copiloto Autónomo
       </p>
       <p class="text-sm text-ink/80">
-        Te derivamos desde el expediente <strong class="font-mono">${utmContent.replace(/[^A-Z0-9-]/gi, '')}</strong>.
+        Startidea te deriva desde el expediente <strong class="font-mono">${utmContent.replace(/[^A-Z0-9-]/gi, '')}</strong>.
         Al enviar este formulario, Startidea se encarga de presentar la convocatoria por ti
         (comisión 12% solo al éxito). Si solo querías los documentos del Copiloto, ya los tienes en tu email.
       </p>

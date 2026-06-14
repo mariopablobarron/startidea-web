@@ -278,8 +278,8 @@
         alert('Cuéntame primero algo y luego paso la conversación al equipo.');
         return;
       }
-      var email = prompt('¿A qué email te respondemos? (opcional, deja vacío para enviar sin contacto)');
-      var ok = confirm('Vamos a enviar esta conversación al equipo de Startidea para responderte. Tus datos se tratan según la política de privacidad (https://startidea.es/privacidad). ¿Continuamos?');
+      var email = prompt('¿A qué email te responde Startidea? (opcional, deja vacío para enviar sin contacto)');
+      var ok = confirm('Esta conversación se enviará al equipo de Startidea para responderte. Tus datos se tratan según la política de privacidad (https://startidea.es/privacidad). ¿Continuar?');
       if (!ok) return;
       var transcript = history
         .map(function (m) { return (m.role === 'user' ? '> ' : '') + m.content; })
