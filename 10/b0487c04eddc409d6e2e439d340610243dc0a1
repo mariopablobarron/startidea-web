@@ -1,0 +1,21 @@
+docs/security-headers-via-traefik.md
+  s_ddfa8ed37a818a::t_f3ff9480571157 33-34,63-64,76,87-88,91-93
+infra/docker-compose.production.template.yml
+  s_ddfa8ed37a818a::t_b6c043a637e843 60-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "10b0487c04eddc409d6e2e439d340610243dc0a1",
+  "prompts": {},
+  "sessions": {
+    "s_ddfa8ed37a818a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019eb879-87b3-7a43-8dc8-361096650eb5",
+        "model": "gpt-5.5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
