@@ -34,10 +34,13 @@ const propiedades = [
   <div class="container-x flex items-center justify-between gap-4 py-2 md:py-2.5 lg:py-3">
     <Logo class="h-10 sm:h-11 md:h-12 lg:h-14" />
 
-    <!-- Nav desktop — el bar inline solo aparece a partir de 1360px, donde caben
-         todos los enlaces sin partirse; por debajo se usa el menú "Menú". -->
+    <!-- Nav desktop — bar inline a partir de 1360px, donde caben todos los
+         enlaces sin solapar el logo. PENDIENTE (auditoría UX 14-jun): por
+         debajo (portátiles 13-14") solo se ve "Menú"; bajar el breakpoint
+         exige reducir el contenido del nav (demotar 1-2 ítems a un
+         desplegable) — decisión de IA, no un quick win. Gap reducido a gap-3. -->
     <nav class="hidden min-[1360px]:block" aria-label="Principal">
-      <ul class="flex items-center gap-4">
+      <ul class="flex items-center gap-3">
         {links.map((l) => (
           <li>
             <a href={l.href} class="link-underline whitespace-nowrap text-sm text-ink/85 hover:text-ink">
