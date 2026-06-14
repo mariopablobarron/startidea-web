@@ -142,6 +142,28 @@
     var sendTeam = document.getElementById('ai-send-team');
     if (!panel || !form) return;
 
+    // El chip flotante móvil aparece solo tras superar el hero, para no
+    // solaparse con el CTA del hero (misma esquina inferior-derecha).
+    // IntersectionObserver (no scroll listener): el sitio usa <body> como
+    // contenedor de scroll, así que window.scrollY no sirve aquí.
+    if (chipMobile) {
+      chipMobile.style.transition = 'opacity .25s ease, transform .25s ease';
+      var setChip = function (show) {
+        chipMobile.style.opacity = show ? '1' : '0';
+        chipMobile.style.transform = show ? 'translateY(0)' : 'translateY(10px)';
+        chipMobile.style.pointerEvents = show ? 'auto' : 'none';
+      };
+      var hero = document.querySelector('main section') || document.querySelector('section');
+      if (hero && 'IntersectionObserver' in window) {
+        setChip(false);
+        new IntersectionObserver(function (entries) {
+          setChip(!entries[0].isIntersecting);
+        }, { threshold: 0 }).observe(hero);
+      } else {
+        setChip(true);
+      }
+    }
+
     var history = [];
     var isStreaming = false;
     var welcomed = false;
