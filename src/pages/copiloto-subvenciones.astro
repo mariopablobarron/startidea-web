@@ -1,5 +1,46 @@
 ---
+import { organizationSchema, serviceSchema, howToSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 export const prerender = true;
+
+// Datos espejo del contenido visible de la página (mantener en sync si se edita el HTML).
+const steps = [
+  { name: 'Envías tu solicitud', text: 'Rellenas el formulario con los datos de tu organización y el enlace a la convocatoria que te interesa. Es suficiente con la URL de la convocatoria.' },
+  { name: 'Analizamos el encaje', text: 'El equipo de Startidea estudia los requisitos, los criterios de valoración y la documentación exigida, y envía un diagnóstico de encaje en 24–48h. Si tiene sentido presentarse, arranca el servicio sin coste por adelantado.' },
+  { name: 'Generamos los documentos', text: 'Memoria, presupuesto, checklist y guía de presentación listos en 24–48 horas. Startidea revisa cada pieza antes de enviártela.' },
+  { name: 'Presentamos la solicitud', text: 'El equipo de Startidea presenta ante el organismo en nombre de tu entidad. Recibes el justificante con número de registro y CSV, y puedes seguir el estado en tiempo real desde el portal de cliente.' },
+];
+const faqs = [
+  { q: '¿Qué convocatorias tramitáis?', a: 'Subvenciones públicas de cualquier organismo: Junta de Andalucía, ministerios, diputaciones provinciales, ayuntamientos y fondos europeos (FEDER, FSE+, FEADER). Si la convocatoria está publicada en un boletín oficial o en el BDNS, Startidea puede analizarla.' },
+  { q: '¿Tengo que aportar algún documento?', a: 'Sí. Para generar la documentación se necesita el NIF o CIF de la entidad, los estatutos actualizados y el enlace a la convocatoria (la URL del boletín o de la sede electrónica es suficiente). En algunos casos puede ser necesario aportar documentación adicional de la entidad.' },
+  { q: '¿Cuánto tarda?', a: 'Los documentos generados (memoria, presupuesto, checklist y guía de presentación) se entregan en un plazo habitual de 24 a 48 horas desde la recepción de la solicitud completa. Los plazos pueden variar en convocatorias de alta complejidad técnica.' },
+  { q: '¿Qué pasa si no conceden la subvención?', a: 'No hay ningún coste. El servicio funciona estrictamente a comisión de éxito: si la administración deniega la subvención o la resolución es desfavorable, Startidea no cobra nada. Sin facturas, sin penalizaciones.' },
+  { q: '¿Cómo se paga la comisión?', a: 'Startidea envía la factura una vez que la administración ha notificado la resolución favorable y el importe concedido es firme. La comisión es el 12% de ese importe, por transferencia bancaria, en los términos del contrato firmado al inicio del servicio.' },
+];
+
+const jsonLd = [
+  organizationSchema(),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Copiloto de Subvenciones', url: `${SITE_URL}/copiloto-subvenciones` },
+  ]),
+  serviceSchema({
+    name: 'Copiloto de Subvenciones — tramitación de subvenciones a éxito',
+    description:
+      'Tramitación de subvenciones públicas para entidades del tercer sector, empresas e instituciones en España. Startidea genera la memoria técnica, el presupuesto, el checklist y la guía de presentación, y presenta la solicitud ante el organismo. Comisión a éxito del 12%: solo se cobra si se concede la subvención, sin pago inicial, sin cuota mensual y sin permanencia.',
+    serviceType: 'Tramitación de subvenciones',
+    url: `${SITE_URL}/copiloto-subvenciones`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Administración pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Tramitación de subvenciones a éxito (comisión 12%)', description: 'Diagnóstico de encaje, memoria, presupuesto, checklist y presentación electrónica. Comisión del 12% del importe concedido; sin ningún coste si no se concede.' },
+    ],
+  }),
+  howToSchema({
+    name: 'Cómo tramitar una subvención con el Copiloto de Subvenciones de Startidea',
+    description: 'Los cuatro pasos para tramitar una subvención pública con Startidea, con comisión a éxito y sin pago por adelantado.',
+    steps,
+  }),
+  faqPageSchema(faqs.map(f => ({ q: f.q, a: f.a }))),
+];
 ---
 
 <!DOCTYPE html>
@@ -11,6 +52,7 @@ export const prerender = true;
   <meta name="description" content="Generamos la memoria, presupuesto y checklist para tus solicitudes de subvención. Comisión a éxito del 12%: solo cobramos si te la conceden.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://startidea.es/copiloto-subvenciones">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
