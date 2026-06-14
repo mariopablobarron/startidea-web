@@ -1,0 +1,30 @@
+src/layouts/Base.astro
+  s_0ab79ba551035b::t_b0f572755c0f46 121
+  s_0ab79ba551035b::t_6fa4794ab0bbbd 25
+src/components/AsistenteIA.astro
+  s_0ab79ba551035b::t_11074f00baabad 35
+  s_0ab79ba551035b::t_898105d2488fb2 14
+src/components/HubFlotante.astro
+  s_0ab79ba551035b::t_5c0c79f718da28 1-17,19-97
+  s_0ab79ba551035b::t_011e43c93e3098 18
+src/components/HeroJourney.astro
+  s_0ab79ba551035b::t_cea3408868fdf9 131
+src/components/VoiceAgent.astro
+  s_0ab79ba551035b::t_db5c90dcab3dba 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b12d86d8982d07ad96990f50ed987f8afdc3c6b6",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
