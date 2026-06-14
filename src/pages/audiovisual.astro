@@ -186,6 +186,48 @@ const proceso = [
     </div>
   </section>
 
+  <!-- Reel — prueba visual del trabajo real (auditoría UX 14-jun: la página
+       vendía producción audiovisual sin enseñar ni una imagen). Metraje propio
+       de Startidea, mudo en bucle; enlaces a YouTube/Spotify para el resto. -->
+  <section class="border-b border-ink/15 bg-ink py-16 text-paper md:py-20">
+    <div class="container-x">
+      <span class="label !text-paper/60">— El trabajo, no la promesa</span>
+      <div class="mt-8 grid grid-cols-12 items-center gap-x-8 gap-y-8">
+        <div class="col-span-12 lg:col-span-8">
+          <div class="relative aspect-video w-full overflow-hidden border border-paper/15 bg-black">
+            <video
+              class="absolute inset-0 h-full w-full object-cover"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="/audiovisual/reel-poster.jpg"
+              aria-label="Reel de producción audiovisual de Startidea"
+            >
+              <source src="/audiovisual/reel.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <div class="col-span-12 lg:col-span-4">
+          <p class="text-lede text-paper/85">
+            Una muestra de la producción real de Startidea: vídeo, documental y podcast para entidades con propósito. El trabajo completo, en los canales.
+          </p>
+          <div class="mt-7 flex flex-col gap-3">
+            <a href="https://www.youtube.com/c/AgenciadeComunicaciónSocialSTARTIDEA" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border-b border-paper/40 pb-1 text-sm text-paper transition-colors hover:border-paper">
+              Ver vídeos en YouTube
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="https://open.spotify.com/show/3c3Pm70Up3v1GOdYuSxj05" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border-b border-paper/40 pb-1 text-sm text-paper transition-colors hover:border-paper">
+              Escuchar el podcast en Spotify
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Pilares -->
   <section class="bg-paper-warm py-20 md:py-28">
     <div class="container-x">
