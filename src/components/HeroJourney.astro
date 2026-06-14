@@ -15,6 +15,10 @@
 <section class="jny" data-jny>
   <div class="jny__layer" data-jny-layer>
     <canvas id="jny-canvas" aria-hidden="true"></canvas>
+    <video id="jny-bg" class="jny__bg" muted loop playsinline preload="none" poster="/hero/hero-poster.jpg" aria-hidden="true">
+      <source src="/hero/hero-loop.mp4" type="video/mp4" />
+    </video>
+    <div class="jny__scrim" aria-hidden="true"></div>
     <div class="jny__vignette"></div>
 
     <div class="jny__overlay container-x">
@@ -72,6 +76,16 @@
   #jny-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
   .jny__vignette { position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background: radial-gradient(70% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%); }
+  /* Fondo de vídeo (marca de agua) — solo en el hero asentado/estático. Durante
+     el viaje 3D está oculto (display:none, preload:none → no carga). */
+  .jny__bg { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
+    object-fit: cover; display: none; opacity: 0; pointer-events: none;
+    transition: opacity 1s ease; }
+  .jny__scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    opacity: 0; transition: opacity 1s ease;
+    background: linear-gradient(95deg, rgba(8,7,10,.94) 0%, rgba(8,7,10,.82) 38%, rgba(8,7,10,.5) 72%, rgba(8,7,10,.35) 100%); }
+  .jny.is-arrived .jny__bg, .jny.is-static .jny__bg { display: block; opacity: .7; }
+  .jny.is-arrived .jny__scrim, .jny.is-static .jny__scrim { opacity: 1; }
   .jny__overlay { position: absolute; inset: 0; z-index: 2; }
   .jny__stage { position: absolute; left: 0; right: 0; padding-left: clamp(24px,6vw,96px); padding-right: clamp(24px,6vw,96px);
     top: 50%; transform: translateY(-50%); opacity: 0; transition: opacity .5s ease; pointer-events: none; }
@@ -216,6 +230,10 @@
         scrollBy(0, after - before); // colapso compensado: el contenido no se mueve
         html.style.scrollBehavior = prevSB;
         setChrome(false); // nav y chips vuelven
+        // Fondo de vídeo: solo se reproduce en desktop (en móvil queda el poster
+        // estático, para no gastar datos). small = innerWidth < 760 (arriba).
+        const bg = document.getElementById('jny-bg');
+        if (bg && !small) bg.play().catch(function () {});
       };
 
       const onScroll = () => {
