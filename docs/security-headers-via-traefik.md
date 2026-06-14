@@ -30,6 +30,8 @@ en TODAS las respuestas (estáticas y SSR), sin tocar el código Astro.
 - traefik.http.middlewares.startidea-security.headers.referrerPolicy=strict-origin-when-cross-origin
 - traefik.http.middlewares.startidea-security.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN
 - traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Permissions-Policy=geolocation=(),camera=(),microphone=(),payment=()
+- traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Cross-Origin-Opener-Policy=same-origin
+- traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Cross-Origin-Resource-Policy=same-origin
 - traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' https://analytics.hubstartidea.es; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://analytics.hubstartidea.es; form-action 'self' https://buttondown.email; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
 - traefik.http.routers.startidea-web.middlewares=startidea-security@docker
 ```
@@ -58,6 +60,8 @@ Bloque exacto a añadir a `labels:` del servicio `startidea-web`:
   - "traefik.http.middlewares.startidea-security.headers.referrerPolicy=strict-origin-when-cross-origin"
   - "traefik.http.middlewares.startidea-security.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN"
   - "traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Permissions-Policy=geolocation=(), camera=(), microphone=(), payment=()"
+  - "traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Cross-Origin-Opener-Policy=same-origin"
+  - "traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Cross-Origin-Resource-Policy=same-origin"
   - "traefik.http.middlewares.startidea-security.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' https://analytics.hubstartidea.es; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://analytics.hubstartidea.es; form-action 'self' https://buttondown.email; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
   - "traefik.http.routers.startidea-web.middlewares=startidea-security@docker"
 ```
@@ -69,7 +73,7 @@ Bloque exacto a añadir a `labels:` del servicio `startidea-web`:
 ## Verificación post-deploy
 
 ```bash
-curl -sSI https://startidea.es/precios | grep -iE "strict|frame|content-security|referrer|permissions|nosniff"
+curl -sSI https://startidea.es/precios | grep -iE "strict|frame|content-security|referrer|permissions|cross-origin|nosniff"
 ```
 
 Esperado:
@@ -80,7 +84,13 @@ x-frame-options: SAMEORIGIN
 referrer-policy: strict-origin-when-cross-origin
 content-security-policy: default-src 'self'; …
 permissions-policy: geolocation=(), camera=(), microphone=(), payment=()
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: same-origin
 ```
+
+No activar `Cross-Origin-Embedder-Policy` sin una auditoría previa de analítica,
+embeds y recursos externos. Puede romper recursos de terceros si no devuelven
+sus propias cabeceras compatibles.
 
 ## Después de aplicar — limpiar middleware Astro
 
