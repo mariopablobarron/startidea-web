@@ -217,6 +217,7 @@ const ORG = {
     'https://www.youtube.com/c/AgenciadeComunicaciónSocialSTARTIDEA',
     'https://open.spotify.com/show/3c3Pm70Up3v1GOdYuSxj05',
     'https://www.wikidata.org/wiki/Q140197667',
+    'https://www.crunchbase.com/organization/startidea-9326',
   ],
 };
 
