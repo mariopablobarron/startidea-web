@@ -5,9 +5,9 @@ export const prerender = true;
 // Datos espejo del contenido visible de la página (mantener en sync si se edita el HTML).
 const steps = [
   { name: 'Envías tu solicitud', text: 'Rellenas el formulario con los datos de tu organización y el enlace a la convocatoria que te interesa. Es suficiente con la URL de la convocatoria.' },
-  { name: 'Analizamos el encaje', text: 'El equipo de Startidea estudia los requisitos, los criterios de valoración y la documentación exigida, y envía un diagnóstico de encaje en 24–48h. Si tiene sentido presentarse, arranca el servicio sin coste por adelantado.' },
-  { name: 'Generamos los documentos', text: 'Memoria, presupuesto, checklist y guía de presentación listos en 24–48 horas. Startidea revisa cada pieza antes de enviártela.' },
-  { name: 'Presentamos la solicitud', text: 'El equipo de Startidea presenta ante el organismo en nombre de tu entidad. Recibes el justificante con número de registro y CSV, y puedes seguir el estado en tiempo real desde el portal de cliente.' },
+  { name: 'Startidea analiza el encaje', text: 'El equipo de Startidea estudia los requisitos, los criterios de valoración y la documentación exigida, y envía un diagnóstico de encaje en 24–48h. Si tiene sentido presentarse, arranca el servicio sin coste por adelantado.' },
+  { name: 'Startidea genera los documentos', text: 'Memoria, presupuesto, checklist y guía de presentación listos en 24–48 horas. Startidea revisa cada pieza antes de enviártela.' },
+  { name: 'Startidea presenta la solicitud', text: 'El equipo de Startidea presenta ante el organismo en nombre de tu entidad. Recibes el justificante con número de registro y CSV, y puedes seguir el estado en tiempo real desde el portal de cliente.' },
 ];
 const faqs = [
   { q: '¿Qué convocatorias tramitáis?', a: 'Subvenciones públicas de cualquier organismo: Junta de Andalucía, ministerios, diputaciones provinciales, ayuntamientos y fondos europeos (FEDER, FSE+, FEADER). Si la convocatoria está publicada en un boletín oficial o en el BDNS, Startidea puede analizarla.' },
@@ -49,7 +49,7 @@ const jsonLd = [
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Copiloto de Subvenciones · Tramitación de subvenciones · Startidea Granada</title>
-  <meta name="description" content="Generamos la memoria, presupuesto y checklist para tus solicitudes de subvención. Comisión a éxito del 12%: solo cobramos si te la conceden.">
+  <meta name="description" content="Startidea genera la memoria, presupuesto y checklist para tus solicitudes de subvención. Comisión a éxito del 12%: solo cobra si te la conceden.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://startidea.es/copiloto-subvenciones">
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
@@ -524,7 +524,7 @@ const jsonLd = [
     <span class="hero-label">Copiloto de Subvenciones</span>
     <h1>Tramita subvenciones sin pagar si no las consigues</h1>
     <p class="hero-sub">
-      Generamos toda la documentación para vuestra subvención. Solo cobramos si la conceden.
+      Startidea genera toda la documentación para vuestra subvención. Solo cobra si la conceden.
     </p>
     <div class="hero-ctas">
       <a href="/subvenciones/presentar/nuevo" class="btn-primary">Solicitar ahora →</a>
@@ -597,21 +597,21 @@ const jsonLd = [
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h3>Analizamos el encaje</h3>
+            <h3>Startidea analiza el encaje</h3>
             <p>El equipo de Startidea estudia los requisitos, los criterios de valoración y la documentación exigida. Te enviamos un diagnóstico de encaje en 24–48h. Si tiene sentido presentarse, arrancamos — sin coste por adelantado.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <h3>Generamos los documentos</h3>
+            <h3>Startidea genera los documentos</h3>
             <p>Memoria, presupuesto, checklist y guía de presentación listos en 24–48 horas. Startidea revisa cada pieza antes de enviártela.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Presentamos la solicitud</h3>
+            <h3>Startidea presenta la solicitud</h3>
             <p>El equipo de Startidea presenta ante el organismo en nombre de tu entidad. Recibes el justificante con número de registro y CSV. Puedes hacer seguimiento en tiempo real desde tu portal de cliente en <a href="/portal" style="color:var(--magenta)">startidea.es/portal</a>.</p>
           </div>
         </div>
