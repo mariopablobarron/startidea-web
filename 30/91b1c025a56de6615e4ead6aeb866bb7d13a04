@@ -1,0 +1,20 @@
+src/pages/tecnologia.astro
+  s_0ab79ba551035b::t_ee6f5439ad66d9 136
+  s_0ab79ba551035b::t_82c474156ae6d4 4-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3091b1c025a56de6615e4ead6aeb866bb7d13a04",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
