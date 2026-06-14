@@ -1,0 +1,34 @@
+.gitignore
+  s_0ab79ba551035b::t_e4f4c08020c7f8 54-57
+src/middleware.ts
+  s_ddfa8ed37a818a::t_b6c043a637e843 37-39,44,46
+  s_0ab79ba551035b::t_7d9c4da7de044e 33-36,40-43,45
+public/.well-known/security.txt
+  s_ddfa8ed37a818a::t_b6c043a637e843 1-5
+AGENTS.md
+  s_0ab79ba551035b::t_4a4a5ef158879d 1-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e5fa1b91074ec4bba72d61c59aa3f5016340a35e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_ddfa8ed37a818a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019eb879-87b3-7a43-8dc8-361096650eb5",
+        "model": "gpt-5.5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
