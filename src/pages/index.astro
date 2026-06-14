@@ -40,12 +40,10 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   <!-- 1. Gancho — viaje inmersivo 3D (Plan A) -->
   <HeroJourney />
 
-  <!-- 1.5 Tesis + cifras animadas — sostiene la energía al salir del hero,
-       antes del formulario. Incluye las 3 cifras de credibilidad (antes en
-       MetricasHero, ahora aquí para no duplicar). -->
+  <!-- 1.5 Tesis + cifras animadas — sostiene la energía al salir del hero.
+       Incluye las 3 cifras de credibilidad (antes en MetricasHero, ahora
+       aquí para no duplicar). -->
   <TesisImpacto />
-
-  <CtaConversion />
 
   <!-- 2. Social proof inmediato — banda de logos reconocibles -->
   <LogosBanner />
@@ -64,6 +62,11 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   <ParaQuien />
 
   <ComoTrabajamos />
+
+  <!-- Conversión — formulario corto, ya entendido qué hace / para quién /
+       cómo. Movido aquí desde justo-tras-hero (petición Mario 2026-06-14):
+       primero se entiende la oferta, luego se pide la reunión. -->
+  <CtaConversion />
 
   <!-- 4. Prueba social — quién ha confiado + casos -->
   <HanConfiado />
