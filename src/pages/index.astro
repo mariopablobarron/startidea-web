@@ -15,9 +15,9 @@
 // → cómo empezar.
 import Base from '@/layouts/Base.astro';
 import HeroJourney from '@/components/HeroJourney.astro';
+import TesisImpacto from '@/components/TesisImpacto.astro';
 import CtaConversion from '@/components/CtaConversion.astro';
 import LogosBanner from '@/components/LogosBanner.astro';
-import MetricasHero from '@/components/MetricasHero.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
 import Ecosistema from '@/components/Ecosistema.astro';
 import MerchPromo from '@/components/MerchPromo.astro';
@@ -39,13 +39,18 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
 >
   <!-- 1. Gancho — viaje inmersivo 3D (Plan A) -->
   <HeroJourney />
+
+  <!-- 1.5 Tesis + cifras animadas — sostiene la energía al salir del hero,
+       antes del formulario. Incluye las 3 cifras de credibilidad (antes en
+       MetricasHero, ahora aquí para no duplicar). -->
+  <TesisImpacto />
+
   <CtaConversion />
 
   <!-- 2. Social proof inmediato — banda de logos reconocibles -->
   <LogosBanner />
 
-  <!-- 3. Quién — credibilidad rápida -->
-  <MetricasHero />
+  <!-- 3. Quién — audiencias -->
   <ParaQuien />
 
   <!-- 3. Qué — servicios + método -->

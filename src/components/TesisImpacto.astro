@@ -1,0 +1,98 @@
+---
+/**
+ * Tesis + cifras animadas — primera sección tras el hero inmersivo.
+ *
+ * Objetivo (feedback Mario 2026-06-14): al salir del viaje 3D, sostener la
+ * energía con una afirmación potente + credibilidad inmediata, en vez de
+ * chocar con el formulario frío. Fondo oscuro: puente desde el hero (dark)
+ * hacia el resto de la home (claro).
+ *
+ * La tríada del titular mapea los tres pilares: comunicación, fundraising y
+ * tecnología (comunica / financia / sostiene).
+ *
+ * Cifras: cuentan hacia arriba al entrar en viewport (IntersectionObserver —
+ * el sitio scrollea en <body>, window.scrollY no sirve). Respeta
+ * prefers-reduced-motion (muestra el valor final sin animar).
+ */
+
+const cifras = [
+  { target: 15, suffix: '', unidad: 'años', body: 'Acompañando organizaciones con propósito desde febrero de 2011.' },
+  { target: 90, suffix: '+', unidad: 'organizaciones', body: 'Tercer sector, instituciones y empresas con propósito real.' },
+  { target: 320, suffix: '+', unidad: 'proyectos', body: 'Estrategia, comunicación, audiovisual, tecnología y fundraising.' },
+];
+---
+
+<section id="tesis-impacto" class="relative overflow-hidden border-b border-paper/10 bg-ink py-24 text-paper md:py-32">
+  <div class="container-x">
+    <span class="label !text-paper/55">— Desde 2011</span>
+
+    <h2 class="mt-6 max-w-[16ch] font-display text-display-lg leading-[0.98] text-paper md:text-display-xl">
+      El propósito no se <em class="not-italic text-magenta">comunica</em> solo.<br />
+      Ni se <em class="not-italic text-magenta">financia</em>. Ni se <em class="not-italic text-magenta">sostiene</em>.
+    </h2>
+
+    <p class="mt-8 max-w-measure text-lede text-paper/80">
+      Startidea pone comunicación, fundraising y tecnología al servicio de las
+      organizaciones que mueven algo: tercer sector, instituciones y empresas
+      con propósito. En Granada y en toda España.
+    </p>
+
+    <ol class="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 border-t border-paper/15 pt-12 md:grid-cols-3">
+      {cifras.map((c) => (
+        <li>
+          <p
+            class="font-display text-display-lg leading-[0.9] text-magenta tabular-nums md:text-display-xl"
+            data-count={c.target}
+            data-suffix={c.suffix}
+          >{c.target}{c.suffix}</p>
+          <p class="mt-3 font-mono text-sm uppercase tracking-widest text-paper/55 md:text-base">
+            {c.unidad}
+          </p>
+          <p class="mt-4 max-w-measure text-sm leading-relaxed text-paper/70 md:text-base">
+            {c.body}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('tesis-impacto');
+    if (!section) return;
+    var nums = section.querySelectorAll('[data-count]');
+    if (!nums.length) return;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // El HTML ya renderiza el valor final (SSR / sin-JS / fallback). Solo se
+    // anima (0 -> target) al entrar en viewport y con la pestaña visible; si
+    // rAF está pausado (pestaña oculta) o hay reduce-motion, se deja el final.
+    function animate(el) {
+      var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+      var suffix = el.getAttribute('data-suffix') || '';
+      if (reduce || document.hidden) { el.textContent = target + suffix; return; }
+      var dur = 1500;
+      var start = null;
+      el.textContent = '0';
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.6 });
+      nums.forEach(function (n) { io.observe(n); });
+    }
+  })();
+</script>
