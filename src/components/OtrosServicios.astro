@@ -2,6 +2,8 @@
 // Menú flotante al final de cada página de servicio:
 // 3 servicios "hermanos" + CTA reservar diagnóstico.
 // Marca el actual (slug) para no listarlo.
+import FranjaConfianza from '@/components/FranjaConfianza.astro';
+
 interface Props {
   current: string;
 }
@@ -21,6 +23,10 @@ const servicios = [
 
 const otros = servicios.filter((s) => s.slug !== current);
 ---
+
+<!-- Prueba social (cifras + logos) antes del cierre — en todas las páginas
+     de servicio que usan OtrosServicios. -->
+<FranjaConfianza />
 
 <!-- Bloque al pie: lista completa de otros servicios + CTA -->
 <section class="border-t border-ink/15 bg-paper-warm py-20 md:py-28">

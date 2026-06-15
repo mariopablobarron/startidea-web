@@ -1,0 +1,63 @@
+---
+/**
+ * Franja de confianza — prueba social reutilizable (hallazgo nº1 auditoría UX
+ * 14-jun: las páginas de servicio afirmaban mucho sin mostrar nada donde el
+ * usuario decide). Cifras reales + logos reales de clientes. SIN testimonio
+ * hasta tener frases reales de cliente (slot preparado abajo, comentado).
+ *
+ * Se incluye desde OtrosServicios.astro → aparece en todas las páginas de
+ * servicio justo antes del cierre. Fondo claro para que los logos se lean.
+ */
+const cifras = [
+  { num: '15', sufijo: 'años', label: 'Acompañando organizaciones con propósito desde 2011.' },
+  { num: '90+', sufijo: 'organizaciones', label: 'Tercer sector, instituciones y empresas con propósito.' },
+  { num: '320+', sufijo: 'proyectos', label: 'Comunicación, audiovisual, fundraising y tecnología.' },
+];
+
+const logos = [
+  { name: 'Cruz Roja Española', src: '/clientes/cruz-roja.png' },
+  { name: 'Save the Children', src: '/clientes/save-the-children.png' },
+  { name: 'Acción Contra el Hambre', src: '/clientes/accion-contra-el-hambre.png' },
+  { name: 'YMCA España', src: '/clientes/ymca.png' },
+  { name: 'Proyecto Solidario', src: '/clientes/proyecto-solidario.png' },
+  { name: 'Diputación de Granada', src: '/clientes/diputacion-granada.png' },
+  { name: 'Ayuntamiento de Granada', src: '/clientes/ayuntamiento-granada.png' },
+];
+---
+
+<section class="border-t border-ink/15 bg-paper py-14 md:py-18">
+  <div class="container-x">
+    <span class="label">— Confían en Startidea</span>
+
+    <ol class="mt-7 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-3">
+      {cifras.map((c) => (
+        <li class="border-t-2 border-ink/15 pt-4">
+          <p class="font-display text-display-md leading-none text-ink">
+            <span class="text-magenta">{c.num}</span>
+            <span class="ml-2 align-baseline font-mono text-xs uppercase tracking-widest text-ink-mute md:text-sm">{c.sufijo}</span>
+          </p>
+          <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/70">{c.label}</p>
+        </li>
+      ))}
+    </ol>
+
+    <ul class="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6">
+      {logos.map((l) => (
+        <li class="shrink-0">
+          <img
+            src={l.src}
+            alt={l.name}
+            loading="lazy"
+            decoding="async"
+            width="120"
+            height="44"
+            class="h-9 w-auto max-w-[120px] object-contain opacity-80 grayscale md:h-10"
+          />
+        </li>
+      ))}
+    </ul>
+
+    <!-- TODO: cuando Mario pase 1-2 testimonios reales, añadir aquí un <blockquote>
+         con cita + nombre/organización (segmentado por audiencia si es posible). -->
+  </div>
+</section>
