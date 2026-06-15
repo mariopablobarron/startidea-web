@@ -1,0 +1,20 @@
+src/pages/manifiesto.astro
+  s_0ab79ba551035b::t_72e75e433aa4f4 177-196
+  s_0ab79ba551035b::t_a6d6c0e013bf89 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "eb32fa8e9397cfffc1792786da5a0a621fbbcb3e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
