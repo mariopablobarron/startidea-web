@@ -1,0 +1,171 @@
+src/pages/consultoria.astro
+  s_0ab79ba551035b::t_9415ca612d146f 217
+src/pages/subvenciones/auto-copiloto.astro
+  s_0ab79ba551035b::t_9415ca612d146f 87,97,105,144,153,163,172,194,210,218,224,229,241,249,257,267,277
+src/pages/admin/encuesta/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 49,56,71,75,92,106,114,118
+src/pages/merchandising.astro
+  s_0ab79ba551035b::t_9415ca612d146f 68
+src/pages/admin/crm/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 94,96,118,124,132,140,155-158,188,190,218,229,240,259,265,271
+src/pages/admin/funnel.astro
+  s_0ab79ba551035b::t_9415ca612d146f 144,148,157,159,162,164,169,176,216,218,236,243,247,251,263,266
+src/components/HeroImmersive.astro
+  s_0ab79ba551035b::t_9415ca612d146f 34
+src/components/Casos.astro
+  s_0ab79ba551035b::t_9415ca612d146f 15,18,93
+src/components/AudienciaDetalle.astro
+  s_0ab79ba551035b::t_9415ca612d146f 189
+src/pages/subvenciones/mapa.astro
+  s_0ab79ba551035b::t_9415ca612d146f 404,714,747,807
+src/components/GranadaSocialFeed.astro
+  s_0ab79ba551035b::t_9415ca612d146f 138,142,165,171,181,184
+  s_0ab79ba551035b::t_d2b5176effd63f 103
+src/pages/admin/leads/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 124,170
+src/pages/subvenciones/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 185,292,350,360,534-535,693
+src/components/CtaFinal.astro
+  s_0ab79ba551035b::t_9415ca612d146f 23,29
+src/pages/subvenciones/[slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 138,293,325,349,353
+src/pages/subvenciones/catalogo/[slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 156,253,261,263,266,270,274,330,346,368,380,398,434,436,468
+src/pages/subvenciones/crear-alerta.astro
+  s_0ab79ba551035b::t_9415ca612d146f 66,81,96
+src/components/Manifesto.astro
+  s_0ab79ba551035b::t_58e03ba841f833 18
+  s_0ab79ba551035b::t_9415ca612d146f 38
+src/pages/notas.astro
+  s_0ab79ba551035b::t_9415ca612d146f 133,157,173,191,198,201,227,245,252,255,270,281,314
+src/pages/subvenciones/presentar/nuevo.astro
+  s_0ab79ba551035b::t_9415ca612d146f 60,63,86,140,148-149,156,159,177,195,206,218,228,262,268,285,298,309,312,320,324,341,365,404,413-414,433,446-447,452,460,465,503,509,516,528,539,553,574,581,601,634,637,645,655,658,660-664,1185,1276,1279
+src/pages/subvenciones/catalogo/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 101,105,109,113-114,130,135,144-145,175,183,196,213
+src/components/ChatChip.astro
+  s_0ab79ba551035b::t_9415ca612d146f 78,91,103
+src/pages/admin/buscar/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 28,30,39,42,54-55,57,76-77,79,88
+src/pages/admin/notas/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 37,51,66,78,80,86,98
+src/components/Footer.astro
+  s_0ab79ba551035b::t_d9ac560511755b 165
+  s_0ab79ba551035b::t_a13d135c709956 123
+  s_0ab79ba551035b::t_9415ca612d146f 95
+src/components/RecursosHome.astro
+  s_0ab79ba551035b::t_9415ca612d146f 42
+src/components/LogosBanner.astro
+  s_0ab79ba551035b::t_9415ca612d146f 61
+src/pages/admin/portal-usuarios.astro
+  s_0ab79ba551035b::t_9415ca612d146f 31,33,43-44,51-57,67,75-76,87
+src/pages/laboratorio/cursos/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 30,62,90,110,113,121,126,141,184
+src/pages/como-trabajamos.astro
+  s_0ab79ba551035b::t_9415ca612d146f 183
+src/pages/subvenciones/presentar/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 98,152,169
+src/components/AdminBar.astro
+  s_0ab79ba551035b::t_9415ca612d146f 117,178,244
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_9415ca612d146f 185,256,283,288,332,443,461,471,501,520,548,683,700
+src/pages/admin/impulsa/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 56,60-61,79,86,110
+src/pages/admin/landing-ai.astro
+  s_0ab79ba551035b::t_9415ca612d146f 120
+src/pages/encuesta-fundraising.astro
+  s_0ab79ba551035b::t_9415ca612d146f 15
+src/pages/admin/convocatorias/[slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 38,44,71,80,84,97,110,122,134,148,152,170,183,196,200,211,222,234,247,258,269,282,295,298,332,343,357,365,379,382,393,405,409,423,513
+src/pages/admin/auto-copiloto/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 122,124,129,133,148,154,158,175,181,214,232,235,237,242,265,271,278-282,291,294-295,307,331,343-347,353,356,364,452,465,471,531-532,540
+src/pages/admin/convocatorias/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 40,45,110,117-123,171,189,204-205
+src/pages/admin/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 177,185,214,220,223,237,243,255,263,268,270,278,280,288,334,347,361,365,370,374,391,404,409,412,415,418,422,431,443,448,452,464,467,482,491,495,499,503,512,520,533,538,555,574,584,589,613,619,639,654,660,669,685,698,711,714,724,735,741,757,763,774,780,795,805,813,821,825,829,908
+src/pages/subvenciones/granada.astro
+  s_0ab79ba551035b::t_9415ca612d146f 54,67,87,107
+src/components/AsistenteIA.astro
+  s_0ab79ba551035b::t_9415ca612d146f 57,89
+src/components/Nav.astro
+  s_0ab79ba551035b::t_9415ca612d146f 142
+src/components/VoiceAgent.astro
+  s_0ab79ba551035b::t_9415ca612d146f 106,177
+src/pages/admin/login.astro
+  s_0ab79ba551035b::t_9415ca612d146f 98,107,127
+src/pages/casos.astro
+  s_0ab79ba551035b::t_9415ca612d146f 108
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_9415ca612d146f 239,350
+src/components/ComoTrabajamos.astro
+  s_0ab79ba551035b::t_9415ca612d146f 35,40,55,65,75
+src/components/NotasRelacionadas.astro
+  s_0ab79ba551035b::t_9415ca612d146f 47,64,72,77,80
+src/components/TesisImpacto.astro
+  s_0ab79ba551035b::t_49d2cf40eadcc6 44
+  s_0ab79ba551035b::t_0d8c56e4d9c26d 30-31
+  s_0ab79ba551035b::t_9415ca612d146f 27,48
+src/pages/casos/[slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 213
+src/pages/impulsa/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 53,66,93,106
+src/pages/laboratorio/cursos/[slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 31,102,116,119,140,162,174,182,211,233
+src/components/CtaConversion.astro
+  s_0ab79ba551035b::t_9415ca612d146f 49,62,91
+src/pages/laboratorio/fundraising/[...slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 182
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_9415ca612d146f 242
+src/pages/subvenciones/agenda-2030-2026.astro
+  s_0ab79ba551035b::t_9415ca612d146f 98,105,109,117,121,134,150,164,175,186,196,207,234,255,259,263,276,291,302,314,324,352,366
+src/pages/notas/[...slug].astro
+  s_0ab79ba551035b::t_9415ca612d146f 223,237,289
+src/components/OtrosServicios.astro
+  s_0ab79ba551035b::t_9415ca612d146f 65
+src/pages/admin/knowledge.astro
+  s_0ab79ba551035b::t_9415ca612d146f 71
+src/components/SubsidyCard.astro
+  s_0ab79ba551035b::t_9415ca612d146f 72,76
+src/pages/contacto.astro
+  s_0ab79ba551035b::t_9415ca612d146f 74,80,87
+src/pages/laboratorio/fundraising/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 101,111
+src/pages/precios.astro
+  s_0ab79ba551035b::t_9415ca612d146f 113,115,117,126-129,142,144,156-157,173,175,200,225,238,251,264
+src/components/Ecosistema.astro
+  s_0ab79ba551035b::t_9415ca612d146f 127,140,170
+src/components/ParaQuien.astro
+  s_0ab79ba551035b::t_9415ca612d146f 15
+src/pages/google-ad-grants.astro
+  s_0ab79ba551035b::t_9415ca612d146f 98,121,131,264,278,286,290,313,329,347
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_9415ca612d146f 86,90,110,114-115,120,127,142,144-148,151-154,163,180,183,189,191,211,233,237,250,281,312,341,367,376,436,457,480,504,512,537,545,553,559,564,593,605
+src/pages/subvenciones/mi-copiloto.astro
+  s_0ab79ba551035b::t_9415ca612d146f 38,62,102,105,113,140,143,147,151,155,160,166,172,178,183,187,198,209,226,257,261
+src/pages/admin/crm/[email].astro
+  s_0ab79ba551035b::t_9415ca612d146f 133,138,153,155,160,172,184,199,215,222,239,263,304,347,356,363-364,384,434,443-444,446,450,456,503,506,510,514,522,530,537,548,556,562
+src/pages/admin/expedientes/index.astro
+  s_0ab79ba551035b::t_9415ca612d146f 64,66,94,102,110-116,129,143,166,184
+src/pages/audiovisual.astro
+  s_0ab79ba551035b::t_9415ca612d146f 273
+src/pages/recursos/diagnostico-modelo-fundraising.astro
+  s_0ab79ba551035b::t_9415ca612d146f 55,60,65
+src/pages/subvenciones/presentar/gracias.astro
+  s_0ab79ba551035b::t_9415ca612d146f 31,57,75,111,120,136,188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "f285eec06fb54a9e0809b3431a67eeb435730724",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
