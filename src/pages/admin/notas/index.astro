@@ -34,7 +34,7 @@ const CAT_COLOR: Record<string, string> = {
 <Base title="Admin · Notas / contenido" noindex={true}>
   <section class="bg-paper py-12">
     <div class="container-x">
-      <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+      <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
       <h1 class="mt-1 font-display text-3xl text-ink">Notas / contenido — {publicadas} publicadas</h1>
 
       <!-- KPIs -->
@@ -48,7 +48,7 @@ const CAT_COLOR: Record<string, string> = {
         ].map((k) => (
           <div class="border border-ink/15 bg-paper-warm p-4">
             <p class="font-display text-2xl text-ink">{k.v}</p>
-            <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">{k.l}</p>
+            <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/75">{k.l}</p>
           </div>
         ))}
       </div>
@@ -63,7 +63,7 @@ const CAT_COLOR: Record<string, string> = {
       <div class="mt-8 overflow-x-auto">
         <table class="w-full border-collapse text-sm">
           <thead>
-            <tr class="border-b border-ink/20 text-left text-ink/50">
+            <tr class="border-b border-ink/20 text-left text-ink/75">
               <th class="py-2 pr-3">Fecha</th>
               <th class="py-2 pr-3">Título</th>
               <th class="py-2 pr-3">Categoría</th>
@@ -75,15 +75,15 @@ const CAT_COLOR: Record<string, string> = {
           <tbody>
             {all.map((n) => (
               <tr class="border-b border-ink/10 text-ink/80">
-                <td class="py-2 pr-3 whitespace-nowrap font-mono text-xs text-ink/50">{fmt(n.data.pubDate)}</td>
+                <td class="py-2 pr-3 whitespace-nowrap font-mono text-xs text-ink/75">{fmt(n.data.pubDate)}</td>
                 <td class="py-2 pr-3">{n.data.title}</td>
-                <td class={`py-2 pr-3 ${CAT_COLOR[n.data.category || ''] ?? 'text-ink/50'}`}>{n.data.category || '—'}</td>
+                <td class={`py-2 pr-3 ${CAT_COLOR[n.data.category || ''] ?? 'text-ink/75'}`}>{n.data.category || '—'}</td>
                 <td class="py-2 pr-3">
                   {n.data.draft
                     ? <span class="font-mono text-[10px] uppercase tracking-widest text-amber-700">borrador</span>
                     : <span class="font-mono text-[10px] uppercase tracking-widest text-emerald-700">publicada</span>}
                 </td>
-                <td class="py-2 pr-3 font-mono text-[10px] text-ink/40">
+                <td class="py-2 pr-3 font-mono text-[10px] text-ink/75">
                   {n.data.tldr ? 'TL;DR ' : ''}{n.data.faqs && n.data.faqs.length ? `· ${n.data.faqs.length} FAQ` : ''}
                 </td>
                 <td class="py-2 pr-3 whitespace-nowrap">
@@ -95,7 +95,7 @@ const CAT_COLOR: Record<string, string> = {
         </table>
       </div>
 
-      <p class="mt-6 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+      <p class="mt-6 font-mono text-[10px] uppercase tracking-widest text-ink/75">
         La edición del contenido se hace en el repo (src/content/notas/). Esta vista es de control y SEO/GEO.
       </p>
     </div>

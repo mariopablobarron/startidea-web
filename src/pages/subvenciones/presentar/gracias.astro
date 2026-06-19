@@ -28,7 +28,7 @@ export const prerender = false;
       <div id="status-live" class="mb-10 border-2 border-magenta/30 bg-paper hidden">
         <div class="border-b border-magenta/20 bg-magenta/5 px-5 py-3 flex items-center justify-between gap-3">
           <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Estado del expediente — en vivo</p>
-          <span id="status-id" class="font-mono text-[10px] text-ink/40"></span>
+          <span id="status-id" class="font-mono text-[10px] text-ink/75"></span>
         </div>
         <div class="px-5 py-5">
           <!-- Barra de progreso -->
@@ -54,7 +54,7 @@ export const prerender = false;
                 <span class="step-dot shrink-0 flex h-6 w-6 items-center justify-center font-mono text-xs border border-ink/15 text-ink/30">
                   {i + 1}
                 </span>
-                <span class="step-label text-sm text-ink/50">{s.label}</span>
+                <span class="step-label text-sm text-ink/75">{s.label}</span>
               </li>
             ))}
           </ol>
@@ -72,7 +72,7 @@ export const prerender = false;
         <p class="text-sm text-paper/75 leading-relaxed mb-5">
           Acabas de recibir un email con un <strong class="text-paper">enlace de acceso directo</strong> a tu portal de cliente. Sin contraseña: un solo clic y estás dentro. El enlace es válido durante 1 hora.
         </p>
-        <p class="text-xs text-paper/50 leading-relaxed">
+        <p class="text-xs text-paper/70 leading-relaxed">
           Si no lo ves en unos minutos, revisa la carpeta de spam. También puedes solicitar un nuevo acceso en{' '}
           <a href="/portal" class="text-magenta hover:underline">startidea.es/portal</a>.
         </p>
@@ -108,7 +108,7 @@ export const prerender = false;
               <span class="col-span-2 font-mono text-sm text-magenta">{step.n}</span>
               <div class="col-span-10">
                 <p class="font-medium text-ink">{step.t}</p>
-                <p class="mt-1 text-sm text-ink/60 leading-relaxed">{step.d}</p>
+                <p class="mt-1 text-sm text-ink/75 leading-relaxed">{step.d}</p>
               </div>
             </li>
           ))}
@@ -117,7 +117,7 @@ export const prerender = false;
 
       <!-- Honorarios -->
       <div class="mb-10 border border-ink/10 bg-paper-warm p-5">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-2">Modelo de honorarios</p>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">Modelo de honorarios</p>
         <p class="text-sm text-ink/70 leading-relaxed">
           Comisión a éxito del <strong class="text-ink">12%</strong> sobre el importe concedido por la Administración. Si la subvención no se concede, no hay ningún coste. La factura se emite cuando la resolución favorable es firme.
         </p>
@@ -133,7 +133,7 @@ export const prerender = false;
         </a>
       </div>
 
-      <p class="mt-8 text-sm text-ink/40">
+      <p class="mt-8 text-sm text-ink/75">
         ¿Alguna duda? Escríbenos a{' '}
         <a href="mailto:hola@startidea.es" class="underline hover:text-magenta">hola@startidea.es</a>{' '}
         indicando el nombre de tu entidad.
@@ -185,7 +185,7 @@ export const prerender = false;
           'step-label text-sm transition-colors',
           isActive ? 'text-magenta font-medium'
             : isDone ? 'text-ink'
-            : 'text-ink/40',
+            : 'text-ink/75',
         ].join(' ');
         if (isDone && !isActive) { lbl.textContent = `${lbl.textContent?.replace(/^✓ /, '')} ✓`; }
       });

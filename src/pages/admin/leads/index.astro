@@ -121,7 +121,7 @@ function buildHref(overrides: Record<string, string | number | undefined>): stri
           name="q"
           value={q}
           placeholder="Buscar nombre, email, organización, reto…"
-          class="border border-ink/20 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none"
+          class="border border-ink/20 bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none"
         />
         <select name="kind" class="border border-ink/20 bg-paper px-3 py-3 font-mono text-xs uppercase tracking-widest text-ink">
           <option value="">Tipo: todos</option>
@@ -167,7 +167,7 @@ function buildHref(overrides: Record<string, string | number | undefined>): stri
                       {audienceLabels[it.audience] ?? it.audience}
                       {it.subType && <span class="text-ink-mute"> · {it.subType.replace(/-/g, " ")}</span>}
                     </p>
-                    <p class="mt-2 line-clamp-2 text-sm text-ink/65">{it.challenge}</p>
+                    <p class="mt-2 line-clamp-2 text-sm text-ink/75">{it.challenge}</p>
                   </div>
 
                   <div class="col-span-12 lg:col-span-2 lg:text-right">

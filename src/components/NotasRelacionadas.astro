@@ -44,7 +44,7 @@ const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
         </div>
         <a
           href={catUrl}
-          class="hidden shrink-0 font-mono text-[11px] uppercase tracking-widest text-ink/50 underline-offset-4 hover:text-magenta hover:underline sm:block"
+          class="hidden shrink-0 font-mono text-[11px] uppercase tracking-widest text-ink/75 underline-offset-4 hover:text-magenta hover:underline sm:block"
         >
           Ver todas →
         </a>
@@ -61,7 +61,7 @@ const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
                 class="group grid grid-cols-12 gap-x-8 gap-y-3 py-7 transition-colors hover:bg-paper"
               >
                 <div class="col-span-12 lg:col-span-2">
-                  <p class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                     {fmt.format(nota.data.pubDate)}
                   </p>
                 </div>
@@ -69,15 +69,15 @@ const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
                   <h3 class="font-display text-lg leading-snug text-ink transition-colors group-hover:text-magenta md:text-xl">
                     {nota.data.title}
                   </h3>
-                  <p class="mt-1.5 text-sm text-ink/65 line-clamp-2">
+                  <p class="mt-1.5 text-sm text-ink/75 line-clamp-2">
                     {nota.data.description}
                   </p>
                 </div>
                 <div class="col-span-12 lg:col-span-2 lg:text-right">
-                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                     ~{min} min
                   </span>
-                  <p class="mt-1 font-mono text-xs text-ink/50 transition-colors group-hover:text-magenta">
+                  <p class="mt-1 font-mono text-xs text-ink/75 transition-colors group-hover:text-magenta">
                     Leer →
                   </p>
                 </div>

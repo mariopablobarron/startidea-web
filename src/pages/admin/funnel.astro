@@ -141,11 +141,11 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
       <!-- Header -->
       <div class="mb-8 flex items-center justify-between">
         <div>
-          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">
             ← Admin
           </a>
           <h1 class="mt-1 font-display text-4xl text-ink">Embudo de conversión</h1>
-          <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink/40">
+          <p class="mt-1 font-mono text-[11px] uppercase tracking-widest text-ink/75">
             Subvenciones — Captación → Facturación
           </p>
         </div>
@@ -154,26 +154,26 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
       <!-- Tasas clave en cabecera -->
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-8">
         <div class="border border-ink/15 bg-paper p-4">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Conversión total</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Conversión total</p>
           <p class="mt-2 font-display text-2xl text-ink">{tasaPerfilToExp}</p>
-          <p class="mt-1 font-mono text-[10px] text-ink/40">Perfiles → expediente abierto</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/75">Perfiles → expediente abierto</p>
         </div>
         <div class="border border-ink/15 bg-paper p-4">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Cierre</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Cierre</p>
           <p class="mt-2 font-display text-2xl text-ink">{tasaExpToFirma}</p>
-          <p class="mt-1 font-mono text-[10px] text-ink/40">Expediente → contrato firmado</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/75">Expediente → contrato firmado</p>
         </div>
         <div class="border-2 border-magenta/30 bg-paper p-4">
           <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">Revenue</p>
           <p class="mt-2 font-display text-2xl text-magenta">{fmtEur(economico.facturadoTotal)}</p>
-          <p class="mt-1 font-mono text-[10px] text-ink/40">{tasaFirmaToFact} firma → factura</p>
+          <p class="mt-1 font-mono text-[10px] text-ink/75">{tasaFirmaToFact} firma → factura</p>
         </div>
       </div>
 
       <!-- Embudo visual -->
       <div class="border border-ink/15 bg-paper">
         <div class="border-b border-ink/10 px-5 py-3">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
             Etapas del embudo (anchos proporcionales)
           </p>
         </div>
@@ -213,9 +213,9 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
                   ></div>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between gap-3 text-[11px]">
-                  <p class="font-mono text-ink/40 truncate">{etapa.detalle}</p>
+                  <p class="font-mono text-ink/75 truncate">{etapa.detalle}</p>
                   {dropRate !== null && Number(dropRate) > 0 && (
-                    <p class="font-mono text-ink/40 flex-shrink-0">
+                    <p class="font-mono text-ink/75 flex-shrink-0">
                       −{dropRate} % drop
                     </p>
                   )}
@@ -233,22 +233,22 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
             <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">
               Sub-embudo · Copiloto Autónomo
             </p>
-            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
               Lead magnet → cliente premium
             </span>
           </div>
           <div class="px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <div>
               <p class="font-display text-2xl text-ink">{conversion.expedientesConversion}</p>
-              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Expedientes conversión</p>
+              <p class="font-mono text-[10px] uppercase text-ink/75 mt-1">Expedientes conversión</p>
             </div>
             <div>
               <p class="font-display text-2xl text-ink">{conversion.conversionContratoFirmado}</p>
-              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Contratos firmados</p>
+              <p class="font-mono text-[10px] uppercase text-ink/75 mt-1">Contratos firmados</p>
             </div>
             <div>
               <p class="font-display text-2xl text-ink">{conversion.conversionPresentados}</p>
-              <p class="font-mono text-[10px] uppercase text-ink/40 mt-1">Presentados</p>
+              <p class="font-mono text-[10px] uppercase text-ink/75 mt-1">Presentados</p>
             </div>
             <div>
               <p class="font-display text-2xl text-magenta">{fmtEur(conversion.facturadoConversion)}</p>
@@ -260,10 +260,10 @@ const tasaFirmaToFact = pct(economico.facturadoTotal > 0 ? 1 : 0, contratos.acep
 
       <!-- Nota metodológica -->
       <div class="mt-8 border border-ink/10 bg-paper/50 p-4">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">
           Notas metodológicas
         </p>
-        <ul class="text-[12px] text-ink/60 space-y-1.5 leading-relaxed">
+        <ul class="text-[12px] text-ink/75 space-y-1.5 leading-relaxed">
           {ga4.days_covered > 0 ? (
             <li>• Datos GA4 sincronizados desde el HUB via cron 06:00 UTC. Cobertura: {ga4.days_covered} días con datos hasta {ga4.last_date}.</li>
           ) : (

@@ -27,7 +27,7 @@ const ESTADO_COLOR: Record<string, string> = {
   abierto: 'text-green-700 bg-green-50 border-green-200',
   proximo: 'text-magenta bg-magenta/8 border-magenta/20',
   'a-demanda': 'text-ink/70 bg-ink/5 border-ink/15',
-  agotado: 'text-ink/40 bg-ink/5 border-ink/10',
+  agotado: 'text-ink/75 bg-ink/5 border-ink/10',
 };
 
 const FORMATO_ICON: Record<string, string> = {
@@ -59,7 +59,7 @@ const jsonLd = [
         <span aria-hidden="true">/</span>
         <a href="/laboratorio" class="hover:text-magenta">Laboratorio</a>
         <span aria-hidden="true">/</span>
-        <span class="text-ink/65">Cursos</span>
+        <span class="text-ink/75">Cursos</span>
       </nav>
     </div>
   </section>
@@ -87,7 +87,7 @@ const jsonLd = [
       {cursos.length === 0 ? (
         <div class="border border-ink/15 bg-paper-warm p-12 text-center">
           <p class="font-display text-2xl text-ink">Próximas formaciones en preparación.</p>
-          <p class="mt-3 text-ink/60">
+          <p class="mt-3 text-ink/75">
             Déjanos tu email y Startidea te avisa en cuanto se abra la inscripción.
           </p>
           <a href="/contacto" class="btn mt-6 inline-flex">Avísame cuando haya cursos →</a>
@@ -107,10 +107,10 @@ const jsonLd = [
                         <span class:list={['rounded-full border px-2.5 py-0.5 font-mono uppercase tracking-widest', ESTADO_COLOR[est]]}>
                           {ESTADO_LABEL[est]}
                         </span>
-                        <span class="font-mono uppercase tracking-widest text-ink/50">
+                        <span class="font-mono uppercase tracking-widest text-ink/75">
                           {FORMATO_ICON[fmt]} {fmt}
                         </span>
-                        <span class="font-mono uppercase tracking-widest text-ink/50">
+                        <span class="font-mono uppercase tracking-widest text-ink/75">
                           {curso.data.modalidad}
                         </span>
                       </div>
@@ -118,12 +118,12 @@ const jsonLd = [
                       <h2 class="mt-3 font-display text-2xl leading-tight text-ink md:text-3xl">
                         {curso.data.title}
                       </h2>
-                      <p class="mt-2 max-w-measure text-sm text-ink/65 leading-relaxed">
+                      <p class="mt-2 max-w-measure text-sm text-ink/75 leading-relaxed">
                         {curso.data.description}
                       </p>
 
                       <!-- Meta row -->
-                      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink/55 font-mono">
+                      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink/75 font-mono">
                         <span>⏱ {curso.data.duracion}</span>
                         {curso.data.proxima_edicion && (
                           <span>
@@ -138,7 +138,7 @@ const jsonLd = [
                     <div class="shrink-0 text-right">
                       <p class="font-display text-3xl text-ink">{curso.data.precio} <span class="text-base font-sans">€</span></p>
                       {curso.data.precio_esfl && (
-                        <p class="text-xs text-ink/50 mt-0.5">
+                        <p class="text-xs text-ink/75 mt-0.5">
                           {curso.data.precio_esfl} € ESFL
                         </p>
                       )}
@@ -181,7 +181,7 @@ const jsonLd = [
   <!-- CTA -->
   <section class="bg-ink py-14 md:py-20 text-paper">
     <div class="container-x text-center">
-      <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— Lista de aviso</span>
+      <span class="font-mono text-[11px] uppercase tracking-widest text-paper/70">— Lista de aviso</span>
       <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
         ¿Startidea te avisa cuando<br />
         <em class="italic text-magenta">abra la inscripción</em>?

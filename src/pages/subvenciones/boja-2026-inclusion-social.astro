@@ -182,7 +182,7 @@ const grupos = [
     key: 'persona' as const,
     label: 'Personas físicas',
     chip: 'Ayuda documental disponible',
-    chipColor: 'bg-ink/5 text-ink/60 border-ink/10',
+    chipColor: 'bg-ink/5 text-ink/75 border-ink/10',
     desc: 'Subvenciones individuales para personas mayores y con discapacidad. Startidea puede ayudar a organizar y revisar la documentación necesaria.',
   },
 ];
@@ -253,7 +253,7 @@ function buildLink(linea: Linea) {
     <div class="container-x">
       <div class="flex flex-wrap items-center gap-2 mb-4">
         <span class="label">— Convocatoria abierta</span>
-        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">BOJA {BOJA}</span>
+        <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">BOJA {BOJA}</span>
       </div>
       <h1 class="font-display text-display-xl leading-[0.96] text-ink">
         15 líneas del BOJA.<br />
@@ -280,12 +280,12 @@ function buildLink(linea: Linea) {
           { term: 'Cierre L7 Mod.2', def: '2 junio 2026' },
         ].map(({ term, def }) => (
           <div class="bg-paper p-5">
-            <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/50">{term}</dt>
+            <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">{term}</dt>
             <dd class="mt-1 text-sm font-medium text-ink">{def}</dd>
           </div>
         ))}
       </dl>
-      <p class="mt-4 text-xs text-ink/50 max-w-prose">
+      <p class="mt-4 text-xs text-ink/75 max-w-prose">
         Obligación de relación electrónica: todas las solicitudes deben presentarse a través del Registro Electrónico Único de la Junta de Andalucía. El 4 de junio de 2026 es día hábil; el plazo no se amplía. Startidea recomienda presentar con un mínimo de 5 días de margen.
       </p>
     </div>
@@ -329,7 +329,7 @@ function buildLink(linea: Linea) {
           <div class="space-y-1.5">
             <label for="el-desc" class="label text-base">
               ¿Qué hace vuestra entidad?
-              <span class="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink/40">
+              <span class="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink/75">
                 Opcional — mejora mucho el resultado
               </span>
             </label>
@@ -440,7 +440,7 @@ function buildLink(linea: Linea) {
               <div class="mb-6 flex flex-wrap items-start gap-3 border-t-2 border-ink/20 pt-6">
                 <div class="flex-1">
                   <h3 class="font-display text-xl text-ink">{grupo.label}</h3>
-                  <p class="mt-1 text-sm text-ink/60">{grupo.desc}</p>
+                  <p class="mt-1 text-sm text-ink/75">{grupo.desc}</p>
                 </div>
                 <span class={`shrink-0 border px-3 py-1 font-mono text-[10px] uppercase tracking-widest ${grupo.chipColor}`}>
                   {grupo.chip}
@@ -458,7 +458,7 @@ function buildLink(linea: Linea) {
                           ⏰ {linea.deadlineNote}
                         </span>
                       ) : (
-                        <span class="font-mono text-[9px] uppercase tracking-wide text-ink/40">
+                        <span class="font-mono text-[9px] uppercase tracking-wide text-ink/75">
                           Hasta {linea.deadline}
                         </span>
                       )}
@@ -468,7 +468,7 @@ function buildLink(linea: Linea) {
                       {linea.titulo}
                     </h4>
 
-                    <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+                    <p class="mt-2 text-sm text-ink/75 leading-relaxed">
                       {linea.desc}
                     </p>
 
@@ -498,7 +498,7 @@ function buildLink(linea: Linea) {
             Solo la documentación<br />
             <em class="italic text-magenta">de la entidad.</em>
           </h2>
-          <p class="mt-3 text-sm text-ink/65 max-w-prose">
+          <p class="mt-3 text-sm text-ink/75 max-w-prose">
             Son los documentos que casi cualquier convocatoria pública requiere. Si ya los tenéis preparados, el proceso es inmediato.
           </p>
           <a href="/copiloto-subvenciones" class="mt-5 inline-block font-mono text-xs uppercase tracking-widest text-magenta hover:underline">
@@ -517,7 +517,7 @@ function buildLink(linea: Linea) {
             ].map(({ doc, nota }) => (
               <li class="border border-ink/10 bg-white p-4">
                 <p class="font-medium text-sm text-ink">{doc}</p>
-                <p class="mt-1 text-xs text-ink/55 leading-relaxed">{nota}</p>
+                <p class="mt-1 text-xs text-ink/75 leading-relaxed">{nota}</p>
               </li>
             ))}
           </ul>
@@ -545,7 +545,7 @@ function buildLink(linea: Linea) {
           Consulta sin coste
         </a>
       </div>
-      <p class="mt-6 text-sm text-paper/40">
+      <p class="mt-6 text-sm text-paper/70">
         ¿Buscas otras convocatorias? →
         <a href="/subvenciones/catalogo" class="text-paper/60 hover:text-magenta underline underline-offset-2">
           Catálogo completo de Startidea
@@ -680,7 +680,7 @@ function buildLink(linea: Linea) {
               ${encajeBadge}
             </div>
             <p class="font-medium text-sm text-ink leading-snug">${l.titulo}</p>
-            <p class="mt-1 text-xs text-ink/60 leading-relaxed">${l.razon}</p>
+            <p class="mt-1 text-xs text-ink/75 leading-relaxed">${l.razon}</p>
           </div>
           <a href="${link}"
              class="shrink-0 bg-ink text-paper font-mono text-[11px] font-bold uppercase tracking-widest px-5 py-2.5 text-center hover:bg-magenta transition-colors whitespace-nowrap">
@@ -697,7 +697,7 @@ function buildLink(linea: Linea) {
           ${avisoHtml}
         </div>
         <div class="space-y-3">${lineasHtml}</div>
-        <p class="text-xs text-ink/40">
+        <p class="text-xs text-ink/75">
           Análisis orientativo basado en el tipo de entidad y actividad descrita.
           Startidea verifica el encaje exacto durante el diagnóstico.
         </p>

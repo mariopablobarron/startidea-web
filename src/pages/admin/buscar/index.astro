@@ -25,9 +25,9 @@ const fmt = (ms: number) => new Date(ms).toLocaleDateString('es-ES', { day: '2-d
 <Base title="Admin · Buscador global" noindex={true}>
   <section class="bg-paper py-12">
     <div class="container-x">
-      <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+      <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
       <h1 class="mt-1 font-display text-3xl text-ink">Buscador global</h1>
-      <p class="mt-2 text-sm text-ink/60">Cruza CRM (portal · copiloto · auto-copiloto · diagnósticos) y solicitudes de Startidea Impulsa por nombre, email o entidad.</p>
+      <p class="mt-2 text-sm text-ink/75">Cruza CRM (portal · copiloto · auto-copiloto · diagnósticos) y solicitudes de Startidea Impulsa por nombre, email o entidad.</p>
 
       <form method="get" action="/admin/buscar" class="mt-6 flex gap-3">
         <input type="search" name="q" value={q} placeholder="Nombre, email o entidad…" autofocus
@@ -36,10 +36,10 @@ const fmt = (ms: number) => new Date(ms).toLocaleDateString('es-ES', { day: '2-d
       </form>
 
       {q.length >= 2 && (
-        <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink/50">{totalRes} resultado{totalRes !== 1 ? 's' : ''} para “{q}”</p>
+        <p class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink/75">{totalRes} resultado{totalRes !== 1 ? 's' : ''} para “{q}”</p>
       )}
       {q.length > 0 && q.length < 2 && (
-        <p class="mt-6 text-sm text-ink/50">Escribe al menos 2 caracteres.</p>
+        <p class="mt-6 text-sm text-ink/75">Escribe al menos 2 caracteres.</p>
       )}
 
       {crm.length > 0 && (
@@ -51,10 +51,10 @@ const fmt = (ms: number) => new Date(ms).toLocaleDateString('es-ES', { day: '2-d
                 <a href={`/admin/crm/${encodeURIComponent(c.email)}`} class="flex flex-wrap items-center justify-between gap-2 py-3 hover:text-magenta">
                   <span>
                     <span class="font-display text-ink">{c.nombre || c.org_nombre || c.email}</span>
-                    {c.org_nombre && c.nombre && <span class="text-ink/50"> · {c.org_nombre}</span>}
-                    <span class="block font-mono text-xs text-ink/40">{c.email}{c.telefono ? ` · ${c.telefono}` : ''}</span>
+                    {c.org_nombre && c.nombre && <span class="text-ink/75"> · {c.org_nombre}</span>}
+                    <span class="block font-mono text-xs text-ink/75">{c.email}{c.telefono ? ` · ${c.telefono}` : ''}</span>
                   </span>
-                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     {c.expedientes_count > 0 ? `${c.expedientes_count} exp.` : ''}{c.has_portal ? ' · portal' : ''}
                   </span>
                 </a>
@@ -73,10 +73,10 @@ const fmt = (ms: number) => new Date(ms).toLocaleDateString('es-ES', { day: '2-d
                 <a href="/admin/impulsa" class="flex flex-wrap items-center justify-between gap-2 py-3 hover:text-magenta">
                   <span>
                     <span class="font-display text-ink">{s.org_nombre}</span>
-                    <span class="text-ink/50"> · {s.org_tipo}</span>
-                    <span class="block font-mono text-xs text-ink/40">{s.contacto_nombre} · {s.contacto_email}</span>
+                    <span class="text-ink/75"> · {s.org_tipo}</span>
+                    <span class="block font-mono text-xs text-ink/75">{s.contacto_nombre} · {s.contacto_email}</span>
                   </span>
-                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">{s.estado} · {fmt(s.created_at)}</span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">{s.estado} · {fmt(s.created_at)}</span>
                 </a>
               </li>
             ))}
@@ -85,7 +85,7 @@ const fmt = (ms: number) => new Date(ms).toLocaleDateString('es-ES', { day: '2-d
       )}
 
       {q.length >= 2 && totalRes === 0 && (
-        <p class="mt-6 text-ink/60">Sin resultados. Prueba con parte del email o del nombre de la entidad.</p>
+        <p class="mt-6 text-ink/75">Sin resultados. Prueba con parte del email o del nombre de la entidad.</p>
       )}
     </div>
   </section>

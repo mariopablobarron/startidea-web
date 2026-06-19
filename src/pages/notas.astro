@@ -130,7 +130,7 @@ const jsonLd = [
               {cat !== 'Todas' && (
                 <div class="mb-10 border-t border-ink/15 pt-8">
                   <span class="label">— {cat}</span>
-                  <p class="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink/40">
+                  <p class="mt-1 font-mono text-[11px] uppercase tracking-wider text-ink/75">
                     {items.length} {items.length === 1 ? 'nota' : 'notas'}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ const jsonLd = [
                             >
                               — {subCat}
                             </button>
-                            <p class="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                            <p class="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink/75">
                               {subItems.length} {subItems.length === 1 ? 'nota' : 'notas'}
                             </p>
                           </div>
@@ -170,7 +170,7 @@ const jsonLd = [
                                   class="reveal group grid grid-cols-12 gap-x-8 gap-y-4 py-8 transition-colors hover:bg-paper-warm"
                                 >
                                   <div class="col-span-12 lg:col-span-3">
-                                    <p class="font-mono text-[11px] uppercase tracking-widest text-ink/50">
+                                    <p class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                                       {fmt.format(nota.data.pubDate)}
                                     </p>
                                   </div>
@@ -188,17 +188,17 @@ const jsonLd = [
                                         </span>
                                       )}
                                       {nota.data.tags.slice(0, 2).map((tag) => (
-                                        <span class="border border-ink/20 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/50">
+                                        <span class="border border-ink/20 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/75">
                                           #{tag}
                                         </span>
                                       ))}
                                     </div>
                                   </div>
                                   <div class="col-span-12 lg:col-span-2 lg:text-right">
-                                    <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                                    <span class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                                       ~{min} min
                                     </span>
-                                    <p class="mt-1 font-mono text-xs text-ink/60 transition-colors group-hover:text-magenta">
+                                    <p class="mt-1 font-mono text-xs text-ink/75 transition-colors group-hover:text-magenta">
                                       Leer →
                                     </p>
                                   </div>
@@ -224,7 +224,7 @@ const jsonLd = [
                           class="reveal group grid grid-cols-12 gap-x-8 gap-y-4 py-8 transition-colors hover:bg-paper-warm"
                         >
                           <div class="col-span-12 lg:col-span-3">
-                            <p class="font-mono text-[11px] uppercase tracking-widest text-ink/50">
+                            <p class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                               {fmt.format(nota.data.pubDate)}
                             </p>
                           </div>
@@ -242,17 +242,17 @@ const jsonLd = [
                                 </span>
                               )}
                               {nota.data.tags.slice(0, 2).map((tag) => (
-                                <span class="border border-ink/20 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/50">
+                                <span class="border border-ink/20 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-ink/75">
                                   #{tag}
                                 </span>
                               ))}
                             </div>
                           </div>
                           <div class="col-span-12 lg:col-span-2 lg:text-right">
-                            <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">
+                            <span class="font-mono text-[11px] uppercase tracking-widest text-ink/75">
                               ~{min} min
                             </span>
-                            <p class="mt-1 font-mono text-xs text-ink/60 transition-colors group-hover:text-magenta">
+                            <p class="mt-1 font-mono text-xs text-ink/75 transition-colors group-hover:text-magenta">
                               Leer →
                             </p>
                           </div>
@@ -267,7 +267,7 @@ const jsonLd = [
         })}
 
         {/* Estado vacío al combinar filtros (categoría + audiencia) */}
-        <p data-empty class="hidden border-t border-ink/15 pt-8 font-display text-xl text-ink/60 md:text-2xl">
+        <p data-empty class="hidden border-t border-ink/15 pt-8 font-display text-xl text-ink/75 md:text-2xl">
           No hay notas que combinen esa categoría y esa audiencia.{' '}
           <button type="button" data-reset class="italic text-magenta underline-offset-4 hover:underline">
             Quitar filtros
@@ -278,7 +278,7 @@ const jsonLd = [
   ) : (
     <section class="bg-paper py-16 md:py-24">
       <div class="container-x">
-        <p class="font-display text-2xl text-ink/60 md:text-3xl">
+        <p class="font-display text-2xl text-ink/75 md:text-3xl">
           Aún no hay notas publicadas. La primera saldrá pronto — suscríbete abajo para no perderla.
         </p>
       </div>
@@ -311,7 +311,7 @@ const jsonLd = [
               required
               placeholder="tu@email.com"
               autocomplete="email"
-              class="flex-1 border border-ink bg-paper px-5 py-3.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+              class="flex-1 border border-ink bg-paper px-5 py-3.5 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
             />
             <button type="submit" class="btn">
               Suscribirme <span aria-hidden="true">→</span>

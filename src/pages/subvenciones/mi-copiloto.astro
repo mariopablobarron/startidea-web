@@ -35,7 +35,7 @@ const statusLabel = profile?.active
 
 const statusColor = profile?.active
   ? (profile.confirmed ? 'text-green-600' : 'text-yellow-600')
-  : 'text-ink/40';
+  : 'text-ink/75';
 
 const TIPO_LABELS: Record<string, string> = {
   asociacion: 'Asociación',
@@ -59,7 +59,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
 >
   <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
     <div class="container-x">
-      <nav class="mb-4 font-mono text-[10px] uppercase tracking-widest text-ink/40">
+      <nav class="mb-4 font-mono text-[10px] uppercase tracking-widest text-ink/75">
         <a href="/subvenciones" class="hover:text-magenta">← Buscador de subvenciones</a>
         {' · '}
         <a href="/subvenciones/auto-copiloto" class="hover:text-magenta">Copiloto Autónomo</a>
@@ -99,10 +99,10 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
             <div class="border border-ink/15 bg-paper p-6">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">Estado del Copiloto</p>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-1">Estado del Copiloto</p>
                   <p class={`text-lg font-bold ${statusColor}`}>{statusLabel}</p>
                   {profile.last_run_at && (
-                    <p class="mt-1 text-xs text-ink/40">Último ciclo: {formatDate(profile.last_run_at)}</p>
+                    <p class="mt-1 text-xs text-ink/75">Último ciclo: {formatDate(profile.last_run_at)}</p>
                   )}
                 </div>
                 <div class="flex flex-col gap-2">
@@ -110,7 +110,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
                     <button
                       id="btn-pause"
                       data-token={token}
-                      class="border border-ink/20 px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors"
+                      class="border border-ink/20 px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors"
                     >
                       Pausar
                     </button>
@@ -137,54 +137,54 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
 
             <!-- Ficha del perfil -->
             <div class="border border-ink/15 p-6 space-y-4">
-              <h2 class="font-mono text-xs uppercase tracking-widest text-ink/40">Perfil registrado</h2>
+              <h2 class="font-mono text-xs uppercase tracking-widest text-ink/75">Perfil registrado</h2>
               <dl class="grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
                 <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Organización</dt>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Organización</dt>
                   <dd class="mt-0.5 text-ink font-medium">{esc(profile.org_nombre)}</dd>
                 </div>
                 <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Tipo</dt>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Tipo</dt>
                   <dd class="mt-0.5 text-ink">{TIPO_LABELS[profile.org_tipo] ?? profile.org_tipo}</dd>
                 </div>
                 <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Email</dt>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Email</dt>
                   <dd class="mt-0.5 text-ink">{esc(profile.email)}</dd>
                 </div>
                 <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Representante</dt>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Representante</dt>
                   <dd class="mt-0.5 text-ink">{esc(profile.representante)}</dd>
                 </div>
                 {profile.ccaa && (
                   <div>
-                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Comunidad Autónoma</dt>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Comunidad Autónoma</dt>
                     <dd class="mt-0.5 text-ink capitalize">{esc(profile.ccaa)}</dd>
                   </div>
                 )}
                 {territoriosArr.length > 0 && (
                   <div>
-                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Territorios de búsqueda</dt>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Territorios de búsqueda</dt>
                     <dd class="mt-0.5 text-ink capitalize">{territoriosArr.join(', ')}</dd>
                   </div>
                 )}
                 {profile.keywords && (
                   <div class="sm:col-span-2">
-                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Palabras clave</dt>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Palabras clave</dt>
                     <dd class="mt-0.5 text-ink">{esc(profile.keywords)}</dd>
                   </div>
                 )}
                 {profile.importe_min > 0 && (
                   <div>
-                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Importe mínimo</dt>
+                    <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Importe mínimo</dt>
                     <dd class="mt-0.5 text-ink">{profile.importe_min.toLocaleString('es-ES')} €</dd>
                   </div>
                 )}
                 <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/40">Registrado</dt>
+                  <dt class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Registrado</dt>
                   <dd class="mt-0.5 text-ink">{formatDate(profile.created_at)}</dd>
                 </div>
               </dl>
-              <p class="mt-4 text-xs text-ink/40 border-t border-ink/10 pt-4">
+              <p class="mt-4 text-xs text-ink/75 border-t border-ink/10 pt-4">
                 ¿Necesitas actualizar los datos del perfil?{' '}
                 <a href={`mailto:hola@startidea.es?subject=Actualizar perfil Copiloto ${esc(profile.org_nombre)}`} class="text-magenta hover:underline">
                   Escríbenos →
@@ -195,7 +195,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
             <!-- Historial de convocatorias detectadas -->
             {logEntries.length > 0 ? (
               <div class="border border-ink/15 p-6">
-                <h2 class="font-mono text-xs uppercase tracking-widest text-ink/40 mb-4">
+                <h2 class="font-mono text-xs uppercase tracking-widest text-ink/75 mb-4">
                   Convocatorias detectadas ({logEntries.length})
                 </h2>
                 <div class="divide-y divide-ink/10">
@@ -206,7 +206,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
                       </span>
                       <div class="min-w-0">
                         <p class="text-sm text-ink font-medium truncate">{esc(entry.convocatoria_title)}</p>
-                        <p class="text-xs text-ink/40 mt-0.5">
+                        <p class="text-xs text-ink/75 mt-0.5">
                           {formatDate(entry.created_at)}
                           {entry.expediente_id && (
                             <> · <code class="font-mono">{esc(entry.expediente_id)}</code></>
@@ -223,7 +223,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
             ) : (
               <div class="border border-ink/10 bg-paper-warm p-6 text-center">
                 <p class="font-mono text-xs uppercase tracking-widest text-ink/30 mb-2">Sin convocatorias aún</p>
-                <p class="text-sm text-ink/50">
+                <p class="text-sm text-ink/75">
                   El Copiloto revisa nuevas convocatorias cada día a las 07:30h.
                   En cuanto detecte algo que encaje con tu perfil, te lo enviaremos por email.
                 </p>
@@ -254,11 +254,11 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
 
         <!-- Ayuda -->
         <div class="border-t border-ink/10 pt-6">
-          <p class="text-xs text-ink/40">
+          <p class="text-xs text-ink/75">
             ¿Tienes dudas o quieres cambiar el perfil?{' '}
             <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>
             {' · '}
-            <a href="/subvenciones" class="text-ink/50 hover:text-magenta">Ver buscador →</a>
+            <a href="/subvenciones" class="text-ink/75 hover:text-magenta">Ver buscador →</a>
           </p>
         </div>
 

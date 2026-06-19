@@ -91,9 +91,9 @@ function paginateUrl(p: number) {
       <!-- Header -->
       <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">← Admin</a>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
           <h1 class="mt-1 font-display text-4xl text-ink">CRM</h1>
-          <p class="mt-1 text-sm text-ink/50">
+          <p class="mt-1 text-sm text-ink/75">
             {totalAll} contacto{totalAll !== 1 ? 's' : ''} totales ·
             portal_users + expedientes + auto-copiloto
           </p>
@@ -115,13 +115,13 @@ function paginateUrl(p: number) {
         />
         <button
           type="submit"
-          class="border border-ink/20 bg-paper px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+          class="border border-ink/20 bg-paper px-5 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:border-magenta hover:text-magenta transition-colors"
         >
           Buscar
         </button>
         {q && (
           <a href="/admin/crm"
-             class="border border-ink/10 bg-paper px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta transition-colors">
+             class="border border-ink/10 bg-paper px-4 py-2.5 font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta transition-colors">
             ✕
           </a>
         )}
@@ -129,7 +129,7 @@ function paginateUrl(p: number) {
 
       <!-- Resultado / info -->
       {q && (
-        <p class="mb-4 font-mono text-[11px] text-ink/50 uppercase tracking-widest">
+        <p class="mb-4 font-mono text-[11px] text-ink/75 uppercase tracking-widest">
           {contacts.total} resultado{contacts.total !== 1 ? 's' : ''} para «{q}»
         </p>
       )}
@@ -137,7 +137,7 @@ function paginateUrl(p: number) {
       <!-- Tabla de contactos -->
       {contacts.items.length === 0 ? (
         <div class="border border-ink/10 bg-paper p-12 text-center">
-          <p class="font-display text-xl text-ink/40">
+          <p class="font-display text-xl text-ink/75">
             {q ? 'Sin resultados para esa búsqueda' : 'Todavía no hay contactos en el CRM'}
           </p>
           {!q && (
@@ -152,10 +152,10 @@ function paginateUrl(p: number) {
 
           <!-- Cabecera tabla -->
           <div class="hidden sm:grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 border-b border-ink/10 bg-paper-warm/50 px-5 py-2">
-            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">Contacto</span>
-            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-40 text-center">Servicios</span>
-            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-32 text-center">Último estado</span>
-            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40 w-28 text-center">Actividad</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Contacto</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75 w-40 text-center">Servicios</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75 w-32 text-center">Último estado</span>
+            <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75 w-28 text-center">Actividad</span>
             <span class="w-6"></span>
           </div>
 
@@ -185,9 +185,9 @@ function paginateUrl(p: number) {
                         <p class="font-medium text-ink text-sm truncate">
                           {c.nombre || c.org_nombre || c.email}
                         </p>
-                        <p class="text-[11px] text-ink/40 font-mono truncate">{c.email}</p>
+                        <p class="text-[11px] text-ink/75 font-mono truncate">{c.email}</p>
                         {c.org_nombre && c.nombre && (
-                          <p class="text-[11px] text-ink/50 truncate">{c.org_nombre}
+                          <p class="text-[11px] text-ink/75 truncate">{c.org_nombre}
                             {c.org_cif && <span class="text-ink/30"> · {c.org_cif}</span>}
                           </p>
                         )}
@@ -215,7 +215,7 @@ function paginateUrl(p: number) {
                         </span>
                       )}
                       {c.notes_count > 0 && (
-                        <span class="border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-[9px] text-ink/50">
+                        <span class="border border-ink/15 bg-paper px-1.5 py-0.5 font-mono text-[9px] text-ink/75">
                           💬 {c.notes_count}
                         </span>
                       )}
@@ -226,7 +226,7 @@ function paginateUrl(p: number) {
                       {c.last_exp_status ? (
                         <span class:list={[
                           'inline-block border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide',
-                          EXP_STATUS_COLOR[c.last_exp_status] ?? 'bg-paper border-ink/15 text-ink/50',
+                          EXP_STATUS_COLOR[c.last_exp_status] ?? 'bg-paper border-ink/15 text-ink/75',
                         ]}>
                           {EXP_STATUS_LABELS[c.last_exp_status] ?? c.last_exp_status}
                         </span>
@@ -237,7 +237,7 @@ function paginateUrl(p: number) {
 
                     <!-- Actividad -->
                     <div class="sm:w-28 sm:text-right">
-                      <span class="font-mono text-[10px] text-ink/40">{relativeTime(c.last_activity_at)}</span>
+                      <span class="font-mono text-[10px] text-ink/75">{relativeTime(c.last_activity_at)}</span>
                     </div>
 
                     <!-- Acción -->
@@ -256,19 +256,19 @@ function paginateUrl(p: number) {
       <!-- Paginación -->
       {totalPages > 1 && (
         <nav class="mt-6 flex items-center justify-between">
-          <p class="font-mono text-[11px] text-ink/40">
+          <p class="font-mono text-[11px] text-ink/75">
             Página {page} de {totalPages} · {contacts.total} contactos
           </p>
           <div class="flex gap-2">
             {page > 1 && (
               <a href={paginateUrl(page - 1)}
-                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors">
+                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:border-magenta hover:text-magenta transition-colors">
                 ← Anterior
               </a>
             )}
             {page < totalPages && (
               <a href={paginateUrl(page + 1)}
-                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:border-magenta hover:text-magenta transition-colors">
+                 class="border border-ink/20 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:border-magenta hover:text-magenta transition-colors">
                 Siguiente →
               </a>
             )}

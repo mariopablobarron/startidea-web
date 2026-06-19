@@ -174,7 +174,7 @@ const STATUS_COLORS: Record<string, string> = {
       <!-- Header -->
       <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">— Startidea</span>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-ink/75">— Startidea</span>
           <h1 class="mt-1 font-display text-4xl text-ink">Panel de admin</h1>
         </div>
         <div class="flex items-center gap-4">
@@ -182,7 +182,7 @@ const STATUS_COLORS: Record<string, string> = {
             <input type="search" name="q" placeholder="Buscar contacto / entidad…"
                    class="w-56 border border-ink/20 bg-paper px-3 py-2 text-sm text-ink focus:border-magenta focus:outline-none" />
           </form>
-          <a href="/admin/logout" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+          <a href="/admin/logout" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">
             Cerrar sesión →
           </a>
         </div>
@@ -211,16 +211,16 @@ const STATUS_COLORS: Record<string, string> = {
       <!-- ─── Feed de actividad reciente ──────────────────── -->
       {actividad.length > 0 && (
         <div class="mb-8 border border-ink/15 bg-paper p-5">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">Actividad reciente</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-3">Actividad reciente</p>
           <ul class="divide-y divide-ink/10">
             {actividad.map((a) => (
               <li>
                 <a href={a.href} class="flex items-center justify-between gap-3 py-2 text-sm hover:text-magenta">
                   <span class="flex items-center gap-2 truncate">
-                    <span class={`font-mono text-[10px] uppercase tracking-widest ${TIPO_COLOR[a.tipo] ?? 'text-ink/50'}`}>{a.tipo}</span>
+                    <span class={`font-mono text-[10px] uppercase tracking-widest ${TIPO_COLOR[a.tipo] ?? 'text-ink/75'}`}>{a.tipo}</span>
                     <span class="truncate text-ink/80">{a.label}</span>
                   </span>
-                  <span class="shrink-0 font-mono text-[10px] text-ink/40">{fmtActAgo(a.ts)}</span>
+                  <span class="shrink-0 font-mono text-[10px] text-ink/75">{fmtActAgo(a.ts)}</span>
                 </a>
               </li>
             ))}
@@ -234,13 +234,13 @@ const STATUS_COLORS: Record<string, string> = {
 
           <!-- KPIs expedientes -->
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-3">
               Copiloto de Subvenciones — Expedientes
             </p>
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div class="border border-ink/15 bg-paper p-4">
                 <p class="font-display text-3xl text-ink">{stats.total}</p>
-                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">Total</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/75">Total</p>
               </div>
               <div class="border border-yellow-200 bg-yellow-50/40 p-4">
                 <p class="font-display text-3xl text-yellow-700">{enProceso}</p>
@@ -252,7 +252,7 @@ const STATUS_COLORS: Record<string, string> = {
               </div>
               <div class="border border-ink/15 bg-paper p-4">
                 <p class="font-display text-3xl text-ink">{stats.rechazado ?? 0}</p>
-                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">No concedidos</p>
+                <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/75">No concedidos</p>
               </div>
             </div>
           </div>
@@ -260,14 +260,14 @@ const STATUS_COLORS: Record<string, string> = {
           <!-- Pipeline económico -->
           {(economico.facturadoTotal > 0 || economico.pipelineTotal > 0) && (
             <div>
-              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-3">
                 Pipeline económico (comisión 12%)
               </p>
               <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div class="border-2 border-magenta/30 bg-paper p-4">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 mb-1">Facturado</p>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-1">Facturado</p>
                   <p class="font-display text-2xl text-magenta">{fmtEur(economico.facturadoTotal)}</p>
-                  <p class="mt-1 font-mono text-[10px] text-ink/40">Facturas emitidas</p>
+                  <p class="mt-1 font-mono text-[10px] text-ink/75">Facturas emitidas</p>
                 </div>
                 <div class="border border-blue-200 bg-blue-50/30 p-4">
                   <p class="font-mono text-[10px] uppercase tracking-widest text-blue-600 mb-1">Por facturar</p>
@@ -275,9 +275,9 @@ const STATUS_COLORS: Record<string, string> = {
                   <p class="mt-1 font-mono text-[10px] text-blue-500">{economico.pendienteFacturar} expediente{economico.pendienteFacturar !== 1 ? 's' : ''} con importe concedido</p>
                 </div>
                 <div class="border border-ink/10 bg-paper/50 p-4">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-1">Total potencial</p>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-1">Total potencial</p>
                   <p class="font-display text-2xl text-ink">{fmtEur(economico.facturadoTotal + economico.pipelineTotal)}</p>
-                  <p class="mt-1 font-mono text-[10px] text-ink/40">Facturado + por facturar</p>
+                  <p class="mt-1 font-mono text-[10px] text-ink/75">Facturado + por facturar</p>
                 </div>
               </div>
             </div>
@@ -285,7 +285,7 @@ const STATUS_COLORS: Record<string, string> = {
 
           <!-- Acciones pendientes -->
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-3">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-3">
               Acciones pendientes
             </p>
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -331,7 +331,7 @@ const STATUS_COLORS: Record<string, string> = {
           */}
           <div>
             <div class="flex items-center justify-between mb-3">
-              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 Sistema operativo — Subvenciones
               </p>
               <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
@@ -344,7 +344,7 @@ const STATUS_COLORS: Record<string, string> = {
               <a href="/admin/convocatorias"
                  class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
                 <div class="flex items-baseline justify-between">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     Catálogo activo
                   </p>
                   <span class="font-mono text-[10px] text-ink/30">
@@ -358,20 +358,20 @@ const STATUS_COLORS: Record<string, string> = {
                   <div>
                     <p class:list={[
                       'font-mono uppercase tracking-wider',
-                      catalogo.urgentes > 0 ? 'text-yellow-700' : 'text-ink/40',
+                      catalogo.urgentes > 0 ? 'text-yellow-700' : 'text-ink/75',
                     ]}>
                       {catalogo.urgentes} urgente{catalogo.urgentes !== 1 ? 's' : ''}
                     </p>
-                    <p class="text-[10px] text-ink/40">Cierran en {'<'} 14 d</p>
+                    <p class="text-[10px] text-ink/75">Cierran en {'<'} 14 d</p>
                   </div>
                   <div>
                     <p class:list={[
                       'font-mono uppercase tracking-wider',
-                      catalogo.nuevasUltimos7d > 0 ? 'text-emerald-700' : 'text-ink/40',
+                      catalogo.nuevasUltimos7d > 0 ? 'text-emerald-700' : 'text-ink/75',
                     ]}>
                       +{catalogo.nuevasUltimos7d} 7d
                     </p>
-                    <p class="text-[10px] text-ink/40">Última: {fmtAgo(catalogo.ultimaIngesta)}</p>
+                    <p class="text-[10px] text-ink/75">Última: {fmtAgo(catalogo.ultimaIngesta)}</p>
                   </div>
                 </div>
                 {catalogo.expiradas > 0 && (
@@ -388,7 +388,7 @@ const STATUS_COLORS: Record<string, string> = {
               <a href="/admin/auto-copiloto"
                  class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
                 <div class="flex items-baseline justify-between">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     Copiloto autónomo
                   </p>
                   <span class:list={[
@@ -401,25 +401,25 @@ const STATUS_COLORS: Record<string, string> = {
                 <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
                   {acProfiles.active}
                 </p>
-                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/75">
                   Perfiles activos
                 </p>
                 <div class="mt-3 grid grid-cols-2 gap-2 text-[11px]">
                   <div>
-                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                    <p class="font-mono uppercase tracking-wider text-ink/75">
                       {acLog.ultimas_24h}
                     </p>
-                    <p class="text-[10px] text-ink/40">Envíos 24 h</p>
+                    <p class="text-[10px] text-ink/75">Envíos 24 h</p>
                   </div>
                   <div>
-                    <p class="font-mono uppercase tracking-wider text-ink/60">
+                    <p class="font-mono uppercase tracking-wider text-ink/75">
                       {acProfiles.pendingConfirm}
                     </p>
-                    <p class="text-[10px] text-ink/40">Sin confirmar</p>
+                    <p class="text-[10px] text-ink/75">Sin confirmar</p>
                   </div>
                 </div>
                 {acProfiles.paused > 0 && (
-                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                  <p class="mt-2 font-mono text-[10px] uppercase tracking-wider text-ink/75">
                     {acProfiles.paused} pausados
                   </p>
                 )}
@@ -428,7 +428,7 @@ const STATUS_COLORS: Record<string, string> = {
               <!-- 3) Embudo de conversión -->
               <a href="/admin/funnel" class="group block border border-ink/15 bg-paper p-4 transition-colors hover:border-magenta">
                 <div class="flex items-baseline justify-between">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     Conversión copiloto → cliente
                   </p>
                   <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30 group-hover:text-magenta">
@@ -440,16 +440,16 @@ const STATUS_COLORS: Record<string, string> = {
                     <p class="mt-2 font-display text-3xl text-ink group-hover:text-magenta">
                       {conversion.expedientesConversion}
                     </p>
-                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/75">
                       Expedientes desde el copiloto
                     </p>
                     <div class="mt-3 space-y-1 text-[11px]">
                       <div class="flex items-baseline justify-between">
-                        <span class="font-mono uppercase text-ink/60">Firmados</span>
+                        <span class="font-mono uppercase text-ink/75">Firmados</span>
                         <span class="font-mono text-ink">{conversion.conversionContratoFirmado}</span>
                       </div>
                       <div class="flex items-baseline justify-between">
-                        <span class="font-mono uppercase text-ink/60">Presentados</span>
+                        <span class="font-mono uppercase text-ink/75">Presentados</span>
                         <span class="font-mono text-ink">{conversion.conversionPresentados}</span>
                       </div>
                       <div class="flex items-baseline justify-between border-t border-ink/10 pt-1 mt-1">
@@ -461,10 +461,10 @@ const STATUS_COLORS: Record<string, string> = {
                 ) : (
                   <>
                     <p class="mt-2 font-display text-3xl text-ink/30">0</p>
-                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink/75">
                       Sin conversiones todavía
                     </p>
-                    <p class="mt-3 font-mono text-[10px] text-ink/40 leading-relaxed">
+                    <p class="mt-3 font-mono text-[10px] text-ink/75 leading-relaxed">
                       El embudo se llena cuando un perfil del Copiloto Autónomo abre un expediente con Startidea.
                     </p>
                   </>
@@ -479,7 +479,7 @@ const STATUS_COLORS: Record<string, string> = {
               <!-- 4) Estado de servicios (carga client-side) -->
               <div id="sos-health" class="block border border-ink/15 bg-paper p-4" data-health-widget>
                 <div class="flex items-baseline justify-between">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     Estado de servicios
                   </p>
                   <span id="sos-health-status" class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
@@ -488,19 +488,19 @@ const STATUS_COLORS: Record<string, string> = {
                 </div>
                 <ul id="sos-health-list" class="mt-3 space-y-1.5 text-[11px]">
                   <li class="flex items-baseline justify-between">
-                    <span class="font-mono uppercase text-ink/60">HUB chat IA</span>
+                    <span class="font-mono uppercase text-ink/75">HUB chat IA</span>
                     <span class="font-mono text-ink/30" data-probe="hub_voice">— ms</span>
                   </li>
                   <li class="flex items-baseline justify-between">
-                    <span class="font-mono uppercase text-ink/60">OpenRouter</span>
+                    <span class="font-mono uppercase text-ink/75">OpenRouter</span>
                     <span class="font-mono text-ink/30" data-probe="openrouter">— ms</span>
                   </li>
                   <li class="flex items-baseline justify-between">
-                    <span class="font-mono uppercase text-ink/60">BD tamaño</span>
+                    <span class="font-mono uppercase text-ink/75">BD tamaño</span>
                     <span class="font-mono text-ink/30" data-probe="db">—</span>
                   </li>
                   <li class="flex items-baseline justify-between border-t border-ink/10 pt-1.5 mt-1.5">
-                    <span class="font-mono uppercase text-ink/60">Último expediente</span>
+                    <span class="font-mono uppercase text-ink/75">Último expediente</span>
                     <span class="font-mono text-ink/30" data-probe="last_exp">—</span>
                   </li>
                 </ul>
@@ -509,7 +509,7 @@ const STATUS_COLORS: Record<string, string> = {
               <!-- 5) Scrapers — últimas ejecuciones -->
               <div class="block border border-ink/15 bg-paper p-4">
                 <div class="flex items-baseline justify-between">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                     Scrapers
                   </p>
                   <span class="font-mono text-[10px] uppercase tracking-widest text-ink/30">
@@ -517,7 +517,7 @@ const STATUS_COLORS: Record<string, string> = {
                   </span>
                 </div>
                 {scraperRuns.length === 0 ? (
-                  <p class="mt-3 font-mono text-[11px] text-ink/40 leading-relaxed">
+                  <p class="mt-3 font-mono text-[11px] text-ink/75 leading-relaxed">
                     Sin ejecuciones registradas todavía. Se rellenará cuando corra el cron diario de BDNS (06:00 UTC) o cuando dispares manualmente desde /admin/convocatorias.
                   </p>
                 ) : (
@@ -530,12 +530,12 @@ const STATUS_COLORS: Record<string, string> = {
                             run.ok === 1 ? 'bg-emerald-500' : 'bg-red-500',
                           ]}></span>
                           <span class="font-mono uppercase text-ink/70 flex-shrink-0">{run.scraper}</span>
-                          <span class="font-mono text-[10px] text-ink/40 truncate">
+                          <span class="font-mono text-[10px] text-ink/75 truncate">
                             {fmtAgo(run.started_at)}
                             {run.duration_ms ? ` · ${Math.round(run.duration_ms / 1000)}s` : ''}
                           </span>
                         </div>
-                        <span class="font-mono text-ink/60 flex-shrink-0">
+                        <span class="font-mono text-ink/75 flex-shrink-0">
                           {run.total_new > 0 ? <span class="text-emerald-700">+{run.total_new}</span> : '0'}
                           {run.error && <span class="text-red-600 ml-1" title={run.error}>!</span>}
                         </span>
@@ -552,7 +552,7 @@ const STATUS_COLORS: Record<string, string> = {
           {recientes.length > 0 && (
             <div>
               <div class="flex items-center justify-between mb-3">
-                <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                   Expedientes recientes
                 </p>
                 <a href="/admin/expedientes" class="font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
@@ -571,7 +571,7 @@ const STATUS_COLORS: Record<string, string> = {
                         </td>
                         <td class="px-4 py-2.5 max-w-[200px]">
                           <p class="font-medium text-ink truncate text-xs">{exp.org_nombre}</p>
-                          <p class="text-[10px] text-ink/40 truncate">{exp.convocatoria_title ?? 'Sin convocatoria'}</p>
+                          <p class="text-[10px] text-ink/75 truncate">{exp.convocatoria_title ?? 'Sin convocatoria'}</p>
                         </td>
                         <td class="px-4 py-2.5">
                           <span class:list={[
@@ -581,12 +581,12 @@ const STATUS_COLORS: Record<string, string> = {
                             {STATUS_LABELS[exp.status] ?? exp.status}
                           </span>
                         </td>
-                        <td class="px-4 py-2.5 text-[11px] text-ink/40 whitespace-nowrap hidden sm:table-cell">
+                        <td class="px-4 py-2.5 text-[11px] text-ink/75 whitespace-nowrap hidden sm:table-cell">
                           {fmtDate(exp.created_at)}
                         </td>
                         <td class="px-4 py-2.5 text-right">
                           <a href={`/admin/expedientes/${exp.id}`}
-                             class="font-mono text-[10px] uppercase tracking-wider text-ink/40 hover:text-magenta">
+                             class="font-mono text-[10px] uppercase tracking-wider text-ink/75 hover:text-magenta">
                             Ver →
                           </a>
                         </td>
@@ -610,13 +610,13 @@ const STATUS_COLORS: Record<string, string> = {
           <div class="flex items-start justify-between gap-3">
             <span class="text-3xl" aria-hidden="true">👥</span>
             {nCRMContacts > 0 && (
-              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 {nCRMContacts} contactos
               </span>
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">CRM de clientes</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Vista unificada de todos los contactos: portal, copiloto de subvenciones, auto-copiloto y diagnósticos.
           </p>
           <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta">
@@ -636,7 +636,7 @@ const STATUS_COLORS: Record<string, string> = {
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Copiloto de Subvenciones</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Expedientes, documentos IA, contratos y facturas.
           </p>
           {stats.recibido > 0 && (
@@ -651,13 +651,13 @@ const STATUS_COLORS: Record<string, string> = {
           <div class="flex items-start justify-between gap-2">
             <span class="text-3xl" aria-hidden="true">🏠</span>
             {nPortalUsers > 0 && (
-              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/40">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 {nPortalUsers} usuario{nPortalUsers !== 1 ? 's' : ''}
               </span>
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink">Portal de clientes</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Registro, acceso, expedientes y servicios para clientes.
           </p>
           <div class="mt-4 flex flex-wrap gap-3">
@@ -666,7 +666,7 @@ const STATUS_COLORS: Record<string, string> = {
               Usuarios →
             </a>
             <a href="/portal" target="_blank"
-               class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+               class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">
               Ver portal ↗
             </a>
             <a href="/api/admin/backup-db" id="backup-link"
@@ -682,7 +682,7 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">🤖</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Auto-copiloto</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Perfiles registrados, campañas manuales y recordatorios de plazo.
           </p>
           <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-magenta">
@@ -695,7 +695,7 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border-2 border-emerald-200 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">🗃️</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Catálogo de convocatorias</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Gestiona el catálogo dinámico: activa/desactiva, edita requisitos, importes y plazos sin tocar código.
           </p>
           <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-emerald-600 group-hover:text-magenta">
@@ -708,10 +708,10 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">📊</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Estadísticas convocatorias</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Consultas al widget BOJA · expedientes por convocatoria · copiloto · tráfico GSC.
           </p>
-          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink/40 group-hover:text-magenta">
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-widest text-ink/75 group-hover:text-magenta">
             Ver estadísticas →
           </p>
         </a>
@@ -721,7 +721,7 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">🎯</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Leads y diagnósticos</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Formularios de diagnóstico y presupuestos recibidos.
           </p>
         </a>
@@ -732,13 +732,13 @@ const STATUS_COLORS: Record<string, string> = {
           <div class="flex items-start justify-between gap-3">
             <span class="text-3xl" aria-hidden="true">🚀</span>
             {impulsaTotal > 0 && (
-              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 {impulsaTotal} solicitud{impulsaTotal !== 1 ? 'es' : ''}
               </span>
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Startidea Impulsa</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Solicitudes del programa RSC: estados, notas y export CSV.
           </p>
           {impulsaNuevas > 0 && (
@@ -754,13 +754,13 @@ const STATUS_COLORS: Record<string, string> = {
           <div class="flex items-start justify-between gap-3">
             <span class="text-3xl" aria-hidden="true">📊</span>
             {encuestaTotal > 0 && (
-              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 {encuestaTotal} respuesta{encuestaTotal !== 1 ? 's' : ''}
               </span>
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Encuesta · Informe</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Respuestas de /encuesta-fundraising: agregados para el informe y export CSV.
           </p>
         </a>
@@ -771,13 +771,13 @@ const STATUS_COLORS: Record<string, string> = {
           <div class="flex items-start justify-between gap-3">
             <span class="text-3xl" aria-hidden="true">📝</span>
             {notasPublicadas > 0 && (
-              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/50">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
                 {notasPublicadas} publicadas
               </span>
             )}
           </div>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Notas / contenido</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Control editorial del blog: categorías, estado SEO/GEO y borradores.
           </p>
           {notasBorradores > 0 && (
@@ -792,7 +792,7 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">🧠</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">Knowledge base</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             Base de conocimiento interna del chat IA.
           </p>
         </a>
@@ -802,7 +802,7 @@ const STATUS_COLORS: Record<string, string> = {
            class="group block border border-ink/15 bg-paper p-6 transition-colors hover:border-magenta">
           <span class="text-3xl" aria-hidden="true">📈</span>
           <h2 class="mt-4 font-display text-xl text-ink group-hover:text-magenta">SEO Dashboard ↗</h2>
-          <p class="mt-2 text-sm text-ink/60 leading-relaxed">
+          <p class="mt-2 text-sm text-ink/75 leading-relaxed">
             GA4 + Search Console + agentes IA. En el HUB.
           </p>
         </a>
@@ -810,7 +810,7 @@ const STATUS_COLORS: Record<string, string> = {
         <!-- Accesos rápidos -->
         <div class="border border-ink/10 bg-paper/50 p-6">
           <span class="text-3xl" aria-hidden="true">⚡</span>
-          <h2 class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink/50">Accesos rápidos</h2>
+          <h2 class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink/75">Accesos rápidos</h2>
           <ul class="mt-3 space-y-2 text-sm">
             <li>
               <a href="/subvenciones/presentar/nuevo" target="_blank"
@@ -818,15 +818,15 @@ const STATUS_COLORS: Record<string, string> = {
             </li>
             <li>
               <a href="/subvenciones" target="_blank"
-                 class="text-ink/60 hover:text-magenta">Buscador de subvenciones →</a>
+                 class="text-ink/75 hover:text-magenta">Buscador de subvenciones →</a>
             </li>
             <li>
               <a href="/portal" target="_blank"
-                 class="text-ink/60 hover:text-magenta">Portal de clientes →</a>
+                 class="text-ink/75 hover:text-magenta">Portal de clientes →</a>
             </li>
             <li>
               <a href="https://coolify.startidea.es" target="_blank" rel="noopener"
-                 class="text-ink/60 hover:text-magenta">Coolify panel ↗</a>
+                 class="text-ink/75 hover:text-magenta">Coolify panel ↗</a>
             </li>
           </ul>
         </div>
@@ -905,7 +905,7 @@ const STATUS_COLORS: Record<string, string> = {
       if (activity?.last_expediente_at) {
         setProbe('last_exp', true, fmtAgo(activity.last_expediente_at), 'font-mono text-ink/70');
       } else {
-        setProbe('last_exp', true, 'sin datos', 'font-mono text-ink/40');
+        setProbe('last_exp', true, 'sin datos', 'font-mono text-ink/75');
       }
     } catch (err) {
       if (statusEl) {

@@ -114,7 +114,7 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
       <!-- KPIs ligeros -->
       <span
         id="admin-kpis"
-        class="hidden text-paper/55 lg:inline"
+        class="hidden text-paper/70 lg:inline"
         aria-live="polite"
       >
         cargando…
@@ -175,7 +175,7 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
         Notificaciones
       </div>
       <ul id="admin-notif-list" class="max-h-[60vh] overflow-y-auto">
-        <li class="px-4 py-3 text-[11px] text-paper/50">Cargando…</li>
+        <li class="px-4 py-3 text-[11px] text-paper/70">Cargando…</li>
       </ul>
     </div>
 
@@ -241,7 +241,7 @@ const HUB_DASHBOARD = "https://hub.startidea.tech/startidea";
                       `<li><a href="${esc(it.href)}" class="flex items-start gap-2 border-b border-paper/10 px-4 py-2.5 text-[11px] leading-snug text-paper/85 hover:bg-paper/5 hover:text-magenta"><span>${esc(it.icon)}</span><span>${esc(it.text)}</span></a></li>`,
                   )
                   .join("")
-              : `<li class="px-4 py-3 text-[11px] text-paper/50">Sin notificaciones. Todo al día ✅</li>`;
+              : `<li class="px-4 py-3 text-[11px] text-paper/70">Sin notificaciones. Todo al día ✅</li>`;
           }
         } catch {
           const el = document.getElementById("admin-kpis");

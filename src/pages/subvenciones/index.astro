@@ -182,7 +182,7 @@ const jsonLd = [
           name="q"
           placeholder="Busca por palabra clave: cultura, infancia, mujer rural, igualdad…"
           autocomplete="off"
-          class="border border-ink bg-paper px-5 py-3.5 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          class="border border-ink bg-paper px-5 py-3.5 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
         />
         <button type="submit" class="btn">Buscar →</button>
       </form>
@@ -289,7 +289,7 @@ const jsonLd = [
                   type="button"
                   id="subv-toggle-cerrado"
                   data-status="cerrado"
-                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors text-ink/60 hover:text-ink"
+                  class="subv-status-btn rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors text-ink/75 hover:text-ink"
                   aria-pressed="false"
                 >
                   Cerradas
@@ -347,7 +347,7 @@ const jsonLd = [
     <div class="container-x">
       <div class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/50">— ¿La tienes ya?</span>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/70">— ¿La tienes ya?</span>
           <h2 class="mt-2 font-display text-2xl leading-tight text-paper md:text-3xl">
             Startidea la presenta por ti.<br />
             <em class="italic text-magenta">Tú solo firmas.</em>
@@ -357,7 +357,7 @@ const jsonLd = [
           </p>
           <a
             href="/financiacion-empresas"
-            class="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-paper/55 underline-offset-4 transition-colors hover:text-magenta hover:underline"
+            class="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-paper/70 underline-offset-4 transition-colors hover:text-magenta hover:underline"
           >
             ¿Empresa? Servicio completo de financiación: CDTI, ENISA, IDAE y más
             <span aria-hidden="true">→</span>
@@ -531,8 +531,8 @@ const jsonLd = [
           <h3 class="mt-2 font-display text-2xl leading-tight text-ink group-hover:text-magenta md:text-3xl">
             ${escapeHtml(it.title)}
           </h3>
-          ${it.organization ? `<p class="mt-2 text-sm italic text-ink/65">${escapeHtml(it.organization)}</p>` : ''}
-          <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/65">
+          ${it.organization ? `<p class="mt-2 text-sm italic text-ink/75">${escapeHtml(it.organization)}</p>` : ''}
+          <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/75">
             ${it.amount_eur ? `<span>💶 ${fmtAmount(it.amount_eur)}</span>` : ''}
             ${it.deadline ? `<span>📅 Plazo: ${fmtDate(it.deadline)}</span>` : ''}
             ${it.published_at ? `<span>Publicada: ${fmtDate(it.published_at)}</span>` : ''}
@@ -690,7 +690,7 @@ const jsonLd = [
       btn.setAttribute('aria-pressed', String(isActive));
       btn.classList.toggle('bg-ink', isActive);
       btn.classList.toggle('text-paper', isActive);
-      btn.classList.toggle('text-ink/60', !isActive);
+      btn.classList.toggle('text-ink/75', !isActive);
     });
   }
 

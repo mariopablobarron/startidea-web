@@ -37,12 +37,12 @@ function fmtDate(ts: number): string {
       <div class="mb-8 flex items-center justify-between gap-4 flex-wrap">
         <div>
           <div class="flex items-center gap-3 mb-1">
-            <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/40 hover:text-magenta">
+            <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">
               ← Admin
             </a>
           </div>
           <h1 class="font-display text-4xl text-ink">Convocatorias</h1>
-          <p class="mt-1 text-sm text-ink/50">
+          <p class="mt-1 text-sm text-ink/75">
             {convs.filter(c => c.activa).length} activas · {convs.filter(c => !c.activa).length} inactivas
           </p>
         </div>
@@ -107,20 +107,20 @@ function fmtDate(ts: number): string {
       <!-- Tabla -->
       {convs.length === 0 ? (
         <div class="border border-ink/10 bg-paper p-12 text-center">
-          <p class="text-ink/40 font-mono text-sm">No hay convocatorias todavía.</p>
+          <p class="text-ink/75 font-mono text-sm">No hay convocatorias todavía.</p>
         </div>
       ) : (
         <div class="overflow-x-auto">
           <table class="w-full border border-ink/15 bg-paper text-sm">
             <thead class="border-b border-ink/15 bg-paper-warm">
               <tr>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Código</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Título</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Tipo</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Plazo</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Importe</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Estado</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Acciones</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Código</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Título</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Tipo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Plazo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Importe</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Estado</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Acciones</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-ink/8">
@@ -168,7 +168,7 @@ function fmtDate(ts: number): string {
                     <div class="flex items-center gap-3">
                       <a
                         href={`/admin/convocatorias/${c.slug}`}
-                        class="font-mono text-[10px] uppercase tracking-widest text-ink/60 hover:text-magenta"
+                        class="font-mono text-[10px] uppercase tracking-widest text-ink/75 hover:text-magenta"
                       >
                         Editar
                       </a>
@@ -186,7 +186,7 @@ function fmtDate(ts: number): string {
                         type="button"
                         data-slug={c.slug}
                         data-activa={c.activa ? '1' : '0'}
-                        class="toggle-btn font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta"
+                        class="toggle-btn font-mono text-[10px] uppercase tracking-widest text-ink/75 hover:text-magenta"
                       >
                         {c.activa ? 'Desactivar' : 'Activar'}
                       </button>
@@ -201,8 +201,8 @@ function fmtDate(ts: number): string {
 
       <!-- Info del sistema -->
       <div class="mt-8 border border-ink/10 bg-paper p-5">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/40 mb-2">Cómo funciona el Copiloto Autónomo</p>
-        <ul class="space-y-1 text-sm text-ink/60">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">Cómo funciona el Copiloto Autónomo</p>
+        <ul class="space-y-1 text-sm text-ink/75">
           <li>✅ Al <strong>activar</strong> una convocatoria, el sistema notifica automáticamente a los perfiles del Copiloto que encajan.</li>
           <li>✅ El cron diario detecta convocatorias nuevas del HUB externo y procesa matches.</li>
           <li>✅ Scraper BDNS: ejecutar manualmente o con cron <code class="font-mono text-[11px] bg-paper-warm px-1">subvenciones-scraper-startidea.sh</code> en el VPS.</li>

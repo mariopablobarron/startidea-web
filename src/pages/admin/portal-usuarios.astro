@@ -28,9 +28,9 @@ function fmtDate(ts: number): string {
 
       <div class="mb-8 flex items-start justify-between gap-4">
         <div>
-          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">← Admin</a>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
           <h1 class="mt-2 font-display text-3xl text-ink">Portal — Usuarios registrados</h1>
-          <p class="mt-1 text-sm text-ink/60">{usuarios.length} cuenta{usuarios.length !== 1 ? 's' : ''} activa{usuarios.length !== 1 ? 's' : ''}</p>
+          <p class="mt-1 text-sm text-ink/75">{usuarios.length} cuenta{usuarios.length !== 1 ? 's' : ''} activa{usuarios.length !== 1 ? 's' : ''}</p>
         </div>
         <a href="/portal" target="_blank"
            class="btn text-sm">
@@ -40,21 +40,21 @@ function fmtDate(ts: number): string {
 
       {usuarios.length === 0 ? (
         <div class="border border-ink/15 bg-paper p-16 text-center">
-          <p class="text-ink/50">Aún no hay usuarios registrados en el portal.</p>
-          <p class="mt-2 text-sm text-ink/40">Se registrarán en <strong>startidea.es/portal/registro</strong></p>
+          <p class="text-ink/75">Aún no hay usuarios registrados en el portal.</p>
+          <p class="mt-2 text-sm text-ink/75">Se registrarán en <strong>startidea.es/portal/registro</strong></p>
         </div>
       ) : (
         <div class="border border-ink/15 bg-paper overflow-hidden">
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-ink/15 bg-paper-warm">
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Organización</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Representante</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Email</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Tipo</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Provincia</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Exped.</th>
-                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Alta</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Organización</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Representante</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Email</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Tipo</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Provincia</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Exped.</th>
+                <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Alta</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-ink/8">
@@ -64,7 +64,7 @@ function fmtDate(ts: number): string {
                   <tr class="hover:bg-paper-warm/50 transition-colors">
                     <td class="px-4 py-3 max-w-[200px]">
                       <p class="font-medium text-ink truncate">{u.org_nombre}</p>
-                      {u.org_cif && <p class="font-mono text-[10px] text-ink/40">{u.org_cif}</p>}
+                      {u.org_cif && <p class="font-mono text-[10px] text-ink/75">{u.org_cif}</p>}
                     </td>
                     <td class="px-4 py-3 text-ink/80">{u.nombre}</td>
                     <td class="px-4 py-3">
@@ -72,8 +72,8 @@ function fmtDate(ts: number): string {
                         {u.email}
                       </a>
                     </td>
-                    <td class="px-4 py-3 text-xs text-ink/60">{u.org_tipo || '—'}</td>
-                    <td class="px-4 py-3 text-xs text-ink/60">{u.provincia || '—'}</td>
+                    <td class="px-4 py-3 text-xs text-ink/75">{u.org_tipo || '—'}</td>
+                    <td class="px-4 py-3 text-xs text-ink/75">{u.provincia || '—'}</td>
                     <td class="px-4 py-3 text-center">
                       {exps.length > 0 ? (
                         <a href={`/admin/expedientes?email=${encodeURIComponent(u.email)}`}
@@ -84,7 +84,7 @@ function fmtDate(ts: number): string {
                         <span class="font-mono text-[11px] text-ink/30">0</span>
                       )}
                     </td>
-                    <td class="px-4 py-3 text-xs text-ink/50 whitespace-nowrap">
+                    <td class="px-4 py-3 text-xs text-ink/75 whitespace-nowrap">
                       {fmtDate(u.created_at)}
                     </td>
                   </tr>

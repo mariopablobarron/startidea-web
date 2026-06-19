@@ -401,7 +401,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
             id="lista-convocatorias"
             class="border-y border-ink/15 divide-y divide-ink/15"
           >
-            <li class="py-8 text-sm text-ink/60">Cargando convocatorias desde el BDNS…</li>
+            <li class="py-8 text-sm text-ink/75">Cargando convocatorias desde el BDNS…</li>
           </ol>
 
           <div class="mt-8 flex items-center justify-between gap-4">
@@ -711,7 +711,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
     if (!lista) return;
 
     if (!append) {
-      lista.innerHTML = `<li class="py-8 text-sm text-ink/60">Cargando convocatorias…</li>`;
+      lista.innerHTML = `<li class="py-8 text-sm text-ink/75">Cargando convocatorias…</li>`;
     }
 
     const params = new URLSearchParams({
@@ -744,7 +744,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
       }>;
 
       if (items.length === 0 && !append) {
-        lista.innerHTML = `<li class="py-12 text-center text-ink/60">No hay convocatorias abiertas con los filtros seleccionados.</li>`;
+        lista.innerHTML = `<li class="py-12 text-center text-ink/75">No hay convocatorias abiertas con los filtros seleccionados.</li>`;
         if (meta) meta.textContent = `0 resultados`;
         return;
       }
@@ -804,7 +804,7 @@ const lastUpdatedLabel = safeIsoToLabel(stats?.last_updated ?? null);
         masBtn.style.opacity = masBtn.disabled ? '0.4' : '1';
       }
     } catch (e) {
-      lista.innerHTML = `<li class="py-12 text-center text-ink/60">No se pudo conectar con el BDNS. Inténtalo en unos minutos.</li>`;
+      lista.innerHTML = `<li class="py-12 text-center text-ink/75">No se pudo conectar con el BDNS. Inténtalo en unos minutos.</li>`;
       if (meta) meta.textContent = 'Error de conexión';
     }
   }

@@ -69,11 +69,11 @@ const territorio =
 
     <!-- Organismo -->
     {item.organization && (
-      <p class="mt-2 text-sm italic text-ink/65">{item.organization}</p>
+      <p class="mt-2 text-sm italic text-ink/75">{item.organization}</p>
     )}
 
     <!-- Pie: datos clave en mono -->
-    <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/65">
+    <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-xs text-ink/75">
       {item.amount_eur && <span>💶 {fmtAmount(item.amount_eur)}</span>}
       {item.deadline && (
         <span>📅 Plazo: {fmtDate(item.deadline)}</span>

@@ -100,7 +100,7 @@ function truncate(s: string, n: number): string {
             <span class="label !text-magenta">— En directo · Granada Social</span>
           </div>
           <h2 class="mt-5 font-display text-display-md leading-[1.02] text-paper">
-            Lo que <em class="italic text-magenta">se cuece</em><br/>en Granada.
+            Lo que <em class="italic text-magenta-light">se cuece</em><br/>en Granada.
           </h2>
         </div>
 
@@ -135,11 +135,11 @@ function truncate(s: string, n: number): string {
               class="group block h-full"
             >
               <div class="flex items-center justify-between gap-3">
-                <span class="font-mono text-[10px] uppercase tracking-widest text-paper/55">
+                <span class="font-mono text-[10px] uppercase tracking-widest text-paper/70">
                   {i === 0 ? 'Destacado' : 'Reciente'}
                 </span>
                 {art.date && (
-                  <time class="font-mono text-[10px] uppercase tracking-widest text-paper/45">
+                  <time class="font-mono text-[10px] uppercase tracking-widest text-paper/70">
                     {fmtDate(art.date)}
                   </time>
                 )}
@@ -162,13 +162,13 @@ function truncate(s: string, n: number): string {
               )}
               <div class="mt-6 flex items-center justify-between gap-3">
                 {art.author && (
-                  <span class="font-mono text-[10px] uppercase tracking-widest text-paper/45">
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-paper/70">
                     {truncate(art.author, 30)}
                   </span>
                 )}
                 <span
                   aria-hidden="true"
-                  class="text-paper/55 transition-transform group-hover:translate-x-1 group-hover:text-magenta"
+                  class="text-paper/70 transition-transform group-hover:translate-x-1 group-hover:text-magenta"
                 >→</span>
               </div>
             </a>
@@ -178,10 +178,10 @@ function truncate(s: string, n: number): string {
 
       <!-- Pie con CTA al portal completo -->
       <div class="mt-10 flex flex-wrap items-baseline justify-between gap-4 border-t border-paper/10 pt-6">
-        <p class="font-mono text-[11px] uppercase tracking-widest text-paper/55">
+        <p class="font-mono text-[11px] uppercase tracking-widest text-paper/70">
           Refrescado el {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}
           {' · '}
-          <span class="text-paper/40">fuente: granadasocial.org</span>
+          <span class="text-paper/70">fuente: granadasocial.org</span>
         </p>
         <a
           href="https://granadasocial.org"

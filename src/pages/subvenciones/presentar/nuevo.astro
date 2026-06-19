@@ -57,10 +57,10 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           ].map((s, i) => (
             <>
               <div class="flex flex-col items-center" data-step-dot={s.n}>
-                <div class="flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/40 transition-colors" data-dot-circle>
+                <div class="flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/75 transition-colors" data-dot-circle>
                   {s.n}
                 </div>
-                <span class="mt-1 hidden font-mono text-[10px] uppercase tracking-wider text-ink/40 sm:block" data-dot-label>{s.label}</span>
+                <span class="mt-1 hidden font-mono text-[10px] uppercase tracking-wider text-ink/75 sm:block" data-dot-label>{s.label}</span>
               </div>
               {i < 3 && <div class="h-px flex-1 bg-ink/15" />}
             </>
@@ -83,7 +83,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-1" class="step-panel space-y-6">
             <legend class="font-display text-2xl text-ink">Tu entidad</legend>
-            <p class="text-sm text-ink/60">Los datos del organismo que va a presentarse a la subvención.</p>
+            <p class="text-sm text-ink/75">Los datos del organismo que va a presentarse a la subvención.</p>
 
             <div class="space-y-1">
               <label for="orgName" class="label">Nombre de la organización <span class="text-magenta">*</span></label>
@@ -137,7 +137,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-2" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Elige la subvención</legend>
-            <p class="text-sm text-ink/60">
+            <p class="text-sm text-ink/75">
               Estas son las convocatorias activas que Startidea tramita ahora mismo. Haz clic en una para ver todos los detalles: quién puede pedir, qué gastos cubre, importe orientativo y plazo. Si ninguna encaja, usa las opciones del final.
             </p>
 
@@ -145,18 +145,18 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
             <div class="flex flex-wrap items-center gap-2">
               <span class="font-mono text-[10px] uppercase tracking-widest text-ink/35">Ver:</span>
               <button type="button" data-conv-filter="all"     class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink bg-ink text-paper">Todas ({CONV_DATA.length})</button>
-              <button type="button" data-conv-filter="privada" class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Tercer sector ({CONV_DATA.filter(c => c.beneficiario === 'privada').length})</button>
-              <button type="button" data-conv-filter="local"   class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/60 hover:border-ink hover:text-ink">Entidades locales ({CONV_DATA.filter(c => c.beneficiario === 'local').length})</button>
+              <button type="button" data-conv-filter="privada" class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/75 hover:border-ink hover:text-ink">Tercer sector ({CONV_DATA.filter(c => c.beneficiario === 'privada').length})</button>
+              <button type="button" data-conv-filter="local"   class="conv-filter-btn px-3 py-1.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-ink/20 text-ink/75 hover:border-ink hover:text-ink">Entidades locales ({CONV_DATA.filter(c => c.beneficiario === 'local').length})</button>
             </div>
 
             <!-- Widget de matching — perfil rápido de la entidad -->
             <div id="matching-widget" class="border border-ink/15 bg-paper p-4 space-y-4 transition-all">
               <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div>
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50 flex items-center gap-2">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 flex items-center gap-2">
                     <span class="text-magenta">🎯</span> ¿Cuál os encaja? — 2 preguntas rápidas
                   </p>
-                  <p class="text-xs text-ink/40 mt-0.5">Las tarjetas se ordenan automáticamente según vuestro perfil.</p>
+                  <p class="text-xs text-ink/75 mt-0.5">Las tarjetas se ordenan automáticamente según vuestro perfil.</p>
                 </div>
                 <button type="button" id="mw-reset" class="font-mono text-[9px] uppercase tracking-widest text-ink/30 hover:text-magenta hidden">
                   Borrar filtro ×
@@ -174,7 +174,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                     { val: 'no',    label: 'No estamos inscritos' },
                     { val: 'no_se', label: 'No lo sé' },
                   ].map(({ val, label }) => (
-                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors">
                       <input type="radio" name="mw_registro_ss" value={val} class="sr-only" />
                       {label}
                     </label>
@@ -192,7 +192,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                     { val: 'si', label: 'Sí, al corriente' },
                     { val: 'no', label: 'Tenemos alguna deuda o duda' },
                   ].map(({ val, label }) => (
-                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors">
                       <input type="radio" name="mw_corriente" value={val} class="sr-only" />
                       {label}
                     </label>
@@ -203,7 +203,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <!-- Colectivos (solo para privada) -->
               <div id="mw-row-colectivos" class="hidden">
                 <p class="text-sm font-medium text-ink mb-2">
-                  ¿Con qué colectivos trabajáis? <span class="font-normal text-ink/40">(selecciona los que apliquen)</span>
+                  ¿Con qué colectivos trabajáis? <span class="font-normal text-ink/75">(selecciona los que apliquen)</span>
                 </p>
                 <div class="flex flex-wrap gap-2">
                   {[
@@ -215,7 +215,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                     { val: 'inmigrantes',     label: 'Inmigrantes / Temporeros' },
                     { val: 'participacion',   label: 'Participación ciudadana' },
                   ].map(({ val, label }) => (
-                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 hover:border-ink hover:text-ink transition-colors">
+                    <label class="mw-chip-label cursor-pointer px-3 py-1.5 border border-ink/20 font-mono text-[10px] uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors">
                       <input type="checkbox" name="mw_colectivo" value={val} class="sr-only" />
                       {label}
                     </label>
@@ -225,7 +225,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
             </div>
 
             <!-- Aviso fuente -->
-            <div class="flex items-start gap-2 text-xs text-ink/40">
+            <div class="flex items-start gap-2 text-xs text-ink/75">
               <span>📋</span>
               <span>Convocatorias del BOJA nº 99 (26 mayo 2026) — Consejería de Inclusión Social, Juventud, Familias e Igualdad. Plazo general hasta el 16 de junio de 2026.</span>
             </div>
@@ -259,13 +259,13 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                             {conv.deadlineNote && <p class="text-[9px] text-amber-500 mt-0.5">{conv.deadlineNote}</p>}
                           </div>
                         </div>
-                        <p class="mt-0.5 text-xs text-ink/50">{conv.beneficiarioLabel}</p>
+                        <p class="mt-0.5 text-xs text-ink/75">{conv.beneficiarioLabel}</p>
                         <!-- Badge de encaje (rellena el motor de matching) -->
                         <span class="conv-match-badge hidden items-center gap-1 mt-1.5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest border"></span>
                         <!-- 3 bullets resumen -->
                         <ul class="mt-2 space-y-0.5">
                           {conv.financiaResumen.map(b => (
-                            <li class="flex items-start gap-1.5 text-xs text-ink/65">
+                            <li class="flex items-start gap-1.5 text-xs text-ink/75">
                               <span class="shrink-0 text-green-600 mt-0.5 leading-none">▸</span>
                               <span>{b}</span>
                             </li>
@@ -282,7 +282,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   <div class="conv-selected-banner hidden items-center gap-3 border-t border-magenta/30 bg-magenta/5 px-4 py-2.5">
                     <span class="text-magenta font-bold">✓</span>
                     <p class="text-sm font-medium text-ink flex-1">Convocatoria seleccionada</p>
-                    <button type="button" class="conv-deselect-btn font-mono text-[10px] uppercase tracking-wider text-ink/45 hover:text-magenta shrink-0">
+                    <button type="button" class="conv-deselect-btn font-mono text-[10px] uppercase tracking-wider text-ink/75 hover:text-magenta shrink-0">
                       Cambiar →
                     </button>
                   </div>
@@ -295,7 +295,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                         <p class="text-sm text-ink/80 leading-relaxed">{conv.tipoEntidades}</p>
                       </div>
                       <div class="bg-paper-warm/50 px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">✅ Qué se puede subvencionar</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">✅ Qué se puede subvencionar</p>
                         <ul class="space-y-1">
                           {conv.gastosOk.map(g => (
                             <li class="flex items-start gap-2 text-sm text-ink/75">
@@ -306,10 +306,10 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                         </ul>
                       </div>
                       <div class="bg-paper-warm/50 px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">❌ Qué NO cubre</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">❌ Qué NO cubre</p>
                         <ul class="space-y-1">
                           {conv.gastosNo.map(g => (
-                            <li class="flex items-start gap-2 text-sm text-ink/60">
+                            <li class="flex items-start gap-2 text-sm text-ink/75">
                               <span class="mt-0.5 text-red-400 shrink-0 text-xs leading-none">✗</span>
                               <span>{g}</span>
                             </li>
@@ -317,11 +317,11 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                         </ul>
                       </div>
                       <div class="bg-paper-warm/50 px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-1.5">€ Orientación de importe</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-1.5">€ Orientación de importe</p>
                         <p class="text-sm text-ink/75 leading-relaxed">{conv.importe}</p>
                       </div>
                       <div class="bg-paper-warm/50 px-5 py-4">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/45 mb-2">Condiciones para poder solicitar</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">Condiciones para poder solicitar</p>
                         <ul class="space-y-1">
                           {conv.requisitos.map(r => (
                             <li class="flex items-start gap-2 text-sm text-ink/75">
@@ -338,7 +338,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                     </div>
                     <!-- CTA dentro del panel de detalles -->
                     <div class="border-t border-magenta/20 bg-magenta/5 px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <p class="text-xs text-ink/60 leading-relaxed">
+                      <p class="text-xs text-ink/75 leading-relaxed">
                         Startidea verifica el encaje real en el diagnóstico (24–48h). Si no encaja al 100 %, Startidea te lo dice antes de seguir.
                       </p>
                       <button type="button" class="conv-select-btn shrink-0 btn text-sm">
@@ -362,7 +362,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <!-- Mi convocatoria es diferente -->
               <details class="border border-ink/15" id="other-conv-panel">
                 <summary class="cursor-pointer select-none flex items-center gap-3 px-4 py-3 hover:bg-paper-warm">
-                  <span class="font-mono text-[11px] uppercase tracking-wider text-ink/60">
+                  <span class="font-mono text-[11px] uppercase tracking-wider text-ink/75">
                     Tengo una convocatoria diferente o que no está en la lista
                   </span>
                   <span class="ml-auto font-mono text-xs text-ink/30">↓</span>
@@ -401,7 +401,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   </div>
                   <div id="other-conv-confirm" class="hidden border border-magenta/30 bg-magenta/5 p-3 text-sm text-ink">
                     <span class="text-magenta font-bold mr-2">✓</span>Convocatoria manual registrada.
-                    <button type="button" id="btn-clear-other" class="ml-2 font-mono text-[10px] text-ink/40 hover:text-magenta uppercase">Limpiar</button>
+                    <button type="button" id="btn-clear-other" class="ml-2 font-mono text-[10px] text-ink/75 hover:text-magenta uppercase">Limpiar</button>
                   </div>
                 </div>
               </details>
@@ -410,8 +410,8 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-4 hover:border-ink/30 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
                 <input type="radio" id="conv-no-se" name="conv-no-se-radio" value="no-se" class="accent-magenta mt-0.5 shrink-0" />
                 <div>
-                  <p class="font-mono text-[11px] uppercase tracking-wider text-ink/65">Que Startidea lo analice y encuentre la convocatoria</p>
-                  <p class="mt-1 text-xs text-ink/50 leading-relaxed">
+                  <p class="font-mono text-[11px] uppercase tracking-wider text-ink/75">Que Startidea lo analice y encuentre la convocatoria</p>
+                  <p class="mt-1 text-xs text-ink/75 leading-relaxed">
                     Con la descripción de vuestra actividad y necesidades, Startidea identifica las convocatorias con mejor encaje y os las presenta en el diagnóstico. Sin coste.
                   </p>
                 </div>
@@ -430,7 +430,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                 ¿Qué hace vuestra entidad y para qué necesitáis la subvención?
                 <span class="text-magenta">*</span>
               </label>
-              <p class="text-xs text-ink/50 leading-relaxed">
+              <p class="text-xs text-ink/75 leading-relaxed">
                 No tiene que ser perfecto — Startidea lo refinará. Con 3–4 frases es suficiente para arrancar.
               </p>
               <textarea
@@ -443,13 +443,13 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                 class="form-input w-full resize-none"
               ></textarea>
               <details class="text-xs">
-                <summary class="cursor-pointer text-ink/40 hover:text-ink/70">¿No sé qué escribir? Ver guía rápida</summary>
-                <div class="mt-2 space-y-1 border border-ink/10 bg-paper-warm p-3 text-ink/60">
+                <summary class="cursor-pointer text-ink/75 hover:text-ink/70">¿No sé qué escribir? Ver guía rápida</summary>
+                <div class="mt-2 space-y-1 border border-ink/10 bg-paper-warm p-3 text-ink/75">
                   <p><strong>Responde estas 3 preguntas:</strong></p>
                   <p>1. ¿A quién ayuda vuestra entidad y cómo? (colectivo y tipo de servicio)</p>
                   <p>2. ¿Qué proyecto o programa queréis hacer con la subvención?</p>
                   <p>3. ¿Cuántas personas se beneficiarán y en qué plazo?</p>
-                  <p class="mt-2 text-ink/40">No hace falta que sea largo. Si luego Startidea necesita más datos, os los pide.</p>
+                  <p class="mt-2 text-ink/75">No hace falta que sea largo. Si luego Startidea necesita más datos, os los pide.</p>
                 </div>
               </details>
               <p class="text-xs text-ink/30">Máximo 2000 caracteres. <span id="chars-left">2000</span> restantes.</p>
@@ -457,12 +457,12 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
 
             <!-- ─── Datos de impacto (accordion opcional) ─────────────────── -->
             <details class="border border-ink/10">
-              <summary class="cursor-pointer select-none px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink/60 hover:bg-paper-warm">
+              <summary class="cursor-pointer select-none px-4 py-3 font-mono text-xs uppercase tracking-wider text-ink/75 hover:bg-paper-warm">
                 + Datos de impacto de la organización
                 <span class="text-magenta">(mejora mucho los documentos generados)</span>
               </summary>
               <div class="space-y-4 border-t border-ink/10 p-4">
-                <p class="text-xs text-ink/50">El equipo usa estos datos para cuantificar la memoria técnica. Rellena solo lo que sepas, no es obligatorio.</p>
+                <p class="text-xs text-ink/75">El equipo usa estos datos para cuantificar la memoria técnica. Rellena solo lo que sepas, no es obligatorio.</p>
                 <div class="grid grid-cols-2 gap-4">
                   <div class="space-y-1">
                     <label for="beneficiariosAnuales" class="label">Personas atendidas al año</label>
@@ -500,20 +500,20 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
             <!-- ─── Presentación electrónica ──────────────────────────────── -->
             <div class="space-y-3">
               <p class="label">¿Cómo queréis gestionar la presentación electrónica?</p>
-              <p class="text-xs text-ink/50">En ningún caso Startidea utiliza ni solicita vuestro certificado digital. Siempre permanece bajo vuestro control.</p>
+              <p class="text-xs text-ink/75">En ningún caso Startidea utiliza ni solicita vuestro certificado digital. Siempre permanece bajo vuestro control.</p>
               <div class="grid gap-3 sm:grid-cols-2">
                 <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
                   <input type="radio" name="apoderamiento" value="si" class="accent-magenta mt-0.5 shrink-0" />
                   <div>
                     <span class="text-sm font-medium text-ink">Otorgamos apoderamiento a Startidea</span>
-                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea presenta en vuestro nombre usando su propio certificado. Vosotros solo otorgáis el permiso en la sede electrónica (5 minutos).</p>
+                    <p class="mt-0.5 text-xs text-ink/75 leading-relaxed">Startidea presenta en vuestro nombre usando su propio certificado. Vosotros solo otorgáis el permiso en la sede electrónica (5 minutos).</p>
                   </div>
                 </label>
                 <label class="flex cursor-pointer items-start gap-3 border border-ink/15 p-3 hover:border-magenta/40 has-[:checked]:border-magenta has-[:checked]:bg-magenta/5">
                   <input type="radio" name="apoderamiento" value="no" class="accent-magenta mt-0.5 shrink-0" />
                   <div>
                     <span class="text-sm font-medium text-ink">Preferimos firmar nosotros</span>
-                    <p class="mt-0.5 text-xs text-ink/55 leading-relaxed">Startidea prepara el expediente completo. Cuando dais el visto bueno, Startidea os envía las instrucciones para que firmáis y presentéis con vuestro certificado (menos de 10 minutos).</p>
+                    <p class="mt-0.5 text-xs text-ink/75 leading-relaxed">Startidea prepara el expediente completo. Cuando dais el visto bueno, Startidea os envía las instrucciones para que firmáis y presentéis con vuestro certificado (menos de 10 minutos).</p>
                   </div>
                 </label>
               </div>
@@ -525,7 +525,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-3" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Documentos disponibles</legend>
-            <p class="text-sm text-ink/60">
+            <p class="text-sm text-ink/75">
               Sube los documentos que ya tengas preparados. No es obligatorio tenerlos todos — en el diagnóstico Startidea te dice qué falta y cómo conseguirlo.
             </p>
 
@@ -536,7 +536,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   <div>
                     <p class="font-mono text-[10px] uppercase tracking-widest text-magenta">✦ Nuevo — IA</p>
                     <h3 class="mt-0.5 font-display text-xl text-ink">Borrador de memoria técnica</h3>
-                    <p class="mt-1 text-sm text-ink/60 leading-relaxed">
+                    <p class="mt-1 text-sm text-ink/75 leading-relaxed">
                       Con los datos que has introducido, la IA genera un borrador estructurado (8 secciones)
                       adaptado a la convocatoria elegida. Tarda 20–30 segundos.
                     </p>
@@ -550,7 +550,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               <div class="px-5 py-5 space-y-4">
                 <!-- Estado de generación -->
                 <div id="gen-mem-status" class="hidden border border-ink/10 bg-paper-warm px-4 py-3">
-                  <p id="gen-mem-status-msg" class="text-sm text-ink/60 animate-pulse">Conectando con el modelo de IA…</p>
+                  <p id="gen-mem-status-msg" class="text-sm text-ink/75 animate-pulse">Conectando con el modelo de IA…</p>
                 </div>
 
                 <!-- Botón principal -->
@@ -571,14 +571,14 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                       <button
                         type="button"
                         id="btn-copy-memoria"
-                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/75 hover:border-magenta hover:text-magenta transition-colors"
                       >
                         Copiar
                       </button>
                       <button
                         type="button"
                         id="btn-download-memoria"
-                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/60 hover:border-magenta hover:text-magenta transition-colors"
+                        class="font-mono text-[10px] uppercase tracking-widest border border-ink/20 px-3 py-1.5 text-ink/75 hover:border-magenta hover:text-magenta transition-colors"
                       >
                         Descargar .txt
                       </button>
@@ -598,7 +598,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                   <button
                     type="button"
                     id="btn-regen-memoria"
-                    class="font-mono text-[10px] uppercase tracking-widest text-ink/40 hover:text-magenta"
+                    class="font-mono text-[10px] uppercase tracking-widest text-ink/75 hover:text-magenta"
                   >
                     ↺ Regenerar
                   </button>
@@ -631,10 +631,10 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
                       <p class="font-mono text-sm text-ink">{doc.label}</p>
                       {doc.badge && <span class="shrink-0 font-mono text-[9px] uppercase tracking-widest text-magenta">{doc.badge}</span>}
                     </div>
-                    <p class="mt-0.5 text-xs text-ink/50">{doc.hint}</p>
+                    <p class="mt-0.5 text-xs text-ink/75">{doc.hint}</p>
                     <div class="mt-3 flex items-center gap-3">
                       <span class="border border-ink px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-paper-warm">Seleccionar archivo</span>
-                      <span class="text-xs text-ink/40" id={`${doc.id}-name`}>Sin archivo seleccionado</span>
+                      <span class="text-xs text-ink/75" id={`${doc.id}-name`}>Sin archivo seleccionado</span>
                     </div>
                   </label>
                   <input type="file" id={doc.id} name={doc.name} multiple={doc.multiple} accept=".pdf,.doc,.docx,.xls,.xlsx,.odt,.ods,.txt" class="sr-only" data-file-label={`${doc.id}-name`} />
@@ -642,7 +642,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
               ))}
             </div>
 
-            <div class="border border-ink/10 bg-paper-warm p-3 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+            <div class="border border-ink/10 bg-paper-warm p-3 font-mono text-[10px] uppercase tracking-wider text-ink/75">
               Formatos: PDF, Word (.doc/.docx), Excel (.xls/.xlsx), OpenDocument, TXT · Máx. 20 MB por archivo
             </div>
           </fieldset>
@@ -652,16 +652,16 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
           ═══════════════════════════════════════════════════════════════ -->
           <fieldset id="step-4" class="step-panel hidden space-y-6">
             <legend class="font-display text-2xl text-ink">Confirmar y enviar</legend>
-            <p class="text-sm text-ink/60">Revisa el resumen y confirma el envío.</p>
+            <p class="text-sm text-ink/75">Revisa el resumen y confirma el envío.</p>
 
             <div id="resumen" class="space-y-3 border border-ink/15 bg-paper-warm p-5">
-              <h3 class="font-mono text-xs uppercase tracking-wider text-ink/50">Resumen del expediente</h3>
+              <h3 class="font-mono text-xs uppercase tracking-wider text-ink/75">Resumen del expediente</h3>
               <dl class="space-y-2 text-sm">
-                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Entidad</dt><dd id="resumen-entidad" class="text-ink"></dd></div>
-                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">CIF</dt><dd id="resumen-cif" class="text-ink"></dd></div>
-                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Email</dt><dd id="resumen-email" class="text-ink"></dd></div>
-                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Convocatoria</dt><dd id="resumen-convocatoria" class="text-ink"></dd></div>
-                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/50">Documentos</dt><dd id="resumen-docs" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/75">Entidad</dt><dd id="resumen-entidad" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/75">CIF</dt><dd id="resumen-cif" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/75">Email</dt><dd id="resumen-email" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/75">Convocatoria</dt><dd id="resumen-convocatoria" class="text-ink"></dd></div>
+                <div class="flex gap-2"><dt class="w-32 shrink-0 text-ink/75">Documentos</dt><dd id="resumen-docs" class="text-ink"></dd></div>
               </dl>
             </div>
 
@@ -1182,7 +1182,7 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
         dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-magenta bg-magenta font-mono text-sm text-paper transition-colors';
         dot.textContent = String(i);
       } else {
-        dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/40 transition-colors';
+        dot.className = 'flex h-8 w-8 items-center justify-center border-2 border-ink/20 bg-paper font-mono text-sm text-ink/75 transition-colors';
         dot.textContent = String(i);
       }
     }
@@ -1273,10 +1273,10 @@ try { CONV_DATA = listConvocatoriasActivas(); } catch { CONV_DATA = []; }
       if (input.files && input.files.length > 0) {
         const names = Array.from(input.files).map(f => f.name).join(', ');
         label.textContent = names.length > 50 ? names.slice(0, 47) + '…' : names;
-        label.classList.add('text-ink'); label.classList.remove('text-ink/40');
+        label.classList.add('text-ink'); label.classList.remove('text-ink/75');
       } else {
         label.textContent = 'Sin archivo seleccionado';
-        label.classList.remove('text-ink'); label.classList.add('text-ink/40');
+        label.classList.remove('text-ink'); label.classList.add('text-ink/75');
       }
     });
   });

@@ -53,12 +53,12 @@ function servicios(raw: string): string {
 
       <!-- Lista -->
       <div class="mt-8 space-y-4">
-        {solicitudes.length === 0 && <p class="text-ink/60">No hay solicitudes{filtro ? ' en este estado' : ''}.</p>}
+        {solicitudes.length === 0 && <p class="text-ink/75">No hay solicitudes{filtro ? ' en este estado' : ''}.</p>}
         {solicitudes.map((s) => (
           <article class="border border-ink/15 bg-paper-warm p-5" data-id={s.id}>
             <div class="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 class="font-display text-xl text-ink">{s.org_nombre} <span class="text-sm font-normal text-ink/50">· {s.org_tipo}</span></h2>
-              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/40">{fmt(s.created_at)}</span>
+              <h2 class="font-display text-xl text-ink">{s.org_nombre} <span class="text-sm font-normal text-ink/75">· {s.org_tipo}</span></h2>
+              <span class="font-mono text-[11px] uppercase tracking-widest text-ink/75">{fmt(s.created_at)}</span>
             </div>
             <p class="mt-1 text-sm text-ink/70">
               {s.contacto_nombre}{s.contacto_cargo ? ` (${s.contacto_cargo})` : ''} ·
@@ -76,14 +76,14 @@ function servicios(raw: string): string {
             {s.objetivo && <p class="mt-1 text-sm text-ink/70"><span class="font-semibold">Objetivo:</span> {s.objetivo}</p>}
 
             <div class="mt-4 flex flex-wrap items-end gap-3 border-t border-ink/10 pt-4">
-              <label class="text-xs text-ink/60">Estado
+              <label class="text-xs text-ink/75">Estado
                 <select class="js-estado mt-1 block border border-ink/20 bg-paper px-3 py-2 text-sm text-ink">
                   {ESTADOS_IMPULSA.map((e) => (
                     <option value={e} selected={s.estado === e}>{ESTADO_LABEL[e]}</option>
                   ))}
                 </select>
               </label>
-              <label class="flex-1 text-xs text-ink/60">Notas
+              <label class="flex-1 text-xs text-ink/75">Notas
                 <input type="text" class="js-notas mt-1 block w-full border border-ink/20 bg-paper px-3 py-2 text-sm text-ink" value={s.notas_admin} placeholder="Notas internas…" />
               </label>
               <button class="js-guardar btn-ghost text-sm">Guardar</button>
@@ -107,7 +107,7 @@ function servicios(raw: string): string {
     if (!btn) return;
     btn.addEventListener('click', async () => {
       btn.disabled = true;
-      if (msg) { msg.textContent = 'Guardando…'; msg.className = 'js-msg text-xs text-ink/50'; }
+      if (msg) { msg.textContent = 'Guardando…'; msg.className = 'js-msg text-xs text-ink/75'; }
       try {
         const res = await fetch('/api/admin/impulsa-estado', {
           method: 'POST',

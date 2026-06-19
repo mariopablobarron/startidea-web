@@ -61,9 +61,9 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
       <!-- Header -->
       <div class="mb-8 flex items-center justify-between">
         <div>
-          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/50 hover:text-magenta">← Admin</a>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
           <h1 class="mt-2 font-display text-3xl text-ink">Copiloto de Subvenciones</h1>
-          <p class="mt-1 text-sm text-ink/60">Expedientes gestionados · {stats.total ?? 0} en total</p>
+          <p class="mt-1 text-sm text-ink/75">Expedientes gestionados · {stats.total ?? 0} en total</p>
         </div>
         <a href="/subvenciones/presentar/nuevo" target="_blank"
            class="btn text-sm">
@@ -91,7 +91,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
             ]}
           >
             <p class="font-display text-3xl text-ink">{(stats as any)[key] ?? 0}</p>
-            <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">{label}</p>
+            <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/75">{label}</p>
           </a>
         ))}
       </div>
@@ -99,7 +99,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
       <!-- Tabla de expedientes -->
       {items.length === 0 ? (
         <div class="border border-ink/15 bg-paper p-16 text-center">
-          <p class="text-ink/50">No hay expedientes{statusFilter ? ` con estado "${statusFilter}"` : ''}.</p>
+          <p class="text-ink/75">No hay expedientes{statusFilter ? ` con estado "${statusFilter}"` : ''}.</p>
         </div>
       ) : (
         <div class="border border-ink/15 bg-paper">
@@ -107,13 +107,13 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-ink/15 bg-paper-warm">
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">ID</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Entidad</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Convocatoria</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Estado</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Elig.</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Recibido</th>
-                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/50">Acción</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">ID</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Entidad</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Convocatoria</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Estado</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Elig.</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Recibido</th>
+                  <th class="px-4 py-3 text-left font-mono text-[10px] uppercase tracking-widest text-ink/75">Acción</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-ink/10">
@@ -126,7 +126,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
                     </td>
                     <td class="px-4 py-3 max-w-[220px]">
                       <p class="font-medium text-ink truncate">{exp.org_nombre}</p>
-                      <p class="text-xs text-ink/50">{exp.org_cif} · {exp.provincia}</p>
+                      <p class="text-xs text-ink/75">{exp.org_cif} · {exp.provincia}</p>
                     </td>
                     <td class="px-4 py-3 max-w-[200px]">
                       {exp.convocatoria_url ? (
@@ -140,7 +140,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
                           {exp.convocatoria_title ?? exp.convocatoria_slug}
                         </a>
                       ) : (
-                        <span class="text-xs text-ink/40 italic">Sin identificar</span>
+                        <span class="text-xs text-ink/75 italic">Sin identificar</span>
                       )}
                     </td>
                     <td class="px-4 py-3">
@@ -163,7 +163,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
                         );
                       })()}
                     </td>
-                    <td class="px-4 py-3 text-xs text-ink/50 whitespace-nowrap">
+                    <td class="px-4 py-3 text-xs text-ink/75 whitespace-nowrap">
                       {fmtDate(exp.created_at)}
                     </td>
                     <td class="px-4 py-3">
@@ -181,7 +181,7 @@ function getEligInfo(raw: string | null): { score: number; bloqueante: boolean }
           <!-- Paginación -->
           {totalPages > 1 && (
             <div class="flex items-center justify-between border-t border-ink/15 px-4 py-3">
-              <span class="font-mono text-xs text-ink/50">Página {page + 1} de {totalPages}</span>
+              <span class="font-mono text-xs text-ink/75">Página {page + 1} de {totalPages}</span>
               <div class="flex gap-2">
                 {page > 0 && (
                   <a href={`?${statusFilter ? `status=${statusFilter}&` : ''}page=${page - 1}`}

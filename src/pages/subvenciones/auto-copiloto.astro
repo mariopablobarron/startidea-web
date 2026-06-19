@@ -84,7 +84,7 @@ const jsonLd = [
         <!-- Datos org -->
         <div class="border-b border-ink/15 pb-6">
           <h2 class="font-display text-xl font-bold text-ink">Tu organización</h2>
-          <p class="mt-1 text-sm text-ink/60">Estos datos irán en todos los documentos generados.</p>
+          <p class="mt-1 text-sm text-ink/75">Estos datos irán en todos los documentos generados.</p>
         </div>
 
         <div class="grid gap-5 sm:grid-cols-2">
@@ -94,7 +94,7 @@ const jsonLd = [
             </label>
             <input id="org_nombre" name="org_nombre" type="text" required maxlength="200"
               placeholder="Asociación Ejemplo Granada"
-              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
           </div>
           <div>
             <label for="org_cif" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
@@ -102,7 +102,7 @@ const jsonLd = [
             </label>
             <input id="org_cif" name="org_cif" type="text" maxlength="20"
               placeholder="G12345678"
-              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
           </div>
         </div>
 
@@ -141,7 +141,7 @@ const jsonLd = [
           </label>
           <input id="representante" name="representante" type="text" required maxlength="150"
             placeholder="Nombre y apellidos"
-            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
         </div>
 
         <div>
@@ -150,7 +150,7 @@ const jsonLd = [
           </label>
           <textarea id="org_descripcion" name="org_descripcion" required minlength="40" maxlength="800" rows="4"
             placeholder="Describe brevemente qué hace tu organización, a quién beneficia, en qué áreas actúa y qué proyectos suele desarrollar. Cuanto más detallado, mejor serán los documentos generados."
-            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
           ></textarea>
           <p class="mt-1 font-mono text-[11px] text-ink-mute">
             Describe la actividad principal de tu organización. Mínimo 40 caracteres.
@@ -160,7 +160,7 @@ const jsonLd = [
         <!-- Filtros de convocatorias -->
         <div class="border-t border-ink/15 pt-6">
           <h2 class="font-display text-xl font-bold text-ink">Qué convocatorias te interesan</h2>
-          <p class="mt-1 text-sm text-ink/60">Opcional — sin filtros recibirás todas las nuevas que detectemos.</p>
+          <p class="mt-1 text-sm text-ink/75">Opcional — sin filtros recibirás todas las nuevas que detectemos.</p>
         </div>
 
         <div>
@@ -169,7 +169,7 @@ const jsonLd = [
           </label>
           <input id="keywords" name="keywords" type="text" maxlength="300"
             placeholder="mujer rural, igualdad, inclusión, tercer sector"
-            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
         </div>
 
         <div class="grid gap-5 sm:grid-cols-2">
@@ -191,7 +191,7 @@ const jsonLd = [
             </label>
             <input id="importe_min" name="importe_min" type="number" min="0" step="1000"
               placeholder="0"
-              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
           </div>
         </div>
 
@@ -207,7 +207,7 @@ const jsonLd = [
             </label>
             <input id="email" name="email" type="email" required autocomplete="email"
               placeholder="tu@email.com"
-              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
           </div>
           <div>
             <label for="telefono" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
@@ -215,18 +215,18 @@ const jsonLd = [
             </label>
             <input id="telefono" name="telefono" type="tel"
               placeholder="600 000 000"
-              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+              class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
           </div>
         </div>
 
         <!-- Contexto adicional (opcional) — mejora la calidad de los documentos generados -->
         <details class="border border-ink/15 group">
-          <summary class="flex cursor-pointer items-center justify-between px-5 py-4 font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-ink">
+          <summary class="flex cursor-pointer items-center justify-between px-5 py-4 font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-ink">
             <span>Contexto adicional <span class="normal-case text-magenta font-bold">(mejora mucho los documentos)</span></span>
             <span class="ml-2 transition-transform group-open:rotate-180">▾</span>
           </summary>
           <div class="space-y-5 border-t border-ink/10 px-5 pb-6 pt-5">
-            <p class="text-sm text-ink/60">
+            <p class="text-sm text-ink/75">
               Datos opcionales que el equipo usará como contexto para preparar documentos más precisos y adaptados.
               No son obligatorios, pero cuantos más proporciones, mejores serán las memorias técnicas.
             </p>
@@ -238,7 +238,7 @@ const jsonLd = [
                 </label>
                 <input id="anos_activos" name="anos_activos" type="number" min="0" max="200"
                   placeholder="14"
-                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
               </div>
               <div>
                 <label for="beneficiarios_anuales" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
@@ -246,7 +246,7 @@ const jsonLd = [
                 </label>
                 <input id="beneficiarios_anuales" name="beneficiarios_anuales" type="number" min="0"
                   placeholder="500"
-                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
               </div>
               <div>
                 <label for="presupuesto_anual" class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">
@@ -254,7 +254,7 @@ const jsonLd = [
                 </label>
                 <input id="presupuesto_anual" name="presupuesto_anual" type="text" maxlength="50"
                   placeholder="50.000–100.000 €"
-                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+                  class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
               </div>
             </div>
 
@@ -264,7 +264,7 @@ const jsonLd = [
               </label>
               <textarea id="proyectos_anteriores" name="proyectos_anteriores" rows="3" maxlength="600"
                 placeholder="Ej: Programa de empleo juvenil (Junta de Andalucía 2023, 30.000€). Proyecto de inclusión digital (IRPF 2022, 18.000€)."
-                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
               ></textarea>
             </div>
 
@@ -274,7 +274,7 @@ const jsonLd = [
               </label>
               <textarea id="logros_principales" name="logros_principales" rows="2" maxlength="400"
                 placeholder="Ej: 95% de inserción laboral en nuestros programas, 3 premios nacionales, presencia en 12 municipios."
-                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
+                class="mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40 resize-y"
               ></textarea>
             </div>
           </div>
