@@ -205,6 +205,7 @@ const jsonLd = [
       territory: String(fd.get('territory') ?? 'nacional'),
       beneficiary_types: String(fd.get('beneficiary_types') ?? ''),
       finalidades: String(fd.get('finalidades') ?? ''),
+      attribution: (window.stAttribution && window.stAttribution()) || {},
     };
 
     if (!body.name || !body.email || !body.keywords) {

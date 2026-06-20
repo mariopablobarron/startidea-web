@@ -226,6 +226,7 @@ const jsonLd = [
               path: '/contacto',
               consent: data.get('consent') === 'on',
               website: (data.get('website') || '').toString(),
+              attribution: (window.stAttribution && window.stAttribution()) || {},
             }),
           });
           var json = await r.json().catch(function () { return { ok: false }; });

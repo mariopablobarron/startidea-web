@@ -140,6 +140,7 @@
         org_type: (data.get('org_type') || '').toString(),
         message: (data.get('message') || '').toString().trim(),
         source: 'home_cta',
+        attribution: (window.stAttribution && window.stAttribution()) || {},
       };
 
       try {

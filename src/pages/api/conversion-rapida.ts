@@ -9,6 +9,7 @@
  */
 import type { APIRoute } from 'astro';
 import { sendTelegram } from '@/lib/telegram';
+import { formatAttribution } from '@/lib/attribution';
 
 export const prerender = false;
 
@@ -76,6 +77,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   ];
   if (message) lines.push(`<b>Reto:</b> ${escapeHtml(message)}`);
   lines.push(``, `<b>Source:</b> ${escapeHtml(source)}`);
+
+  const origen = formatAttribution(body?.attribution);
+  if (origen) lines.push(`<b>Origen:</b> ${escapeHtml(origen)}`);
 
   await sendTelegram(lines.join('\n'));
 

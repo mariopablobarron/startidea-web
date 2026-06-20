@@ -298,6 +298,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     });
     const services = fd.getAll("services").map(String).filter(Boolean);
     if (services.length) data.answers = { services };
+    data.attribution = (window.stAttribution && window.stAttribution()) || {};
 
     try {
       const r = await fetch(intakeUrl, {

@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { sendOwnerLeadEmail } from '@/lib/email-resend';
 import { sendTelegram, hasTelegramConfig } from '@/lib/telegram';
+import { formatAttribution } from '@/lib/attribution';
 
 export const prerender = false;
 
@@ -62,11 +63,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
   lastByIp.set(ip, now);
 
+  const origen = formatAttribution(body.attribution);
   const text =
     `<b>Nuevo mensaje · startidea.es</b>\n\n` +
     `<b>De:</b> ${escape(name)}\n` +
     `<b>Email:</b> ${escape(email)}\n` +
     `<b>Página:</b> <code>${escape(path)}</code>\n` +
+    (origen ? `<b>Origen:</b> ${escape(origen)}\n` : '') +
     `<b>Consentimiento RGPD:</b> ${consent ? 'sí' : 'no'}\n\n` +
     `${escape(message)}`;
 

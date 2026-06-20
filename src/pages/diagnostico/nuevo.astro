@@ -682,6 +682,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
       else answers.asePresentRaw = ase;
     }
     if (Object.keys(answers).length) data.answers = answers;
+    data.attribution = (window.stAttribution && window.stAttribution()) || {};
 
     try {
       const r = await fetch(intakeUrl, {
