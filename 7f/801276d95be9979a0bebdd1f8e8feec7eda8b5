@@ -1,0 +1,37 @@
+src/lib/attribution.ts
+  s_0ab79ba551035b::t_d2c8eec0bbda29 1-44
+src/pages/api/contacto.ts
+  s_0ab79ba551035b::t_91c4ad477b1374 4
+  s_0ab79ba551035b::t_83b94c96f4e7f4 66,72
+src/pages/diagnostico/nuevo.astro
+  s_0ab79ba551035b::t_3ec8dac71c9460 685
+src/components/AnalyticsTracker.astro
+  s_0ab79ba551035b::t_791c0ba2f9acb3 29-72
+src/components/CtaConversion.astro
+  s_0ab79ba551035b::t_ffef605c25f545 143
+src/pages/presupuesto/nuevo.astro
+  s_0ab79ba551035b::t_d9199b2dd95ef5 301
+src/pages/api/conversion-rapida.ts
+  s_0ab79ba551035b::t_0028cb0cc7359a 12
+  s_0ab79ba551035b::t_71535741a4614e 81-83
+src/pages/contacto.astro
+  s_0ab79ba551035b::t_cbbe1dc4cb6e5b 229
+src/pages/subvenciones/crear-alerta.astro
+  s_0ab79ba551035b::t_336eee4737ddf0 208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "7f801276d95be9979a0bebdd1f8e8feec7eda8b5",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
