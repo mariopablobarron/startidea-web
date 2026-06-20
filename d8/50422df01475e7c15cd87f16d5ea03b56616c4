@@ -1,0 +1,54 @@
+src/components/CasosRelacionados.astro
+  s_0ab79ba551035b::t_574feb35be6735 1-80
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_2caaa61a10dddc 66-68
+  s_0ab79ba551035b::t_d89ff88bbba381 392-394
+  s_0ab79ba551035b::t_a6b0723eeab703 190-191,198-222
+  s_0ab79ba551035b::t_eaaf9ecdb27339 5,7
+  s_0ab79ba551035b::t_aea3135db03d57 338-339
+src/components/FranjaConfianza.astro
+  s_0ab79ba551035b::t_02c37685023d4f 60-69
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_b9009d03071305 5-6,9-10
+  s_0ab79ba551035b::t_8fea570b780b9e 197-198,205-229
+  s_0ab79ba551035b::t_720c76c3346dcb 312-313,322-323
+src/pages/consultoria.astro
+  s_0ab79ba551035b::t_f69d69b0e411f0 138-140
+  s_0ab79ba551035b::t_ead4a09ac26592 287-288
+  s_0ab79ba551035b::t_883b1c66418b50 5,7
+  s_0ab79ba551035b::t_fd19ebb02b4365 167-168,175-199
+  s_0ab79ba551035b::t_4f4f3016ebc87f 321-323
+src/pages/audiovisual.astro
+  s_0ab79ba551035b::t_c218782e01a4ac 343-344
+  s_0ab79ba551035b::t_46282692edb833 377-379
+  s_0ab79ba551035b::t_8f1ee7857d669c 54-56
+  s_0ab79ba551035b::t_1f12aac9ec6f99 5,7
+  s_0ab79ba551035b::t_581e4cc349de02 182-183,194-218
+src/pages/tecnologia.astro
+  s_0ab79ba551035b::t_77b50a9a6e47ff 4,6
+  s_0ab79ba551035b::t_712935f39f48fc 285-287
+  s_0ab79ba551035b::t_afed89649270b9 31-33
+  s_0ab79ba551035b::t_c43c9c7b16c38f 275-276
+  s_0ab79ba551035b::t_fe0596db63da24 155-156,167-191
+src/data/casos.ts
+  s_0ab79ba551035b::t_d35373d74d3fa5 493-504
+src/data/servicios.ts
+  s_0ab79ba551035b::t_8fa35a3da5b9c0 131-132,134-135
+  s_0ab79ba551035b::t_a11009840402b9 107-130,133,136-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "d850422df01475e7c15cd87f16d5ea03b56616c4",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
