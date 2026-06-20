@@ -490,3 +490,15 @@ export const casos: Caso[] = [
 export function getCasoBySlug(slug: string): Caso | undefined {
   return casos.find((c) => c.slug === slug);
 }
+
+/** Casos en el orden exacto de la lista de slugs dada (ignora los que no existan).
+ *  Pensado para curar la prueba relevante en cada ficha de servicio. */
+export function casosPorSlugs(slugs: string[]): Caso[] {
+  return slugs.map((s) => getCasoBySlug(s)).filter((c): c is Caso => Boolean(c));
+}
+
+/** Casos cuya disciplina principal coincide. Útil como conveniencia; para fichas
+ *  de servicio con cobertura desigual, preferir casosPorSlugs() con lista curada. */
+export function casosPorDisciplina(disciplina: Caso['discipline']): Caso[] {
+  return casos.filter((c) => c.discipline === disciplina);
+}

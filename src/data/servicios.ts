@@ -104,6 +104,37 @@ export function gruposPublicos(): GrupoPublico[] {
   }));
 }
 
+/**
+ * Rango de inversión ORIENTATIVO y público por grupo (identificado por su href).
+ * Expone solo órdenes de magnitud — el "desde" mínimo y la horquilla de proyectos
+ * puntuales (€), más el acompañamiento mensual si lo hay. NO es tarifa cerrada: el
+ * precio formal se cierra siempre tras el diagnóstico. Seguro para serializar al
+ * cliente (decisión Mario 2026-06-15: mostrar rangos para bajar la fricción nº1).
+ */
+export interface RangoPublico {
+  desde: number;          // mínimo de proyecto puntual (€)
+  hasta: number;          // máximo de proyecto puntual (€)
+  mensualDesde?: number;  // acompañamiento continuo, si el grupo lo ofrece (€/mes)
+}
+export function rangoPublico(href: string): RangoPublico | null {
+  const g = GRUPOS_SERVICIOS.find((grupo) => grupo.href === href);
+  if (!g) return null;
+  const puntuales = g.items.filter((i) => i.unidad === '€').map((i) => i.precio);
+  const mensuales = g.items.filter((i) => i.unidad === '€/mes').map((i) => i.precio);
+  const base = puntuales.length ? puntuales : mensuales;
+  if (base.length === 0) return null;
+  const rango: RangoPublico = { desde: Math.min(...base), hasta: Math.max(...base) };
+  if (mensuales.length) rango.mensualDesde = Math.min(...mensuales);
+  return rango;
+}
+
+/** Formatea un entero como "2.800 €" (separador de miles manual — el Node SSR
+ *  con small-ICU no aplica toLocaleString('es-ES') de forma fiable). */
+export function fmtEur(n: number): string {
+  const miles = String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return `${miles} €`;
+}
+
 /** Lookup server-side de un servicio por su ID. */
 export function buscarServicio(id: string): { servicio: Servicio; grupo: string } | null {
   for (const g of GRUPOS_SERVICIOS) {

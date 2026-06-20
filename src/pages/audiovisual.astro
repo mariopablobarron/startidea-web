@@ -2,7 +2,9 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { rangoPublico, fmtEur } from '@/data/servicios';
 
 const faqs = [
   {
@@ -48,6 +50,9 @@ const jsonLd = [
     ],
   }),
 ];
+
+const rango = rangoPublico('/audiovisual');
+const casosSlugs = ['granada-social-5', 'proyecto-hombre'];
 
 const pilares = [
   {
@@ -174,8 +179,8 @@ const proceso = [
         Startidea produce vídeo, documentales y podcast para ONG, entidades del tercer sector, instituciones y empresas con propósito —en Granada y en toda España—: del guion a la distribución, con estudio propio. Contenidos pensados no solo para verse o escucharse, sino para construir marca, comunidad y reputación.
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
-        <a href="/contacto" class="btn">
-          Pide una reunión de diagnóstico
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_audiovisual_hero">
+          Habla de tu vídeo o podcast
           <span aria-hidden="true">→</span>
         </a>
         <a href="https://hubstartidea.es" target="_blank" rel="noopener" class="btn-ghost">
@@ -185,6 +190,32 @@ const proceso = [
       </div>
     </div>
   </section>
+
+  {rango && (
+    <!-- Inversión orientativa — baja la fricción nº1 (qué orden de inversión es) -->
+    <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+      <div class="container-x">
+        <div class="grid grid-cols-12 items-baseline gap-x-8 gap-y-3 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Inversión orientativa</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <p class="font-display text-2xl leading-tight text-ink md:text-3xl">
+              Proyectos desde <span class="text-magenta">{fmtEur(rango.desde)}</span>.
+              {rango.mensualDesde && (
+                <span class="mt-1 block text-xl text-ink/70 md:text-2xl">
+                  Acompañamiento continuo desde <span class="text-magenta">{fmtEur(rango.mensualDesde)}</span>/mes.
+                </span>
+              )}
+            </p>
+            <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
+              Los proyectos más habituales se mueven entre {fmtEur(rango.desde)} y {fmtEur(rango.hasta)}. Es un orden de magnitud: el precio formal se cierra tras el diagnóstico, sin sorpresas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Reel — prueba visual del trabajo real (auditoría UX 14-jun: la página
        vendía producción audiovisual sin enseñar ni una imagen). Metraje propio
@@ -309,8 +340,8 @@ const proceso = [
           </ol>
 
           <div class="mt-16 border-t border-paper/15 pt-8">
-            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
-              Pide una reunión de diagnóstico
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_audiovisual_proceso">
+              Empieza con un diagnóstico de 30 min
               <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -342,6 +373,9 @@ const proceso = [
       </div>
     </div>
   </section>
+
+  <!-- Prueba: casos reales, antes de las FAQs -->
+  <CasosRelacionados slugs={casosSlugs} titulo="Audiovisual con resultado" />
 
   <NotasRelacionadas category="Comunicación" />
   <OtrosServicios current="audiovisual" />

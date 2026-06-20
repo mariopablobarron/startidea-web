@@ -57,7 +57,15 @@ const logos = [
       ))}
     </ul>
 
-    <!-- TODO: cuando Mario pase 1-2 testimonios reales, añadir aquí un <blockquote>
-         con cita + nombre/organización (segmentado por audiencia si es posible). -->
+    <!-- Testimonio real (único cliente con cita en datos, casos.ts → Down Granada).
+         Cuando Mario pase 2+ frases más, se enciende Testimonios.astro en la home. -->
+    <figure class="mt-12 border-t border-ink/15 pt-8">
+      <blockquote class="max-w-measure font-display text-xl leading-snug text-ink md:text-2xl">
+        “No queríamos una web bonita. Queríamos una herramienta que sirviera. Eso es lo que tenemos.”
+      </blockquote>
+      <figcaption class="mt-4 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        Equipo de Comunicación · Down Granada
+      </figcaption>
+    </figure>
   </div>
 </section>

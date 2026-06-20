@@ -2,7 +2,9 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { rangoPublico, fmtEur } from '@/data/servicios';
 
 const faqs = [
   {
@@ -133,6 +135,9 @@ const areas = [
   },
 ];
 
+const rango = rangoPublico('/consultoria');
+const casosSlugs = ['down-granada', 'tres-mil-millones-latidos'];
+
 const proceso = [
   { step: '01', title: 'Diagnóstico (gratuito)', body: '30 minutos. Tú cuentas el reto y Startidea te dice honestamente si encaja.' },
   { step: '02', title: 'Propuesta cerrada', body: 'En una semana: alcance, plazos, equipo, presupuesto. Sin "depende".' },
@@ -159,13 +164,39 @@ const proceso = [
         Startidea acompaña a organizaciones, entidades sociales, administraciones públicas y empresas con propósito a pensar mejor, decidir con criterio y ejecutar con sentido. Ordena la estrategia, diseña proyectos sólidos, fortalece la captación de recursos y ayuda a demostrar resultados.
       </p>
       <div class="mt-10">
-        <a href="/contacto" class="btn">
-          Pide una reunión de diagnóstico gratuita
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_consultoria_hero">
+          Habla de tu estrategia
           <span aria-hidden="true">→</span>
         </a>
       </div>
     </div>
   </section>
+
+  {rango && (
+    <!-- Inversión orientativa — baja la fricción nº1 (qué orden de inversión es) -->
+    <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+      <div class="container-x">
+        <div class="grid grid-cols-12 items-baseline gap-x-8 gap-y-3 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Inversión orientativa</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <p class="font-display text-2xl leading-tight text-ink md:text-3xl">
+              Proyectos desde <span class="text-magenta">{fmtEur(rango.desde)}</span>.
+              {rango.mensualDesde && (
+                <span class="mt-1 block text-xl text-ink/70 md:text-2xl">
+                  Acompañamiento continuo desde <span class="text-magenta">{fmtEur(rango.mensualDesde)}</span>/mes.
+                </span>
+              )}
+            </p>
+            <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
+              Los proyectos más habituales se mueven entre {fmtEur(rango.desde)} y {fmtEur(rango.hasta)}. Es un orden de magnitud: el precio formal se cierra tras el diagnóstico, sin sorpresas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Pilares -->
   <section class="bg-paper-warm py-20 md:py-28">
@@ -253,8 +284,8 @@ const proceso = [
           </ol>
 
           <div class="mt-16 border-t border-paper/15 pt-8">
-            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
-              Pide una reunión de diagnóstico gratuita
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_consultoria_proceso">
+              Empieza con un diagnóstico de 30 min
               <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -286,6 +317,9 @@ const proceso = [
       </div>
     </div>
   </section>
+
+  <!-- Prueba: casos reales, antes de las FAQs -->
+  <CasosRelacionados slugs={casosSlugs} titulo="Estrategia que se tradujo en producto" />
 
   <NotasRelacionadas category="Estrategia" />
   <OtrosServicios current="consultoria" />

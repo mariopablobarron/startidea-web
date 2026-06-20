@@ -1,0 +1,80 @@
+---
+/**
+ * Prueba en el punto de decisión — casos relevantes dentro de una ficha de servicio.
+ *
+ * Recibe una lista CURADA de slugs (más fiable que filtrar por disciplina, dada la
+ * cobertura desigual de casos: solo 6 reales, repartidos de forma irregular). Muestra
+ * hasta 3 con su métrica destacada y enlace al caso completo. Si no hay ninguno
+ * relevante, cae a un enlace a /casos — nunca inventa prueba que no existe.
+ *
+ * Vender con prueba, sin hype (decisión Mario 2026-06-15): cifras reales, cero
+ * superlativos. La métrica manda; el cliente y la intervención dan contexto.
+ */
+import { casosPorSlugs, type Caso, type CasoMetric } from '@/data/casos';
+
+interface Props {
+  slugs: string[];
+  titulo?: string;
+}
+const { slugs, titulo = 'Resultados, no promesas' } = Astro.props;
+const items = casosPorSlugs(slugs).slice(0, 3);
+
+function metricaPrincipal(c: Caso): CasoMetric {
+  return c.metrics && c.metrics.length > 0 ? c.metrics[0] : c.metric;
+}
+---
+
+{items.length > 0 ? (
+  <section class="border-t border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <span class="label">— {titulo}</span>
+      <ol class="mt-7 grid grid-cols-1 gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((c) => {
+          const m = metricaPrincipal(c);
+          return (
+            <li>
+              <a
+                href={`/casos/${c.slug}`}
+                class="group flex h-full flex-col justify-between bg-paper p-7 transition-colors hover:bg-paper-warm"
+                data-track="cta"
+                data-track-id={`caso_${c.slug}_desde_servicio`}
+              >
+                <div>
+                  <p class="font-display text-display-md leading-none text-magenta">{m.value}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-snug text-ink/80">{m.label}</p>
+                </div>
+                <div class="mt-8 border-t border-ink/15 pt-4">
+                  <p class="font-display text-lg leading-tight text-ink transition-colors group-hover:text-magenta">{c.cliente}</p>
+                  <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{c.intervention}</p>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="mt-8">
+        <a
+          href="/casos"
+          class="link-underline font-mono text-sm text-ink"
+          data-track="cta"
+          data-track-id="ver_todos_casos_desde_servicio"
+        >
+          Ver todos los casos →
+        </a>
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="border-t border-ink/15 bg-paper py-12">
+    <div class="container-x">
+      <a
+        href="/casos"
+        class="link-underline font-mono text-sm text-ink"
+        data-track="cta"
+        data-track-id="ver_casos_fallback"
+      >
+        Ver los casos de Startidea →
+      </a>
+    </div>
+  </section>
+)}
