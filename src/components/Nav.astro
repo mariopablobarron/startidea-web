@@ -1,12 +1,15 @@
 ---
 import Logo from './Logo.astro';
 
+// `desktop: false` → fuera del bar inline de escritorio (cabe en portátiles
+// 13-14" sin solapar el logo, fix Mario 2026-06-21); siguen en el menú
+// móvil/desplegable y en el footer.
 const links = [
   { label: 'Para quién', href: '/para-quien' },
   { label: 'Qué hacemos', href: '/que-hacemos' },
   { label: 'Casos', href: '/casos' },
   { label: 'Sobre', href: '/sobre' },
-  { label: 'Laboratorio', href: '/laboratorio' },
+  { label: 'Laboratorio', href: '/laboratorio', desktop: false },
   // Financiación apunta a la landing maestra que agrega las 5 fuentes
   // (BDNS + CDTI + IDAE + ENISA + Andalucía TRADE). Desde ahí el visitante
   // entra al buscador /subvenciones o lee las guías editoriales.
@@ -14,7 +17,7 @@ const links = [
   // reflejar el alcance real del servicio (subvenciones + préstamos
   // participativos + créditos blandos + misiones comerciales).
   { label: 'Financiación', href: '/financiacion-empresas' },
-  { label: 'Notas', href: '/notas' },
+  { label: 'Notas', href: '/notas', desktop: false },
 ];
 
 // Líneas editoriales / propiedades de Startidea.
@@ -39,9 +42,9 @@ const propiedades = [
          debajo (portátiles 13-14") solo se ve "Menú"; bajar el breakpoint
          exige reducir el contenido del nav (demotar 1-2 ítems a un
          desplegable) — decisión de IA, no un quick win. Gap reducido a gap-3. -->
-    <nav class="hidden min-[1360px]:block" aria-label="Principal">
+    <nav class="hidden min-[1180px]:block" aria-label="Principal">
       <ul class="flex items-center gap-3">
-        {links.map((l) => (
+        {links.filter((l) => l.desktop !== false).map((l) => (
           <li>
             <a href={l.href} class="link-underline whitespace-nowrap text-sm text-ink/85 hover:text-ink">
               {l.label}
@@ -93,7 +96,7 @@ const propiedades = [
     <button
       type="button"
       id="nav-toggle"
-      class="min-[1360px]:hidden border border-ink px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
+      class="min-[1180px]:hidden border border-ink px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
       aria-label="Abrir menú"
       aria-expanded="false"
     >
@@ -102,7 +105,7 @@ const propiedades = [
   </div>
 
   <!-- Mobile / tablet / small desktop fullscreen menu -->
-  <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper min-[1360px]:hidden">
+  <div id="nav-mobile" class="hidden border-t border-ink/15 bg-paper min-[1180px]:hidden">
     <div class="container-x py-5">
       <ul class="flex flex-col">
         {links.map((l) => (
