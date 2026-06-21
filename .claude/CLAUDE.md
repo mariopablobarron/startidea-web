@@ -101,14 +101,14 @@ const fichaUrl = buildFichaUrl(exp.convocatoria_slug);
 
 `tsc --noEmit` no detecta los problemas anteriores porque no parsea los `<script>` inline ni el JSX del template. **Antes de cualquier push con cambios en `.astro`, correr `npm run build` local**. Tarda ~2 min pero evita ciclos de deploy fallido en Coolify.
 
-### 4. Auto-deploy SÍ activo vía GitHub Actions (NO vía panel Coolify)
+### 4. Auto-deploy = cron-pull en la VPS (NO GitHub Actions, NO panel Coolify)
 
-**Cada push a `main` despliega solo.** El mecanismo NO es el panel de Coolify, es el workflow `.github/workflows/deploy.yml`: en cada push a `main` (salvo cambios solo en `docs/`, `reports/`, `README.md`, `infra/`) hace SSH al VPS con la key dedicada (`secret VPS_SSH_KEY`, restringida con `command="..."` en `authorized_keys` a ejecutar solo `/root/deploy-startidea-web.sh` → build + recreate). ~3-4 min. Coolify solo gestiona Traefik/certs/panel.
+**Cada push a `main` despliega solo, pero NO vía GitHub Actions.** El mecanismo real (desde el incidente del 18-jun y su recuperación el 21-jun-2026) es un **cron-pull en la VPS**: `*/2 * * * * /usr/local/bin/deploy-lock /root/startidea-web-autodeploy.sh`. El script hace `git fetch origin main`; si `HEAD != origin/main`, hace `git pull --ff-only` + rebuild Docker + recreate (~2-4 min en total tras el push). Coolify solo gestiona Traefik/certs/panel.
 
-- **Verificar un deploy**: `gh run list --workflow=deploy.yml --limit 5` (debe salir `success`).
-- **Forzar deploy sin commit nuevo**: `gh workflow run deploy.yml`.
-- **Si un cambio NO aparece en prod**: confirmar que el path no está en `paths-ignore` (p.ej. solo tocar `reports/` NO dispara deploy — es a propósito).
-- ~~"Coolify no auto-deploya, hay que pulsar Deploy"~~ **OBSOLETO** (era cierto antes del 12-may-2026). Ya NO hay que tocar el panel.
+- **Verificar un deploy**: comprobar la URL en prod (`curl -s -o /dev/null -w "%{http_code}" https://startidea.es/<ruta>`) o el log de deploy en la VPS. NO mirar `gh run list`.
+- ⚠️ **El workflow `.github/workflows/deploy.yml` está OBSOLETO** (último run 14-jun, fallando). `gh run list --workflow=deploy.yml` muestra `X` viejos que son ruido — NO indican que el deploy real haya fallado. No usarlo como señal.
+- **Si un cambio NO aparece en prod**: confirmar (a) que el commit está en `origin/main` (`git log --oneline -1 origin/main`), y (b) que el cron-pull está activo en la VPS (no `#PAUSED-RECOVERY` en el crontab — se pausó tras el cron-storm del 18-jun).
+- ~~"Auto-deploy vía GitHub Actions deploy.yml"~~ **OBSOLETO desde 21-jun-2026.** ~~"Coolify no auto-deploya, hay que pulsar Deploy"~~ **OBSOLETO** (era cierto antes del 12-may-2026).
 
 ## Cómo pedir cosas a Claude en este repo
 
