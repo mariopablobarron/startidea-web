@@ -3,9 +3,10 @@ title: 'Licitar comunicación con una institución pública: qué exige y qué f
 description: 'Cómo prepararse para licitar contratos de comunicación con ayuntamientos, diputaciones, consejerías y otras administraciones. Procedimientos, solvencia exigida, errores frecuentes y plazos realistas.'
 pubDate: 2026-06-10
 audience: 'Instituciones'
+tldr: 'Una administración pública compra comunicación por obligación legal, no por gusto. Quien desconoce ese marco ve cómo su oferta no llega ni a evaluarse, por buena que sea la idea. Esta guía ordena lo que exige la administración: solvencia, procedimiento, los errores que descartan ofertas y qué pasa al ganar.'
 category: 'Comunicación'
 tags: ['instituciones', 'licitaciones', 'contratación pública', 'comunicación institucional', 'ayuntamientos', 'diputaciones', 'sector público']
-draft: true
+draft: false
 faqs:
   - question: '¿Qué diferencia hay entre un contrato menor y un procedimiento abierto en comunicación?'
     answer: 'El contrato menor es la forma más simple: adjudicación directa por la administración sin concurrencia formal, con un límite económico de 15.000 € en servicios (sin IVA) según la Ley 9/2017 de Contratos del Sector Público. Por encima de esa cifra entra en juego el procedimiento abierto, abierto simplificado u otro procedimiento con publicidad, donde varias empresas concurren con ofertas técnicas y económicas evaluadas conforme a los pliegos. Los plazos, la documentación y la complejidad son completamente distintos: un contrato menor se puede tramitar en una semana; un procedimiento abierto raramente baja de tres meses desde publicación hasta firma.'

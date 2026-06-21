@@ -3,6 +3,7 @@ title: 'IA fértil, no IA útil: cómo se relacionan las organizaciones con la i
 description: 'La mayoría de los proyectos con IA buscan productividad. Pocos preguntan para qué. Esta nota distingue entre IA útil e IA fértil, propone un marco de relación humano-IA y explica por qué la skill clave del momento no es saber programar prompts, sino saber facilitar.'
 pubDate: 2026-06-10
 audience: 'Todas'
+tldr: 'La pregunta sobre la IA no es cuánto tiempo ahorra, sino para qué se ahorra. La IA útil multiplica tareas; la IA fértil libera tiempo para pensar mejor y acompañar a quien importa. La competencia clave del momento no es programar prompts, sino saber facilitar.'
 category: 'Estrategia'
 tags: ['inteligencia artificial', 'IA', 'ética', 'pedagogía', 'pensamiento crítico', 'facilitación', 'innovación social']
 draft: false

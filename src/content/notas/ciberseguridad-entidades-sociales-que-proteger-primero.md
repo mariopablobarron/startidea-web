@@ -3,6 +3,7 @@ title: 'Ciberseguridad para entidades sociales: qué proteger primero cuando no 
 description: 'Guía honesta para ONGs, fundaciones e instituciones eclesiales sobre por dónde empezar a proteger los datos digitales. Sin alarmismo, sin jerga, con un orden de prioridades realista cuando los recursos son limitados.'
 pubDate: 2026-05-26
 audience: 'Tercer sector'
+tldr: 'Para una entidad social sin departamento de TI, lo que protege no es comprar herramientas, sino el orden: qué proteger primero. Esta guía da ese orden de prioridades —datos sensibles, accesos, copias de seguridad, equipo— sin alarmismo y para presupuestos modestos.'
 category: 'Estrategia'
 tags: ['ciberseguridad', 'protección de datos', 'RGPD', 'ONG', 'fundaciones', 'tercer sector', 'instituciones eclesiales']
 draft: false
