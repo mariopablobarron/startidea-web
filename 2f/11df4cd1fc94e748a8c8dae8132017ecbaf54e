@@ -1,0 +1,25 @@
+src/components/HeroJourney.astro
+  s_0ab79ba551035b::t_09464f9a1e8b70 72-73,75
+  s_0ab79ba551035b::t_8f7b3aefc4ac00 131-133
+  s_0ab79ba551035b::t_d7d746b727b925 83-85,87
+  s_0ab79ba551035b::t_618999c03739e9 214-215,218
+  s_0ab79ba551035b::t_28c19b66090002 247-249
+  s_0ab79ba551035b::t_b0831444277bf0 274-283
+  s_0ab79ba551035b::t_4ca2017bea77e0 236-242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "2f11df4cd1fc94e748a8c8dae8132017ecbaf54e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
