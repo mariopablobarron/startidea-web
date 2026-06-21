@@ -3,9 +3,13 @@ import Logo from './Logo.astro';
 
 const year = new Date().getFullYear();
 
+// Footer aligerado (Mario 2026-06-21: "mucha info, los títulos"). De 4 columnas
+// (33 enlaces) a 3 equilibradas con lo esencial. Lo retirado sigue en la nav y
+// el sitemap: Financiación pública, Catálogo, Impulsa, Precios, Comunidad,
+// Merchandising, Granada Social, Glosario, Prensa, Asistente IA, Changelog, pedidos@.
 const cols = [
   {
-    title: 'Disciplinas',
+    title: 'Servicios',
     links: [
       { label: 'Consultoría', href: '/consultoria' },
       { label: 'Comunicación', href: '/comunicacion' },
@@ -13,43 +17,26 @@ const cols = [
       { label: 'Tecnología', href: '/tecnologia' },
       { label: 'Fundraising', href: '/fundraising' },
       { label: 'Protección digital', href: '/proteccion-digital' },
-      { label: 'Financiación pública', href: '/financiacion-empresas' },
-      { label: 'Buscador subvenciones', href: '/subvenciones' },
-      { label: 'Catálogo Startidea', href: '/subvenciones/catalogo' },
-      { label: 'Startidea Impulsa (RSC)', href: '/impulsa' },
-      { label: 'Precios', href: '/precios' },
     ],
   },
   {
-    title: 'Propiedades',
+    title: 'Explora',
     links: [
-      { label: 'Hub Startidea', href: '/hub' },
-      { label: 'Comunidad Startidea ↗', href: 'https://comunidad.hubstartidea.es', external: true },
-      { label: 'Merchandising', href: '/merchandising' },
-      { label: 'Granada Social ↗', href: 'https://granadasocial.org', external: true },
-    ],
-  },
-  {
-    title: 'Casa',
-    links: [
+      { label: 'Subvenciones', href: '/subvenciones' },
+      { label: 'Casos', href: '/casos' },
+      { label: 'Notas mensuales', href: '/notas' },
       { label: 'Sobre Startidea', href: '/sobre' },
       { label: 'Manifiesto', href: '/manifiesto' },
-      { label: 'Notas mensuales', href: '/notas' },
-      { label: 'Glosario', href: '/glosario' },
-      { label: 'Casos', href: '/casos' },
-      { label: 'Prensa', href: '/prensa' },
-      { label: 'Asistente IA', href: '/asistente' },
-      { label: 'Changelog', href: '/changelog' },
+      { label: 'Hub Startidea', href: '/hub' },
     ],
   },
   {
     title: 'Hablar',
     links: [
-      { label: 'Acceso clientes', href: '/portal' },
-      { label: 'Reservar diagnóstico', href: '/contacto' },
+      { label: 'Reservar 30 min', href: '/contacto' },
       { label: 'Pedir presupuesto', href: '/presupuesto' },
+      { label: 'Acceso clientes', href: '/portal' },
       { label: 'hola@startidea.es', href: 'mailto:hola@startidea.es' },
-      { label: 'pedidos@startidea.es', href: 'mailto:pedidos@startidea.es' },
       { label: '+34 958 045 789', href: 'tel:+34958045789' },
     ],
   },
@@ -116,14 +103,11 @@ const redes = [
          títulos de las columnas Disciplinas/Propiedades/etc. -->
     <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
       <div class="lg:col-span-4 flex flex-col items-start">
-        <Logo class="h-20 sm:h-24 md:h-28 lg:h-32 xl:h-36" />
-        <p class="mt-8 max-w-md font-display text-3xl font-extrabold leading-[1.05] tracking-tight text-ink md:text-4xl">
-          Innovación social <em class="italic text-magenta">que se nota</em>.
+        <Logo iconOnly class="h-12 sm:h-14" />
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-ink/80">
+          Innovación social que se nota: estrategia, comunicación y herramientas para organizaciones que existen para algo más.
         </p>
-        <p class="mt-5 max-w-md text-sm leading-relaxed text-ink/80">
-          Estrategia, comunicación y herramientas para organizaciones que existen para algo más.
-        </p>
-        <div class="mt-8">
+        <div class="mt-7">
           <a href="/contacto" class="btn-ghost">
             Reservar 30 min
             <span aria-hidden="true">→</span>
@@ -131,7 +115,7 @@ const redes = [
         </div>
       </div>
 
-      <div class="lg:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
+      <div class="lg:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
         {cols.map((col) => (
           <div>
             <h3 class="label">— {col.title}</h3>
