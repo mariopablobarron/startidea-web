@@ -1,0 +1,24 @@
+src/content/notas/crowdfunding-ong-cuando-funciona.md
+  s_0ab79ba551035b::t_5c46d9635be752 1-76
+src/content/notas/agencia-comunicacion-ong-que-pedir-cuanto-cuesta.md
+  s_0ab79ba551035b::t_9ef93735a744d4 1-107
+src/content/notas/convocatorias-2026-tercer-sector-espana.md
+  s_0ab79ba551035b::t_95e4121c7dd1d2 1-16,18-88
+  s_0ab79ba551035b::t_b312fd21483dbe 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "3c3af645648f88cec5b9fdc2ac4ee7ed00c2925e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
