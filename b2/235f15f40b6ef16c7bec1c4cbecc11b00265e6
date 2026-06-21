@@ -1,0 +1,27 @@
+src/components/AnalyticsTracker.astro
+  s_0ab79ba551035b::t_c92d5ccc3e06a7 55
+src/components/Footer.astro
+  s_0ab79ba551035b::t_0334e25c414d63 16
+src/pages/redes-sociales-granada.astro
+  s_0ab79ba551035b::t_9ab54e5f60a5d6 1-257
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_38f8692318933d 231-240
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_7ca6454a33cc31 98-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "b2235f15f40b6ef16c7bec1c4cbecc11b00265e6",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
