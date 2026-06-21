@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import isotipo from '@/assets/brand/logo-isotipo-only.png';
+// Lazos SOLOS (sin wordmark) — el asset icon-only de verdad. Antes se usaba
+// logo-isotipo-only.png que, pese al nombre, incluía el wordmark "startidea" →
+// con el <span>Startidea</span> de abajo salía DOBLE (Mario 2026-06-21).
+import isotipo from '@/assets/brand/isotipo-lazos.png';
 
 interface Props {
   class?: string;
