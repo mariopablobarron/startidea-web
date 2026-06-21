@@ -1,0 +1,257 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import { rangoPublico, fmtEur } from '@/data/servicios';
+import { localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+// Reutiliza el rango de Comunicación: la gestión de redes vive ahí (€/mes).
+const rango = rangoPublico('/comunicacion');
+
+// Prueba local: casos de Granada.
+const casosSlugs = ['granada-social-5', 'down-granada', 'acogimiento-familiar-granada'];
+
+const faqs = [
+  {
+    question: '¿Cuánto cuesta la gestión de redes sociales en Granada?',
+    answer: 'La gestión continua de redes parte de 800 €/mes e incluye estrategia, calendario editorial, producción de piezas, programación y moderación. El precio formal se cierra tras un diagnóstico de 30 minutos según el número de canales, la frecuencia de publicación y si hace falta producción audiovisual propia. No hay packs cerrados que no encajen con nadie: el alcance se ajusta a cada organización.',
+  },
+  {
+    question: '¿Hay que estar en Granada para trabajar con Startidea?',
+    answer: 'No es imprescindible. Startidea tiene estudio en el centro de Granada y conoce de cerca el tejido asociativo y empresarial granadino, lo que facilita las grabaciones, la cobertura de eventos y las reuniones presenciales. Pero el trabajo de social media se hace en buena parte en remoto, así que también acompaña a organizaciones de toda Andalucía y del resto de España.',
+  },
+  {
+    question: '¿Trabaja Startidea con asociaciones pequeñas de Granada?',
+    answer: 'Sí. Buena parte del tejido social de Granada son entidades pequeñas con equipos reducidos. Para ese perfil, gestionar bien dos canales con criterio rinde más que estar en cinco a medias. Startidea ayuda a decidir qué redes sí y cuáles no, y a montar un calendario que el equipo pueda sostener sin quemarse.',
+  },
+  {
+    question: '¿En qué redes conviene estar?',
+    answer: 'Depende de la audiencia, no de la moda. Para muchas entidades sociales e instituciones de Granada, la combinación útil es Instagram más LinkedIn, y para algunas un canal de difusión por WhatsApp o una newsletter. Dejar una red que no aporta es una decisión legítima y a menudo la correcta. Startidea define el mapa de canales en el diagnóstico, antes de producir nada.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Comunicación estratégica', url: `${SITE_URL}/comunicacion` },
+    { name: 'Redes sociales en Granada', url: `${SITE_URL}/redes-sociales-granada` },
+  ]),
+  localBusinessSchema(),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Gestión de redes sociales y social media en Granada',
+    description:
+      'Gestión de redes sociales (social media) en Granada para entidades del tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, producción de contenidos, cobertura de eventos y construcción de comunidad.',
+    serviceType: 'Gestión de redes sociales',
+    url: `${SITE_URL}/redes-sociales-granada`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Estrategia de redes sociales', description: 'Mapa de canales, tono y objetivos por audiencia.' },
+      { name: 'Gestión continua de perfiles', description: 'Calendario, copy, creatividad, programación y moderación.' },
+      { name: 'Cobertura de eventos en Granada', description: 'Producción en directo y resumen editorial post-evento.' },
+      { name: 'Construcción de comunidad', description: 'Dinamización, conversación y vínculo a medio plazo.' },
+    ],
+  }),
+];
+
+const incluye = [
+  {
+    num: '01',
+    title: 'Estrategia de redes, no improvisación',
+    body: 'Antes de publicar, un mapa de canales: qué redes sí y cuáles no, qué tono, qué objetivos por audiencia. Para una entidad de Granada con equipo pequeño, enfocar bien dos canales vale más que estar en cinco a medias.',
+  },
+  {
+    num: '02',
+    title: 'Gestión continua con criterio editorial',
+    body: 'Calendario editorial, copy, creatividad, programación y moderación. Social media tratado como canal editorial —conversación y comunidad— y no como tablón de anuncios ni fábrica de métricas vanidosas.',
+  },
+  {
+    num: '03',
+    title: 'Contenido que conoce el terreno',
+    body: 'Piezas que entienden el contexto granadino: el tejido asociativo, las fechas del sector, la conversación local. Storytelling de proyectos e impacto con dignidad, sin pornomiseria ni épica simplista.',
+  },
+  {
+    num: '04',
+    title: 'Cobertura de eventos sobre el terreno',
+    body: 'Estudio en el centro de Granada: jornadas, presentaciones y acciones cubiertas en directo, con foto, vídeo y publicación coordinados, y un resumen editorial después del evento.',
+  },
+  {
+    num: '05',
+    title: 'Comunidad, no solo seguidores',
+    body: 'El foco está en construir comunidad real —personas que vuelven, que comentan, que se implican— y no en inflar un número de seguidores que no mueve nada. Dinamización y vínculo a medio plazo.',
+  },
+];
+
+const local = [
+  {
+    title: 'Conoce el tejido de Granada',
+    body: 'Quince años trabajando con organizaciones granadinas y el medio Granada Social. Startidea no llega a aprender el terreno: ya lo conoce.',
+  },
+  {
+    title: 'Presencial cuando suma',
+    body: 'Estudio propio en el centro de Granada para grabaciones, coberturas y reuniones. La logística deja de ser un problema cuando la agencia está al lado.',
+  },
+  {
+    title: 'Andalucía y toda España',
+    body: 'La base es Granada, pero el social media se gestiona en remoto. Startidea acompaña también a entidades de Sevilla, Málaga, Madrid o donde haga falta.',
+  },
+];
+---
+
+<Base
+  title="Redes sociales y social media en Granada — Startidea"
+  description="Gestión de redes sociales y social media en Granada para tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, contenidos, cobertura de eventos y comunidad. Agencia con estudio en el centro de Granada."
+  ogSlug="page/redes-sociales-granada"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Redes sociales · Social media · Granada</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Redes sociales y social media<br/>
+        <em class="italic text-magenta">en Granada</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea gestiona las redes sociales de entidades del tercer sector, instituciones y empresas con propósito en Granada —y en toda Andalucía—: estrategia, calendario editorial, contenidos y comunidad, con una agencia que conoce el terreno y tiene estudio en el centro de la ciudad. Social media con criterio editorial, no por inercia.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_redes_granada_hero">
+          Habla de tus redes sociales
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {rango?.mensualDesde && (
+    <!-- Inversión orientativa — baja la fricción nº1 -->
+    <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+      <div class="container-x">
+        <div class="grid grid-cols-12 items-baseline gap-x-8 gap-y-3 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Inversión orientativa</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <p class="font-display text-2xl leading-tight text-ink md:text-3xl">
+              Gestión continua de redes desde <span class="text-magenta">{fmtEur(rango.mensualDesde)}</span>/mes.
+            </p>
+            <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
+              Es un orden de magnitud: el precio formal se cierra tras un diagnóstico de 30 minutos, según los canales, la frecuencia y si hace falta producción audiovisual propia. Sin packs cerrados que no encajan con nadie.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Qué incluye -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Social media <em class="italic text-magenta">con cabeza</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {incluye.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué una agencia de Granada -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Por qué local</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Una agencia que <em class="italic text-magenta">conoce Granada</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {local.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-10 max-w-measure text-ink/80">
+            La gestión de redes es una pieza de un trabajo mayor: la <a href="/comunicacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación estratégica</a> completa —relato, contenidos, campañas con causa e identidad— se detalla en la página de servicio.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prueba: casos granadinos -->
+  <CasosRelacionados slugs={casosSlugs} titulo="Trabajo con organizaciones de Granada" />
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Empieza con un <em class="italic text-magenta">diagnóstico de 30 min</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Tú cuentas el reto de tus redes y Startidea te dice con honestidad si hay encaje y por dónde empezar. Sin compromiso y sin propuesta genérica.
+          </p>
+          <div class="mt-10">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_redes_granada_final">
+              Pide tu diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <NotasRelacionadas category="Comunicación" />
+  <OtrosServicios current="comunicacion" />
+</Base>

@@ -95,6 +95,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'Comunicar para algo',
       subtitle: 'Estrategia, contenidos, redes, campañas con causa, marketing digital, marca, comunicación institucional y crisis. Comunicación con propósito, no decorativa.',
     },
+    'page/redes-sociales-granada': {
+      kind: 'page',
+      eyebrow: '— Redes sociales · Granada',
+      title: 'Redes sociales y social media en Granada.',
+      accent: 'en Granada',
+      subtitle: 'Gestión de redes para tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, contenidos y comunidad. Con estudio en el centro de Granada.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',
