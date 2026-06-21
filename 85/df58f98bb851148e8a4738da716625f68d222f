@@ -1,0 +1,27 @@
+src/content/notas/como-escribir-memoria-tecnica-subvencion.md
+  s_0ab79ba551035b::t_042f214a2dc663 1-76
+src/content/notas/ia-fertil-no-ia-util.md
+  s_0ab79ba551035b::t_d414d18957ab02 6
+src/content/notas/rgpd-fundaciones-cinco-documentos-imprescindibles.md
+  s_0ab79ba551035b::t_e013de33733ff8 6
+src/content/notas/licitar-comunicacion-administracion-publica.md
+  s_0ab79ba551035b::t_ffb6186e6c7c87 6,9
+src/content/notas/ciberseguridad-entidades-sociales-que-proteger-primero.md
+  s_0ab79ba551035b::t_7b459b7aebf38a 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "85df58f98bb851148e8a4738da716625f68d222f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
