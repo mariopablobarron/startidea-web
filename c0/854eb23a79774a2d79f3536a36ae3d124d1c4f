@@ -1,0 +1,21 @@
+src/components/Footer.astro
+  s_0ab79ba551035b::t_ff05d98b6f8d5d 118
+  s_0ab79ba551035b::t_b5c77e8361476e 6-9,12,23,25-27,30,36,38
+  s_0ab79ba551035b::t_d2999eea648ef9 106-108,110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "c0854eb23a79774a2d79f3536a36ae3d124d1c4f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
