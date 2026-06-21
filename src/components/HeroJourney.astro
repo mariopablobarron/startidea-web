@@ -69,8 +69,10 @@
   .jny { position: relative; height: 320vh; }
   /* Visitas siguientes en la misma sesión: viaje corto (no forzar scroll largo). */
   .jny.is-quick { height: 130vh; }
+  /* z-index 40 (no 60): por debajo de la Nav sticky (z-50) para que el menú
+     SIEMPRE acompañe, visible sobre el viaje (petición Mario 2026-06-21). */
   .jny__layer {
-    position: fixed; inset: 0; z-index: 60; overflow: hidden; color: #fff;
+    position: fixed; inset: 0; z-index: 40; overflow: hidden; color: #fff;
     background: #08070a; transition: opacity .4s ease;
   }
   #jny-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
@@ -78,9 +80,11 @@
     background: radial-gradient(70% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%); }
   /* Fondo de vídeo (marca de agua) — solo en el hero asentado/estático. Durante
      el viaje 3D está oculto (display:none, preload:none → no carga). */
+  /* Fondo de vídeo: siempre en el DOM (display:block, opacity:0). En el viaje el
+     JS lo hace aparecer en crossfade en el tramo final (consecutivo). En
+     reduce-motion (is-static) lo muestra el CSS de abajo. */
   .jny__bg { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
-    object-fit: cover; display: none; opacity: 0; pointer-events: none;
-    transition: opacity 1s ease; }
+    object-fit: cover; display: block; opacity: 0; pointer-events: none; }
   .jny__scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none;
     opacity: 0; transition: opacity 1s ease;
     background: linear-gradient(95deg, rgba(8,7,10,.94) 0%, rgba(8,7,10,.82) 38%, rgba(8,7,10,.5) 72%, rgba(8,7,10,.35) 100%); }
@@ -124,10 +128,9 @@
 </style>
 
 <style is:global>
-  /* Mientras el viaje ocupa la pantalla, ocultamos el chrome del sitio (Nav,
-     chips flotantes) para inmersión total. La capa fija ya tapa la barra CTA
-     móvil. Reaparece al llegar al contenido. */
-  html.journey-immersive header,
+  /* El menú (Nav sticky) SIEMPRE acompaña, también durante el viaje (z-50 por
+     encima de la capa z-40). Solo ocultamos el FAB flotante para no recargar la
+     inmersión; reaparece al llegar al contenido. */
   html.journey-immersive #hub-flotante {
     opacity: 0 !important;
     pointer-events: none !important;
@@ -208,9 +211,11 @@
 
       const stages = [...section.querySelectorAll('.jny__stage')];
       const hint = section.querySelector('[data-hint]');
+      const bg = document.getElementById('jny-bg');
+      const scrim = section.querySelector('.jny__scrim');
       const show = (n, on) => { const e = stages.find(s => s.dataset.stage === n); if (e) e.classList.toggle('show', on); };
 
-      let prog = 0, target = 0, t = 0, paused = false, done = false, completedOnce = false, settled = false;
+      let prog = 0, target = 0, t = 0, paused = false, done = false, completedOnce = false, settled = false, bgStarted = false;
 
       // Tras completar el viaje UNA vez, cuando el usuario ya ha pasado el hero
       // entero hacia el contenido, el hero se "asienta" en su estado limpio
@@ -228,16 +233,20 @@
         html.style.scrollBehavior = 'auto';
         scrollBy(0, after - before); // colapso compensado: el contenido no se mueve
         html.style.scrollBehavior = prevSB;
-        setChrome(false); // nav y chips vuelven
-        // Fondo de vídeo: solo se reproduce en desktop (en móvil queda el poster
-        // estático, para no gastar datos). small = innerWidth < 760 (arriba).
-        const bg = document.getElementById('jny-bg');
-        if (bg && !small) bg.play().catch(function () {});
+        setChrome(false); // chips vuelven (el nav nunca se ocultó)
+        // Snap al estado final del hero por si el crossfade no llegó al máximo en
+        // scroll rápido: vídeo + scrim al tope, partículas fuera. El vídeo solo
+        // se reproduce en desktop (en móvil queda el poster, sin gastar datos).
+        canvas.style.opacity = '';
+        if (bg) { bg.style.opacity = '0.7'; if (!small) bg.play().catch(function () {}); }
+        if (scrim) scrim.style.opacity = '1';
       };
 
       const onScroll = () => {
         target = progAt();
-        if (completedOnce && !settled && scrollY > section.offsetHeight + 1) settle();
+        // Asienta en cuanto el viaje llega al final (sin pantalla muerta). El
+        // vídeo ya está en pantalla por el crossfade → el asentamiento es invisible.
+        if (!settled && target >= 0.999) settle();
       };
       addEventListener('scroll', onScroll, { passive: true }); onScroll();
       document.addEventListener('visibilitychange', () => { paused = document.hidden; });
@@ -262,9 +271,16 @@
           show('end', prog > 0.82);
           if (prog > 0.98) completedOnce = true;
           if (hint) hint.style.opacity = prog > 0.05 ? '0' : '0.55';
-          // Capa: visible durante el viaje, se desvanece al llegar al contenido.
-          const fade = prog < 0.86 ? 1 : Math.max(0, (1 - prog) / 0.14);
-          layer.style.opacity = String(fade);
+          // Crossfade consecutivo: el vídeo de marca + scrim entran en el tramo
+          // final mientras las partículas se van. La capa NO se desvanece → el
+          // vídeo queda como hero y el asentamiento es invisible (sin "salto").
+          if (bg) {
+            if (prog > 0.6 && !bgStarted && !small) { bgStarted = true; try { bg.load(); bg.play().catch(function () {}); } catch (_) {} }
+            const vin = Math.max(0, Math.min(1, (prog - 0.66) / 0.26));
+            bg.style.opacity = String(vin * 0.7);
+            if (scrim) scrim.style.opacity = String(vin);
+            canvas.style.opacity = String(1 - Math.max(0, Math.min(1, (prog - 0.72) / 0.24)));
+          }
           // No bloquear clics del contenido en cuanto el viaje está por acabar.
           layer.style.pointerEvents = prog > 0.95 ? 'none' : '';
           setChrome(prog < 0.92);
