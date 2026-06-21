@@ -28,6 +28,10 @@
     font-feature-settings: 'ss01', 'cv11';
     font-size: 16px;
     line-height: 1.6;
+    /* 'clip' como en html: contiene desbordes horizontales SIN crear contenedor
+       de scroll. Con 'hidden' el body se volvía scroll-container (overflow-y:auto)
+       y rompía el position:sticky del nav (se iba con el scroll). */
+    overflow-x: clip;
   }
 
   ::selection {
