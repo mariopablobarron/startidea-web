@@ -1,0 +1,21 @@
+src/pages/audiovisual.astro
+  s_0ab79ba551035b::t_d29174ad23df74 19-21
+  s_0ab79ba551035b::t_66ea7f592b645a 170
+  s_0ab79ba551035b::t_e4758e98ebd046 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "a0281dd2d428468ebbe7ae152014959f042b6e6f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
