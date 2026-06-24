@@ -101,4 +101,4 @@ La comunicación no es un canal de captación: es la infraestructura de confianz
 
 ---
 
-Si tu asociación lleva años con las mismas fuentes de financiación y quieres construir algo más sólido, [empieza por una llamada de diagnóstico](/contacto). Treinta minutos para entender la situación y ver qué tiene más sentido. Sin coste y sin compromiso.
+Diversificar la financiación es solo una de las patas de hacer sostenible una [organización sin ánimo de lucro](/notas/organizacion-sin-animo-de-lucro-granada): las otras dos son la visibilidad y poder demostrar el impacto. Si tu asociación lleva años con las mismas fuentes de financiación y quieres construir algo más sólido, [empieza por una llamada de diagnóstico](/contacto). Treinta minutos para entender la situación y ver qué tiene más sentido. Sin coste y sin compromiso.
