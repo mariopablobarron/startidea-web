@@ -1,0 +1,21 @@
+src/content/notas/profesionalizar-asociacion-sin-perder-alma.md
+  s_0ab79ba551035b::t_87ef88ca3cd5a8 83
+src/content/notas/fundraising-asociaciones-captacion-fondos.md
+  s_0ab79ba551035b::t_76afc81f6c1694 104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "13914aabff3dd5ebe67a3b9249d0e53ffa18c8b7",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
