@@ -1,0 +1,27 @@
+src/components/Nav.astro
+  s_0ab79ba551035b::t_8d5a0f0db0c6be 3-8
+  s_0ab79ba551035b::t_c3f386e955a51b 93
+  s_0ab79ba551035b::t_61d7ec623826ab 157
+src/data/booking.ts
+  s_0ab79ba551035b::t_e540d9268f29ab 12
+  s_0ab79ba551035b::t_6a5cf99ed34da6 1-11,13-22
+src/pages/contacto.astro
+  s_0ab79ba551035b::t_24edc5e4db0ff8 55-76
+  s_0ab79ba551035b::t_324e87fbc0dd11 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "aa44d0d3d902d8af090ee434fa05c3edd18e9457",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
