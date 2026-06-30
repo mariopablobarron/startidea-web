@@ -116,6 +116,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'no clics',
       subtitle: 'Google Ads, Meta Ads y Google Ad Grants para tercer sector, instituciones y empresas con propósito. Medición por objetivo —socios, donantes, leads—, no por impresiones.',
     },
+    'page/mantenimiento-web': {
+      kind: 'page',
+      eyebrow: '— Mantenimiento web',
+      title: 'Tu web, sin sustos.',
+      accent: 'sin sustos',
+      subtitle: 'Hosting, SSL, copias, actualizaciones de seguridad, monitorización y soporte. Cuota mensual sin permanencia para tercer sector, instituciones y empresas con propósito.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',

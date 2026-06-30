@@ -1,0 +1,187 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const casosSlugs = ['granada-social-5', 'down-granada', 'clinica-baca'];
+
+// Niveles de cuota — precios ORIENTATIVOS (€/mes), pendientes de validación.
+const planes = [
+  {
+    nombre: 'Esencial',
+    precio: 49,
+    pitch: 'La web, viva y protegida.',
+    incluye: [
+      'Hosting gestionado + certificado SSL',
+      'Copias de seguridad diarias',
+      'Actualizaciones de seguridad',
+      'Monitorización de caídas (uptime)',
+      '30 min de cambios al mes',
+    ],
+  },
+  {
+    nombre: 'Completo',
+    precio: 99,
+    destacado: true,
+    pitch: 'Lo anterior, y que evolucione.',
+    incluye: [
+      'Todo lo de Esencial',
+      '2 h de cambios de contenido al mes',
+      'Soporte prioritario (respuesta en 24 h)',
+      'Informe trimestral de rendimiento y seguridad',
+    ],
+  },
+  {
+    nombre: 'Tranquilidad total',
+    precio: 179,
+    pitch: 'Olvídate de la web.',
+    incluye: [
+      'Todo lo de Completo',
+      '5 h al mes de mejoras y cambios',
+      'Soporte preferente',
+      'Revisión SEO técnica trimestral',
+    ],
+  },
+];
+
+const faqs = [
+  {
+    question: '¿Por qué necesita mantenimiento una web?',
+    answer: 'Una web no es un folleto: es software vivo. Sin actualizaciones de seguridad queda expuesta a ataques; sin copias, un fallo puede perder años de trabajo; sin monitorización, puede estar caída días sin que nadie se entere. El mantenimiento evita que una web pase de activo a problema —y de problema a urgencia cara.',
+  },
+  {
+    question: '¿Tengo que tener mi web hecha por Startidea?',
+    answer: 'No necesariamente. Startidea puede asumir el mantenimiento de una web existente tras una auditoría inicial que verifica en qué estado está (stack, seguridad, copias). Si la web es muy antigua o insegura, a veces sale más a cuenta rehacerla; eso se dice con honestidad antes de firmar nada.',
+  },
+  {
+    question: '¿El hosting está incluido en la cuota?',
+    answer: 'Sí, en todos los planes se incluye hosting gestionado de calidad (servidores en la Unión Europea) y el certificado SSL. No hay que contratar el alojamiento por separado ni preocuparse de renovaciones: Startidea lo gestiona como parte del servicio.',
+  },
+  {
+    question: '¿Hay permanencia?',
+    answer: 'No hay permanencia forzosa. El servicio es mensual y se puede cancelar avisando con un mes. Startidea prefiere que te quedes porque el servicio merece la pena, no porque un contrato te obligue.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Mantenimiento web', url: `${SITE_URL}/mantenimiento-web` },
+  ]),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Mantenimiento web',
+    description:
+      'Mantenimiento web gestionado para tercer sector, instituciones y empresas con propósito: hosting, certificado SSL, copias de seguridad, actualizaciones de seguridad, monitorización y soporte. Cuota mensual sin permanencia.',
+    serviceType: 'Mantenimiento de sitios web',
+    url: `${SITE_URL}/mantenimiento-web`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: planes.map((p) => ({
+      name: `Plan ${p.nombre}`,
+      description: `${p.pitch} Desde ${p.precio} €/mes.`,
+    })),
+  }),
+];
+---
+
+<Base
+  title="Mantenimiento web — hosting, seguridad y soporte — Startidea"
+  description="Mantenimiento web gestionado para entidades del tercer sector, instituciones y empresas con propósito: hosting, SSL, copias diarias, actualizaciones de seguridad, monitorización y soporte. Cuota mensual desde 49 €, sin permanencia. Agencia en Granada."
+  ogSlug="page/mantenimiento-web"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Mantenimiento web</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Tu web, <em class="italic text-magenta">sin sustos</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Una web es software vivo: necesita hosting, seguridad, copias y alguien que esté pendiente. Startidea se ocupa de todo con una cuota mensual clara —sin permanencia y sin sorpresas— para que tu organización dedique su energía a su causa, no a que la web no se caiga. Hecha por Startidea o no.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_mantenimiento_hero">
+          Quiero mi web tranquila
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Planes -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="border-t border-ink/15 pt-8">
+        <span class="label">— Planes de cuota mensual</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Elige tu nivel de <em class="italic text-magenta">tranquilidad</em>.
+        </h2>
+
+        <div class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 lg:grid-cols-3">
+          {planes.map((p) => (
+            <div class={`flex flex-col bg-paper p-8 ${p.destacado ? 'lg:-my-4 lg:border-2 lg:border-magenta lg:bg-paper-warm' : ''}`}>
+              {p.destacado && (
+                <span class="mb-3 inline-block w-fit bg-magenta px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-paper">El más elegido</span>
+              )}
+              <h3 class="font-display text-2xl text-ink">{p.nombre}</h3>
+              <p class="mt-1 text-sm text-ink/70">{p.pitch}</p>
+              <p class="mt-5 font-display text-4xl text-ink">
+                {p.precio} €<span class="text-base text-ink/60">/mes</span>
+              </p>
+              <ul class="mt-6 flex-1 space-y-2 text-sm text-ink/80">
+                {p.incluye.map((i) => (
+                  <li class="flex gap-2">
+                    <span class="text-magenta" aria-hidden="true">→</span>
+                    <span>{i}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={`/contacto?servicio=mantenimiento-${p.nombre.toLowerCase().replace(/ /g, '-')}&ref=mantenimiento`}
+                class={`mt-8 block text-center ${p.destacado ? 'btn' : 'btn-ghost'}`}
+                data-track="cta"
+                data-track-id={`cta_mantenimiento_${p.nombre.toLowerCase().replace(/ /g, '_')}`}
+              >
+                Contratar {p.nombre}
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <p class="mt-6 max-w-measure text-sm leading-relaxed text-ink/70">
+          Precios orientativos sin IVA. Para webs con necesidades especiales (e-commerce, plataformas a medida, tráfico alto) se hace un presupuesto específico tras una breve auditoría. ¿Tu web aún no existe? Startidea también la <a href="/tecnologia" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">construye</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CasosRelacionados slugs={casosSlugs} titulo="Webs que cuidamos" />
+
+  <!-- FAQs -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="mantenimiento" />
+</Base>
