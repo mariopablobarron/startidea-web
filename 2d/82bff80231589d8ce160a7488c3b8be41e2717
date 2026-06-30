@@ -1,0 +1,26 @@
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_22b3803bb002a8 119-125
+src/pages/mantenimiento-web.astro
+  s_0ab79ba551035b::t_866e7e13fade21 186
+  s_0ab79ba551035b::t_523d9172629978 1-185,187
+src/components/AnalyticsTracker.astro
+  s_0ab79ba551035b::t_8a09316b5f07ff 56
+src/components/OtrosServicios.astro
+  s_0ab79ba551035b::t_57af878ff46aea 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "2d82bff80231589d8ce160a7488c3b8be41e2717",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
