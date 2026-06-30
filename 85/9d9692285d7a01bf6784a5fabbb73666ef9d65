@@ -1,0 +1,39 @@
+src/lib/candidaturas-db.ts
+  s_0ab79ba551035b::t_3ee320254f3752 1-158
+src/pages/admin/candidaturas/index.astro
+  s_0ab79ba551035b::t_d3ac8c81246f5f 1-142
+src/pages/admin/candidaturas/export.csv.ts
+  s_0ab79ba551035b::t_450ccb387477a9 1-64
+src/pages/api/admin/candidatura-doc.ts
+  s_0ab79ba551035b::t_77313d0c3f727f 1-78
+src/pages/empleo.astro
+  s_0ab79ba551035b::t_572f16da65dda8 1-228
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_be49223829b1c0 105-111
+src/components/Footer.astro
+  s_0ab79ba551035b::t_2ad0e8ca19cc9f 30
+src/pages/api/candidatura.ts
+  s_0ab79ba551035b::t_26d4c93fa18608 1-213
+src/pages/admin/index.astro
+  s_0ab79ba551035b::t_db208576c227e2 755-776
+  s_0ab79ba551035b::t_4ea1220b8336ea 21
+  s_0ab79ba551035b::t_c587ba646b9452 74-76
+src/pages/api/admin/candidatura-estado.ts
+  s_0ab79ba551035b::t_6f709386db007b 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "859d9692285d7a01bf6784a5fabbb73666ef9d65",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
