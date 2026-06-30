@@ -1,0 +1,68 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import { getAllReservas } from '@/lib/cursos-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect('/admin/login?next=' + encodeURIComponent('/admin/cursos-reservas'));
+}
+
+const reservas = getAllReservas();
+const pagadas = reservas.filter((r) => r.estado_pago === 'pagada');
+const totalSenal = pagadas.reduce((s, r) => s + r.senal_cents, 0) / 100;
+
+function fmt(ts: number): string {
+  return new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+const ESTADO_LABEL: Record<string, string> = {
+  pendiente: '⏳ Pendiente',
+  pagada: '✅ Pagada',
+  reembolsada: '↩️ Reembolsada',
+};
+---
+
+<Base title="Admin · Reservas de cursos" noindex={true}>
+  <section class="bg-paper py-12">
+    <div class="container-x">
+      <h1 class="font-display text-3xl text-ink">Reservas de cursos ({reservas.length})</h1>
+      <p class="mt-2 text-sm text-ink/70">
+        {pagadas.length} pagada{pagadas.length !== 1 ? 's' : ''} · {totalSenal.toLocaleString('es-ES')} € en señales cobradas.
+      </p>
+
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-ink/20 text-left font-mono text-[10px] uppercase tracking-widest text-ink/60">
+              <th class="py-2 pr-4">Fecha</th>
+              <th class="py-2 pr-4">Curso</th>
+              <th class="py-2 pr-4">Alumno</th>
+              <th class="py-2 pr-4">ESFL</th>
+              <th class="py-2 pr-4">Señal</th>
+              <th class="py-2 pr-4">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reservas.length === 0 && (
+              <tr><td colspan="6" class="py-6 text-ink/60">Aún no hay reservas.</td></tr>
+            )}
+            {reservas.map((r) => (
+              <tr class="border-b border-ink/10 align-top">
+                <td class="py-3 pr-4 font-mono text-xs text-ink/60 whitespace-nowrap">{fmt(r.created_at)}</td>
+                <td class="py-3 pr-4 text-ink">{r.curso_title}</td>
+                <td class="py-3 pr-4 text-ink/85">
+                  {r.nombre || '—'}<br/>
+                  {r.email && <a href={`mailto:${r.email}`} class="text-xs underline decoration-magenta/40 underline-offset-2">{r.email}</a>}
+                </td>
+                <td class="py-3 pr-4">{r.esfl ? 'Sí' : '—'}</td>
+                <td class="py-3 pr-4 whitespace-nowrap">{(r.senal_cents / 100).toLocaleString('es-ES')} €</td>
+                <td class="py-3 pr-4 whitespace-nowrap">{ESTADO_LABEL[r.estado_pago] ?? r.estado_pago}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>

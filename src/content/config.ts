@@ -93,6 +93,9 @@ const cursos = defineCollection({
     precio: z.number().int().nonnegative(),
     // Precio reducido para entidades sin ánimo de lucro (opcional)
     precio_esfl: z.number().int().nonnegative().optional(),
+    // Señal/depósito para reservar plaza (euros, sin IVA). Se descuenta del
+    // total cuando la edición se confirma. Default 50 €.
+    senal: z.number().int().positive().default(50),
     // Estado de la convocatoria
     estado: z.enum(['abierto', 'proximo', 'agotado', 'a-demanda']).default('proximo'),
     // Fecha de la próxima edición (opcional, si ya está fijada)

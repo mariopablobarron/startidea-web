@@ -163,18 +163,24 @@ const jsonLd = [
               Sin plazas disponibles
             </p>
           ) : (
-            <a
-              href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`}
-              class="btn mt-2 block text-center"
-            >
-              {d.estado === 'abierto' ? 'Inscribirme →' : 'Avísame cuando abra →'}
-            </a>
+            <form method="POST" action="/api/curso-checkout" class="mt-2 space-y-3">
+              <input type="hidden" name="slug" value={curso.slug} />
+              {d.precio_esfl && (
+                <label class="flex items-start gap-2 text-xs leading-snug text-ink/75">
+                  <input type="checkbox" name="esfl" class="mt-0.5" />
+                  <span>Soy una entidad sin ánimo de lucro (precio reducido {d.precio_esfl} €; se verifica con documentación).</span>
+                </label>
+              )}
+              <button type="submit" class="btn block w-full text-center">
+                Reservar plaza · señal {d.senal} € →
+              </button>
+            </form>
           )}
 
           <p class="text-[11px] text-ink/75 leading-snug">
-            {d.estado === 'a-demanda'
-              ? 'La edición se abre cuando hay 6+ inscritos. Startidea te confirma fecha en 48h.'
-              : 'Plazas limitadas. Si tienes dudas antes de inscribirte, escríbenos.'}
+            La <strong>señal de {d.senal} €</strong> reserva tu plaza y se descuenta del precio total ({d.precio} €) al confirmarse la edición. {d.estado === 'a-demanda' || d.estado === 'proximo'
+              ? 'La edición se abre cuando hay 6+ inscritos; si no llega a abrirse, se devuelve íntegra.'
+              : 'Plazas limitadas.'} ¿Dudas? <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`} class="link-underline text-ink">Escríbenos</a>.
           </p>
         </div>
 

@@ -1,0 +1,29 @@
+---
+import Base from '@/layouts/Base.astro';
+export const prerender = false;
+// El pago lo confirma el webhook de Stripe (fuente de verdad). Esta página solo
+// agradece; no expone datos sensibles del pago.
+---
+
+<Base title="Plaza reservada — Startidea Lab" noindex={true}>
+  <section class="bg-paper py-24 md:py-32">
+    <div class="container-x">
+      <div class="mx-auto max-w-measure border-2 border-magenta bg-paper-warm p-8 md:p-12">
+        <span class="label">— Startidea Lab</span>
+        <h1 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Plaza <em class="italic text-magenta">reservada</em>.
+        </h1>
+        <p class="mt-6 text-lede text-ink/80">
+          Hemos recibido tu señal y tu plaza queda reservada. Te llega un email de confirmación en unos minutos.
+        </p>
+        <p class="mt-4 text-ink/75">
+          El equipo de Startidea te escribirá con la fecha definitiva y los detalles. La señal se descuenta del precio total cuando se confirma la edición; si no llegara a abrirse, se devuelve íntegra.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/laboratorio/cursos" class="btn">Ver más cursos <span aria-hidden="true">→</span></a>
+          <a href="/contacto" class="btn-ghost">Tengo una duda</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
