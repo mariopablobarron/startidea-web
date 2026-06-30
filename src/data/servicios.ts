@@ -75,6 +75,18 @@ export const GRUPOS_SERVICIOS: GrupoServicios[] = [
     ],
   },
   {
+    // Honorarios de GESTIÓN — la inversión publicitaria (lo que se paga a
+    // Google/Meta) va aparte. Precios orientativos pendientes de confirmar.
+    nombre: 'Publicidad y SEM con propósito',
+    href: '/publicidad',
+    items: [
+      { id: 'auditoria-ads', nombre: 'Auditoría de cuentas publicitarias', precio: 900, unidad: '€' },
+      { id: 'setup-campanas-ads', nombre: 'Setup de campañas (Google/Meta Ads)', precio: 1200, unidad: '€' },
+      { id: 'campana-pago-causa-3m', nombre: 'Campaña de pago con causa (3 meses)', precio: 3000, unidad: '€' },
+      { id: 'gestion-ads-mes', nombre: 'Gestión mensual de campañas de pago', precio: 700, unidad: '€/mes' },
+    ],
+  },
+  {
     nombre: 'Hub Startidea · espacios',
     href: '/hub',
     items: [

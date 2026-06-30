@@ -109,6 +109,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'del proyecto',
       subtitle: 'Empleo, freelance o colaboración en una agencia de innovación social en Granada. Envía tu candidatura espontánea con CV, cartas y portfolio.',
     },
+    'page/publicidad': {
+      kind: 'page',
+      eyebrow: '— Publicidad y SEM con propósito',
+      title: 'Publicidad que trae causa, no clics.',
+      accent: 'no clics',
+      subtitle: 'Google Ads, Meta Ads y Google Ad Grants para tercer sector, instituciones y empresas con propósito. Medición por objetivo —socios, donantes, leads—, no por impresiones.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',

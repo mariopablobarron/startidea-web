@@ -1,0 +1,247 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import { rangoPublico, fmtEur } from '@/data/servicios';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const rango = rangoPublico('/publicidad');
+const casosSlugs = ['granada-social-5', 'down-granada', 'proyecto-hombre'];
+
+const faqs = [
+  {
+    question: '¿Qué es el SEM y en qué se diferencia del SEO?',
+    answer: 'El SEM (Search Engine Marketing) es la publicidad de pago en buscadores y redes —Google Ads, Meta Ads— donde se paga por aparecer. El SEO es el posicionamiento orgánico (gratuito) que se gana con contenido y autoridad. El SEM da resultados inmediatos mientras hay inversión; el SEO es a medio plazo pero perdura. Lo ideal es combinarlos: Startidea trabaja los dos de forma coordinada.',
+  },
+  {
+    question: '¿La inversión en anuncios está incluida en el precio?',
+    answer: 'No. Los honorarios de gestión (estrategia, montaje, optimización y reporte) van por un lado, y la inversión publicitaria —lo que se paga directamente a Google o Meta por los anuncios— va aparte y la fija cada organización según su objetivo. Startidea recomienda un presupuesto de medios realista en el diagnóstico y nunca cobra comisión oculta sobre esa inversión.',
+  },
+  {
+    question: '¿Gestionáis Google Ad Grants para entidades sin ánimo de lucro?',
+    answer: 'Sí, y es una de las grandes ventajas para el tercer sector: Google Ad Grants concede hasta 10.000 $/mes en anuncios de búsqueda gratuitos a asociaciones, fundaciones y ONGs registradas en España. Startidea solicita, configura y optimiza el programa. Hay una página específica con todos los detalles del servicio de Ad Grants.',
+  },
+  {
+    question: '¿Trabajáis también Meta e Instagram Ads, no solo Google?',
+    answer: 'Sí. Según el objetivo se elige el canal: Google Ads (Search y Performance Max) para captar a quien ya busca, y Meta/Instagram Ads para campañas de sensibilización, captación de socios o difusión de eventos. No se da por hecho un canal: se decide en función de a quién hay que llegar y con qué mensaje.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Publicidad y SEM', url: `${SITE_URL}/publicidad` },
+  ]),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Publicidad y SEM con propósito',
+    description:
+      'Gestión de campañas de publicidad online (Google Ads, Meta Ads) y Google Ad Grants para tercer sector, instituciones y empresas con propósito. Estrategia, montaje, optimización y medición por objetivo —socios, donantes, leads—, no por clics vanidosos.',
+    serviceType: 'Gestión de publicidad online (SEM)',
+    url: `${SITE_URL}/publicidad`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    offers: [
+      { name: 'Google Ad Grants', description: 'Hasta 10.000 $/mes en anuncios gratuitos para ESFL.', url: `${SITE_URL}/google-ad-grants` },
+      { name: 'Google Ads de pago', description: 'Search y Performance Max para captar a quien ya busca.' },
+      { name: 'Meta / Instagram Ads', description: 'Campañas con causa: socios, donantes, eventos.' },
+      { name: 'Medición y optimización', description: 'ROI por objetivo, no clics vanidosos.' },
+    ],
+  }),
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Google Ad Grants (gratis para ESFL)',
+    body: 'La mejor baza del tercer sector: hasta 10.000 $/mes en anuncios de búsqueda gratuitos para asociaciones, fundaciones y ONGs registradas. Startidea solicita, configura y optimiza el programa para que ese crédito traiga socios, donantes o tráfico útil —no impresiones vacías.',
+  },
+  {
+    num: '02',
+    title: 'Google Ads de pago (Search · Performance Max)',
+    body: 'Cuando Ad Grants no llega —o para empresas con propósito, que no pueden usarlo— campañas de pago que capturan a quien ya está buscando lo que ofreces. Estructura limpia, palabras clave con intención y nada de quemar presupuesto en términos que no convierten.',
+  },
+  {
+    num: '03',
+    title: 'Meta e Instagram Ads con causa',
+    body: 'Para sensibilizar, captar socios o difundir un evento, las redes de Meta llegan donde la búsqueda no. Segmentación cuidada, creatividades que respetan la causa (sin pornomiseria) y un plan de medios proporcionado al objetivo.',
+  },
+  {
+    num: '04',
+    title: 'Medición por objetivo, no por vanidad',
+    body: 'Cada campaña se mide por lo que importa —un socio nuevo, un donante, un lead, una inscripción— y no por clics o impresiones que decoran un informe. Eventos de conversión bien montados, A/B testing y un reporte honesto de qué funciona y qué se corta.',
+  },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico', body: '30 minutos. Objetivo real (socios, donantes, leads), audiencia y presupuesto de medios sensato.' },
+  { step: '02', title: 'Estrategia y montaje', body: 'Mapa de canales (Ad Grants, Google de pago, Meta), estructura de cuenta y creatividades.' },
+  { step: '03', title: 'Optimización continua', body: 'Ajuste semanal: pujas, audiencias, anuncios. Se corta lo que no rinde y se escala lo que sí.' },
+  { step: '04', title: 'Reporte honesto', body: 'Resultados por objetivo, coste por adquisición y decisiones para el mes siguiente.' },
+];
+---
+
+<Base
+  title="Publicidad y SEM con propósito — Google y Meta Ads — Startidea"
+  description="Gestión de publicidad online para tercer sector, instituciones y empresas con propósito: Google Ad Grants (10.000 $/mes gratis para ESFL), Google Ads, Meta e Instagram Ads. Medición por objetivo, no por clics vanidosos. Agencia en Granada."
+  ogSlug="page/publicidad"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Publicidad y SEM con propósito</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Publicidad que<br/>
+        <em class="italic text-magenta">trae causa</em>, no clics.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Google Ads, Meta Ads y Google Ad Grants para entidades del tercer sector, instituciones y empresas con propósito. Startidea monta y optimiza campañas que se miden por lo que de verdad importa —un socio, un donante, un lead— y no por impresiones que decoran un informe. La inversión publicitaria se rentabiliza, no se quema.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_publicidad_hero">
+          Habla de tu campaña
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {rango && (
+    <!-- Inversión orientativa -->
+    <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+      <div class="container-x">
+        <div class="grid grid-cols-12 items-baseline gap-x-8 gap-y-3 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Honorarios orientativos</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <p class="font-display text-2xl leading-tight text-ink md:text-3xl">
+              Gestión desde <span class="text-magenta">{fmtEur(rango.desde)}</span>.
+              {rango.mensualDesde && (
+                <span class="mt-1 block text-xl text-ink/70 md:text-2xl">
+                  Gestión continua de campañas desde <span class="text-magenta">{fmtEur(rango.mensualDesde)}</span>/mes.
+                </span>
+              )}
+            </p>
+            <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
+              Son <strong>honorarios de gestión</strong>: la inversión publicitaria (lo que se paga a Google o Meta) va aparte y la fija cada organización. Es un orden de magnitud; el precio formal se cierra tras el diagnóstico, sin comisiones ocultas sobre la inversión.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Qué incluye -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cada canal, <em class="italic text-magenta">con sentido</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {areas.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-8 max-w-measure text-ink/80">
+            ¿Eres una entidad sin ánimo de lucro? Empieza por la página de
+            <a href="/google-ad-grants" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">Google Ad Grants</a>: 10.000 $/mes en publicidad gratuita antes de invertir un euro.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué con propósito (vs generalista) -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Por qué Startidea</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            No es lo mismo vender zapatillas <em class="italic text-magenta">que una causa</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-ink/85">
+            La mayoría de agencias de publicidad optimizan para clics y ventas de catálogo. Una causa se mide distinto: un socio que se queda años, un donante recurrente, un voluntario que se implica. Startidea lleva 15 años con el tercer sector y las empresas con propósito, así que monta las campañas para ese objetivo —y conoce de antemano las palancas (y las trampas) de comunicar lo social sin caer en el sensacionalismo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proceso -->
+  <section class="bg-ink py-24 text-paper md:py-32">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/60">— Proceso</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Cómo se trabaja<em class="italic text-magenta"> contigo</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-paper/15 bg-paper/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-ink p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl text-paper">{p.title}</h3>
+                <p class="mt-3 text-sm text-paper/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+          <div class="mt-16 border-t border-paper/15 pt-8">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_publicidad_proceso">
+              Empieza con un diagnóstico de 30 min
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CasosRelacionados slugs={casosSlugs} titulo="Resultados, no clics vanidosos" />
+
+  <!-- FAQs -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <NotasRelacionadas category="Comunicación" />
+  <OtrosServicios current="publicidad" />
+</Base>
