@@ -1,5 +1,11 @@
 ---
 import Logo from './Logo.astro';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+// CTA "Reservar diagnóstico": abre el calendario externo si está configurado
+// (pestaña nueva), si no cae al formulario de /contacto.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 
 // `desktop: false` → fuera del bar inline de escritorio (cabe en portátiles
 // 13-14" sin solapar el logo, fix Mario 2026-06-21); siguen en el menú
@@ -84,7 +90,7 @@ const propiedades = [
           <a href="/presupuesto" class="btn-ghost whitespace-nowrap !py-2.5 !px-4 text-[13px]">
             Presupuesto
           </a>
-          <a href="/contacto" class="btn whitespace-nowrap !py-2.5 !px-4 text-[13px]">
+          <a href={reservaHref} {...reservaExt} class="btn whitespace-nowrap !py-2.5 !px-4 text-[13px]">
             Reservar diagnóstico
             <span aria-hidden="true">→</span>
           </a>
@@ -148,7 +154,7 @@ const propiedades = [
         <a href="/presupuesto" class="btn-ghost w-full !py-2.5 text-sm text-center">
           Pedir presupuesto
         </a>
-        <a href="/contacto" class="btn w-full !py-2.5 text-sm">
+        <a href={reservaHref} {...reservaExt} class="btn w-full !py-2.5 text-sm">
           Reservar diagnóstico →
         </a>
       </div>

@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { faqPageSchema, breadcrumbList, localBusinessSchema, SITE_URL } from '@/lib/jsonld';
+import { bookingHref, hasBooking } from '@/data/booking';
 
 const faqs = [
   {
@@ -51,7 +52,28 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- Calendario embed + datos -->
+  {hasBooking() && (
+    <!-- Reserva self-service (Cal.com) — sin CSP, abre el calendario en pestaña nueva -->
+    <section class="border-b border-ink/15 bg-ink py-10 text-paper md:py-12">
+      <div class="container-x flex flex-wrap items-center justify-between gap-4">
+        <p class="font-display text-2xl leading-tight text-paper md:text-3xl">
+          ¿Prefieres <em class="italic text-magenta">elegir hueco</em> ahora mismo?
+        </p>
+        <a
+          href={bookingHref()}
+          target="_blank"
+          rel="noopener"
+          data-track="cta"
+          data-track-id="cta_contacto_reservar_calendario"
+          class="btn !border-paper !bg-paper !text-ink hover:!border-magenta hover:!bg-magenta hover:!text-paper"
+        >
+          📅 Reservar hueco ahora <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- Formulario + datos -->
   <section class="bg-paper py-20 md:py-28">
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
