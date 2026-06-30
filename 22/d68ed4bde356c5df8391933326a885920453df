@@ -1,0 +1,41 @@
+src/content/config.ts
+  s_0ab79ba551035b::t_bce3e9028174b1 96-98
+src/lib/stripe.ts
+  s_0ab79ba551035b::t_295de025511651 1-31
+src/lib/cursos-db.ts
+  s_0ab79ba551035b::t_0b6a00a524b5fd 1-111
+package.json
+  s_0ab79ba551035b::t_87ebf010f84c6c 32
+src/pages/api/stripe-webhook.ts
+  s_0ab79ba551035b::t_b418aa2fa8ff99 1-112
+src/pages/admin/cursos-reservas/index.astro
+  s_0ab79ba551035b::t_008e60c0ec1fa9 1-68
+src/pages/laboratorio/cursos/[slug].astro
+  s_0ab79ba551035b::t_383bf2fbd09227 166-177,181-183
+src/pages/api/curso-checkout.ts
+  s_0ab79ba551035b::t_8b1b586fbeb1fe 13
+  s_0ab79ba551035b::t_4696f0e7f10823 46-50
+  s_0ab79ba551035b::t_0ab51f0b3f047c 1-12,14-45,51-101
+src/pages/laboratorio/cursos/gracias.astro
+  s_0ab79ba551035b::t_19f5b0a2475cd3 1-29
+.env.example
+  s_0ab79ba551035b::t_8123aa64603d7f 42-48
+package-lock.json
+  s_0ab79ba551035b::t_a8af74fa2e9e24 27,6949-6965,7267-7280
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "22d68ed4bde356c5df8391933326a885920453df",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
