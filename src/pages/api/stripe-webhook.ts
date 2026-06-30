@@ -56,12 +56,22 @@ export const POST: APIRoute = async ({ request }) => {
       const esfl = session.metadata?.esfl === '1';
       const totalEur = ((session.amount_total ?? 0) / 100).toFixed(2);
 
-      let reserva;
+      let result;
       try {
-        reserva = markReservaPaid(session.id, paymentIntent, nombre, email, Date.now());
+        result = markReservaPaid(session.id, paymentIntent, nombre, email, Date.now());
       } catch (err) {
         console.error('[stripe-webhook] error marcando pagada:', err);
       }
+
+      // Stripe reintenta el mismo evento: si ya estaba pagada (no hubo
+      // transición) y hay registro, hacemos ACK sin volver a notificar.
+      if (result && !result.transitioned && result.reserva) {
+        return new Response(JSON.stringify({ received: true, duplicate: true }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        });
+      }
+      const reserva = result?.reserva;
 
       // Avisos no bloqueantes.
       try {

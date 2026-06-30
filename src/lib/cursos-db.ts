@@ -79,23 +79,29 @@ export function createReserva(r: {
     .run(r);
 }
 
-/** Marca pagada (idempotente: solo si seguía pendiente). Devuelve la reserva. */
+/**
+ * Marca pagada (idempotente: solo si seguía pendiente). Devuelve la reserva y
+ * `transitioned` = true SOLO si esta llamada hizo el cambio pendiente→pagada.
+ * Stripe reintenta el mismo evento; usar `transitioned` para no notificar dos
+ * veces la misma reserva.
+ */
 export function markReservaPaid(
   sessionId: string,
   paymentIntent: string,
   nombre: string,
   email: string,
   paidAt: number,
-): ReservaCurso | undefined {
+): { reserva: ReservaCurso | undefined; transitioned: boolean } {
   const db = getDb();
-  db.prepare(`
+  const info = db.prepare(`
     UPDATE reservas_curso
        SET estado_pago = 'pagada', stripe_payment_intent = ?, nombre = ?, email = ?, paid_at = ?
      WHERE stripe_session_id = ? AND estado_pago != 'pagada'
   `).run(paymentIntent, nombre, email, paidAt, sessionId);
-  return db
+  const reserva = db
     .prepare('SELECT * FROM reservas_curso WHERE stripe_session_id = ?')
     .get(sessionId) as ReservaCurso | undefined;
+  return { reserva, transitioned: info.changes > 0 };
 }
 
 export function getAllReservas(): ReservaCurso[] {

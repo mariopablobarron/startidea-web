@@ -27,6 +27,8 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit';
 export const prerender = false;
 
 const MAX_FILE_BYTES = 30 * 1024 * 1024; // 30 MB por archivo
+const MAX_TOTAL_BYTES = 90 * 1024 * 1024; // tope total por candidatura (anti-abuso de disco)
+const MAX_FILES = 12; // nº máximo de adjuntos por candidatura
 // Extensiones admitidas por campo de adjunto.
 const ALLOWED_EXT = new Set([
   '.pdf', '.doc', '.docx', '.odt', '.rtf', '.txt',
@@ -121,12 +123,20 @@ async function handle(request: Request, clientAddress: string): Promise<Response
 
   try {
     let created = false;
+    let totalBytes = 0;
     for (const field of FILE_FIELDS) {
       for (const entry of form.getAll(field)) {
         if (!(entry instanceof File) || !entry.name || entry.size === 0) continue;
         if (entry.size > MAX_FILE_BYTES) {
           return new Response(
             JSON.stringify({ ok: false, error: 'too_large', detail: `"${entry.name}" supera el límite de 30 MB.` }),
+            { status: 413, headers: { 'content-type': 'application/json' } },
+          );
+        }
+        totalBytes += entry.size;
+        if (adjuntos.length >= MAX_FILES || totalBytes > MAX_TOTAL_BYTES) {
+          return new Response(
+            JSON.stringify({ ok: false, error: 'too_many', detail: 'Demasiados archivos o tamaño total excesivo. Reduce los adjuntos.' }),
             { status: 413, headers: { 'content-type': 'application/json' } },
           );
         }
