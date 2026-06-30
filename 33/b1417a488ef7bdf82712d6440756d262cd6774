@@ -1,0 +1,42 @@
+src/pages/api/stripe-webhook.ts
+  s_0ab79ba551035b::t_294c4c830fdfba 59,61,66-74
+  s_65877aa637ec34::t_3e6cc46b8031ba 75
+src/lib/cursos-db.ts
+  s_0ab79ba551035b::t_9b418705b18aa6 82-87,94,96,101,104
+src/pages/api/candidatura.ts
+  s_0ab79ba551035b::t_1b97e38922c415 126,136-139
+  s_0ab79ba551035b::t_fc0169db74c3a6 30-31
+  s_da3fa1ec98d35a::t_da7b3d854be3b5 140-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "33b1417a488ef7bdf82712d6440756d262cd6774",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_65877aa637ec34": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "09be501c-fea4-4e5e-ba37-545d057a463d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_da3fa1ec98d35a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bd23b04c-6182-4582-9ca9-aa6d2a9eedb0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
