@@ -1,0 +1,142 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import {
+  getAllCandidaturas,
+  statsCandidaturas,
+  ESTADOS_CANDIDATURA,
+  type Adjunto,
+} from '@/lib/candidaturas-db';
+
+export const prerender = false;
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect('/admin/login?next=' + encodeURIComponent('/admin/candidaturas'));
+}
+
+const filtroEstado = Astro.url.searchParams.get('estado') ?? '';
+const filtroTipo = Astro.url.searchParams.get('tipo') ?? '';
+let candidaturas = getAllCandidaturas();
+if (filtroEstado) candidaturas = candidaturas.filter((c) => c.estado === filtroEstado);
+if (filtroTipo) candidaturas = candidaturas.filter((c) => c.tipo === filtroTipo);
+const stats = statsCandidaturas();
+const total = getAllCandidaturas().length;
+
+const ESTADO_LABEL: Record<string, string> = {
+  nueva: '🟢 Nueva',
+  revisada: '👀 Revisada',
+  preseleccionada: '⭐ Preseleccionada',
+  entrevista: '📞 Entrevista',
+  descartada: '🗑️ Descartada',
+  contratada: '✅ Contratada',
+};
+const TIPO_LABEL: Record<string, string> = {
+  empleo: 'Empleo',
+  freelance: 'Freelance',
+  colaboracion: 'Colaboración',
+};
+
+function fmt(ts: number): string {
+  return new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+function parseAdjuntos(raw: string): Adjunto[] {
+  try { const a = JSON.parse(raw); return Array.isArray(a) ? a : []; } catch { return []; }
+}
+---
+
+<Base title="Admin · Candidaturas" noindex={true}>
+  <section class="bg-paper py-12">
+    <div class="container-x">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h1 class="font-display text-3xl text-ink">Candidaturas ({total})</h1>
+        <a href="/admin/candidaturas/export.csv" class="btn-ghost">Exportar CSV ↓</a>
+      </div>
+
+      <!-- Filtros por estado -->
+      <div class="mt-6 flex flex-wrap gap-2 text-sm">
+        <a href="/admin/candidaturas" class={`border px-3 py-1 ${!filtroEstado && !filtroTipo ? 'border-magenta text-magenta' : 'border-ink/20 text-ink/70'}`}>Todas ({total})</a>
+        {ESTADOS_CANDIDATURA.map((e) => (
+          <a href={`/admin/candidaturas?estado=${e}`} class={`border px-3 py-1 ${filtroEstado === e ? 'border-magenta text-magenta' : 'border-ink/20 text-ink/70'}`}>
+            {ESTADO_LABEL[e]} ({stats[e] ?? 0})
+          </a>
+        ))}
+      </div>
+      <div class="mt-2 flex flex-wrap gap-2 text-sm">
+        {Object.keys(TIPO_LABEL).map((t) => (
+          <a href={`/admin/candidaturas?tipo=${t}`} class={`border px-3 py-1 ${filtroTipo === t ? 'border-magenta text-magenta' : 'border-ink/20 text-ink/70'}`}>
+            {TIPO_LABEL[t]}
+          </a>
+        ))}
+      </div>
+
+      <!-- Lista -->
+      <div class="mt-8 space-y-4">
+        {candidaturas.length === 0 && (
+          <p class="text-ink/60">No hay candidaturas con este filtro.</p>
+        )}
+        {candidaturas.map((c) => {
+          const adjuntos = parseAdjuntos(c.adjuntos);
+          return (
+            <article class="border border-ink/15 bg-white/60 p-5">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 class="font-display text-xl text-ink">
+                  {c.nombre}
+                  <span class="ml-2 font-mono text-xs uppercase tracking-widest text-magenta">{TIPO_LABEL[c.tipo] ?? c.tipo}</span>
+                </h2>
+                <span class="font-mono text-xs text-ink/50">{fmt(c.created_at)} · ref {c.id}</span>
+              </div>
+
+              <p class="mt-1 text-sm text-ink/75">
+                <a href={`mailto:${c.email}`} class="underline decoration-magenta/40 underline-offset-2">{c.email}</a>
+                {c.telefono && <> · {c.telefono}</>}
+                {c.ubicacion && <> · {c.ubicacion}</>}
+                {c.area && <> · <strong>{c.area}</strong></>}
+              </p>
+
+              {(c.linkedin || c.web) && (
+                <p class="mt-1 text-sm text-ink/70">
+                  {c.linkedin && <a href={c.linkedin} target="_blank" rel="noopener" class="underline decoration-magenta/40 underline-offset-2">LinkedIn</a>}
+                  {c.linkedin && c.web && ' · '}
+                  {c.web && <a href={c.web} target="_blank" rel="noopener" class="underline decoration-magenta/40 underline-offset-2">Web / Portfolio</a>}
+                </p>
+              )}
+
+              {c.mensaje && <p class="mt-3 whitespace-pre-line text-sm text-ink/85">{c.mensaje}</p>}
+
+              {adjuntos.length > 0 && (
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {adjuntos.map((a, i) => (
+                    <a
+                      href={`/api/admin/candidatura-doc?id=${c.id}&i=${i}`}
+                      class="inline-flex items-center gap-1 border border-ink/20 bg-paper px-3 py-1 text-xs hover:border-magenta hover:text-magenta"
+                    >
+                      📎 {a.campo}: {a.nombre} <span class="text-ink/40">({a.kb} KB)</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              <!-- Estado -->
+              <form method="POST" action="/api/admin/candidatura-estado" class="mt-4 flex flex-wrap items-center gap-2">
+                <input type="hidden" name="id" value={c.id} />
+                <select name="estado" class="border border-ink/20 bg-paper px-2 py-1 text-sm">
+                  {ESTADOS_CANDIDATURA.map((e) => (
+                    <option value={e} selected={c.estado === e}>{ESTADO_LABEL[e]}</option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  name="notas"
+                  value={c.notas_admin}
+                  placeholder="Notas internas…"
+                  class="min-w-[180px] flex-1 border border-ink/20 bg-paper px-2 py-1 text-sm"
+                />
+                <button type="submit" class="border border-magenta bg-magenta px-3 py-1 text-sm text-white">Guardar</button>
+              </form>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Base>

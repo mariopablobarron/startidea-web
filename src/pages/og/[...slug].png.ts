@@ -102,6 +102,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'en Granada',
       subtitle: 'Gestión de redes para tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, contenidos y comunidad. Con estudio en el centro de Granada.',
     },
+    'page/empleo': {
+      kind: 'page',
+      eyebrow: '— Trabaja con Startidea',
+      title: 'Forma parte del proyecto.',
+      accent: 'del proyecto',
+      subtitle: 'Empleo, freelance o colaboración en una agencia de innovación social en Granada. Envía tu candidatura espontánea con CV, cartas y portfolio.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',

@@ -1,0 +1,228 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Trabaja con Startidea', url: `${SITE_URL}/empleo` },
+  ]),
+];
+
+const inputCls = 'mt-1 w-full border border-ink/20 bg-paper px-3 py-2 text-ink placeholder:text-ink/40 focus:border-magenta focus:outline-none';
+const labelCls = 'block text-sm font-medium text-ink';
+
+const areas = [
+  'Comunicación',
+  'Audiovisual y podcast',
+  'Tecnología y producto',
+  'Diseño',
+  'Consultoría e innovación social',
+  'Fundraising',
+  'Otro',
+];
+---
+
+<Base
+  title="Trabaja con Startidea — empleo, freelance y colaboraciones"
+  description="¿Quieres formar parte de Startidea? Envía tu candidatura espontánea —empleo, freelance o colaboración— con tu CV, cartas de recomendación y portfolio. Agencia de innovación social en Granada."
+  ogSlug="page/empleo"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Trabaja con Startidea</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Forma parte<br/><em class="italic text-magenta">del proyecto</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea es una agencia de innovación social en Granada que trabaja la comunicación, el audiovisual, la tecnología y el fundraising de organizaciones con propósito. No siempre hay vacantes abiertas, pero el equipo revisa cada candidatura y guarda los perfiles que encajan. Si quieres aportar —en plantilla, como freelance o en una colaboración puntual—, este es el sitio.
+      </p>
+    </div>
+  </section>
+
+  <!-- Formulario -->
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Tu candidatura</span>
+          <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/70">
+            Cuéntate en pocas líneas y adjunta lo que quieras que el equipo vea. Los campos con * son obligatorios.
+          </p>
+        </div>
+
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <!-- Panel de éxito (oculto hasta enviar) -->
+          <div id="cand-ok" class="hidden border-2 border-magenta bg-white/70 p-8">
+            <h2 class="font-display text-2xl text-ink">Candidatura recibida ✅</h2>
+            <p class="mt-3 max-w-measure text-ink/80">
+              Gracias. Tu perfil ha quedado registrado y has recibido un email de confirmación. Si encaja con una necesidad —ahora o más adelante—, el equipo te escribe.
+            </p>
+          </div>
+
+          <form id="cand-form" class="space-y-6" novalidate>
+            <!-- Honeypot anti-spam (oculto para humanos) -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden">
+              <label>No rellenar<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
+            <!-- Tipo -->
+            <fieldset>
+              <legend class={labelCls}>¿Qué tipo de relación buscas? *</legend>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <label class="cursor-pointer border border-ink/20 bg-paper px-4 py-2 text-sm has-[:checked]:border-magenta has-[:checked]:text-magenta">
+                  <input type="radio" name="tipo" value="empleo" class="sr-only" checked /> Empleo
+                </label>
+                <label class="cursor-pointer border border-ink/20 bg-paper px-4 py-2 text-sm has-[:checked]:border-magenta has-[:checked]:text-magenta">
+                  <input type="radio" name="tipo" value="freelance" class="sr-only" /> Freelance
+                </label>
+                <label class="cursor-pointer border border-ink/20 bg-paper px-4 py-2 text-sm has-[:checked]:border-magenta has-[:checked]:text-magenta">
+                  <input type="radio" name="tipo" value="colaboracion" class="sr-only" /> Colaboración
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label class={labelCls} for="nombre">Nombre y apellidos *</label>
+                <input class={inputCls} id="nombre" name="nombre" type="text" required maxlength="120" />
+              </div>
+              <div>
+                <label class={labelCls} for="email">Email *</label>
+                <input class={inputCls} id="email" name="email" type="email" required maxlength="120" />
+              </div>
+              <div>
+                <label class={labelCls} for="telefono">Teléfono</label>
+                <input class={inputCls} id="telefono" name="telefono" type="tel" maxlength="30" />
+              </div>
+              <div>
+                <label class={labelCls} for="ubicacion">Ubicación</label>
+                <input class={inputCls} id="ubicacion" name="ubicacion" type="text" maxlength="80" placeholder="Granada, remoto…" />
+              </div>
+              <div>
+                <label class={labelCls} for="area">Área de interés</label>
+                <select class={inputCls} id="area" name="area">
+                  {areas.map((a) => <option value={a}>{a}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class={labelCls} for="linkedin">LinkedIn</label>
+                <input class={inputCls} id="linkedin" name="linkedin" type="url" maxlength="200" placeholder="https://linkedin.com/in/…" />
+              </div>
+              <div class="sm:col-span-2">
+                <label class={labelCls} for="web">Web o portfolio (enlace)</label>
+                <input class={inputCls} id="web" name="web" type="url" maxlength="200" placeholder="https://…" />
+              </div>
+            </div>
+
+            <div>
+              <label class={labelCls} for="mensaje">Preséntate</label>
+              <textarea class={inputCls} id="mensaje" name="mensaje" rows="5" maxlength="2500" placeholder="Quién eres, qué te interesa de Startidea y qué puedes aportar."></textarea>
+            </div>
+
+            <!-- Adjuntos -->
+            <div class="grid gap-6 sm:grid-cols-2">
+              <div>
+                <label class={labelCls} for="cv">CV (PDF o Word)</label>
+                <input class="mt-1 w-full text-sm text-ink/80 file:mr-3 file:border file:border-ink/20 file:bg-paper file:px-3 file:py-1 file:text-sm" id="cv" name="cv" type="file" accept=".pdf,.doc,.docx,.odt,.rtf" />
+              </div>
+              <div>
+                <label class={labelCls} for="carta">Cartas de recomendación</label>
+                <input class="mt-1 w-full text-sm text-ink/80 file:mr-3 file:border file:border-ink/20 file:bg-paper file:px-3 file:py-1 file:text-sm" id="carta" name="carta" type="file" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" />
+              </div>
+              <div>
+                <label class={labelCls} for="portfolio">Portfolio (PDF, ZIP, imágenes…)</label>
+                <input class="mt-1 w-full text-sm text-ink/80 file:mr-3 file:border file:border-ink/20 file:bg-paper file:px-3 file:py-1 file:text-sm" id="portfolio" name="portfolio" type="file" multiple accept=".pdf,.zip,.png,.jpg,.jpeg,.webp,.ppt,.pptx" />
+              </div>
+              <div>
+                <label class={labelCls} for="otros">Otros archivos</label>
+                <input class="mt-1 w-full text-sm text-ink/80 file:mr-3 file:border file:border-ink/20 file:bg-paper file:px-3 file:py-1 file:text-sm" id="otros" name="otros" type="file" multiple />
+              </div>
+            </div>
+            <p class="text-xs text-ink/55">Cada archivo puede pesar hasta 30 MB. Formatos: PDF, Word, imágenes, ZIP, presentaciones.</p>
+
+            <!-- Consentimiento -->
+            <label class="flex items-start gap-3 text-sm text-ink/80">
+              <input type="checkbox" name="consent" id="consent" class="mt-1" required />
+              <span>Acepto que Startidea trate mis datos y archivos para gestionar mi candidatura, según la <a href="/privacidad" class="underline decoration-magenta/40 underline-offset-2">política de privacidad</a>. *</span>
+            </label>
+
+            <div id="cand-status" class="text-sm text-magenta" role="status" aria-live="polite"></div>
+
+            <button id="cand-submit" type="submit" class="btn">
+              Enviar candidatura <span aria-hidden="true">→</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // JavaScript puro (sin TypeScript): este bloque se emite tal cual al navegador.
+    var form = document.getElementById('cand-form');
+    var okPanel = document.getElementById('cand-ok');
+    var statusEl = document.getElementById('cand-status');
+    var btn = document.getElementById('cand-submit');
+    var MAX = 30 * 1024 * 1024;
+
+    function setError(msg) {
+      statusEl.style.color = '';
+      statusEl.textContent = msg;
+    }
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        setError('');
+
+        // Validación cliente: requeridos + tamaño de archivos.
+        var nombre = form.querySelector('#nombre');
+        var email = form.querySelector('#email');
+        var consent = form.querySelector('#consent');
+        if (!nombre.value.trim() || !email.value.trim()) {
+          setError('Rellena tu nombre y tu email.');
+          return;
+        }
+        if (!consent.checked) {
+          setError('Necesitas aceptar la política de privacidad para enviar la candidatura.');
+          return;
+        }
+        var fileInputs = form.querySelectorAll('input[type=file]');
+        for (var i = 0; i < fileInputs.length; i++) {
+          var files = fileInputs[i].files;
+          for (var j = 0; j < files.length; j++) {
+            if (files[j].size > MAX) {
+              setError('"' + files[j].name + '" supera el límite de 30 MB. Quítalo o comprímelo.');
+              return;
+            }
+          }
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Enviando…';
+        try {
+          var fd = new FormData(form);
+          var res = await fetch('/api/candidatura', { method: 'POST', body: fd });
+          var data = {};
+          try { data = await res.json(); } catch (_) {}
+          if (res.ok && data.ok) {
+            form.style.display = 'none';
+            okPanel.classList.remove('hidden');
+            okPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            setError(data.detail || 'No se pudo enviar. Revisa los datos e inténtalo de nuevo.');
+            btn.disabled = false;
+            btn.textContent = 'Enviar candidatura →';
+          }
+        } catch (_) {
+          setError('Error de red. Inténtalo de nuevo en un momento.');
+          btn.disabled = false;
+          btn.textContent = 'Enviar candidatura →';
+        }
+      });
+    }
+  </script>
+</Base>
