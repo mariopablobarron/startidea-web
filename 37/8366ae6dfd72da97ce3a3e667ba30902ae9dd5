@@ -1,0 +1,23 @@
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_3ef7715c4e1a7d 237-238
+src/pages/comunicacion-eclesial.astro
+  s_0ab79ba551035b::t_1b6b2b827df7b2 1-197
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_cb8652bd7b4271 126-132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "378366ae6dfd72da97ce3a3e667ba30902ae9dd5",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
