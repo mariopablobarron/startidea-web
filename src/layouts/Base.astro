@@ -35,6 +35,19 @@ interface Props {
   ogSlug?: string;  // ej. 'home', 'page/manifiesto', 'casos/down-granada'
   noindex?: boolean;
   jsonLd?: unknown | unknown[];
+  ogType?: string;  // 'website' (default) | 'article' para notas/casos
+  // Metadatos Open Graph de artículo. Solo se emiten si ogType === 'article'.
+  // Mejoran el rich preview en redes y dan a Google/AI crawlers fecha y autor
+  // explícitos sin depender solo del JSON-LD BlogPosting.
+  article?: {
+    publishedTime?: string;  // ISO 8601
+    modifiedTime?: string;   // ISO 8601
+    author?: string;
+    section?: string;
+    tags?: string[];
+  };
+  // Texto alternativo de la og:image. Cae al título si no se especifica.
+  ogImageAlt?: string;
 }
 
 const {
@@ -43,6 +56,9 @@ const {
   ogSlug = 'home',
   noindex = false,
   jsonLd = null,
+  ogType = 'website',
+  article,
+  ogImageAlt,
 } = Astro.props;
 
 const SITE_URL = Astro.site?.toString().replace(/\/$/, '') || 'https://startidea.es';
@@ -80,19 +96,39 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <!-- Directiva de indexación. Páginas indexables piden a Google preview de
+         imagen grande y snippet completo: clave para aparecer bien en Google
+         Discover y para que las AI Overviews / motores generativos puedan citar
+         pasajes amplios. Las noindex se quedan fuera del índice. -->
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex,nofollow'
+        : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}
+    />
     {googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt ?? title} />
     <meta property="og:site_name" content="Startidea" />
+
+    {ogType === 'article' && article && (
+      <>
+        {article.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+        {article.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+        {article.author && <meta property="article:author" content={article.author} />}
+        {article.section && <meta property="article:section" content={article.section} />}
+        {article.tags?.map((t) => <meta property="article:tag" content={t} />)}
+      </>
+    )}
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />

@@ -111,6 +111,15 @@ const jsonLd = [
   description={nota.data.description}
   ogSlug={`notas/${nota.slug}`}
   jsonLd={jsonLd}
+  ogType="article"
+  ogImageAlt={nota.data.coverAlt ?? nota.data.title}
+  article={{
+    publishedTime: nota.data.pubDate.toISOString(),
+    modifiedTime: (nota.data.updatedDate ?? nota.data.pubDate).toISOString(),
+    author: nota.data.author,
+    section: nota.data.category,
+    tags: nota.data.tags,
+  }}
 >
   <article>
     <!-- Cabecera -->
