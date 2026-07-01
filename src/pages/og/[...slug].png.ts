@@ -123,6 +123,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'sin sustos',
       subtitle: 'Hosting, SSL, copias, actualizaciones de seguridad, monitorización y soporte. Cuota mensual sin permanencia para tercer sector, instituciones y empresas con propósito.',
     },
+    'page/comunicacion-eclesial': {
+      kind: 'page',
+      eyebrow: '— Comunicación eclesial',
+      title: 'Comunicar la misión, con su propio lenguaje.',
+      accent: 'su propio lenguaje',
+      subtitle: 'Comunicación estratégica para diócesis, congregaciones, movimientos y fundaciones eclesiales: plan, relato de la misión, presencia digital, obras sociales y crisis.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',

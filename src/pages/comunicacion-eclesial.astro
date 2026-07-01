@@ -1,0 +1,197 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const casosSlugs = ['proyecto-hombre', 'granada-social-5', 'acogimiento-familiar-granada'];
+
+const faqs = [
+  {
+    question: '¿Entiende Startidea la comunicación de una institución de la Iglesia?',
+    answer: 'Sí. Startidea tiene experiencia consolidada con diócesis, congregaciones, movimientos laicales y fundaciones eclesiales, y no trata la comunicación eclesial como una variante de la comunicación corporativa: es un ámbito con su propia lógica, sus estructuras de gobierno y sus audiencias específicas (fieles, benefactores, sociedad civil, medios). Se respeta el lenguaje institucional y la sensibilidad de cada realidad.',
+  },
+  {
+    question: '¿Con qué tipo de instituciones eclesiales trabaja Startidea?',
+    answer: 'Con diócesis y delegaciones, congregaciones religiosas, movimientos y asociaciones laicales, parroquias con proyectos concretos, y fundaciones y obras sociales de inspiración cristiana. El alcance se adapta al tamaño y a la estructura de cada una —no es lo mismo la comunicación de una diócesis que la de una congregación con obra social.',
+  },
+  {
+    question: '¿Ayudáis a comunicar las obras sociales de la Iglesia?',
+    answer: 'Es una de las líneas más habituales. Muchas instituciones eclesiales sostienen una obra social importante que apenas se comunica. Startidea ayuda a contar esa obra con dignidad —memorias, campañas de captación, presencia digital— para que llegue a benefactores, administraciones y sociedad, sin caer en el triunfalismo ni en la pornografía emocional.',
+  },
+  {
+    question: '¿Cómo se gestiona la sensibilidad y la confidencialidad?',
+    answer: 'Con discreción y respeto. La comunicación institucional de la Iglesia toca asuntos delicados; Startidea trabaja con confidencialidad, adecúa el registro a cada interlocutor y, cuando hace falta, acompaña en comunicación de situaciones sensibles o de crisis con un plan profesional y prudente.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Comunicación estratégica', url: `${SITE_URL}/comunicacion` },
+    { name: 'Comunicación eclesial', url: `${SITE_URL}/comunicacion-eclesial` },
+  ]),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Comunicación eclesial',
+    description:
+      'Comunicación estratégica para instituciones de la Iglesia: diócesis, congregaciones, movimientos laicales, parroquias y fundaciones eclesiales. Plan de comunicación, relato institucional, presencia digital, comunicación de obras sociales e institucional y de crisis.',
+    serviceType: 'Comunicación institucional eclesial',
+    url: `${SITE_URL}/comunicacion-eclesial`,
+    audience: ['Institución eclesial', 'Diócesis', 'Congregación religiosa', 'Movimiento laical', 'Fundación', 'Parroquia'],
+    offers: [
+      { name: 'Plan de comunicación institucional', description: 'Estrategia, audiencias y mensajes para diócesis, congregaciones y movimientos.' },
+      { name: 'Relato de la misión y el carisma', description: 'Contar la identidad y la obra sin jerga ni triunfalismo.' },
+      { name: 'Comunicación de obras sociales', description: 'Memorias, campañas y captación para las obras de la institución.' },
+      { name: 'Comunicación institucional y de crisis', description: 'Registro adecuado y prudencia en asuntos sensibles.' },
+    ],
+  }),
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Plan de comunicación institucional',
+    body: 'Antes de las piezas, la dirección: qué comunica la institución, a quién (fieles, benefactores, administraciones, sociedad, medios) y con qué prioridades. Un plan defendible ante el consejo o el gobierno de la congregación, adaptado a su estructura y a sus tiempos.',
+  },
+  {
+    num: '02',
+    title: 'Relato de la misión y el carisma',
+    body: 'Traducir la identidad y la obra a un lenguaje que se entienda dentro y fuera —sin jerga interna, sin triunfalismo—. El carisma de una congregación o el servicio de una diócesis contados de forma que interpelen también a quien no comparte la fe.',
+  },
+  {
+    num: '03',
+    title: 'Presencia digital con criterio',
+    body: 'Web institucional, memoria anual, redes trabajadas como canal editorial y no como tablón. Para muchas instituciones eclesiales, ordenar y dignificar su presencia digital es el primer paso —y a veces el que más impacto tiene en captación y reputación.',
+  },
+  {
+    num: '04',
+    title: 'Comunicación de las obras sociales',
+    body: 'Muchas instituciones sostienen una obra social importante que apenas cuentan. Memorias, campañas de captación de fondos y difusión que llegan a benefactores y administraciones, con la realidad contada con dignidad —ni alarmismo, ni pornomiseria.',
+  },
+  {
+    num: '05',
+    title: 'Comunicación institucional y de crisis',
+    body: 'Comunicados, posicionamientos y relación con medios con el registro adecuado a cada interlocutor. Y, cuando llega un asunto delicado, un plan de comunicación de crisis profesional, prudente y confidencial.',
+  },
+];
+---
+
+<Base
+  title="Comunicación eclesial — diócesis, congregaciones e instituciones de la Iglesia — Startidea"
+  description="Comunicación estratégica para instituciones de la Iglesia: diócesis, congregaciones, movimientos laicales, parroquias y fundaciones eclesiales. Plan de comunicación, relato de la misión, presencia digital, obras sociales y comunicación de crisis. Experiencia consolidada."
+  ogSlug="page/comunicacion-eclesial"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Comunicación eclesial</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Comunicar la misión.<br/>
+        <em class="italic text-magenta">Con su propio lenguaje</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        La comunicación de una institución de la Iglesia no es comunicación corporativa con otro logo: tiene su propia lógica, sus estructuras de gobierno y sus audiencias. Startidea acompaña a diócesis, congregaciones, movimientos y fundaciones eclesiales a comunicar su misión y su obra con criterio y respeto —dentro y fuera—, con la experiencia de quince años en el sector.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_eclesial_hero">
+          Habla de tu institución
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Un ámbito con <em class="italic text-magenta">códigos propios</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {areas.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-8 max-w-measure text-ink/80">
+            La comunicación eclesial es una aplicación especializada de la
+            <a href="/comunicacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación estratégica</a> de Startidea, con la mirada puesta en las instituciones de la Iglesia.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A quién acompaña -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— A quién acompaña</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cada realidad, <em class="italic text-magenta">su medida</em>.
+          </h2>
+          <ul class="mt-10 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { t: 'Diócesis y delegaciones', d: 'Comunicación institucional, medios y presencia digital.' },
+              { t: 'Congregaciones religiosas', d: 'Relato del carisma, memoria y comunicación de la obra.' },
+              { t: 'Movimientos y asociaciones laicales', d: 'Identidad, captación y dinamización de comunidad.' },
+              { t: 'Parroquias con proyecto', d: 'Acompañamiento puntual en iniciativas concretas.' },
+              { t: 'Fundaciones eclesiales', d: 'Comunicación institucional y fundraising.' },
+              { t: 'Obras sociales de la Iglesia', d: 'Memorias, campañas y captación de benefactores.' },
+            ].map((x) => (
+              <li class="bg-paper-warm p-7">
+                <h3 class="font-display text-xl leading-tight text-ink">{x.t}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink/75">{x.d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CasosRelacionados slugs={casosSlugs} titulo="Proyectos con instituciones y obra social" />
+
+  <!-- FAQs -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="comunicacion" />
+</Base>
