@@ -1,0 +1,26 @@
+src/pages/ia-administraciones.astro
+  s_0ab79ba551035b::t_75df8cf508c095 1-241,243
+  s_0ab79ba551035b::t_bf84e3e9104812 242
+src/components/OtrosServicios.astro
+  s_0ab79ba551035b::t_94f76acddb88b6 19
+src/components/AnalyticsTracker.astro
+  s_0ab79ba551035b::t_a349c70df0e1a8 56
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_c5da433b00e47f 133-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "731163db6397a4b78b50da2a7760ef3ad750225f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
