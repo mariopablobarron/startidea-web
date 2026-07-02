@@ -130,6 +130,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'su propio lenguaje',
       subtitle: 'Comunicación estratégica para diócesis, congregaciones, movimientos y fundaciones eclesiales: plan, relato de la misión, presencia digital, obras sociales y crisis.',
     },
+    'page/ia-administraciones': {
+      kind: 'page',
+      eyebrow: '— IA para administraciones públicas',
+      title: 'Menos burocracia. Más servicio público.',
+      accent: 'Más servicio público',
+      subtitle: 'Automatización, asistentes de atención ciudadana y agentes de IA a medida para ayuntamientos y diputaciones. IA con criterio: datos en la UE, explicable y auditable.',
+    },
     'page/audiovisual': {
       kind: 'page',
       eyebrow: '— Producción Audiovisual y Podcast',

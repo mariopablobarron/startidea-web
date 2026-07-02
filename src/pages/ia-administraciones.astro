@@ -1,0 +1,243 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿Tiene sentido la IA para un ayuntamiento pequeño o mediano?',
+    answer: 'Sí, y a menudo más que para uno grande: son los que más ahogados están de tareas repetitivas y menos personal tienen para asumirlas. El enfoque de Startidea no es un gran proyecto de transformación, sino empezar por un caso concreto de alto retorno —responder a la ciudadanía, tramitar una ayuda, ordenar documentación— que se paga solo en tiempo liberado, y crecer desde ahí.',
+  },
+  {
+    question: '¿Qué pasa con los datos de los ciudadanos y el RGPD?',
+    answer: 'Es lo primero que se define. Startidea trabaja con proveedores y modelos que alojan los datos en la Unión Europea, no entrena modelos con la información de la ciudadanía, y deja por escrito qué datos se tratan, para qué y durante cuánto tiempo. Nada de cajas negras: las soluciones son auditables y explicables, alineadas con la transparencia que la propia Administración exige.',
+  },
+  {
+    question: '¿La IA sustituye a los trabajadores públicos?',
+    answer: 'No. La automatiza lo repetitivo —clasificar documentos, responder preguntas frecuentes, preparar borradores— para que las personas dediquen su tiempo a lo que exige criterio y trato humano. Bien planteada, la IA no reduce plantilla: reduce la parte del trabajo que nadie quiere hacer y que satura los servicios.',
+  },
+  {
+    question: '¿Tenéis experiencia real o es una promesa?',
+    answer: 'Producto propio en producción: el Copiloto de Subvenciones de Startidea usa agentes de IA para ayudar a entidades a encontrar, preparar y justificar convocatorias. No es una demo: es una herramienta que funciona con datos reales todos los días. Esa misma capacidad se aplica a los retos de una administración.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'IA para administraciones', url: `${SITE_URL}/ia-administraciones` },
+  ]),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Inteligencia artificial y automatización para administraciones públicas',
+    description:
+      'Automatización documental, asistentes de atención ciudadana, agentes de IA a medida y modernización de portales para ayuntamientos, diputaciones y administraciones públicas. IA con criterio: datos en la UE, RGPD, explicable y auditable.',
+    serviceType: 'Consultoría de IA para el sector público',
+    url: `${SITE_URL}/ia-administraciones`,
+    audience: ['Administración pública', 'Ayuntamiento', 'Diputación', 'Institución pública'],
+    offers: [
+      { name: 'Automatización documental y de trámites', description: 'Menos burocracia repetitiva, más tiempo para lo que importa.' },
+      { name: 'Asistentes de atención ciudadana', description: 'Chatbots sobre la información real del organismo, 24/7.' },
+      { name: 'Agentes de IA a medida', description: 'Como el Copiloto de Subvenciones, aplicado a cada reto.' },
+      { name: 'Formación y gobernanza de la IA', description: 'Que el equipo la use con criterio, ética y transparencia.' },
+    ],
+  }),
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Automatización documental y de trámites',
+    body: 'Clasificar, extraer y ordenar información de expedientes, instancias y documentación; preparar borradores; cruzar datos. La parte repetitiva que satura los servicios se automatiza con criterio, liberando al personal para lo que exige juicio humano.',
+  },
+  {
+    num: '02',
+    title: 'Asistentes y chatbots de atención ciudadana',
+    body: 'Un asistente que responde a la ciudadanía 24/7 sobre la información real del organismo —trámites, plazos, requisitos—, en varios idiomas y sin inventarse respuestas. Descarga el teléfono y el mostrador de las preguntas de siempre.',
+  },
+  {
+    num: '03',
+    title: 'Agentes de IA a medida',
+    body: 'Cuando el reto es específico, un agente propio. Startidea ya tiene uno en producción —el Copiloto de Subvenciones— que encuentra, prepara y justifica convocatorias. Esa misma ingeniería se aplica a los procesos concretos de cada administración.',
+  },
+  {
+    num: '04',
+    title: 'Modernización de portales y transparencia',
+    body: 'Portales web institucionales accesibles, rápidos y usables; datos abiertos y espacios de transparencia que se entienden. La tecnología moderna cuando suma y estable cuando es lo correcto —sin dependencias de proveedores opacos.',
+  },
+  {
+    num: '05',
+    title: 'Formación y gobernanza de la IA',
+    body: 'Para que la IA no sea humo ni riesgo: formación al equipo, criterios de uso, protección de datos y un marco ético claro. Que la administración decida qué automatiza y qué no, con conocimiento y no por moda.',
+  },
+];
+
+const criterios = [
+  { t: 'Datos en la UE y RGPD', d: 'Nada de entrenar modelos con datos de la ciudadanía. Tratamiento documentado y auditable.' },
+  { t: 'IA explicable, sin cajas negras', d: 'Soluciones que se pueden auditar y justificar —como la propia Administración exige.' },
+  { t: 'Innovación social, no tecno-humo', d: 'La tecnología al servicio del ciudadano y del empleado público, no al revés.' },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico', body: 'Dónde se pierde tiempo hoy y qué proceso da más retorno si se automatiza.' },
+  { step: '02', title: 'Piloto de alto retorno', body: 'Un caso de uso concreto, acotado y medible. Sin macroproyectos de años.' },
+  { step: '03', title: 'Despliegue', body: 'Puesta en marcha con datos reales, seguridad y cumplimiento desde el minuto uno.' },
+  { step: '04', title: 'Formación y gobernanza', body: 'El equipo aprende a usarlo y a decidir. La IA se queda, con criterio.' },
+];
+---
+
+<Base
+  title="Inteligencia artificial para administraciones y ayuntamientos — Startidea"
+  description="IA y automatización para administraciones públicas: automatización documental, asistentes de atención ciudadana, agentes a medida y modernización de portales. IA con criterio —datos en la UE, RGPD, explicable— para ayuntamientos y diputaciones. Copiloto de Subvenciones en producción."
+  ogSlug="page/ia-administraciones"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— IA para administraciones públicas</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Menos burocracia.<br/>
+        <em class="italic text-magenta">Más servicio público</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Automatización, asistentes de atención ciudadana y agentes de IA a medida para ayuntamientos, diputaciones y administraciones. Startidea aplica la inteligencia artificial con criterio —datos en la UE, explicable y auditable— para liberar al personal de lo repetitivo y mejorar lo que recibe la ciudadanía. Con producto propio ya en producción, no promesas.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_ia_admin_hero">
+          Habla de un caso concreto
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            La IA, <em class="italic text-magenta">donde de verdad ayuda</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {areas.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prueba real: el copiloto -->
+  <section class="bg-ink py-16 text-paper md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 items-center gap-x-8 gap-y-6">
+        <div class="col-span-12 lg:col-span-8">
+          <span class="label !text-paper/60">— Prueba, no promesa</span>
+          <p class="mt-4 font-display text-2xl leading-tight text-paper md:text-3xl">
+            El <span class="text-magenta">Copiloto de Subvenciones</span> de Startidea ya usa agentes de IA en producción para encontrar, preparar y justificar convocatorias.
+          </p>
+          <p class="mt-3 max-w-measure text-paper/75">
+            No es una demo: funciona con datos reales cada día. Esa misma ingeniería se aplica a los procesos de una administración.
+          </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 lg:text-right">
+          <a href="/copiloto-subvenciones" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+            Ver el Copiloto <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IA con criterio -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— IA con criterio</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Sin humo y <em class="italic text-magenta">sin riesgos</em>.
+          </h2>
+          <ul class="mt-10 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {criterios.map((x) => (
+              <li class="bg-paper-warm p-7">
+                <h3 class="font-display text-xl leading-tight text-ink">{x.t}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink/75">{x.d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proceso -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo se empieza</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Un piloto, <em class="italic text-magenta">no un macroproyecto</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-paper p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-8 max-w-measure text-sm leading-relaxed text-ink/70">
+            Los proyectos para administraciones se presupuestan a medida: se empieza por un piloto acotado de alto retorno y se crece desde ahí. El presupuesto se cierra tras el diagnóstico, sin macrocontratos ni ataduras de proveedor.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="ia-administraciones" />
+</Base>
