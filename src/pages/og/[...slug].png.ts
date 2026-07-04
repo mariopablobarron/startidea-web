@@ -130,6 +130,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'su propio lenguaje',
       subtitle: 'Comunicación estratégica para diócesis, congregaciones, movimientos y fundaciones eclesiales: plan, relato de la misión, presencia digital, obras sociales y crisis.',
     },
+    'page/agentes-ia': {
+      kind: 'page',
+      eyebrow: '— Agentes IA para organizaciones',
+      title: 'Un agente que sabe lo que tu organización sabe.',
+      accent: 'lo que tu organización sabe',
+      subtitle: 'Agentes de IA con tus documentos reales: consultor interno, atención, redacción con tu voz. Plataforma propia en la UE, sin licencias por usuario. Cuatro en producción.',
+    },
     'page/ia-administraciones': {
       kind: 'page',
       eyebrow: '— IA para administraciones públicas',

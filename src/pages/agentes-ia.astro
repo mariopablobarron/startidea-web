@@ -1,0 +1,247 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    question: '¿En qué se diferencia esto de un chatbot genérico?',
+    answer: 'En que sabe lo que tu organización sabe. Un chatbot genérico responde con lo que aprendió de internet; un agente de Startidea responde con tus documentos reales —tarifas, protocolos, metodología, memoria de actividades— y cuando algo no está en ellos, lo dice en vez de inventárselo. La diferencia se nota en la primera pregunta seria.',
+  },
+  {
+    question: '¿Dónde quedan mis documentos y mis datos?',
+    answer: 'En una plataforma autoalojada en servidores propios en la Unión Europea, no en el SaaS de turno. Tu conocimiento no se usa para entrenar modelos de terceros, no sale de la infraestructura acordada y queda documentado qué se indexa y para qué. Si mañana quieres irte, te llevas tus documentos y tus flujos —sin secuestro de proveedor.',
+  },
+  {
+    question: '¿Cuánto cuesta?',
+    answer: 'Sin licencias por usuario: un agente sirve igual a un equipo de 3 que de 30. Se empieza por un piloto acotado —un agente, un caso de uso, tus documentos— que se presupuesta tras el diagnóstico. La filosofía es la misma que en todo Startidea: primero un caso que se pague solo en tiempo liberado, y crecer desde ahí.',
+  },
+  {
+    question: '¿Podremos mantenerlo nosotros sin depender de vosotros?',
+    answer: 'Sí, y es parte del encargo. La plataforma tiene un editor visual sin código: cambiar lo que el agente sabe, ajustar su tono o añadir documentos nuevos es algo que tu equipo aprende a hacer en una formación corta. Startidea queda detrás para lo estructural, no para cada coma.',
+  },
+  {
+    question: '¿Y si la IA se inventa cosas?',
+    answer: 'Es el riesgo número uno y se diseña contra él desde el primer día: el agente responde citando las fuentes de tu conocimiento, tiene instrucciones explícitas de no inventar datos ni cifras, y cuando no sabe algo lo reconoce y deriva a una persona. Honesto por diseño —igual que pedimos a los equipos humanos.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Agentes IA', url: `${SITE_URL}/agentes-ia` },
+  ]),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Agentes de IA con el conocimiento de tu organización',
+    description:
+      'Agentes de inteligencia artificial entrenados con los documentos reales de tu entidad o empresa: consultor interno, asistente de atención, redactor con tu voz. Plataforma propia autoalojada en la UE, sin licencias por usuario, editable sin código. Para tercer sector, pymes y organizaciones con propósito.',
+    serviceType: 'Consultoría e implantación de agentes de IA',
+    url: `${SITE_URL}/agentes-ia`,
+    audience: ['Tercer sector', 'ONG', 'Fundación', 'Pyme', 'Empresa con propósito'],
+    offers: [
+      { name: 'Agentes con tu conocimiento', description: 'Responden con tus documentos reales, no con generalidades de internet.' },
+      { name: 'Asistentes de atención', description: 'Primeras respuestas 24/7 con la información real de tu organización.' },
+      { name: 'Redacción con tu voz', description: 'Contenido editorial y comercial que suena a ti, no a máquina.' },
+      { name: 'Plataforma propia y formación', description: 'Autoalojada en la UE, editable sin código por tu equipo.' },
+    ],
+  }),
+];
+
+const areas = [
+  {
+    num: '01',
+    title: 'Un consultor interno que se sabe tus documentos',
+    body: 'Tarifas, metodología, protocolos, memoria de actividades: el agente responde a tu equipo con el conocimiento real de la casa, citando de dónde lo saca. La pregunta que hoy interrumpe a la persona que más sabe, mañana la responde el agente en diez segundos.',
+  },
+  {
+    num: '02',
+    title: 'Asistentes de atención y primer contacto',
+    body: 'Un asistente que atiende web o WhatsApp 24/7 con la información real de tu organización —servicios, horarios, requisitos, cómo colaborar— y deriva a una persona cuando toca. Descarga al equipo de las preguntas de siempre sin sonar a contestador.',
+  },
+  {
+    num: '03',
+    title: 'Redacción con tu voz',
+    body: 'Un agente editorial entrenado en tu tono y tus formatos: noticias, boletines, publicaciones, borradores de propuestas. No sustituye el criterio de quien firma — le quita la página en blanco y los primeros borradores.',
+  },
+  {
+    num: '04',
+    title: 'Plataforma propia, en tu servidor',
+    body: 'Los agentes viven en una plataforma autoalojada en la Unión Europea —la tuya o la que Startidea gestiona—, con editor visual para que tu equipo los modifique sin código. Sin cuotas por usuario, sin ceder tu conocimiento a un SaaS opaco.',
+  },
+  {
+    num: '05',
+    title: 'Integración donde ya trabajáis',
+    body: 'El agente no es otra pestaña más: se integra en las herramientas que ya usa tu equipo —intranet, panel de gestión, web pública— y se conecta a tus sistemas cuando aporta. La IA va a donde está el trabajo, no al revés.',
+  },
+];
+
+const criterios = [
+  { t: 'Tu conocimiento se queda en casa', d: 'Plataforma autoalojada en la UE. Tus documentos no entrenan modelos de terceros ni viven en un SaaS que mañana cambia de precio o de dueño.' },
+  { t: 'Sin licencias por usuario', d: 'Un agente sirve igual a 3 personas que a 30. Se paga el trabajo de construirlo bien, no un peaje mensual por cabeza.' },
+  { t: 'Honesto por diseño', d: 'Responde citando tus fuentes. Si algo no está en tus documentos, lo dice y deriva a una persona. Sin cifras inventadas.' },
+];
+
+const proceso = [
+  { step: '01', title: 'Diagnóstico', body: 'Qué pregunta se repite más, qué tarea satura al equipo, qué conocimiento está disperso. Ahí está el primer agente.' },
+  { step: '02', title: 'Piloto con tus documentos', body: 'Un agente, un caso de uso, tu conocimiento real indexado. En semanas, no en trimestres.' },
+  { step: '03', title: 'Prueba y ajuste de voz', body: 'Tu equipo lo usa, el tono se afina, el conocimiento se completa. El agente se parece cada vez más a la casa.' },
+  { step: '04', title: 'Ampliación y formación', body: 'Más agentes si tiene sentido, y formación para que el equipo los edite sin código. La IA se queda — con criterio.' },
+];
+---
+
+<Base
+  title="Agentes de IA con tu conocimiento — para tercer sector y pymes — Startidea"
+  description="Agentes de inteligencia artificial que saben lo que tu organización sabe: consultor interno, asistente de atención, redactor con tu voz. Plataforma propia autoalojada en la UE, sin licencias por usuario, editable sin código. Con cuatro agentes propios en producción — prueba, no promesa."
+  ogSlug="page/agentes-ia"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Agentes IA para organizaciones</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Un agente que sabe<br/>
+        <em class="italic text-magenta">lo que tu organización sabe</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        No otro chatbot genérico: agentes de IA entrenados con tus documentos reales —tarifas, protocolos, metodología, tono— que responden a tu equipo y a tu público citando de dónde lo sacan. En plataforma propia, alojada en la UE, editable sin código. Startidea tiene cuatro en producción para sí misma: prueba, no promesa.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_agentes_ia_hero">
+          Habla de tu primer agente
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Empleados digitales, <em class="italic text-magenta">con tu conocimiento</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {areas.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prueba real: el equipo de agentes propio -->
+  <section class="bg-ink py-16 text-paper md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 items-center gap-x-8 gap-y-6">
+        <div class="col-span-12 lg:col-span-8">
+          <span class="label !text-paper/60">— Prueba, no promesa</span>
+          <p class="mt-4 font-display text-2xl leading-tight text-paper md:text-3xl">
+            Startidea trabaja cada día con <span class="text-magenta">cuatro agentes propios</span>: consultor experto, comercial de propuestas, redactor editorial y asesor de ayudas.
+          </p>
+          <p class="mt-3 max-w-measure text-paper/75">
+            Montados sobre plataforma autoalojada, con el conocimiento real de la agencia indexado y conectados a su sistema de gestión. Lo que ofrecemos es lo que usamos.
+          </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 lg:text-right">
+          <a href="/casos/equipo-agentes-ia" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+            Ver el caso <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Criterio -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— IA con criterio</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tuyo de verdad, <em class="italic text-magenta">no alquilado</em>.
+          </h2>
+          <ul class="mt-10 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {criterios.map((x) => (
+              <li class="bg-paper-warm p-7">
+                <h3 class="font-display text-xl leading-tight text-ink">{x.t}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink/75">{x.d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proceso -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cómo se empieza</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Un agente piloto, <em class="italic text-magenta">no un macroproyecto</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
+            {proceso.map((p) => (
+              <li class="bg-paper p-8">
+                <span class="font-display text-5xl text-magenta">{p.step}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-8 max-w-measure text-sm leading-relaxed text-ink/70">
+            El piloto se presupuesta tras el diagnóstico, sin licencias por usuario ni permanencias. Si tu organización puede acogerse a ayudas de digitalización, se estudia en el mismo diagnóstico.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <OtrosServicios current="agentes-ia" />
+</Base>
