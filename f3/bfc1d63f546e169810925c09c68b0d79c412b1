@@ -1,0 +1,23 @@
+src/components/FormacionPromo.astro
+  s_21e6d4add46ccf::t_416ecf696065f3 1-88
+src/pages/agentes-ia.astro
+  s_21e6d4add46ccf::t_ae84ab7886fb10 222-240
+src/pages/index.astro
+  s_21e6d4add46ccf::t_2af0c339b4309c 20,74-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f3bfc1d63f546e169810925c09c68b0d79c412b1",
+  "prompts": {},
+  "sessions": {
+    "s_21e6d4add46ccf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22201b17-baa9-4d10-8b7b-1103f7014bdd",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
