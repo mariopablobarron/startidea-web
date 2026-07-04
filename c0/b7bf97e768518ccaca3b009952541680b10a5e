@@ -1,0 +1,27 @@
+src/pages/agentes-ia.astro
+  s_21e6d4add46ccf::t_8c68203a479525 1-247
+src/components/Footer.astro
+  s_21e6d4add46ccf::t_bbb819aa4d4b81 19
+src/components/OtrosServicios.astro
+  s_21e6d4add46ccf::t_8d9d8b9eba30b1 19
+src/data/casos.ts
+  s_21e6d4add46ccf::t_c494ab3b31c7c6 486-550
+src/pages/og/[...slug].png.ts
+  s_21e6d4add46ccf::t_49699b16a5a306 133-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c0b7bf97e768518ccaca3b009952541680b10a5e",
+  "prompts": {},
+  "sessions": {
+    "s_21e6d4add46ccf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22201b17-baa9-4d10-8b7b-1103f7014bdd",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
