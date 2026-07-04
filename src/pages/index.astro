@@ -17,6 +17,7 @@ import Base from '@/layouts/Base.astro';
 import HeroJourney from '@/components/HeroJourney.astro';
 import TesisImpacto from '@/components/TesisImpacto.astro';
 import CtaConversion from '@/components/CtaConversion.astro';
+import FormacionPromo from '@/components/FormacionPromo.astro';
 import LogosBanner from '@/components/LogosBanner.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
 import Ecosistema from '@/components/Ecosistema.astro';
@@ -69,6 +70,11 @@ import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/js
   <HanConfiado />
   <Casos />
   <Testimonios />
+
+  <!-- Formación — entrada de bajo compromiso antes del formulario de
+       conversión (petición Mario 2026-07-04: destacar la formación en el
+       portal). Banda compacta autoalimentada de la colección `cursos`. -->
+  <FormacionPromo />
 
   <!-- Conversión — formulario corto, ya entendido qué hace / para quién / cómo,
        Y vista la prueba. Extiende la regla de Mario (2026-06-14: "primero se

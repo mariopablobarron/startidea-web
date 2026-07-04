@@ -1,0 +1,88 @@
+---
+// Banda promocional de formación (Laboratorio) — petición Mario 2026-07-04:
+// destacar la formación en el portal. Sigue el patrón visual de MerchPromo
+// (banda editorial compacta) para no re-alargar la home (feedback cliente
+// 7-may: "la página es muy larga").
+//
+// Los cursos salen de la colección `cursos`: la banda se actualiza sola
+// cuando se publica una formación nueva (draft: false), mostrando las 3
+// más recientes.
+import { getCollection } from 'astro:content';
+
+const allCursos = await getCollection('cursos', (c) => !c.data.draft);
+const cursos = allCursos
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const ESTADO_LABEL: Record<string, string> = {
+  abierto: 'Inscripción abierta',
+  proximo: 'Próxima edición',
+  agotado: 'Plazas agotadas',
+  'a-demanda': 'A demanda',
+};
+---
+
+<section
+  id="formacion-promo"
+  class="relative border-y border-magenta/30 bg-paper-warm py-16 md:py-20"
+>
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 items-end">
+      <!-- Etiqueta -->
+      <div class="col-span-12 lg:col-span-3">
+        <span class="label text-magenta">— Laboratorio · Formación</span>
+        <div class="mt-4 num-edit text-7xl text-magenta md:text-8xl">Lab</div>
+      </div>
+
+      <!-- Copy + cursos -->
+      <div class="col-span-12 mt-8 lg:col-span-6 lg:mt-0">
+        <h2 class="font-display text-display-md leading-[0.96] text-ink md:text-display-lg">
+          Aprende a hacerlo
+          <em class="italic text-magenta">con tu propio equipo.</em>
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-ink/80">
+          Talleres prácticos para el tercer sector y organizaciones con propósito:
+          nadie sale con apuntes — se sale con un plan, una solicitud o
+          <strong>un agente de IA construido</strong>. En Granada, online o en tu entidad.
+        </p>
+
+        <ul class="mt-8 divide-y divide-ink/15 border-t border-ink/15">
+          {cursos.map((c) => (
+            <li>
+              <a
+                href={`/laboratorio/cursos/${c.slug}/`}
+                class="group grid grid-cols-12 items-baseline gap-x-4 py-4"
+              >
+                <span class="col-span-12 font-display text-lg font-bold leading-tight text-ink group-hover:text-magenta sm:col-span-8">
+                  {c.data.title}
+                </span>
+                <span class="col-span-8 mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute sm:col-span-2 sm:mt-0">
+                  {c.data.duracion.split('(')[0].trim()}
+                </span>
+                <span class="col-span-4 mt-1 text-right font-mono text-[10px] uppercase tracking-widest text-magenta sm:col-span-2 sm:mt-0">
+                  {ESTADO_LABEL[c.data.estado] ?? c.data.estado}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="col-span-12 mt-10 lg:col-span-3 lg:mt-0">
+        <a
+          href="/laboratorio/cursos/"
+          class="btn w-full !justify-center !py-4 !text-base lg:!text-lg"
+          data-track="cta"
+          data-track-id="cta_formacion_home"
+        >
+          Ver toda la formación
+          <span aria-hidden="true">→</span>
+        </a>
+        <p class="mt-4 text-center text-xs leading-relaxed text-ink/60 lg:text-left">
+          Precio reducido para entidades sin ánimo de lucro. Grupos cerrados a medida desde 6 personas.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
