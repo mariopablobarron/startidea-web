@@ -1,0 +1,23 @@
+src/content/notas/ia-sin-ceder-tus-datos-plataforma-propia.md
+  s_21e6d4add46ccf::t_f5cfd4731dafc1 1-60
+src/content/notas/agentes-ia-para-ong-tercer-sector.md
+  s_21e6d4add46ccf::t_71c61a4850b9f9 1-60
+src/content/cursos/crea-tu-primer-agente-ia-sin-codigo.md
+  s_21e6d4add46ccf::t_e7b9993db0165c 1-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "31a7adc1b6802805aa06e8b8bb17f1d77838354b",
+  "prompts": {},
+  "sessions": {
+    "s_21e6d4add46ccf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "22201b17-baa9-4d10-8b7b-1103f7014bdd",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
