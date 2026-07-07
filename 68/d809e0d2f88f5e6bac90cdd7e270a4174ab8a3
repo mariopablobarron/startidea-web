@@ -1,0 +1,23 @@
+src/pages/redes-sociales-ia.astro
+  s_e00f3dd486523c::t_9e6ec74df35c86 1-234
+src/pages/asistente-documentos.astro
+  s_e00f3dd486523c::t_22ff558d04b70a 1-222
+src/pages/telar.astro
+  s_e00f3dd486523c::t_0581d47fb2c2e5 1-222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "68d809e0d2f88f5e6bac90cdd7e270a4174ab8a3",
+  "prompts": {},
+  "sessions": {
+    "s_e00f3dd486523c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "940613b0-017c-4ad5-a2d8-1be6890e8412",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
