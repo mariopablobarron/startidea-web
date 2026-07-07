@@ -1,0 +1,234 @@
+---
+/**
+ * /redes-sociales-ia — Landing de venta del servicio de gestión de redes
+ * sociales con IA supervisada (base: hub multi-tenant / Granada Social).
+ * Página empaquetada con planes. Borrador comercial para revisión.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    q: '¿La IA no sonará genérica?',
+    a: 'No sale nada sin tu aprobación, y el "cerebro de marca" se calibra con tus propios textos, tu tono y tus líneas rojas. Si algo no suena a ti, se ajusta. La IA redacta; el criterio editorial lo pone Startidea.',
+  },
+  {
+    q: '¿Tengo que dar mis contraseñas?',
+    a: 'No. Las redes se conectan por los métodos oficiales de cada plataforma. Mantienes el control y la propiedad de tus cuentas en todo momento.',
+  },
+  {
+    q: '¿Y si quiero escribir yo algunas publicaciones?',
+    a: 'Puedes. El sistema es tu base, no tu jaula: editas, añades o pausas cuando quieras. Muchos clientes dejan que la IA cubra el día a día y reservan las piezas especiales para escribirlas ellos.',
+  },
+  {
+    q: '¿Hay permanencia?',
+    a: 'Ninguna. Si un mes no aporta, lo dejas. El alta inicial calibra el sistema con tu marca; a partir de ahí es mes a mes.',
+  },
+  {
+    q: '¿Qué diferencia hay con una herramienta de IA que ya puedo usar yo?',
+    a: 'Que aquí no hay un robot suelto: hay un sistema entrenado con tu marca y personas supervisando. Tú no gestionas la herramienta ni peleas con prompts — recibes contenido listo para aprobar y publicado por Startidea.',
+  },
+];
+
+const jsonLd = [
+  faqPageSchema(faqs),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Redes sociales con IA', url: `${SITE_URL}/redes-sociales-ia` },
+  ]),
+];
+
+const planes = [
+  {
+    nombre: 'Presencia',
+    precio: '190',
+    resumen: 'Para no volver a tener el perfil parado.',
+    items: ['3 publicaciones/semana', '1 red principal + réplicas', 'Aprobación mensual en bloque'],
+  },
+  {
+    nombre: 'Crecimiento',
+    precio: '390',
+    destacado: true,
+    resumen: 'Presencia diaria y constante en tus redes.',
+    items: ['Publicación diaria', '3 redes', 'Doble aprobación', 'Informe mensual', 'Reunión mensual'],
+  },
+  {
+    nombre: 'Institucional',
+    precio: '690',
+    resumen: 'Cuando la imagen es parte del mensaje.',
+    items: ['Todo lo de Crecimiento', 'Cobertura de eventos', 'Banco de imágenes y reels', 'SLA de respuesta'],
+  },
+];
+
+const pasos = [
+  { num: '01', title: 'Calibramos tu marca', body: 'Una reunión y tus textos actuales bastan para afinar el cerebro de marca: tono, valores, líneas rojas y hashtags.' },
+  { num: '02', title: 'La IA propone, tú apruebas', body: 'Cada semana tienes la cola de publicaciones lista para revisar. Apruebas en un clic, en bloque o pieza a pieza.' },
+  { num: '03', title: 'Publicamos y medimos', body: 'Sale a la hora óptima en cada red. Recibes un informe mensual claro: alcance, publicaciones y temas.' },
+];
+---
+
+<Base
+  title="Redes sociales con IA para asociaciones y pymes — Startidea"
+  description="Gestión de redes sociales con IA entrenada con tu voz de marca y supervisada por personas. Redactamos, programamos y publicamos por ti. Tú solo apruebas. Sin permanencia."
+  ogSlug="page/redes-sociales-ia"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Redes sociales con IA</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Tus redes, al día.<br/>
+        <em class="italic text-magenta">Sin que te robe el día.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea pone la inteligencia artificial a redactar y programar tus publicaciones con la voz de tu marca. Personas supervisan cada pieza. Tú solo apruebas — nosotros publicamos por ti, cada día, en todas tus redes.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="rrssia_demo_hero">
+          Pedir una demo
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="#planes" class="btn-ghost">Ver planes</a>
+      </div>
+      <p class="mt-6 text-sm text-ink/50">Sin permanencia · Primera propuesta de contenido en 2 semanas.</p>
+    </div>
+  </section>
+
+  <!-- Problema -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-8">
+        <span class="label">— El problema</span>
+        <p class="mt-6 font-display text-display-md leading-tight text-ink">
+          Sabes que tienes que estar en redes. Pero el día se va en lo urgente y el perfil lleva tres semanas parado.
+        </p>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">
+          Contratar a alguien a jornada completa no sale a cuenta, y las herramientas "mágicas" acaban dando textos genéricos que no suenan a ti.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solución -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— La solución</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        IA con <em class="italic text-magenta">tu voz</em>, supervisada por personas.
+      </h2>
+      <div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
+        <div>
+          <h3 class="font-display text-2xl text-ink">Habla como tú</h3>
+          <p class="mt-3 text-ink/70">Cargamos tu tono, tus valores, tus líneas rojas y tus hashtags en un cerebro de marca. Nada suena a plantilla.</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Se adapta a cada red</h3>
+          <p class="mt-3 text-ink/70">El mismo mensaje, escrito para X, Instagram y LinkedIn como corresponde a cada una.</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Tú tienes la última palabra</h3>
+          <p class="mt-3 text-ink/70">Aprobación en un clic — en bloque o publicación a publicación. Nada sale sin tu visto bueno.</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Cero mantenimiento por tu parte</h3>
+          <p class="mt-3 text-ink/70">Startidea vigila, programa y publica. Tú recuperas el tiempo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Cómo funciona</span>
+      <div class="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {pasos.map((p) => (
+          <div class="border-t border-ink/20 pt-5">
+            <span class="font-display text-4xl text-magenta">{p.num}</span>
+            <h3 class="mt-3 font-display text-2xl text-ink">{p.title}</h3>
+            <p class="mt-3 text-ink/70">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Planes -->
+  <section id="planes" class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Planes</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Precios claros, sin permanencia.</h2>
+      <div class="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-3">
+        {planes.map((plan) => (
+          <div class={`flex flex-col rounded-lg border p-6 ${plan.destacado ? 'border-magenta bg-ink text-paper' : 'border-ink/20 bg-paper text-ink'}`}>
+            <span class={`label ${plan.destacado ? '!text-magenta' : ''}`}>{plan.nombre}</span>
+            <p class="mt-4 font-display text-5xl leading-none">
+              {plan.precio}&nbsp;€
+              <span class={`text-lg ${plan.destacado ? 'text-paper/60' : 'text-ink/50'}`}>/mes</span>
+            </p>
+            <p class={`mt-3 text-sm ${plan.destacado ? 'text-paper/70' : 'text-ink/60'}`}>{plan.resumen}</p>
+            <ul class="mt-6 flex-1 space-y-2 text-sm">
+              {plan.items.map((it) => (
+                <li class="flex gap-2">
+                  <span class="text-magenta" aria-hidden="true">→</span>
+                  <span class={plan.destacado ? 'text-paper/90' : 'text-ink/80'}>{it}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/contacto"
+              class={`btn mt-8 ${plan.destacado ? '!bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta' : ''}`}
+              data-track="cta"
+              data-track-id={`rrssia_plan_${plan.nombre.toLowerCase()}`}
+            >
+              Empezar
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        ))}
+      </div>
+      <p class="mt-6 text-sm text-ink/50">Alta única: 350&nbsp;€ (cerebro de marca + conexión de tus redes + 2 semanas de calibración).</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Preguntas frecuentes</span>
+      <div class="mt-10 max-w-measure divide-y divide-ink/15">
+        {faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="cursor-pointer list-none font-display text-xl text-ink">{f.q}</summary>
+            <p class="mt-3 text-ink/70">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Deja de tener el perfil parado</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            En dos semanas, contenido<br/>
+            <em class="italic text-magenta">con tu marca</em>, publicándose solo.
+          </h2>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="/contacto"
+              class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"
+              data-track="cta" data-track-id="rrssia_demo_final"
+            >
+              Pedir demo
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
