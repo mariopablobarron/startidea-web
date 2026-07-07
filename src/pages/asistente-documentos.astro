@@ -1,0 +1,222 @@
+---
+/**
+ * /asistente-documentos — Landing de venta del asistente IA entrenado con
+ * la documentación del cliente (base: Sim, flujos RAG #6/#7 verificados).
+ * Página empaquetada con planes. Borrador comercial para revisión.
+ * (Distinta de /asistente, que explica el chatbot de esta propia web.)
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const faqs = [
+  {
+    q: '¿Y si se inventa cosas?',
+    a: 'Responde solo con tus documentos y cita de dónde lo saca. Si la respuesta no está en tu documentación, te dice que no está — no rellena. Es lo contrario de un chatbot genérico.',
+  },
+  {
+    q: '¿Mis documentos son privados?',
+    a: 'Sí. Instancia propia en infraestructura de Startidea, en España/UE. Tus documentos no se comparten ni se usan para entrenar modelos de terceros.',
+  },
+  {
+    q: '¿Puedo actualizar la documentación?',
+    a: 'Sí. Se añaden o sustituyen documentos y el asistente se actualiza. Tu conocimiento cambia; el asistente cambia con él.',
+  },
+  {
+    q: '¿Lo pueden usar mis clientes, no solo mi equipo?',
+    a: 'Sí. El mismo asistente puede ir embebido en tu web para atención al cliente, o quedarse como herramienta interna. Tú decides quién lo usa.',
+  },
+  {
+    q: '¿Qué formatos admite?',
+    a: 'PDF, Word, texto, hojas de cálculo, webs… La mayoría de la documentación con la que ya trabajas. En el arranque se ingiere y se calibra.',
+  },
+];
+
+const jsonLd = [
+  faqPageSchema(faqs),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Asistente experto en documentos', url: `${SITE_URL}/asistente-documentos` },
+  ]),
+];
+
+const planes = [
+  {
+    nombre: 'Asistente',
+    precio: '70',
+    resumen: 'Tu documentación, consultable al instante.',
+    items: ['Base de conocimiento privada', 'Chat con cita de fuente', 'Actualización de documentos'],
+  },
+  {
+    nombre: 'Asistente + Automatizaciones',
+    precio: '150',
+    destacado: true,
+    resumen: 'Y el sistema trabajando por ti.',
+    items: ['Todo lo del plan Asistente', '2 flujos a medida incluidos', 'Correo, informes o avisos automáticos'],
+  },
+];
+---
+
+<Base
+  title="Asistente de IA entrenado con tus documentos — Startidea"
+  description="Un asistente de IA que se ha leído tu documentación —catálogo, normativa, FAQs— y responde al instante citando la fuente. Privado, alojado en España. Demo con tus propios documentos."
+  ogSlug="page/asistente-documentos"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Asistente IA experto en tu negocio</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Se ha leído toda tu documentación.<br/>
+        <em class="italic text-magenta">Y responde en 3 segundos.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea crea un asistente de IA con tus catálogos, normativas, procedimientos y FAQs. Responde al instante y cita de dónde lo saca. Para tu equipo o para tus clientes.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="asistdoc_demo_hero">
+          Ver una demo con tus documentos
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="#planes" class="btn-ghost">Ver planes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problema -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-8">
+        <span class="label">— El problema</span>
+        <p class="mt-6 font-display text-display-md leading-tight text-ink">
+          La respuesta existe. Está en un PDF de 80 páginas, en el catálogo, en un correo de hace dos años.
+        </p>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">
+          Pero encontrarla lleva tiempo, y siempre acaban preguntando a la misma persona. El conocimiento de tu empresa está ahí, pero no a mano.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solución -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— La solución</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        Responde <em class="italic text-magenta">solo con lo tuyo</em>. Y cita la fuente.
+      </h2>
+      <div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
+        <div>
+          <h3 class="font-display text-2xl text-ink">Entrenado con lo tuyo</h3>
+          <p class="mt-3 text-ink/70">Catálogo, normativa interna, FAQs, procedimientos, tarifas… lo que le des.</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Con cita de la fuente</h3>
+          <p class="mt-3 text-ink/70">Cada respuesta indica de qué documento y sección sale. Verificable, no un "confía en mí".</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Tuyo y privado</h3>
+          <p class="mt-3 text-ink/70">Alojado en infraestructura de Startidea en España/UE. Tus documentos no alimentan a nadie más.</p>
+        </div>
+        <div>
+          <h3 class="font-display text-2xl text-ink">Crece contigo</h3>
+          <p class="mt-3 text-ink/70">Se le pueden añadir automatizaciones del mismo sistema: clasificar el correo, informes diarios, avisos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- La demo -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-9">
+        <span class="label">— La demo lo dice todo</span>
+        <p class="mt-6 font-display text-display-md leading-tight text-ink">
+          No te contamos cómo sería. Te lo enseñamos <em class="italic text-magenta">con tus propios documentos.</em>
+        </p>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">
+          Nos pasas 3 o 4 PDFs, los cargamos delante de ti y le hacemos las preguntas que tu equipo responde cada día. En menos de una hora ves el asistente funcionando con tu material.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Planes -->
+  <section id="planes" class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Planes</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Precio fijo, sin sorpresas.</h2>
+      <div class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:max-w-3xl">
+        {planes.map((plan) => (
+          <div class={`flex flex-col rounded-lg border p-6 ${plan.destacado ? 'border-magenta bg-ink text-paper' : 'border-ink/20 bg-paper text-ink'}`}>
+            <span class={`label ${plan.destacado ? '!text-magenta' : ''}`}>{plan.nombre}</span>
+            <p class="mt-4 font-display text-5xl leading-none">
+              {plan.precio}&nbsp;€
+              <span class={`text-lg ${plan.destacado ? 'text-paper/60' : 'text-ink/50'}`}>/mes</span>
+            </p>
+            <p class={`mt-3 text-sm ${plan.destacado ? 'text-paper/70' : 'text-ink/60'}`}>{plan.resumen}</p>
+            <ul class="mt-6 flex-1 space-y-2 text-sm">
+              {plan.items.map((it) => (
+                <li class="flex gap-2">
+                  <span class="text-magenta" aria-hidden="true">→</span>
+                  <span class={plan.destacado ? 'text-paper/90' : 'text-ink/80'}>{it}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href="/contacto"
+              class={`btn mt-8 ${plan.destacado ? '!bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta' : ''}`}
+              data-track="cta"
+              data-track-id={`asistdoc_plan_${plan.nombre.toLowerCase().split(' ')[0]}`}
+            >
+              Pedir la demo
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        ))}
+      </div>
+      <p class="mt-6 text-sm text-ink/50">Puesta en marcha: 600–900&nbsp;€ (ingesta de tu documentación, calibración de respuestas y entrega del acceso).</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Preguntas frecuentes</span>
+      <div class="mt-10 max-w-measure divide-y divide-ink/15">
+        {faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="cursor-pointer list-none font-display text-xl text-ink">{f.q}</summary>
+            <p class="mt-3 text-ink/70">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Asistente experto en tu negocio</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            El conocimiento de tu empresa,<br/>
+            <em class="italic text-magenta">a una pregunta de distancia.</em>
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/70">Pídenos la demo con tus documentos: en una hora lo ves funcionando.</p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a
+              href="/contacto"
+              class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"
+              data-track="cta" data-track-id="asistdoc_demo_final"
+            >
+              Reservar demo
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
