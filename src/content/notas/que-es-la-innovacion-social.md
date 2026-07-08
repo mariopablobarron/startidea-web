@@ -78,4 +78,6 @@ En los tres casos el patrón es el mismo: un problema social real, una forma nue
 
 La innovación social no es una palabra de moda: es un criterio. Resolver mejor un problema colectivo, de una forma nueva, para que el beneficio sea de la gente. La próxima vez que alguien la use, la prueba es sencilla: ¿qué problema resuelve, qué cambia respecto a antes, y quién se queda el valor? Si las tres respuestas están claras, hay innovación social. Si no, probablemente sea otra cosa con una buena etiqueta.
 
+Y si quieres pasar de la definición a la práctica, esta guía complementaria explica [cómo aplicar la innovación social en tu organización, paso a paso](/notas/como-aplicar-innovacion-social-organizacion).
+
 ¿Tu organización quiere innovar de verdad y no sabe por dónde? Empieza por una conversación: [reserva un diagnóstico](/contacto) de treinta minutos, sin coste.
