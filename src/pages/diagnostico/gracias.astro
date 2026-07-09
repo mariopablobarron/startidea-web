@@ -46,6 +46,20 @@ import Base from '@/layouts/Base.astro';
     </div>
   </section>
 
+  <!-- Primera lectura personalizada (solo si llega desde /diagnostico/nuevo con datos en sessionStorage) -->
+  <section id="first-read" class="hidden border-b border-ink/15 bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <span class="label">— Tu primera lectura</span>
+      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+        Esto es lo que <em class="italic text-magenta">vemos de entrada</em>.
+      </h2>
+      <div id="first-read-body" class="mt-6 max-w-measure space-y-3 text-ink/85"></div>
+      <p class="mt-6 text-xs text-ink-mute">
+        Lectura automática a partir de tus respuestas, no un análisis todavía. En la llamada la afinamos con contexto real.
+      </p>
+    </div>
+  </section>
+
   <!-- 4 acciones útiles post-conversión -->
   <section class="bg-paper-warm py-16 md:py-20">
     <div class="container-x">
@@ -134,5 +148,103 @@ import Base from '@/layouts/Base.astro';
   const w = window;
   if (typeof w.stTrack === 'function') {
     w.stTrack('form_submit', { form_type: kind });
+  }
+
+  // ─── Primera lectura personalizada ─────────────────────────────
+  // Lee el resumen que /diagnostico/nuevo dejó en sessionStorage, genera
+  // 3-4 frases con reglas simples (sin backend, sin IA) y las muestra.
+  // Se borra tras leerlo: es de un solo uso, ligado a este envío concreto.
+  type DiagResult = {
+    audience?: string;
+    subType?: string;
+    stage?: string;
+    services?: string[];
+    legalStatus?: string;
+    fundingMix?: string;
+    captationGoal?: string;
+    asePresent?: boolean;
+    inst_committee?: string;
+    emp_funding?: string;
+    collaborationModel?: string;
+    timeframe?: string;
+  };
+
+  function buildFirstRead(r: DiagResult): string[] {
+    const lines: string[] = [];
+
+    const subtypeLabels: Record<string, string> = {
+      pyme: 'una PYME', 'gran-empresa': 'una gran empresa', startup: 'una startup', autonomo: 'un autónomo/a con propósito',
+      eclesial: 'una institución eclesial', publica: 'una institución pública', educativa: 'una institución educativa', sanitaria: 'una institución sanitaria',
+      asociacion: 'una asociación', fundacion: 'una fundación', 'cooperativa-social': 'una cooperativa social', ong: 'una ONG', red: 'una red/federación',
+      idea: 'una idea en formación', mvp: 'un MVP en marcha', validacion: 'un proyecto validando con primeros clientes', escalado: 'un proyecto escalando',
+    };
+    const stageLabels: Record<string, string> = {
+      idea: 'en fase de idea', lanzamiento: 'recién lanzada', consolidado: 'ya consolidada', replanteamiento: 'en replanteamiento estratégico',
+    };
+
+    const subtype = r.subType ? subtypeLabels[r.subType] ?? r.subType : null;
+    const stage = r.stage ? stageLabels[r.stage] : null;
+    if (subtype) {
+      lines.push(`Nos escribís como ${subtype}${stage ? `, ${stage}` : ''}. Eso ya adapta por dónde empezaríamos.`);
+    }
+
+    if (r.audience === 'entidad-social') {
+      if (r.legalStatus === 'tramite') {
+        lines.push('Estáis en trámite de constitución: mientras se resuelve, conviene construir la narrativa de "socio fundador" en vez de vender ya la deducción fiscal, que solo aplica una vez esté reconocida la utilidad pública.');
+      } else if (r.legalStatus === 'constituida') {
+        lines.push('Ya estáis constituidos: eso permite hablar desde ya de deducción fiscal como palanca de captación, no solo de causa.');
+      } else if (r.legalStatus === 'no-formalizada') {
+        lines.push('Aún sin formalizar: antes de invertir en captación masiva, conviene cerrar la parte legal para no perder el primer impulso de confianza de quien done.');
+      }
+      if (r.captationGoal) {
+        lines.push(`Tenéis ya un objetivo concreto ("${r.captationGoal}") — eso facilita mucho calcular si el modelo es rentable antes de arrancar.`);
+      }
+    } else if (r.audience === 'empresa') {
+      if (r.asePresent === true) {
+        lines.push('Ya tenéis programa de propósito activo: es terreno fértil para contar una historia real, no una campaña de imagen.');
+      } else if (r.asePresent === false) {
+        lines.push('Sin programa de propósito activo todavía: antes de comunicar "impacto" conviene decidir si de verdad queréis construirlo, o centrar el mensaje en otro sitio.');
+      }
+    } else if (r.audience === 'institucion') {
+      if (r.inst_committee === 'no') {
+        lines.push('Sin comité ni área de comunicación interna: probablemente el primer cuello de botella no es la falta de ideas, sino quién decide y con qué rapidez.');
+      } else if (r.inst_committee === 'informal') {
+        lines.push('Tenéis comunicación interna informal: formalizar quién decide qué acelera cualquier cosa que hagamos juntos.');
+      }
+    } else if (r.audience === 'emprendedor') {
+      if (r.emp_funding === 'ninguna' || r.emp_funding === 'propia') {
+        lines.push('Sin financiación externa todavía: tiene sentido priorizar acciones baratas y medibles antes que campañas de gran alcance.');
+      }
+    }
+
+    const modelLabels: Record<string, string> = {
+      puntual: 'un proyecto puntual', recurrente: 'una colaboración recurrente', exito: 'un modelo por resultados/éxito',
+    };
+    if (r.collaborationModel && modelLabels[r.collaborationModel]) {
+      lines.push(`Preferís ${modelLabels[r.collaborationModel]}${r.collaborationModel === 'exito' ? ' — para esto lo primero que hay que acordar en la llamada es qué cuenta como "éxito" y cómo se mide' : ''}.`);
+    } else if (r.collaborationModel === 'no-claro') {
+      lines.push('No tenéis claro aún el modelo de colaboración — normal, es justo lo primero que resolvemos en la llamada.');
+    }
+
+    return lines;
+  }
+
+  try {
+    const raw = sessionStorage.getItem('st_diag_result');
+    if (raw) {
+      sessionStorage.removeItem('st_diag_result');
+      const result = JSON.parse(raw) as DiagResult;
+      const lines = buildFirstRead(result);
+      if (lines.length) {
+        const section = document.getElementById('first-read');
+        const body = document.getElementById('first-read-body');
+        if (body) {
+          body.innerHTML = lines.map((l) => `<p>${l}</p>`).join('');
+        }
+        section?.classList.remove('hidden');
+      }
+    }
+  } catch {
+    // JSON corrupto o sessionStorage no disponible — se omite sin romper la página
   }
 </script>
