@@ -1,0 +1,30 @@
+src/content/notas/que-evalua-empresa-antes-convenio-ong.md
+  s_79c413f4f00358::t_4eabb0ff91a9b5 1-50
+src/content/notas/subvencion-cobrada-tarde-prestamo-al-estado.md
+  s_79c413f4f00358::t_812c2ba7b752ca 1-58
+src/content/diagnosticos/fundacion-ambiental-fondo-europeo.md
+  s_79c413f4f00358::t_012792d4d1a751 1-72
+src/content/diagnosticos/fundacion-cultural-ingresos-propios.md
+  s_79c413f4f00358::t_3ff2278da64bad 1-72
+src/content/notas/legados-solidarios-asociaciones-pequenas.md
+  s_79c413f4f00358::t_86c9da0bd8a023 9
+  s_79c413f4f00358::t_82e2cbf6b0e3bf 1-8,10-53
+src/content/diagnosticos/asociacion-educativa-subvencion-municipal.md
+  s_79c413f4f00358::t_d93f8f3a086ee7 1-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e64e97e3c5ca954ea01b3d7a5b050df5a5300839",
+  "prompts": {},
+  "sessions": {
+    "s_79c413f4f00358": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bdde9244-e34d-4464-9e89-f0b9e85a35b1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
