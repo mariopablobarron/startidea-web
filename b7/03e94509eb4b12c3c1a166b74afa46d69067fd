@@ -1,0 +1,26 @@
+src/pages/diagnostico/gracias.astro
+  s_afb972448eb704::t_4905b41ba36211 25,28,31-33
+  s_afb972448eb704::t_0b8ee835a5658b 34
+src/pages/diagnostico/nuevo.astro
+  s_afb972448eb704::t_a73f8f9b3c97fd 246,249,251-253,257-280
+  s_afb972448eb704::t_edd875bae6fe61 959-968
+  s_afb972448eb704::t_941e801b27a1df 22-27
+  s_afb972448eb704::t_30f641e641804c 190-239
+  s_afb972448eb704::t_d149b45eba2f0e 479-506
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b703e94509eb4b12c3c1a166b74afa46d69067fd",
+  "prompts": {},
+  "sessions": {
+    "s_afb972448eb704": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "da7dee66-444c-4cc7-9111-f3deaf511b96",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": null
+    }
+  }
+}
