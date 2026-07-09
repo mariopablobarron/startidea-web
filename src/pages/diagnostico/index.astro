@@ -1,150 +1,1012 @@
 ---
-import Base from '@/layouts/Base.astro';
-import { breadcrumbList, localBusinessSchema, SITE_URL } from '@/lib/jsonld';
+// /diagnostico — Diagnóstico "árbol" adaptativo (página principal).
+//
+// Antes había una landing intermedia en /diagnostico que mandaba a
+// /diagnostico/nuevo. Se eliminó ese paso: el árbol vive directamente aquí y
+// /diagnostico/nuevo redirige a esta URL (compatibilidad de enlaces antiguos).
+//
+// Paso 1 es un ÁRBOL interactivo: la raíz es el isotipo real de Startidea
+// (trazado vectorial exacto desde public/brand/isotipo-lazos.png con potrace),
+// y de él nacen las ramas del perfil (audience) → subtipo. Al elegir subtipo,
+// el árbol fija dos <input hidden> (audience, subType) y entrega el resto del
+// formulario (contacto → servicios → reto → recursos), que sigue siendo el
+// wizard adaptativo de siempre.
+//
+// Categorías (audience):
+//   - empresa            → PYME / Gran empresa / Startup / Autónomo
+//   - institucion        → Eclesial / Pública / Educativa / Sanitaria
+//   - entidad-social     → Asociación / Fundación / Cooperativa social / ONG / Red
+//   - emprendedor        → Idea / MVP / Validación / Escalado
+//
+// Backend: POST a /api/diagnosticos/intake del HUB con kind="diagnostico"
+// + answers JSON con campos extra (mission, fundingMix, legalStatus, ASE…).
+
+import Base from "@/layouts/Base.astro";
+import { breadcrumbList, localBusinessSchema, SITE_URL } from "@/lib/jsonld";
+import { gruposPublicos } from "@/data/servicios";
+
+// Catálogo COMPLETO de servicios sin precios (seguro para el cliente). El
+// cliente marca lo que le interesa; el HUB/equipo hace el lookup de precios
+// server-side para preparar el presupuesto + hoja de ruta que se envían luego.
+const GRUPOS = gruposPublicos();
 
 const jsonLd = [
   breadcrumbList([
-    { name: 'Inicio', url: `${SITE_URL}/` },
-    { name: 'Diagnóstico', url: `${SITE_URL}/diagnostico` },
+    { name: "Inicio", url: `${SITE_URL}/` },
+    { name: "Diagnóstico", url: `${SITE_URL}/diagnostico` },
   ]),
   localBusinessSchema(),
 ];
+
+const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
+
+// Isotipo real de Startidea, contorno vectorial exacto (potrace del PNG oficial).
+const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4 -505 26 -97 97 -251 148 -322 19 -27 34 -52 34 -57 0 -22 -89 -105 -144 -134 -53 -27 -71 -32 -138 -32 -101 0 -106 6 -79 87 33 99 51 222 51 350 0 196 -41 342 -128 460 -50 68 -138 142 -188 158 -83 28 -176 -10 -235 -96 -38 -56 -86 -180 -95 -246 -6 -40 -13 -52 -58 -91 -164 -142 -204 -392 -94 -586 44 -77 126 -157 195 -189 52 -24 70 -27 163 -27 89 0 113 4 158 24 l52 24 63 -32 c124 -60 256 -59 385 6 71 35 176 125 218 186 l20 29 75 -24 c102 -32 235 -32 339 0 177 55 316 201 352 373 13 62 6 101 -22 129 -20 20 -74 27 -96 12 -6 -4 -33 -49 -60 -100 -65 -124 -101 -164 -182 -204 -59 -29 -75 -33 -147 -32 -86 1 -161 23 -159 45 1 8 11 60 23 116 27 131 27 263 1 395 -44 214 -181 464 -277 504 -45 19 -57 18 -92 -11z m126 -342 c57 -103 85 -209 86 -328 1 -98 -17 -215 -32 -215 -10 0 -64 117 -91 199 -12 37 -23 103 -27 160 -6 106 4 251 17 251 5 0 26 -30 47 -67z m-680 -58 c28 -19 84 -119 116 -205 35 -96 51 -191 51 -315 -1 -205 -58 -253 -147 -121 -80 118 -120 250 -121 401 -1 121 8 180 34 223 22 36 35 39 67 17z m-256 -482 c25 -103 76 -195 173 -317 38 -48 30 -71 -21 -61 -85 16 -156 75 -197 164 -36 80 -23 302 17 288 6 -2 19 -35 28 -74z";
 ---
 
 <Base
   title="Diagnóstico de proyecto — Startidea · Granada"
-  description="Cuéntale a Startidea tu reto de comunicación, fundraising o consultoría en 3 minutos. Recibes un primer briefing pre-reunión preparado por el equipo antes de la llamada."
+  description="Cuéntale a Startidea tu reto en 3 minutos: elige tu rama en el árbol y solo respondes lo que aplica a tu caso. Recibes un briefing y una hoja de ruta a medida antes de hablar."
   ogSlug="page/diagnostico"
   jsonLd={jsonLd}
 >
-  <!-- Hero -->
-  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+  <section class="border-b border-ink/15 bg-paper py-12 md:py-16">
     <div class="container-x">
-      <span class="label">— Diagnóstico inicial</span>
-      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Tres minutos.<br/>
-        <em class="italic text-magenta">Un briefing claro.</em>
+      <span class="label">
+        — Diagnóstico · paso <span data-step-label>1</span> de 5
+      </span>
+      <h1 class="mt-4 font-display text-display-lg leading-[0.98] text-ink">
+        Elige tu <em class="italic text-magenta">rama</em>.
       </h1>
-      <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Antes de hablar, cuéntanos qué necesitas resolver. Startidea recibe el cuestionario, prepara un primer análisis y llega a la reunión con preguntas que importan — no con un guion de venta.
+      <p class="mt-6 max-w-measure text-ink/80">
+        La raíz es quién eres; de ahí crecen las preguntas que sí aplican a tu
+        caso. Sin coste. Cuando termines, Startidea recibe el briefing antes de
+        llamarte.
+      </p>
+      <p class="mt-3 max-w-measure text-sm text-ink-mute">
+        ¿Buscas concretamente una web? Usa el
+        <a href="/diagnostico/brief-web" class="underline decoration-magenta/40 underline-offset-2 hover:text-magenta">briefing de web</a>:
+        respondes, subes tu logo y colores, y obtienes un documento listo para empezar.
       </p>
 
-      <div class="mt-10 flex flex-wrap gap-3">
-        <a href="/diagnostico/nuevo" class="btn">Empezar diagnóstico →</a>
-        <a href="/diagnostico/brief-web" class="btn-ghost">Quiero una web → Briefing</a>
-        <a href="/contacto" class="btn-ghost">Prefiero una llamada directa</a>
+      <!-- Progress bar -->
+      <div class="mt-8 flex max-w-md items-center gap-2" aria-hidden="true">
+        <div class="h-1 flex-1 overflow-hidden bg-ink/15">
+          <div
+            data-progress
+            class="h-full bg-magenta transition-all duration-300"
+            style="width: 20%"
+          ></div>
+        </div>
       </div>
-      <p class="mt-4 max-w-measure text-sm text-ink-mute">
-        ¿Buscas concretamente una web? Usa el <a href="/diagnostico/brief-web" class="underline decoration-magenta/40 underline-offset-2 hover:text-magenta">briefing de web</a>: respondes, subes tu logo y colores, y obtienes un documento listo para empezar.
-      </p>
     </div>
   </section>
 
-  <!-- Cómo funciona -->
-  <section class="bg-paper py-20 md:py-28">
+  <section class="bg-paper py-12 md:py-16">
     <div class="container-x">
-      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
-        <div class="col-span-12 lg:col-span-3">
-          <span class="label">— Cómo funciona</span>
-        </div>
-        <div class="col-span-12 lg:col-span-9">
-          <h2 class="font-display text-display-md leading-tight text-ink">
-            Antes de la <em class="italic text-magenta">primera llamada</em>.
-          </h2>
+      <form
+        id="diag-form"
+        data-intake-url={INTAKE_URL}
+        class="max-w-2xl space-y-10"
+        novalidate
+      >
+        <!-- honeypot anti-bot -->
+        <input
+          type="text"
+          name="honeypot"
+          tabindex="-1"
+          autocomplete="off"
+          class="absolute -left-[9999px]"
+          aria-hidden="true"
+        />
 
-          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
-            <li class="grid grid-cols-12 gap-x-8 py-8">
-              <div class="col-span-12 lg:col-span-2">
-                <span class="font-mono text-ink-mute">01</span>
-              </div>
-              <div class="col-span-12 lg:col-span-10">
-                <h3 class="font-display text-2xl text-ink">Rellenas el cuestionario</h3>
-                <p class="mt-3 max-w-measure text-ink/80">
-                  Diez preguntas concretas sobre tu organización, el reto que quieres resolver y los recursos que tienes. Sin caja negra: ves todo lo que Startidea va a leer.
-                </p>
-              </div>
-            </li>
-            <li class="grid grid-cols-12 gap-x-8 py-8">
-              <div class="col-span-12 lg:col-span-2">
-                <span class="font-mono text-ink-mute">02</span>
-              </div>
-              <div class="col-span-12 lg:col-span-10">
-                <h3 class="font-display text-2xl text-ink">Startidea prepara un briefing</h3>
-                <p class="mt-3 max-w-measure text-ink/80">
-                  El equipo lee tus respuestas y prepara una primera lectura: hipótesis de fondo, encaje con servicios, preguntas para abrir la conversación. No se vende nada — se entiende el problema.
-                </p>
-              </div>
-            </li>
-            <li class="grid grid-cols-12 gap-x-8 py-8">
-              <div class="col-span-12 lg:col-span-2">
-                <span class="font-mono text-ink-mute">03</span>
-              </div>
-              <div class="col-span-12 lg:col-span-10">
-                <h3 class="font-display text-2xl text-ink">Reunión de 30 minutos</h3>
-                <p class="mt-3 max-w-measure text-ink/80">
-                  Mario te llama. Se habla del reto con el briefing delante. Si Startidea es el partner adecuado, te lo dice. Si no, te orienta hacia quien sí — sin segundas intenciones.
-                </p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- El árbol fija estos dos valores -->
+        <input type="hidden" name="audience" value="" />
+        <input type="hidden" name="subType" value="" />
 
-  <!-- Para quién -->
-  <section class="bg-paper-warm py-20 md:py-28">
-    <div class="container-x">
-      <div class="grid grid-cols-12 gap-x-8 gap-y-12 border-t border-ink/15 pt-8">
-        <div class="col-span-12 lg:col-span-3">
-          <span class="label">— Para quién</span>
-        </div>
-        <div class="col-span-12 lg:col-span-9">
-          <h2 class="font-display text-display-md leading-tight text-ink">
-            Startidea trabaja con <em class="italic text-magenta">tres perfiles</em>.
-          </h2>
-          <p class="mt-6 max-w-measure text-ink/80">
-            Si tu organización encaja en alguno, este diagnóstico te puede ahorrar tiempo. Si no, dilo y Startidea te orienta al equipo adecuado.
-          </p>
+        <!-- ============ PASO 1: EL ÁRBOL (audience + subType) ============ -->
+        <fieldset data-step="1" class="space-y-6">
+          <div>
+            <h2 class="font-display text-2xl text-ink">¿Quién eres?</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Toca la raíz y sigue las ramas. Cada elección abre la siguiente.
+            </p>
+          </div>
 
-          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
-            <div class="grid grid-cols-12 gap-x-8 py-8">
-              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Tercer sector</dt>
-              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
-                Fundaciones, ONG, asociaciones. Comunicación, marca, fundraising, replanteamiento estratégico.
-              </dd>
+          <div class="st-tree-wrap" data-tree-wrap>
+            <div class="st-tree-hud">
+              <div class="st-tree-crumbs" data-tree-crumbs></div>
+              <button type="button" class="st-tree-back" data-tree-back disabled>
+                ← Volver a la raíz
+              </button>
             </div>
-            <div class="grid grid-cols-12 gap-x-8 py-8">
-              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Instituciones</dt>
-              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
-                Eclesiales, públicas, educativas. Comunicación interna, identidad institucional, proyectos pastorales y culturales.
-              </dd>
-            </div>
-            <div class="grid grid-cols-12 gap-x-8 py-8">
-              <dt class="col-span-12 font-display text-2xl text-ink lg:col-span-5">Empresas con propósito</dt>
-              <dd class="col-span-12 mt-3 max-w-measure text-ink/80 lg:col-span-7 lg:mt-0">
-                ASE (Acción Social Empresarial), marca empleadora, mecenazgo, programas de impacto. Empresas que quieren hacer las cosas bien y contarlo sin postureo.
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
-  </section>
+            <svg
+              class="st-tree-svg"
+              data-tree-svg
+              viewBox="0 0 1000 820"
+              preserveAspectRatio="xMidYMid meet"
+              role="group"
+              aria-label="Árbol de diagnóstico: elige tu perfil"
+            >
+              <defs>
+                <filter id="stNodeShadow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1c1a15" flood-opacity="0.22"></feDropShadow>
+                </filter>
+              </defs>
+              <g data-tree-camera></g>
+            </svg>
+            <p class="st-tree-hint" data-tree-hint>
+              También puedes usar el teclado: Tab para moverte, Enter para elegir.
+            </p>
+          </div>
+        </fieldset>
 
-  <!-- CTA final -->
-  <section class="bg-paper py-20 md:py-28">
-    <div class="container-x text-center">
-      <span class="label">— Cuéntanos</span>
-      <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
-        Tres minutos para empezar a <em class="italic text-magenta">resolver</em>.
-      </h2>
-      <p class="mt-6 mx-auto max-w-measure text-ink/80">
-        Sin coste. Sin compromiso. Sin cookies de terceros.
-      </p>
-      <div class="mt-10 flex flex-wrap justify-center gap-3">
-        <a href="/diagnostico/nuevo" class="btn">Empezar diagnóstico →</a>
-      </div>
+        <!-- ============ PASO 2: CONTACTO ============ -->
+        <fieldset data-step="2" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">Tu contacto</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Perfil elegido:
+              <span class="font-medium text-magenta" data-profile-recap>—</span>.
+              Para poder llamarte, cuéntanos quién eres.
+            </p>
+          </div>
+
+          <div class="space-y-5">
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre</label>
+              <input type="text" id="name" name="name" required minlength="2" maxlength="100"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-medium text-ink">Tu email</label>
+              <input type="email" id="email" name="email" required maxlength="200"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="organizationName" class="block text-sm font-medium text-ink">
+                <span data-org-label-default>Organización</span>
+                <span data-org-label-emprendedor class="hidden">Nombre del proyecto (si lo tiene)</span>
+              </label>
+              <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
+                placeholder="Nombre o razón social"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
+                <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
+                <input type="tel" id="phone" name="phone" maxlength="40"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label for="website" class="block text-sm font-medium text-ink">Web (opcional)</label>
+              <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Redes sociales + rastreo de posicionamiento -->
+          <div class="space-y-5 border-t border-ink/15 pt-8">
+            <div>
+              <h3 class="font-display text-lg text-ink">Tu presencia online</h3>
+              <p class="mt-1 text-sm text-ink-mute">
+                Pon el usuario (@) o la URL de las redes que uséis. Nos sirve para
+                entender de qué partís antes de proponer nada.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="social_instagram" class="block text-sm font-medium text-ink">Instagram</label>
+                <input type="text" id="social_instagram" name="social_instagram" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_facebook" class="block text-sm font-medium text-ink">Facebook</label>
+                <input type="text" id="social_facebook" name="social_facebook" maxlength="120" placeholder="@página o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_linkedin" class="block text-sm font-medium text-ink">LinkedIn</label>
+                <input type="text" id="social_linkedin" name="social_linkedin" maxlength="120" placeholder="URL de la página"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_tiktok" class="block text-sm font-medium text-ink">TikTok / YouTube</label>
+                <input type="text" id="social_tiktok" name="social_tiktok" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="social_other" class="block text-sm font-medium text-ink">Otras (opcional)</label>
+              <input type="text" id="social_other" name="social_other" maxlength="200" placeholder="Newsletter, Twitch, otra red…"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 border border-ink/20 bg-paper-warm/40 p-4 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input type="checkbox" name="seoScan" value="si" class="mt-1 accent-magenta" />
+              <span>
+                <span class="block font-medium text-ink">Quiero un rastreo de mi posicionamiento en internet</span>
+                <span class="mt-1 block text-ink-mute">
+                  Analizamos cómo apareces hoy en Google y redes (visibilidad, palabras
+                  clave, comparación con entidades similares) y lo incluimos en tu hoja de ruta.
+                </span>
+              </span>
+            </label>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Al árbol</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 3: SERVICIOS + ETAPA ============ -->
+        <fieldset data-step="3" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">¿Qué necesitas?</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Marca todo lo que te interese, sin compromiso. Con esto preparamos
+              tu presupuesto orientativo y una hoja de ruta a medida para tu
+              entidad — te la enviamos por email, no aquí.
+            </p>
+          </div>
+
+          <div class="space-y-6">
+            <span class="block text-sm font-medium text-ink">Servicios de Startidea</span>
+            {GRUPOS.map((grupo) => (
+              <div class="space-y-2">
+                <span class="block font-mono text-[10px] uppercase tracking-widest text-magenta">
+                  {grupo.nombre}
+                </span>
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                  {grupo.items.map((it) => (
+                    <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                      <input type="checkbox" name="services" value={it.id} class="accent-magenta" />
+                      <span>{it.nombre}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div class="space-y-2 border-t border-ink/15 pt-4">
+              <label for="servicesOther" class="block text-sm font-medium text-ink">
+                ¿Algo que no está en la lista? <span class="text-ink-mute">(opcional)</span>
+              </label>
+              <input type="text" id="servicesOther" name="servicesOther" maxlength="200"
+                placeholder="Cuéntanos qué necesitas y lo valoramos."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="space-y-3 border-t border-ink/15 pt-6">
+            <span class="block text-sm font-medium text-ink">
+              <span data-stage-label-default>¿En qué etapa estáis?</span>
+              <span data-stage-label-emprendedor class="hidden">¿En qué momento estás?</span>
+            </span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {[
+                ["idea", "Idea en formación"],
+                ["lanzamiento", "Lanzamiento reciente"],
+                ["consolidado", "Proyecto consolidado"],
+                ["replanteamiento", "Replanteamiento estratégico"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="radio" name="stage" value={v} required />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 4: RETO + PREGUNTAS ADAPTATIVAS ============ -->
+        <fieldset data-step="4" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">El reto concreto</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Sé directo. No hace falta que esté redactado bonito.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="challenge" class="block text-sm font-medium text-ink">
+              ¿Qué reto quieres resolver?
+            </label>
+            <textarea id="challenge" name="challenge" required minlength="20" maxlength="2000" rows="6"
+              placeholder="Ej: Necesitamos profesionalizar la comunicación externa. Tenemos 1.200 socios pero la captación nueva está estancada hace dos años."
+              class="w-full resize-y border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none"></textarea>
+            <p class="text-xs text-ink-mute"><span data-count-challenge>0</span> / 2000</p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="triedBefore" class="block text-sm font-medium text-ink">
+              ¿Qué habéis probado antes? <span class="text-ink-mute">(opcional)</span>
+            </label>
+            <textarea id="triedBefore" name="triedBefore" maxlength="1500" rows="3"
+              placeholder="Lo que habéis intentado y por qué no terminó de funcionar."
+              class="w-full resize-y border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none"></textarea>
+          </div>
+
+          <!-- Preguntas adaptativas — solo aparecen si el audience lo justifica -->
+
+          <div data-extra-for="entidad-social" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu entidad</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="mission" class="block text-sm font-medium text-ink">Misión en una frase</label>
+              <input type="text" id="mission" name="mission" maxlength="200"
+                placeholder="ej. acompañamos a familias acogedoras en Granada"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">Estado legal de la entidad</span>
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+                {[
+                  ["constituida", "Constituida y operativa"],
+                  ["tramite", "En trámite de constitución"],
+                  ["no-formalizada", "Aún no formalizada"],
+                ].map(([v, label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="legalStatus" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="text-xs text-ink-mute">Esto cambia la estrategia (ej. deducción fiscal solo aplica si hay utilidad pública o fundación constituida).</p>
+            </div>
+            <div class="space-y-2">
+              <label for="fundingMix" class="block text-sm font-medium text-ink">Mezcla actual de financiación</label>
+              <input type="text" id="fundingMix" name="fundingMix" maxlength="200"
+                placeholder="ej. 60% subvenciones públicas, 30% socios, 10% empresas"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="currentBase" class="block text-sm font-medium text-ink">Base actual de socios/seguidores</label>
+              <input type="text" id="currentBase" name="currentBase" maxlength="200"
+                placeholder="ej. ~300 seguidores en Europa, sin base de socios de pago todavía"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="captationGoal" class="block text-sm font-medium text-ink">Objetivo de captación concreto</label>
+              <input type="text" id="captationGoal" name="captationGoal" maxlength="200"
+                placeholder="ej. 100 socios a 150€/año con retención a largo plazo"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label for="activeChannels" class="block text-sm font-medium text-ink">Redes y canales activos hoy</label>
+              <input type="text" id="activeChannels" name="activeChannels" maxlength="200"
+                placeholder="ej. Instagram y Facebook sin cuidar, web propia desactualizada"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-extra-for="empresa" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu empresa</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Tenéis programa ASE o de propósito activo?</span>
+              <div class="grid grid-cols-3 gap-2">
+                {[["si","Sí"],["no","No"],["explorando","Lo estamos explorando"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="asePresent" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="teamSize" class="block text-sm font-medium text-ink">Tamaño del equipo (opcional)</label>
+              <input type="text" id="teamSize" name="teamSize" maxlength="40" placeholder="ej. 25 personas"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <div data-extra-for="emprendedor" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu proyecto</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="emp_team" class="block text-sm font-medium text-ink">¿Lo haces solo/a o en equipo?</label>
+              <input type="text" id="emp_team" name="emp_team" maxlength="120"
+                placeholder="ej. somos 2 cofundadoras + 1 freelance"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Tienes financiación o ingresos?</span>
+              <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+                {[
+                  ["ninguna","Aún no"],
+                  ["propia","Solo capital propio"],
+                  ["clientes","Primeros clientes"],
+                  ["inversor","Inversión externa"],
+                ].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="emp_funding" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div data-extra-for="institucion" class="hidden space-y-5 border-t border-ink/15 pt-6">
+            <div>
+              <h3 class="font-display text-lg text-ink">Sobre tu institución</h3>
+              <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Existe comité o área de comunicación interna?</span>
+              <div class="grid grid-cols-3 gap-2">
+                {[["si","Sí"],["informal","Informal"],["no","No"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="inst_committee" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 5: RECURSOS + PLAZO + FUENTE ============ -->
+        <fieldset data-step="5" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">Recursos y plazo</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Estimaciones aproximadas. Sin compromiso.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">
+              ¿Cuánto podéis destinar al mes?
+            </span>
+            <p class="text-xs text-ink-mute">
+              Aunque trabajemos algún proyecto puntual, saber tu capacidad mensual
+              es lo que nos deja ajustar la hoja de ruta a algo sostenible para ti.
+            </p>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+              {[
+                ["<150","< 150 €/mes"],
+                ["150-500","150 - 500 €/mes"],
+                ["500-1500","500 - 1.500 €/mes"],
+                ["1500-3000","1.500 - 3.000 €/mes"],
+                ["3000+","+ 3.000 €/mes"],
+                ["no-se","Aún no lo sé"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="monthlyBudget" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">
+              Presupuesto total para un proyecto puntual <span class="text-ink-mute">(opcional)</span>
+            </span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {[
+                ["<1k","< 1.000 €"],
+                ["1k-5k","1k - 5k"],
+                ["5k-15k","5k - 15k"],
+                ["15k+","15k +"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="budgetRange" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Plazo en mente</span>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {[
+                ["asap","Cuanto antes"],
+                ["1-3m","1 - 3 meses"],
+                ["3-6m","3 - 6 meses"],
+                ["6m+","6 meses +"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="timeframe" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Modelo de colaboración que prefieres</span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {[
+                ["puntual", "Proyecto puntual (pago único)"],
+                ["recurrente", "Colaboración recurrente (cuota fija)"],
+                ["exito", "Por resultados / éxito (ej. por socio o venta conseguida)"],
+                ["no-claro", "Aún no lo tengo claro"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="radio" name="collaborationModel" value={v} />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="source" class="block text-sm font-medium text-ink">¿Cómo nos has conocido? (opcional)</label>
+            <input type="text" id="source" name="source" maxlength="200"
+              placeholder="Google, recomendación, evento, etc."
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="submit" class="btn">Enviar diagnóstico →</button>
+          </div>
+        </fieldset>
+
+        <!-- Estado de envío -->
+        <div data-status class="hidden border-l-2 border-magenta bg-paper-warm p-4 text-sm"></div>
+      </form>
     </div>
   </section>
 </Base>
+
+<!-- Estilos del árbol (globales pero acotados a .st-tree-wrap, porque los
+     nodos SVG se crean en JS y no reciben el hash de los estilos scoped). -->
+<style is:global>
+  .st-tree-wrap{
+    position:relative;
+    border:1px solid rgba(28,26,21,.14);
+    background:
+      radial-gradient(ellipse 120% 80% at 50% 108%, var(--tw-paper-warm,#ece2cf), transparent 62%),
+      var(--tw-paper,#f3ede1);
+    overflow:hidden;
+  }
+  .st-tree-hud{
+    position:absolute; top:0; left:0; right:0; z-index:2;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem; padding:.75rem 1rem;
+  }
+  .st-tree-crumbs{
+    display:flex; flex-wrap:wrap; align-items:center; gap:.3em;
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:rgba(28,26,21,.55); max-width:60%;
+  }
+  .st-tree-crumbs .sep{ opacity:.45; }
+  .st-tree-back{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+    background:none; border:1px solid rgba(28,26,21,.16);
+    color:#1c1a15; padding:.5em .9em; cursor:pointer; white-space:nowrap;
+    transition:border-color .2s,color .2s;
+  }
+  .st-tree-back:hover{ border-color:#c81d5c; color:#c81d5c; }
+  .st-tree-back:disabled{ opacity:.3; cursor:default; }
+  .st-tree-back:disabled:hover{ border-color:rgba(28,26,21,.16); color:#1c1a15; }
+
+  .st-tree-svg{ display:block; width:100%; height:clamp(360px,58vh,560px); }
+  .st-tree-hint{
+    position:absolute; bottom:.5rem; left:0; right:0; text-align:center;
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:9px; letter-spacing:.08em; text-transform:uppercase;
+    color:rgba(28,26,21,.4); pointer-events:none;
+  }
+
+  .st-tree-wrap .branch-path{
+    fill:none; stroke:#1c1a15; stroke-width:2.4; stroke-linecap:round; opacity:.82;
+  }
+  .st-tree-wrap .branch-path.dim{ opacity:.16; }
+  .st-tree-wrap .branch-path.active{ stroke:#c81d5c; opacity:1; stroke-width:3; }
+  .st-tree-wrap .branch-path.grow{ animation:st-branch-grow .7s cubic-bezier(.22,.8,.3,1) both; }
+  @keyframes st-branch-grow{ from{ stroke-dashoffset:var(--len); } to{ stroke-dashoffset:0; } }
+
+  .st-tree-wrap .node{ cursor:pointer; }
+  .st-tree-wrap .node:focus{ outline:none; }
+  .st-tree-wrap .node circle.halo{
+    fill:none; stroke:#c81d5c; stroke-width:1; opacity:0; transition:opacity .25s,r .25s;
+  }
+  .st-tree-wrap .node:hover circle.halo, .st-tree-wrap .node:focus circle.halo{ opacity:.55; }
+  .st-tree-wrap .node circle.core{
+    fill:#f3ede1; stroke:#1c1a15; stroke-width:1.6;
+    transition:fill .25s,stroke .25s,transform .25s;
+    transform-origin:center; transform-box:fill-box; filter:url(#stNodeShadow);
+  }
+  .st-tree-wrap .node:hover circle.core, .st-tree-wrap .node:focus circle.core{
+    stroke:#c81d5c; transform:scale(1.12);
+  }
+  .st-tree-wrap .node.chosen circle.core{ fill:#c81d5c; stroke:#c81d5c; }
+  .st-tree-wrap .node.dim{ opacity:.22; }
+  .st-tree-wrap .node.dim circle.core{ filter:none; }
+
+  .st-tree-wrap .node .label-pill{
+    fill:#f3ede1; stroke:rgba(28,26,21,.14); stroke-width:1; transition:stroke .2s;
+  }
+  .st-tree-wrap .node:hover .label-pill, .st-tree-wrap .node:focus .label-pill{ stroke:#c81d5c; }
+  .st-tree-wrap .node text{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:19px; font-weight:700; letter-spacing:-.01em; fill:#1c1a15; user-select:none;
+  }
+  .st-tree-wrap .node text tspan{ font-size:19px; }
+  .st-tree-wrap .node.dim text{ fill:rgba(28,26,21,.55); }
+
+  .st-tree-wrap .node.sprout{ animation:st-node-sprout .5s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes st-node-sprout{
+    0%{ opacity:0; transform:translate(var(--tx),var(--ty)) scale(.2); }
+    100%{ opacity:1; transform:translate(var(--tx),var(--ty)) scale(1); }
+  }
+
+  .st-tree-wrap .root-caption{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase; fill:rgba(28,26,21,.55);
+  }
+
+  @media (max-width:640px){
+    .st-tree-wrap .node text, .st-tree-wrap .node text tspan{ font-size:22px; }
+    .st-tree-svg{ height:clamp(340px,64vh,520px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .st-tree-wrap .branch-path.grow{ animation:none; stroke-dashoffset:0 !important; }
+    .st-tree-wrap .node.sprout{ animation:none; }
+  }
+</style>
+
+<script define:vars={{ ISOTIPO_PATH_D }}>
+  // ─── Árbol de diagnóstico (Paso 1) ──────────────────────────────
+  const form = document.getElementById("diag-form");
+  if (!form) throw new Error("form missing");
+
+  const intakeUrl = form.dataset.intakeUrl;
+  const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
+  const stepLabel = document.querySelector("[data-step-label]");
+  const progress = document.querySelector("[data-progress]");
+  const statusBox = form.querySelector("[data-status]");
+  const challengeCounter = form.querySelector("[data-count-challenge]");
+  const challenge = form.querySelector("[name='challenge']");
+  const audienceInput = form.querySelector("[name='audience']");
+  const subTypeInput = form.querySelector("[name='subType']");
+  const profileRecap = form.querySelector("[data-profile-recap]");
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const AUDIENCES = [
+    { id: "empresa", label: "Empresa", subs: [
+      { id: "pyme", label: "PYME" }, { id: "gran-empresa", label: "Gran empresa" },
+      { id: "startup", label: "Startup" }, { id: "autonomo", label: "Autónomo/a" },
+    ]},
+    { id: "institucion", label: "Institución", subs: [
+      { id: "eclesial", label: "Eclesial" }, { id: "publica", label: "Pública" },
+      { id: "educativa", label: "Educativa" }, { id: "sanitaria", label: "Sanitaria" },
+    ]},
+    { id: "entidad-social", label: "Entidad social", subs: [
+      { id: "asociacion", label: "Asociación" }, { id: "fundacion", label: "Fundación" },
+      { id: "cooperativa-social", label: "Cooperativa social" }, { id: "ong", label: "ONG" },
+      { id: "red", label: "Red / Federación" },
+    ]},
+    { id: "emprendedor", label: "Emprendedor/a", subs: [
+      { id: "idea", label: "Idea" }, { id: "mvp", label: "MVP" },
+      { id: "validacion", label: "Validación" }, { id: "escalado", label: "Escalando" },
+    ]},
+  ];
+
+  const camera = form.querySelector("[data-tree-camera]");
+  const treeBack = form.querySelector("[data-tree-back]");
+  const treeCrumbs = form.querySelector("[data-tree-crumbs]");
+
+  const BASE_X = 500, BASE_Y = 690, TRUNK_TOP_Y = 520;
+  let chosenAudience = null; // objeto de AUDIENCES o null
+
+  const NS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function quad(x1, y1, x2, y2, bulge) {
+    const mx = (x1 + x2) / 2 + bulge, my = (y1 + y2) / 2;
+    return `M${x1},${y1} Q${mx},${my} ${x2},${y2}`;
+  }
+  function layout(nodes, cx, cy, spread, len) {
+    const n = nodes.length;
+    const startAngle = -90 - spread / 2;
+    return nodes.map((node, i) => {
+      const angle = n === 1 ? -90 : startAngle + (spread * i / (n - 1));
+      const rad = angle * Math.PI / 180;
+      return { node, x: cx + Math.cos(rad) * len, y: cy + Math.sin(rad) * len, angle };
+    });
+  }
+  function wrapLabel(label) {
+    if (label.length <= 10 || !label.includes(" ")) return [label];
+    const w = label.split(" "), mid = Math.ceil(w.length / 2);
+    return [w.slice(0, mid).join(" "), w.slice(mid).join(" ")];
+  }
+  function makeNode(x, y, label, angle, opts) {
+    opts = opts || {};
+    const coreR = 30, fontSize = 19, charW = fontSize * 0.62, lineH = fontSize * 1.22;
+    const PAD_X = 9, PAD_Y = 6, GAP = coreR + 16;
+    const g = svgEl("g", {
+      class: "node" + (opts.dim ? " dim" : "") + (opts.chosen ? " chosen" : ""),
+      tabindex: "0", role: "button", "aria-label": label, transform: `translate(${x},${y})`,
+    });
+    g.appendChild(svgEl("circle", { class: "halo", r: 40 }));
+    g.appendChild(svgEl("circle", { class: "core", r: coreR }));
+    const lines = wrapLabel(label);
+    const textW = Math.max(...lines.map((l) => l.length * charW));
+    const textH = lines.length * lineH;
+    let side = "center";
+    if (angle !== undefined) { if (angle <= -100) side = "left"; else if (angle >= -80) side = "right"; }
+    let anchorX, anchor, pillX, firstLineY;
+    if (side === "left") { anchor = "end"; anchorX = -GAP; pillX = anchorX - textW - PAD_X; firstLineY = -(textH / 2) + lineH * 0.78; }
+    else if (side === "right") { anchor = "start"; anchorX = GAP; pillX = anchorX - PAD_X; firstLineY = -(textH / 2) + lineH * 0.78; }
+    else { anchor = "middle"; anchorX = 0; pillX = -(textW / 2) - PAD_X; firstLineY = coreR + 20 + lineH * 0.78; }
+    const pillY = (side === "center" ? coreR + 20 : -(textH / 2)) - PAD_Y;
+    g.appendChild(svgEl("rect", { class: "label-pill", x: pillX, y: pillY, width: textW + PAD_X * 2, height: textH + PAD_Y * 2, rx: 4 }));
+    const t = svgEl("text", { x: anchorX, y: firstLineY, "text-anchor": anchor });
+    lines.forEach((line, i) => {
+      const ts = svgEl("tspan", { x: anchorX, dy: i === 0 ? "0" : `${lineH}px` });
+      ts.textContent = line; t.appendChild(ts);
+    });
+    g.appendChild(t);
+    return g;
+  }
+  function growBranch(p, delay) {
+    if (reduceMotion) return;
+    const len = p.getTotalLength();
+    p.style.setProperty("--len", len);
+    p.style.strokeDasharray = len;
+    p.style.animationDelay = `${delay}s`;
+    p.classList.add("grow");
+  }
+  function sproutNode(g, x, y, delay) {
+    if (reduceMotion) return;
+    g.style.setProperty("--tx", `${x}px`);
+    g.style.setProperty("--ty", `${y}px`);
+    g.style.animationDelay = `${delay}s`;
+    g.classList.add("sprout");
+  }
+
+  function renderTree() {
+    if (!camera) return;
+    camera.innerHTML = "";
+
+    // Tronco
+    const trunk = svgEl("path", { class: "branch-path active", d: `M${BASE_X},${BASE_Y} L${BASE_X},${TRUNK_TOP_Y}` });
+    camera.appendChild(trunk);
+
+    // Raíz = isotipo real (vectorial, escala uniforme)
+    const ISO = 150;
+    const isoSvg = svgEl("svg", { x: BASE_X - ISO / 2, y: BASE_Y - ISO + 22, width: ISO, height: ISO, viewBox: "0 0 256 256" });
+    const isoG = svgEl("g", { transform: "translate(0,256) scale(0.1,-0.1)", fill: "#c81d5c", stroke: "none" });
+    isoG.appendChild(svgEl("path", { d: ISOTIPO_PATH_D }));
+    isoSvg.appendChild(isoG);
+    camera.appendChild(isoSvg);
+    const cap = svgEl("text", { x: BASE_X, y: BASE_Y + 30, class: "root-caption", "text-anchor": "middle" });
+    cap.textContent = "raíz"; camera.appendChild(cap);
+
+    if (!chosenAudience) {
+      // Estado A: elegir perfil
+      const placed = layout(AUDIENCES, BASE_X, TRUNK_TOP_Y, 150, 200);
+      placed.forEach(({ node, x, y, angle }, i) => {
+        const p = svgEl("path", { class: "branch-path", d: quad(BASE_X, TRUNK_TOP_Y, x, y, (x - BASE_X) * 0.35) });
+        camera.appendChild(p); growBranch(p, i * 0.05);
+        const g = makeNode(x, y, node.label, angle);
+        sproutNode(g, x, y, 0.12 + i * 0.06);
+        g.addEventListener("click", () => pickAudience(node));
+        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickAudience(node); } });
+        camera.appendChild(g);
+      });
+    } else {
+      // Estado B: perfil elegido → rama corta al nodo del perfil (centrado) y subtipos
+      const midY = 430;
+      const p0 = svgEl("path", { class: "branch-path active", d: `M${BASE_X},${TRUNK_TOP_Y} L${BASE_X},${midY}` });
+      camera.appendChild(p0); growBranch(p0, 0);
+      const audNode = makeNode(BASE_X, midY, chosenAudience.label, undefined, { chosen: true });
+      audNode.addEventListener("click", resetToRoot);
+      audNode.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); resetToRoot(); } });
+      camera.appendChild(audNode);
+
+      const spread = chosenAudience.subs.length >= 5 ? 165 : 145;
+      const placed = layout(chosenAudience.subs, BASE_X, midY, spread, 175);
+      placed.forEach(({ node, x, y, angle }, i) => {
+        const p = svgEl("path", { class: "branch-path", d: quad(BASE_X, midY, x, y, (x - BASE_X) * 0.32) });
+        camera.appendChild(p); growBranch(p, i * 0.05);
+        const g = makeNode(x, y, node.label, angle);
+        sproutNode(g, x, y, 0.12 + i * 0.06);
+        g.addEventListener("click", () => pickSubType(node));
+        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickSubType(node); } });
+        camera.appendChild(g);
+      });
+    }
+    updateTreeCrumbs();
+  }
+
+  function updateTreeCrumbs() {
+    if (!treeCrumbs) return;
+    const parts = ["raíz"];
+    if (chosenAudience) parts.push(chosenAudience.label.toLowerCase());
+    treeCrumbs.innerHTML = parts.map((p, i) => (i > 0 ? '<span class="sep">/</span>' : "") + `<span>${p}</span>`).join(" ");
+    if (treeBack) treeBack.disabled = !chosenAudience;
+  }
+
+  function pickAudience(node) { chosenAudience = node; renderTree(); }
+  function resetToRoot() { chosenAudience = null; renderTree(); }
+
+  function pickSubType(node) {
+    if (!chosenAudience) return;
+    if (audienceInput) audienceInput.value = chosenAudience.id;
+    if (subTypeInput) subTypeInput.value = node.id;
+    // Refresca la lógica adaptativa (equivale al antiguo change de audience)
+    if (audienceInput) audienceInput.dispatchEvent(new Event("change", { bubbles: true }));
+    if (profileRecap) profileRecap.textContent = `${chosenAudience.label} · ${node.label}`;
+    setStep(1); // → contacto
+  }
+
+  treeBack?.addEventListener("click", resetToRoot);
+
+  // ─── Wizard (contacto → servicios → reto → recursos) ────────────
+  let current = 0;
+  const total = steps.length;
+
+  function setStep(i) {
+    current = Math.max(0, Math.min(total - 1, i));
+    steps.forEach((s, idx) => s.classList.toggle("hidden", idx !== current));
+    if (stepLabel) stepLabel.textContent = String(current + 1);
+    if (progress) progress.style.width = `${((current + 1) / total) * 100}%`;
+    refreshAdaptive();
+    if (current === 0) renderTree();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function getAudience() { return audienceInput?.value ?? ""; }
+
+  function refreshAdaptive() {
+    const audience = getAudience();
+    form.querySelectorAll("[data-extra-for]").forEach((el) => {
+      el.classList.toggle("hidden", el.dataset.extraFor !== audience);
+    });
+    const isEmp = audience === "emprendedor";
+    form.querySelectorAll("[data-org-label-default]").forEach((el) => el.classList.toggle("hidden", isEmp));
+    form.querySelectorAll("[data-org-label-emprendedor]").forEach((el) => el.classList.toggle("hidden", !isEmp));
+    form.querySelectorAll("[data-stage-label-default]").forEach((el) => el.classList.toggle("hidden", isEmp));
+    form.querySelectorAll("[data-stage-label-emprendedor]").forEach((el) => el.classList.toggle("hidden", !isEmp));
+    const orgInput = form.querySelector("[name='organizationName']");
+    if (orgInput instanceof HTMLInputElement) orgInput.required = !isEmp;
+  }
+
+  function validateStep() {
+    const fs = steps[current];
+    const required = Array.from(fs.querySelectorAll("[required]")).filter((el) => !el.closest(".hidden"));
+    for (const el of required) {
+      if (el instanceof HTMLInputElement && el.type === "radio") {
+        const anyChecked = form.querySelector(`input[name='${el.name}']:checked`);
+        if (!anyChecked) return `Falta elegir: ${el.name}`;
+      } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
+        return `Falta o no es válido: ${el.name || el.id}`;
+      } else if (el.minLength && el.value.length < el.minLength) {
+        return `Muy corto: ${el.name || el.id}`;
+      }
+    }
+    return null;
+  }
+
+  form.addEventListener("click", (e) => {
+    const t = e.target;
+    if (t.matches("[data-next]")) {
+      const err = validateStep();
+      if (err) { showStatus(err, true); return; }
+      hideStatus(); setStep(current + 1);
+    } else if (t.matches("[data-prev]")) {
+      hideStatus(); setStep(current - 1);
+    }
+  });
+
+  form.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.name === "audience") refreshAdaptive();
+    if (t.name === "challenge" && challengeCounter) challengeCounter.textContent = String(t.value.length);
+  });
+  challenge?.addEventListener("input", () => {
+    if (challengeCounter) challengeCounter.textContent = String(challenge.value.length);
+  });
+
+  function showStatus(msg, isError = false) {
+    if (!statusBox) return;
+    statusBox.textContent = msg;
+    statusBox.className = `border-l-2 p-4 text-sm ${isError ? "border-magenta bg-paper-warm text-magenta" : "border-ink/30 bg-paper-warm text-ink"}`;
+    statusBox.classList.remove("hidden");
+  }
+  function hideStatus() { statusBox?.classList.add("hidden"); }
+
+  // ─── Submit ─────────────────────────────────────────────────────
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const err = validateStep();
+    if (err) { showStatus(err, true); return; }
+    if (!getAudience()) { showStatus("Vuelve al árbol y elige tu perfil.", true); return; }
+    showStatus("Enviando…", false);
+    const fd = new FormData(form);
+    const data = { kind: "diagnostico" };
+    ["name","email","phone","organizationName","role","website","audience","subType","stage","challenge","triedBefore","budgetRange","timeframe","source","honeypot"].forEach((k) => {
+      const v = fd.get(k); if (typeof v === "string" && v) data[k] = v;
+    });
+    if (!data.organizationName && typeof data.name === "string") data.organizationName = data.name;
+    const services = fd.getAll("services").map(String).filter(Boolean);
+    const answers = {};
+    if (services.length) answers.services = services;
+    // Redes sociales → subobjeto solo con las que rellenó
+    const socials = {};
+    ["social_instagram","social_facebook","social_linkedin","social_tiktok","social_other"].forEach((k) => {
+      const v = fd.get(k);
+      if (typeof v === "string" && v) socials[k.replace("social_", "")] = v;
+    });
+    if (Object.keys(socials).length) answers.socials = socials;
+    // seoScan (opt-in de rastreo de posicionamiento) → booleano
+    answers.seoScan = fd.get("seoScan") === "si";
+    ["mission","fundingMix","teamSize","emp_team","emp_funding","inst_committee","legalStatus","currentBase","captationGoal","activeChannels","collaborationModel","servicesOther","monthlyBudget"].forEach((k) => {
+      const v = fd.get(k); if (typeof v === "string" && v) answers[k] = v;
+    });
+    const ase = fd.get("asePresent");
+    if (typeof ase === "string" && ase) {
+      if (ase === "si") data.asePresent = true;
+      else if (ase === "no") data.asePresent = false;
+      else answers.asePresentRaw = ase;
+    }
+    if (Object.keys(answers).length) data.answers = answers;
+    data.attribution = (window.stAttribution && window.stAttribution()) || {};
+
+    try {
+      const r = await fetch(intakeUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      const json = await r.json().catch(() => null);
+      if (r.ok && json?.ok) {
+        try {
+          sessionStorage.setItem("st_diag_result", JSON.stringify({
+            audience: data.audience, subType: data.subType, stage: data.stage, services,
+            legalStatus: answers.legalStatus, fundingMix: answers.fundingMix,
+            captationGoal: answers.captationGoal, asePresent: data.asePresent,
+            inst_committee: answers.inst_committee, emp_funding: answers.emp_funding,
+            collaborationModel: answers.collaborationModel, timeframe: data.timeframe,
+          }));
+        } catch { /* sessionStorage no disponible */ }
+        window.location.href = "/diagnostico/gracias";
+      } else {
+        showStatus(`No se pudo enviar (${json?.error ?? r.status}). Inténtalo en unos minutos.`, true);
+      }
+    } catch {
+      showStatus("Error de red. Inténtalo en unos minutos.", true);
+    }
+  });
+
+  // Init
+  setStep(0);
+</script>
