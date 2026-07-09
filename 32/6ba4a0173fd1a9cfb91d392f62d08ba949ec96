@@ -1,0 +1,26 @@
+src/pages/diagnostico/nuevo.astro
+  s_afb972448eb704::t_fcc87247347eda 2,4-9,14,18,32-34,39,50,53-55,89-94,98,102-126,130,133,135-137,141,185,483-585,596-696,698-776,780,786,790,798-801,806,808,811-812,815,826-827,829,836,842,848,854-855,858-860,862,864,866-867,879,883-890,893
+  s_afb972448eb704::t_2e5f7eb9787ca8 324,446-462
+  s_afb972448eb704::t_be00ae2be38ed1 882
+  s_afb972448eb704::t_96b81d6e168d2a 285-300,307-323
+src/pages/diagnostico/gracias.astro
+  s_afb972448eb704::t_534487534d7826 49-52,54-62
+  s_afb972448eb704::t_5ca7f46e3f7ef1 53
+  s_afb972448eb704::t_1cccb3254318fc 152-249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "326ba4a0173fd1a9cfb91d392f62d08ba949ec96",
+  "prompts": {},
+  "sessions": {
+    "s_afb972448eb704": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "da7dee66-444c-4cc7-9111-f3deaf511b96",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": null
+    }
+  }
+}
