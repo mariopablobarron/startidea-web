@@ -19,6 +19,12 @@
 
 import Base from "@/layouts/Base.astro";
 import { breadcrumbList, SITE_URL } from "@/lib/jsonld";
+import { gruposPublicos } from "@/data/servicios";
+
+// Catálogo COMPLETO de servicios sin precios (seguro para el cliente). El
+// cliente marca lo que le interesa; el HUB/equipo hace el lookup de precios
+// server-side para preparar el presupuesto + hoja de ruta que se envían luego.
+const GRUPOS = gruposPublicos();
 
 const jsonLd = [
   breadcrumbList([
@@ -181,37 +187,97 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
             </div>
           </div>
 
+          <!-- Redes sociales + rastreo de posicionamiento -->
+          <div class="space-y-5 border-t border-ink/15 pt-8">
+            <div>
+              <h3 class="font-display text-lg text-ink">Tu presencia online</h3>
+              <p class="mt-1 text-sm text-ink-mute">
+                Pon el usuario (@) o la URL de las redes que uséis. Nos sirve para
+                entender de qué partís antes de proponer nada.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="social_instagram" class="block text-sm font-medium text-ink">Instagram</label>
+                <input type="text" id="social_instagram" name="social_instagram" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_facebook" class="block text-sm font-medium text-ink">Facebook</label>
+                <input type="text" id="social_facebook" name="social_facebook" maxlength="120" placeholder="@página o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_linkedin" class="block text-sm font-medium text-ink">LinkedIn</label>
+                <input type="text" id="social_linkedin" name="social_linkedin" maxlength="120" placeholder="URL de la página"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_tiktok" class="block text-sm font-medium text-ink">TikTok / YouTube</label>
+                <input type="text" id="social_tiktok" name="social_tiktok" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="social_other" class="block text-sm font-medium text-ink">Otras (opcional)</label>
+              <input type="text" id="social_other" name="social_other" maxlength="200" placeholder="Newsletter, Twitch, otra red…"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 border border-ink/20 bg-paper-warm/40 p-4 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input type="checkbox" name="seoScan" value="si" class="mt-1 accent-magenta" />
+              <span>
+                <span class="block font-medium text-ink">Quiero un rastreo de mi posicionamiento en internet</span>
+                <span class="mt-1 block text-ink-mute">
+                  Analizamos cómo apareces hoy en Google y redes (visibilidad, palabras
+                  clave, comparación con entidades similares) y lo incluimos en tu hoja de ruta.
+                </span>
+              </span>
+            </label>
+          </div>
+
           <div class="flex justify-between pt-4">
             <button type="button" data-prev class="btn-ghost">← Al árbol</button>
             <button type="button" data-next class="btn">Siguiente →</button>
           </div>
         </fieldset>
 
-        <!-- ============ PASO 3: SERVICIO + ETAPA ============ -->
+        <!-- ============ PASO 3: SERVICIOS + ETAPA ============ -->
         <fieldset data-step="3" class="hidden space-y-8">
           <div>
-            <h2 class="font-display text-2xl text-ink">¿Qué buscas?</h2>
+            <h2 class="font-display text-2xl text-ink">¿Qué necesitas?</h2>
             <p class="mt-2 text-sm text-ink-mute">
-              Puedes marcar varios servicios.
+              Marca todo lo que te interese, sin compromiso. Con esto preparamos
+              tu presupuesto orientativo y una hoja de ruta a medida para tu
+              entidad — te la enviamos por email, no aquí.
             </p>
           </div>
 
-          <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">Servicios que te interesan</span>
-            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-              {[
-                ["comunicacion", "Comunicación / identidad"],
-                ["web", "Diseño y desarrollo web"],
-                ["audiovisual", "Audiovisual / podcast"],
-                ["fundraising", "Fundraising / subvenciones"],
-                ["consultoria", "Consultoría / estrategia"],
-                ["otro", "Otro"],
-              ].map(([v, label]) => (
-                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
-                  <input type="checkbox" name="services" value={v} class="accent-magenta" />
-                  <span>{label}</span>
-                </label>
-              ))}
+          <div class="space-y-6">
+            <span class="block text-sm font-medium text-ink">Servicios de Startidea</span>
+            {GRUPOS.map((grupo) => (
+              <div class="space-y-2">
+                <span class="block font-mono text-[10px] uppercase tracking-widest text-magenta">
+                  {grupo.nombre}
+                </span>
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                  {grupo.items.map((it) => (
+                    <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                      <input type="checkbox" name="services" value={it.id} class="accent-magenta" />
+                      <span>{it.nombre}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div class="space-y-2 border-t border-ink/15 pt-4">
+              <label for="servicesOther" class="block text-sm font-medium text-ink">
+                ¿Algo que no está en la lista? <span class="text-ink-mute">(opcional)</span>
+              </label>
+              <input type="text" id="servicesOther" name="servicesOther" maxlength="200"
+                placeholder="Cuéntanos qué necesitas y lo valoramos."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
             </div>
           </div>
 
@@ -410,7 +476,34 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           </div>
 
           <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">Presupuesto orientativo</span>
+            <span class="block text-sm font-medium text-ink">
+              ¿Cuánto podéis destinar al mes?
+            </span>
+            <p class="text-xs text-ink-mute">
+              Aunque trabajemos algún proyecto puntual, saber tu capacidad mensual
+              es lo que nos deja ajustar la hoja de ruta a algo sostenible para ti.
+            </p>
+            <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+              {[
+                ["<150","< 150 €/mes"],
+                ["150-500","150 - 500 €/mes"],
+                ["500-1500","500 - 1.500 €/mes"],
+                ["1500-3000","1.500 - 3.000 €/mes"],
+                ["3000+","+ 3.000 €/mes"],
+                ["no-se","Aún no lo sé"],
+              ].map(([v,label]) => (
+                <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                  <input type="radio" name="monthlyBudget" value={v} class="sr-only" />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">
+              Presupuesto total para un proyecto puntual <span class="text-ink-mute">(opcional)</span>
+            </span>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
                 ["<1k","< 1.000 €"],
@@ -863,7 +956,16 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     const services = fd.getAll("services").map(String).filter(Boolean);
     const answers = {};
     if (services.length) answers.services = services;
-    ["mission","fundingMix","teamSize","emp_team","emp_funding","inst_committee","legalStatus","currentBase","captationGoal","activeChannels","collaborationModel"].forEach((k) => {
+    // Redes sociales → subobjeto solo con las que rellenó
+    const socials = {};
+    ["social_instagram","social_facebook","social_linkedin","social_tiktok","social_other"].forEach((k) => {
+      const v = fd.get(k);
+      if (typeof v === "string" && v) socials[k.replace("social_", "")] = v;
+    });
+    if (Object.keys(socials).length) answers.socials = socials;
+    // seoScan (opt-in de rastreo de posicionamiento) → booleano
+    answers.seoScan = fd.get("seoScan") === "si";
+    ["mission","fundingMix","teamSize","emp_team","emp_funding","inst_committee","legalStatus","currentBase","captationGoal","activeChannels","collaborationModel","servicesOther","monthlyBudget"].forEach((k) => {
       const v = fd.get(k); if (typeof v === "string" && v) answers[k] = v;
     });
     const ase = fd.get("asePresent");
