@@ -1,0 +1,42 @@
+src/content/diagnosticos/asociacion-salud-mental.md
+  s_a007441de5d7e2::t_7d3804709ec640 20
+  s_a007441de5d7e2::t_006e03e063856a 1-19,21-88
+src/components/CtaConversion.astro
+  s_a007441de5d7e2::t_0f85a01c994e65 102
+src/content/notas/cuanto-cuesta-base-de-socios-ong.md
+  s_a007441de5d7e2::t_ce4f05ab944a04 8
+  s_a007441de5d7e2::t_2232b7f74509fb 1-7,9-58
+src/content/diagnosticos/plataforma-personas-sin-hogar.md
+  s_a007441de5d7e2::t_eae25eedee5b66 1-19,21-86
+  s_a007441de5d7e2::t_5e0b045e238279 20
+src/content/notas/informe-impacto-para-patrono-empresarial.md
+  s_a007441de5d7e2::t_24732e928a98da 8
+  s_a007441de5d7e2::t_38ed77353c7526 1-7,9-53
+src/content/notas/ia-ong-sin-comite-etica-tres-reglas.md
+  s_a007441de5d7e2::t_549a516c71c716 8
+  s_a007441de5d7e2::t_9acbdf6b9f888a 1-7,9-49
+src/components/CtaFinal.astro
+  s_a007441de5d7e2::t_afb78e57a050ee 39
+src/components/HeroJourney.astro
+  s_a007441de5d7e2::t_00820c4e872634 35-36
+  s_a007441de5d7e2::t_190dfa3380e3d2 107-108
+src/content/diagnosticos/cooperativa-insercion-migracion.md
+  s_a007441de5d7e2::t_47722d07ad861f 19
+  s_a007441de5d7e2::t_7d0f0edaa89092 1-18,20-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8400c11909c9523682614f449fdd8ab85106c780",
+  "prompts": {},
+  "sessions": {
+    "s_a007441de5d7e2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5857b74f-3423-48aa-891a-e5dceb2f09e4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
