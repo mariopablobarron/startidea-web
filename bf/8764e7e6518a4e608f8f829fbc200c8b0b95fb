@@ -1,0 +1,21 @@
+src/components/Fundador.astro
+  s_0ab79ba551035b::t_2673437d191169 33-46
+src/components/Ecosistema.astro
+  s_0ab79ba551035b::t_56d5da64d5725b 108-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bf8764e7e6518a4e608f8f829fbc200c8b0b95fb",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
