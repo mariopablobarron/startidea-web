@@ -105,6 +105,11 @@ export default defineConfig({
         if (page.includes('/portal/enviado'))      return false;
         // Preview interna del laboratorio inmersivo (sin contenido indexable).
         if (page.includes('/lab/inmersivo'))       return false;
+        // Experimentos de home + "gracias" de cursos: son noindex; fuera del
+        // sitemap para no mandar a Google señales contradictorias (noindex+sitemap).
+        if (page.includes('/lab/home-immersive'))  return false;
+        if (page.includes('/lab/home-journey'))    return false;
+        if (page.includes('/laboratorio/cursos/gracias')) return false;
         // Subvenciones: excluir páginas individuales del scraper BDNS (~2100 URLs)
         // Solo conservar: index · curated landings (boja-2026-*) · mapa
         if (page.includes('/subvenciones/')) {
