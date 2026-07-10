@@ -1,0 +1,27 @@
+.claude/CLAUDE.md
+  s_0ab79ba551035b::t_9b2e31378da04a 128-143
+copiloto-sede/drivers/junta-andalucia.mjs
+  s_0ab79ba551035b::t_f4b6a264976e85 2,4-12,14-19,21-26,29-35,37-49,51-55,57,62-69,71-93,96,98-103,105-113,120-149,151,154-155,160,162,164,169-179,181-189
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_0fa7e382bb03f3 662
+  s_0ab79ba551035b::t_d2340ccbde9731 540
+  s_0ab79ba551035b::t_d72055f1d1f46f 586-645
+infra/copiloto-sede/README.md
+  s_0ab79ba551035b::t_fc50dfb34fd7af 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "ed5b07b6353bd60d4290405450e7c394b402fe80",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
