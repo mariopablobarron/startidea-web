@@ -1,145 +1,190 @@
 /**
- * Driver — Junta de Andalucía (Ventanilla Electrónica VEA + Presentación
- * Electrónica General / procedimientos específicos).
+ * Driver — Junta de Andalucía · Ventanilla Electrónica (VEA).
  *
- * Estructura capturada EN VIVO (Claude in Chrome, cert de Startidea Consulting):
- *   Acceso: ws094.../SolicitarTicket?v=PEG → redirige a veaja.cloud.juntadeandalucia.es
- *   → login con certificado/Cl@ve (titular) → crea /borrador/<id>.
- *   Pasos del borrador: 1) COMPLETAR (Solicitud) + APORTAR (docs) · 2) Firmar · 3) Presentar.
- *   El formulario "Solicitud" se abre en un IFRAME/modal (botones: "Limpiar
- *   formulario", "Guardar y cerrar"). Secciones: Solicitante, Domicilio,
- *   Contacto, Representante, Objeto (textarea), Lugar/Fecha/Firma.
+ * Estructura capturada EN VIVO el 2026-07-10 (Playwright, páginas públicas):
+ *   Entrada:  https://veaja.cloud.juntadeandalucia.es/inicio/procedimiento-detalle/PEG_VEA
+ *   (la URL vieja ws094.../SolicitarTicket?v=PEG redirige aquí — la VEA se migró a
+ *    una plataforma cloud nueva, un SPA de Angular).
+ *   La página de entrada declara los 3 pasos: 1) iniciar solicitud (formulario +
+ *   docs) · 2) firmar con Certificado digital o Cl@ve (+ Autofirma) · 3) presentar.
+ *   Al pulsar "INICIAR SOLICITUD" aparece INMEDIATAMENTE el modal "Autenticarme
+ *   con:" (Certificado electrónico / Cl@ve / NIF-NIE). => NO hay formulario público:
+ *   te autenticas ANTES de ver nada. Ese modal es el punto de handoff.
  *
- * MODOS:
- *   'asistido' → deja todo listo hasta la firma; el cliente firma (legal por defecto).
- *   'autonomo' → el agente firma con sign() (signMode entidad|apoderado) y presenta.
- *
- * ⚠️ TODO(live): partes que solo se afinan con el plazo ABIERTO + cert real:
- *   - AUTENTICACIÓN: el acceso a VEA usa certificado/Cl@ve. Para 'autonomo' hay
- *     que resolverla (Playwright clientCertificates si es TLS client-cert, o
- *     integración Cl@ve/AutoFirma si es flujo OS). Verificar en vivo.
- *   - Selector exacto del IFRAME del formulario y labels finos (capturados por
- *     texto; pueden requerir ajuste de tildes/mayúsculas).
- *   - Flujo APORTAR (input file) y botones Firmar/Presentar + captura del CSV.
+ * ALCANCE (decisión Mario 2026-07-10): SOLO modo 'asistido'. El Copiloto captura la
+ * sede en vivo y entrega al cliente/apoderado una guía hiperconcreta (capturas de la
+ * entrada + de la pantalla de acceso, prefill desde el expediente y checklist de
+ * documentos). NUNCA se autentica, firma ni presenta por el cliente. El modo
+ * 'autonomo' queda deshabilitado a propósito (requiere firma real XAdES/PAdES +
+ * certificado + revisión legal; ver copiloto-sede/signers/index.mjs).
  */
-import { sign } from '../signers/index.mjs';
 
-const PEG_ENTRY = 'https://ws094.juntadeandalucia.es/V_virtual/SolicitarTicket?v=PEG';
+// URL de entrada del PEG (Presentación Electrónica General) en la VEA nueva.
+const PEG_ENTRY =
+  'https://veaja.cloud.juntadeandalucia.es/inicio/procedimiento-detalle/PEG_VEA';
 
-// Mapa de campos del formulario VEA "Solicitud" → etiquetas capturadas.
-// Se rellena por etiqueta (robusto a cambios de id). Ajustar en vivo si hace falta.
-const SOLICITANTE = {
-  razonSocial: 'NOMBRE/RAZÓN SOCIAL/DENOMINACION',
-  primerApellido: 'PRIMER APELLIDO',
-  segundoApellido: 'SEGUNDO APELLIDO',
-  cif: 'DNI/NIE/CIF',
-  tipoVia: 'TIPO DE VÍA',
-  nombreVia: 'NOMBRE DE LA VÍA',
-  numero: 'NÚMERO',
-  provincia: 'PROVINCIA',
-  municipio: 'MUNICIPIO',
-  localidad: 'LOCALIDAD',
-  codPostal: 'COD.POSTAL',
-  telefonoMovil: 'TELÉFONO MÓVIL',
-  email: 'CORREO ELECTRÓNICO',
-};
+const SHOT = { type: 'png', fullPage: false };
 
 export async function tramitarJuntaAndalucia(job) {
-  const { expedienteId, formData = {}, files = [], mode = 'asistido', signMode = 'mock', procedimiento } = job;
-  const { chromium } = await import('playwright');
+  const {
+    expedienteId,
+    formData = {},
+    files = [],
+    mode = 'asistido',
+    procedimiento,
+  } = job;
 
-  // Contexto. Para 'autonomo' la auth con certificado se inyecta aquí.
-  // TODO(live): si VEA usa TLS client-cert → newContext({ clientCertificates:[{ origin, pfx, passphrase }] })
-  //   con el .pfx de custodia (lib/cert-store). Si usa Cl@ve (OS dialog) → integración aparte.
+  // El modo autónomo (firmar + presentar por el cliente) está fuera de alcance.
+  // Se rechaza explícito para que nadie dispare una presentación a medias.
+  if (mode === 'autonomo') {
+    return {
+      status: 'no_disponible',
+      message:
+        'El modo autónomo (firmar y presentar en nombre del cliente) está deshabilitado: ' +
+        'requiere firma real con certificado + revisión legal. Usa el modo asistido.',
+      sedeUrl: procedimiento?.entryUrl || PEG_ENTRY,
+    };
+  }
+
+  const { chromium } = await import('playwright');
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ locale: 'es-ES', acceptDownloads: true });
+  const context = await browser.newContext({
+    locale: 'es-ES',
+    viewport: { width: 1280, height: 900 },
+    acceptDownloads: false,
+  });
   const page = await context.newPage();
+  const evidencias = [];
 
   try {
-    // ── 1. Acceso a la sede (PEG genérico o procedimiento específico) ─────────
     const entry = procedimiento?.entryUrl || PEG_ENTRY;
-    await page.goto(entry, { waitUntil: 'domcontentloaded', timeout: 45000 });
 
-    // Aceptar cookies de VEA si aparece (propias, esenciales)
-    await page.getByRole('button', { name: /^ACEPTAR$/i }).click({ timeout: 5000 }).catch(() => {});
+    // ── 1. Página de entrada del procedimiento (pública) ─────────────────────
+    await page.goto(entry, { waitUntil: 'networkidle', timeout: 45000 });
+    await dismissCookies(page);
+    // El SPA carga el detalle async; esperamos a que aparezca el CTA.
+    await page
+      .getByRole('button', { name: /INICIAR SOLICITUD/i })
+      .waitFor({ state: 'visible', timeout: 20000 })
+      .catch(() => {});
 
-    // ── 2. Auth con certificado/Cl@ve ─────────────────────────────────────────
-    // En 'asistido' la hace el cliente (handoff). En 'autonomo' debe estar ya
-    // resuelta por el contexto (clientCertificates) — ver TODO(live) arriba.
-    if (mode === 'asistido') {
-      const evidencia = await page.screenshot({ fullPage: false }).then(
-        (b) => `data:image/png;base64,${b.toString('base64')}`, () => null);
-      await browser.close();
-      return {
-        status: 'handoff_firma',
-        message: 'Trámite preparado en la Ventanilla Electrónica de la Junta. El cliente debe autenticarse con su certificado/Cl@ve y firmar.',
-        sedeUrl: entry,
-        prefill: buildPrefill(formData),
-        checklist: buildChecklist(files),
-        evidencia,
-        siguientePaso: 'El cliente entra, se identifica con certificado/Cl@ve y firma.',
-      };
+    const procedimientoNombre = await page
+      .locator('h1')
+      .first()
+      .innerText()
+      .then((t) => t.trim())
+      .catch(() => '');
+
+    await capture(page, evidencias, 'entrada', 'Página de entrada del procedimiento en la Ventanilla Electrónica');
+
+    // ── 2. Pulsar INICIAR SOLICITUD → aparece el muro de autenticación ───────
+    // (No introducimos NIF ni credenciales: paramos justo en el handoff.)
+    let metodosAcceso = [];
+    const iniciar = page.getByRole('button', { name: /INICIAR SOLICITUD/i }).first();
+    if (await iniciar.isVisible().catch(() => false)) {
+      await iniciar.click({ timeout: 15000 }).catch(() => {});
+      await page
+        .getByRole('heading', { name: /Autenticarme con/i })
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .catch(() => {});
+
+      metodosAcceso = await detectarMetodosAcceso(page);
+      await capture(page, evidencias, 'acceso', 'Pantalla de acceso: identifícate con certificado digital o Cl@ve');
     }
 
-    // ── 3. AUTÓNOMO: completar Solicitud (formulario en iframe) ───────────────
-    await page.getByRole('button', { name: /COMPLETAR/i }).first().click({ timeout: 30000 });
-    const form = page.frameLocator('iframe'); // TODO(live): afinar selector del iframe
-    await fillSolicitud(form, formData);
-    await page.getByRole('button', { name: /Guardar y cerrar/i }).click({ timeout: 15000 });
-
-    // ── 4. APORTAR documentación obligatoria ──────────────────────────────────
-    // TODO(live): pulsar APORTAR y subir cada fichero (input[type=file]).
-    //   for (const f of files) await form.locator('input[type=file]').setInputFiles(f.path);
-
-    // ── 5. Firmar + Presentar ─────────────────────────────────────────────────
-    const firma = await sign({ signMode, expedienteId, cif: formData.org_cif,
-      certRef: { kind: signMode === 'apoderado' ? 'startidea' : 'entidad', cif: formData.org_cif } });
-    // TODO(live): pulsar "Firmar" (paso 2) y "Presentar" (paso 3); capturar el CSV/justificante.
     await browser.close();
+
     return {
-      status: firma.signed ? 'presentado' : 'error_firma',
-      signMode,
-      csv: firma.csv ?? null,
-      registro: firma.registro ?? null,
-      message: firma.detail,
+      status: 'handoff_firma',
+      message:
+        'Trámite localizado en la Ventanilla Electrónica de la Junta de Andalucía. ' +
+        'El cliente (o Startidea como apoderado) debe entrar, identificarse con ' +
+        'certificado digital o Cl@ve, rellenar la solicitud con los datos de abajo, ' +
+        'adjuntar los documentos y firmar.',
       sedeUrl: entry,
+      procedimiento: procedimientoNombre || 'Presentación Electrónica General (PEG)',
+      metodosAcceso: metodosAcceso.length ? metodosAcceso : ['certificado', 'clave'],
+      prefill: buildPrefill(formData),
+      checklist: buildChecklist(files),
+      evidencias, // [{ paso, titulo, imagen(dataURL) }]
+      evidencia: evidencias[0]?.imagen ?? null, // compat: primera captura
+      siguientePaso:
+        'Entrar en la sede, identificarse con certificado/Cl@ve, iniciar la solicitud, ' +
+        'copiar los datos del prefill, adjuntar los documentos del checklist y firmar.',
     };
   } finally {
     await browser.close().catch(() => {});
   }
 }
 
-// Rellena la sección Solicitante del formulario (en el iframe), por etiqueta.
-async function fillSolicitud(form, d) {
-  const set = async (label, value) => {
-    if (value === undefined || value === null || value === '') return;
-    // getByLabel es robusto; si falla, intentar por placeholder/nombre cercano.
-    await form.getByLabel(new RegExp(label, 'i')).fill(String(value)).catch(() => {});
-  };
-  await set(SOLICITANTE.razonSocial, d.org_nombre);
-  await set(SOLICITANTE.cif, d.org_cif);
-  await set(SOLICITANTE.provincia, d.provincia);
-  await set(SOLICITANTE.email, d.email);
-  await set(SOLICITANTE.telefonoMovil, d.telefono);
-  // Objeto del escrito (textarea de la sección Expone/Solicita)
-  if (d.descripcion_proyecto) {
-    await form.locator('textarea').first().fill(String(d.descripcion_proyecto)).catch(() => {});
-  }
-  // TODO(live): tipo de vía/municipio son selects (combo) — usar selectOption.
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+// Captura la pantalla actual como data-URL y la añade a la lista de evidencias.
+async function capture(page, evidencias, paso, titulo) {
+  const img = await page
+    .screenshot(SHOT)
+    .then((b) => `data:image/png;base64,${b.toString('base64')}`)
+    .catch(() => null);
+  if (img) evidencias.push({ paso, titulo, imagen: img });
 }
 
+// Cierra el banner de cookies (elige la opción más conservadora si existe).
+async function dismissCookies(page) {
+  for (const rx of [/rechazar/i, /solo.*esenciales/i, /aceptar/i]) {
+    const btn = page.getByRole('button', { name: rx }).first();
+    if (await btn.isVisible().catch(() => false)) {
+      await btn.click({ timeout: 3000 }).catch(() => {});
+      return;
+    }
+  }
+}
+
+// Detecta qué métodos de acceso ofrece el modal de autenticación.
+async function detectarMetodosAcceso(page) {
+  const metodos = [];
+  if (await page.getByRole('button', { name: /certificado/i }).first().isVisible().catch(() => false)) {
+    metodos.push('certificado');
+  }
+  if (await page.getByRole('button', { name: /cl@?ve/i }).first().isVisible().catch(() => false)) {
+    metodos.push('clave');
+  }
+  return metodos;
+}
+
+// Prefill: los datos del expediente que el cliente teclea tras identificarse.
+// Etiquetas alineadas con la sección "Solicitante" del formulario VEA.
 function buildPrefill(d) {
   return {
     razonSocial: d.org_nombre ?? '',
     nif: d.org_cif ?? '',
+    representante: d.representante ?? '',
     provincia: d.provincia ?? 'Granada',
+    telefono: d.telefono ?? '',
     email: d.email ?? '',
+    importeSolicitado: d.importe_solicitado ?? '',
     objeto: d.descripcion_proyecto ?? '',
   };
 }
 
+// Checklist de documentos obligatorios: marca cuáles ya vienen adjuntos al
+// expediente (docs_adjuntos) y cuáles el cliente debe subir en la sede.
+const DOCS_OBLIGATORIOS = [
+  { doc: 'memoria', etiqueta: 'Memoria técnica del proyecto' },
+  { doc: 'presupuesto', etiqueta: 'Presupuesto detallado' },
+  { doc: 'estatutos', etiqueta: 'Estatutos de la entidad' },
+  { doc: 'cif', etiqueta: 'Tarjeta de identificación fiscal (CIF)' },
+  { doc: 'hacienda', etiqueta: 'Certificado de estar al corriente con Hacienda' },
+  { doc: 'seguridad_social', etiqueta: 'Certificado de estar al corriente con la Seguridad Social' },
+];
+
 function buildChecklist(files) {
-  const tiene = new Set((files || []).map((f) => f.name));
-  return ['memoria', 'presupuesto', 'estatutos', 'hacienda', 'seguridad_social']
-    .map((doc) => ({ doc, adjunto: tiene.has(doc) }));
+  const nombres = (files || [])
+    .map((f) => (typeof f === 'string' ? f : f?.name ?? ''))
+    .join(' ')
+    .toLowerCase();
+  return DOCS_OBLIGATORIOS.map(({ doc, etiqueta }) => ({
+    doc,
+    etiqueta,
+    adjunto: nombres.includes(doc),
+  }));
 }

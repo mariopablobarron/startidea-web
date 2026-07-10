@@ -537,7 +537,7 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
                     <p class="mt-1 text-[10px] text-ink/75">
                       Prepara el trámite en la sede hasta la firma. El cliente firma con su certificado.
                     </p>
-                    <p id="tramitar-sede-result" class="mt-2 text-xs leading-relaxed"></p>
+                    <div id="tramitar-sede-result" class="mt-2 text-xs leading-relaxed"></div>
                   </div>
                 )}
                 {sedeDetectada.notasEspeciales && (
@@ -583,6 +583,66 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
     .find((r) => r.startsWith('startidea_admin='))
     ?.split('=')[1] ?? '';
 
+  function escHtml(s: unknown): string {
+    return String(s ?? '').replace(/[&<>"]/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
+  }
+
+  // Pinta el resultado de la tramitación asistida: capturas de la sede en vivo,
+  // datos a copiar en el formulario (prefill) y checklist de documentos.
+  function renderTramitarResult(out: HTMLElement, data: any): void {
+    const metodos = Array.isArray(data.metodosAcceso) ? data.metodosAcceso : [];
+    const prefill = data.prefill && typeof data.prefill === 'object' ? data.prefill : {};
+    const checklist = Array.isArray(data.checklist) ? data.checklist : [];
+    const evidencias = Array.isArray(data.evidencias) ? data.evidencias : [];
+
+    const PREFILL_LABELS: Record<string, string> = {
+      razonSocial: 'Nombre / Razón social', nif: 'DNI/NIE/CIF', representante: 'Representante',
+      provincia: 'Provincia', telefono: 'Teléfono', email: 'Correo electrónico',
+      importeSolicitado: 'Importe solicitado', objeto: 'Objeto / descripción',
+    };
+    const prefillRows = Object.entries(prefill)
+      .filter(([, v]) => v !== '' && v != null)
+      .map(([k, v]) => `<tr class="border-t border-blue-100">
+        <td class="py-1 pr-3 align-top text-ink/60 whitespace-nowrap">${escHtml(PREFILL_LABELS[k] ?? k)}</td>
+        <td class="py-1 font-mono text-ink select-all">${escHtml(v)}</td></tr>`).join('');
+
+    const checklistRows = checklist.map((c: any) =>
+      `<li class="flex items-start gap-2">
+        <span>${c.adjunto ? '✅' : '⬜'}</span>
+        <span class="${c.adjunto ? 'text-ink/75' : 'text-ink'}">${escHtml(c.etiqueta ?? c.doc)}${c.adjunto ? '' : ' <span class="text-yellow-700 text-[10px] uppercase tracking-wide">(el cliente lo sube en la sede)</span>'}</span>
+      </li>`).join('');
+
+    const shots = evidencias.map((ev: any) =>
+      `<figure class="border border-blue-200 bg-white">
+        <img src="${escHtml(ev.imagen)}" alt="${escHtml(ev.titulo)}" class="w-full block" loading="lazy" />
+        <figcaption class="px-2 py-1 text-[10px] text-ink/60 border-t border-blue-100">${escHtml(ev.titulo)}</figcaption>
+      </figure>`).join('');
+
+    out.className = 'mt-3 space-y-3';
+    out.innerHTML = `
+      <p class="text-green-700">✅ ${escHtml(data.message ?? 'Trámite preparado.')}</p>
+      ${data.procedimiento ? `<p class="text-[11px] text-ink/60">Procedimiento: <span class="text-ink">${escHtml(data.procedimiento)}</span></p>` : ''}
+      <p class="text-xs">
+        ${data.sedeUrl ? `<a href="${escHtml(data.sedeUrl)}" target="_blank" rel="noopener" class="border border-blue-300 bg-blue-600 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-white hover:bg-blue-700">Abrir sede ↗</a>` : ''}
+        ${metodos.length ? `<span class="ml-2 text-[11px] text-ink/60">Acceso: ${metodos.map((m: string) => m === 'clave' ? 'Cl@ve' : 'Certificado').map(escHtml).join(' · ')}</span>` : ''}
+      </p>
+      ${prefillRows ? `<div>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/60 mb-1">Datos para el formulario (copiar tras identificarse)</p>
+        <table class="w-full text-xs"><tbody>${prefillRows}</tbody></table>
+      </div>` : ''}
+      ${checklistRows ? `<div>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/60 mb-1">Documentos obligatorios</p>
+        <ul class="space-y-1 text-xs">${checklistRows}</ul>
+      </div>` : ''}
+      ${shots ? `<div>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-ink/60 mb-1">Sede en vivo (capturas)</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${shots}</div>
+      </div>` : ''}
+      ${data.siguientePaso ? `<p class="text-[11px] text-ink/60 border-t border-blue-100 pt-2">→ ${escHtml(data.siguientePaso)}</p>` : ''}
+    `;
+  }
+
   // Tramitación asistida en sede (Fase 2 — container copiloto-sede)
   document.getElementById('btn-tramitar-sede')?.addEventListener('click', async (e) => {
     const btn = e.currentTarget as HTMLButtonElement;
@@ -599,10 +659,7 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
       });
       const data = await res.json();
       if (res.ok && data.ok) {
-        out.className = 'mt-2 text-xs leading-relaxed text-green-700';
-        out.innerHTML = `✅ ${data.message ?? 'Trámite preparado.'}` +
-          (data.sedeUrl ? ` <a href="${data.sedeUrl}" target="_blank" rel="noopener" class="underline">Abrir sede ↗</a>` : '') +
-          (data.siguientePaso ? `<br><span class="text-ink/75">${data.siguientePaso}</span>` : '');
+        renderTramitarResult(out, data);
       } else {
         out.className = 'mt-2 text-xs leading-relaxed text-red-600';
         out.textContent = `⚠ ${data.detail ?? data.error ?? 'Error desconocido'}`;

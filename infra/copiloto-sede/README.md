@@ -1,3 +1,9 @@
+> ⚠️ **DEPRECADO (2026-07-10).** Este prototipo quedó huérfano (nunca se integró en
+> `startidea-web`). El microservicio **canónico** de Fase 2 es **`copiloto-sede/`** (raíz
+> del repo), que ya está cableado al admin (`/api/admin/tramitar-sede`) y cuyo driver
+> `junta-andalucia` fue reescrito contra la VEA nueva (`veaja.cloud.juntadeandalucia.es`)
+> en modo asistido. No añadir código aquí; usar el de la raíz.
+
 # copiloto-sede — guía visual de sedes electrónicas (Fase 2a)
 
 Microservicio Playwright que abre la sede electrónica de una convocatoria,

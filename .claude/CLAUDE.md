@@ -125,10 +125,22 @@ Ejemplos útiles:
 - ~~S4: newsletter segmentation + Google AdGrants landing~~ ✅ DONE (2026-05-26)
 - ~~S5: Startidea Lab Cursos~~ ✅ DONE (2026-05-26) — 3 cursos publicados
 
-- S6: Copiloto de Subvenciones — Fase 2 (Playwright sede electrónica)
-  - Admin panel placeholder en `/admin/expedientes/[id]` → sección "Fase 2 — Automatización sede electrónica"
-  - Pendiente: implementar por sede (Junta de Andalucía, BDNS/infosubvenciones.es, OEPM...)
-  - Requiere container separado con Playwright (NO meter en imagen principal)
+- S6: Copiloto de Subvenciones — Fase 2 (Playwright sede electrónica) — EN CURSO
+  - **Alcance: SOLO tramitación ASISTIDA** (decisión Mario 2026-07-10). El Copiloto
+    captura la sede en vivo y entrega al cliente/apoderado una guía hiperconcreta
+    (capturas de entrada + acceso, prefill del expediente, checklist de docs). NUNCA
+    se autentica, firma ni presenta por el cliente. El modo `autonomo` está
+    deshabilitado a propósito (firma real XAdES/PAdES + revisión legal, fuera de alcance).
+  - Microservicio canónico: **`copiloto-sede/`** (raíz). El otro, `infra/copiloto-sede/`,
+    quedó DEPRECADO (huérfano). Container separado con Playwright, NO en la imagen principal.
+  - Junta de Andalucía: la VEA se migró a `veaja.cloud.juntadeandalucia.es` (SPA). El
+    driver `copiloto-sede/drivers/junta-andalucia.mjs` reescrito contra ella (2026-07-10):
+    captura entrada + modal de acceso (certificado/Cl@ve), no hay formulario público
+    (el muro de auth aparece al pulsar INICIAR SOLICITUD). Admin `/admin/expedientes/[id]`
+    pinta capturas + prefill + checklist.
+  - **Pendiente**: desplegar el container `copiloto-sede/` en la VPS (ver `copiloto-sede/DEPLOY.md`)
+    y setear `COPILOTO_SEDE_URL` + `COPILOTO_SEDE_SECRET` en el .env de startidea-web.
+    Otras sedes (BDNS/infosubvenciones.es, OEPM, Diputación) son V2.
 
 - ~~S7 (editorial): 2-3 notas adicionales~~ ✅ DONE (2026-05-26)
   - roi-tramitar-subvenciones-agencia.md
