@@ -1,0 +1,23 @@
+src/content/diagnosticos/asociacion-educativa-subvencion-municipal.md
+  s_1768f5d6965396::t_da387ced32202a 20
+src/content/diagnosticos/fundacion-cultural-ingresos-propios.md
+  s_1768f5d6965396::t_337b3f449e04e7 20
+src/content/diagnosticos/fundacion-ambiental-fondo-europeo.md
+  s_1768f5d6965396::t_46e9b79b959a88 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4b77e0a9d1aea1b3d815840b0bf175193f225a44",
+  "prompts": {},
+  "sessions": {
+    "s_1768f5d6965396": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "106ba66f-9805-4e3f-b1e2-5fe688711486",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
