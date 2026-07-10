@@ -17,7 +17,7 @@ edad_media_donante: 44
 base_social: 210
 duracion_diagnostico: "6 semanas"
 permitir_descarga: false
-draft: true
+draft: false
 ---
 
 ## Contexto
