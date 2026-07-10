@@ -1,0 +1,19 @@
+astro.config.mjs
+  s_71c49a0e297064::t_3907226244ca00 108-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "44faf9f8f46e5da4ff1116a49763b51c0a20395e",
+  "prompts": {},
+  "sessions": {
+    "s_71c49a0e297064": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1eeaffc2-54eb-44e5-bf10-633d00043908",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
