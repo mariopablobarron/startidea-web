@@ -49,6 +49,8 @@ const diagnosticos = defineCollection({
       'Salud',
       'Medio ambiente',
       'Cultura',
+      'Igualdad y género',
+      'Animalismo',
       'Multi-causa',
     ]),
     geografia: z.enum(['Local', 'Regional', 'Estatal', 'Internacional']),
