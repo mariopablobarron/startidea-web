@@ -1,0 +1,21 @@
+src/content/notas/social-media-tercer-sector-granada.md
+  s_4837a6f157c458::t_d8bec6e0a38061 87,91
+src/pages/que-hacemos.astro
+  s_4837a6f157c458::t_d8bec6e0a38061 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "361f5511f0cd1e34e67b29974afb1ba6211df9ee",
+  "prompts": {},
+  "sessions": {
+    "s_4837a6f157c458": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "473af6b0-812e-480c-b1b3-16a6e49957c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
