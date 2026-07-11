@@ -1,8 +1,9 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { esPublicado } from '@/lib/publicado';
 
-const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
+const all = await getCollection('diagnosticos', ({ data }) => esPublicado(data));
 all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long' });

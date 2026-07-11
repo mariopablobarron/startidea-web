@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { renderOg, type OgInput } from '@/lib/og';
 import { casos } from '@/data/casos';
 import { audiencias } from '@/data/audiencias';
+import { esPublicado } from '@/lib/publicado';
 
 // ─── Catálogo de OGs ────────────────────────────────────────
 // Cada slug → input para renderOg
@@ -324,7 +325,7 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
   }
 
   // Notas individuales (Content Collection)
-  const notas = await getCollection('notas', ({ data }) => !data.draft);
+  const notas = await getCollection('notas', ({ data }) => esPublicado(data));
   for (const nota of notas) {
     const fmt = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' });
     catalog[`notas/${nota.slug}`] = {

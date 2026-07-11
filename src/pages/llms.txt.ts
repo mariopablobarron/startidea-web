@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { SITE_URL } from '@/lib/jsonld';
+import { esPublicado } from '@/lib/publicado';
 
 /**
  * /llms.txt — índice curado para crawlers y agentes de IA (ChatGPT,
@@ -10,7 +11,7 @@ import { SITE_URL } from '@/lib/jsonld';
  * Spec: https://llmstxt.org
  */
 export async function GET(_context: APIContext) {
-  const notas = await getCollection('notas', ({ data }) => !data.draft);
+  const notas = await getCollection('notas', ({ data }) => esPublicado(data));
   notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   const notaLines = notas

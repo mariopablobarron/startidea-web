@@ -2,8 +2,9 @@
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { esPublicado } from '@/lib/publicado';
 
-const notas = await getCollection('notas', ({ data }) => !data.draft);
+const notas = await getCollection('notas', ({ data }) => esPublicado(data));
 notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });

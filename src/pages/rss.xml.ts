@@ -1,9 +1,10 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
+import { esPublicado } from '@/lib/publicado';
 
 export async function GET(context: APIContext) {
-  const notas = await getCollection('notas', ({ data }) => !data.draft);
+  const notas = await getCollection('notas', ({ data }) => esPublicado(data));
   notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   return rss({

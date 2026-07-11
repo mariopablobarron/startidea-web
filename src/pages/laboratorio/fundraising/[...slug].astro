@@ -2,9 +2,10 @@
 import Base from '@/layouts/Base.astro';
 import { getCollection, getEntry } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
+import { esPublicado } from '@/lib/publicado';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
+  const all = await getCollection('diagnosticos', ({ data }) => esPublicado(data));
   return all.map((entry) => ({ params: { slug: entry.slug } }));
 };
 
@@ -38,7 +39,7 @@ const mezcla = Object.entries(d.mezcla_ingresos)
   }));
 
 // Otros diagnósticos (excluyendo el actual)
-const todos = await getCollection('diagnosticos', ({ data }) => !data.draft);
+const todos = await getCollection('diagnosticos', ({ data }) => esPublicado(data));
 const otros = todos
   .filter((e) => e.slug !== entry.slug)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())

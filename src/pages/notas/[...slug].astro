@@ -3,9 +3,10 @@ import Base from '@/layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { blogPostingSchema, breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import { esPublicado } from '@/lib/publicado';
 
 export async function getStaticPaths() {
-  const notas = await getCollection('notas', ({ data }) => !data.draft);
+  const notas = await getCollection('notas', ({ data }) => esPublicado(data));
   // Ordenadas por fecha desc para construir prev/next
   notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   return notas.map((nota, i) => ({
