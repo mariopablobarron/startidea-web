@@ -1,0 +1,24 @@
+copiloto-sede/DEPLOY.md
+  s_f745cdd4f0889c::t_1d9479e6bc23e8 6-21
+copiloto-sede/Dockerfile
+  s_f745cdd4f0889c::t_7400da904f1971 7
+  s_f745cdd4f0889c::t_c4c757ee70bf52 4-6
+copiloto-sede/package.json
+  s_f745cdd4f0889c::t_9328e813f37f10 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "61d0cccdd3a217faec7693994ae9fa397f52455c",
+  "prompts": {},
+  "sessions": {
+    "s_f745cdd4f0889c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3469f8d1-2507-49da-9fcf-cbb8904dd9d0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
