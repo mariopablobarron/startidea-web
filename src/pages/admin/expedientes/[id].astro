@@ -570,6 +570,23 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
             )}
           </div>
 
+          <!-- Buscar convocatorias en vivo (Tavily) -->
+          <div class="border border-dashed border-ink/25 bg-paper/50 p-5">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-2">🔎 Convocatorias en vivo</h2>
+            <p class="text-xs text-ink/75 mb-2">
+              Busca ayudas/convocatorias abiertas relacionadas con este expediente en fuentes
+              oficiales (BOJA, BDNS, BOE, Diputación).
+            </p>
+            <button
+              id="btn-buscar-convocatorias"
+              data-expid={exp.id}
+              class="border border-ink/25 bg-white px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink hover:bg-ink hover:text-paper disabled:opacity-50"
+            >
+              Buscar en vivo
+            </button>
+            <div id="buscar-convocatorias-result" class="mt-3 text-xs leading-relaxed"></div>
+          </div>
+
         </div>
       </div>
 
@@ -666,6 +683,55 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
       }
     } catch (err) {
       out.className = 'mt-2 text-xs leading-relaxed text-red-600';
+      out.textContent = `⚠ ${(err as Error).message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // Buscar convocatorias en vivo (Tavily)
+  function renderConvocatorias(out: HTMLElement, data: any): void {
+    const results = Array.isArray(data.results) ? data.results : [];
+    if (!results.length) {
+      out.className = 'mt-3 text-xs text-ink/75';
+      out.textContent = 'No se encontraron convocatorias abiertas relacionadas en fuentes oficiales.';
+      return;
+    }
+    const items = results.map((r: any) => `
+      <li class="border-t border-ink/10 py-2">
+        <a href="${escHtml(r.url)}" target="_blank" rel="noopener" class="font-medium text-blue-700 underline">${escHtml(r.title || r.url)}</a>
+        ${r.content ? `<p class="mt-0.5 text-ink/70">${escHtml(String(r.content).slice(0, 220))}…</p>` : ''}
+      </li>`).join('');
+    out.className = 'mt-3 space-y-2';
+    out.innerHTML = `
+      ${data.answer ? `<div class="border-l-2 border-blue-300 bg-blue-50/40 px-3 py-2 text-ink/80">${escHtml(data.answer)}</div>` : ''}
+      <ul class="text-xs">${items}</ul>
+      <p class="text-[10px] text-ink/50">Búsqueda web en vivo (Tavily) · verifica siempre en la sede oficial antes de tramitar.</p>
+    `;
+  }
+
+  document.getElementById('btn-buscar-convocatorias')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const id = btn.dataset.expid!;
+    const out = document.getElementById('buscar-convocatorias-result')!;
+    btn.disabled = true;
+    out.className = 'mt-3 text-xs text-ink/75';
+    out.textContent = 'Buscando en fuentes oficiales…';
+    try {
+      const res = await fetch('/api/admin/buscar-convocatorias', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        renderConvocatorias(out, data);
+      } else {
+        out.className = 'mt-3 text-xs text-red-600';
+        out.textContent = `⚠ ${data.detail ?? data.error ?? 'Error'}`;
+      }
+    } catch (err) {
+      out.className = 'mt-3 text-xs text-red-600';
       out.textContent = `⚠ ${(err as Error).message}`;
     } finally {
       btn.disabled = false;
