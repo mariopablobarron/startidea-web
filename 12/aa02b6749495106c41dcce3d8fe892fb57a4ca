@@ -1,0 +1,26 @@
+src/content/notas/transparencia-cuentas-claras-captacion.md
+  s_a3deb8e1843a3f::t_a0be8dc701a756 1-9,11-55
+  s_a3deb8e1843a3f::t_6da783f74fd66c 10
+src/content/notas/voluntariado-corporativo-sin-postureo.md
+  s_a3deb8e1843a3f::t_1d32e94ebecf83 1-9,11-52
+  s_a3deb8e1843a3f::t_6da783f74fd66c 10
+src/content/notas/legados-herencias-solidarias-tercer-sector.md
+  s_a3deb8e1843a3f::t_dc8eadf58531ad 1-9,11-68
+  s_a3deb8e1843a3f::t_6da783f74fd66c 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "12aa02b6749495106c41dcce3d8fe892fb57a4ca",
+  "prompts": {},
+  "sessions": {
+    "s_a3deb8e1843a3f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4926c62d-2dca-4382-80a8-5a268a7222b0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
