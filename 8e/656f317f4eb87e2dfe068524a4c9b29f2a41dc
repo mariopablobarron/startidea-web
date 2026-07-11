@@ -1,0 +1,49 @@
+src/pages/rss.xml.ts
+  s_4837a6f157c458::t_71f8a3400b775a 4,7
+src/pages/og/[...slug].png.ts
+  s_4837a6f157c458::t_71f8a3400b775a 6,328
+src/pages/llms.txt.ts
+  s_4837a6f157c458::t_71f8a3400b775a 4,14
+src/pages/subvenciones/presentar/index.astro
+  s_4837a6f157c458::t_71f8a3400b775a 77-113
+src/pages/fundraising.astro
+  s_4837a6f157c458::t_71f8a3400b775a 198-234
+src/pages/comunicacion.astro
+  s_4837a6f157c458::t_71f8a3400b775a 205-241
+src/pages/laboratorio/fundraising/index.astro
+  s_4837a6f157c458::t_71f8a3400b775a 4,6
+src/pages/laboratorio/fundraising/[...slug].astro
+  s_4837a6f157c458::t_71f8a3400b775a 5,8,42
+src/pages/notas.astro
+  s_4837a6f157c458::t_71f8a3400b775a 5,7
+src/pages/llms-full.txt.ts
+  s_4837a6f157c458::t_71f8a3400b775a 4,13,30-44,47-53
+src/pages/notas/[...slug].astro
+  s_4837a6f157c458::t_71f8a3400b775a 6,9
+src/lib/publicado.ts
+  s_ec44def1cccb1b::t_53018737949a65 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "8e656f317f4eb87e2dfe068524a4c9b29f2a41dc",
+  "prompts": {},
+  "sessions": {
+    "s_4837a6f157c458": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "473af6b0-812e-480c-b1b3-16a6e49957c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_ec44def1cccb1b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "286fba12-9e4e-4571-b9da-404d09010c90",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
