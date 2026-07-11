@@ -1,0 +1,24 @@
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_88ade79bcee620 692-740
+  s_0ab79ba551035b::t_4d0e47347e5435 573-589
+src/pages/api/admin/buscar-convocatorias.ts
+  s_0ab79ba551035b::t_742f001cc54f42 1-87
+src/lib/tavily.ts
+  s_0ab79ba551035b::t_c59e90757db20e 1-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "fe3f2e3c25271b15f25eac0077d8b06dcebbfe98",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
