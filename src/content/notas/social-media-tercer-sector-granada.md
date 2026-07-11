@@ -84,8 +84,8 @@ Una agencia externa aporta valor real en tres escenarios bien definidos:
 
 No tiene sentido subcontratar si lo que se busca es "subir publicaciones porque hay que estar": el resultado son publicaciones sin alma que la audiencia detecta a los tres segundos. Las redes sin una estrategia editorial detrás cuestan dinero y no devuelven nada — sea quien sea quien las gestione.
 
-Una agencia local en Granada con experiencia real en tercer sector puede acompañar a una organización entre 700 y 1.800 euros mensuales según el alcance: solo planificación + revisión, o producción completa con diseño + redacción + comunidad.
+Una [agencia de social media en Granada](/redes-sociales-granada) con experiencia real en tercer sector puede acompañar a una organización entre 700 y 1.800 euros mensuales según el alcance: solo planificación + revisión, o producción completa con diseño + redacción + comunidad.
 
 ---
 
-Startidea trabaja la comunicación digital de organizaciones sociales en Granada desde 2011. Si tu entidad está en este punto y quiere hablar sobre qué dedicación tiene sentido en tu caso, [reserva 30 minutos](/contacto): hablamos de qué tienes, qué te falta y si encajamos. Sin compromiso.
+Startidea trabaja la comunicación digital de organizaciones sociales en Granada desde 2011, tanto en la [gestión de redes sociales en Granada](/redes-sociales-granada) como en la [comunicación estratégica](/comunicacion) completa. Si tu entidad está en este punto y quiere hablar sobre qué dedicación tiene sentido en tu caso, [reserva 30 minutos](/contacto): hablamos de qué tienes, qué te falta y si encajamos. Sin compromiso.
