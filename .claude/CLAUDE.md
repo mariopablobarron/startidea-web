@@ -151,3 +151,7 @@ Ejemplos útiles:
 
 - API key OpenRouter, GOOGLE_CLIENT_SECRET, ADMIN_TOKEN, etc. NUNCA en commits.
 - Si encuentras un secret expuesto en código, pídeme que lo rote antes de cualquier otro cambio.
+- Variables nuevas (2026-07-11) que viven SOLO en el `.env` del container Coolify:
+  `COPILOTO_SEDE_URL` + `COPILOTO_SEDE_SECRET` (Fase 2 sede), y `TAVILY_API_KEY`
+  (búsqueda de convocatorias en vivo, `src/lib/tavily.ts`). PENDIENTE: reflejar
+  `TAVILY_API_KEY=` como placeholder en `.env.example` (Claude no puede editar `.env*`).
