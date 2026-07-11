@@ -1,0 +1,26 @@
+src/content/config.ts
+  s_a3deb8e1843a3f::t_b47885a50988c3 52
+  s_a3deb8e1843a3f::t_fb1b2d4bbdf1e8 53
+src/content/diagnosticos/federacion-pacientes-enfermedad-rara.md
+  s_a3deb8e1843a3f::t_5abe6210848a6a 1-73
+src/content/diagnosticos/protectora-animalista-microdonantes.md
+  s_a3deb8e1843a3f::t_87c2bffbe447e9 1-73
+src/content/diagnosticos/asociacion-igualdad-pacto-estado.md
+  s_a3deb8e1843a3f::t_1db3c23b50e6b6 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "d2a56af860b6b7e83c5f49e7147753897d3309cd",
+  "prompts": {},
+  "sessions": {
+    "s_a3deb8e1843a3f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4926c62d-2dca-4382-80a8-5a268a7222b0",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
