@@ -3,6 +3,22 @@
 Pasos para activar la tramitación automática en producción. Hazlos en orden.
 Los `<placeholders>` los rellenas tú. **Ningún secreto va al repo.**
 
+> **⚠️ Alcance actual = SOLO modo asistido.** El modo asistido NO firma ni
+> autentica: solo captura la sede en vivo y devuelve prefill + checklist + capturas.
+> Por eso **NO necesita certificados**: sáltate los pasos 0 (`CERT_MASTER_KEY`),
+> 1 y 2 (cifrar/subir el `.pfx`) y las env vars `CERT_*` del paso 4. El ÚNICO
+> secreto necesario es `COPILOTO_SEDE_SECRET`. Los pasos de certificados solo
+> aplican el día que se habilite el modo autónomo (firma real, hoy fuera de alcance).
+>
+> **Estado 2026-07-11: DESPLEGADO y verificado en srv1456258.** Container
+> `copiloto-sede` (imagen base `mcr.microsoft.com/playwright:v1.61.1-jammy`) en
+> red `coolify`, puerto 8090 interno, sin certs. Código en `/docker/copiloto-src`,
+> secreto en `/root/copiloto-sede.secret` (600). `startidea-web` ya tiene las 2
+> env vars. Para rebuild: `cd /docker/copiloto-src/copiloto-sede && docker build
+> -t copiloto-sede . && docker rm -f copiloto-sede && docker run -d --name
+> copiloto-sede --restart unless-stopped --network coolify --shm-size=1gb
+> -e COPILOTO_SEDE_SECRET="$(cat /root/copiloto-sede.secret)" copiloto-sede`.
+
 > Resumen del flujo: cifras tu certificado en local → subes solo el cifrado al
 > VPS → arrancas el container `copiloto-sede` (red interna) → das 2 env vars a
 > `startidea-web` → conectas el MCP. Verificas en cada paso.

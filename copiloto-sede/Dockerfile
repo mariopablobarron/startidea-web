@@ -1,7 +1,10 @@
 # Copiloto Fase 2 — container Playwright SEPARADO.
 # Imagen oficial de Playwright (trae Chromium + todas las deps del SO).
 # NUNCA fusionar con la imagen de startidea-web (regla: Playwright fuera del main).
-FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+# ⚠️ La versión de esta imagen DEBE coincidir EXACTAMENTE con la de "playwright"
+# en package.json (pin exacto, sin ^). Si divergen, Chromium no arranca:
+# "Executable doesn't exist at /ms-playwright/chromium_headless_shell-...".
+FROM mcr.microsoft.com/playwright:v1.61.1-jammy
 
 WORKDIR /app
 
