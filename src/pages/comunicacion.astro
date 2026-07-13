@@ -9,6 +9,13 @@ import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } f
 const rango = rangoPublico('/comunicacion');
 const casosSlugs = ['granada-social-5', 'proyecto-hombre', 'clinica-baca'];
 
+// Meta description con promesa concreta (precio público desde + gestión mensual)
+// para mejorar el CTR en el clúster «comunicación para ONG» (pos ~8, 0 clics).
+// Dinámica desde rangoPublico para no hardcodear ni desviarse de los precios reales.
+const metaDesc = rango
+  ? `Comunicación para ONG desde ${fmtEur(rango.desde)}${rango.mensualDesde ? ` y gestión de redes desde ${fmtEur(rango.mensualDesde)}/mes` : ''}. Estrategia, contenidos e identidad para el tercer sector. Agencia en Granada.`
+  : 'Comunicación estratégica y marketing social para ONG, instituciones y empresas con propósito. Agencia con sede en Granada.';
+
 const faqs = [
   {
     question: '¿Qué incluye el servicio de comunicación estratégica de Startidea?',
@@ -178,7 +185,7 @@ const proceso = [
 
 <Base
   title="Agencia de comunicación para ONG y tercer sector — Startidea"
-  description="Comunicación estratégica, marketing social y gestión de redes sociales (social media) para tercer sector, instituciones y empresas con propósito. Agencia con sede en Granada: estrategia, contenidos, identidad visual y campañas de captación."
+  description={metaDesc}
   ogSlug="page/comunicacion"
   jsonLd={jsonLd}
 >
