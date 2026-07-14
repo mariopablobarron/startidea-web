@@ -1,7 +1,8 @@
 ---
 title: 'Plan de comunicación para una ONG: estructura, pasos y errores frecuentes'
-description: 'Cómo construir un plan de comunicación real para una ONG, fundación o asociación. No el documento que nadie lee: el plan que orienta decisiones durante doce meses.'
+description: 'Guía del plan de comunicación de una ONG o fundación: los 6 elementos que lo sostienen, el calendario de 12 meses, los 5 errores más frecuentes y un checklist de estructura para empezar.'
 pubDate: 2026-05-26
+updatedDate: 2026-07-14
 tldr: 'Un plan de comunicación útil para una ONG no es el documento que nadie lee, sino el que orienta decisiones durante doce meses. Se sostiene sobre seis elementos —objetivos, públicos, mensajes, canales, calendario y medición— y reconoce con honestidad lo que la comunicación no puede resolver por sí sola.'
 category: 'Comunicación'
 audience: 'Tercer sector'
@@ -99,6 +100,23 @@ El plan sin métricas no es un plan: es una lista de intenciones. Los indicadore
 - **Pocos** (tres o cuatro por objetivo, no veinte métricas que nadie revisa)
 
 La revisión trimestral es una reunión de dos horas donde se comparan los indicadores con el plan, se entiende por qué algo no ha funcionado y se ajusta el calendario siguiente. Sin esta reunión, el plan es papel.
+
+## Checklist de estructura del plan
+
+Para pasar de la teoría al documento, esta es la estructura mínima que debería contener el plan de comunicación de una ONG. Sirve como índice de partida —adaptable al tamaño y a la madurez de cada organización—:
+
+- **1. Diagnóstico**: auditoría de mensajes, audiencias reales, canales con tracción y mapa de activos de los últimos doce meses.
+- **2. Objetivos**: tres o cuatro objetivos de comunicación alineados con la estrategia de la organización, cada uno con su indicador.
+- **3. Audiencias**: entre cuatro y seis, definidas por quién son, qué les preocupa, qué necesitan para actuar y dónde están.
+- **4. Narrativa y mensajes**: el relato central y los mensajes clave derivados para cada audiencia.
+- **5. Canales y formatos**: los dos o tres canales prioritarios y la razón de cada uno; qué se descarta y por qué.
+- **6. Calendario editorial**: frecuencia por canal, hitos del año, campañas con fecha y responsable, y contenidos reutilizables.
+- **7. Presupuesto**: coste de producción y, sobre todo, de distribución. Un plan sin partida de distribución es contenido para el archivo.
+- **8. Medición y revisión**: los indicadores por objetivo y la fecha fija de la revisión trimestral.
+
+Una ONG pequeña puede resolver este índice en un documento de diez páginas; una organización con varias líneas de programa necesitará más. Lo que no cambia con el tamaño es el orden: sin diagnóstico no hay objetivos realistas, y sin medición el plan no es un plan.
+
+En el caso de una **ONG internacional o de cooperación**, la estructura es la misma, pero se añaden dos capas: la coordinación de mensajes entre sede y terreno (para que la narrativa sea coherente sin borrar la voz local) y la adaptación cultural e idiomática de cada pieza, que es mucho más que una traducción.
 
 ## Lo que el plan no puede resolver
 
