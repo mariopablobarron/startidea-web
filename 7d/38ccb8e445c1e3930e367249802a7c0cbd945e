@@ -1,0 +1,36 @@
+src/pages/telar.astro
+  s_0ab79ba551035b::t_fd9fe3920c7d26 125
+  s_0ab79ba551035b::t_93c97bd5585271 82
+src/content/diagnosticos/asociacion-discapacidad-andaluzia.md
+  s_0ab79ba551035b::t_d5e2f65847aa9d 27
+src/pages/redes-sociales-ia.astro
+  s_0ab79ba551035b::t_05028b21d5e1bf 85
+src/content/diagnosticos/asociacion-mayores-local.md
+  s_0ab79ba551035b::t_2a1cd8d526925a 27
+src/content/diagnosticos/sal-fundacion-cooperacion.md
+  s_0ab79ba551035b::t_8e8bef95022b64 27
+src/components/MobileCtaBar.astro
+  s_0ab79ba551035b::t_7bb6b3c147bada 17
+src/pages/index.astro
+  s_0ab79ba551035b::t_4faf85af5bac35 3
+src/styles/global.css
+  s_0ab79ba551035b::t_b45177f5b9f414 41-56
+node_modules
+  s_0ab79ba551035b::t_e9f55858adb25e 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "7d38ccb8e445c1e3930e367249802a7c0cbd945e",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
