@@ -24,7 +24,7 @@ draft: false
 
 Asociación local de una capital de provincia, fundada hace 38 años, presupuesto anual de 240.000 €, equipo de 4 personas más voluntariado. Causa: acompañamiento, soledad no deseada y atención sociosanitaria a personas mayores. Trabajo intenso de proximidad: 320 personas atendidas activamente cada año.
 
-Llegamos por petición de la nueva dirección — una incorporación reciente que detectó algo que el patronato fundador no veía con claridad: la base social estaba intacta en número, pero envejecía con la organización.
+Startidea llegó por petición de la nueva dirección — una incorporación reciente que detectó algo que el patronato fundador no veía con claridad: la base social estaba intacta en número, pero envejecía con la organización.
 
 ## Situación de partida — la radiografía
 

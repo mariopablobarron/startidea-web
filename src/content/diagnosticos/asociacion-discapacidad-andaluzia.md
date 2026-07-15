@@ -24,7 +24,7 @@ draft: false
 
 Federación regional con catorce entidades miembro, dirección compartida con presidencia y un equipo técnico de catorce personas. Veintiocho años de historia, presupuesto medio anual de 1,8 M€, gestión profesional de proyectos europeos y autonómicos. Causa con consenso social transversal: discapacidad. La conversación interna estaba puesta en cómo aprovechar los próximos fondos europeos de inclusión, no en otras fuentes.
 
-Llegamos cuando el patronato pidió un diagnóstico tras una reducción del 12% en una de las convocatorias anuales de la Junta. La pregunta era: *"¿podemos diversificar antes de que la próxima recorte sea peor?"*. La respuesta corta era sí, pero no por el camino que esperaban.
+Startidea llegó cuando el patronato pidió un diagnóstico tras una reducción del 12% en una de las convocatorias anuales de la Junta. La pregunta era: *"¿podemos diversificar antes de que la próxima recorte sea peor?"*. La respuesta corta era sí, pero no por el camino que esperaban.
 
 ## Situación de partida — la radiografía
 

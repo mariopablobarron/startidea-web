@@ -38,6 +38,22 @@
     @apply bg-magenta text-paper;
   }
 
+  /* WCAG 2.4.7 — los inputs .sr-only (chips radio/checkbox de los wizards) no
+     muestran foco de teclado; damos el foco visible al label contenedor. */
+  label:has(input.sr-only:focus-visible) {
+    outline: 2px solid #e6356b;
+    outline-offset: 2px;
+  }
+
+  /* Tablas de Markdown: con overflow-x:clip global las tablas anchas se recortan
+     en móvil sin pista visual. display:block + overflow-x:auto las hace scrollables. */
+  .prose-startidea :is(table),
+  .prose-editorial :is(table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   /* Display: Montserrat 800 (extrabold) por defecto — peso brutal pero limpio.
      H1 sube a 900 (black) para máxima jerarquía */
   h1, h2, h3 {

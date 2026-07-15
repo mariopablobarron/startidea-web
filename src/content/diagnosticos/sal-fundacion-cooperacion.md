@@ -24,7 +24,7 @@ draft: false
 
 Fundación de cooperación internacional con presencia en seis países, equipo técnico estable y reconocimiento sectorial. Veintidós años de trayectoria, sede central en una capital de provincia y delegaciones en dos ciudades más. Patronato profesional, dirección con largo recorrido en el sector. Trabaja sobre todo en proyectos plurianuales con la AECID y agencias multilaterales.
 
-Cuando llegamos, su discurso interno era claro: *"vivimos al borde del precipicio cada vez que se publica la próxima orden de convocatoria"*. La sensación coincidía con los números, pero no por las razones obvias.
+Cuando Startidea entró, su discurso interno era claro: *"vivimos al borde del precipicio cada vez que se publica la próxima orden de convocatoria"*. La sensación coincidía con los números, pero no por las razones obvias.
 
 ## Situación de partida — la radiografía
 
