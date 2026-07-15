@@ -34,7 +34,11 @@ if (Astro.request.method === "POST") {
     error = "Token inválido";
   } else {
     const next = String(data.get("next") ?? "/") || "/";
-    return Astro.redirect(next.startsWith("/") ? next : "/");
+    // Solo rutas internas: rechazar protocol-relative (//evil.com) y /\evil.com,
+    // que empiezan por "/" pero redirigen a host externo (open redirect).
+    const safeNext =
+      next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : "/admin";
+    return Astro.redirect(safeNext);
   }
 } else if (isAdminLoggedIn(Astro.cookies)) {
   return Astro.redirect("/admin");

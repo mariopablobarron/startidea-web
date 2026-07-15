@@ -697,11 +697,20 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
       out.textContent = 'No se encontraron convocatorias abiertas relacionadas en fuentes oficiales.';
       return;
     }
-    const items = results.map((r: any) => `
+    const items = results.map((r: any) => {
+      // Solo enlazar URLs http(s) reales; cualquier otro esquema (javascript:, data:)
+      // se degrada a texto plano para no crear un XSS en la sesión admin.
+      const safe = typeof r.url === 'string' && /^https?:\/\//i.test(r.url) ? r.url : '';
+      const label = escHtml(r.title || r.url || '(sin título)');
+      const head = safe
+        ? `<a href="${escHtml(safe)}" target="_blank" rel="noopener" class="font-medium text-blue-700 underline">${label}</a>`
+        : `<span class="font-medium text-ink/70">${label}</span>`;
+      return `
       <li class="border-t border-ink/10 py-2">
-        <a href="${escHtml(r.url)}" target="_blank" rel="noopener" class="font-medium text-blue-700 underline">${escHtml(r.title || r.url)}</a>
+        ${head}
         ${r.content ? `<p class="mt-0.5 text-ink/70">${escHtml(String(r.content).slice(0, 220))}…</p>` : ''}
-      </li>`).join('');
+      </li>`;
+    }).join('');
     out.className = 'mt-3 space-y-2';
     out.innerHTML = `
       ${data.answer ? `<div class="border-l-2 border-blue-300 bg-blue-50/40 px-3 py-2 text-ink/80">${escHtml(data.answer)}</div>` : ''}

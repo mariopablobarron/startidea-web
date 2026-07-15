@@ -174,7 +174,17 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
       updated_at: Math.floor(Date.now() / 1000),
     });
   } catch (err) {
+    // No se puede continuar: sin fila en BD, enviar confirmación/magic-link/avisos
+    // crearía un expediente fantasma y perdería el lead en silencio. Cortamos aquí.
     console.error('[expediente] SQLite insert error:', err);
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        error: 'db',
+        message: 'No se pudo registrar el expediente. Inténtalo de nuevo en unos minutos o escríbenos a hola@startidea.es.',
+      }),
+      { status: 500, headers: { 'content-type': 'application/json' } },
+    );
   }
 
   // ── Guardar borrador de memoria técnica generado en el wizard ─────────────
