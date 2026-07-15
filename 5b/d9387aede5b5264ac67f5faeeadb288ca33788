@@ -1,0 +1,43 @@
+src/pages/admin/login.astro
+  s_0ab79ba551035b::t_109a476dc3bf9e 37-41
+astro.config.mjs
+  s_0ab79ba551035b::t_51aec6399537db 97-100
+  s_0ab79ba551035b::t_7961879019c62e 122-125
+src/pages/api/admin/tramitar-sede.ts
+  s_0ab79ba551035b::t_df153590e32e8e 35-38,42-48
+src/pages/admin/knowledge.astro
+  s_0ab79ba551035b::t_e4cc60c8fab1b1 53
+  s_0ab79ba551035b::t_2bae792c59ffe1 5-15,18-20
+  s_0ab79ba551035b::t_930cfcbf5ca217 59
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_285f439cd7e210 700-708,710,712-713
+src/pages/api/eligibilidad.ts
+  s_0ab79ba551035b::t_02c5a2e0d6709e 13
+  s_0ab79ba551035b::t_d041aba483d19f 151,154
+  s_0ab79ba551035b::t_e642d7569b9277 99-109,111-112
+  s_0ab79ba551035b::t_ddb554988bd0ac 175
+  s_0ab79ba551035b::t_014ae29f6315ed 150
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_5a58f2b6cc39c5 670,674,678
+  s_0ab79ba551035b::t_36c9533a9f892b 686,689-690,692
+  s_0ab79ba551035b::t_42b599b433328d 644-650,652,658-659
+  s_0ab79ba551035b::t_97158c98c60c98 703
+src/pages/api/expediente.ts
+  s_0ab79ba551035b::t_83a08638bcb665 177-178,180-187
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "5bd9387aede5b5264ac67f5faeeadb288ca33788",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
