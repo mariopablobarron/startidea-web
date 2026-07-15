@@ -94,8 +94,10 @@ export default defineConfig({
         if (page.includes('/api/'))                return false;
         if (page.includes('/404'))                 return false;
         if (page.includes('/recursos/gracias'))    return false;
-        // Páginas de formularios y confirmaciones (noindex)
-        if (page.includes('/diagnostico/'))        return false;
+        // Páginas de formularios y confirmaciones (noindex).
+        // OJO: excluir subpáginas del árbol/brief, pero NO la landing /diagnostico
+        // (indexable, con title/description/JSON-LD propios y es el inicio del funnel).
+        if (page.includes('/diagnostico/') && !/\/diagnostico\/?$/.test(page)) return false;
         if (page.includes('/presupuesto/nuevo'))   return false;
         if (page.includes('/encuesta-fundraising')) return false;
         // Portal privado: dashboard (302 a /portal) y confirmación de envío.
@@ -117,6 +119,10 @@ export default defineConfig({
             return true;  // índice/buscador
           if (page.includes('/subvenciones/boja-2026'))    return true; // landings curadas
           if (page.includes('/subvenciones/mapa'))         return true; // mapa interactivo
+          // Landing de tramitación asistida (línea de negocio principal), sin el
+          // wizard /nuevo ni la confirmación /gracias (noindex).
+          if (page.includes('/subvenciones/presentar') && !page.includes('/nuevo') && !page.includes('/gracias'))
+            return true;
           return false; // todo lo demás (BDNS individual, crear-alerta, mi-alerta, mi-copiloto, etc.)
         }
         return true;

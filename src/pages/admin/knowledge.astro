@@ -2,24 +2,21 @@
 export const prerender = false;
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { isAdminLoggedIn, setAdminSession, getAdminToken } from '@/lib/admin-session';
 
-// Auth básica con token: ?token=XYZ o cookie
-const url = Astro.url;
-const tokenParam = url.searchParams.get('token') || '';
-const cookieToken = Astro.cookies.get('startidea_admin')?.value || '';
-const expected = process.env.ADMIN_TOKEN || '';
-
-const authed = !!expected && (tokenParam === expected || cookieToken === expected);
-
-if (authed && tokenParam) {
-  Astro.cookies.set('startidea_admin', tokenParam, {
-    path: '/',
-    httpOnly: true,
-    sameSite: 'strict',
-    secure: true,
-    maxAge: 60 * 60 * 8,
-  });
+// Auth canónica del panel: cookie de sesión = sha256(ADMIN_TOKEN) (misma que el
+// resto de /admin). Login SOLO por POST → nunca el token en query string (logs,
+// historial, Referer), nunca el token plano en cookie.
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData().catch(() => null);
+  const token = (form?.get('token') ?? '').toString();
+  if (token && setAdminSession(Astro.cookies, token)) {
+    return Astro.redirect('/admin/knowledge', 303);
+  }
 }
+
+const noTokenConfigured = !getAdminToken();
+const authed = isAdminLoggedIn(Astro.cookies);
 
 let archivos: { id: string; size: number; preview: string }[] = [];
 if (authed) {
@@ -35,8 +32,6 @@ if (authed) {
     console.error('[admin/knowledge] error', err);
   }
 }
-
-const noTokenConfigured = !expected;
 ---
 
 <Base
@@ -55,13 +50,13 @@ const noTokenConfigured = !expected;
         <div class="mt-10 border-2 border-magenta bg-paper-warm p-6">
           <p class="font-display text-xl text-magenta">⚠ Falta configurar <code class="font-mono">ADMIN_TOKEN</code> en Coolify.</p>
           <p class="mt-3 max-w-measure text-sm text-ink/85">
-            Sin esa variable nadie puede entrar — ni siquiera tú. En Coolify → Secrets → añade <code class="font-mono">ADMIN_TOKEN</code> y reinicia. Después accede a <code class="font-mono">/admin/knowledge?token=TU_TOKEN</code>.
+            Sin esa variable nadie puede entrar — ni siquiera tú. En Coolify → Secrets → añade <code class="font-mono">ADMIN_TOKEN</code> y reinicia. Después entra en <code class="font-mono">/admin/knowledge</code> con el token.
           </p>
         </div>
       )}
 
       {!authed && !noTokenConfigured && (
-        <form method="get" class="mt-10 max-w-md space-y-3">
+        <form method="post" class="mt-10 max-w-md space-y-3">
           <p class="label">— Acceso</p>
           <input
             name="token"

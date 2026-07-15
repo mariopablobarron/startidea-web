@@ -32,11 +32,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   let id = '';
-  let modo: 'asistido' | 'autonomo' = 'asistido';
+  // Política de negocio + legal: SOLO tramitación asistida. El Copiloto nunca
+  // firma ni presenta por el cliente. Se bloquea aquí (capa web) además del
+  // driver, porque el driver mock no aplica esta restricción.
+  const modo: 'asistido' = 'asistido';
   try {
     const body = (await request.json()) as { id?: string; modo?: string };
     id = (body.id ?? '').trim();
-    if (body.modo === 'autonomo') modo = 'autonomo';
+    if (body.modo === 'autonomo') {
+      return json({
+        ok: false,
+        error: 'modo_no_permitido',
+        detail: 'Solo tramitación asistida. El Copiloto nunca firma ni presenta por el cliente.',
+      }, 422);
+    }
   } catch {
     return json({ ok: false, error: 'bad_json' }, 400);
   }

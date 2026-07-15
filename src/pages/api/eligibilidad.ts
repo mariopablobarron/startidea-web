@@ -10,6 +10,7 @@
 import type { APIRoute } from 'astro';
 import { logEligibilidad } from '../../lib/expedientes-db';
 import { pickModel } from '@/lib/model-router';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const prerender = false;
 
@@ -95,9 +96,20 @@ function detectEntityFromCIF(cif: string) {
 // ─── API route ────────────────────────────────────────────────────────────
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    // Endpoint público que consume API de pago (OpenRouter): rate-limit por IP
+    // y tope de longitud del input para frenar abuso de coste/DoS.
+    const ip = getClientIp(request) || clientAddress || 'unknown';
+    const rl = rateLimit({ key: ip, bucket: 'eligibilidad', maxHits: 15, windowMs: 60 * 60 * 1000 });
+    if (!rl.ok) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Demasiadas consultas seguidas. Espera unos minutos e inténtalo de nuevo.' }),
+        { status: 429, headers: { 'content-type': 'application/json', 'retry-after': String(rl.retryAfter) } },
+      );
+    }
+
     const body = await request.json() as { cif?: string; descripcion?: string };
-    const cif = (body.cif ?? '').trim();
-    const descripcion = (body.descripcion ?? '').trim();
+    const cif = (body.cif ?? '').trim().slice(0, 20);
+    const descripcion = (body.descripcion ?? '').trim().slice(0, 2000);
 
     if (!cif && !descripcion) {
       return json400('Proporciona al menos el CIF o una descripción de la entidad.');
@@ -135,8 +147,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // ── Llamar a OpenRouter ───────────────────────────────────────────────
     if (!OR_KEY) throw new Error('OPENROUTER_API_KEY no configurado');
 
+    const aiController = new AbortController();
+    const aiTimer = setTimeout(() => aiController.abort(), 30000);
     const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
+      signal: aiController.signal,
       headers: {
         Authorization: `Bearer ${OR_KEY}`,
         'Content-Type': 'application/json',
@@ -157,6 +172,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         temperature: 0.1,
       }),
     });
+    clearTimeout(aiTimer);
 
     if (!aiRes.ok) {
       const errText = await aiRes.text();
