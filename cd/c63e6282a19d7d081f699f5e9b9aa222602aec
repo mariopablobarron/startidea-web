@@ -11,6 +11,8 @@ src/pages/que-hacemos.astro
 src/pages/comunicacion.astro
   s_ca3c6de21ccf03::t_7ff7a1c2c7fe54 246-247,250-251
   s_ca3c6de21ccf03::t_4754c8e3222508 12-18,188
+  s_fcc6dee72e9f86::t_231a3fdfd96059 188
+  s_fcc6dee72e9f86::t_e1a5c9d0077b58 12-18
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -22,6 +24,14 @@ src/pages/comunicacion.astro
       "agent_id": {
         "tool": "claude",
         "id": "50b4ce28-f2b8-481f-9625-a5366f3c8797",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_fcc6dee72e9f86": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ecbcd3b8-a2aa-4d53-a245-c44af23a1df2",
         "model": "claude-opus-4-8"
       },
       "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
