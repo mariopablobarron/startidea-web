@@ -9,6 +9,13 @@ import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } f
 const rango = rangoPublico('/comunicacion');
 const casosSlugs = ['granada-social-5', 'proyecto-hombre', 'clinica-baca'];
 
+// Meta description con promesa concreta (precio público desde + gestión mensual)
+// para mejorar el CTR en el clúster «comunicación para ONG» (pos ~8, 0 clics).
+// Dinámica desde rangoPublico para no hardcodear ni desviarse de los precios reales.
+const metaDesc = rango
+  ? `Comunicación para ONG desde ${fmtEur(rango.desde)}${rango.mensualDesde ? ` y gestión de redes desde ${fmtEur(rango.mensualDesde)}/mes` : ''}. Estrategia, contenidos e identidad para el tercer sector. Agencia en Granada.`
+  : 'Comunicación estratégica y marketing social para ONG, instituciones y empresas con propósito. Agencia con sede en Granada.';
+
 const faqs = [
   {
     question: '¿Qué incluye el servicio de comunicación estratégica de Startidea?',
@@ -178,7 +185,7 @@ const proceso = [
 
 <Base
   title="Agencia de comunicación para ONG y tercer sector — Startidea"
-  description="Comunicación estratégica, marketing social y gestión de redes sociales (social media) para tercer sector, instituciones y empresas con propósito. Agencia con sede en Granada: estrategia, contenidos, identidad visual y campañas de captación."
+  description={metaDesc}
   ogSlug="page/comunicacion"
   jsonLd={jsonLd}
 >
@@ -236,8 +243,12 @@ const proceso = [
         <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">gestión de redes sociales y social media en Granada</a>.
         ¿Eres una institución de la Iglesia? Hay una página específica de
         <a href="/comunicacion-eclesial" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación eclesial</a>.
+      </p>
+      <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
         Y si antes de contratar quieres entender el proceso, esta guía explica cómo construir un
         <a href="/notas/plan-comunicacion-ong" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">plan de comunicación para una ONG</a> paso a paso.
+        Si todavía estás comparando agencias, esta otra repasa
+        <a href="/notas/como-elegir-agencia-tercer-sector" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">qué preguntar y qué señales mirar antes de firmar</a>.
       </p>
     </div>
   </section>
