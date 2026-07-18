@@ -1,0 +1,30 @@
+src/pages/llms.txt.ts
+  s_ca3c6de21ccf03::t_c151f97a7f3bd4 28
+src/content/notas/agencia-comunicacion-ong-que-pedir-cuanto-cuesta.md
+  s_ca3c6de21ccf03::t_b85fb0eba5d648 3
+  s_ca3c6de21ccf03::t_521d6c0ce5f41c 2
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_ca3c6de21ccf03::t_6d6e1025a87c34 106
+  s_ca3c6de21ccf03::t_31f33bf3a5fc53 20
+src/pages/que-hacemos.astro
+  s_ca3c6de21ccf03::t_1dffc5ffc5b45f 29
+src/pages/comunicacion.astro
+  s_ca3c6de21ccf03::t_7ff7a1c2c7fe54 246-247,250-251
+  s_ca3c6de21ccf03::t_4754c8e3222508 12-18,188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "cdc63e6282a19d7d081f699f5e9b9aa222602aec",
+  "prompts": {},
+  "sessions": {
+    "s_ca3c6de21ccf03": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "50b4ce28-f2b8-481f-9625-a5366f3c8797",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
