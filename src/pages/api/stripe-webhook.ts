@@ -12,6 +12,7 @@
  */
 
 import type { APIRoute } from 'astro';
+import type Stripe from 'stripe';
 import { getStripe, webhookSecret } from '@/lib/stripe';
 import { markReservaPaid } from '@/lib/cursos-db';
 import { sendTelegram } from '@/lib/telegram';
@@ -47,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as any;
+    const session = event.data.object as Stripe.Checkout.Session;
     if (session.payment_status === 'paid') {
       const email = session.customer_details?.email ?? '';
       const nombre = session.customer_details?.name ?? '';

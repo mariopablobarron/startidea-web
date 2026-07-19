@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, SITE_URL, organizationSchema } from '@/lib/jsonld';
+import { breadcrumbList, SITE_URL, organizationSchema, faqPageSchema } from '@/lib/jsonld';
 
 // FAQ items agrupados por servicio. Cada pregunta es UNA query real del
 // GEO check del HUB (lib/geo/check.ts), redactada con la intención del
@@ -228,30 +228,14 @@ const seccionesFaq: Array<{
   },
 ];
 
-// FAQPage schema — Google y LLMs lo procesan estructurado y pueden mostrar
-// rich results en SERP + extraer respuestas literales para sus contestaciones.
-const faqPage = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: seccionesFaq.flatMap((s) =>
-    s.preguntas.map((p) => ({
-      '@type': 'Question',
-      name: p.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: p.a,
-      },
-    })),
-  ),
-};
-
+// FAQPage schema vía helper (regla del CLAUDE.md: usar siempre los helpers).
 const jsonLd = [
   organizationSchema(),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Qué hace Startidea', url: `${SITE_URL}/que-hacemos` },
   ]),
-  faqPage,
+  faqPageSchema(seccionesFaq.flatMap((s) => s.preguntas.map((p) => ({ q: p.q, a: p.a })))),
 ];
 
 const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length, 0);
