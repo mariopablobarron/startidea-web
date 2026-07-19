@@ -2,6 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import { getCollection, getEntry } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
+import { blogPostingSchema, breadcrumbList, FOUNDER_NAME, SITE_URL } from '@/lib/jsonld';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
@@ -43,12 +44,32 @@ const otros = todos
   .filter((e) => e.slug !== entry.slug)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
+
+// JSON-LD — como el resto de colecciones públicas (auditoría 2026-07-15):
+// BlogPosting (el diagnóstico es contenido editorial firmado) + breadcrumbs.
+const diagUrl = `${SITE_URL}/laboratorio/fundraising/${entry.slug}`;
+const jsonLd = [
+  blogPostingSchema({
+    url: diagUrl,
+    title: d.title,
+    description: d.description,
+    datePublished: d.pubDate,
+    authorName: FOUNDER_NAME,
+    keywords: [d.sector, d.tipologia, d.geografia, 'fundraising', 'diagnóstico'],
+  }),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Diagnósticos de fundraising', url: `${SITE_URL}/laboratorio/fundraising` },
+    { name: d.title, url: diagUrl },
+  ]),
+];
 ---
 
 <Base
   title={`${d.title} — Diagnósticos · Startidea`}
   description={d.description}
   ogSlug={`page/laboratorio-fundraising`}
+  jsonLd={jsonLd}
 >
   <article>
     <!-- Hero / portada -->

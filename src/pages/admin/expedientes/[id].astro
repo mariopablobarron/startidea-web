@@ -791,6 +791,9 @@ const convocatoriaFichaUrl = buildConvocatoriaFichaUrl(exp.convocatoria_slug);
   document.getElementById('btn-entregar')?.addEventListener('click', async (e) => {
     const btn = e.currentTarget as HTMLButtonElement;
     const id = btn.dataset.id!;
+    // Acción irreversible cara al cliente (envía email real) — pedir confirmación,
+    // igual que hace "Enviar contrato".
+    if (!confirm('¿Enviar los documentos al cliente por email? Esta acción le notifica de inmediato.')) return;
     const statusEl = document.getElementById('entregar-status')!;
     btn.disabled = true;
     statusEl.textContent = '⏳ Enviando email al cliente...';

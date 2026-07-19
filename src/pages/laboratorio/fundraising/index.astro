@@ -1,9 +1,17 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const all = await getCollection('diagnosticos', ({ data }) => !data.draft);
 all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Diagnósticos de fundraising', url: `${SITE_URL}/laboratorio/fundraising` },
+  ]),
+];
 
 const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long' });
 
@@ -16,6 +24,7 @@ const geografias = Array.from(new Set(all.map((d) => d.data.geografia))).sort();
   title="Diagnósticos de fundraising — Laboratorio · Startidea"
   description="Diagnósticos públicos y anonimizados de fundraising en entidades del Tercer Sector. Radiografía, palancas detectadas y recomendaciones — el método Startidea aplicado a casos reales."
   ogSlug="page/laboratorio-fundraising"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

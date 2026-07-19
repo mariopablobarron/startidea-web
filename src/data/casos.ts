@@ -398,12 +398,12 @@ export const casos: Caso[] = [
     result: [
       'Aumento de reservas online sostenido durante el primer trimestre tras el lanzamiento.',
       'Pacientes que llegan a primera consulta mejor informados sobre el proceso y los plazos.',
-      'Comunidad estable en redes con engagement orgánico (sin ads).',
+      'Comunidad estable en redes con interacción orgánica (sin ads).',
       'Relación que se ha extendido en formato recurrente — no proyecto puntual.',
     ],
     metrics: [
       { value: '12 meses', label: 'de relación recurrente (no proyecto puntual)' },
-      { value: '0 ads', label: 'comunidad estable en redes con engagement orgánico' },
+      { value: '0 ads', label: 'comunidad estable en redes con interacción orgánica' },
       { value: '< 3 clics', label: 'del paciente a la reserva online' },
     ],
     timeline: [
@@ -411,7 +411,7 @@ export const casos: Caso[] = [
       { when: 'Semana 3-5', title: 'Sistema visual + sesiones fotográficas', detail: 'Fotografía propia del equipo. Sin stock. Sin antes-y-después agresivos.' },
       { when: 'Semana 6-10', title: 'Web institucional nueva', detail: 'Tratamientos + equipo + financiación + reserva en menos de tres clics.' },
       { when: 'Semana 11-12', title: 'Calendario editorial de redes', detail: 'Tono educativo sin clickbait dental. Producción mensual sostenida.' },
-      { when: 'Trimestrales', title: 'Reportes con métricas reales', detail: 'Reservas, comportamiento de pacientes, engagement orgánico — sin vanity metrics.' },
+      { when: 'Trimestrales', title: 'Reportes con métricas reales', detail: 'Reservas, comportamiento de pacientes, interacción orgánica — sin métricas de vanidad.' },
       { when: 'Recurrente', title: 'Relación que continúa', detail: 'Proyecto inicial → contrato recurrente de gestión continua.' },
     ],
     team: [

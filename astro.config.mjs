@@ -72,7 +72,9 @@ export default defineConfig({
     // relacionado = soft-404 y Google acaba tirando el ranking). La de cultura
     // participativa es la mejor página no-marca: 185 impr / 6 clics / pos 9.1.
     '/que-es-la-cultura-participativa-y-como-implantarla-en-las-organizaciones':  '/notas/cultura-participativa-tercer-sector',
-    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':                   '/notas',
+    // Post viejo de Instagram → página de servicio temática (redes sociales),
+    // no al índice /notas (soft-404, ver nota de arriba).
+    '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':                   '/redes-sociales-granada',
 
     // Categorías de WP — redirigir a /notas
     '/category/news':                                     '/notas',

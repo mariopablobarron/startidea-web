@@ -300,6 +300,71 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'GA4 y Search Console',
       subtitle: 'Acceso solo de lectura a las propiedades que cada cliente autoriza. Datos para producir informes SEO internos, no se comparten con terceros y se eliminan a petición.',
     },
+    // Páginas que usaban ogSlug sin entrada en el catálogo → su og:image era 404
+    // (auditoría 2026-07-15). Con output estático, si no está aquí, no existe.
+    'page/precios': {
+      kind: 'page',
+      eyebrow: '— Precios',
+      title: 'Subvenciones a éxito: 12%.',
+      accent: '12%',
+      subtitle: 'Comisión solo si se concede la ayuda. Sin cuotas fijas ni sorpresas: el riesgo lo comparte Startidea contigo.',
+    },
+    'page/prensa': {
+      kind: 'page',
+      eyebrow: '— Prensa',
+      title: 'Datos, logos y contacto directo.',
+      accent: 'contacto directo',
+      subtitle: 'Kit de prensa de Startidea: biografía, cifras y material gráfico. Innovación social desde Granada desde 2011.',
+    },
+    'page/redes-sociales-ia': {
+      kind: 'page',
+      eyebrow: '— Redes sociales con IA',
+      title: 'Tu voz. Publicando cada día.',
+      accent: 'cada día',
+      subtitle: 'IA entrenada con tu voz de marca y supervisada por personas. Tú apruebas — Startidea redacta, programa y publica en todas tus redes.',
+    },
+    'page/telar': {
+      kind: 'page',
+      eyebrow: '— Telar · comunidad propia',
+      title: 'Tu red, en tu casa.',
+      accent: 'en tu casa',
+      subtitle: 'Plataforma de comunidad propia y gestionada: muro, grupos, proyectos, formación y boletín. Los datos son tuyos, alojados en España.',
+    },
+    'page/changelog': {
+      kind: 'page',
+      eyebrow: '— Changelog',
+      title: 'Lo que cambia, a la vista.',
+      accent: 'a la vista',
+      subtitle: 'Lista pública de cambios de startidea.es, generada automáticamente en cada despliegue. Transparencia también en el código.',
+    },
+    'page/asistente': {
+      kind: 'page',
+      eyebrow: '— Asistente IA',
+      title: 'Qué hace. Qué guarda. Qué no.',
+      accent: 'Qué no',
+      subtitle: 'Cómo funciona el asistente conversacional de startidea.es: modelo, datos y límites, explicados sin letra pequeña.',
+    },
+    'page/asistente-documentos': {
+      kind: 'page',
+      eyebrow: '— Asistente con tus documentos',
+      title: 'Una IA que se ha leído tu documentación.',
+      accent: 'tu documentación',
+      subtitle: 'Catálogo, normativa, FAQs: el asistente responde al instante citando la fuente. Para webs de organizaciones con mucho que explicar.',
+    },
+    'page/laboratorio-hyperframes': {
+      kind: 'page',
+      eyebrow: '— Startidea Lab · HyperFrames',
+      title: 'Vídeo editorial hecho con código.',
+      accent: 'con código',
+      subtitle: 'Composiciones HTML animadas que se renderizan a MP4. Hero web, memorias anuales y piezas institucionales sin productora.',
+    },
+    'page/subvenciones-presentar': {
+      kind: 'page',
+      eyebrow: '— Tramitación de subvenciones',
+      title: 'Del encaje a la presentación.',
+      accent: 'presentación',
+      subtitle: 'Gestión completa del expediente: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. A éxito.',
+    },
   };
 
   // Subpáginas de /para-quien (una OG por audiencia)
