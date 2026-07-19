@@ -76,6 +76,9 @@ export default defineConfig({
     // no al índice /notas (soft-404, ver nota de arriba).
     '/instagram-cambia-su-formato-el-43-reemplaza-al-cuadrado':                   '/redes-sociales-granada',
 
+    // Typo corregido en slug de diagnóstico publicado (andaluzia → andaluza)
+    '/laboratorio/fundraising/asociacion-discapacidad-andaluzia': '/laboratorio/fundraising/asociacion-discapacidad-andaluza',
+
     // Categorías de WP — redirigir a /notas
     '/category/news':                                     '/notas',
   },

@@ -8,7 +8,7 @@
 
 import Base from '@/layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, SITE_URL, courseSchema } from '@/lib/jsonld';
 
 export async function getStaticPaths() {
   const cursos = await getCollection('cursos', (c) => !c.data.draft);
@@ -52,34 +52,16 @@ const jsonLd = [
     { name: 'Cursos', url: `${SITE_URL}/laboratorio/cursos` },
     { name: d.title.slice(0, 80), url: `${SITE_URL}/laboratorio/cursos/${curso.slug}` },
   ]),
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Course',
+  courseSchema({
+    url: `${SITE_URL}/laboratorio/cursos/${curso.slug}`,
     name: d.title,
     description: d.description,
-    provider: {
-      '@type': 'Organization',
-      name: 'Startidea',
-      url: SITE_URL,
-    },
     courseMode: d.formato === 'online' ? 'online' : d.formato === 'presencial' ? 'onsite' : 'blended',
-    audience: {
-      '@type': 'Audience',
-      audienceType: d.audience,
-    },
-    offers: {
-      '@type': 'Offer',
-      price: d.precio,
-      priceCurrency: 'EUR',
-      availability:
-        d.estado === 'abierto'
-          ? 'https://schema.org/InStock'
-          : d.estado === 'agotado'
-            ? 'https://schema.org/SoldOut'
-            : 'https://schema.org/PreOrder',
-      ...(d.proxima_edicion ? { validFrom: d.proxima_edicion.toISOString().slice(0, 10) } : {}),
-    },
-  },
+    audience: d.audience,
+    price: d.precio,
+    availability: d.estado === 'abierto' ? 'InStock' : d.estado === 'agotado' ? 'SoldOut' : 'PreOrder',
+    validFrom: d.proxima_edicion ? d.proxima_edicion.toISOString().slice(0, 10) : undefined,
+  }),
 ];
 ---
 

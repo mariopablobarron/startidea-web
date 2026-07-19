@@ -665,7 +665,9 @@ Usa lenguaje muy claro y concreto — como si explicas a alguien sin experiencia
     let end = raw.length;
     for (const m of ALL_MARKERS) {
       if (m === `===${marker}===`) continue;
-      const pos = raw.indexOf(m, afterMarker);
+      // Buscar el siguiente marcador SOLO a inicio de línea (precedido por \n):
+      // si el LLM repite un "===X===" dentro del cuerpo, no debe cortar el bloque.
+      const pos = raw.indexOf(`\n${m}`, afterMarker - 1);
       if (pos !== -1 && pos < end) end = pos;
     }
     return raw.slice(afterMarker, end).trim();

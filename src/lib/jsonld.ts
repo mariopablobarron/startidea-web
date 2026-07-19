@@ -504,3 +504,45 @@ export function serviceSchema(s: ServiceInput) {
       : {}),
   };
 }
+
+/**
+ * Course schema para las fichas de curso de Startidea Lab. provider apunta a
+ * la entidad canónica #organization (no un Organization suelto), para que el
+ * curso refuerce la autoridad del sitio en Google/LLMs.
+ */
+interface CourseInput {
+  url: string;
+  name: string;
+  description: string;
+  courseMode: 'online' | 'onsite' | 'blended';
+  audience?: string;
+  price?: number | string;
+  availability?: 'InStock' | 'SoldOut' | 'PreOrder';
+  validFrom?: string;
+}
+
+export function courseSchema(c: CourseInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    '@id': `${c.url}#course`,
+    name: c.name,
+    description: c.description,
+    url: c.url,
+    provider: { '@id': `${SITE_URL}/#organization` },
+    courseMode: c.courseMode,
+    inLanguage: 'es-ES',
+    ...(c.audience ? { audience: { '@type': 'Audience', audienceType: c.audience } } : {}),
+    ...(c.price !== undefined
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: c.price,
+            priceCurrency: 'EUR',
+            availability: `https://schema.org/${c.availability ?? 'InStock'}`,
+            ...(c.validFrom ? { validFrom: c.validFrom } : {}),
+          },
+        }
+      : {}),
+  };
+}
