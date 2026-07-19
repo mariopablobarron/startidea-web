@@ -1,0 +1,38 @@
+src/pages/api/generar-factura.ts
+  s_0ab79ba551035b::t_6fbf7e01162fb8 64-70,72-77,79-86
+src/lib/expedientes-db.ts
+  s_0ab79ba551035b::t_d175388c45bec8 162-166
+  s_0ab79ba551035b::t_42273c2e9aa211 204-208
+copiloto-sede/drivers/junta-andalucia.mjs
+  s_0ab79ba551035b::t_3f77f0f58be23e 95
+  s_0ab79ba551035b::t_80c2421a55f4e3 180-190,194-196
+src/pages/api/generar-expediente.ts
+  s_0ab79ba551035b::t_da888ae283e61a 214-223
+  s_0ab79ba551035b::t_d6f90bf0543441 60-64
+src/pages/api/chat.ts
+  s_0ab79ba551035b::t_c208e67b5b4236 112,114-115
+  s_0ab79ba551035b::t_157f46d734ecfe 113,116-117,122
+  s_0ab79ba551035b::t_6238c03cdc30d7 138,145-146
+src/pages/api/auto-copiloto/trigger.ts
+  s_0ab79ba551035b::t_fbee58238860eb 35-47,95,110
+src/pages/api/admin/auto-copiloto/campaign.ts
+  s_0ab79ba551035b::t_fbee58238860eb 81-93,105,118
+src/pages/api/auto-copiloto/match-catalog.ts
+  s_0ab79ba551035b::t_fbee58238860eb 47-59,101,114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "bc5688fad7c3aba83e0866bd2b35b218c6d5928c",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
