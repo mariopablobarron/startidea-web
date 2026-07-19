@@ -1,0 +1,38 @@
+src/content/notas/newsletter-segmentacion-ong-tercer-sector.md
+  s_0ab79ba551035b::t_779781bf9d60e8 14
+src/pages/admin/expedientes/[id].astro
+  s_0ab79ba551035b::t_2f3ce5d422d266 794-796
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_83804a1561d795 303-367
+src/data/casos.ts
+  s_0ab79ba551035b::t_5420a7b398dd2f 401
+  s_0ab79ba551035b::t_249fa2c9b04fcf 406
+  s_0ab79ba551035b::t_c2e862a1498220 414
+src/pages/laboratorio/fundraising/index.astro
+  s_0ab79ba551035b::t_8b10bd91524863 4,9-14
+  s_0ab79ba551035b::t_4f68ad296e5183 27
+  s_0ab79ba551035b::t_def17c3212a283 15
+src/pages/redes-sociales-ia.astro
+  s_0ab79ba551035b::t_8dea713955c006 72
+src/pages/laboratorio/fundraising/[...slug].astro
+  s_0ab79ba551035b::t_651895e4be5cae 47-65,72
+  s_0ab79ba551035b::t_530724616eebb8 5
+astro.config.mjs
+  s_0ab79ba551035b::t_c9499dd01a141f 75-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9329b488c23a4f7b7dea2ff6b574c5a97cddb010",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
