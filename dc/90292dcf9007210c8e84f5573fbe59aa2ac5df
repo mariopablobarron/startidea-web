@@ -1,0 +1,28 @@
+src/pages/laboratorio/cursos/[slug].astro
+  s_0ab79ba551035b::t_4c2a7012977e35 11
+  s_0ab79ba551035b::t_fe58d904b9ed2e 55-56,60-64
+src/pages/presupuesto/nuevo.astro
+  s_0ab79ba551035b::t_f2fac70e57b1a8 71-72,88-89,136-137,154-155
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_452f4ecc9304ca 507-548
+src/lib/copiloto-engine.ts
+  s_0ab79ba551035b::t_490917724b49be 668-670
+astro.config.mjs
+  s_0ab79ba551035b::t_5de24f7fb1d7e6 79-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "dc90292dcf9007210c8e84f5573fbe59aa2ac5df",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
