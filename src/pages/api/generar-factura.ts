@@ -61,17 +61,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     );
   }
 
-  // Guardar importe si lo mandaron (actualiza aunque ya hubiera uno)
-  if (importeConcedido?.trim()) {
-    setImporteConcedido(id, importeConcedido.trim());
-  }
+  // Escrituras en BD: cualquier excepción debe volver como JSON {ok:false},
+  // no como la página HTML de error de Astro (contrato del panel admin).
+  try {
+    // Guardar importe si lo mandaron (actualiza aunque ya hubiera uno)
+    if (importeConcedido?.trim()) {
+      setImporteConcedido(id, importeConcedido.trim());
+    }
 
-  // Si ya tiene número de factura, reutilizarlo (idempotente)
-  let facturaNum = exp.factura_num;
-  if (!facturaNum) {
-    facturaNum = nextFacturaNum();
-    saveFactura(id, facturaNum, importeStr);
-  }
+    // Si ya tiene número de factura, reutilizarlo (idempotente)
+    let facturaNum = exp.factura_num;
+    if (!facturaNum) {
+      facturaNum = nextFacturaNum();
+      saveFactura(id, facturaNum, importeStr);
+    }
 
-  return new Response(JSON.stringify({ ok: true, facturaNum }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, facturaNum }), { status: 200 });
+  } catch (err) {
+    console.error('[generar-factura] Excepción no controlada:', err);
+    return new Response(
+      JSON.stringify({ ok: false, error: 'internal', detail: String(err instanceof Error ? err.message : err) }),
+      { status: 500, headers: { 'content-type': 'application/json' } },
+    );
+  }
 };

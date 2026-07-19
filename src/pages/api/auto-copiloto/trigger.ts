@@ -32,6 +32,19 @@ import {
 } from '@/lib/auto-copiloto-db';
 
 // Normaliza un string eliminando acentos y pasando a minúsculas
+// Un perfil con territorios/finalidades corruptos no debe abortar el ciclo
+// entero del cron para todos los perfiles: JSON inválido → fallback y aviso.
+function safeParseArray(raw: string | null | undefined, fallback: string[]): string[] {
+  if (!raw) return fallback;
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? v.filter((x) => typeof x === 'string') : fallback;
+  } catch {
+    console.error('[auto-copiloto] JSON corrupto en perfil:', String(raw).slice(0, 80));
+    return fallback;
+  }
+}
+
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
@@ -79,7 +92,7 @@ function convScoreForProfile(
   // ── Filtros DUROS (descarte si no se cumplen) ──────────────────────────────
 
   // Territorio (filtro duro)
-  const territorios: string[] = JSON.parse(profile.territorios || '["nacional"]');
+  const territorios: string[] = safeParseArray(profile.territorios, ['nacional']);
   if (territorios.length > 0 && !territorios.includes('nacional')) {
     const convCcaa = normalize(conv.ccaa ?? '');
     const convGeo = normalize(conv.geo_level ?? '');
@@ -94,7 +107,7 @@ function convScoreForProfile(
   if (profile.importe_max && conv.amount_eur !== null && conv.amount_eur > profile.importe_max) return 0;
 
   // Finalidades (filtro duro si el perfil las tiene definidas)
-  const finalidades: string[] = JSON.parse(profile.finalidades || '[]');
+  const finalidades: string[] = safeParseArray(profile.finalidades, []);
   if (finalidades.length > 0) {
     const hasFinalidad = finalidades.some((f) => conv.finalidades.includes(f));
     if (!hasFinalidad) return 0;

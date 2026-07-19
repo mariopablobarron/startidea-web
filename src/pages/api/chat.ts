@@ -109,11 +109,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     ...history,
   ];
 
-  // Llamada a OpenRouter con streaming SSE — proxy directo al cliente
+  // Llamada a OpenRouter con streaming SSE — proxy directo al cliente.
+  // El timeout cubre SOLO hasta recibir cabeceras (se cancela justo después):
+  // si OpenRouter se cuelga sin responder, la petición no queda abierta
+  // indefinidamente consumiendo workers. El stream posterior no se limita.
+  const upstreamCtl = new AbortController();
+  const upstreamTimer = setTimeout(() => upstreamCtl.abort(), 30000);
   let upstream: Response;
   try {
     upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
+      signal: upstreamCtl.signal,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
@@ -129,12 +135,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       }),
     });
   } catch (err) {
+    clearTimeout(upstreamTimer);
     console.error('[chat] upstream fetch failed', err);
     return new Response(
       JSON.stringify({ ok: false, error: 'network', message: 'Sin conexión con el modelo. Intenta de nuevo.' }),
       { status: 502, headers: { 'content-type': 'application/json' } },
     );
   }
+  // Cabeceras recibidas: desarmar el timeout para no cortar el stream largo.
+  clearTimeout(upstreamTimer);
 
   if (!upstream.ok || !upstream.body) {
     const errText = await upstream.text().catch(() => '');

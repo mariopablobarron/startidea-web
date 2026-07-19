@@ -158,10 +158,12 @@ function getDb(): Database.Database {
     `ALTER TABLE expedientes ADD COLUMN importe_concedido TEXT`,
     `ALTER TABLE expedientes ADD COLUMN factura_num TEXT`,
     `ALTER TABLE expedientes ADD COLUMN factura_at INTEGER`,
-    // portal_users — campo añadido en fase 2
-    `ALTER TABLE portal_users ADD COLUMN consent_at INTEGER`,
   ]) {
-    try { _db.exec(sql); } catch { /* columna ya existe */ }
+    // Catch acotado: solo "duplicate column" es esperable; cualquier otro error
+    // de migración debe verse en logs, no desaparecer en silencio.
+    try { _db.exec(sql); } catch (e) {
+      if (!/duplicate column/i.test(String(e))) console.error('[expedientes-db] migración falló:', sql, e);
+    }
   }
   // Tabla de contador de facturas (puede ya existir)
   try {
@@ -199,6 +201,11 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_portal_session_email ON portal_sessions (email);
     CREATE INDEX IF NOT EXISTS idx_portal_users_email  ON portal_users (email);
   `);
+  // Migración de portal_users — DEBE ir tras su CREATE TABLE (antes corría antes
+  // de crear la tabla: en BD nueva fallaba contra tabla inexistente).
+  try { _db.exec(`ALTER TABLE portal_users ADD COLUMN consent_at INTEGER`); } catch (e) {
+    if (!/duplicate column/i.test(String(e))) console.error('[expedientes-db] migración portal_users falló:', e);
+  }
   // Tabla de mensajes expediente (puede ya existir — migración segura)
   _db.exec(`
     CREATE TABLE IF NOT EXISTS expediente_messages (

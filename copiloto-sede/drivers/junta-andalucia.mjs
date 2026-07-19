@@ -92,8 +92,7 @@ export async function tramitarJuntaAndalucia(job) {
       await capture(page, evidencias, 'acceso', 'Pantalla de acceso: identifícate con certificado digital o Cl@ve');
     }
 
-    await browser.close();
-
+    // (el cierre del browser lo hace el finally — cerrarlo aquí duplicaba el close)
     return {
       status: 'handoff_firma',
       message:
@@ -178,13 +177,22 @@ const DOCS_OBLIGATORIOS = [
 ];
 
 function buildChecklist(files) {
-  const nombres = (files || [])
-    .map((f) => (typeof f === 'string' ? f : f?.name ?? ''))
-    .join(' ')
-    .toLowerCase();
+  // Coincidencia por TOKEN, no por substring: con substring, "especificaciones.pdf"
+  // contiene "cif" y marcaría como adjunto un documento obligatorio ausente
+  // (trámite con obligaciones legales — mejor pecar de ⬜ que de ✅ falso).
+  const tokens = new Set(
+    (files || [])
+      .map((f) => (typeof f === 'string' ? f : f?.name ?? ''))
+      .join(' ')
+      .toLowerCase()
+      .split(/[^a-z0-9áéíóúñü]+/)
+      .filter(Boolean),
+  );
   return DOCS_OBLIGATORIOS.map(({ doc, etiqueta }) => ({
     doc,
     etiqueta,
-    adjunto: nombres.includes(doc),
+    // seguridad_social se adjunta como "seguridad-social", "ss", etc. — cada
+    // parte del doc debe aparecer como token propio.
+    adjunto: doc.split('_').every((part) => tokens.has(part)),
   }));
 }

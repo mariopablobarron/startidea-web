@@ -57,6 +57,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   // Marcar como "analizando"
   updateStatus(id, 'analizando_ia');
 
+  // Todo lo que sigue puede lanzar (extracción de docs, IA, email). Sin este
+  // try/catch, una excepción dejaba el expediente atascado en 'analizando_ia'
+  // para siempre y devolvía la página HTML de error de Astro en vez de JSON.
+  try {
+
   // Construir contexto de convocatoria
   const { context: convContext } = await buildConvContext({
     convocatoria_slug: exp.convocatoria_slug,
@@ -206,4 +211,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       guia: guia.length,
     },
   }), { status: 200 });
+
+  } catch (err) {
+    // Resetear estado para que el admin pueda reintentar; contrato JSON estable.
+    console.error('[generar-expediente] Excepción no controlada:', err);
+    try { updateStatus(id, 'recibido'); } catch {}
+    return new Response(
+      JSON.stringify({ ok: false, error: 'internal', detail: String(err instanceof Error ? err.message : err) }),
+      { status: 500, headers: { 'content-type': 'application/json' } },
+    );
+  }
 };

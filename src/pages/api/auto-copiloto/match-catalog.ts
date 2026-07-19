@@ -44,6 +44,19 @@ const MAX_PER_RUN = 5;
 
 // ─── Utilidades ───────────────────────────────────────────────────────────────
 
+// Un perfil con territorios/finalidades corruptos no debe abortar el ciclo
+// entero del cron para todos los perfiles: JSON inválido → fallback y aviso.
+function safeParseArray(raw: string | null | undefined, fallback: string[]): string[] {
+  if (!raw) return fallback;
+  try {
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? v.filter((x) => typeof x === 'string') : fallback;
+  } catch {
+    console.error('[auto-copiloto] JSON corrupto en perfil:', String(raw).slice(0, 80));
+    return fallback;
+  }
+}
+
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
@@ -85,7 +98,7 @@ function scoreLocalConvForProfile(
   // ── Filtros DUROS ──────────────────────────────────────────────────────────
 
   // Territorio: convocatorias del catálogo local son de la Junta de Andalucía
-  const territorios: string[] = JSON.parse(profile.territorios || '["nacional"]');
+  const territorios: string[] = safeParseArray(profile.territorios, ['nacional']);
   if (territorios.length > 0 && !territorios.includes('nacional')) {
     const matchTerritorio = territorios.some(
       (t) => normalize(t) === 'andalucia' || normalize(t) === 'andalucía',
@@ -98,7 +111,7 @@ function scoreLocalConvForProfile(
   if (profile.importe_max && conv.amount_eur !== null && conv.amount_eur > profile.importe_max) return 0;
 
   // Finalidades: match textual cuando no hay slugs estructurados
-  const finalidades: string[] = JSON.parse(profile.finalidades || '[]');
+  const finalidades: string[] = safeParseArray(profile.finalidades, []);
   if (finalidades.length > 0) {
     const haystack = normalize(
       conv.title + ' ' + conv.organization + ' ' + conv.finalidades_text.join(' '),
