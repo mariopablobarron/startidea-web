@@ -1,0 +1,29 @@
+src/pages/portal/dashboard.astro
+  s_0ab79ba551035b::t_6c3a1249ade022 131-138,144-147,153
+src/pages/subvenciones/presentar/nuevo.astro
+  s_0ab79ba551035b::t_3bbde848950f46 161
+src/components/Nav.astro
+  s_0ab79ba551035b::t_ec883ec7999e9a 108
+src/pages/que-hacemos.astro
+  s_0ab79ba551035b::t_1715dc5cbbf31b 231,238
+  s_0ab79ba551035b::t_d2e8e1f04c15c1 3
+src/pages/api/stripe-webhook.ts
+  s_0ab79ba551035b::t_0a0b084077fa59 15
+  s_0ab79ba551035b::t_cfa16e6ad83893 51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9712f9a8581a7c22357ab49e9277c29c892c0304",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
