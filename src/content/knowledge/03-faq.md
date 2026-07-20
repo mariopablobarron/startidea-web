@@ -28,6 +28,9 @@ Sí, en merchandising.hubstartidea.es. Bronze Partner de FYVAR desde 2016. Pedid
 ## ¿Tenéis espacio físico?
 Sí, el Hub Startidea en pleno centro de Granada (C/ Conde Cifuentes, 33). Coworking, salas de formación, estudio de podcast y despachos privados.
 
+## ¿Startidea produce videopodcast?
+Sí. El videopodcast es el podcast grabado en vídeo con varias cámaras: se publica el episodio completo y se cortan clips verticales para redes. Startidea lo produce de principio a fin en su estudio propio de Granada — set, iluminación, multicámara, sonido, edición del episodio largo y montaje de cápsulas para YouTube, Spotify, Instagram y TikTok. Permite sostener una conversación con la audiencia y alimentar las redes sin grabar dos veces. Detalle del servicio en `/audiovisual`.
+
 ## ¿Publicáis casos con cliente o anonimizados?
 Las dos cosas. Los casos publicados con autorización están en `/casos`. Los diagnósticos publicados anonimizados están en `/laboratorio/fundraising`.
 
