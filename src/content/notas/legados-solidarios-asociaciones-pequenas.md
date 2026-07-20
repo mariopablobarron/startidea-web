@@ -1,11 +1,11 @@
 ---
 title: 'Legados solidarios: la fuente de ingresos que casi ninguna entidad pequeña se atreve a pedir'
 description: 'El legado solidario es una de las vías de financiación más estables que existen y una de las menos trabajadas por las entidades pequeñas, porque exige hablar con los socios de algo incómodo: qué pasará con lo suyo cuando ya no estén. Esta nota explica por qué merece la pena vencer esa incomodidad y cómo empezar sin parecer un buitre.'
-pubDate: 2026-07-09
+pubDate: 2026-07-20
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['legados', 'herencias solidarias', 'fundraising', 'financiación', 'base social', 'planificación', 'tercer sector', 'grandes donantes']
-draft: true
+draft: false
 tldr: 'El legado solidario —dejar a una entidad parte de una herencia— es una de las fuentes de ingreso más estables y menos competidas que existen, y casi ninguna entidad pequeña la trabaja porque implica hablar de la muerte con sus socios. No es cosa solo de grandes fundaciones: cualquier entidad con una base social fiel y algo de trayectoria puede recibir legados. La clave no es una campaña agresiva, sino informar con naturalidad de que la opción existe, ponerlo fácil y cultivar la relación a largo plazo. El primer legado tarda años; por eso el momento de empezar es ahora.'
 faqs:
   - question: '¿Qué es un legado solidario?'

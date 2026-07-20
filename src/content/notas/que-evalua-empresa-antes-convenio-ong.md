@@ -1,11 +1,11 @@
 ---
 title: 'Qué evalúa una empresa antes de firmar un convenio con tu entidad'
 description: 'Antes de aprobar un convenio con una entidad social, una empresa no evalúa primero la causa: evalúa el riesgo de asociarse contigo. Esta nota explica qué mira de verdad quien tiene que defender esa firma ante su comité, y cómo llegar a la reunión habiendo respondido a lo que aún no te han preguntado.'
-pubDate: 2026-07-09
+pubDate: 2026-07-20
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['empresas', 'convenios', 'fundraising', 'alianzas', 'due diligence', 'tercer sector', 'financiación privada', 'RSC']
-draft: true
+draft: false
 tldr: 'Una empresa no firma un convenio por la causa: firma cuando el riesgo de asociarse contigo es bajo y fácil de defender internamente. Antes de la reunión evalúa tres cosas — que existas de verdad (cuentas, transparencia, trayectoria), que sepas justificar lo que recibes, y que asociarse contigo no le dé un problema reputacional. La causa abre la puerta; la fiabilidad firma el convenio. Llega a la mesa con eso resuelto y habrás respondido a lo que no te van a preguntar en voz alta.'
 faqs:
   - question: '¿Qué mira una empresa antes de firmar un convenio con una ONG?'

@@ -1,11 +1,11 @@
 ---
 title: 'Una subvención cobrada a 18 meses no es una subvención: es un préstamo que le haces al Estado'
 description: 'La subvención de 50.000 euros que cobras año y medio tarde no vale 50.000 euros. Mientras esperas, adelantas el gasto con tu dinero, pides una póliza o dejas de hacer otra cosa. Esta nota pone número a ese coste oculto y explica por qué medirlo cambia qué convocatorias merece la pena pedir.'
-pubDate: 2026-07-09
+pubDate: 2026-07-20
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['subvenciones', 'tesorería', 'financiación', 'coste financiero', 'liquidez', 'administración pública', 'tercer sector', 'gestión']
-draft: true
+draft: false
 tldr: 'Cuando la administración paga una subvención con año y año y medio de retraso, no te ha dado ese dinero: se lo has adelantado tú. Ese adelanto tiene un coste real —intereses de la póliza que pides, coste de oportunidad del dinero inmovilizado, horas de gestión— que casi nadie calcula. Ponerle número (importe × meses de retraso × coste de tu capital) revela que algunas subvenciones rinden mucho menos de lo que parecen, y que otras cuestan dinero. Medirlo no es pesimismo contable: es lo que te permite decidir a qué convocatoria presentarte y a cuál no.'
 faqs:
   - question: '¿Por qué se dice que una subvención pagada tarde es un préstamo al Estado?'
