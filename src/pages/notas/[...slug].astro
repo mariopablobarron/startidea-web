@@ -208,7 +208,7 @@ const jsonLd = [
 
     <!-- Notas relacionadas de la misma categoría -->
     {nota.data.category && (
-      <NotasRelacionadas category={nota.data.category} exclude={nota.slug} />
+      <NotasRelacionadas category={nota.data.category} exclude={nota.slug} tags={nota.data.tags} />
     )}
 
     <!-- CTA comercial específico para notas de financiación/subvenciones -->

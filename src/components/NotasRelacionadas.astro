@@ -1,13 +1,18 @@
 ---
 /**
  * NotasRelacionadas.astro
- * Muestra hasta 3 notas de la misma categoría.
- * Se usa en landings de servicio y al final de cada nota individual.
+ * Muestra hasta 3 notas de la misma categoría, por RELEVANCIA (solape de tags
+ * con la nota actual) y no solo por recencia — antes solo enlazaba las 3 más
+ * recientes de cada categoría, dejando a la mayoría de notas sin ningún enlace
+ * interno automático (auditoría 2026-07). Con `tags`, cada nota enlaza a sus
+ * vecinas temáticas; sin `tags` (landings de servicio), rota de forma
+ * determinista con el mes para repartir enlazado interno entre todas.
  *
  * Props:
  *   category  — categoría a mostrar ('Comunicación' | 'Financiación' | 'Estrategia' | 'Agencia')
  *   exclude   — slug a excluir (cuando se usa dentro de una nota para no mostrarse a sí misma)
  *   limit     — número máximo de notas a mostrar (default 3)
+ *   tags      — tags de la nota actual, para priorizar por afinidad temática
  */
 import { getCollection } from 'astro:content';
 
@@ -15,16 +20,34 @@ interface Props {
   category: 'Comunicación' | 'Financiación' | 'Estrategia' | 'Agencia';
   exclude?: string;
   limit?: number;
+  tags?: string[];
 }
 
-const { category, exclude, limit = 3 } = Astro.props;
+const { category, exclude, limit = 3, tags = [] } = Astro.props;
 
 const allNotas = await getCollection('notas', ({ data }) => !data.draft && data.category === category);
 allNotas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
-const notas = allNotas
-  .filter((n) => n.slug !== exclude)
-  .slice(0, limit);
+const candidatas = allNotas.filter((n) => n.slug !== exclude);
+
+let notas: typeof candidatas;
+if (tags.length > 0) {
+  // Relevancia: nº de tags compartidos (desc); recencia como desempate (el
+  // sort de arriba ya deja las recientes primero y el sort es estable).
+  const tagSet = new Set(tags.map((t) => t.toLowerCase()));
+  notas = candidatas
+    .map((n) => ({ n, score: (n.data.tags ?? []).filter((t) => tagSet.has(t.toLowerCase())).length }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ n }) => n);
+} else {
+  // Sin tags de referencia (landings): rotación determinista mensual — ventana
+  // que se desplaza con el mes para que TODAS las notas reciban enlaces internos
+  // a lo largo del tiempo (el build corre en cada deploy, ≥1/mes de sobra).
+  const monthIdx = new Date().getFullYear() * 12 + new Date().getMonth();
+  const start = candidatas.length > limit ? monthIdx % candidatas.length : 0;
+  notas = Array.from({ length: Math.min(limit, candidatas.length) }, (_, i) => candidatas[(start + i) % candidatas.length]);
+}
 
 const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'short' });
 
