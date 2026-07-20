@@ -1,0 +1,25 @@
+src/content/knowledge/01-servicios-y-precios.md
+  s_11e25a5bb20496::t_448458892b4611 22
+src/content/knowledge/03-faq.md
+  s_11e25a5bb20496::t_448458892b4611 31-33
+src/content/notas/como-producir-podcast-tercer-sector.md
+  s_11e25a5bb20496::t_448458892b4611 66
+src/pages/audiovisual.astro
+  s_11e25a5bb20496::t_448458892b4611 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "ead761304f885ac30a27cf8613277b9b2605467a",
+  "prompts": {},
+  "sessions": {
+    "s_11e25a5bb20496": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "98b58ef3-49de-4e51-8b89-7c581bb55115",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
