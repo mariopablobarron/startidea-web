@@ -1,0 +1,19 @@
+src/pages/diagnostico/servicio/[slug].astro
+  s_06090b74957476::t_37ecf3a3d8c89b 1-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "fd09758e7bea628008eae830d5eac5b73343072b",
+  "prompts": {},
+  "sessions": {
+    "s_06090b74957476": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8f8ee369-84d5-4cd1-a206-f80e3e91b980",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
