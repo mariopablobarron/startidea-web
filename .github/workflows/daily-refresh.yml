@@ -26,6 +26,16 @@ jobs:
     name: Disparar workflow de deploy
     runs-on: ubuntu-latest
     timeout-minutes: 2
+
+    # Sin esto el GITHUB_TOKEN solo tiene permisos de LECTURA y disparar otro
+    # workflow devuelve `HTTP 403: Resource not accessible by integration`.
+    # Es lo que rompía el refresh diario en silencio: el cron se ejecutaba,
+    # fallaba aquí, y la web no se regeneraba. Detectado el 2026-07-20 tras
+    # 12 días seguidos de fallo sin que saltara ninguna alarma.
+    permissions:
+      actions: write
+      contents: read
+
     steps:
       - name: Disparar deploy.yml
         run: |
@@ -33,4 +43,9 @@ jobs:
             --repo ${{ github.repository }} \
             --ref ${{ github.ref_name }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Usa DEPLOY_DISPATCH_TOKEN (un PAT con scope actions:write) si está
+          # definido; si no, el token automático. GitHub impide que un run
+          # lanzado con GITHUB_TOKEN dispare otro workflow, para evitar
+          # recursiones: si tras dar permisos el deploy sigue sin arrancar,
+          # hay que crear ese PAT y guardarlo como secret del repo.
+          GH_TOKEN: ${{ secrets.DEPLOY_DISPATCH_TOKEN || secrets.GITHUB_TOKEN }}
