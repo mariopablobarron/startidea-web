@@ -1,0 +1,141 @@
+---
+// /diagnostico/servicio/<slug> — Diagnóstico de un servicio concreto.
+//
+// DISTINTO de /diagnostico (el árbol adaptativo general, que sigue igual):
+// esta ruta sirve los cuestionarios del "motor de diagnósticos" del HUB, uno
+// por servicio (redes sociales, web, marca…). El cuestionario se define en el
+// HUB desde su panel, sin tocar este repo, así que aquí no hay preguntas
+// hardcodeadas: solo el marco de marca y el iframe.
+//
+// El HUB autoriza expresamente a startidea.es a embeberlo (CSP
+// frame-ancestors) y publica la altura del contenido por postMessage para que
+// el iframe crezca y no aparezca scroll interno.
+// Ver: HUB/docs/DIAGNOSTICO-EMBEBIDO.md
+
+import Base from '@/layouts/Base.astro';
+
+const HUB = 'https://hub.startidea.tech';
+const WORKSPACE = 'startidea';
+
+// Diagnósticos publicados. Añadir aquí al publicar uno nuevo en el HUB: el
+// `slug` tiene que coincidir con el de la plantilla.
+const DIAGNOSTICOS: Record<
+  string,
+  { titulo: string; descripcion: string; entradilla: string }
+> = {
+  'redes-sociales': {
+    titulo: 'Diagnóstico de redes sociales',
+    descripcion:
+      'Ocho preguntas para saber en qué punto están tus redes y qué plan de contenidos te encaja. Dos minutos, sin compromiso.',
+    entradilla:
+      'Responde con lo que haya, aunque sea poco: sirve igual para saber por dónde empezar.',
+  },
+};
+
+export function getStaticPaths() {
+  return [{ params: { slug: 'redes-sociales' } }];
+}
+
+const { slug } = Astro.params;
+const diag = DIAGNOSTICOS[slug as string];
+if (!diag) return Astro.redirect('/diagnostico');
+
+const src = `${HUB}/diagnostico/${WORKSPACE}/${slug}`;
+---
+
+<Base
+  title={`${diag.titulo} — Startidea`}
+  description={diag.descripcion}
+  ogSlug={`page/diagnostico-${slug}`}
+>
+  <main class="wrap">
+    <header class="cabecera">
+      <p class="eyebrow">Diagnóstico gratuito</p>
+      <h1>{diag.titulo}</h1>
+      <p class="entradilla">{diag.entradilla}</p>
+    </header>
+
+    <!-- El contenido lo sirve el HUB: así el cuestionario se edita desde el
+         panel sin desplegar esta web. -->
+    <iframe
+      id="diagnostico"
+      src={src}
+      title={diag.titulo}
+      loading="lazy"
+      height="900"
+    ></iframe>
+
+    <noscript>
+      <p class="sin-js">
+        Para responder el diagnóstico necesitas JavaScript activado. También
+        puedes <a href={src}>abrirlo en una pestaña nueva</a>.
+      </p>
+    </noscript>
+  </main>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+  }
+  .cabecera {
+    max-width: 42rem;
+    margin: 0 auto 2rem;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rosa, #e63e73);
+    margin: 0 0 0.75rem;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+    text-wrap: balance;
+  }
+  .entradilla {
+    color: #55535e;
+    line-height: 1.6;
+    margin: 0;
+  }
+  iframe {
+    width: 100%;
+    border: 0;
+    display: block;
+    /* Sin transición de altura: al cambiar de paso el salto es grande y
+       animarlo marea más que ayuda. */
+  }
+  .sin-js {
+    padding: 1.5rem;
+    background: #f4efe6;
+    border-radius: 0.75rem;
+    text-align: center;
+  }
+</style>
+
+<script is:inline define:vars={{ HUB }}>
+  (function () {
+    var marco = document.getElementById('diagnostico');
+    if (!marco) return;
+
+    window.addEventListener('message', function (e) {
+      // Aceptar SOLO mensajes del HUB. Sin esta comprobación, cualquier otra
+      // ventana o extensión podría redimensionar el iframe a su antojo.
+      if (e.origin !== HUB) return;
+      if (!e.data || e.data.tipo !== 'startidea:diagnostico:alto') return;
+
+      var alto = Number(e.data.alto);
+      // Rango de cordura: descarta valores absurdos o corruptos.
+      if (!isFinite(alto) || alto < 200 || alto > 20000) return;
+
+      marco.style.height = alto + 'px';
+    });
+  })();
+</script>
