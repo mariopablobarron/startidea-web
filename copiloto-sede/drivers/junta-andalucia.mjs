@@ -79,27 +79,43 @@ export async function tramitarJuntaAndalucia(job) {
 
     // ── 2. Pulsar INICIAR SOLICITUD → aparece el muro de autenticación ───────
     // (No introducimos NIF ni credenciales: paramos justo en el handoff.)
+    // HONESTIDAD de la evidencia: solo se declara handoff completo si el modal
+    // de acceso APARECIÓ de verdad. Antes se etiquetaba la captura como
+    // "pantalla de acceso" aunque el clic o el modal hubieran fallado —
+    // evidencia falsa para un trámite con obligaciones legales.
     let metodosAcceso = [];
+    let modalVisto = false;
     const iniciar = page.getByRole('button', { name: /INICIAR SOLICITUD/i }).first();
     if (await iniciar.isVisible().catch(() => false)) {
       await iniciar.click({ timeout: 15000 }).catch(() => {});
-      await page
+      modalVisto = await page
         .getByRole('heading', { name: /Autenticarme con/i })
         .waitFor({ state: 'visible', timeout: 15000 })
-        .catch(() => {});
+        .then(() => true, () => false);
 
       metodosAcceso = await detectarMetodosAcceso(page);
-      await capture(page, evidencias, 'acceso', 'Pantalla de acceso: identifícate con certificado digital o Cl@ve');
+      await capture(
+        page,
+        evidencias,
+        modalVisto ? 'acceso' : 'estado-tras-clic',
+        modalVisto
+          ? 'Pantalla de acceso: identifícate con certificado digital o Cl@ve'
+          : 'Estado de la sede tras pulsar INICIAR SOLICITUD (el modal de acceso NO llegó a aparecer)',
+      );
     }
 
     // (el cierre del browser lo hace el finally — cerrarlo aquí duplicaba el close)
     return {
-      status: 'handoff_firma',
-      message:
-        'Trámite localizado en la Ventanilla Electrónica de la Junta de Andalucía. ' +
-        'El cliente (o Startidea como apoderado) debe entrar, identificarse con ' +
-        'certificado digital o Cl@ve, rellenar la solicitud con los datos de abajo, ' +
-        'adjuntar los documentos y firmar.',
+      status: modalVisto ? 'handoff_firma' : 'handoff_parcial',
+      modalAccesoVerificado: modalVisto,
+      message: modalVisto
+        ? 'Trámite localizado en la Ventanilla Electrónica de la Junta de Andalucía. ' +
+          'El cliente (o Startidea como apoderado) debe entrar, identificarse con ' +
+          'certificado digital o Cl@ve, rellenar la solicitud con los datos de abajo, ' +
+          'adjuntar los documentos y firmar.'
+        : 'Sede localizada, pero el modal de acceso no llegó a confirmarse en la captura ' +
+          '(la VEA pudo cambiar o tardar). Revisa las capturas antes de entregar la guía: ' +
+          'los datos de prefill y el checklist siguen siendo válidos.',
       sedeUrl: entry,
       procedimiento: procedimientoNombre || 'Presentación Electrónica General (PEG)',
       metodosAcceso: metodosAcceso.length ? metodosAcceso : ['certificado', 'clave'],

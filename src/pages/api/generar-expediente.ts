@@ -54,8 +54,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ ok: false, error: 'not_found' }), { status: 404 });
   }
 
-  // Marcar como "analizando"
-  updateStatus(id, 'analizando_ia');
+  // Marcar como "analizando" — salvo que el expediente ya esté 'entregado' o
+  // 'presentado': regenerar docs sobre esos estados no debe regresarlos.
+  const statusPrevio = exp.status;
+  const statusFinal = statusPrevio === 'entregado' || statusPrevio === 'presentado';
+  if (!statusFinal) updateStatus(id, 'analizando_ia');
 
   // Todo lo que sigue puede lanzar (extracción de docs, IA, email). Sin este
   // try/catch, una excepción dejaba el expediente atascado en 'analizando_ia'
@@ -81,7 +84,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const gen = await runAiGeneration(exp, convContext, docsContext || undefined);
 
   if (!gen.ok) {
-    updateStatus(id, 'recibido');
+    if (!statusFinal) updateStatus(id, statusPrevio);
     // La generación falló para un expediente real — Mario debe enterarse
     // (el cliente probablemente ya está esperando los documentos)
     await notifyError({
@@ -215,7 +218,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   } catch (err) {
     // Resetear estado para que el admin pueda reintentar; contrato JSON estable.
     console.error('[generar-expediente] Excepción no controlada:', err);
-    try { updateStatus(id, 'recibido'); } catch {}
+    try { if (!statusFinal) updateStatus(id, statusPrevio); } catch {}
     return new Response(
       JSON.stringify({ ok: false, error: 'internal', detail: String(err instanceof Error ? err.message : err) }),
       { status: 500, headers: { 'content-type': 'application/json' } },

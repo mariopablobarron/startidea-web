@@ -409,6 +409,17 @@ export function saveAiOutput(
 ): void {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
+  // Guard anti-regresión: regenerar la IA sobre un expediente ya 'entregado' o
+  // 'presentado' NO debe devolverlo a 'docs_listos' en silencio (corrompía el
+  // pipeline y las estadísticas). Los documentos se actualizan igual; el status
+  // solo avanza a 'docs_listos' desde estados anteriores.
+  const current = db.prepare(`SELECT status FROM expedientes WHERE id = ?`).get(id) as
+    | { status: string }
+    | undefined;
+  const keepStatus = current?.status === 'entregado' || current?.status === 'presentado';
+  if (keepStatus) {
+    console.warn(`[expedientes-db] saveAiOutput sobre expediente ${id} en status '${current?.status}': se actualizan los docs pero NO se regresa el status.`);
+  }
   db.prepare(`
     UPDATE expedientes
     SET ai_memoria = @memoria, ai_presupuesto = @presupuesto,
@@ -416,7 +427,7 @@ export function saveAiOutput(
         ai_notas = @notas, ai_elegibilidad = @elegibilidad,
         ai_datos_faltantes = @datosFaltantes,
         ai_at = @now, updated_at = @now,
-        status = 'docs_listos'
+        status = CASE WHEN status IN ('entregado', 'presentado') THEN status ELSE 'docs_listos' END
     WHERE id = @id
   `).run({
     id,

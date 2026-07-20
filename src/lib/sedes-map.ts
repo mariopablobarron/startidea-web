@@ -47,9 +47,14 @@ const SEDES: Array<{ patterns: string[]; sede: SedeInfo }> = [
       'plan estatal de ong', '0,7', 'cero punto siete',
     ],
     sede: {
-      nombre: 'Ministerio de Derechos Sociales e Inclusión',
-      url: 'https://sede.serviciosocialesinclusión.gob.es/',
-      tramiteHint: `Accede a https://sede.serviciosocialesinclusión.gob.es/ con certificado digital. El trámite se llama normalmente "Subvenciones para proyectos de acción social" o similar. En el menú lateral busca "Convocatorias" → "Abiertas".`,
+      // Verificado 2026-07-16: el dominio anterior (sede.serviciosocialesinclusión.gob.es,
+      // con tilde) NO existe (NXDOMAIN). El Ministerio es ahora "Derechos Sociales,
+      // Consumo y Agenda 2030" y su web canónica (200) es www.dsca.gob.es
+      // (mdsocialesa2030.gob.es redirige ahí). La sede electrónica se abre desde
+      // esa web ("Sede electrónica" en la cabecera).
+      nombre: 'Ministerio de Derechos Sociales, Consumo y Agenda 2030',
+      url: 'https://www.dsca.gob.es/',
+      tramiteHint: `Entra en https://www.dsca.gob.es/ y abre "Sede electrónica" (cabecera). Accede con certificado digital. El trámite se llama normalmente "Subvenciones para proyectos de acción social" (Plan estatal ONG / 0,7% IRPF) o similar. Busca "Convocatorias" → "Abiertas".`,
       autofirmaRequired: true,
       notasEspeciales: `La sede del Ministerio usa Autofirma para la firma. Tras presentar recibirás un Registro de Entrada (RE/…) y un código CSV. Guarda ambos. El plazo de subsanación si te falta documentación suele ser 10 días hábiles desde la notificación en la carpeta ciudadana.`,
     },
