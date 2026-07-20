@@ -1,0 +1,25 @@
+src/lib/sedes-map.ts
+  s_0ab79ba551035b::t_70184766e236fa 50-57
+src/pages/api/generar-expediente.ts
+  s_0ab79ba551035b::t_aec93f5b7f8860 57-61,87,221
+src/lib/expedientes-db.ts
+  s_0ab79ba551035b::t_c6c53a6f1c935d 412-422,430
+copiloto-sede/drivers/junta-andalucia.mjs
+  s_0ab79ba551035b::t_b1dd6a62241e00 82-85,87,91,94,97-104,109-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "c603148ea2bbe7c15a1154aed2feb6ee3a8bee94",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
