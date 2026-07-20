@@ -80,7 +80,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       `connect-src 'self' https://analytics.hubstartidea.es https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://analytics.google.com https://*.clarity.ms https://hub.startidea.tech`,
       `media-src 'self' data: blob:`,
       `worker-src 'self' blob:`,
-      `frame-src 'self' https://www.googletagmanager.com`,
+      `frame-src 'self' https://www.googletagmanager.com https://hub.startidea.tech`,
       `manifest-src 'self'`,
     ].join('; ');
     headers.set('content-security-policy', csp);
