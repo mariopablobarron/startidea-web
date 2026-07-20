@@ -88,12 +88,18 @@ export async function tramitarJuntaAndalucia(job) {
     const iniciar = page.getByRole('button', { name: /INICIAR SOLICITUD/i }).first();
     if (await iniciar.isVisible().catch(() => false)) {
       await iniciar.click({ timeout: 15000 }).catch(() => {});
-      modalVisto = await page
-        .getByRole('heading', { name: /Autenticarme con/i })
+      // Heading del modal: /Autenticar/ cubre "Autenticarme" y "Autenticarse"
+      // (la VEA cambió el texto en jul-2026). Robusto a futuros retoques.
+      const headingVisto = await page
+        .getByRole('heading', { name: /Autenticar/i })
         .waitFor({ state: 'visible', timeout: 15000 })
         .then(() => true, () => false);
 
       metodosAcceso = await detectarMetodosAcceso(page);
+      // El muro de acceso se da por visto si aparece el heading O si hay al
+      // menos un botón de acceso (certificado/Cl@ve) — la señal real del handoff,
+      // independiente del texto exacto del título.
+      modalVisto = headingVisto || metodosAcceso.length > 0;
       await capture(
         page,
         evidencias,
