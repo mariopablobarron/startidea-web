@@ -1,0 +1,33 @@
+src/pages/comunicacion-eclesial.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 81-82
+src/pages/ia-administraciones.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 90-91
+src/pages/index.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 29
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 231-232
+src/pages/agentes-ia.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 94-95
+src/pages/notas/[...slug].astro
+  s_0ab79ba551035b::t_d32f2bd8106be9 211
+src/pages/glosario.astro
+  s_0ab79ba551035b::t_53d7b08d1e7b39 160-161
+src/components/NotasRelacionadas.astro
+  s_0ab79ba551035b::t_bd6d105cef1252 4-9,15,23,26,31-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "e9686f9dee5bf441f6356f2250788f09644a03bd",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
