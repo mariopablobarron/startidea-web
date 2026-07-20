@@ -1,0 +1,23 @@
+src/content/notas/legados-solidarios-asociaciones-pequenas.md
+  s_0ab79ba551035b::t_27e061efd3418f 4,8
+src/content/notas/que-evalua-empresa-antes-convenio-ong.md
+  s_0ab79ba551035b::t_27e061efd3418f 4,8
+src/content/notas/subvencion-cobrada-tarde-prestamo-al-estado.md
+  s_0ab79ba551035b::t_27e061efd3418f 4,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "8a3c15310e750c161b3f8caedafce8031c15892b",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
