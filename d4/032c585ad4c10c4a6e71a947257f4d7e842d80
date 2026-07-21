@@ -1,0 +1,27 @@
+src/pages/comunicacion-ong-granada.astro
+  s_fc926b43e01d90::t_fa194820503130 1-276
+src/pages/comunicacion.astro
+  s_fc926b43e01d90::t_b134a6cef472c3 235-236
+  s_fc926b43e01d90::t_58f051a39c6c4b 194
+  s_fc926b43e01d90::t_1b1dfd2432c5d5 181
+src/pages/redes-sociales-granada.astro
+  s_fc926b43e01d90::t_3a92d17f62ccfa 203
+src/pages/que-hacemos.astro
+  s_fc926b43e01d90::t_1bf03f81f616b2 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d4032c585ad4c10c4a6e71a947257f4d7e842d80",
+  "prompts": {},
+  "sessions": {
+    "s_fc926b43e01d90": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "817434b2-7cd1-4388-a302-634dcd0b3aba",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
