@@ -1,0 +1,48 @@
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_9f83f6a3937076 11-13
+  s_4ccdcf455112ce::t_81d1e1711b21ef 10
+src/pages/comunicacion-eclesial.astro
+  s_0ab79ba551035b::t_b58544bab6701b 11-13
+  s_4ccdcf455112ce::t_ffb48890a3ded1 10
+src/pages/precios.astro
+  s_0ab79ba551035b::t_b186c7b6aac2ef 48-50
+  s_4ccdcf455112ce::t_d0d92ebe6f0750 47
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_aee22f980ab2e0 14-16
+  s_4ccdcf455112ce::t_a725270614ed41 13
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_3601c7a8d476ff 198-200
+  s_b5a75aa609492a::t_40666bf89c99ca 197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "5d6e06d7feb078852d0f56f6022fbb2d3652417a",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_4ccdcf455112ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "019f556a-6ea9-75a0-bbcb-381a6660f9b0",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_b5a75aa609492a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "330b96cc-7045-45c3-8461-f076fa55902c",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
