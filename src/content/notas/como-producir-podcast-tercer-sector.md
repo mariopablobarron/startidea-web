@@ -63,7 +63,7 @@ El coste real de un podcast del tercer sector tiene tres bloques principales:
 
 1. **Tiempo de quien conduce y prepara guiones**: 4-8 horas por episodio incluyendo investigación previa, guion semiestructurado y revisión de la entrevista grabada. Es la partida más cara aunque no aparezca en factura.
 2. **Edición y montaje**: 3-5 horas por episodio si lo hace una persona experimentada, 8-12 si lo hace alguien aprendiendo. A precio de mercado, 150-300 € por episodio externalizado.
-3. **Distribución y promoción**: alta en plataformas (Spotify, Apple Podcasts, ivoox, Google Podcasts) — gratis si se hace con un hosting tipo Anchor/Spreaker, ~10 €/mes si se hace con Transistor o Buzzsprout para tener métricas decentes. Promoción en redes: trabajo adicional de comunicación que conviene presupuestar.
+3. **Distribución y promoción**: alta en plataformas (Spotify, Apple Podcasts, ivoox, YouTube Music) — gratis si se hace con un hosting tipo Anchor/Spreaker, ~10 €/mes si se hace con Transistor o Buzzsprout para tener métricas decentes. Promoción en redes: trabajo adicional de comunicación que conviene presupuestar.
 
 Para una serie de 8 episodios con producción externa de edición + guion interno: **entre 4.500 y 7.500 euros**. Si se quiere producción audiovisual completa (cámara para vídeo en YouTube, montaje narrativo, artwork por episodio): **entre 9.000 y 12.000 euros**.
 
