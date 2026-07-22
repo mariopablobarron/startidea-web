@@ -1,0 +1,21 @@
+scripts/geo-monitor.mjs
+  s_0ab79ba551035b::t_b3a9ce7116b9f6 1-187
+scripts/geo-clients.json
+  s_0ab79ba551035b::t_e546bf3701de1d 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d45b8a05b328c4f1b8849d86dca092d37488dc01",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
