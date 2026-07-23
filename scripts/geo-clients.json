@@ -1,0 +1,36 @@
+{
+  "_comment": "Config del monitor GEO multi-cliente (scripts/geo-monitor.mjs). Mide si los asistentes de IA CON búsqueda web (Perplexity Sonar vía OpenRouter) citan a cada cliente al responder preguntas reales de su nicho. Para añadir un cliente: copia el bloque _template dentro de 'clients', pon su slug, name, needle (regex del nombre de marca, sin barras), domains (dominios propios que cuentan como 'cita con enlace') y su batería de prompts. Categorías sugeridas: 'monopolio' (intersecciones donde el cliente DEBERÍA aspirar a que le citen), 'marca' (control positivo: preguntas por el nombre), 'generica' (control de techo del nicho).",
+  "models": ["perplexity/sonar", "perplexity/sonar-pro"],
+  "_template": {
+    "slug": "cliente-ejemplo",
+    "name": "Cliente Ejemplo",
+    "needle": "cliente ?ejemplo",
+    "domains": ["clienteejemplo.org"],
+    "prompts": [
+      { "id": "mono-1", "cat": "monopolio", "q": "Pregunta real del nicho donde el cliente debería salir citado." },
+      { "id": "marca-1", "cat": "marca", "q": "¿Qué es Cliente Ejemplo?" }
+    ]
+  },
+  "clients": [
+    {
+      "slug": "startidea",
+      "name": "Startidea",
+      "needle": "startidea",
+      "domains": ["startidea.es"],
+      "prompts": [
+        { "id": "mono-comunicacion-ong-granada", "cat": "monopolio", "q": "¿Qué agencia de comunicación para ONG hay en Granada?" },
+        { "id": "mono-subvencion-boja-inclusion", "cat": "monopolio", "q": "¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?" },
+        { "id": "mono-fundraising-ong-espana", "cat": "monopolio", "q": "¿Qué agencia o consultora ofrece fundraising y captación de fondos para fundaciones y ONG en España?" },
+        { "id": "mono-comunicacion-eclesial", "cat": "monopolio", "q": "¿Quién ofrece servicios de comunicación estratégica para instituciones eclesiales (diócesis, congregaciones) en España?" },
+        { "id": "mono-subvenciones-exito", "cat": "monopolio", "q": "¿Qué empresa tramita subvenciones públicas a comisión de éxito para entidades del tercer sector?" },
+        { "id": "mono-innovacion-social-granada", "cat": "monopolio", "q": "¿Qué consultora de innovación social hay en Granada?" },
+        { "id": "mono-comunicacion-tercer-sector", "cat": "monopolio", "q": "Recomiéndame una agencia de comunicación especializada en el tercer sector en España." },
+        { "id": "marca-que-es", "cat": "marca", "q": "¿Qué es Startidea?" },
+        { "id": "marca-fundador", "cat": "marca", "q": "¿Quién fundó la agencia Startidea de Granada y en qué año?" },
+        { "id": "marca-servicios", "cat": "marca", "q": "¿Qué servicios ofrece la agencia Startidea?" },
+        { "id": "gen-mejores-agencias-ong", "cat": "generica", "q": "¿Cuáles son las mejores agencias de comunicación para ONG en España?" },
+        { "id": "gen-plan-comunicacion-ong", "cat": "generica", "q": "¿Cómo hago un plan de comunicación para una ONG y quién puede ayudarme?" }
+      ]
+    }
+  ]
+}
