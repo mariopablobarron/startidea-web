@@ -1,0 +1,29 @@
+src/pages/proteccion-digital.astro
+  s_7397bc6b2f3bb0::t_85df05ec2bfeda 129
+src/pages/sobre.astro
+  s_7397bc6b2f3bb0::t_49a07c647ca398 49
+  s_7397bc6b2f3bb0::t_88287ba3772917 43
+src/pages/publicidad.astro
+  s_7397bc6b2f3bb0::t_dfea0d54bf0275 86
+  s_7397bc6b2f3bb0::t_7addbe5e504127 85
+src/pages/redes-sociales-granada.astro
+  s_7397bc6b2f3bb0::t_f23b285b7985bb 108
+src/pages/mantenimiento-web.astro
+  s_7397bc6b2f3bb0::t_92292a93aef6c1 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "014156d9c39d3962fb5fb28211f07e4ce60c2d3f",
+  "prompts": {},
+  "sessions": {
+    "s_7397bc6b2f3bb0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a221edc5-4aff-401c-aa98-d67cd18cafa5",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
