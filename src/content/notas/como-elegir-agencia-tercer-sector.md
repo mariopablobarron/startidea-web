@@ -17,7 +17,7 @@ faqs:
   - question: '¿Cuánto tiempo debería durar el proceso de selección de agencia?'
     answer: 'Entre tres y seis semanas si se hace bien: brief interno (1-2 semanas), invitación a 2-3 agencias, presentaciones y dudas (1 semana) y decisión con contrato (1 semana). Alargar el proceso más de dos meses indica que el brief interno no estaba cerrado.'
   - question: '¿Es mejor una agencia local o puede ser de otra ciudad?'
-    answer: 'Para comunicación estratégica y contenidos la localización importa menos que el encaje sectorial. Para producción audiovisual, eventos o relaciones con medios locales, la presencia física sí tiene valor. En Startidea trabajamos desde Granada con clientes en toda España: lo que importa es la metodología y el contacto directo.'
+    answer: 'Para comunicación estratégica y contenidos la localización importa menos que el encaje sectorial. Para producción audiovisual, eventos o relaciones con medios locales, la presencia física sí tiene valor. Startidea trabaja desde Granada con clientes en toda España: lo que importa es la metodología y el contacto directo.'
 ---
 Cada año, miles de organizaciones sociales en España contratan agencia de comunicación. La mayoría vive después la misma frustración: el plan que prometieron no se ejecutó, el equipo cambió tres veces, los entregables fueron correctos pero genéricos, y al final del año no hay nada que la organización pueda usar el siguiente. Esta nota intenta ayudarte a no repetir ese patrón.
 
@@ -103,7 +103,7 @@ Si la agencia responde a las siete con seguridad y claridad, vas bien. Si tres o
 
 ## Cómo lo plantea Startidea
 
-Startidea no entrega propuestas sin diagnóstico previo. La primera reunión es gratuita y sirve para que ambas partes decidan si encajan. Si encaja, hacemos un diagnóstico breve (con coste, no gratis — porque tiene valor en sí mismo aunque luego no contrates el proyecto completo) y la propuesta de trabajo sale de ahí.
+Startidea no entrega propuestas sin diagnóstico previo. La primera reunión es gratuita y sirve para que ambas partes decidan si encajan. Si encaja, se hace un diagnóstico breve (con coste, no gratis — porque tiene valor en sí mismo aunque luego no contrates el proyecto completo) y la propuesta de trabajo sale de ahí.
 
 Esto evita el patrón habitual de propuestas en frío que prometen cualquier cosa. Y evita que tú firmes un contrato basado en lo que la agencia adivinó, sin haber visto realmente cómo funciona tu organización.
 

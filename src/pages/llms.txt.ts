@@ -25,7 +25,7 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 
 ## Servicios
 
-- [Comunicación estratégica y marketing social](${SITE_URL}/comunicacion): plan de comunicación, relato, contenidos y campañas para entidades sociales.
+- [Comunicación estratégica y marketing social](${SITE_URL}/comunicacion): agencia de comunicación para ONG, fundaciones y entidades sociales en toda España — plan de comunicación, relato, contenidos y campañas.
 - [Fundraising para ONG y entidades sociales](${SITE_URL}/fundraising): diversificación de ingresos, base social, captación de fondos y alianzas.
 - [Tramitación de subvenciones](${SITE_URL}/subvenciones/presentar): diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica con certificado digital. Comisión a éxito.
 - [Consultoría e innovación social](${SITE_URL}/consultoria): estrategia, gobernanza y medición de impacto.
