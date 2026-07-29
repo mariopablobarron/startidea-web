@@ -1,15 +1,17 @@
 ---
 import Base from '@/layouts/Base.astro';
 import AudienciaDetalle from '@/components/AudienciaDetalle.astro';
-import { getAudiencia } from '@/data/audiencias';
+import { getAudiencia, audienciaJsonLd } from '@/data/audiencias';
 
 const a = getAudiencia('tercer-sector')!;
+const jsonLd = audienciaJsonLd(a);
 ---
 
 <Base
   title={a.metaTitle}
   description={a.metaDescription}
   ogSlug="page/para-quien-tercer-sector"
+  jsonLd={jsonLd}
 >
   <AudienciaDetalle audiencia={a} />
 </Base>

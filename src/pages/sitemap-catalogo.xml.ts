@@ -24,6 +24,14 @@ export const GET: APIRoute = async () => {
 
   const today = new Date().toISOString().split('T')[0];
 
+  // Páginas SSR (prerender=false) que NO cubre el sitemap estático de
+  // @astrojs/sitemap. /precios es la landing de "cuánto cuesta tramitar una
+  // subvención a éxito" — indexable y de alta intención, pero invisible al
+  // crawler sin este alta manual.
+  const staticSsr = [
+    { loc: `${SITE_URL}/precios`, changefreq: 'monthly', priority: '0.8' },
+  ];
+
   const urlEntries = [
     // Índice del catálogo
     `  <url>
@@ -32,6 +40,13 @@ export const GET: APIRoute = async () => {
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>`,
+    // Páginas SSR sueltas de alta intención
+    ...staticSsr.map(s => `  <url>
+    <loc>${s.loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${s.changefreq}</changefreq>
+    <priority>${s.priority}</priority>
+  </url>`),
     // Una entrada por convocatoria activa
     ...convs.map(c => `  <url>
     <loc>${SITE_URL}/subvenciones/catalogo/${c.slug}</loc>
