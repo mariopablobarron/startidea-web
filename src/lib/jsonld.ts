@@ -344,6 +344,10 @@ interface CaseStudyInput {
   cliente: string;
   year: string;
   image?: string;
+  /** Web pública del cliente (si existe). Convierte `about` en una entidad
+   *  Organization con `sameAs` → refuerza la entidad de marca del cliente
+   *  para búsquedas de su nombre (ej. "aldaima") en vez de un string plano. */
+  clienteUrl?: string;
 }
 
 export function caseStudySchema(c: CaseStudyInput) {
@@ -358,7 +362,9 @@ export function caseStudySchema(c: CaseStudyInput) {
     publisher: { '@id': `${SITE_URL}/#organization` },
     image: c.image ?? `${SITE_URL}/og/home.png`,
     inLanguage: 'es-ES',
-    about: c.cliente,
+    about: c.clienteUrl
+      ? { '@type': 'Organization', name: c.cliente, sameAs: c.clienteUrl }
+      : c.cliente,
   };
 }
 

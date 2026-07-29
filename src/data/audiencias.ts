@@ -5,6 +5,7 @@
  * Mantener una sola fuente de verdad para que el contenido sea consistente
  * entre el hub y las páginas dedicadas.
  */
+import { organizationSchema, breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 export type Audiencia = {
   id: 'tercer-sector' | 'instituciones' | 'empresas';
@@ -18,6 +19,10 @@ export type Audiencia = {
   keywords: string[];
   avoid: string[];
   services: string[];
+  // FAQ citables (GEO/AEO): preguntas espejo de las búsquedas reales, con
+  // respuestas autónomas (Startidea + servicio + lugar + dato). Se renderizan
+  // visibles y se emiten como FAQPage JSON-LD desde la página de la audiencia.
+  faqs: { q: string; a: string }[];
   // Casos de estudio relacionados (slugs de src/data/casos.ts) — opcional
   casosRelacionados?: string[];
   // Imagen lifestyle para card en home (16:9 o 3:2 aprox)
@@ -57,6 +62,24 @@ export const audiencias: Audiencia[] = [
       'Producción audiovisual y podcast',
       'Profesionalización de equipo de comunicación',
     ],
+    faqs: [
+      {
+        q: '¿Qué agencia trabaja con ONG y fundaciones del tercer sector en España?',
+        a: 'Startidea es una agencia de innovación social con sede en Granada, en activo desde 2011, especializada en comunicación estratégica, fundraising y producción audiovisual para ONG, fundaciones y asociaciones del tercer sector en toda España.',
+      },
+      {
+        q: '¿Qué necesita una ONG para profesionalizar su comunicación?',
+        a: 'Una ONG que quiere profesionalizar su comunicación suele necesitar un plan estratégico de comunicación, captación de fondos (fundraising digital), memorias e informes de impacto y producción audiovisual. Startidea cubre esas líneas con un método propio y casos reales en el tercer sector.',
+      },
+      {
+        q: '¿Cómo puede una fundación captar fondos sin depender solo de subvenciones?',
+        a: 'Startidea diseña planes de fundraising a 12 meses que diversifican los ingresos de una fundación —base social de socios, donación individual, financiación pública y alianzas con empresa— para reducir la dependencia de una sola fuente y profesionalizar la captación.',
+      },
+      {
+        q: '¿Tiene Startidea experiencia con entidades del tercer sector?',
+        a: 'Sí. Startidea ha trabajado con entidades como Down Granada, Aldaima (acogimiento familiar) y Proyecto Hombre Granada, además de organizaciones estatales como Cruz Roja, Save the Children o Acción contra el Hambre.',
+      },
+    ],
     casosRelacionados: ['down-granada', 'acogimiento-familiar-granada', 'tres-mil-millones-latidos'],
     ctaLabel: 'Reservar diagnóstico para tercer sector',
     metaTitle: 'Tercer sector — ONG, fundaciones y asociaciones · Startidea',
@@ -90,6 +113,24 @@ export const audiencias: Audiencia[] = [
       'Producción de jornadas, congresos y publicaciones',
       'Comunicación digital con criterio editorial',
       'Acompañamiento a equipos internos',
+    ],
+    faqs: [
+      {
+        q: '¿Qué agencia ayuda a administraciones e instituciones a modernizar su comunicación?',
+        a: 'Startidea, agencia de innovación social con sede en Granada (desde 2011), acompaña a administraciones públicas, fundaciones públicas y entidades de base ética o religiosa a modernizar su comunicación sin traicionar su identidad, con criterio editorial y evaluación de resultados.',
+      },
+      {
+        q: '¿Cómo modernizar el lenguaje de una institución sin perder su identidad?',
+        a: 'Startidea parte de los códigos propios de la institución y actualiza su comunicación por capas —narrativa, canales digitales y formatos— sin forzar un tono de startup ni desnaturalizar la misión, de modo que conecte con audiencias nuevas manteniendo la continuidad.',
+      },
+      {
+        q: '¿Trabaja Startidea con instituciones eclesiales (diócesis, congregaciones)?',
+        a: 'Sí. Startidea ofrece comunicación eclesial para diócesis, congregaciones, parroquias y fundaciones de la Iglesia, comunicando su misión con su propio lenguaje y con respeto a su identidad.',
+      },
+      {
+        q: '¿Qué servicios de comunicación institucional ofrece Startidea?',
+        a: 'Estrategia de comunicación institucional, modernización de identidad sin pérdida de continuidad, producción de jornadas, congresos y publicaciones, comunicación digital con criterio editorial y acompañamiento a equipos internos.',
+      },
     ],
     casosRelacionados: ['granada-social-5', 'proyecto-hombre'],
     ctaLabel: 'Reservar diagnóstico institucional',
@@ -125,6 +166,24 @@ export const audiencias: Audiencia[] = [
       'Activación de empleados y stakeholders críticos',
       'Producción audiovisual de propósito',
     ],
+    faqs: [
+      {
+        q: '¿Qué agencia ayuda a una empresa a comunicar su propósito y ESG sin greenwashing?',
+        a: 'Startidea, agencia de innovación social con sede en Granada, ayuda a direcciones de comunicación, sostenibilidad y RSC a convertir el discurso ESG en hechos comunicables y verificables, evitando el greenwashing y conectando con stakeholders críticos.',
+      },
+      {
+        q: '¿Cómo puede una empresa articular alianzas reales con el tercer sector?',
+        a: 'Startidea aporta la red del tercer sector que el equipo interno no suele tener y articula partnerships con retorno mutuo —no fotos—, definiendo objetivos, roles y métricas de impacto compartidas entre empresa y entidad social.',
+      },
+      {
+        q: '¿Ayuda Startidea con reportes de sostenibilidad e informes de impacto?',
+        a: 'Sí. Startidea produce comunicación de impacto y reportes legibles que traducen los datos de sostenibilidad en un relato claro para consejos, empleados y stakeholders, sin la ilegibilidad habitual de las memorias ESG.',
+      },
+      {
+        q: '¿Qué es una estrategia de propósito demostrable?',
+        a: 'Es una estrategia que conecta lo que la empresa dice con lo que hace y lo hace medible: narrativa de propósito, activación de empleados, partnerships reales con tercer sector y métricas que evidencian el impacto. Startidea la diseña y la acompaña.',
+      },
+    ],
     casosRelacionados: ['clinica-baca', 'tres-mil-millones-latidos'],
     ctaLabel: 'Reservar diagnóstico de propósito',
     metaTitle: 'Empresas con propósito — ESG real, partnerships con tercer sector · Startidea',
@@ -140,4 +199,20 @@ export const audiencias: Audiencia[] = [
 
 export function getAudiencia(id: Audiencia['id']): Audiencia | undefined {
   return audiencias.find((a) => a.id === id);
+}
+
+/**
+ * JSON-LD para una página de audiencia: Organization + BreadcrumbList + FAQPage.
+ * Cierra el hueco GEO de /para-quien/* (antes no emitían ningún structured data).
+ */
+export function audienciaJsonLd(a: Audiencia) {
+  return [
+    organizationSchema(),
+    breadcrumbList([
+      { name: 'Inicio', url: `${SITE_URL}/` },
+      { name: 'Para quién', url: `${SITE_URL}/para-quien` },
+      { name: a.tag, url: `${SITE_URL}${a.href}` },
+    ]),
+    faqPageSchema(a.faqs.map((f) => ({ q: f.q, a: f.a }))),
+  ];
 }

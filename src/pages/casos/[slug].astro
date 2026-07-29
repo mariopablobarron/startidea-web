@@ -25,6 +25,7 @@ const jsonLd = [
     cliente: caso.cliente,
     year: caso.year,
     image: `${SITE_URL}/og/casos/${caso.slug}.png`,
+    clienteUrl: caso.externalUrl,
   }),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
