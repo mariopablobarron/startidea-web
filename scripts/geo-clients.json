@@ -17,6 +17,7 @@
       "name": "Startidea",
       "needle": "startidea",
       "domains": ["startidea.es"],
+      "network": ["granadasocial.org", "hubstartidea.es", "hub.startidea.tech", "tresmilmillonesdelatidos.es", "empleo.startidea.es", "merchandising.hubstartidea.es", "raizyaccion.hubstartidea.es"],
       "prompts": [
         { "id": "mono-comunicacion-ong-granada", "cat": "monopolio", "q": "¿Qué agencia de comunicación para ONG hay en Granada?" },
         { "id": "mono-subvencion-boja-inclusion", "cat": "monopolio", "q": "¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?" },
