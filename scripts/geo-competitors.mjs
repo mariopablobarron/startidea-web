@@ -87,6 +87,15 @@ const DIRECTORIES = [
   'guiaempresas', 'empresite', 'goodfirms', 'designrush', 'topagencias',
 ];
 
+// AUTORIDADES del sector: asociaciones, plataformas y federaciones de referencia
+// (NO agencias/consultoras). Salir citado JUNTO a ellas es el objetivo, no
+// "ganarles". Se reportan aparte para no leerlas como rivales.
+const AUTHORITIES = [
+  'aefundraising.org', 'plataformatercersector.es', 'solucionesong.org',
+  'afandaluzas.org', 'fundaciones.org', 'plataformaong.org', 'coordinadoraongd.org',
+  'asociaciones.org', 'hazloposible.org', 'observatoritercersector.org',
+];
+
 function hostOf(url) {
   try {
     return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
@@ -183,25 +192,28 @@ async function liveDump(client, models) {
 function classifyHost(host, ownDomains) {
   if (ownDomains.some((d) => isDomain(host, d))) return 'own';
   if (DIRECTORIES.some((b) => isBrand(host, b))) return 'directorio';
+  if (AUTHORITIES.some((d) => isDomain(host, d))) return 'autoridad';
   if (NEUTRAL.some((d) => isDomain(host, d))) return 'neutral';
   return 'competidor';
 }
 
 function analyze(client, dump) {
-  const own = client.domains ?? [];
+  // "Propio" = la marca + toda la red de Startidea (Granada Social, Hub, etc.):
+  // que salga citada una propiedad de la red cuenta como cita, no como rival.
+  const own = [...(client.domains ?? []), ...(client.network ?? [])];
   const money = dump.entries.filter((e) => MONEY_CATS.has(e.cat));
 
-  // Agregado por competidor (y por directorio) en queries dinero.
+  // Agregado por competidor / directorio / autoridad en queries dinero.
   const comp = new Map();   // host → { queries:Set, kind }
-  const perQuery = [];      // { id, cat, q, startideaCitada, competidores:[], directorios:[], neutros:[] }
+  const perQuery = [];
 
   for (const e of money) {
     const hosts = [...new Set((e.sources || []).map(hostOf).filter(Boolean))];
-    const buckets = { competidor: [], directorio: [], neutral: [], own: [] };
+    const buckets = { competidor: [], directorio: [], autoridad: [], neutral: [], own: [] };
     for (const h of hosts) buckets[classifyHost(h, own)].push(h);
     const startideaCitada = e.cited || buckets.own.length > 0;
 
-    for (const kind of ['competidor', 'directorio']) {
+    for (const kind of ['competidor', 'directorio', 'autoridad']) {
       for (const h of buckets[kind]) {
         if (!comp.has(h)) comp.set(h, { host: h, kind, queries: new Set() });
         comp.get(h).queries.add(e.id);
@@ -209,7 +221,8 @@ function analyze(client, dump) {
     }
     perQuery.push({
       id: e.id, cat: e.cat, q: e.q, startideaCitada,
-      competidores: buckets.competidor, directorios: buckets.directorio, neutros: buckets.neutral,
+      competidores: buckets.competidor, directorios: buckets.directorio,
+      autoridades: buckets.autoridad, propios: buckets.own, neutros: buckets.neutral,
     });
   }
 
@@ -248,6 +261,15 @@ function toMarkdown(client, dump, a) {
     L.push('|---|---|');
     for (const r of dirs.slice(0, 15)) L.push(`| ${r.host} | ${r.nQueries} |`);
   }
+  const auths = a.ranking.filter((r) => r.kind === 'autoridad');
+  if (auths.length) {
+    L.push('');
+    L.push('## Autoridades del sector citadas (referencia, no rivales)');
+    L.push('');
+    L.push('| Autoridad | Queries |');
+    L.push('|---|---|');
+    for (const r of auths.slice(0, 15)) L.push(`| ${r.host} | ${r.nQueries} |`);
+  }
   L.push('');
   L.push('## Detalle por query dinero');
   L.push('');
@@ -274,6 +296,11 @@ function printConsole(client, dump, a) {
   if (dirs.length) {
     console.log('\nDIRECTORIOS donde deberías aparecer:');
     for (const r of dirs) console.log(`  ${String(r.nQueries).padStart(2)}×  ${r.host}`);
+  }
+  const auths = a.ranking.filter((r) => r.kind === 'autoridad').slice(0, 8);
+  if (auths.length) {
+    console.log('\nAUTORIDADES del sector (referencia, no rivales):');
+    for (const r of auths) console.log(`  ${String(r.nQueries).padStart(2)}×  ${r.host}`);
   }
   console.log('\nPOR QUERY:');
   for (const p of a.perQuery) {
