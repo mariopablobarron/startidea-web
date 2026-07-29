@@ -1,11 +1,18 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Manifiesto', url: `${SITE_URL}/manifiesto` },
+]);
 ---
 
 <Base
   title="Manifiesto — Startidea"
   description="La innovación social no es una etiqueta. Es una manera de mirar las organizaciones que existen para mejorar el mundo y exigirles que lo hagan mejor."
   ogSlug="page/manifiesto"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

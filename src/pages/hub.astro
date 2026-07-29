@@ -1,6 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Hub Startidea', url: `${SITE_URL}/hub` },
+]);
 
 const espacios = [
   {
@@ -41,6 +47,7 @@ const incluido = [
   title="Hub Startidea — Espacios y Comunidad · Granada"
   description="Coworking, salas de reuniones, estudio de podcast y despachos privados en pleno centro de Granada. Espacio diseñado para conectar a profesionales y proyectos con propósito."
   ogSlug="page/hub"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
