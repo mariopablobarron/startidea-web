@@ -1,0 +1,25 @@
+src/pages/videopodcast.astro
+  s_e16b57e04e0196::t_831cc78fe1fc8e 364
+src/pages/audiovisual.astro
+  s_e16b57e04e0196::t_870989490aa069 23-25
+  s_e16b57e04e0196::t_8eb372774ab5d1 183-184
+  s_e16b57e04e0196::t_363a806b57e856 22
+src/pages/og/[...slug].png.ts
+  s_e16b57e04e0196::t_6028a9a3a6dcbd 159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f958c7d0378797e76d792471907c4a6ede5d778b",
+  "prompts": {},
+  "sessions": {
+    "s_e16b57e04e0196": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbcd6f06-75d8-4d9a-980a-761ea1b1b138",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
