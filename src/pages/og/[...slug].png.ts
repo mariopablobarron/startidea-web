@@ -156,7 +156,7 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       eyebrow: '— Producción Audiovisual y Podcast',
       title: 'Vídeo y podcast con propósito.',
       accent: 'con propósito',
-      subtitle: 'Convertimos ideas, conocimientos y causas en contenidos audiovisuales y podcasts pensados para construir marca, comunidad y reputación. Estudio propio en Granada.',
+      subtitle: 'Ideas, conocimientos y causas convertidos en contenidos audiovisuales y podcasts pensados para construir marca, comunidad y reputación. Estudio propio en Granada.',
     },
     'page/fundraising': {
       kind: 'page',
