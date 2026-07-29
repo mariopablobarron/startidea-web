@@ -102,6 +102,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'en Granada',
       subtitle: 'Gestión de redes para tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, contenidos y comunidad. Con estudio en el centro de Granada.',
     },
+    'page/videopodcast': {
+      kind: 'page',
+      eyebrow: '— Videopodcast · Guía práctica',
+      title: 'Cómo montar un videopodcast y sostenerlo.',
+      accent: 'y sostenerlo',
+      subtitle: 'Qué hace falta de verdad: equipo, espacio, horas de trabajo por episodio, quién presenta, cómo se distribuye y qué se mide. Sin entusiasmo y con datos.',
+    },
     'page/empleo': {
       kind: 'page',
       eyebrow: '— Trabaja con Startidea',

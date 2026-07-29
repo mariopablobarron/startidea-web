@@ -73,7 +73,15 @@ const pilares = [
   },
 ];
 
-const areas = [
+// `enlace` es opcional: solo algunas áreas remiten a una página en profundidad.
+// Tipado explícito para que TS no infiera una unión y falle al leer area.enlace.
+const areas: Array<{
+  num: string;
+  title: string;
+  body: string;
+  items: Array<{ name: string; desc: string }>;
+  enlace?: { href: string; texto: string };
+}> = [
   {
     num: '01',
     title: 'Estrategia de contenidos y formatos',
@@ -97,6 +105,7 @@ const areas = [
       { name: 'Diseño de cabeceras, intros y cierres', desc: 'Elementos sonoros y visuales propios — no plantillas — que dan identidad sostenida al programa.' },
       { name: 'Gestión de publicación en plataformas', desc: 'Spotify, Apple Podcasts, ivoox, YouTube, Amazon Music. Configuración, RSS, metadatos, distribución completa.' },
     ],
+    enlace: { href: '/videopodcast', texto: 'Guía práctica: cómo montar un videopodcast y sostenerlo' },
   },
   {
     num: '03',
@@ -315,6 +324,14 @@ const proceso = [
                 </li>
               ))}
             </ul>
+
+            {area.enlace && (
+              <p class="mt-8 max-w-measure text-ink/80">
+                <a href={area.enlace.href} class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">
+                  {area.enlace.texto}
+                </a>
+              </p>
+            )}
           </div>
         </div>
       </div>
