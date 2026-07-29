@@ -1,0 +1,424 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import { buscarServicio, fmtEur } from '@/data/servicios';
+import { localBusinessSchema, howToSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+// Ancla de precio: se lee del catálogo público (src/data/servicios.ts) para que
+// no se desincronice con /precios. NO se inventa ninguna tarifa aquí.
+const serie = buscarServicio('serie-podcast');
+
+// Delimitación deliberada con /audiovisual:
+//   /audiovisual   → intención comercial ("agencia de videopodcast", "productora").
+//   /videopodcast  → intención informativa/consultiva ("cómo montar un videopodcast",
+//                    "consultoría para lanzar videopodcast", "estrategia de videopodcast").
+// Por eso esta página NO lleva serviceSchema: no compite como landing de servicio.
+
+const faqs = [
+  {
+    question: '¿Qué diferencia hay entre un podcast y un videopodcast?',
+    answer: 'Un podcast de audio se distribuye por RSS a plataformas de escucha y se consume en segundo plano. Un videopodcast graba esa misma conversación con cámaras y se publica además en YouTube y en formato vertical corto en redes. La diferencia práctica no es la cámara: es que el vídeo obliga a cuidar espacio, luz, encuadre y ritmo visual, y encarece la producción de forma sustancial. A cambio, el vídeo trae audiencia nueva y el audio consolida a la que ya existe.',
+  },
+  {
+    question: '¿Cuántas horas de trabajo lleva un episodio de videopodcast?',
+    answer: 'Para un episodio de conversación de 45 a 60 minutos, el reparto realista es de 3 a 5 horas de preparación, 2 horas de grabación con montaje y desmontaje incluidos, de 6 a 10 horas de postproducción del episodio largo y de 3 a 5 horas para los clips verticales y los textos de publicación. Entre 14 y 22 horas por episodio. Producido internamente y publicando cada quince días, equivale a entre siete y once horas semanales: en torno a un día de trabajo por semana.',
+  },
+  {
+    question: '¿Cuánto se tarda en publicar el primer episodio?',
+    answer: 'Entre cuatro y seis semanas desde el arranque en un proyecto normal: definición del concepto, preparación del guion y de la identidad visual y sonora, sesión de grabación, y postproducción y alta en plataformas. Si la organización ya tiene el concepto decidido y la persona presentadora clara, el plazo se acorta. Correr más de eso suele salir caro en la temporada entera.',
+  },
+  {
+    question: '¿Sirve un videopodcast para una ONG pequeña?',
+    answer: 'Sí, con dos condiciones. La primera es que haya una persona capaz de sostener la presentación durante al menos doce episodios: sin esa continuidad el formato no cuaja. La segunda es un calendario realista, porque publicar cada quince días o una vez al mes sin fallar rinde más que un ritmo semanal que se abandona en marzo. Para una entidad pequeña el videopodcast tiene además una ventaja concreta: es un formato donde el tamaño no penaliza, porque lo que se juzga es la calidad de la conversación y no el presupuesto.',
+  },
+  {
+    question: '¿Hace falta un estudio propio para grabar un videopodcast?',
+    answer: 'No es imprescindible, pero el espacio condiciona el resultado más que la cámara. Hace falta una sala con poca reverberación, sin ruido de ventilación ni de calle, y con luz controlable. Una sala de reuniones con moqueta, cortinas y estanterías puede funcionar; un espacio diáfano con suelo duro y paredes desnudas, no. Grabar siempre en el mismo sitio aporta además continuidad visual, que es lo que hace que una serie parezca una serie.',
+  },
+  {
+    question: '¿Qué se mide para saber si un videopodcast está funcionando?',
+    answer: 'Las visualizaciones totales informan poco. Los cuatro indicadores útiles son la retención media en el episodio largo, los suscriptores nuevos por episodio, las escuchas completas en plataformas de audio y las acciones posteriores: visitas a la web desde el episodio, altas en la newsletter y contactos entrantes que mencionan el programa. La evaluación seria se hace en el episodio doce, no en el tercero.',
+  },
+];
+
+const pasos = [
+  {
+    name: 'Decidir para quién es el programa',
+    text: 'Antes de comprar equipo, definir a qué audiencia se dirige el videopodcast y qué encuentra ahí que no encuentra en otro sitio. Sin esa respuesta, el resto de decisiones no tiene criterio.',
+  },
+  {
+    name: 'Fijar una estructura de episodio repetible',
+    text: 'Secciones fijas, duración estable, apertura y cierre reconocibles. El objetivo es que producir el episodio doce no cueste más que producir el segundo.',
+  },
+  {
+    name: 'Elegir quién presenta y comprometer su continuidad',
+    text: 'Presenta quien escucha bien, repregunta y aguanta el silencio, no quien tiene el cargo más alto. Cambiar de presentador cada mes destruye el hábito de la audiencia.',
+  },
+  {
+    name: 'Acondicionar el espacio antes que ampliar el equipo técnico',
+    text: 'Una sala con eco arruina una grabación que ninguna postproducción salva. Absorción acústica, sin ventilación ruidosa y con luz controlable importa más que una cámara adicional.',
+  },
+  {
+    name: 'Diseñar la distribución dentro del episodio',
+    text: 'Si se sabe de antemano que de cada episodio salen cinco clips verticales, la conversación se conduce buscando esos cinco momentos. La distribución no es lo que se hace después de producir.',
+  },
+  {
+    name: 'Preparar a la persona invitada',
+    text: 'Un correo con los tres bloques de la conversación, enviado tres días antes, multiplica la calidad de lo grabado y reduce a la mitad el trabajo de edición.',
+  },
+  {
+    name: 'Comprometerse a doce episodios y medir ahí',
+    text: 'Los seis primeros episodios sirven para encontrar el tono y casi no traen audiencia. Un videopodcast institucional crece por acumulación, no por explosión.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Producción audiovisual y podcast', url: `${SITE_URL}/audiovisual` },
+    { name: 'Cómo montar un videopodcast', url: `${SITE_URL}/videopodcast` },
+  ]),
+  localBusinessSchema(),
+  faqPageSchema(faqs.map((f) => ({ q: f.question, a: f.answer }))),
+  howToSchema({
+    name: 'Cómo montar un videopodcast en una entidad social o una institución',
+    description:
+      'Los siete pasos que determinan si un videopodcast dura más de tres episodios: audiencia, estructura, presentación, espacio, distribución, preparación de invitados y horizonte de medición.',
+    steps: pasos,
+  }),
+];
+
+const requisitos = [
+  {
+    num: '01',
+    title: 'Equipo técnico: menos del que se cree',
+    body: 'Dos cámaras, dos micrófonos de solapa o de brazo, dos puntos de luz continua y una grabadora de audio independiente. Todo lo demás mejora el resultado pero no condiciona que el proyecto exista. El error frecuente es invertir en la cuarta cámara antes que en el segundo micrófono: el espectador perdona un plano feo, no perdona un audio malo.',
+  },
+  {
+    num: '02',
+    title: 'Espacio: importa más que la cámara',
+    body: 'Una sala con eco arruina una grabación que ninguna postproducción salva del todo. Hace falta absorción acústica razonable —moqueta, cortinas, paneles, estanterías llenas—, sin ventilación ruidosa, sin ventana a una calle con tráfico y con control de luz.',
+  },
+  {
+    num: '03',
+    title: 'Tiempo: entre 14 y 22 horas por episodio',
+    body: 'Para un episodio de 45 a 60 minutos: 3-5 horas de preparación, 2 de grabación con montaje y desmontaje, 6-10 de postproducción del episodio largo y 3-5 para los clips verticales y los textos. Producido internamente y publicando cada quince días, eso equivale a entre siete y once horas semanales: en torno a un día de trabajo por semana.',
+  },
+  {
+    num: '04',
+    title: 'Quién presenta: la decisión peor tomada',
+    body: 'No presenta quien tiene el cargo más alto, sino quien escucha bien, repregunta y aguanta el silencio. Quien presenta habla menos que la persona invitada. Y tiene que poder estar en todos los episodios. Si nadie del equipo puede sostener ese papel, es preferible una presentación externa antes que forzar a alguien que no quiere estar delante de la cámara.',
+  },
+];
+
+const errores = [
+  {
+    title: 'Empezar por el equipo y no por el guion',
+    body: 'El patrón se repite: un trimestre comparando cámaras, un set montado, tres episodios grabados en una tarde de euforia, el segundo publicado seis semanas después y el tercero sin editar en un disco duro. El proyecto no muere por falta de equipo, sino de estructura editorial.',
+  },
+  {
+    title: 'No tener plan de distribución',
+    body: 'Un episodio publicado en YouTube sin más suele quedarse en las visualizaciones del propio equipo y poco más. La distribución es parte del diseño del episodio, no una tarea posterior.',
+  },
+  {
+    title: 'No preparar a la persona invitada',
+    body: 'Una entrevista sin briefing previo produce cuarenta minutos de material del que sirven ocho. El briefing es la hora de trabajo más rentable de todo el proceso.',
+  },
+];
+
+const sintesis = [
+  'Un videopodcast es una conversación grabada a la vez en audio y en vídeo, que se publica completa en YouTube y en plataformas de podcast, y en fragmentos verticales cortos en redes. No es un podcast de audio con cámaras: exige guion visual, espacio acondicionado y continuidad de imagen.',
+  'Producir un episodio de videopodcast de 45 a 60 minutos cuesta entre 14 y 22 horas de trabajo: 3-5 de preparación, 2 de grabación, 6-10 de postproducción y 3-5 de clips y publicación.',
+  'El error más frecuente al lanzar un videopodcast es empezar por el equipo técnico en lugar de por el guion y el plan de distribución. Los proyectos no fracasan por falta de cámaras, sino por falta de estructura editorial sostenible.',
+  'Startidea produce videopodcast para entidades del tercer sector, instituciones y empresas con propósito desde su estudio propio en Granada, y también acompaña a los equipos que quieren producirlo por su cuenta.',
+];
+---
+
+<Base
+  title="Cómo montar un videopodcast: guía práctica — Startidea"
+  description="Qué hace falta para montar un videopodcast: equipo, guion, horas de trabajo y distribución. Cómo lo produce Startidea desde su estudio en Granada."
+  ogSlug="page/videopodcast"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Videopodcast · Guía práctica</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Cómo montar un videopodcast<br/>
+        <em class="italic text-magenta">y sostenerlo</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Un videopodcast no es un podcast con cámaras encendidas. Es un formato distinto, con otras exigencias de guion, otro coste de producción y otra forma de llegar a la gente. Esta guía explica qué implica montarlo de verdad —tiempo, equipo, espacio, quién presenta, cómo se distribuye— para que la decisión se tome con datos y no con entusiasmo.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_videopodcast_hero">
+          Consulta tu proyecto de videopodcast
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué es -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué es</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            No es un podcast <em class="italic text-magenta">con cámaras</em>.
+          </h2>
+          <div class="mt-10 max-w-measure space-y-5 text-ink/80">
+            <p>
+              Un videopodcast es una conversación grabada simultáneamente en audio y en vídeo, publicada en dos circuitos a la vez: las plataformas de podcast —Spotify, Apple Podcasts, iVoox— y las plataformas de vídeo, con YouTube como eje y los formatos cortos de Instagram, TikTok y LinkedIn como puerta de entrada. El episodio completo vive en horizontal; los fragmentos que circulan viven en vertical.
+            </p>
+            <p>
+              La diferencia con el podcast de audio no es la cámara: es lo que la cámara obliga a decidir. En audio, un silencio se corta en edición y nadie lo nota. En vídeo, ese mismo silencio se ve en la cara de quien escucha. En audio, el decorado no existe. En vídeo, el fondo de la sala comunica tanto como el mensaje. Un podcast de audio se puede grabar con dos micrófonos en un despacho; un videopodcast necesita encuadre, luz estable, continuidad de vestuario y una escaleta que funcione visualmente.
+            </p>
+            <p>
+              También cambia el retorno. El audio construye vínculo con quien ya sigue a la organización: fidelidad alta, descubrimiento bajo. El vídeo trae gente nueva, porque los clips cortos son hoy uno de los principales mecanismos de descubrimiento en redes. El videopodcast, bien hecho, cubre las dos funciones con una sola grabación.
+            </p>
+            <p>
+              Conviene decirlo sin adorno: por la experiencia de producción de Startidea, un videopodcast sale entre dos y tres veces más caro que el mismo contenido solo en audio. La pregunta correcta no es si el formato está de moda, sino si la organización tiene algo que sostener delante de una cámara cada quince días durante un año.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué encaja -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Para qué sirve</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tres usos que <em class="italic text-magenta">funcionan</em>.
+          </h2>
+          <p class="mt-8 max-w-measure text-ink/80">
+            Las entidades sociales, las instituciones públicas y las eclesiales comparten un problema: tienen mucho que contar y pocos canales donde contarlo con extensión. La nota de prensa no se publica, la memoria anual no se lee y las redes obligan a comprimir en quince segundos un trabajo de quince años. El videopodcast devuelve el formato largo en un espacio que la organización controla entera.
+          </p>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            <li class="bg-paper-warm p-8">
+              <span class="font-display text-5xl text-magenta">01</span>
+              <h3 class="mt-4 font-display text-2xl leading-tight text-ink">Portavocía</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink/80">
+                Una dirección o un equipo técnico que habla con criterio y con cara visible construye autoridad como ningún comunicado consigue. Cuando llega la crisis o el debate público, ya existe una voz reconocible.
+              </p>
+            </li>
+            <li class="bg-paper-warm p-8">
+              <span class="font-display text-5xl text-magenta">02</span>
+              <h3 class="mt-4 font-display text-2xl leading-tight text-ink">Memoria viva</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink/80">
+                Entrevistar a personas fundadoras, a profesionales veteranas o a personas atendidas produce un archivo que dentro de cinco años ya no se podrá volver a grabar.
+              </p>
+            </li>
+            <li class="bg-paper-warm p-8">
+              <span class="font-display text-5xl text-magenta">03</span>
+              <h3 class="mt-4 font-display text-2xl leading-tight text-ink">Captación</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink/80">
+                Un donante particular o una empresa financiadora que ha visto tres episodios llega a la conversación con la confianza ya construida. Esa conversación empieza mucho más adelante.
+              </p>
+            </li>
+          </ol>
+          <p class="mt-10 max-w-measure text-ink/80">
+            Para las instituciones eclesiales hay un cuarto uso que no conviene pasar por alto: la formación. Un ciclo de episodios sobre doctrina social, acción caritativa, patrimonio o historia local es un recurso que se reutiliza en parroquias, colegios y grupos durante años, sin caducidad y sin coste marginal. Para una empresa con propósito el criterio cambia, pero el formato sirve igual: un videopodcast editorial —que invita a otras voces del sector y aporta conocimiento real— posiciona mejor que cualquier campaña autorreferencial. Un videopodcast publicitario no lo escucha nadie. En los tres casos, el programa rinde cuando <a href="/comunicacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">encaja dentro de la estrategia de comunicación de la entidad</a> y no como pieza suelta.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué hace falta -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué hace falta</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Equipo, espacio, tiempo y <em class="italic text-magenta">personas</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {requisitos.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Errores -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Los errores</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Por qué muere <em class="italic text-magenta">en el episodio tres</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {errores.map((e, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{e.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{e.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-10 max-w-measure text-ink/80">
+            Un videopodcast que dura necesita tres cosas decididas antes de comprar nada: para quién es, una estructura de episodio repetible y un calendario que el equipo pueda sostener el mes que coinciden la memoria anual, la justificación de una subvención y la campaña de Navidad. Publicar cada quince días de forma sostenida rinde mucho más que publicar semanalmente durante dos meses y desaparecer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Distribución y medición -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Distribución y medición</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Tres capas y <em class="italic text-magenta">cuatro métricas</em>.
+          </h2>
+          <div class="mt-10 max-w-measure space-y-5 text-ink/80">
+            <p>
+              La <strong>capa larga</strong> es el episodio completo: YouTube y, vía feed RSS, Spotify, Apple Podcasts e iVoox. Ahí importan el título, la descripción con palabras que la gente busca, los capítulos marcados y la miniatura, que es con diferencia el elemento que más determina si alguien hace clic.
+            </p>
+            <p>
+              La <strong>capa corta</strong> son los clips verticales de 30 a 90 segundos para Instagram, TikTok, YouTube Shorts y LinkedIn: el motor real de descubrimiento, y deben poder entenderse sin haber visto el episodio. Es la capa que se apoya en <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">el calendario de redes que distribuye los clips</a>.
+            </p>
+            <p>
+              La <strong>capa propia</strong> es la que casi nadie usa y la más rentable: newsletter con el episodio, transcripción publicada en la web —que genera tráfico de búsqueda durante años— y envío directo a las personas que aparecen en él.
+            </p>
+            <p>
+              La medición honesta empieza por descartar la métrica ruidosa. Las visualizaciones totales no dicen nada. Informan cuatro indicadores: retención media en el episodio largo —si la caída fuerte está en el primer minuto, el problema es la entrada, no el contenido—, suscriptores nuevos por episodio, escuchas completas en plataformas de audio y acciones posteriores: visitas a la web, altas en newsletter y contactos entrantes que mencionan el programa.
+            </p>
+            <p>
+              Conviene fijar una expectativa realista antes del episodio uno. Un videopodcast institucional bien hecho no explota: crece por acumulación. Los seis primeros sirven para encontrar el tono y casi no traen audiencia. La evaluación seria se hace en el episodio doce, no en el tercero. Quien no pueda comprometerse a doce episodios, es mejor que no empiece.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- En síntesis (bloque citable por asistentes de IA) -->
+  <section class="bg-ink py-16 text-paper md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-paper/20 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/70">— En síntesis</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ul class="space-y-5">
+            {sintesis.map((s) => (
+              <li class="max-w-measure border-l-2 border-magenta pl-5 text-paper/85">{s}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quién lo produce — remite a la landing de servicio, no la duplica -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Quién lo produce</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Producción completa o <em class="italic text-magenta">transferencia</em>.
+          </h2>
+          <div class="mt-10 max-w-measure space-y-5 text-ink/80">
+            <p>
+              Startidea produce videopodcast de principio a fin desde su estudio propio en Granada, y también en localización cuando el proyecto lo pide: concepto y guion, grabación multicámara, postproducción con cabecera y cierre propios, clips verticales, alta en plataformas y medición por temporada. Hay dos modalidades: producción completa llave en mano, o acompañamiento con transferencia, en el que el equipo de la organización aprende a producir y la agencia se retira progresivamente. La segunda es más exigente al principio y más barata a medio plazo.
+            </p>
+            {serie && (
+              <p>
+                Como ancla de precio pública, una <strong>{serie.servicio.nombre.toLowerCase()}</strong> parte de <span class="text-magenta">{fmtEur(serie.servicio.precio)}</span>. El coste por episodio baja de forma notable cuando varias grabaciones se agrupan en una misma jornada. El presupuesto formal se cierra tras el diagnóstico, cuando ya se sabe qué se va a producir exactamente: la producción audiovisual <a href="/presupuesto" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">se presupuesta a medida</a> según el proyecto.
+              </p>
+            )}
+            <p>
+              El detalle del servicio, los formatos y el resto de la producción audiovisual están en <a href="/audiovisual" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">el servicio completo de producción audiovisual y podcast</a>. Los proyectos ya publicados con entidades reales están en <a href="/casos" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">los casos de Startidea</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Antes de comprar una cámara, <em class="italic text-magenta">media hora de conversación</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Startidea escucha el proyecto —a quién quiere llegar la organización, quién puede presentar, qué ritmo es sostenible— y responde con honestidad si el videopodcast es el formato adecuado o si hay algo mejor para ese objetivo. Sin propuesta genérica y sin compromiso.
+          </p>
+          <div class="mt-10">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_videopodcast_final">
+              Pide tu diagnóstico de 30 minutos
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <NotasRelacionadas category="Comunicación" />
+  <OtrosServicios current="audiovisual" />
+</Base>
