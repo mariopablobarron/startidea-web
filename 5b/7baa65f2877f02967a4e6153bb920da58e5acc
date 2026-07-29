@@ -1,0 +1,24 @@
+scripts/geo-clients.json
+  s_0ab79ba551035b::t_860d31d8f63ff2 20
+scripts/geo-competitors.mjs
+  s_0ab79ba551035b::t_f5137551f0d1cb 195,201-203,206,208,212,216,224-225
+  s_0ab79ba551035b::t_695c841a1a5521 300-304
+  s_0ab79ba551035b::t_541718159bf8dc 90-98
+  s_0ab79ba551035b::t_76a3aac5d8f4b3 264-272
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5b7baa65f2877f02967a4e6153bb920da58e5acc",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
