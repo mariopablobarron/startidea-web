@@ -26,9 +26,14 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 ## Servicios
 
 - [Comunicación estratégica y marketing social](${SITE_URL}/comunicacion): plan de comunicación, relato, contenidos y campañas para entidades sociales.
+- [Comunicación eclesial](${SITE_URL}/comunicacion-eclesial): comunicación estratégica para diócesis, congregaciones, movimientos laicales y fundaciones de la Iglesia en toda España, con respeto a su lenguaje y sensibilidad.
+- [Agencia de comunicación y social media en Granada](${SITE_URL}/redes-sociales-granada): gestión de redes sociales y comunicación para ONG y entidades de Granada, con estudio propio en la ciudad.
 - [Fundraising para ONG y entidades sociales](${SITE_URL}/fundraising): diversificación de ingresos, base social, captación de fondos y alianzas.
 - [Tramitación de subvenciones](${SITE_URL}/subvenciones/presentar): diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica con certificado digital. Comisión a éxito.
-- [Consultoría e innovación social](${SITE_URL}/consultoria): estrategia, gobernanza y medición de impacto.
+- [Precios de tramitación de subvenciones](${SITE_URL}/precios): comisión a éxito del 12% del importe concedido, sin coste si no se concede. Para entidades del tercer sector.
+- [Subvenciones de inclusión social del BOJA 2026 (Andalucía)](${SITE_URL}/subvenciones/boja-2026-inclusion-social): las 15 líneas de la convocatoria andaluza de inclusión social, con tramitación y justificación asistidas.
+- [Financiación pública para empresas con propósito](${SITE_URL}/financiacion-empresas): las cinco fuentes (BDNS, CDTI, IDAE, ENISA, Andalucía TRADE) para empresas con propósito.
+- [Consultoría e innovación social](${SITE_URL}/consultoria): estrategia, gobernanza y medición de impacto. Consultora de innovación social con sede en Granada desde 2011.
 - [Producción audiovisual y podcast](${SITE_URL}/audiovisual): vídeo y audio al servicio de la causa.
 - [Tecnología y plataformas](${SITE_URL}/tecnologia): webs editoriales, intranets a medida, producto digital con IA, migraciones SEO. Astro, Next.js, WordPress profesional cuando corresponde.
 - [Protección digital y cumplimiento RGPD](${SITE_URL}/proteccion-digital): ciberseguridad y protección de datos para entidades sociales sin departamento TI. Diagnóstico de exposición digital, auditoría de seguridad web (pentest) y acompañamiento continuo. Sin alarmismo.
@@ -40,6 +45,8 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 ## Para quién
 
 - [Tercer sector](${SITE_URL}/para-quien/tercer-sector): ONG, fundaciones y asociaciones.
+- [Instituciones](${SITE_URL}/para-quien/instituciones): administraciones, fundaciones públicas y entidades de base ética o religiosa.
+- [Empresas con propósito](${SITE_URL}/para-quien/empresas): direcciones de comunicación, sostenibilidad y RSC que quieren un ESG demostrable.
 - [Subvenciones abiertas](${SITE_URL}/subvenciones): buscador de convocatorias públicas para entidades sociales y empresas.
 
 ## Recursos
@@ -49,6 +56,7 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 
 ## Sobre Startidea
 
+- [Qué hace Startidea](${SITE_URL}/que-hacemos): página paraguas de todos los servicios de la agencia, con preguntas frecuentes sobre comunicación, fundraising, subvenciones, consultoría y producción audiovisual.
 - [Sobre Startidea y el método](${SITE_URL}/sobre): historia, equipo y forma de trabajar.
 - [Casos](${SITE_URL}/casos): proyectos con organizaciones sociales.
 - Autor de los contenidos: Mario Pablo Sánchez Barrón, fundador y director (https://es.linkedin.com/in/mariobarron).
