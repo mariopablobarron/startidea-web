@@ -1,11 +1,18 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Diagnóstico del modelo de fundraising', url: `${SITE_URL}/recursos/diagnostico-modelo-fundraising` },
+]);
 ---
 
 <Base
   title="Diagnóstico modelo de fundraising — Startidea"
   description="Caso real anonimizado: federación de discapacidad con 86% de dependencia pública. PDF de 12 páginas con la radiografía, las palancas y las recomendaciones de Startidea."
   ogSlug="page/recursos-diagnostico"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">

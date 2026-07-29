@@ -1,5 +1,11 @@
 ---
 import Base from '@/layouts/Base.astro';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const jsonLd = breadcrumbList([
+  { name: 'Inicio', url: `${SITE_URL}/` },
+  { name: 'Cómo trabaja Startidea', url: `${SITE_URL}/como-trabajamos` },
+]);
 
 const ejes = [
   {
@@ -88,6 +94,7 @@ const proceso = [
   title="Cómo trabaja Startidea — El Método de las Tres Preguntas"
   description="Estrategia, comunicación y producto digital bajo el mismo techo. Las tres preguntas se responden juntas o no se responden bien."
   ogSlug="page/como-trabajamos"
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
