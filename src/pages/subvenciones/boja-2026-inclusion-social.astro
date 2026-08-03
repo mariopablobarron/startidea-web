@@ -204,7 +204,7 @@ const jsonLd = [
     },
     {
       question: '¿Cuál es el plazo para presentar las solicitudes del BOJA 2026?',
-      answer: `El plazo general es del 27 de mayo al 16 de junio de 2026 (15 días hábiles). Excepción: la Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio de 2026. Todas las solicitudes se presentan por el Registro Electrónico Único de la Junta de Andalucía.`,
+      answer: `En la edición 2026, el plazo general fue del 27 de mayo al 16 de junio de 2026 (15 días hábiles), con la excepción de la Línea 7 Modalidad 2 (Escuelas de verano), que cerró el 2 de junio. La convocatoria está cerrada; todas las solicitudes se presentaron por el Registro Electrónico Único de la Junta de Andalucía. Startidea avisa y tramita cuando se publica la siguiente edición.`,
     },
     {
       question: '¿Cuánto cuesta que Startidea tramite la subvención BOJA 2026?',
@@ -233,21 +233,21 @@ function buildLink(linea: Linea) {
 
 <Base
   title="Subvenciones Inclusión Social Junta de Andalucía 2026 (BOJA)"
-  description="Las 15 líneas de la Consejería de Inclusión Social (BOJA nº 99, 26 mayo). Plazo general hasta el 16 de junio de 2026. Startidea tramita todas las líneas."
+  description="Las 15 líneas de la Consejería de Inclusión Social (BOJA nº 99, 26 mayo 2026). La edición 2026 está cerrada (plazo cerró el 16 de junio). Guía de referencia; Startidea tramita todas las líneas cuando la Junta las reabre."
   jsonLd={jsonLd}
 >
 
-  <!-- Alerta de plazo -->
-  <div class="border-b border-amber-200 bg-amber-50 py-3">
+  <!-- Aviso: edición 2026 cerrada -->
+  <div class="border-b border-amber-300 bg-amber-100 py-3">
     <div class="container-x flex flex-wrap items-center justify-between gap-3">
-      <p class="text-sm text-amber-800">
-        <strong>⏰ Plazo abierto:</strong> {DEADLINE_L7M2} (L7 Mod.2) · {DEADLINE} (resto de líneas)
+      <p class="text-sm text-amber-900">
+        <strong>Convocatoria 2026 cerrada.</strong> El plazo general finalizó el {DEADLINE}. Esta página se mantiene como referencia de las 15 líneas.
       </p>
       <a
-        href="#lineas"
-        class="shrink-0 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-700 hover:text-amber-900"
+        href="/subvenciones"
+        class="shrink-0 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-800 hover:text-amber-950"
       >
-        Ver las 15 líneas ↓
+        Ver convocatorias abiertas →
       </a>
     </div>
   </div>
@@ -256,15 +256,15 @@ function buildLink(linea: Linea) {
   <section class="border-b border-ink/15 bg-paper py-14 md:py-20">
     <div class="container-x">
       <div class="flex flex-wrap items-center gap-2 mb-4">
-        <span class="label">— Convocatoria abierta</span>
+        <span class="label">— Convocatoria 2026 (cerrada)</span>
         <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">BOJA {BOJA}</span>
       </div>
       <h1 class="font-display text-display-xl leading-[0.96] text-ink">
         15 líneas del BOJA.<br />
-        <em class="italic text-magenta">Startidea lo tramita todo.</em>
+        <em class="italic text-magenta">Startidea las tramita todas.</em>
       </h1>
       <p class="mt-6 max-w-measure text-lede text-ink/75">
-        La Consejería de Inclusión Social ha publicado 15 líneas de subvención (BOJA nº 99, 26 mayo 2026). Plazo hasta el <strong>{DEADLINE}</strong>. Startidea gestiona el expediente completo: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. Solo pagas si se concede.
+        En 2026 la Consejería de Inclusión Social publicó 15 líneas de subvención (BOJA nº 99, 26 mayo 2026); el plazo general cerró el <strong>{DEADLINE}</strong>. Esta guía se mantiene como referencia de las 15 líneas. Cuando la Junta reabra la convocatoria, Startidea gestiona el expediente completo: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. Solo pagas si se concede.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#elegibilidad" class="btn">¿Podemos pedir? Comprobarlo →</a>
@@ -290,7 +290,7 @@ function buildLink(linea: Linea) {
         ))}
       </dl>
       <p class="mt-4 text-xs text-ink/75 max-w-prose">
-        Obligación de relación electrónica: todas las solicitudes deben presentarse a través del Registro Electrónico Único de la Junta de Andalucía. El 4 de junio de 2026 es día hábil; el plazo no se amplía. Startidea recomienda presentar con un mínimo de 5 días de margen.
+        Obligación de relación electrónica: todas las solicitudes se presentaron a través del Registro Electrónico Único de la Junta de Andalucía. Cuando la Junta reabra estas líneas, Startidea recomienda presentar con un mínimo de 5 días de margen sobre el cierre.
       </p>
     </div>
   </section>

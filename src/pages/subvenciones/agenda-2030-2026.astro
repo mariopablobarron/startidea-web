@@ -39,7 +39,7 @@ const jsonLd = [
     },
     {
       q: '¿Cuándo cierra el plazo y hasta cuándo se puede contratar a Startidea?',
-      a: 'El plazo cierra el 20 de junio de 2026 de forma improrrogable. Startidea acepta encargos hasta el 6 de junio para garantizar margen operativo de dos semanas. Después de esa fecha, la decisión de presentar o no depende del estado del proyecto en cada entidad concreta.',
+      a: 'En la edición 2026 el plazo cerró el 20 de junio de forma improrrogable. La convocatoria está cerrada; Startidea avisa cuando se publica la siguiente edición y acepta encargos con al menos dos semanas de margen sobre el cierre.',
     },
     {
       q: '¿Qué cobra Startidea por tramitar esta convocatoria?',
@@ -56,12 +56,27 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
 
+  <!-- Aviso: edición 2026 cerrada -->
+  <div class="border-b border-amber-300 bg-amber-100 py-3">
+    <div class="container-x flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm text-amber-900">
+        <strong>Convocatoria 2026 cerrada.</strong> El plazo finalizó el {DEADLINE}. Esta página se mantiene como referencia.
+      </p>
+      <a
+        href="/subvenciones"
+        class="shrink-0 font-mono text-[11px] font-bold uppercase tracking-widest text-amber-800 hover:text-amber-950"
+      >
+        Ver convocatorias abiertas →
+      </a>
+    </div>
+  </div>
+
   <!-- Hero -->
   <section class="bg-ink text-paper py-16 md:py-24">
     <div class="container-x">
       <div class="mx-auto max-w-3xl">
         <span class="font-mono text-[11px] uppercase tracking-widest text-magenta">
-          — Convocatoria estatal abierta · cierre {DEADLINE}
+          — Convocatoria estatal 2026 (cerrada) · cerró el {DEADLINE}
         </span>
         <h1 class="mt-4 font-display text-display-xl leading-[1.02] text-paper">
           Convocatoria 2026<br />
@@ -122,9 +137,9 @@ const jsonLd = [
             <p class="font-display text-2xl text-ink mt-1">12 meses</p>
           </div>
           <div class="border border-amber-300 bg-amber-50 p-5">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-amber-700">Plazo</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-amber-700">Plazo (cerrado)</p>
             <p class="font-display text-base text-amber-900 mt-1">{DEADLINE}</p>
-            <p class="font-mono text-[9px] text-amber-700/70 mt-0.5">improrrogable</p>
+            <p class="font-mono text-[9px] text-amber-700/70 mt-0.5">edición 2026 cerrada</p>
           </div>
         </div>
 
@@ -278,9 +293,9 @@ const jsonLd = [
           Sprint de 2 semanas hasta presentación.
         </h2>
         <p class="text-lede text-ink/70 mb-10">
-          Con el plazo abierto del 20 de mayo al 20 de junio hay margen, pero
-          no sobra. Startidea trabaja un sprint operativo intenso. Esto es lo
-          que pasa cada semana:
+          El plazo estuvo abierto del 20 de mayo al 20 de junio de 2026. Cuando
+          la convocatoria se reabra, Startidea trabaja un sprint operativo intenso
+          de dos semanas hasta la presentación. Esto es lo que pasa cada semana:
         </p>
 
         <div class="space-y-5">
