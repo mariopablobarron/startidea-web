@@ -1,0 +1,23 @@
+src/pages/comunicacion.astro
+  s_ca26d82f505520::t_a040b9b419cdce 188-189
+src/pages/videopodcast.astro
+  s_ca26d82f505520::t_7448946cfe2447 139-140
+src/pages/audiovisual.astro
+  s_ca26d82f505520::t_72f0f1a06d1c41 183-184
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "0cd9a14c1502338335d09e055258331db64f0de1",
+  "prompts": {},
+  "sessions": {
+    "s_ca26d82f505520": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8ccf3be-630c-4017-8b94-4ad0e9df2955",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
