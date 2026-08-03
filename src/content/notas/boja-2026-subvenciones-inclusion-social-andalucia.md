@@ -11,7 +11,7 @@ faqs:
   - question: '¿Quién puede solicitar las subvenciones BOJA 2026 de Inclusión Social?'
     answer: 'Depende de la línea. Hay líneas para entidades privadas sin ánimo de lucro (asociaciones, fundaciones, cooperativas, entidades religiosas inscritas), líneas para entidades locales (ayuntamientos, diputaciones, mancomunidades), líneas para organismos institucionales (universidades, federaciones representativas) y dos líneas de ayudas individuales para personas mayores y personas con discapacidad. El CIF de la entidad determina el tipo: letra G para asociaciones y fundaciones, F para cooperativas, P para corporaciones locales, Q para organismos públicos, R para congregaciones religiosas.'
   - question: '¿Cuál es el plazo para presentar las solicitudes?'
-    answer: 'El plazo general es del 27 de mayo al 16 de junio de 2026 (15 días hábiles). Hay una excepción: la Línea 7 en su Modalidad 2 (Escuelas de verano para menores en zonas desfavorecidas) cierra el 2 de junio de 2026. Todas las solicitudes deben presentarse a través del Registro Electrónico Único de la Junta de Andalucía. El 4 de junio es día hábil; el plazo no se amplía.'
+    answer: 'En la edición 2026, el plazo general fue del 27 de mayo al 16 de junio de 2026 (15 días hábiles), con una excepción: la Línea 7 en su Modalidad 2 (Escuelas de verano para menores en zonas desfavorecidas), que cerró el 2 de junio. La convocatoria está cerrada; todas las solicitudes se presentaron a través del Registro Electrónico Único de la Junta de Andalucía. Startidea avisa y tramita cuando se publica la siguiente edición.'
   - question: '¿Qué documentación se necesita para presentarse?'
     answer: 'Los requisitos varían por línea, pero la documentación habitual incluye: estatutos actualizados con sello de inscripción, NIF/CIF en vigor, acreditación del representante legal, certificado de estar al corriente con Hacienda (AEAT), certificado de estar al corriente con la Seguridad Social (TGSS), memoria de actividades del último ejercicio, presupuesto del proyecto o programa y declaraciones responsables según el modelo de la convocatoria. Para entidades locales se requiere además el acuerdo del órgano competente.'
   - question: '¿Cuánto tiempo lleva preparar el expediente?'
@@ -20,9 +20,11 @@ faqs:
     answer: 'El Copiloto es el servicio de tramitación completa de Startidea: diagnóstico de encaje, memoria técnica, presupuesto justificado y presentación electrónica ante la sede de la Junta de Andalucía. El modelo de honorarios es a comisión de éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. El formulario de solicitud está en startidea.es/subvenciones/presentar/nuevo.'
 ---
 
+> **Actualización (julio de 2026):** la convocatoria BOJA 2026 de Inclusión Social está **cerrada** — el plazo general finalizó el 16 de junio de 2026. Esta nota se mantiene como referencia de las 15 líneas. Consulta las [convocatorias abiertas ahora](/subvenciones); Startidea avisa y tramita cuando la Junta publica la siguiente edición.
+
 El 26 de mayo de 2026, la Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía publicó en el **BOJA nº 99** las convocatorias anuales de subvenciones para el ejercicio 2026. Son **15 líneas distintas** dirigidas a tipos de beneficiarios muy diferentes: desde personas físicas hasta ayuntamientos, pasando por asociaciones, fundaciones, cooperativas y universidades.
 
-El plazo general cierra el **16 de junio de 2026**. Quedan menos de tres semanas. Esta nota explica qué hay, a quién va dirigido cada bloque y qué se necesita para presentarse.
+El plazo general de la edición 2026 cerró el **16 de junio de 2026**. Esta nota explica qué hay, a quién va dirigido cada bloque y qué se necesita para presentarse, y sirve de referencia de cara a la próxima edición.
 
 ## Qué es exactamente lo que se ha publicado
 
@@ -79,7 +81,7 @@ El encaje con la línea es la primera criba. Presentarse a una línea para la qu
 
 **El encaje entre la actividad ordinaria y la convocatoria**. L10 financia el mantenimiento estructural (personal, sede, gastos corrientes). L11 financia programas concretos. No son equivalentes: presentarse a la línea equivocada puede significar que la actividad no encaja con los criterios de valoración aunque la entidad sea técnicamente elegible.
 
-**El tiempo disponible**. Con el plazo cerrando el 16 de junio, arrancar el proceso antes del 9 o 10 de junio es imprescindible para tener margen ante cualquier imprevisto: una subsanación pedida por el organismo, un certificado que tarda más de lo previsto, un problema técnico en la sede electrónica.
+**El tiempo disponible**. En convocatorias con un plazo tan corto (15 días hábiles), arrancar el proceso en cuanto se publica la orden es imprescindible para tener margen ante cualquier imprevisto: una subsanación pedida por el organismo, un certificado que tarda más de lo previsto, un problema técnico en la sede electrónica. Es la lección para la próxima edición.
 
 ## La documentación administrativa que casi siempre se pide
 

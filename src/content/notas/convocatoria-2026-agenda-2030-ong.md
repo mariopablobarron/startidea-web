@@ -10,7 +10,7 @@ tags: ['subvenciones', 'agenda 2030', 'ODS', 'tercer sector', 'fondo perdido', '
 draft: false
 faqs:
   - question: '¿Qué es la Convocatoria 2026 para la Agenda 2030?'
-    answer: 'Es una línea de ayudas a fondo perdido pensada para financiar proyectos de organizaciones sin ánimo de lucro alineados con la Agenda 2030 y los Objetivos de Desarrollo Sostenible. Cubre cinco líneas: incidencia (impulso de políticas públicas), proyectos piloto, innovación e I+D+i, alianzas multiactor (ODS 17) y campañas de comunicación. Cada entidad puede presentar un único proyecto y el plazo cierra el 20 de junio de 2026 de forma improrrogable.'
+    answer: 'Es una línea de ayudas a fondo perdido pensada para financiar proyectos de organizaciones sin ánimo de lucro alineados con la Agenda 2030 y los Objetivos de Desarrollo Sostenible. Cubre cinco líneas: incidencia (impulso de políticas públicas), proyectos piloto, innovación e I+D+i, alianzas multiactor (ODS 17) y campañas de comunicación. Cada entidad puede presentar un único proyecto. En la edición 2026 el plazo cerró el 20 de junio de forma improrrogable; la convocatoria está cerrada y Startidea avisa cuando se publica la siguiente.'
   - question: '¿Quién puede solicitar la Convocatoria 2026 Agenda 2030?'
     answer: 'Asociaciones, fundaciones, ONGs y entidades de la Economía Social (cooperativas, mutualidades) sin ánimo de lucro con personalidad jurídica propia, NIF en vigor y capacidad administrativa para ejecutar el proyecto. Las entidades pueden estar registradas en cualquier comunidad autónoma de España siempre que el proyecto se desarrolle dentro del territorio nacional o cumpla los criterios geográficos específicos de la convocatoria.'
   - question: '¿Qué gastos cubre la subvención?'
@@ -21,7 +21,9 @@ faqs:
     answer: 'El servicio funciona a comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia. Para el caso concreto de la Convocatoria 2026 Agenda 2030, el equipo tiene un sprint operativo de 2 semanas: del primer día de decisión al expediente presentado con justificante CSV. El formulario de solicitud está en startidea.es/subvenciones/presentar/nuevo.'
 ---
 
-A las organizaciones del tercer sector que llaman a Startidea les pasa casi siempre lo mismo: las ayudas con sentido aparecen cuando ya no hay tiempo de prepararlas bien. La **Convocatoria 2026 para la Agenda 2030** es exactamente uno de esos casos. Cierra el **20 de junio de 2026** —de forma improrrogable— y es de las pocas líneas que financian a fondo perdido proyectos reales en cinco frentes: incidencia política, proyectos piloto, innovación e I+D+i, alianzas multiactor y comunicación.
+> **Actualización (julio de 2026):** la Convocatoria 2026 para la Agenda 2030 está **cerrada** — el plazo finalizó el 20 de junio de 2026. Esta nota se mantiene como referencia de las cinco líneas y del proceso. Consulta las [convocatorias abiertas ahora](/subvenciones); Startidea avisa y tramita cuando se publica la siguiente edición.
+
+A las organizaciones del tercer sector que llaman a Startidea les pasa casi siempre lo mismo: las ayudas con sentido aparecen cuando ya no hay tiempo de prepararlas bien. La **Convocatoria 2026 para la Agenda 2030** fue exactamente uno de esos casos. Cerró el **20 de junio de 2026** —de forma improrrogable— y es de las pocas líneas que financian a fondo perdido proyectos reales en cinco frentes: incidencia política, proyectos piloto, innovación e I+D+i, alianzas multiactor y comunicación.
 
 Esta nota recoge lo que necesitas saber para decidir si presentarte (y si la respuesta es sí, qué papel puede jugar Startidea presentando el expediente por ti).
 
