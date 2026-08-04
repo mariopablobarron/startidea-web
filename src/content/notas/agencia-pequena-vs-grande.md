@@ -87,8 +87,8 @@ En cualquier caso, decide pidiendo un [diagnóstico previo](/diagnostico) que te
 
 ## Cómo trabaja Startidea sobre esto
 
-Startidea es una agencia pequeña por elección, no por accidente. Equipo sénior, foco en tercer sector y empresas con propósito, relaciones largas con clientes que repiten año tras año. No competimos en volumen ni cobertura nacional masiva: competimos en profundidad de comprensión del sector y en continuidad del interlocutor.
+Startidea es una agencia pequeña por elección, no por accidente. Equipo sénior, foco en tercer sector y empresas con propósito, relaciones largas con clientes que repiten año tras año. Startidea no compite en volumen ni cobertura nacional masiva: compite en profundidad de comprensión del sector y en continuidad del interlocutor.
 
-Si tu proyecto encaja con esto, escríbenos. Si no encaja, también lo diremos honestamente — y te orientaremos hacia el tipo de agencia que sí encaja para ti. No es altruismo: es que recomendar mal nos cuesta caro a medio plazo, y recomendar bien construye reputación.
+Si tu proyecto encaja con esto, escribe a Startidea. Si no encaja, también se dirá con honestidad — y se indicará el tipo de agencia que sí encaja para ti. No es altruismo: es que recomendar mal sale caro a medio plazo, y recomendar bien construye reputación.
 
 [Empieza con un diagnóstico de 3 minutos](/diagnostico) o [reserva una llamada de 30 minutos](/contacto).

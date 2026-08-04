@@ -120,4 +120,4 @@ Algunos errores frecuentes que vale la pena mencionar:
 
 La segmentación no es una técnica avanzada. Es una decisión de respeto hacia las personas que han dado su email porque les importa lo que hace la organización. Darles contenido pensado para ellos es la mínima cortesía, y también es lo que hace que sigan ahí el año que viene.
 
-Si quieres revisar cómo está estructurada la comunicación por email de tu organización, en Startidea hacemos diagnósticos de comunicación que incluyen la auditoría completa de la newsletter: lista, segmentos, métricas y propuesta de estructura. [Cuéntanos el reto](/contacto).
+Si quieres revisar cómo está estructurada la comunicación por email de tu organización, en Startidea se hacen diagnósticos de comunicación que incluyen la auditoría completa de la newsletter: lista, segmentos, métricas y propuesta de estructura. [Cuenta el reto](/contacto).

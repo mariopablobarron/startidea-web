@@ -19,7 +19,7 @@ faqs:
   - question: '¿Cómo puede una asociación pequeña empezar a captar socios?'
     answer: 'Con tres pasos concretos: primero, definir la propuesta de valor del socio (qué recibe a cambio de su cuota más allá de "apoyar la causa"); segundo, crear un formulario de alta sencillo con pago recurrente (Stripe, PayPal Giving Fund o SEPA); tercero, activar la red existente (equipo, voluntariado, patronato, beneficiarios, aliados) antes de invertir en publicidad. La primera oleada de socios casi siempre viene de personas que ya conocen la organización.'
   - question: '¿Puede Startidea ayudar a diseñar la estrategia de captación de fondos de mi asociación?'
-    answer: 'Sí. El proceso empieza con un diagnóstico de las fuentes actuales y su estabilidad, sigue con el mapa de fuentes potenciales priorizadas y cierra con el plan de captación con hitos, responsables y presupuesto. La primera llamada de 30 minutos es sin coste. También tramitamos subvenciones con certificado digital si hay convocatorias abiertas que encajan.'
+    answer: 'Sí. El proceso empieza con un diagnóstico de las fuentes actuales y su estabilidad, sigue con el mapa de fuentes potenciales priorizadas y cierra con el plan de captación con hitos, responsables y presupuesto. La primera llamada de 30 minutos es sin coste. Startidea también tramita subvenciones con certificado digital si hay convocatorias abiertas que encajan.'
 ---
 
 La mayoría de asociaciones en España viven con una hipoteca silenciosa: una o dos fuentes de financiación que concentran el 80% de sus ingresos. Cuando esa fuente falla — una subvención que no se renueva, una empresa colaboradora que cambia de política, un patronato que reduce su aportación — la organización entra en crisis.

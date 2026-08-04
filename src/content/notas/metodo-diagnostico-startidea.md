@@ -1,7 +1,7 @@
 ---
 title: 'Por qué Startidea no hace propuestas en frío: el método del diagnóstico'
 seoTitle: 'Método del diagnóstico de Startidea'
-description: 'Cómo trabaja Startidea con un cliente nuevo y por qué hay un diagnóstico previo antes de cualquier propuesta. Una explicación honesta del método, sus límites y por qué a veces decimos que no.'
+description: 'Cómo trabaja Startidea con un cliente nuevo y por qué hay un diagnóstico previo antes de cualquier propuesta. Una explicación honesta del método, sus límites y por qué a veces la respuesta es que no.'
 metaDescription: 'Por qué Startidea no propone en frío: un diagnóstico previo ordena el problema antes de proponer, y a veces concluye que no hace falta contratar.'
 pubDate: 2026-05-13
 tldr: 'Startidea no hace propuestas en frío: antes realiza un diagnóstico de pago que ordena el problema real antes de proponer una solución. Ese diagnóstico evita vender lo que no hace falta y permite decir que no cuando no hay encaje. Requiere información y honestidad del cliente, y a veces concluye que no hace falta contratar nada.'
@@ -17,7 +17,7 @@ faqs:
   - question: '¿Cuánto cuesta el diagnóstico de Startidea?'
     answer: 'La primera llamada de 30 minutos es sin coste. Si el diagnóstico requiere más de una sesión o implica revisión profunda de materiales, se propone un encargo mínimo. En proyectos de más de 10.000€ el diagnóstico suele estar incluido en la primera fase. En proyectos menores puede ser un servicio independiente de 300-800€.'
   - question: '¿Qué pasa si después del diagnóstico Startidea dice que no puede ayudar?'
-    answer: 'Ocurre. Si el diagnóstico revela que el proyecto no encaja con el perfil de Startidea, que el presupuesto no es viable o que hay otro proveedor más adecuado, lo decimos con claridad. En ese caso compartimos la lectura de situación igualmente y, si es posible, recomendamos otras opciones. Esa honestidad es parte del método.'
+    answer: 'Ocurre. Si el diagnóstico revela que el proyecto no encaja con el perfil de Startidea, que el presupuesto no es viable o que hay otro proveedor más adecuado, Startidea lo dice con claridad. En ese caso, la lectura de situación se comparte igualmente y, si es posible, se recomiendan otras opciones. Esa honestidad es parte del método.'
   - question: '¿Cuánto tiempo tarda Startidea en responder a una solicitud de diagnóstico?'
     answer: 'El equipo confirma en menos de 48 horas laborales si el proyecto encaja con la agenda actual. La llamada de diagnóstico se agenda normalmente en la semana siguiente. Si hay urgencia (plazo de convocatoria inminente, reunión de patronato en días), se puede acelerar escribiendo directamente a hola@startidea.es con el asunto «Urgente».'
 ---
@@ -47,7 +47,7 @@ El alcance habitual incluye:
 
 Ese documento es lo que el cliente se lleva. Es útil aunque no contrate nada más con Startidea: puede usarlo para tomar decisiones internamente, para una licitación, para presentar al patronato, para negociar con otras agencias.
 
-## Por qué cobramos el diagnóstico
+## Por qué se cobra el diagnóstico
 
 Esta es la parte que más sorprende. La práctica habitual en agencias es no cobrar el diagnóstico inicial porque se considera fase comercial. La consecuencia: el diagnóstico se hace deprisa, con menos profundidad, condicionado por la prisa de vender el proyecto siguiente.
 
@@ -78,7 +78,7 @@ No es magia desde fuera. Para que un diagnóstico funcione, la organización tie
 - **Disponibilidad para una sesión de devolución conjunta**: el documento sin conversación posterior pierde mucho valor. Mínimo dos horas con el equipo decisor.
 - **Datos cuantitativos básicos**: presupuesto anual, número de socios y evolución, fuentes de ingreso por porcentaje, KPIs de comunicación si existen. No hace falta perfección — sí transparencia.
 
-Si la organización no puede o no quiere aportar esto, el diagnóstico no funciona bien. En ese caso, recomendamos posponer hasta que sí pueda.
+Si la organización no puede o no quiere aportar esto, el diagnóstico no funciona bien. En ese caso, conviene posponer hasta que sí pueda.
 
 ## Cuando no hace falta diagnóstico
 

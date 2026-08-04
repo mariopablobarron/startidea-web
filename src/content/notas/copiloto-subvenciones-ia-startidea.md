@@ -62,7 +62,7 @@ El proceso empieza cuando una entidad envía su expediente a través del formula
 
 Con esa información, el equipo de Startidea activa el proceso de generación. La IA trabaja sobre la convocatoria y el contexto de la organización y devuelve un conjunto de documentos en formato editable (Word o PDF según el uso previsto).
 
-En ese punto entra la revisión humana. Desde Startidea revisamos que los documentos sean coherentes con los criterios de la convocatoria antes de entregarlos. El responsable de la entidad los recibe, los revisa con su conocimiento del proyecto real, los ajusta si hace falta y los incorpora al expediente definitivo.
+En ese punto entra la revisión humana. Desde Startidea se revisa que los documentos sean coherentes con los criterios de la convocatoria antes de entregarlos. El responsable de la entidad los recibe, los revisa con su conocimiento del proyecto real, los ajusta si hace falta y los incorpora al expediente definitivo.
 
 No es un proceso sin fricción: hay revisión, hay ajustes, hay intercambio. Lo que cambia es el punto de partida. En lugar de empezar desde una hoja en blanco, empiezas desde un borrador estructurado y coherente que ya ha leído las bases con más atención de la que tendría tiempo cualquier técnico con varias convocatorias abiertas a la vez.
 
@@ -86,7 +86,7 @@ Y funciona peor cuando:
 
 El Copiloto está en producción en fase piloto. Startidea lo usa actualmente con un número limitado de organizaciones para afinar el proceso y mejorar la calidad de los documentos generados.
 
-Si quieres que estudiemos si tu próxima convocatoria es candidata, el primer paso es un diagnóstico rápido: nos envías la convocatoria que has identificado y la información básica de tu entidad, y te decimos en 48 horas si el Copiloto puede aportar algo real o si lo que necesitas es un servicio diferente.
+Si quieres saber si tu próxima convocatoria es candidata, el primer paso es un diagnóstico rápido: envía la convocatoria que has identificado y la información básica de tu entidad, y en 48 horas llega la respuesta sobre si el Copiloto puede aportar algo real o si lo que necesitas es un servicio diferente.
 
 El Copiloto no es la solución a todas las subvenciones. Pero para las que sí funciona, cambia el tiempo que le dedicas: de semanas a horas.
 

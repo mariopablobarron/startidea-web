@@ -31,7 +31,7 @@ Usar IA no obliga a aceptar ese trato. Existe una tercera vía entre "no usar IA
 
 Las mejores plataformas de agentes y conocimiento con IA son hoy **open source** y se pueden autoalojar: instalar en un servidor que tu organización controla — el propio, o el que gestiona tu proveedor de confianza en la Unión Europea. Los modelos de lenguaje (el "cerebro") pueden seguir siendo externos y intercambiables; lo que queda en casa es lo que importa: **tus documentos indexados, tus flujos, tus agentes y el historial de lo que tu equipo les pregunta**.
 
-En Startidea no lo contamos de oídas: [nuestro propio equipo de agentes](/casos/equipo-agentes-ia) corre sobre una plataforma autoalojada en servidor propio, con el conocimiento completo de la agencia dentro. Ni un documento en el SaaS de nadie.
+En Startidea esto no se cuenta de oídas: [el propio equipo de agentes](/casos/equipo-agentes-ia) corre sobre una plataforma autoalojada en servidor propio, con el conocimiento completo de la agencia dentro. Ni un documento en el SaaS de nadie.
 
 ## Los cuatro argumentos (y no todos son técnicos)
 
