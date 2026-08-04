@@ -124,4 +124,4 @@ CDTI es un terreno técnico donde el lenguaje y la estructura de las memorias im
 
 ---
 
-Si tu empresa está considerando una solicitud CDTI, [reserva 30 minutos con Startidea](/contacto). En esa llamada repasamos qué línea encaja con tu proyecto, qué tienes y qué te falta, y si tiene sentido que Startidea acompañe la preparación del expediente. Sin coste, sin compromiso.
+Si tu empresa está considerando una solicitud CDTI, [reserva 30 minutos con Startidea](/contacto). Esa llamada sirve para ver qué línea encaja con tu proyecto, qué tienes y qué te falta, y si tiene sentido que Startidea acompañe la preparación del expediente. Sin coste, sin compromiso.

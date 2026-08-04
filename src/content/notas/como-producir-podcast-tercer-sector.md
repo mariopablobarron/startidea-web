@@ -87,4 +87,4 @@ En el resto de casos, conviene empezar pequeño internamente, ver si la cadencia
 
 ---
 
-Startidea produce podcasts editoriales para organizaciones del tercer sector y instituciones desde 2020. Si estás considerando arrancar uno y quieres una conversación honesta sobre si tu organización está lista, [reserva 30 minutos con el equipo](/contacto). En esa llamada repasamos qué tienes, qué te falta y si tiene sentido empezar — o no.
+Startidea produce podcasts editoriales para organizaciones del tercer sector y instituciones desde 2020. Si estás considerando arrancar uno y quieres una conversación honesta sobre si tu organización está lista, [reserva 30 minutos con el equipo](/contacto). Esa llamada sirve para ver qué tienes, qué te falta y si tiene sentido empezar — o no.
