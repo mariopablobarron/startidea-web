@@ -1,0 +1,48 @@
+src/pages/que-hacemos.astro
+  s_0ab79ba551035b::t_82f796645831df 248-249
+astro.config.mjs
+  s_0ab79ba551035b::t_31b2d11445c7a6 97
+  s_0ab79ba551035b::t_a752b0fff2aaff 94-96,98-99
+src/data/audiencias.ts
+  s_0ab79ba551035b::t_642589b0585df7 106
+  s_0ab79ba551035b::t_34cb4a99ebd347 53-54
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_1be5446d4fd981 237
+  s_5c95b9beb99017::t_9e206e0cafc13f 198-199,202-203,206-207,210-211,214-215,218-219
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_9e35e731614dbe 371-375,377-380,389-390
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_0ab79ba551035b::t_77358baaf79c89 20,106
+src/pages/comunicacion-eclesial.astro
+  s_0ab79ba551035b::t_ed6e6f86c26420 4,100,111-113
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_6387980d7f3f43 4,203-205
+src/pages/og/[...slug].png.ts
+  s_0ab79ba551035b::t_fa733f04323bf6 21-27
+src/pages/precios.astro
+  s_0ab79ba551035b::t_eed17e3d90f1bd 16,111-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "1163d5b08d09e19f334df9800568d3089680dd5f",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_5c95b9beb99017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "622010e1-d266-47fb-935c-45bdb98c2b53",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
