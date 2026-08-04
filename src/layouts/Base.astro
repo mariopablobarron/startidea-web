@@ -136,14 +136,18 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
+    {jsonLd && <JsonLd data={jsonLd} />}
+  </head>
+  <body class="pb-[72px] xl:pb-0">
+    <!-- Analytics al final del body (antes vivían en <head>): eran ~42KB de JS
+         inline síncrono que se ejecutaba ANTES de que el navegador descubriera
+         los stylesheets (Astro los inyecta al final del head) → retrasaba el
+         primer render. El orden relativo consent→gtag→clarity se conserva. -->
     <GoogleTagManager />
     <AnalyticsTracker />
     <MicrosoftClarity />
-    {jsonLd && <JsonLd data={jsonLd} />}
     <!-- Umami analytics (privacy-first) -->
     <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="3535ee03-30aa-4c5c-a74e-4650ed465c21"></script>
-  </head>
-  <body class="pb-[72px] xl:pb-0">
     <AdminBar />
     <Splash />
     <FaviconAnimado />
