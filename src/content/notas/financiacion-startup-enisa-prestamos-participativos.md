@@ -2,6 +2,7 @@
 title: 'Préstamos ENISA para startups y PYMES: cómo funcionan, cuánto piden y cuándo conviene pedirlos'
 description: 'ENISA otorga préstamos participativos a startups y pequeñas empresas españolas para crecer sin diluir capital. Esta nota explica las tres líneas (Jóvenes Emprendedores, Crecimiento, Emprendedores), el rango de importes, qué pide ENISA en su análisis y cuándo conviene pedirlo frente a una ronda de inversión.'
 pubDate: 2026-05-25
+updatedDate: 2026-08-04
 tldr: 'ENISA concede préstamos participativos a startups y pymes para crecer sin diluir capital, en tres líneas —Jóvenes Emprendedores, Crecimiento y Emprendedores— con importes y requisitos distintos. Conviene frente a una ronda de inversión cuando se quiere financiar el crecimiento sin ceder participación, siempre que el proyecto pueda devolver el préstamo.'
 audience: 'Empresas con propósito'
 category: 'Financiación'
@@ -19,7 +20,7 @@ faqs:
   - question: '¿Cómo se solicita un préstamo ENISA?'
     answer: 'La solicitud es 100% telemática en la sede electrónica de ENISA: alta en el portal, formulario online (empresa, línea, importe y destino de los fondos) y documentación adjunta (plan de negocio, proyecciones financieras, últimas cuentas, escrituras y CV del equipo). Tras el envío, ENISA analiza el expediente —casi siempre pide alguna aclaración— en un plazo de 4-6 meses; si la resolución es favorable, el préstamo se formaliza ante notario y se desembolsa. ENISA no funciona por convocatorias con plazo: las líneas están abiertas de forma continua mientras haya presupuesto anual.'
   - question: '¿Startidea ayuda a presentar la solicitud ENISA?'
-    answer: 'Sí. Startidea acompaña en la preparación del expediente completo: plan de negocio adaptado al lenguaje y los criterios de ENISA, proyecciones financieras realistas y justificables, memoria técnica del proyecto, dossier del equipo, y revisión cruzada por un segundo redactor antes del envío. Para startups y PYMES con proyecto definido, el tiempo de preparación es 3-5 semanas. Si el proyecto aún no está cerrado, lo trabajamos primero en una sesión de diagnóstico para que el plan que se presenta a ENISA sea consistente con la realidad operativa de la empresa.'
+    answer: 'Sí. Startidea acompaña en la preparación del expediente completo: plan de negocio adaptado al lenguaje y los criterios de ENISA, proyecciones financieras realistas y justificables, memoria técnica del proyecto, dossier del equipo, y revisión cruzada por un segundo redactor antes del envío. Para startups y PYMES con proyecto definido, el tiempo de preparación es 3-5 semanas. Si el proyecto aún no está cerrado, Startidea lo trabaja primero en una sesión de diagnóstico para que el plan que se presenta a ENISA sea consistente con la realidad operativa de la empresa.'
 ---
 
 ENISA (Empresa Nacional de Innovación) es uno de los instrumentos públicos de financiación menos conocidos por las startups españolas — y uno de los más útiles cuando se entiende bien para qué sirve. No es una subvención (no es dinero a fondo perdido), no es una ronda de inversión (no diluye capital), no es un crédito bancario clásico (el interés y la devolución están vinculados a resultados). Es **un préstamo participativo**: una figura que combina lo mejor de varios mundos.
@@ -105,6 +106,10 @@ La solicitud es **100% telemática** a través de la sede electrónica de ENISA.
 5. **Resolución**: si es favorable, se formaliza el préstamo (con intervención notarial) y se desembolsa. Si es denegatoria, ENISA indica el motivo y cabe volver a presentar más adelante con el expediente corregido.
 
 A diferencia de las subvenciones, ENISA **no funciona por convocatorias con plazo cerrado**: las líneas están abiertas de forma continua mientras haya presupuesto anual disponible, así que el momento de solicitar lo marca la empresa, no el calendario. La línea de **Jóvenes Emprendedores** suele ser la puerta de entrada para empresas de menos de 24 meses con socios menores de 40 años.
+
+## ENISA no es la única puerta
+
+Si el proyecto tiene un componente fuerte de I+D+i, conviene comparar con las [ayudas CDTI (NEOTEC, PID, Línea Directa)](/notas/cdti-ayudas-innovacion-empresas): ahí hay tramos no reembolsables que ENISA no ofrece, a cambio de más exigencia técnica. Y para situar ENISA dentro del mapa completo de financiación pública —BDNS, CDTI, IDAE, ENISA y Andalucía TRADE—, la referencia es la guía de [financiación pública para empresas con propósito](/financiacion-empresas). Las fuentes no son excluyentes: la combinación correcta depende de la fase y del proyecto.
 
 ## Cómo lo aborda Startidea
 
