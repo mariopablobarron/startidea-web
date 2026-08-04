@@ -1,6 +1,8 @@
 ---
 title: "Federación andaluza de discapacidad · cuando la causa pesa más que el método"
 description: "Diagnóstico de fundraising en una federación andaluza de discapacidad con dependencia del 86% de subvención pública autonómica y un programa de empresas inexistente. La organización tenía la causa, faltaba el músculo comercial."
+seoTitle: "Fundraising en discapacidad · diagnóstico"
+metaDescription: "Federación andaluza de discapacidad con el 86% del presupuesto en subvención pública y sin programa de empresas: diagnóstico y plan de captación privada."
 pubDate: 2026-04-20
 sector: "Discapacidad"
 geografia: "Regional"

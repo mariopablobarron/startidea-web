@@ -1,6 +1,8 @@
 ---
 title: "Fundación ambiental · un solo proyecto europeo sostiene el 60% del presupuesto"
 description: "Diagnóstico de fundraising en una fundación de conservación cuya salud aparente esconde una fecha de caducidad: el proyecto LIFE que la financia termina, y entre marco europeo y marco europeo hay un vacío que nadie ha presupuestado. El riesgo no es un recorte, es el calendario."
+seoTitle: "Fundraising ambiental · diagnóstico"
+metaDescription: "Fundación ambiental con el 55% del presupuesto en un único proyecto LIFE con fecha de fin: diagnóstico, fondo de reserva y plan de captación."
 pubDate: 2026-07-09
 sector: "Medio ambiente"
 geografia: "Estatal"

@@ -1,6 +1,8 @@
 ---
 title: "Fundación de cooperación internacional · ingreso multianual sostenido"
 description: "Diagnóstico de fundraising en una fundación estatal con dependencia crítica de subvención pública (78%) y base social envejecida. La radiografía, las palancas detectadas y las decisiones que recomendamos."
+seoTitle: "Fundraising en cooperación · diagnóstico"
+metaDescription: "Fundación de cooperación internacional con el 78% de subvención pública y una base social de 64 años de media: diagnóstico y plan de renovación."
 pubDate: 2026-04-15
 sector: "Cooperación internacional"
 geografia: "Estatal"

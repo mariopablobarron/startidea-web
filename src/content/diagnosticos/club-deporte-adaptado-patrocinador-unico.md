@@ -1,6 +1,8 @@
 ---
 title: "Asociación de deporte adaptado · cuando un solo patrocinador sostiene media temporada"
 description: "Diagnóstico de fundraising en un club de deporte adaptado que crecía sobre un único patrocinador empresarial. El 40% del presupuesto colgaba de una sola firma, y la renovación se decidía cada año en una reunión que la asociación no controlaba."
+seoTitle: "Fundraising en deporte adaptado · caso"
+metaDescription: "Club de deporte adaptado con el 40% del presupuesto en un único patrocinador: diagnóstico y plan para diversificar la cartera de empresas."
 pubDate: 2026-07-14
 sector: "Discapacidad"
 geografia: "Regional"

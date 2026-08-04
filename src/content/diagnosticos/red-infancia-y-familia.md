@@ -1,6 +1,8 @@
 ---
 title: "Red estatal de infancia y familia · cuando crecer rápido oculta la fragilidad"
 description: "Diagnóstico de fundraising en una red estatal de infancia y familia que multiplicó su presupuesto por tres en cinco años — pero con concentración crítica en un único financiador privado. Cómo se detecta el riesgo cuando todo va bien."
+seoTitle: "Fundraising en infancia · diagnóstico"
+metaDescription: "Red estatal de infancia y familia con el 38% del presupuesto en una sola fundación bancaria: diagnóstico y plan de diversificación de fondos."
 pubDate: 2026-04-25
 sector: "Infancia y familia"
 geografia: "Estatal"

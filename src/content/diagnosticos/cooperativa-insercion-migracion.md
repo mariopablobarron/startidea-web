@@ -1,6 +1,8 @@
 ---
 title: "Cooperativa de inserción sociolaboral · cuando el ingreso propio esconde el riesgo"
 description: "Diagnóstico de fundraising en una empresa de inserción de personas migrantes que factura el 68% de sus ingresos por su propia actividad. No dependía de la subvención pública — dependía de un solo cliente. El riesgo era de mercado, no de convocatoria."
+seoTitle: "Fundraising y migración · diagnóstico"
+metaDescription: "Cooperativa de inserción de personas migrantes con el 54% de la facturación en un solo cliente: diagnóstico y plan de diversificación comercial."
 pubDate: 2026-07-08
 sector: "Migración y refugio"
 geografia: "Regional"

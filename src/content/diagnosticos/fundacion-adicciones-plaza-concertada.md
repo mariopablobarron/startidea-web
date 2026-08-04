@@ -1,6 +1,8 @@
 ---
 title: "Fundación de adicciones · cuando la plaza concertada es a la vez sostén y techo"
 description: "Diagnóstico de fundraising en una fundación asistencial de drogodependencias con el 82% del ingreso atado a plazas concertadas con la administración autonómica. El concierto paga las nóminas y, al mismo tiempo, impide crecer: nadie capta porque la plaza 'ya está pagada'."
+seoTitle: "Fundraising en adicciones · diagnóstico"
+metaDescription: "Fundación de adicciones con el 82% del ingreso en plazas concertadas, que sostienen y a la vez ponen techo: diagnóstico y plan de captación propia."
 pubDate: 2026-07-13
 sector: "Salud"
 geografia: "Regional"
