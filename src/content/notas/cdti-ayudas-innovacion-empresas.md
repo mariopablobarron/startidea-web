@@ -2,6 +2,7 @@
 title: 'Ayudas CDTI para innovación empresarial: NEOTEC, PID, Línea Directa y cuándo conviene cada una'
 description: 'CDTI (Centro para el Desarrollo Tecnológico Industrial) es el principal organismo público español de apoyo a la I+D+i empresarial. Esta nota explica las cuatro líneas más usadas (NEOTEC, PID, Línea Directa de Innovación, Cervera) con sus rangos de financiación, requisitos reales y cuándo conviene cada una.'
 pubDate: 2026-05-25
+updatedDate: 2026-08-04
 tldr: 'CDTI es el principal organismo público español de apoyo a la I+D+i empresarial. Sus cuatro líneas más usadas —NEOTEC, PID, Línea Directa de Innovación y Cervera— cubren fines y rangos distintos, entre subvención y crédito blando. La elección depende del estado del proyecto y de si interesa ayuda a fondo perdido o financiación a devolver.'
 audience: 'Empresas con propósito'
 category: 'Financiación'
@@ -99,13 +100,13 @@ Decisión que toda empresa innovadora se acaba haciendo:
 | Si quieres… | Línea recomendada |
 |---|---|
 | Subvención pura sin devolver, startup tecnológica < 3 años | **NEOTEC** |
-| Préstamo participativo sin diluir capital, < 1,5M€ | **ENISA Crecimiento** (no CDTI) |
+| Préstamo participativo sin diluir capital, < 1,5M€ | **[ENISA Crecimiento](/notas/financiacion-startup-enisa-prestamos-participativos)** (no CDTI) |
 | Financiar I+D real con tramo no reembolsable, > 500K€ | **PID** o **Cervera** |
 | Innovación incremental rápida, < 1,5M€ | **Línea Directa de Innovación** |
 | Proyecto territorial Andalucía + internacionalización | **Andalucía TRADE** (no CDTI) |
 | Proyecto de transición energética | **IDAE** o autonómica + complementaria CDTI |
 
-No son mutuamente excluyentes. Una startup tecnológica madura puede combinar NEOTEC (primera fase) + PID (escalado) + ENISA (capital circulante) en distintos años.
+No son mutuamente excluyentes. Una startup tecnológica madura puede combinar NEOTEC (primera fase) + PID (escalado) + [ENISA](/notas/financiacion-startup-enisa-prestamos-participativos) (capital circulante) en distintos años. El mapa completo de fuentes está en la guía de [financiación pública para empresas](/financiacion-empresas).
 
 ## Cómo lo aborda Startidea
 
