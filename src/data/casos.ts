@@ -197,7 +197,7 @@ export const casos: Caso[] = [
     discipline: 'Comunicación',
     year: '2025',
     duration: '6 semanas',
-    title: 'Un quinto aniversario que sirvió para contar quiénes somos.',
+    title: 'Un quinto aniversario que sirvió para contarse con la altura que ya tenía.',
     body: 'Cobertura audiovisual integral del evento conmemorativo del 5º aniversario de Granada Social.',
     metric: { value: '5 años', label: 'de plataforma sociocultural en Granada' },
     context:
