@@ -88,4 +88,4 @@ Una [agencia de social media en Granada](/redes-sociales-granada) con experienci
 
 ---
 
-Startidea trabaja la comunicación digital de organizaciones sociales en Granada desde 2011, tanto en la [gestión de redes sociales en Granada](/redes-sociales-granada) como en la [comunicación estratégica](/comunicacion) completa. Si tu entidad está en este punto y quiere hablar sobre qué dedicación tiene sentido en tu caso, [reserva 30 minutos](/contacto): hablamos de qué tienes, qué te falta y si encajamos. Sin compromiso.
+Startidea trabaja la comunicación digital de organizaciones sociales en Granada desde 2011, tanto en la [gestión de redes sociales en Granada](/redes-sociales-granada) como en la [comunicación estratégica](/comunicacion) completa. Si tu entidad está en este punto y quiere hablar sobre qué dedicación tiene sentido en tu caso, [reserva 30 minutos](/contacto): la conversación cubre qué tienes, qué te falta y si hay encaje. Sin compromiso.

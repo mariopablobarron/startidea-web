@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: '¿Hace falta que llegue a la llamada con un brief?',
-    a: 'No. Una idea aproximada del reto basta. Si tienes un brief o una RFP, mejor — los leemos antes y la conversación rinde más.',
+    a: 'No. Una idea aproximada del reto basta. Si tienes un brief o una RFP, mejor — se leen antes y la conversación rinde más.',
   },
 ];
 
@@ -257,7 +257,7 @@ const jsonLd = [
               method: 'contacto_form',
               page_path: '/contacto',
             });
-            form.innerHTML = '<div class="border-2 border-magenta p-6"><p class="font-display text-2xl text-ink">Recibido. Te llamamos en menos de 24 horas laborales.</p><p class="mt-2 text-sm text-ink/70">Si es urgente, escríbenos directamente a <a href="mailto:hola@startidea.es" class="link-underline">hola@startidea.es</a>.</p></div>';
+            form.innerHTML = '<div class="border-2 border-magenta p-6"><p class="font-display text-2xl text-ink">Recibido. Startidea te llama en menos de 24 horas laborales.</p><p class="mt-2 text-sm text-ink/70">Si es urgente, escribe directamente a <a href="mailto:hola@startidea.es" class="link-underline">hola@startidea.es</a>.</p></div>';
           } else {
             status.textContent =
               json.error === 'rate' ? 'Espera unos segundos antes de reenviar.' :
