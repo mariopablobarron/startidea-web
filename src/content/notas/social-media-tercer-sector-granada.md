@@ -1,5 +1,6 @@
 ---
 title: 'Social media para entidades sociales en Granada (sin perder la cabeza ni la causa)'
+seoTitle: 'Social media para el tercer sector en Granada'
 description: 'Una guía honesta sobre cómo gestionar redes sociales en una ONG, fundación o asociación de Granada. Qué redes funcionan en el contexto local, cuánto tiempo dedicar, qué métricas importan y cuándo subcontratar.'
 metaDescription: 'Guía honesta de redes sociales para ONG y asociaciones de Granada: qué plataformas funcionan en el contexto local, cuánto tiempo dedicar y qué medir.'
 pubDate: 2026-05-24

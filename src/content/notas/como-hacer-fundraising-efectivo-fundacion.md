@@ -1,5 +1,6 @@
 ---
 title: 'Cómo hacer fundraising efectivo para una fundación (sin depender de un solo donante)'
+seoTitle: 'Fundraising efectivo para una fundación'
 description: 'El fundraising real no es buscar al mecenas providencial. Es construir una mezcla de fuentes que aguante un mal año. Esta nota separa los cuatro pilares (socios, grandes donantes, empresas, subvenciones) y cómo equilibrarlos según el tamaño de la fundación.'
 metaDescription: 'Fundraising efectivo para una fundación: los cuatro pilares (socios, grandes donantes, empresas, subvenciones) y cómo equilibrarlos sin depender de uno solo.'
 pubDate: 2026-05-20

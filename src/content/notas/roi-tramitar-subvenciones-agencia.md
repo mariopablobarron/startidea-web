@@ -1,5 +1,6 @@
 ---
 title: '¿Vale la pena pagar para tramitar una subvención? El cálculo que pocas entidades hacen'
+seoTitle: 'ROI de tramitar subvenciones con una agencia'
 description: 'Muchas organizaciones del tercer sector tramitan sus subvenciones internamente sin calcular cuánto cuesta realmente ese tiempo. Aquí está el cálculo completo: coste interno, probabilidad de éxito, importe concedido y qué cambia cuando lo gestiona alguien externo.'
 metaDescription: 'Tramitar una subvención internamente tiene un coste de tiempo que casi nadie calcula. El cálculo completo de ROI para decidir si compensa externalizar.'
 pubDate: 2026-05-26

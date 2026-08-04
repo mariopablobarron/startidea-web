@@ -1,5 +1,6 @@
 ---
 title: 'Cómo leer una convocatoria de subvención antes de redactar el proyecto'
+seoTitle: 'Cómo leer una convocatoria de subvención'
 description: 'La mayoría de solicitudes se pierden por no haber leído bien las bases. Guía para analizar una convocatoria —objeto, requisitos, criterios de valoración y plazos— y decidir si vale la pena presentarse antes de escribir una sola línea.'
 metaDescription: 'Cómo leer una convocatoria de subvención antes de redactar: objeto, requisitos, criterios de valoración y plazos, en el orden que evita perder tiempo.'
 pubDate: 2026-05-31

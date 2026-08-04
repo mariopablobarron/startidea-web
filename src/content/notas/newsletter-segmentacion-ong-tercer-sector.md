@@ -1,5 +1,6 @@
 ---
 title: 'Por qué tu newsletter del tercer sector llega a todos y no interesa a nadie'
+seoTitle: 'Cómo segmentar la newsletter de una ONG'
 description: 'La mayoría de las organizaciones sin ánimo de lucro tienen una sola lista de correo y envían lo mismo a todos. El resultado: bajas constantes, aperturas del 18% y directivos que piden "más contenido". La solución no es más frecuencia: es segmentación. Guía práctica para ONGs, fundaciones y asociaciones.'
 metaDescription: 'Newsletter del tercer sector que llega a todos y no interesa a nadie: la solución no es enviar más, es segmentar la lista en al menos tres públicos.'
 pubDate: 2026-05-26

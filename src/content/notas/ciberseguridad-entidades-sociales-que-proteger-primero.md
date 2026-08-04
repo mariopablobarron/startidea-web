@@ -1,5 +1,6 @@
 ---
 title: 'Ciberseguridad para entidades sociales: qué proteger primero cuando no hay departamento de TI'
+seoTitle: 'Ciberseguridad para ONG: qué proteger primero'
 description: 'Guía honesta para ONGs, fundaciones e instituciones eclesiales sobre por dónde empezar a proteger los datos digitales. Sin alarmismo, sin jerga, con un orden de prioridades realista cuando los recursos son limitados.'
 metaDescription: 'Ciberseguridad para ONG y fundaciones sin departamento de TI: qué proteger primero, con un orden de prioridades realista para presupuestos modestos.'
 pubDate: 2026-05-26

@@ -1,5 +1,6 @@
 ---
 title: 'Qué evalúa una empresa antes de firmar un convenio con tu entidad'
+seoTitle: 'Qué evalúa una empresa antes de un convenio'
 description: 'Antes de aprobar un convenio con una entidad social, una empresa no evalúa primero la causa: evalúa el riesgo de asociarse contigo. Esta nota explica qué mira de verdad quien tiene que defender esa firma ante su comité, y cómo llegar a la reunión habiendo respondido a lo que aún no te han preguntado.'
 metaDescription: 'Antes de firmar un convenio, una empresa evalúa el riesgo de asociarse con la entidad social, no solo la causa. Qué mira de verdad y cómo prepararlo.'
 pubDate: 2026-07-20

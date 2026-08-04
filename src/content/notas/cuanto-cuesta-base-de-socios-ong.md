@@ -1,5 +1,6 @@
 ---
 title: 'Cuánto cuesta de verdad tener una base de socios (y por qué casi nadie lo calcula)'
+seoTitle: 'Cuánto cuesta la base de socios de una ONG'
 description: 'La cuota mensual de un socio parece ingreso limpio, pero captarlo y mantenerlo tiene un coste que casi ninguna entidad calcula. Esta nota explica cómo se mide el coste de captación, cuánto tarda un socio en "amortizarse" y por qué crecer sin ese número a la vista puede quemar la caja en lugar de llenarla.'
 metaDescription: 'Captar y mantener socios tiene un coste real que casi ninguna entidad calcula: cómo medir el coste de captación y cuánto tarda un socio en amortizarse.'
 pubDate: 2026-07-08

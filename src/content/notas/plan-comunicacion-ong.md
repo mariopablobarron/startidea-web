@@ -1,5 +1,6 @@
 ---
 title: 'Plan de comunicación para una ONG: estructura, pasos y errores frecuentes'
+seoTitle: 'Plan de comunicación ONG: estructura y errores'
 description: 'Guía del plan de comunicación de una ONG o fundación: los 6 elementos que lo sostienen, el calendario de 12 meses, los 5 errores más frecuentes y un checklist de estructura para empezar.'
 metaDescription: 'Plan de comunicación para una ONG: los seis elementos que lo sostienen, el calendario de doce meses y los cinco errores más frecuentes al hacerlo.'
 pubDate: 2026-05-26

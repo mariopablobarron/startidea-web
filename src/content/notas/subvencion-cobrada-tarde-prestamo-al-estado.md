@@ -1,5 +1,6 @@
 ---
 title: 'Una subvención cobrada a 18 meses no es una subvención: es un préstamo que le haces al Estado'
+seoTitle: 'Cobrar tarde una subvención: qué cuesta'
 description: 'La subvención de 50.000 euros que cobras año y medio tarde no vale 50.000 euros. Mientras esperas, adelantas el gasto con tu dinero, pides una póliza o dejas de hacer otra cosa. Esta nota pone número a ese coste oculto y explica por qué medirlo cambia qué convocatorias merece la pena pedir.'
 metaDescription: 'Una subvención cobrada 18 meses tarde no vale lo mismo: mientras la entidad espera, adelanta el gasto. Cómo calcular ese coste financiero oculto.'
 pubDate: 2026-07-20

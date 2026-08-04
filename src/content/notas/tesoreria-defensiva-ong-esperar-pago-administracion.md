@@ -1,5 +1,6 @@
 ---
 title: 'Tesorería defensiva: cómo no quebrar mientras la Junta tarda 18 meses en pagar'
+seoTitle: 'Tesorería defensiva: pagos tardíos de la Junta'
 description: 'El desfase entre gastar y cobrar es el principal riesgo de supervivencia para las entidades del tercer sector con financiación pública. Cuatro mecanismos concretos que funcionan hoy para cubrir ese hueco sin hipotecar la organización.'
 metaDescription: 'Cuatro mecanismos para cubrir el desfase entre gastar y cobrar cuando la Administración tarda meses en pagar una subvención, sin hipotecar la entidad.'
 pubDate: 2026-05-27

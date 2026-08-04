@@ -1,5 +1,6 @@
 ---
 title: 'Fundraising individual para asociaciones pequeñas: qué funciona sin tener departamento de captación'
+seoTitle: 'Fundraising individual para asociaciones'
 description: 'La mayoría de guías de fundraising individual están escritas para grandes ONGs con equipos dedicados. Aquí va el enfoque para la asociación de menos de 10 personas que quiere empezar a captar donaciones individuales sin volverse loca con herramientas y procesos complejos.'
 metaDescription: 'Fundraising individual para asociaciones de menos de 10 personas: cómo captar donaciones con la red propia y un proceso mínimo viable.'
 pubDate: 2026-05-26

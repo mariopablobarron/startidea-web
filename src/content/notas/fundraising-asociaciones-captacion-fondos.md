@@ -1,5 +1,6 @@
 ---
 title: 'Fundraising para asociaciones: cómo captar fondos sin depender de una sola fuente'
+seoTitle: 'Fundraising para asociaciones: cómo captar'
 description: 'Guía práctica de captación de fondos para asociaciones y entidades del tercer sector. Fuentes, estrategias, errores frecuentes y por qué diversificar importa más que encontrar la subvención perfecta.'
 metaDescription: 'Fundraising para asociaciones: qué fuentes combinar —socios, donantes, empresas, subvenciones— para no depender de una sola y captar fondos de forma estable.'
 pubDate: 2026-05-26

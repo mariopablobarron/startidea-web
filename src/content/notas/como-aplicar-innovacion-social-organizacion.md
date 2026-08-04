@@ -1,5 +1,6 @@
 ---
 title: 'Cómo aplicar la innovación social en tu organización, paso a paso'
+seoTitle: 'Cómo aplicar innovación social paso a paso'
 description: 'La innovación social no es un chispazo de genialidad: es un método. Esta guía práctica explica los seis pasos para pasar de un problema social real a una solución que funcione —empezar por el problema y no por la idea, escuchar a quien lo vive, prototipar barato, medir impacto y escalar solo cuando toca— y los errores que la hunden.'
 metaDescription: 'Cómo aplicar innovación social paso a paso: seis pasos desde el problema real hasta una solución probada y medida, y los errores que la hunden.'
 pubDate: 2026-07-01

@@ -1,5 +1,6 @@
 ---
 title: 'Agencia pequeña vs agencia grande: qué encaja con cada proyecto social'
+seoTitle: 'Agencia pequeña vs grande: cuál elegir'
 description: 'Cuando una fundación, institución o empresa con propósito busca agencia, suele dudar entre la opción local pequeña y la red grande. Esta nota separa qué aporta cada una y cuándo conviene cada estructura — sin caer en la falsa elección de "pequeño igual mejor" ni "grande igual seguro".'
 metaDescription: 'Agencia pequeña o grande para un proyecto social: cuatro preguntas que deciden el tamaño de agencia que encaja, sin dar por buena ninguna opción de partida.'
 pubDate: 2026-05-13

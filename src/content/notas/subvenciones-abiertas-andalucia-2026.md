@@ -1,5 +1,6 @@
 ---
 title: 'Subvenciones abiertas en Andalucía 2026: qué convocatorias gestiona Startidea y cómo solicitar'
+seoTitle: 'Subvenciones abiertas en Andalucía 2026'
 description: 'Guía práctica de las convocatorias de subvenciones abiertas en Andalucía en 2026 para tercer sector y entidades locales. Cuáles son, para quién, cómo saber si encajan y cómo tramitar el expediente a comisión de éxito.'
 metaDescription: 'Catálogo de convocatorias de subvenciones abiertas en Andalucía 2026 para tercer sector y entidades locales: beneficiarios, plazos y cómo tramitar.'
 pubDate: 2026-05-28

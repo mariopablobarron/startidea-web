@@ -1,5 +1,6 @@
 ---
 title: 'Socios que se van sin avisar: cómo medir y frenar la fuga de la base social'
+seoTitle: 'Cómo frenar la fuga de socios de una ONG'
 description: 'La mayoría de las bajas de socios no son enfados: son tarjetas caducadas, correos que ya nadie lee y silencio. Cómo calcular la tasa de bajas real, distinguir la fuga evitable de la inevitable y montar una rutina de retención sin departamento de captación.'
 metaDescription: 'Cómo calcular la tasa real de bajas de socios, distinguir la fuga evitable de la inevitable y montar una rutina de retención sin departamento de captación.'
 pubDate: 2026-07-13

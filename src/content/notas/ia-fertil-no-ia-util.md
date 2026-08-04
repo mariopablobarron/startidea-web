@@ -1,5 +1,6 @@
 ---
 title: 'IA fértil, no IA útil: cómo se relacionan las organizaciones con la inteligencia artificial sin perderse'
+seoTitle: 'IA fértil vs IA útil: la diferencia clave'
 description: 'La mayoría de los proyectos con IA buscan productividad. Pocos preguntan para qué. Esta nota distingue entre IA útil e IA fértil, propone un marco de relación humano-IA y explica por qué la skill clave del momento no es saber programar prompts, sino saber facilitar.'
 metaDescription: 'IA fértil frente a IA útil: por qué la pregunta no es cuánto tiempo ahorra la inteligencia artificial, sino para qué se usa ese tiempo ganado.'
 pubDate: 2026-06-10
