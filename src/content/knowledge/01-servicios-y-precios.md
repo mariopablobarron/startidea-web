@@ -19,6 +19,7 @@ Todos los precios son **"desde X €"** orientativos. El precio formal se cierra
 ## Producción Audiovisual y Podcast
 - Vídeo institucional (3-5 min) — desde **3.500 €**
 - Serie de podcast (4 episodios) — desde **2.800 €**
+  - Producible en formato **videopodcast** (grabado en vídeo, multicámara, en el estudio propio de Granada): incluye el episodio largo y los clips verticales para redes. Consultar presupuesto según número de cámaras y volumen de clips.
 - Cobertura audiovisual de evento — desde **1.800 €**
 - Documental corto — desde **6.000 €**
 
