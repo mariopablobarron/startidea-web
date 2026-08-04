@@ -6,7 +6,7 @@ pubDate: 2026-07-13
 audience: 'Tercer sector'
 category: 'Financiación'
 tags: ['fundraising', 'base social', 'socios', 'retención', 'churn', 'fidelización', 'ONG']
-draft: true
+draft: false
 tldr: 'Una base social se vacía por abajo mucho antes de que nadie lo note: la mayoría de las bajas son impagos técnicos y desvinculación silenciosa, no enfados. Para frenarlas hay que medir la tasa de bajas real (socios perdidos sobre el total al inicio del año), separar la fuga evitable —tarjeta caducada, falta de contacto— de la inevitable, y montar una rutina fija de recuperación de impagos y contacto de impacto. Retener un socio cuesta una fracción de captar uno nuevo.'
 faqs:
   - question: '¿Cómo se calcula la tasa de bajas (churn) de socios de una ONG?'
