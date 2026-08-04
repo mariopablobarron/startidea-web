@@ -53,6 +53,12 @@ const jsonLd = [
       'Gestión de redes sociales (social media) en Granada para entidades del tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, producción de contenidos, cobertura de eventos y construcción de comunidad.',
     serviceType: 'Gestión de redes sociales',
     url: `${SITE_URL}/redes-sociales-granada`,
+    // La landing es local: el Service tiene que nombrar la ciudad, no solo #localbusiness.
+    areaServed: [
+      { type: 'City', name: 'Granada' },
+      { type: 'AdministrativeArea', name: 'Andalucía' },
+      { type: 'Country', name: 'España' },
+    ],
     audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
     offers: [
       { name: 'Estrategia de redes sociales', description: 'Mapa de canales, tono y objetivos por audiencia.' },
@@ -108,8 +114,8 @@ const local = [
 ---
 
 <Base
-  title="Redes sociales y social media en Granada — Startidea"
-  description="Gestión de redes sociales y social media en Granada para tercer sector, instituciones y empresas con propósito: estrategia, calendario editorial, contenidos, cobertura de eventos y comunidad. Agencia con estudio en el centro de Granada."
+  title="Agencia de redes sociales y social media en Granada"
+  description="Gestión de redes sociales y social media en Granada para tercer sector, instituciones y empresas con propósito. Desde 800 €/mes, estudio propio en Granada."
   ogSlug="page/redes-sociales-granada"
   jsonLd={jsonLd}
 >
@@ -172,7 +178,7 @@ const local = [
                   {it.num}
                 </span>
                 <div class="col-span-12 sm:col-span-10">
-                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <h3 class="font-display text-xl font-bold leading-tight tracking-normal text-ink md:text-2xl">{it.title}</h3>
                   <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
                 </div>
               </li>
@@ -261,5 +267,5 @@ const local = [
   </section>
 
   <NotasRelacionadas category="Comunicación" />
-  <OtrosServicios current="comunicacion" />
+  <OtrosServicios current="redes-sociales-granada" />
 </Base>
