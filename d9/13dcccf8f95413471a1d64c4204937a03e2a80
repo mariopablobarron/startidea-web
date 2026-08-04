@@ -1,0 +1,53 @@
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_5143dfd4faa3da::t_888c406f16476a 130
+src/pages/agentes-ia.astro
+  s_5143dfd4faa3da::t_a7198695ff5eaa 25
+  s_5143dfd4faa3da::t_47178cb7ce2820 158
+src/pages/comunicacion.astro
+  s_5143dfd4faa3da::t_d459977819b8c4 147
+src/pages/asistente-documentos.astro
+  s_5143dfd4faa3da::t_45e5ef927fe7f8 138
+  s_5143dfd4faa3da::t_75bf1a362514be 135
+src/pages/sobre.astro
+  s_5143dfd4faa3da::t_2f8161cd529e09 35
+src/pages/contacto.astro
+  s_5143dfd4faa3da::t_575ac792910096 260
+  s_5143dfd4faa3da::t_e9ed2e38bab081 21
+src/pages/casos.astro
+  s_5143dfd4faa3da::t_7245aba7203a58 47
+src/pages/como-trabajamos.astro
+  s_5143dfd4faa3da::t_f2799c19e7ccca 64
+src/content/notas/como-producir-podcast-tercer-sector.md
+  s_5143dfd4faa3da::t_15478da5804bd2 90
+src/pages/financiacion-empresas.astro
+  s_5143dfd4faa3da::t_5fa93432ba4537 181
+src/content/notas/social-media-tercer-sector-granada.md
+  s_5143dfd4faa3da::t_3cdee77d9a4aaa 91
+src/pages/fundraising.astro
+  s_5143dfd4faa3da::t_80c631a1db49ba 143
+  s_5143dfd4faa3da::t_833822d501db43 95
+src/pages/redes-sociales-ia.astro
+  s_5143dfd4faa3da::t_9cee539f8be08d 123
+src/pages/copiloto-subvenciones.astro
+  s_5143dfd4faa3da::t_722ef41fecd418 601
+src/pages/mantenimiento-web.astro
+  s_5143dfd4faa3da::t_5287718c7c9ad6 160
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_5143dfd4faa3da::t_9719695292597f 127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d913dcccf8f95413471a1d64c4204937a03e2a80",
+  "prompts": {},
+  "sessions": {
+    "s_5143dfd4faa3da": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca17431a-f8b8-46a5-9d1e-cb5d1450de99",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
