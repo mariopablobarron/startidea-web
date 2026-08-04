@@ -101,3 +101,5 @@ El diagnóstico tarda 2-4 horas. Si el encaje no existe, evita invertir 30-40 ho
 ---
 
 Startidea hace este diagnóstico antes de cada expediente. Si ya tienes una convocatoria identificada, [el formulario del Copiloto](/subvenciones/presentar/nuevo) empieza exactamente ahí: con la convocatoria y los datos de tu proyecto, y en 24 horas tienes el diagnóstico. Si aún no sabes qué hay abierto, el [catálogo de convocatorias de Startidea](/subvenciones/catalogo) lista solo las que el equipo ha revisado y está tramitando ahora mismo.
+
+Y si lo que falta es poner los números uno al lado del otro, la [comparación de las tres formas de tramitar](/precios) —por tu cuenta, con el Copiloto o con el servicio gestionado a éxito— detalla qué cuesta y qué exige cada una.
