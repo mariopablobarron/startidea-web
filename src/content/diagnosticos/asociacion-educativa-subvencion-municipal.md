@@ -1,6 +1,8 @@
 ---
 title: "Asociación de refuerzo educativo · el 78% depende de un convenio que se renueva por costumbre"
 description: "Diagnóstico de fundraising en una asociación que lucha contra el fracaso escolar en barrios. Lleva ocho años renovando el mismo convenio municipal sin concurrencia. Nadie recuerda cuándo se firmó por última vez con condiciones nuevas — y esa comodidad es precisamente el riesgo."
+seoTitle: "Fundraising en educación · diagnóstico"
+metaDescription: "Asociación de refuerzo educativo con un convenio municipal que cubre el 61% del presupuesto: diagnóstico y plan de diversificación de ingresos."
 pubDate: 2026-07-09
 sector: "Educación"
 geografia: "Local"

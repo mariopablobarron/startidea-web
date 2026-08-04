@@ -1,6 +1,8 @@
 ---
 title: "Asociación de salud mental · cuando el estigma frena la captación privada"
 description: "Diagnóstico de fundraising en una asociación de personas afectadas y familias con un 71% de ingreso atado a conciertos sanitarios y un donante privado casi inexistente. El problema no era la causa: era que la causa da vergüenza pedirla."
+seoTitle: "Fundraising en salud mental · diagnóstico"
+metaDescription: "Asociación de salud mental con el 71% de ingreso público y el estigma frenando la captación privada: diagnóstico y plan de fundraising digno."
 pubDate: 2026-07-08
 sector: "Salud"
 geografia: "Regional"

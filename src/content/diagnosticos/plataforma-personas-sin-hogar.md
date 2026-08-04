@@ -1,6 +1,8 @@
 ---
 title: "Plataforma contra el sinhogarismo · cuando la urgencia impide construir base social"
 description: "Diagnóstico de fundraising en una plataforma de atención a personas sin hogar que lo daba todo en la emergencia y no tenía tiempo para cultivar donantes. El 100% del equipo estaba en primera línea y nadie sostenía la relación con quien paga la primera línea."
+seoTitle: "Fundraising y sinhogarismo · diagnóstico"
+metaDescription: "Plataforma de personas sin hogar con 620 donantes sin fidelizar por falta de tiempo: diagnóstico y plan de captación recurrente."
 pubDate: 2026-07-08
 sector: "Multi-causa"
 geografia: "Local"

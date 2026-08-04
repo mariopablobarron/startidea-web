@@ -45,6 +45,14 @@ const otros = todos
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
 
+// SEO: `title` y `description` son lo que lee la persona (H1 y entradilla) y
+// se pasan de largo para el SERP — los títulos de la serie llevan el ángulo
+// del caso tras el "·" y con el sufijo llegaban a 118 caracteres. Cuando el
+// diagnóstico define `seoTitle` / `metaDescription`, mandan esos en el <head>
+// y en el JSON-LD; si no, se cae a los visibles como hasta ahora.
+const metaTitle = d.seoTitle ? `${d.seoTitle} · Startidea` : `${d.title} — Diagnósticos · Startidea`;
+const metaDesc = d.metaDescription ?? d.description;
+
 // JSON-LD — como el resto de colecciones públicas (auditoría 2026-07-15):
 // BlogPosting (el diagnóstico es contenido editorial firmado) + breadcrumbs.
 const diagUrl = `${SITE_URL}/laboratorio/fundraising/${entry.slug}`;
@@ -52,7 +60,7 @@ const jsonLd = [
   blogPostingSchema({
     url: diagUrl,
     title: d.title,
-    description: d.description,
+    description: metaDesc,
     datePublished: d.pubDate,
     authorName: FOUNDER_NAME,
     keywords: [d.sector, d.tipologia, d.geografia, 'fundraising', 'diagnóstico'],
@@ -66,8 +74,8 @@ const jsonLd = [
 ---
 
 <Base
-  title={`${d.title} — Diagnósticos · Startidea`}
-  description={d.description}
+  title={metaTitle}
+  description={metaDesc}
   ogSlug={`page/laboratorio-fundraising`}
   jsonLd={jsonLd}
 >
