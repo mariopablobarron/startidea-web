@@ -52,8 +52,17 @@ const notas = defineCollection({
 const diagnosticos = defineCollection({
   type: 'content',
   schema: z.object({
+    // Mismo reparto de papeles que en `notas` (ver arriba): `title` y
+    // `description` son lo que lee la persona; `seoTitle` y `metaDescription`
+    // son lo que ve Google. Los títulos de esta serie son largos a propósito
+    // —llevan el ángulo del caso tras el "·"— y con el sufijo del layout se
+    // iban a 107-118 caracteres, así que se truncaban los 12.
     title: z.string(),
+    seoTitle: z.string().min(20).max(48).optional(),
+    // `description` se pinta VISIBLE como entradilla del diagnóstico y ronda
+    // los 200-295 caracteres: el doble de lo que Google muestra.
     description: z.string(),
+    metaDescription: z.string().min(80).max(158).optional(),
     pubDate: z.coerce.date(),
     sector: z.enum([
       'Cooperación internacional',

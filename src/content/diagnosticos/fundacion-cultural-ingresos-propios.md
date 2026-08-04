@@ -1,6 +1,8 @@
 ---
 title: "Fundación cultural · el 38% viene de actividad propia, y eso la hace fuerte hasta el día que no puede abrir"
 description: "Diagnóstico de fundraising en una fundación que gestiona un espacio cultural. Vive de su propia taquilla, sus alquileres y su formación — un modelo que el sector premia como ejemplar. Pero un ingreso que depende de tener las puertas abiertas se evapora entero el día que hay que cerrarlas."
+seoTitle: "Fundraising en cultura · diagnóstico"
+metaDescription: "Fundación cultural con el 72% del presupuesto en ingreso procíclico, vulnerable al cierre del espacio: diagnóstico y plan de mecenazgo."
 pubDate: 2026-07-09
 sector: "Cultura"
 geografia: "Regional"

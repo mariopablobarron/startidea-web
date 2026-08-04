@@ -1,6 +1,8 @@
 ---
 title: "Asociación local de mayores · cuando el donante envejece con la causa"
 description: "Diagnóstico de fundraising en una asociación local de mayores con base social fundadora intacta y sin reemplazo generacional. La organización no tiene problema de captación, tiene problema de relevo."
+seoTitle: "Fundraising con mayores · diagnóstico"
+metaDescription: "Asociación local de mayores con 940 socios de 78 años de media y sin relevo generacional: diagnóstico y plan de renovación de la base social."
 pubDate: 2026-04-27
 sector: "Mayores"
 geografia: "Local"
