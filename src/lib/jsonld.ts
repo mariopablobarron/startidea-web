@@ -466,6 +466,13 @@ interface ServiceInput {
   url: string;
   audience?: string[]; // ["Empresa", "ONG", "Fundación", "Startup"...]
   offers?: Array<{ name: string; description: string; url?: string }>;
+  /** Cobertura territorial declarada. Por omisión, España + Andalucía.
+   *  Las landings con intención local (p.ej. /redes-sociales-granada) deben
+   *  anteponer la City: si el Service no nombra la ciudad, el único nodo que
+   *  la nombra es #localbusiness, y los motores de respuesta no reconcilian
+   *  "este servicio" con "esta ciudad" al resolver queries geolocalizadas.
+   *  El orden va de lo más específico a lo más amplio. */
+  areaServed?: Array<{ type: 'City' | 'AdministrativeArea' | 'Country'; name: string }>;
 }
 
 export function serviceSchema(s: ServiceInput) {
@@ -478,10 +485,12 @@ export function serviceSchema(s: ServiceInput) {
     serviceType: s.serviceType,
     url: s.url,
     provider: { '@id': `${SITE_URL}/#organization` },
-    areaServed: [
-      { '@type': 'Country', name: 'España' },
-      { '@type': 'AdministrativeArea', name: 'Andalucía' },
-    ],
+    areaServed: s.areaServed
+      ? s.areaServed.map((a) => ({ '@type': a.type, name: a.name }))
+      : [
+          { '@type': 'Country', name: 'España' },
+          { '@type': 'AdministrativeArea', name: 'Andalucía' },
+        ],
     availableLanguage: ['es-ES'],
     ...(s.audience && s.audience.length
       ? {
