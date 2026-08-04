@@ -1,5 +1,6 @@
 ---
 title: 'Cómo conseguir subvenciones para una ONG: guía práctica sin atajos'
+seoTitle: 'Cómo conseguir subvenciones para una ONG'
 description: 'Qué hace falta para que una ONG, fundación o asociación consiga subvenciones públicas en España. Fuentes, requisitos, errores frecuentes y el proceso real paso a paso.'
 metaDescription: 'Cómo conseguir subvenciones para una ONG: requisitos previos, dónde buscar convocatorias en fuentes oficiales como la BDNS, y el proceso paso a paso.'
 pubDate: 2026-05-26

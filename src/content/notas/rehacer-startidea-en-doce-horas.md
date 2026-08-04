@@ -1,5 +1,6 @@
 ---
 title: 'Hemos rehecho startidea.es en doce horas. Aquí está el método.'
+seoTitle: 'Cómo Startidea rehizo su web en doce horas'
 description: 'WordPress fuera, Astro 5 + Node + un VPS infrautilizado dentro. Cero coste extra, código abierto y un agente trabajando 24/7. Notas de campo de una migración real.'
 metaDescription: 'De WordPress a Astro 5 sobre un VPS propio: cómo Startidea rehizo startidea.es en doce horas, sin coste extra y con un agente IA trabajando 24/7.'
 pubDate: 2026-04-28

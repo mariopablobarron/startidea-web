@@ -1,5 +1,6 @@
 ---
 title: 'Cómo crear alianzas estratégicas entre ONGs (sin que muera la primera reunión)'
+seoTitle: 'Cómo crear alianzas estratégicas entre ONGs'
 description: 'La mayoría de las alianzas entre organizaciones del tercer sector se anuncian con foto y rueda de prensa, y se silencian al año sin resultados. Esta nota describe las cuatro condiciones reales que distinguen una alianza que produce algo de una alianza decorativa.'
 metaDescription: 'Alianzas estratégicas entre ONGs: las cuatro condiciones que distinguen una alianza que produce resultados de una alianza decorativa que se apaga al año.'
 pubDate: 2026-05-21

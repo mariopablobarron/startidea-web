@@ -1,5 +1,6 @@
 ---
 title: 'El informe de impacto que sí lee un patrono empresarial'
+seoTitle: 'Informe de impacto que sí lee una empresa'
 description: 'La memoria de cuarenta páginas no la lee el patrocinador que la financió. Lo que un responsable de empresa necesita es una página con una cifra que pueda usar en su propio informe de sostenibilidad. Esta nota explica qué mira de verdad quien firma el cheque y cómo darle exactamente eso sin traicionar el rigor.'
 metaDescription: 'El informe de impacto que un patrono empresarial sí lee: una página con una cifra citable, no la memoria de cuarenta páginas que nadie abre.'
 pubDate: 2026-07-08

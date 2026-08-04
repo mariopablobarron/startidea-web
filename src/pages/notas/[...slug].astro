@@ -114,7 +114,7 @@ const jsonLd = [
 ---
 
 <Base
-  title={`${nota.data.title} — Notas · Startidea`}
+  title={`${nota.data.seoTitle ?? nota.data.title} · Startidea`}
   description={metaDesc}
   ogSlug={`notas/${nota.slug}`}
   jsonLd={jsonLd}

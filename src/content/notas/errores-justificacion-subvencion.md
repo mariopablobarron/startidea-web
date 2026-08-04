@@ -1,5 +1,6 @@
 ---
 title: 'Errores que tumban una justificación de subvención (y cómo evitar el reintegro)'
+seoTitle: 'Errores en la justificación de una subvención'
 description: 'Conseguir la subvención es la mitad del trabajo: la otra mitad es justificarla bien. Los errores más frecuentes que obligan a devolver el dinero —gastos no elegibles, fuera de plazo, sin trazabilidad— y cómo prevenirlos desde el primer día.'
 metaDescription: 'Los errores más frecuentes que tumban la justificación de una subvención —gastos no elegibles, fuera de plazo, sin trazabilidad— y cómo evitar el reintegro.'
 pubDate: 2026-05-31

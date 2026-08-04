@@ -1,5 +1,6 @@
 ---
 title: 'Greenwashing vs propósito: la diferencia se mide en el contrato con el tercer sector'
+seoTitle: 'Greenwashing vs propósito: cómo distinguirlos'
 description: 'Cómo distinguir, sin recurrir al espíritu de la marca, si una alianza ESG entre una empresa y una entidad social es real o postureo. Cuatro cláusulas que lo decantan.'
 metaDescription: 'Cómo distinguir greenwashing de propósito real en una alianza ESG entre empresa y entidad social: la respuesta está en el contrato, no en la marca.'
 pubDate: 2026-06-09

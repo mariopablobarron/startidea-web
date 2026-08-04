@@ -1,5 +1,6 @@
 ---
 title: 'Cómo elegir agencia de comunicación para tu organización social'
+seoTitle: 'Cómo elegir agencia de comunicación social'
 description: 'Una guía honesta para fundaciones, ONG e instituciones que están a punto de contratar agencia. Qué preguntar, qué señales mirar y qué errores evitar — escrita por quienes están al otro lado de esa decisión.'
 metaDescription: 'Cómo elegir agencia de comunicación para una organización social: qué preguntar, qué señales mirar y los errores más frecuentes al decidir.'
 pubDate: 2026-05-13

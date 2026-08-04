@@ -1,5 +1,6 @@
 ---
 title: 'Organización sin ánimo de lucro en Granada: cómo arrancar y, sobre todo, sostenerla'
+seoTitle: 'Crear organización sin ánimo de lucro en Granada'
 description: 'Guía honesta para crear o consolidar una organización sin ánimo de lucro en Granada: forma jurídica, los primeros pasos, y el error que hunde a la mayoría — no pensar la financiación ni la comunicación desde el día uno.'
 metaDescription: 'Cómo crear una organización sin ánimo de lucro en Granada y, sobre todo, sostenerla: financiación, comunicación e impacto, antes de constituirla.'
 pubDate: 2026-06-24

@@ -1,5 +1,6 @@
 ---
 title: 'Legados solidarios: la fuente de ingresos que casi ninguna entidad pequeña se atreve a pedir'
+seoTitle: 'Legados solidarios en asociaciones pequeñas'
 description: 'El legado solidario es una de las vías de financiación más estables que existen y una de las menos trabajadas por las entidades pequeñas, porque exige hablar con los socios de algo incómodo: qué pasará con lo suyo cuando ya no estén. Esta nota explica por qué merece la pena vencer esa incomodidad y cómo empezar sin parecer un buitre.'
 metaDescription: 'Legados solidarios: por qué es una de las fuentes de ingresos más estables del tercer sector y cómo empezar a hablar de ello sin resultar oportunista.'
 pubDate: 2026-07-20

@@ -3,7 +3,14 @@ import { defineCollection, z } from 'astro:content';
 const notas = defineCollection({
   type: 'content',
   schema: z.object({
+    // OJO: `title` también se pinta VISIBLE como H1 de la nota, así que se
+    // escribe pensando en el lector, no en el SERP. Para el <title> está
+    // `seoTitle`: Google corta alrededor de los 60 caracteres y el layout
+    // añade su propio sufijo, así que un H1 largo se trunca siempre.
     title: z.string(),
+    // Título del SERP. Solo afecta al <title>; el H1 se queda como está.
+    // El máximo cuenta con que el layout añade ' · Startidea' (12 car.).
+    seoTitle: z.string().min(20).max(48).optional(),
     // OJO: `description` cumple DOS funciones — se renderiza VISIBLE como
     // entradilla al inicio de la nota y, por defecto, es la meta description.
     // Como entradilla puede (y suele) pasar de 300 caracteres, longitud a la

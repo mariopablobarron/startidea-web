@@ -1,5 +1,6 @@
 ---
 title: 'Por qué Startidea no hace propuestas en frío: el método del diagnóstico'
+seoTitle: 'Método del diagnóstico de Startidea'
 description: 'Cómo trabaja Startidea con un cliente nuevo y por qué hay un diagnóstico previo antes de cualquier propuesta. Una explicación honesta del método, sus límites y por qué a veces decimos que no.'
 metaDescription: 'Por qué Startidea no propone en frío: un diagnóstico previo ordena el problema antes de proponer, y a veces concluye que no hace falta contratar.'
 pubDate: 2026-05-13
