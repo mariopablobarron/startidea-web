@@ -1,6 +1,7 @@
 ---
 title: 'Copiloto de subvenciones: cómo la IA prepara tu solicitud sin que pierdas el control'
 description: 'El Copiloto de Subvenciones de Startidea usa inteligencia artificial para generar los documentos de tu solicitud — memoria técnica, presupuesto, plan de evaluación — a partir de la información de tu organización y la convocatoria concreta. Sin plantillas genéricas, sin que tengas que escribir desde cero.'
+metaDescription: 'El Copiloto de Subvenciones usa IA para redactar memoria técnica, presupuesto y plan de evaluación de la solicitud; tú revisas, ajustas y presentas.'
 pubDate: 2026-05-26
 tldr: 'El Copiloto de Subvenciones de Startidea usa inteligencia artificial para redactar los documentos de la solicitud —memoria técnica, presupuesto, plan de evaluación— a partir de los datos de la entidad y de la convocatoria concreta, sin plantillas genéricas. La persona mantiene el control y la decisión final: la IA acelera el borrador, no lo firma.'
 updatedDate: 2026-05-26

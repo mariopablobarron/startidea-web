@@ -1,6 +1,7 @@
 ---
 title: 'IA en tu organización sin comité de ética: tres reglas para empezar mañana'
 description: 'La parálisis por "gobernanza de la IA" frena a organizaciones que hoy podrían ahorrar horas cada semana. No hace falta un comité ni un reglamento de veinte páginas para empezar bien: hacen falta tres reglas de sentido común que caben en un folio. Esta nota las explica.'
+metaDescription: 'Usar IA en una ONG sin comité de ética: tres reglas simples —datos, revisión humana y transparencia— para empezar mañana mismo, sin reglamento.'
 pubDate: 2026-07-08
 audience: 'Todas'
 category: 'Estrategia'

@@ -1,6 +1,7 @@
 ---
 title: 'Del dinero público a la base social: cómo construir una cuota mensual estable en una ONG'
 description: 'Guía para pasar de depender de subvenciones y convenios a tener socios con cuota recurrente. Por qué la base social es el activo más valioso, cómo arrancar sin departamento de captación y qué métricas vigilar.'
+metaDescription: 'Cómo construir base social en una ONG: pasar de depender de subvenciones a tener socios con cuota mensual, arrancando por los círculos propios de la entidad.'
 pubDate: 2026-05-31
 audience: 'Tercer sector'
 category: 'Financiación'

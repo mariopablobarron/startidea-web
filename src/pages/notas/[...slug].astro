@@ -80,11 +80,18 @@ const words = nota.body.trim().split(/\s+/).length;
 const readingTime = Math.max(1, Math.round(words / 200));
 
 const notaUrl = `${SITE_URL}/notas/${nota.slug}`;
+
+// `description` se pinta VISIBLE como entradilla y suele pasar de 300
+// caracteres, longitud a la que Google trunca el snippet. `metaDescription`
+// existe para separar ambos usos: manda en el <meta> y en el BlogPosting,
+// mientras la entradilla de la nota se queda como está.
+const metaDesc = nota.data.metaDescription ?? nota.data.description;
+
 const jsonLd = [
   blogPostingSchema({
     url: notaUrl,
     title: nota.data.title,
-    description: nota.data.description,
+    description: metaDesc,
     datePublished: nota.data.pubDate,
     dateModified: nota.data.updatedDate,
     authorName: nota.data.author,
@@ -108,7 +115,7 @@ const jsonLd = [
 
 <Base
   title={`${nota.data.title} — Notas · Startidea`}
-  description={nota.data.description}
+  description={metaDesc}
   ogSlug={`notas/${nota.slug}`}
   jsonLd={jsonLd}
   ogType="article"

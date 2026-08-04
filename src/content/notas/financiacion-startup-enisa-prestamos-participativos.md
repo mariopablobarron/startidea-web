@@ -1,6 +1,7 @@
 ---
 title: 'Préstamos ENISA para startups y PYMES: cómo funcionan, cuánto piden y cuándo conviene pedirlos'
 description: 'ENISA otorga préstamos participativos a startups y pequeñas empresas españolas para crecer sin diluir capital. Esta nota explica las tres líneas (Jóvenes Emprendedores, Crecimiento, Emprendedores), el rango de importes, qué pide ENISA en su análisis y cuándo conviene pedirlo frente a una ronda de inversión.'
+metaDescription: 'Préstamos participativos ENISA para startups y pymes: las tres líneas, los importes y cuándo conviene pedirlos frente a una ronda de inversión.'
 pubDate: 2026-05-25
 updatedDate: 2026-08-04
 tldr: 'ENISA concede préstamos participativos a startups y pymes para crecer sin diluir capital, en tres líneas —Jóvenes Emprendedores, Crecimiento y Emprendedores— con importes y requisitos distintos. Conviene frente a una ronda de inversión cuando se quiere financiar el crecimiento sin ceder participación, siempre que el proyecto pueda devolver el préstamo.'

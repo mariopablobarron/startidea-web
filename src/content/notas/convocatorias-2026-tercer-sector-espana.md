@@ -1,6 +1,7 @@
 ---
 title: 'Convocatorias 2026 para el tercer sector en España: dónde mirar y cómo no perderte ninguna'
 description: 'La mayoría de entidades del tercer sector se entera de las convocatorias cuando ya están cerradas o en los últimos días de plazo. Esta guía explica dónde están las fuentes fiables, por qué fallan los sistemas de vigilancia habituales y cómo montar un calendario de financiación que funcione de verdad.'
+metaDescription: 'Convocatorias 2026 para el tercer sector: dónde consultarlas, por qué se llega tarde y cómo montar un sistema de vigilancia que avise a tiempo.'
 pubDate: 2026-06-21
 updatedDate: 2026-06-21
 category: 'Financiación'

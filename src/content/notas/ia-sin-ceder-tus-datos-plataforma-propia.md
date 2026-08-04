@@ -1,6 +1,7 @@
 ---
 title: 'IA sin ceder tus datos: por qué tu organización debería plantearse una plataforma propia'
 description: 'Cada documento que subes a un SaaS de IA vive en servidores que no controlas, bajo condiciones que pueden cambiar mañana. Esta nota explica la alternativa — plataformas de IA autoalojadas —, cuándo compensa, cuándo no, y las cinco preguntas de soberanía del dato que hacer a cualquier proveedor.'
+metaDescription: 'IA sin ceder tus datos a un SaaS: qué son las plataformas autoalojadas, cuándo compensan y las preguntas de soberanía del dato al proveedor.'
 pubDate: 2026-07-04
 audience: 'Todas'
 category: 'Estrategia'

@@ -1,6 +1,7 @@
 ---
 title: 'Cómo profesionalizar una asociación sin perder su alma'
 description: 'Crecer y ordenarse no tiene por qué traicionar la causa. Guía para profesionalizar la gestión de una asociación o fundación —estructura, roles, procesos— sin convertirla en una burocracia que olvida para qué existe.'
+metaDescription: 'Profesionalizar una asociación es ordenar roles, procesos y decisiones sin sustituir la misión por el procedimiento. Cómo crecer sin burocratizar.'
 pubDate: 2026-05-31
 audience: 'Tercer sector'
 category: 'Estrategia'

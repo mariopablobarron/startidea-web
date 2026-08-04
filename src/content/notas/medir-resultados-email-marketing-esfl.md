@@ -1,6 +1,7 @@
 ---
 title: 'Qué métricas de email marketing importan realmente en una ESFL (y cuáles son ruido)'
 description: 'La mayoría de herramientas de email marketing te abruman con estadísticas. Para una entidad sin ánimo de lucro, solo 4 métricas indican realmente si tu comunicación por email está funcionando. Las demás son ruido que distrae.'
+metaDescription: 'Email marketing en una ESFL: las cuatro métricas que de verdad indican si funciona la comunicación por correo, y las que solo distraen sin aportar nada.'
 pubDate: 2026-05-26
 tldr: 'En una entidad sin ánimo de lucro, solo cuatro métricas de email indican si la comunicación funciona; el resto suele ser ruido que distrae. La clave está en leer esas pocas métricas en conjunto y orientarlas a la acción que se busca —donar, inscribirse, asistir—, no en acumular estadísticas vistosas como el total de envíos.'
 updatedDate: 2026-05-26

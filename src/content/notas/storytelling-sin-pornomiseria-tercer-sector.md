@@ -1,6 +1,7 @@
 ---
 title: 'Storytelling sin pornomiseria: cómo contar el impacto social con dignidad'
 description: 'Contar historias de impacto sin explotar el sufrimiento de las personas. Qué es la pornomiseria, por qué deja de funcionar y cómo construir un relato potente que respete la dignidad de quien protagoniza la causa.'
+metaDescription: 'Qué es la pornomiseria en la comunicación social, por qué deja de funcionar y cómo contar el impacto con dignidad, sin explotar el sufrimiento ajeno.'
 pubDate: 2026-05-31
 audience: 'Tercer sector'
 category: 'Comunicación'
