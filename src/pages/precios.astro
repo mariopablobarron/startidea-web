@@ -13,6 +13,7 @@
  * SSR: prerender=false para reusar JSON-LD coherente con el catálogo.
  */
 import Base from '@/layouts/Base.astro';
+import LogosBanner from '@/components/LogosBanner.astro';
 import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
@@ -106,6 +107,9 @@ const jsonLd = [
       </div>
     </div>
   </section>
+
+  <!-- Social proof: organizaciones reconocibles (señal de entidad, como en la home) -->
+  <LogosBanner />
 
   <!-- Tabla comparativa -->
   <section class="border-y border-ink/10 bg-paper-warm py-14 md:py-20">

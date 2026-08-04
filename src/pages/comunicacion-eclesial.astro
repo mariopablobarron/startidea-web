@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import LogosBanner from '@/components/LogosBanner.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
@@ -96,7 +97,7 @@ const areas = [
         <em class="italic text-magenta">Con su propio lenguaje</em>.
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        La comunicación de una institución de la Iglesia no es comunicación corporativa con otro logo: tiene su propia lógica, sus estructuras de gobierno y sus audiencias. Startidea acompaña a diócesis, congregaciones, movimientos y fundaciones eclesiales a comunicar su misión y su obra con criterio y respeto —dentro y fuera—, con la experiencia de quince años en el sector.
+        La comunicación de una institución de la Iglesia no es comunicación corporativa con otro logo: tiene su propia lógica, sus estructuras de gobierno y sus audiencias. Startidea acompaña a diócesis, congregaciones, movimientos y fundaciones eclesiales a comunicar su misión y su obra con criterio y respeto —dentro y fuera—, con experiencia en el sector desde 2011.
       </p>
       <div class="mt-10">
         <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_eclesial_hero">
@@ -106,6 +107,9 @@ const areas = [
       </div>
     </div>
   </section>
+
+  <!-- Social proof: organizaciones reconocibles (señal de entidad, como en la home) -->
+  <LogosBanner />
 
   <!-- Áreas -->
   <section class="bg-paper py-20 md:py-28">

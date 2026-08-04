@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import LogosBanner from '@/components/LogosBanner.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
@@ -198,6 +199,9 @@ const proceso = [
       </div>
     </div>
   </section>
+
+  <!-- Social proof: organizaciones reconocibles (señal de entidad, como en la home) -->
+  <LogosBanner />
 
   {rango && (
     <!-- Inversión orientativa — baja la fricción nº1 (qué orden de inversión es) -->
