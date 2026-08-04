@@ -1,6 +1,7 @@
 ---
 title: 'Qué es la innovación social: definición y ejemplos claros'
 description: 'La innovación social suena a palabra vacía, pero tiene un significado concreto: nuevas formas de resolver problemas sociales que funcionan mejor que las que había. Esta nota la explica sin jerga, con ejemplos reconocibles —del microcrédito a las cooperativas de energía— y aclara en qué se diferencia de la RSC, la tecnología y el marketing con causa.'
+metaDescription: 'Qué es la innovación social, explicado sin jerga: definición clara, ejemplos reconocibles y en qué se diferencia de la RSC y el marketing con causa.'
 pubDate: 2026-07-01
 updatedDate: 2026-07-01
 tldr: 'La innovación social es encontrar formas nuevas y mejores de resolver un problema social, cuyo valor se queda en la sociedad y no en un dueño privado. No es tecnología por sí misma, ni RSC, ni marketing con causa: puede ser una idea organizativa muy simple. Ejemplos: el microcrédito, las cooperativas de energía, el comercio justo, la Wikipedia o el modelo Housing First. Lo que la define no es la novedad, sino que resuelve mejor y para más gente.'

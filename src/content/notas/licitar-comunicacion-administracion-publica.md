@@ -1,6 +1,7 @@
 ---
 title: 'Licitar comunicación con una institución pública: qué exige y qué falla'
 description: 'Cómo prepararse para licitar contratos de comunicación con ayuntamientos, diputaciones, consejerías y otras administraciones. Procedimientos, solvencia exigida, errores frecuentes y plazos realistas.'
+metaDescription: 'Licitar comunicación con una administración pública: procedimientos, solvencia exigida, errores que descartan ofertas y plazos reales de cada fase.'
 pubDate: 2026-06-10
 audience: 'Instituciones'
 tldr: 'Una administración pública compra comunicación por obligación legal, no por gusto. Quien desconoce ese marco ve cómo su oferta no llega ni a evaluarse, por buena que sea la idea. Esta guía ordena lo que exige la administración: solvencia, procedimiento, los errores que descartan ofertas y qué pasa al ganar.'

@@ -1,6 +1,7 @@
 ---
 title: 'Producción de documentales y podcast para el tercer sector: qué formato cuenta mejor tu impacto'
 description: 'Vídeo corto, documental o podcast: cada formato sirve para una cosa distinta. Guía honesta para entidades sociales sobre qué producir según el objetivo, qué cuesta de verdad y cómo encargarlo sin tirar el presupuesto.'
+metaDescription: 'Vídeo corto, documental o podcast: cada formato del tercer sector sirve para un objetivo distinto. Cuándo usar cada uno y qué cuesta de verdad producirlo.'
 pubDate: 2026-06-14
 audience: 'Tercer sector'
 category: 'Comunicación'

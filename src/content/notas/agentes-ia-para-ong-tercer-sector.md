@@ -1,6 +1,7 @@
 ---
 title: 'Agentes de IA para ONG y entidades sociales: qué son, para qué sirven y cuánto cuestan'
 description: 'Un agente de IA no es un chatbot genérico: es un asistente que responde con los documentos reales de tu entidad — tarifas, protocolos, memoria, tono. Esta nota explica qué es, los tres usos con más retorno en una organización social, qué cuesta de verdad y qué preguntar antes de contratar uno.'
+metaDescription: 'Agentes de IA para ONG: qué son, los tres usos con más retorno en una entidad social y cómo se paga la construcción, no licencias por usuario.'
 pubDate: 2026-07-04
 audience: 'Tercer sector'
 category: 'Estrategia'

@@ -1,6 +1,7 @@
 ---
 title: 'Crowdfunding para ONG: cuándo funciona y cuándo no'
 description: 'El crowdfunding atrae donaciones puntuales cuando hay una historia concreta, una base social previa y una meta realista. Sin esos tres elementos, la campaña fracasa o termina financiando a la plataforma. Esta nota explica cuándo tiene sentido plantearlo, cuándo no, y cómo encajarlo en un mix de financiación sano.'
+metaDescription: 'El crowdfunding para ONG funciona con historia concreta, base social previa y meta realista; sin esos tres elementos, la campaña suele fracasar.'
 pubDate: 2026-06-21
 updatedDate: 2026-06-21
 category: 'Financiación'

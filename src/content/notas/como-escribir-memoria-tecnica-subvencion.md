@@ -1,6 +1,7 @@
 ---
 title: 'Cómo escribir la memoria técnica de una subvención que puntúa alto'
 description: 'La memoria técnica decide la mayor parte de la puntuación de una subvención, pero casi siempre se redacta para describir el proyecto en vez de para responder al baremo. Esta guía explica qué pide cada apartado, cómo escribir para los criterios de valoración y qué errores descartan memorias técnicamente buenas.'
+metaDescription: 'Cómo escribir la memoria técnica de una subvención que puntúa alto: qué pide cada apartado y cómo mapear la redacción a los criterios de valoración.'
 pubDate: 2026-06-21
 tldr: 'La memoria técnica es lo que más puntúa en una subvención, pero suele redactarse para describir el proyecto, no para responder a los criterios de valoración. Cada apartado —diagnóstico, objetivos, actividades, indicadores— debe mapearse al baremo. Esta guía da la estructura, cómo escribir para puntuar y los errores que descartan memorias técnicamente buenas.'
 updatedDate: 2026-06-21

@@ -4,7 +4,16 @@ const notas = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
+    // OJO: `description` cumple DOS funciones — se renderiza VISIBLE como
+    // entradilla al inicio de la nota y, por defecto, es la meta description.
+    // Como entradilla puede (y suele) pasar de 300 caracteres, longitud a la
+    // que Google trunca el snippet por la mitad. Para separar ambos usos está
+    // `metaDescription`: si se define, manda en el <meta> y en el JSON-LD, y
+    // la entradilla visible se queda intacta.
     description: z.string(),
+    // Snippet del SERP. Solo afecta al <meta name="description"> y al
+    // BlogPosting. El máximo es duro a propósito: Google corta ~155-160.
+    metaDescription: z.string().min(80).max(158).optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     audience: z.enum(['Tercer sector', 'Instituciones', 'Empresas con propósito', 'Todas']).default('Todas'),
