@@ -23,7 +23,7 @@ faqs:
 
 Cada primavera, miles de organizaciones del tercer sector publican su memoria anual. La mayoría se descargan dos veces: una por el equipo que la imprimió y otra por la persona que la guardó "por si acaso". Es una pena, porque en esas memorias suele estar el trabajo más sólido del año — proyectos terminados, datos limpios, decisiones explicables. Pero el formato termina enterrándolo.
 
-La conclusión que sacamos tras quince años haciendo memorias para fundaciones y ONGs es ingrata: **el problema rara vez es la organización. Es la convención del género.** Las memorias del sector se parecen demasiado entre sí, y casi todas se parecen a un dossier interno. Ninguna de las dos cosas ayuda.
+La conclusión que dejan quince años haciendo memorias para fundaciones y ONGs es ingrata: **el problema rara vez es la organización. Es la convención del género.** Las memorias del sector se parecen demasiado entre sí, y casi todas se parecen a un dossier interno. Ninguna de las dos cosas ayuda.
 
 Estas son las cinco decisiones que más impacto tienen en si una memoria se lee o se archiva.
 

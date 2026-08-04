@@ -42,9 +42,9 @@ Cultura participativa requiere:
 
 ## Un caso real: la federación de 35 personas
 
-Anonimizamos los detalles, pero la situación es habitual. Una federación regional del sector discapacidad, 35 personas en plantilla, 12 entidades miembro. Decisiones operativas estancadas en una dirección general que llegaba tarde a todo. Equipos técnicos frustrados porque proponían y no pasaba nada. Patronato cuestionando por qué la federación no avanzaba.
+Los detalles están anonimizados, pero la situación es habitual. Una federación regional del sector discapacidad, 35 personas en plantilla, 12 entidades miembro. Decisiones operativas estancadas en una dirección general que llegaba tarde a todo. Equipos técnicos frustrados porque proponían y no pasaba nada. Patronato cuestionando por qué la federación no avanzaba.
 
-Lo que hicimos no fue un «plan de cultura participativa». Fue concreto: identificamos cuatro decisiones que la dirección tomaba sola y que afectaban a todos (calendario anual de actividades, criterios de adhesión de entidades miembro, presupuesto interno por área, modelo de comunicación externa). Cada una pasó a un grupo de trabajo con dos personas técnicas y la dirección. Reglas claras: el grupo propone, la dirección puede vetar pero tiene que justificar por qué.
+Lo que hizo Startidea no fue un «plan de cultura participativa». Fue concreto: se identificaron cuatro decisiones que la dirección tomaba sola y que afectaban a todos (calendario anual de actividades, criterios de adhesión de entidades miembro, presupuesto interno por área, modelo de comunicación externa). Cada una pasó a un grupo de trabajo con dos personas técnicas y la dirección. Reglas claras: el grupo propone, la dirección puede vetar pero tiene que justificar por qué.
 
 A los seis meses, tres de las cuatro decisiones se tomaban en grupo sin necesidad de veto. La cuarta se devolvió a la dirección porque tenía implicaciones legales que el grupo no podía resolver. Pero el equipo dejó de proponer cosas «para que la dirección las olvide»: ahora las llevan a una mesa donde sí pasan.
 

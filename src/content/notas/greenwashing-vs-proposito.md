@@ -22,7 +22,7 @@ faqs:
     answer: 'No hay una cifra universal, pero la referencia más útil es proporcional: si la empresa tiene 10M€ de facturación, una alianza de 10.000€ anuales es simbólica; una de 80-150K€ empieza a tener impacto real. La Fundación Lealtad y otros observatorios del sector recomiendan que las alianzas corporativas representen al menos el 0,5-1% del EBITDA de la empresa para ser tomadas en serio.'
 ---
 
-Llevamos años en la posición incómoda de explicarle a fundaciones y ONGs que **no toda alianza con una empresa es buena**, y a empresas que **no toda alianza con una ONG es buena prensa**. Las dos partes pierden el tiempo cuando el partnership se diseña desde el departamento de comunicación en lugar de desde el departamento legal.
+Startidea lleva años en la posición incómoda de explicarle a fundaciones y ONGs que **no toda alianza con una empresa es buena**, y a empresas que **no toda alianza con una ONG es buena prensa**. Las dos partes pierden el tiempo cuando el partnership se diseña desde el departamento de comunicación en lugar de desde el departamento legal.
 
 La distinción entre propósito real y postureo no se ve en las notas de prensa. Se ve en el contrato. Y se ve en cuatro cláusulas concretas.
 
@@ -58,7 +58,7 @@ Cuando el partnership lo firma marketing y reporta a marketing, su techo es ser 
 
 ---
 
-Hay una pregunta que solemos hacer a las dos partes antes de aceptar acompañar un partnership: **"¿podríais romper esta alianza mañana sin perder valor?"**.
+Hay una pregunta que se suele hacer a las dos partes antes de aceptar acompañar un partnership: **"¿podríais romper esta alianza mañana sin perder valor?"**.
 
 Si la empresa puede romperla sin perder más que una nota de prensa, es greenwashing. Si la ONG puede romperla sin perder más que una colaboración pequeña, es captación cosmética. **Solo cuando ambas partes tienen algo real que perder al separarse, el partnership ha entrado en territorio de propósito.**
 

@@ -49,7 +49,7 @@ Se paga mal así: licencia mensual por usuario de una herramienta genérica. Con
 
 Se paga bien así: **se construye una vez y sirve a todo el equipo**. Lo que cuesta es el trabajo de hacerlo bien — auditar e indexar el conocimiento, definir identidad y salvaguardas, integrarlo donde ya trabajáis y formar al equipo para mantenerlo. Por eso lo sensato es empezar por un piloto acotado, con presupuesto cerrado tras un diagnóstico, que se pague solo en tiempo liberado.
 
-Un efecto secundario que nadie anuncia: construir el agente **audita vuestro conocimiento**. Cuando indexamos los documentos de la propia Startidea, [los agentes destaparon dos tarifarios contradictorios](/casos/equipo-agentes-ia) que convivían en el Drive desde hacía años. Encontrar eso también es parte del valor.
+Un efecto secundario que nadie anuncia: construir el agente **audita vuestro conocimiento**. Cuando se indexaron los documentos de la propia Startidea, [los agentes destaparon dos tarifarios contradictorios](/casos/equipo-agentes-ia) que convivían en el Drive desde hacía años. Encontrar eso también es parte del valor.
 
 ## Las preguntas que hacer antes de contratar
 

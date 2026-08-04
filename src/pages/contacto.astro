@@ -117,7 +117,7 @@ const jsonLd = [
 
             <div class="flex flex-wrap items-center gap-3 pt-2">
               <button type="submit" class="btn">
-                Enviar y nos llamamos
+                Enviar y Startidea te llama
                 <span aria-hidden="true">→</span>
               </button>
               <a href="/diagnostico" class="btn-ghost">O empieza con un diagnóstico</a>
@@ -264,11 +264,11 @@ const jsonLd = [
               json.error === 'consent' ? 'Marca la casilla de aceptación de la política de privacidad.' :
               json.error === 'email' ? 'El email no parece válido.' :
               json.error === 'fields' ? 'Faltan datos por rellenar.' :
-              'No se pudo enviar. Escríbenos a hola@startidea.es y Startidea lo revisa.';
+              'No se pudo enviar. Escribe a hola@startidea.es y Startidea lo revisa.';
             btn.disabled = false;
           }
         } catch (err) {
-          status.textContent = 'Sin conexión. Escríbenos a hola@startidea.es.';
+          status.textContent = 'Sin conexión. Escribe a hola@startidea.es.';
           btn.disabled = false;
         }
       });

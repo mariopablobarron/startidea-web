@@ -41,7 +41,7 @@ No es una herramienta de captación rápida y no hay que pedirle que lo sea. Es 
 
 El podcast no es un formato, es una **relación en el tiempo**. Su fuerza no está en un episodio brillante, sino en la presencia continua: aparecer cada semana o cada mes en los oídos de una audiencia que ya te eligió. Para entidades que quieren construir autoridad en un tema —y posicionarse como la voz que sabe de algo— es de los pocos formatos que lo consiguen.
 
-Pero tiene una trampa: lo caro no es grabar, es mantener la frecuencia. Un podcast que arranca con energía y muere al cuarto episodio comunica peor que no haberlo empezado. Antes de producir uno, la pregunta no es «¿podemos grabar?», sino «¿podemos sostener esto doce meses?». (Si esa es vuestra duda, lo desarrollamos en [cómo producir un podcast para el tercer sector](/notas/como-producir-podcast-tercer-sector).)
+Pero tiene una trampa: lo caro no es grabar, es mantener la frecuencia. Un podcast que arranca con energía y muere al cuarto episodio comunica peor que no haberlo empezado. Antes de producir uno, la pregunta no es «¿podemos grabar?», sino «¿podemos sostener esto doce meses?». (Si esa es vuestra duda, eso se desarrolla en [cómo producir un podcast para el tercer sector](/notas/como-producir-podcast-tercer-sector).)
 
 ## La pregunta que ordena la decisión
 
@@ -59,7 +59,7 @@ Una entidad pequeña casi nunca necesita un documental. Necesita dos o tres cáp
 
 Y hay un componente que no es negociable, sea cual sea el formato: el guion. En un vídeo institucional es plano a plano; en un documental o un testimonio es un guion de preguntas y una estructura narrativa. Pero siempre lo hay. Sin guion no hay dirección, y sin dirección la producción técnica acumula material que luego no se monta. El guion es lo que separa un vídeo que cuenta algo de uno que solo se ve bien.
 
-Hay una última cosa que el tercer sector no debería negociar: **contar el impacto sin pornomiseria**. Producir con dignidad —sin explotar el dolor de las personas para emocionar— no es solo ético, es más eficaz a medio plazo. Lo tratamos aparte en [storytelling sin pornomiseria](/notas/storytelling-sin-pornomiseria-tercer-sector).
+Hay una última cosa que el tercer sector no debería negociar: **contar el impacto sin pornomiseria**. Producir con dignidad —sin explotar el dolor de las personas para emocionar— no es solo ético, es más eficaz a medio plazo. Startidea lo trata aparte en [storytelling sin pornomiseria](/notas/storytelling-sin-pornomiseria-tercer-sector).
 
 ---
 

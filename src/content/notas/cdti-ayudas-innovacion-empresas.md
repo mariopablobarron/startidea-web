@@ -118,7 +118,7 @@ CDTI es un terreno técnico donde el lenguaje y la estructura de las memorias im
 
 2. **Construcción de la memoria** (3-6 semanas según línea): redacción de la memoria técnica con el lenguaje CDTI (carácter innovador, riesgo, hitos verificables, indicadores), memoria económica desglosada por partidas elegibles, justificación del impacto.
 
-3. **Coordinación con equipo técnico**: para PID y Cervera, Startidea trabaja como redactor coordinador con el CTO o jefe de I+D de la empresa — no inventamos contenido técnico, lo estructuramos y traducimos al formato CDTI.
+3. **Coordinación con equipo técnico**: para PID y Cervera, Startidea trabaja como redactor coordinador con el CTO o jefe de I+D de la empresa — no inventa contenido técnico, lo estructura y traduce al formato CDTI.
 
 4. **Presentación electrónica**: envío del expediente con el certificado digital de representante de la empresa + seguimiento de cualquier requerimiento de subsanación.
 
