@@ -368,9 +368,16 @@ export function caseStudySchema(c: CaseStudyInput) {
   };
 }
 
+// Acepta {q,a} (convención) y también {question,answer}: astro build no
+// typechequea el frontmatter, y una página que pasó {question,answer} emitió
+// durante semanas un FAQPage con 6 Question VACÍAS (name/text undefined se
+// serializan fuera del JSON) sin que nada fallara. Normalizar aquí lo hace
+// imposible de repetir en silencio.
 interface FaqItem {
-  q: string;
-  a: string;
+  q?: string;
+  a?: string;
+  question?: string;
+  answer?: string;
 }
 
 export function faqPageSchema(items: FaqItem[]) {
@@ -379,8 +386,8 @@ export function faqPageSchema(items: FaqItem[]) {
     '@type': 'FAQPage',
     mainEntity: items.map((it) => ({
       '@type': 'Question',
-      name: it.q,
-      acceptedAnswer: { '@type': 'Answer', text: it.a },
+      name: it.q ?? it.question ?? '',
+      acceptedAnswer: { '@type': 'Answer', text: it.a ?? it.answer ?? '' },
     })),
   };
 }

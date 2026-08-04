@@ -50,8 +50,8 @@ export const audiencias: Audiencia[] = [
     quote: 'Comunicar bien no es opcional cuando lo que está en juego es tu causa.',
     body: [
       'Startidea trabaja con direcciones de comunicación, direcciones generales y patronatos de entidades del tercer sector con presupuesto y voluntad de profesionalizar su comunicación e impacto.',
-      'Sabemos que vivís la tensión entre misión y eficacia. Que captáis fondos sin perder al donante histórico, que demostráis impacto a un patronato que no siempre habla el mismo idioma, que profesionalizáis vuestra comunicación digital con recursos limitados.',
-      'No vamos a venderos humo de marketing. Tenemos casos parecidos al vuestro y, lo que es más importante, sabemos en qué se diferencian del que tenemos en frente.',
+      'Startidea conoce la tensión entre misión y eficacia: captar fondos sin perder al donante histórico, demostrar impacto a un patronato que no siempre habla el mismo idioma, profesionalizar la comunicación digital con recursos limitados.',
+      'Aquí no hay humo de marketing. Startidea tiene casos parecidos al vuestro y, lo que es más importante, sabe en qué se diferencia del que tiene en frente cada organización.',
     ],
     keywords: ['Misión', 'Impacto', 'Comunidad', 'Transformación', 'Coherencia', 'Sostenibilidad'],
     avoid: ['"Branding" sin estrategia', 'Engagement como métrica única', 'Promesas que no se pueden cumplir'],
@@ -103,7 +103,7 @@ export const audiencias: Audiencia[] = [
     body: [
       'Responsables de áreas de comunicación, innovación social o transformación digital en administraciones, fundaciones públicas, diócesis, congregaciones, asociaciones eclesiales y plataformas confesionales.',
       'Vuestro reto: llegar a audiencias jóvenes, modernizar el lenguaje sin traicionar la identidad, justificar la inversión en comunicación ante órganos de gobierno, evaluar resultados sin desnaturalizar la misión.',
-      'Conocemos vuestros códigos. No os vamos a forzar a parecer una startup. Sabemos comunicar lo que hacéis sin folclorismo ni edulcorante, con respeto a la identidad y rigor en la ejecución.',
+      'Startidea conoce vuestros códigos y no os va a forzar a parecer una startup. Sabe comunicar lo que hacéis sin folclorismo ni edulcorante, con respeto a la identidad y rigor en la ejecución.',
     ],
     keywords: ['Identidad', 'Coherencia', 'Propósito', 'Evaluación', 'Rendición de cuentas', 'Narrativa institucional'],
     avoid: ['Jerga corporativa agresiva', 'Adaptaciones que descontextualizan la misión', 'Comunicación que solo busca rejuvenecer la fachada'],

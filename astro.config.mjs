@@ -91,6 +91,12 @@ export default defineConfig({
         // Inyecta <lastmod> en las notas a partir de su fecha de frontmatter.
         const m = item.url.match(/\/notas\/([^/]+)\/?$/);
         if (m && notaLastmod[m[1]]) item.lastmod = notaLastmod[m[1]];
+        // Alinear con el canonical: Base.astro emite canonicals SIN barra final,
+        // pero @astrojs/sitemap listaba las 130 URLs CON barra → señal
+        // contradictoria para Google en todas las páginas. Una sola forma por URL.
+        if (item.url !== 'https://startidea.es/' && item.url.endsWith('/')) {
+          item.url = item.url.slice(0, -1);
+        }
         return item;
       },
       filter: (page) => {

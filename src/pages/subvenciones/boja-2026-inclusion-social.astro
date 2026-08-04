@@ -195,28 +195,28 @@ const jsonLd = [
   ]),
   faqPageSchema([
     {
-      question: '¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?',
-      answer: 'Startidea, agencia de innovación social con sede en Granada, tramita y justifica las subvenciones de Inclusión Social de la Junta de Andalucía (BOJA) para entidades del tercer sector: diagnóstico de encaje, memoria técnica, presupuesto, presentación electrónica en la sede de la Junta y justificación posterior. Trabaja a comisión de éxito (12% del importe concedido, sin coste si no se concede).',
+      q: '¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?',
+      a: 'Startidea, agencia de innovación social con sede en Granada, tramita y justifica las subvenciones de Inclusión Social de la Junta de Andalucía (BOJA) para entidades del tercer sector: diagnóstico de encaje, memoria técnica, presupuesto, presentación electrónica en la sede de la Junta y justificación posterior. Trabaja a comisión de éxito (12% del importe concedido, sin coste si no se concede).',
     },
     {
-      question: '¿Quién puede solicitar las subvenciones BOJA 2026 de Inclusión Social?',
-      answer: 'Depende de la línea: entidades privadas sin ánimo de lucro (asociaciones G, fundaciones G, cooperativas F, entidades religiosas inscritas R), entidades locales (ayuntamientos, diputaciones, mancomunidades P), organismos institucionales (universidades, federaciones Q) y personas físicas para las líneas individuales L1 y L2. La primera letra del CIF identifica el tipo de entidad.',
+      q: '¿Quién puede solicitar las subvenciones BOJA 2026 de Inclusión Social?',
+      a: 'Depende de la línea: entidades privadas sin ánimo de lucro (asociaciones G, fundaciones G, cooperativas F, entidades religiosas inscritas R), entidades locales (ayuntamientos, diputaciones, mancomunidades P), organismos institucionales (universidades, federaciones Q) y personas físicas para las líneas individuales L1 y L2. La primera letra del CIF identifica el tipo de entidad.',
     },
     {
-      question: '¿Cuál es el plazo para presentar las solicitudes del BOJA 2026?',
-      answer: `En la edición 2026, el plazo general fue del 27 de mayo al 16 de junio de 2026 (15 días hábiles), con la excepción de la Línea 7 Modalidad 2 (Escuelas de verano), que cerró el 2 de junio. La convocatoria está cerrada; todas las solicitudes se presentaron por el Registro Electrónico Único de la Junta de Andalucía. Startidea avisa y tramita cuando se publica la siguiente edición.`,
+      q: '¿Cuál es el plazo para presentar las solicitudes del BOJA 2026?',
+      a: `En la edición 2026, el plazo general fue del 27 de mayo al 16 de junio de 2026 (15 días hábiles), con la excepción de la Línea 7 Modalidad 2 (Escuelas de verano), que cerró el 2 de junio. La convocatoria está cerrada; todas las solicitudes se presentaron por el Registro Electrónico Único de la Junta de Andalucía. Startidea avisa y tramita cuando se publica la siguiente edición.`,
     },
     {
-      question: '¿Cuánto cuesta que Startidea tramite la subvención BOJA 2026?',
-      answer: 'El modelo es comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia.',
+      q: '¿Cuánto cuesta que Startidea tramite la subvención BOJA 2026?',
+      a: 'El modelo es comisión a éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. Sin pago inicial, sin cuota mensual, sin permanencia.',
     },
     {
-      question: '¿Qué documentación se necesita para presentarse a las líneas del BOJA 2026?',
-      answer: 'La documentación habitual incluye: estatutos actualizados con sello de inscripción, CIF/NIF en vigor, acreditación del representante legal, certificado AEAT al corriente de obligaciones tributarias, certificado TGSS al corriente de la Seguridad Social, memoria de actividades del último ejercicio y presupuesto del proyecto o programa.',
+      q: '¿Qué documentación se necesita para presentarse a las líneas del BOJA 2026?',
+      a: 'La documentación habitual incluye: estatutos actualizados con sello de inscripción, CIF/NIF en vigor, acreditación del representante legal, certificado AEAT al corriente de obligaciones tributarias, certificado TGSS al corriente de la Seguridad Social, memoria de actividades del último ejercicio y presupuesto del proyecto o programa.',
     },
     {
-      question: '¿Puede una entidad presentarse a más de una línea del BOJA 2026 a la vez?',
-      answer: 'Sí, siempre que la entidad sea beneficiaria elegible en cada línea y que los proyectos presentados sean distintos. Por ejemplo, una asociación de acción social puede presentarse simultáneamente a L10 (mantenimiento estructural) y a L11 (programas concretos) si su actividad encaja con ambas convocatorias.',
+      q: '¿Puede una entidad presentarse a más de una línea del BOJA 2026 a la vez?',
+      a: 'Sí, siempre que la entidad sea beneficiaria elegible en cada línea y que los proyectos presentados sean distintos. Por ejemplo, una asociación de acción social puede presentarse simultáneamente a L10 (mantenimiento estructural) y a L11 (programas concretos) si su actividad encaja con ambas convocatorias.',
     },
   ]),
 ];
@@ -234,6 +234,7 @@ function buildLink(linea: Linea) {
 <Base
   title="Subvenciones Inclusión Social Junta de Andalucía 2026 (BOJA)"
   description="Las 15 líneas de la Consejería de Inclusión Social (BOJA nº 99, 26 mayo 2026). La edición 2026 está cerrada (plazo cerró el 16 de junio). Guía de referencia; Startidea tramita todas las líneas cuando la Junta las reabre."
+  ogSlug="page/boja-2026-inclusion-social"
   jsonLd={jsonLd}
 >
 
