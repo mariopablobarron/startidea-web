@@ -52,7 +52,7 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 ## Recursos
 
 - [Glosario del tercer sector](${SITE_URL}/glosario): definiciones claras de fundraising, base social, concurrencia competitiva, BDNS, declaración responsable, impacto social y más.
-- [Cómo montar un videopodcast](${SITE_URL}/videopodcast): guía práctica para entidades e instituciones. Qué distingue un videopodcast de un podcast de audio, equipo y espacio necesarios, horas de trabajo reales por episodio (entre 14 y 22 para un episodio de 45-60 minutos), quién debe presentar, los tres errores que lo matan en el episodio tres, y cómo se distribuye y se mide.
+- [Cómo montar un videopodcast](${SITE_URL}/videopodcast): guía práctica para entidades e instituciones. Qué distingue un videopodcast de un podcast de audio, equipo y espacio necesarios, horas de trabajo reales por episodio (entre 14 y 22 para un episodio de 45-60 minutos), quién debe presentar, los tres errores que lo matan en el episodio tres, cómo se distribuye y se mide, y las tres situaciones en las que conviene no lanzarlo todavía: sin alguien que sostenga la presentación de forma estable, con el calendario del año ya cerrado, o cuando lo que se necesita son resultados este trimestre.
 
 ## Sobre Startidea
 
