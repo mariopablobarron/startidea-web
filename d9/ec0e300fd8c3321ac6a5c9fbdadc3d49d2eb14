@@ -1,0 +1,25 @@
+src/pages/videopodcast.astro
+  s_37ee1de1a7f916::t_0f79aa9b65bd1a 43-44,46
+  s_37ee1de1a7f916::t_b441fefe3e07f6 334,339,343,346,349,351-352
+  s_37ee1de1a7f916::t_5a8e079835f3c5 335-338,340-342,344-345,347-348,350,353-358
+  s_37ee1de1a7f916::t_d8f7cf0a93d2db 138
+  s_37ee1de1a7f916::t_bbfe42b28368df 45
+src/pages/llms.txt.ts
+  s_37ee1de1a7f916::t_56fd5f6065c12d 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d9ec0e300fd8c3321ac6a5c9fbdadc3d49d2eb14",
+  "prompts": {},
+  "sessions": {
+    "s_37ee1de1a7f916": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bf8b7d4-1c64-460d-a75c-f6bb134f689d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
