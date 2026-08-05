@@ -1,0 +1,19 @@
+ESTADO-AGENTE.md
+  s_37ee1de1a7f916::t_1e7e7f670c05fb 1-80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a4fc25487362dae0bbadaa8719602c8dd606273c",
+  "prompts": {},
+  "sessions": {
+    "s_37ee1de1a7f916": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bf8b7d4-1c64-460d-a75c-f6bb134f689d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
