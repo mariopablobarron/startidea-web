@@ -52,6 +52,19 @@ Nota metodológica: verifiqué que **el canonical es correcto en ambas variantes
 es que el canonical es una *sugerencia* y aquí Google no la está aplicando porque ambas URLs
 devuelven **200**.
 
+### ✅ APLICADO EN PRODUCCIÓN el 2026-08-06
+
+Middleware `startidea-slashredir` activo. Verificado en vivo: `/sobre/`, `/comunicacion/`,
+`/audiovisual/` y `/notas/plan-comunicacion-ong/` devuelven **301** a su versión sin barra; la home
+`/` sigue en 200; `/sobre` y `/comunicacion` siguen en 200. Sin regresiones: wizard de
+`/subvenciones/presentar/nuevo`, sitemap, `llms.txt`, `robots.txt`, OG dinámicas y `/api/health`
+responden 200; las 7 cabeceras de seguridad siguen intactas; los redirects previos de `www` y de
+`http` siguen funcionando; contenedor `healthy`.
+
+**Qué medir y cuándo:** en 3-4 semanas, que las URLs con barra desaparezcan de GSC y que sus
+impresiones se consoliden en la versión sin barra. La señal más clara será `/comunicacion`, que
+absorberá las 132 impresiones que hoy se lleva `/comunicacion/` en posición 32,3.
+
 ### Dónde va el arreglo (y dónde NO)
 
 **No vale `src/middleware.ts`.** El propio middleware lo advierte en su comentario (líneas 50-55):
@@ -72,13 +85,18 @@ externos.
 `/Users/STARTIDEA/startidea-infra/stacks/startidea-web-traefik`. Sigue exactamente el patrón de
 `startidea-wwwredir`, que ya hace lo mismo para `www`:
 
+Ese compose usa labels en formato **mapa**, no lista. Lo aplicado, literal:
+
 ```yaml
-- "traefik.http.middlewares.startidea-slashredir.redirectregex.permanent=true"
-- "traefik.http.middlewares.startidea-slashredir.redirectregex.regex=^https://startidea\\.es/(.+)/$$"
-- "traefik.http.middlewares.startidea-slashredir.redirectregex.replacement=https://startidea.es/$${1}"
-# y añadirlo a la cadena del router:
-- "traefik.http.routers.startidea-web.middlewares=startidea-compress,startidea-sec,startidea-slashredir"
+      traefik.http.middlewares.startidea-slashredir.redirectregex.regex: "^https://startidea\\.es/(.+)/$$"
+      traefik.http.middlewares.startidea-slashredir.redirectregex.replacement: "https://startidea.es/$${1}"
+      traefik.http.middlewares.startidea-slashredir.redirectregex.permanent: "true"
+      # y en la cadena del router:
+      traefik.http.routers.startidea-web.middlewares: startidea-compress,startidea-sec,startidea-slashredir
 ```
+
+El `$$` es escapado de docker compose: llega al contenedor como `$` literal. Verificado con
+`docker inspect` tras recrear — el label real es `^https://startidea\.es/(.+)/$`.
 
 Notas de riesgo, verificadas:
 
@@ -142,11 +160,11 @@ el contenido antiguo funcionaba mejor que el nuevo.
 ## Orden de ejecución propuesto
 
 1. **Verificar el hallazgo 1** (home). Sin esto, lo demás es ruido de fondo.
-2. **301 de trailing slash** (hallazgo 2). Bajo riesgo, efecto medible en semanas.
+2. ~~**301 de trailing slash** (hallazgo 2).~~ ✅ **Hecho el 2026-08-06.**
 3. **Rescatar ENISA y `/notas`** (hallazgo 3). Demanda ya existente.
 4. **Consolidar superficie invisible** (hallazgo 4). El trabajo lento.
 
-Los puntos 2 y 4 afectan a indexación: requieren OK explícito de Mario antes de desplegar.
+El punto 4 afecta a indexación: requiere OK explícito de Mario antes de desplegar.
 
 ## Límite conocido de esta auditoría
 
