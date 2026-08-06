@@ -18,10 +18,56 @@ Es la página que más tráfico aporta del sitio (210 de ~250 clics no sintétic
 se ha degradado de 6,2 a 21,5 en cuatro meses. Ninguna otra acción de este documento importa tanto
 como entender esto.
 
-Hipótesis a comprobar, en orden: (a) la home compite ahora con páginas internas por las queries de
-marca y genéricas; (b) la degradación es un artefacto de aparecer para muchas más queries irrelevantes
-(la posición media empeora aunque no se pierda ninguna posición real); (c) pérdida real de autoridad.
-La (b) es la más probable dado el patrón general de dilución — **verificar antes de actuar**.
+### ✅ Verificado el 2026-08-06 — es canibalización, y tiene fecha
+
+Descartada la hipótesis del artefacto estadístico: las impresiones de la home **no crecieron**
+(775 → 833), así que la caída de posición no se explica por «aparecer para más cosas».
+
+Serie de la home:
+
+| Mes | Clics | Impr. | Pos. |
+|---|---|---|---|
+| 2026-04 | 55 | 775 | **4,6** |
+| 2026-05 | 71 | 1.432 | 7,7 |
+| 2026-06 | 45 | 1.070 | 16,3 |
+| 2026-07 | 35 | 833 | **21,3** |
+
+Y las queries de marca, aisladas, están **sanas y estables** — posición 2,3 → 3,6, impresiones
+250 → 219, clics 55 → 44. La home no ha perdido la marca.
+
+Restando la marca: en abril las ~525 impresiones no-marca de la home estaban en posición ~5,7; en
+julio, sus ~614 impresiones no-marca están en posición ~27. **La home se hundió en las queries
+genéricas, no en las de marca.**
+
+Y la fecha lo explica. Primera impresión de cada página de servicio:
+
+| Página | Primera impresión | Impr. | Pos. actual |
+|---|---|---|---|
+| `/consultoria` | 2026-05-04 | 62 | 10,0 |
+| `/comunicacion` | 2026-05-12 | 833 | 12,9 |
+| `/audiovisual` | 2026-05-16 | 429 | 10,1 |
+| `/redes-sociales-granada` | 2026-06-22 | 490 | 21,4 |
+
+Las páginas de servicio entran en el índice a principios de mayo. La posición de la home empieza a
+degradarse **ese mismo mes** (4,6 → 7,7) y se desploma en junio (16,3).
+
+**Conclusión:** Google reasignó las queries genéricas de la home a las nuevas páginas
+especializadas. El movimiento en sí es correcto — para eso se crean páginas de servicio. El problema
+es que **las páginas nuevas rankean peor de lo que rankeaba la home**: donde la home estaba en ~5,7,
+`/comunicacion` está en 12,9 y `/redes-sociales-granada` en 21,4. La especialización costó
+posiciones en vez de ganarlas.
+
+Esto reordena todo el diagnóstico: no es «se ha publicado demasiado», es **«se ha repartido la
+autoridad de la home entre páginas hijas que aún no se la han ganado»**.
+
+**Qué hacer (no es revertir):** consolidar autoridad hacia las páginas de servicio en vez de
+dejarlas competir solas — enlazado interno desde la home con anchor text de la query objetivo, y
+retirar de la home el contenido que la mantiene compitiendo por esas mismas queries. El objetivo
+mínimo es devolver a `/comunicacion` y compañía a la posición ~5,7 que tenía la home.
+
+**Límite:** GSC no da la dimensión página+query, así que la reasignación está **inferida por
+coincidencia temporal**, no medida directamente. Es una inferencia sólida (fechas, marca aislada
+estable, impresiones planas), pero conviene confirmarla con la API de GSC en cuanto se pueda.
 
 ---
 
@@ -159,7 +205,9 @@ el contenido antiguo funcionaba mejor que el nuevo.
 
 ## Orden de ejecución propuesto
 
-1. **Verificar el hallazgo 1** (home). Sin esto, lo demás es ruido de fondo.
+1. ~~**Verificar el hallazgo 1** (home).~~ ✅ **Hecho el 2026-08-06:** es canibalización de la home
+   por las páginas de servicio que entraron en el índice en mayo. Acción pendiente: consolidar
+   autoridad hacia ellas con enlazado interno.
 2. ~~**301 de trailing slash** (hallazgo 2).~~ ✅ **Hecho el 2026-08-06.**
 3. **Rescatar ENISA y `/notas`** (hallazgo 3). Demanda ya existente.
 4. **Consolidar superficie invisible** (hallazgo 4). El trabajo lento.
