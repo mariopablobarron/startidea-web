@@ -1,0 +1,57 @@
+src/components/Footer.astro
+  s_0ab79ba551035b::t_18be8f19cb071f 30
+src/pages/para-quien/tercer-sector.astro
+  s_0ab79ba551035b::t_a0e332ee432f6c 4,7,14
+src/components/AudienciaDetalle.astro
+  s_0ab79ba551035b::t_74d40def5c7468 145-167
+src/pages/comunicacion.astro
+  s_0ab79ba551035b::t_cfc47fbae8aa06 14-16
+  s_0ab79ba551035b::t_58af5a08588059 249-251
+  s_6e62a39db8d36e::t_85340312318dad 13
+src/pages/para-quien/instituciones.astro
+  s_0ab79ba551035b::t_2a2e0eec8b5dda 4,7,14
+src/data/audiencias.ts
+  s_0ab79ba551035b::t_ae9d5b60aef4af 8
+  s_0ab79ba551035b::t_ec55b6773609cf 22-25
+  s_0ab79ba551035b::t_50aa9ad51bbb76 169-186
+  s_0ab79ba551035b::t_97d27f597d2d2e 117-134
+  s_0ab79ba551035b::t_7dff7eadd3f52b 203-218
+  s_0ab79ba551035b::t_387ede8ec0377e 65-82
+src/pages/para-quien/empresas.astro
+  s_0ab79ba551035b::t_37b4421ac07fa5 4,7,14
+src/pages/casos/[slug].astro
+  s_0ab79ba551035b::t_7f00625d1b71fe 28
+src/pages/sitemap-catalogo.xml.ts
+  s_0ab79ba551035b::t_a3bc030c8d3f80 27-34,43-49
+src/components/HanConfiado.astro
+  s_0ab79ba551035b::t_4b8e949552b443 28-29,32,34
+  s_0ab79ba551035b::t_1b42b49974c185 75
+  s_0ab79ba551035b::t_71097ecaf7e304 105-136
+  s_0ab79ba551035b::t_7f64a988fb06a3 61,68
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_4bc5ff76c6460d 347-350,365-367
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8a9af5068d6ba16d429837734f2c42a673fe4b55",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_6e62a39db8d36e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "019f56c9-c03a-73c1-882e-ff80e88bfbf2",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

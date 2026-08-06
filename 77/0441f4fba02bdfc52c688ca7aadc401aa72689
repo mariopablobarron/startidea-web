@@ -1,0 +1,23 @@
+src/pages/audiovisual.astro
+  s_37ee1de1a7f916::t_4665d42bbd996a 402-411
+src/pages/agentes-ia.astro
+  s_37ee1de1a7f916::t_9a9afb75941028 265-277
+src/pages/proteccion-digital.astro
+  s_37ee1de1a7f916::t_66ac4b2f661323 292-303
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "770441f4fba02bdfc52c688ca7aadc401aa72689",
+  "prompts": {},
+  "sessions": {
+    "s_37ee1de1a7f916": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bf8b7d4-1c64-460d-a75c-f6bb134f689d",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

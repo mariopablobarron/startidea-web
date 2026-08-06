@@ -1,0 +1,29 @@
+src/pages/como-trabajamos.astro
+  s_0ab79ba551035b::t_85e56252b08e5d 3-8
+  s_0ab79ba551035b::t_0bfe7ee21e42ce 97
+src/pages/manifiesto.astro
+  s_0ab79ba551035b::t_81857fe9c186e3 3-8
+  s_0ab79ba551035b::t_45b0b91434abc9 15
+src/pages/hub.astro
+  s_0ab79ba551035b::t_d41d02b196e83a 4-9
+  s_0ab79ba551035b::t_11ed1da79a7a47 50
+src/pages/recursos/diagnostico-modelo-fundraising.astro
+  s_0ab79ba551035b::t_c49ec70442d45b 15
+  s_0ab79ba551035b::t_a1dda2f839889a 3-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d169fa8a1cf18e705ce5f9e89202a751d1084d25",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

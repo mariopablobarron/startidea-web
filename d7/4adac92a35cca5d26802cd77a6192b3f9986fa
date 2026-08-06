@@ -1,0 +1,25 @@
+src/layouts/Base.astro
+  s_0ab79ba551035b::t_bcad3f6b693376 139-145
+src/pages/financiacion-empresas.astro
+  s_0ab79ba551035b::t_9672201ae6310c 373-384
+src/pages/redes-sociales-granada.astro
+  s_0ab79ba551035b::t_b34827daede749 269-280
+src/components/Testimonios.astro
+  s_0ab79ba551035b::t_671fc5f54e2320 61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d74adac92a35cca5d26802cd77a6192b3f9986fa",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

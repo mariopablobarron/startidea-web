@@ -1,0 +1,45 @@
+src/content/diagnosticos/asociacion-mayores-local.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/asociacion-salud-mental.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/asociacion-educativa-subvencion-municipal.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/fundacion-cultural-ingresos-propios.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/config.ts
+  s_5143dfd4faa3da::t_a0b696c0b4978d 55-59,61-63,65
+src/content/diagnosticos/red-infancia-y-familia.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/cooperativa-insercion-migracion.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/fundacion-ambiental-fondo-europeo.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/sal-fundacion-cooperacion.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/plataforma-personas-sin-hogar.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/pages/laboratorio/fundraising/[...slug].astro
+  s_5143dfd4faa3da::t_a0b696c0b4978d 48-55,63,77-78
+src/content/diagnosticos/club-deporte-adaptado-patrocinador-unico.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/asociacion-discapacidad-andaluza.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+src/content/diagnosticos/fundacion-adicciones-plaza-concertada.md
+  s_5143dfd4faa3da::t_a0b696c0b4978d 4-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "a0fd53412bb5030a2ae5c6b11cc4f534ca5cb16c",
+  "prompts": {},
+  "sessions": {
+    "s_5143dfd4faa3da": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca17431a-f8b8-46a5-9d1e-cb5d1450de99",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

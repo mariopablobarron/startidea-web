@@ -1,0 +1,85 @@
+src/content/notas/rehacer-startidea-en-doce-horas.md
+  s_5143dfd4faa3da::t_258584bd2c05a8 25,27,29,31
+  s_5143dfd4faa3da::t_e0b6058c7b3c94 37,39-40
+  s_5143dfd4faa3da::t_d449dd0170a07b 44,47-49,51,53
+  s_5143dfd4faa3da::t_ce672616e9d219 62,64,68
+  s_5143dfd4faa3da::t_ccc82990b72459 22
+  s_5143dfd4faa3da::t_f6bce09e51ed8d 18
+  s_5143dfd4faa3da::t_2e41d993a1dbf9 2
+src/pages/contacto.astro
+  s_5143dfd4faa3da::t_6bfc6f391dabdd 120,267,271
+src/pages/manifiesto.astro
+  s_5143dfd4faa3da::t_811efe1062e278 121
+  s_5143dfd4faa3da::t_465619d174a0fa 163
+  s_5143dfd4faa3da::t_ee80168125605a 87
+  s_5143dfd4faa3da::t_f078dc1c04aab4 106
+  s_5143dfd4faa3da::t_232099c1e90ad9 83
+  s_5143dfd4faa3da::t_5673b1e1bfc59d 125
+  s_5143dfd4faa3da::t_827b94f44e7cb8 131
+  s_5143dfd4faa3da::t_1d3665b7934fe7 144
+  s_5143dfd4faa3da::t_9c943ab9eb38dc 74
+  s_5143dfd4faa3da::t_1905610aeed1e4 147
+  s_5143dfd4faa3da::t_c70061cfe3b428 90
+  s_5143dfd4faa3da::t_75e77dfebc751e 128
+  s_5143dfd4faa3da::t_0bb3c40e9e077d 93
+  s_5143dfd4faa3da::t_e08548d1c627ac 225
+  s_5143dfd4faa3da::t_5d8c6ffc6b9557 179
+  s_5143dfd4faa3da::t_7d99638594dcd6 176
+  s_5143dfd4faa3da::t_a9ee57b63b066d 172
+src/pages/merchandising.astro
+  s_5143dfd4faa3da::t_6bfc6f391dabdd 123
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_5143dfd4faa3da::t_6a530e9bb56e9d 47
+  s_5143dfd4faa3da::t_1138c0795ee962 45
+src/content/notas/newsletter-segmentacion-ong-tercer-sector.md
+  s_5143dfd4faa3da::t_e23532eac7e27a 123
+src/content/notas/copiloto-subvenciones-ia-startidea.md
+  s_5143dfd4faa3da::t_873dc898f3d3a2 65
+  s_5143dfd4faa3da::t_24bbd393294401 89
+src/content/notas/ia-sin-ceder-tus-datos-plataforma-propia.md
+  s_5143dfd4faa3da::t_09d7a302426471 34
+src/pages/cookies.astro
+  s_5143dfd4faa3da::t_6bfc6f391dabdd 97
+src/content/notas/fundraising-asociaciones-captacion-fondos.md
+  s_5143dfd4faa3da::t_580f1631938065 22
+src/content/notas/agencia-pequena-vs-grande.md
+  s_5143dfd4faa3da::t_7d820d08cff092 90
+  s_5143dfd4faa3da::t_5eea908a50b8e2 92
+src/content/notas/agentes-ia-para-ong-tercer-sector.md
+  s_5143dfd4faa3da::t_e25def8dedc9f2 52
+src/content/notas/produccion-documentales-podcast-tercer-sector.md
+  s_5143dfd4faa3da::t_6b5388adcf6594 44
+  s_5143dfd4faa3da::t_2522780397a6e5 62
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_5143dfd4faa3da::t_f1eb80e9d86282 121
+src/content/notas/greenwashing-vs-proposito.md
+  s_5143dfd4faa3da::t_67da0298566da5 61
+  s_5143dfd4faa3da::t_dd3e91fde30016 25
+src/pages/hub.astro
+  s_5143dfd4faa3da::t_6bfc6f391dabdd 140
+src/pages/precios.astro
+  s_5143dfd4faa3da::t_6bfc6f391dabdd 234,358
+src/content/notas/memoria-anual-que-se-lee.md
+  s_5143dfd4faa3da::t_bd9eace035383c 26
+src/content/notas/metodo-diagnostico-startidea.md
+  s_5143dfd4faa3da::t_fb5eed069d7fad 50
+  s_5143dfd4faa3da::t_1811559b1ef23d 81
+  s_5143dfd4faa3da::t_40eb553281ddbe 4
+  s_5143dfd4faa3da::t_aab220616302e8 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "5a16ec81ca6387d39c8060981547671ee11bbe39",
+  "prompts": {},
+  "sessions": {
+    "s_5143dfd4faa3da": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca17431a-f8b8-46a5-9d1e-cb5d1450de99",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

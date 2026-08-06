@@ -1,0 +1,21 @@
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_0ab79ba551035b::t_01b5dfb7cc2435 5,103,109
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_0ab79ba551035b::t_f73a003e7726d7 5,23,110-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "972c47667ee738ffa372d4bff1cc797070283dd0",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

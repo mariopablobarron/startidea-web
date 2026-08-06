@@ -1,0 +1,23 @@
+src/content/diagnosticos/club-deporte-adaptado-patrocinador-unico.md
+  s_84f0f6f3c30aae::t_c054c167134e13 1-88
+src/content/diagnosticos/fundacion-adicciones-plaza-concertada.md
+  s_84f0f6f3c30aae::t_1091bebe8299af 1-88
+src/content/notas/fuga-socios-retencion-base-social.md
+  s_84f0f6f3c30aae::t_95a5637ce5168d 1-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "ca9520a4ab7ec00e87848c3f7bf335e28abb0ffa",
+  "prompts": {},
+  "sessions": {
+    "s_84f0f6f3c30aae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1b153bd2-7ec3-4420-9b64-765819b7186b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

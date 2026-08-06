@@ -1,0 +1,38 @@
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_0ab79ba551035b::t_2658167a533122 236
+  s_0ab79ba551035b::t_6431f891367e59 259,264,267
+  s_0ab79ba551035b::t_dc1809dc1e422c 240-241,243-244,247-248,250
+  s_0ab79ba551035b::t_1caf63ccc20ee1 293
+  s_0ab79ba551035b::t_51d6a401332af5 207
+src/pages/subvenciones/presentar/nuevo.astro
+  s_0ab79ba551035b::t_6340db75d2fcb2 230
+src/content/notas/boja-2026-subvenciones-inclusion-social-andalucia.md
+  s_0ab79ba551035b::t_b5ce00a46d0588 23-24
+  s_0ab79ba551035b::t_b6e5d3beb2409a 14
+  s_0ab79ba551035b::t_336aa2ab4a982f 27
+  s_0ab79ba551035b::t_34343f3bfebf22 84
+src/content/notas/convocatoria-2026-agenda-2030-ong.md
+  s_0ab79ba551035b::t_2ecd46bf114e24 13
+  s_0ab79ba551035b::t_8a3de2354c8b59 24-26
+src/pages/subvenciones/agenda-2030-2026.astro
+  s_0ab79ba551035b::t_8f9409ea5cea7d 296-298
+  s_0ab79ba551035b::t_f2b410ace78180 140,142
+  s_0ab79ba551035b::t_3912a458c49982 42
+  s_0ab79ba551035b::t_253c499dfcc254 59-73,79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "9ea65dd6bf73897c960b4dfbb830fd2f53c7ceb2",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
