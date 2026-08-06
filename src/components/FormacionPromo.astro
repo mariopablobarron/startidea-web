@@ -50,7 +50,7 @@ const ESTADO_LABEL: Record<string, string> = {
           {cursos.map((c) => (
             <li>
               <a
-                href={`/laboratorio/cursos/${c.slug}/`}
+                href={`/laboratorio/cursos/${c.slug}`}
                 class="group grid grid-cols-12 items-baseline gap-x-4 py-4"
               >
                 <span class="col-span-12 font-display text-lg font-bold leading-tight text-ink group-hover:text-magenta sm:col-span-8">
@@ -71,7 +71,7 @@ const ESTADO_LABEL: Record<string, string> = {
       <!-- CTA -->
       <div class="col-span-12 mt-10 lg:col-span-3 lg:mt-0">
         <a
-          href="/laboratorio/cursos/"
+          href="/laboratorio/cursos"
           class="btn w-full !justify-center !py-4 !text-base lg:!text-lg"
           data-track="cta"
           data-track-id="cta_formacion_home"
