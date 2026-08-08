@@ -1,0 +1,38 @@
+src/layouts/Base.astro
+  s_13c6a17efffee8::t_39208c1be17c05 29,150
+src/components/SpotifyPixel.astro
+  s_13c6a17efffee8::t_39208c1be17c05 1-9,11-46
+  s_13c6a17efffee8::t_b866ede0477139 10
+src/components/CtaConversion.astro
+  s_13c6a17efffee8::t_39208c1be17c05 26
+src/components/CookieBanner.astro
+  s_13c6a17efffee8::t_39208c1be17c05 19
+  s_13c6a17efffee8::t_b866ede0477139 38
+infra/docker-compose.production.template.yml
+  s_13c6a17efffee8::t_39208c1be17c05 58
+src/middleware.ts
+  s_13c6a17efffee8::t_39208c1be17c05 61-63,77,79,81
+src/components/GoogleTagManager.astro
+  s_13c6a17efffee8::t_b866ede0477139 27
+src/components/MicrosoftClarity.astro
+  s_13c6a17efffee8::t_b866ede0477139 13
+src/pages/cookies.astro
+  s_13c6a17efffee8::t_39208c1be17c05 8,43,48
+  s_13c6a17efffee8::t_b866ede0477139 102,121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c7d38d9ec609fabd727dd0ce432c5692084c0211",
+  "prompts": {},
+  "sessions": {
+    "s_13c6a17efffee8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fde79-70ee-7721-af04-fb14c8b3aa94",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
