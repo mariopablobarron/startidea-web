@@ -1,0 +1,46 @@
+---
+// Spotify Pixel para atribuir visitas y conversiones de campañas.
+// Solo se carga tras consentimiento explícito de cookies de terceros.
+const spotifyPixelId = '18ec3e2261264ed991f8ba10a2d90161';
+---
+
+{spotifyPixelId && (
+  <script is:inline define:vars={{ spotifyPixelId }}>
+    (function () {
+      var CONSENT_KEY = 'startidea.cookieconsent.v2';
+      var loaded = false;
+
+      function hasConsent() {
+        try { return localStorage.getItem(CONSENT_KEY) === 'all'; }
+        catch (_) { return false; }
+      }
+
+      function loadSpotifyPixel() {
+        if (loaded || !spotifyPixelId) return;
+        loaded = true;
+
+        (function (w, d) {
+          var id = 'spdt-capture';
+          var tag = 'script';
+          if (!d.getElementById(id)) {
+            w.spdt = w.spdt || function () {
+              (w.spdt.q = w.spdt.q || []).push(arguments);
+            };
+            var script = d.createElement(tag);
+            script.id = id;
+            script.async = true;
+            script.src = 'https://pixel.byspotify.com/ping.min.js';
+            var firstScript = d.getElementsByTagName(tag)[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+          }
+
+          w.spdt('conf', { key: spotifyPixelId });
+          w.spdt('view');
+        })(window, document);
+      }
+
+      if (hasConsent()) loadSpotifyPixel();
+      document.addEventListener('cookieconsent:all', loadSpotifyPixel);
+    })();
+  </script>
+)}
