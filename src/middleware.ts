@@ -58,8 +58,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
   //  - 'unsafe-inline' (script+style): Astro inline scripts/estilos y handlers
   //    inline (wizard subvenciones, banner cookies, tracking).
   //  - script-src: GA4/GTM (googletagmanager.com), Clarity (*.clarity.ms),
-  //    Umami (analytics.hubstartidea.es), Tailwind CDN (admin convocatorias-stats).
-  //  - connect-src: beacons GA4 (*.google-analytics.com), Clarity, Umami y el
+  //    Spotify Pixel (pixel.byspotify.com), Umami (analytics.hubstartidea.es)
+  //    y Tailwind CDN (admin convocatorias-stats).
+  //  - connect-src: beacons GA4 (*.google-analytics.com), Clarity, Spotify, Umami y el
   //    agente de voz → hub.startidea.tech (transcribe/chat/speak).
   //  - media-src data: blob: → VoiceAgent: primer de audio (data:) + TTS (blob:).
   //  - img-src: self + data: + pixeles de analítica (sin imágenes externas reales).
@@ -73,11 +74,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
       `object-src 'none'`,
       `frame-ancestors 'self'`,
       `form-action 'self' https://buttondown.email`,
-      `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://analytics.hubstartidea.es https://cdn.tailwindcss.com`,
+      `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://pixel.byspotify.com https://analytics.hubstartidea.es https://cdn.tailwindcss.com`,
       `style-src 'self' 'unsafe-inline'`,
-      `img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.clarity.ms`,
+      `img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://*.clarity.ms https://pixel.byspotify.com`,
       `font-src 'self' data:`,
-      `connect-src 'self' https://analytics.hubstartidea.es https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://analytics.google.com https://*.clarity.ms https://hub.startidea.tech`,
+      `connect-src 'self' https://analytics.hubstartidea.es https://www.googletagmanager.com https://*.google-analytics.com https://www.google-analytics.com https://analytics.google.com https://*.clarity.ms https://pixel.byspotify.com https://hub.startidea.tech`,
       `media-src 'self' data: blob:`,
       `worker-src 'self' blob:`,
       `frame-src 'self' https://www.googletagmanager.com https://hub.startidea.tech`,

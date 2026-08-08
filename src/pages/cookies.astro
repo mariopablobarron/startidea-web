@@ -5,7 +5,7 @@ import Legal from '@/layouts/Legal.astro';
 <Legal
   title="Política de cookies"
   description="Qué cookies usa startidea.es, para qué sirven y cómo configurarlas o deshabilitarlas."
-  updated="26 de abril de 2026"
+  updated="8 de agosto de 2026"
 >
   <p>
     El sitio web <strong>startidea.es</strong> utiliza cookies propias y de terceros con la finalidad de mejorar la experiencia de navegación y, cuando se autorice, recoger información estadística sobre el uso del sitio. Esta política se rige por el Reglamento (UE) 2016/679 (RGPD) y la Ley 34/2002 de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE).
@@ -40,12 +40,12 @@ import Legal from '@/layouts/Legal.astro';
 
   <h3>Publicitarias</h3>
   <p>
-    Se utilizan para mostrar anuncios relevantes para el usuario, basados en sus intereses, cuando el sitio incluya publicidad.
+    Se utilizan para medir y atribuir el resultado de campañas publicitarias. Tras aceptar todas las cookies, Spotify Pixel registra visitas y eventos de conversión para relacionarlos con campañas de Spotify y evaluar su rendimiento.
   </p>
 
   <h3>De terceros</h3>
   <p>
-    Provienen de servicios externos integrados en el sitio (vídeos, mapas, redes sociales, herramientas de analítica, etc.).
+    Provienen de servicios externos integrados en el sitio (vídeos, mapas, redes sociales y herramientas de analítica). Los servicios de medición incluyen Google Analytics, Microsoft Clarity y Spotify Pixel. Puedes consultar la <a href="https://www.spotify.com/es/legal/privacy-policy/" rel="noopener noreferrer">Política de Privacidad de Spotify</a>.
   </p>
 
   <h2>3. Base legal y consentimiento</h2>
@@ -99,7 +99,7 @@ import Legal from '@/layouts/Legal.astro';
 
   <hr class="my-12 border-ink/15"/>
   <p class="font-mono text-xs leading-relaxed text-ink-mute">
-    ↗ El consentimiento se gestiona con un banner propio (sin CookieYes ni terceros) que guarda tu elección en el almacenamiento local del navegador (clave <code>startidea.cookieconsent.v1</code>). Si la nueva web va a representar a "Startidea", la designación del responsable debe coordinarse con la asesoría jurídica.
+    ↗ El consentimiento se gestiona con un banner propio (sin CookieYes ni terceros) que guarda tu elección en el almacenamiento local del navegador (clave <code>startidea.cookieconsent.v2</code>). Si la nueva web va a representar a "Startidea", la designación del responsable debe coordinarse con la asesoría jurídica.
   </p>
 
   <script is:inline>
@@ -118,7 +118,7 @@ import Legal from '@/layouts/Legal.astro';
 
       btn.addEventListener('click', function () {
         if (window.startideaConsent && typeof window.startideaConsent.reopen === 'function') {
-          try { localStorage.removeItem('startidea.cookieconsent.v1'); } catch (_) {}
+          try { localStorage.removeItem('startidea.cookieconsent.v2'); } catch (_) {}
           window.startideaConsent.reopen();
           refreshStatus();
         }

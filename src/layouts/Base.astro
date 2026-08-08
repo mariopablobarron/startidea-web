@@ -26,6 +26,7 @@ import HubFlotante from '@/components/HubFlotante.astro';
 import GoogleTagManager from '@/components/GoogleTagManager.astro';
 import AnalyticsTracker from '@/components/AnalyticsTracker.astro';
 import MicrosoftClarity from '@/components/MicrosoftClarity.astro';
+import SpotifyPixel from '@/components/SpotifyPixel.astro';
 import JsonLd from '@/components/JsonLd.astro';
 import AdminBar from '@/components/AdminBar.astro';
 
@@ -146,6 +147,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
     <GoogleTagManager />
     <AnalyticsTracker />
     <MicrosoftClarity />
+    <SpotifyPixel />
     <!-- Umami analytics (privacy-first) -->
     <script defer src="https://analytics.hubstartidea.es/script.js" data-website-id="3535ee03-30aa-4c5c-a74e-4650ed465c21"></script>
     <AdminBar />
