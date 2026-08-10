@@ -19,6 +19,10 @@ const faqs = [
     answer: 'Startidea es una agencia de comunicación especializada en el tercer sector —ONG, fundaciones, instituciones y empresas con propósito—, con sede en Granada y trabajo en toda España desde 2011: estrategia, contenidos, redes sociales y relato de impacto.',
   },
   {
+    question: '¿En qué se diferencia un consultor de comunicación para ONG de una agencia de comunicación?',
+    answer: 'El consultor aporta criterio y estructura —diagnóstico, estrategia, plan y acompañamiento a la dirección— y la ejecución la asume el equipo interno. La agencia, además, produce: contenidos, redes sociales, campañas y piezas de marca. Startidea cubre las dos funciones —estrategia y posicionamiento por un lado; contenidos, campañas, audiovisual y marca por otro— y el alcance se decide en el diagnóstico inicial de 30 minutos. Criterio práctico: si la organización ya tiene al menos una persona dedicada a comunicación, suele rendir más contratar la consultoría estratégica y dejar la producción dentro.',
+  },
+  {
     question: '¿Qué incluye el servicio de comunicación estratégica de Startidea?',
     answer: 'Diagnóstico de la situación actual (auditoría de mensajes, audiencias, canales), definición de narrativa y posicionamiento, plan editorial con calendario, producción de contenidos (notas, reportajes, newsletters, memorias), gestión de relación con medios y evaluación con métricas acordadas. El alcance se cierra en la primera propuesta según el perfil y el momento de la organización.',
   },
@@ -38,6 +42,17 @@ const faqs = [
     question: '¿Es posible contratar solo la producción de contenidos sin estrategia?',
     answer: 'No es recomendable, pero sí es posible si la organización ya tiene estrategia definida y lo que necesita es ejecución. En ese caso Startidea hace una sesión de revisión de 2 horas para validar que la estrategia existente es sólida antes de ponerse a producir. Producir contenidos sin una estrategia clara es uno de los errores más frecuentes y más caros del sector.',
   },
+];
+
+// Las seis fases del plan: fuente única para el HowTo (JSON-LD) y para la
+// sección visible de la página. No duplicar: si cambia una, cambian las dos.
+const pasosPlan = [
+  { name: 'Diagnóstico', text: 'Auditar la situación actual: mensajes, audiencias, canales y reputación. Saber de dónde se parte antes de proponer nada.' },
+  { name: 'Narrativa y posicionamiento', text: 'Definir el relato de la organización y el lugar que quiere ocupar en su sector. Qué se cuenta, a quién y por qué importa.' },
+  { name: 'Plan editorial', text: 'Fijar temas, formatos y frecuencia por audiencia, con un calendario realista que el equipo pueda sostener.' },
+  { name: 'Producción de contenidos', text: 'Crear las piezas: notas, reportajes, newsletters, memoria anual, audiovisual y redes, con criterio editorial y no por inercia.' },
+  { name: 'Relación con medios y difusión', text: 'Llevar el mensaje a los canales y medios donde está la audiencia objetivo, con relaciones de prensa cuando aplica.' },
+  { name: 'Medición', text: 'Evaluar con métricas acordadas de antemano (reputación, captación, visibilidad) y ajustar. Si no movió algo, se corrige.' },
 ];
 
 const jsonLd = [
@@ -64,14 +79,7 @@ const jsonLd = [
     name: 'Cómo hacer un plan de comunicación para una entidad social',
     description:
       'Los pasos para que una ONG, fundación o institución con propósito construya un plan de comunicación que funcione, desde el diagnóstico hasta la medición.',
-    steps: [
-      { name: 'Diagnóstico', text: 'Auditar la situación actual: mensajes, audiencias, canales y reputación. Saber de dónde se parte antes de proponer nada.' },
-      { name: 'Narrativa y posicionamiento', text: 'Definir el relato de la organización y el lugar que quiere ocupar en su sector. Qué se cuenta, a quién y por qué importa.' },
-      { name: 'Plan editorial', text: 'Fijar temas, formatos y frecuencia por audiencia, con un calendario realista que el equipo pueda sostener.' },
-      { name: 'Producción de contenidos', text: 'Crear las piezas: notas, reportajes, newsletters, memoria anual, audiovisual y redes, con criterio editorial y no por inercia.' },
-      { name: 'Relación con medios y difusión', text: 'Llevar el mensaje a los canales y medios donde está la audiencia objetivo, con relaciones de prensa cuando aplica.' },
-      { name: 'Medición', text: 'Evaluar con métricas acordadas de antemano (reputación, captación, visibilidad) y ajustar. Si no movió algo, se corrige.' },
-    ],
+    steps: pasosPlan,
   }),
 ];
 
@@ -250,6 +258,52 @@ const proceso = [
         <a href="/notas/como-elegir-agencia-tercer-sector" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">cómo elegir agencia de comunicación para tu organización social</a>
         y <a href="/notas/agencia-comunicacion-ong-que-pedir-cuanto-cuesta" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">qué pedir y cuánto cuesta una agencia de comunicación para ONG</a>.
       </p>
+    </div>
+  </section>
+
+  <!-- Las seis fases del plan: respaldo visible del howToSchema del frontmatter.
+       Misma fuente (pasosPlan) — no tocar una sin la otra.
+       OJO: la guía /notas/plan-comunicacion-ong tiene SU PROPIA lista de seis
+       (los elementos del documento) y un checklist de 8. Son cosas distintas a
+       propósito: aquí van las fases del trabajo, allí el índice del documento.
+       Si alguien las iguala, el sitio se contradice en la misma query. -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Plan de comunicación</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Cómo se construye un plan de comunicación <em class="italic text-magenta">para una ONG</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-ink/85">
+            Seis fases, del diagnóstico a la medición. Es el orden en que Startidea trabaja un plan
+            de comunicación para una ONG, una fundación o una institución con propósito, en Granada
+            desde 2011. Sirve igual si la organización decide hacerlo por su cuenta.
+          </p>
+
+          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {pasosPlan.map((p, i) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <h3 class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{p.name}</h3>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{p.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <p class="mt-8 max-w-measure text-sm text-ink/70">
+            Eso es el orden del trabajo. El índice del documento —qué apartados lleva, el calendario
+            de doce meses y los errores más frecuentes— está en la
+            <a href="/notas/plan-comunicacion-ong" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">guía para estructurar un plan de comunicación de ONG</a>.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
