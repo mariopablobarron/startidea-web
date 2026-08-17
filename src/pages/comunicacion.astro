@@ -359,6 +359,20 @@ const proceso = [
                 </li>
               ))}
             </ul>
+
+            {/* El videopodcast es el formato que más dudas genera antes de
+                empezar, y su guía estaba huérfana de enlaces internos. El
+                enlace va aquí, en contenidos, y no en el bloque de servicios
+                locales de arriba: /videopodcast es la guía consultiva, no la
+                landing comercial (esa es /audiovisual). */}
+            {area.num === '02' && (
+              <p class="mt-8 max-w-measure text-sm text-ink/70">
+                De todos esos formatos, el videopodcast es el que más se pregunta y el que peor se calcula.
+                Antes de decidirlo conviene leer
+                <a href="/videopodcast" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">qué hace falta para lanzar un videopodcast</a>:
+                espacio, calendario sostenible y las horas reales que lleva cada episodio.
+              </p>
+            )}
           </div>
         </div>
       </div>
