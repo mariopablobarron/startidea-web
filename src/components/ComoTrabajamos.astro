@@ -68,6 +68,15 @@ const ejes = [
             <p class="mt-6 max-w-measure text-paper/85">
               {eje.body}
             </p>
+
+            {/* El eje de comunicación nombra el podcast institucional, y la
+                guía que lo explica no se enlazaba desde la home. Va aquí, en
+                el único punto de la portada donde el formato ya se menciona. */}
+            {eje.num === '02' && (
+              <p class="mt-5 max-w-measure text-sm text-paper/85">
+                El podcast institucional tiene su propia guía: <a href="/videopodcast" class="border-b border-paper/40 pb-0.5 transition-colors hover:border-paper">cómo montar un videopodcast paso a paso</a>, con el tiempo y el equipo que pide de verdad.
+              </p>
+            )}
           </div>
 
           <!-- Lista de capacidades -->
