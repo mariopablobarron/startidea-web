@@ -1,0 +1,19 @@
+src/pages/comunicacion.astro
+  s_dc25b6601fa3ef::t_48131f73e81cb5 369
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "220f01b736f7e8270d0dcb87b6c4d51883030dc0",
+  "prompts": {},
+  "sessions": {
+    "s_dc25b6601fa3ef": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cf45c096-30e6-4938-b86f-daad83b753b9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
