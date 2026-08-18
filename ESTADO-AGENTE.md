@@ -3,9 +3,25 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-08-05, tras el run del equipo SEO/GEO diario.
+**Última actualización:** 2026-08-18, tras cerrar los enlaces de merchandising.
 
 ---
+
+## Hecho el 2026-08-18 (desplegado y verificado en producción)
+
+- **PR #45** (`b0b5219`) — todos los enlaces `merchandising.hubstartidea.es` →
+  `merchandising.startidea.es` (el viejo redirige 301). Eran 12 apariciones en 7
+  ficheros, no 3: Ecosistema, Nav, MerchPromo, jsonld.ts, /merchandising y las 2
+  fichas knowledge del chat IA. Verificado con curl en `/`, `/merchandising` y
+  `/que-hacemos`: 0 restos del dominio viejo.
+- **Monitor GEO: sin cambio necesario.** `geo-monitor.mjs` casa por substring y
+  `geo-competitors.mjs` por sufijo de dominio — `merchandising.startidea.es` ya
+  cuenta como propio vía `startidea.es`. Decisión cerrada tras leer el código.
+- **PR #46** (`d823191`) — `.claude/CLAUDE.md`: S6 (container `copiloto-sede`)
+  marcado como desplegado; llevaba 5 semanas listado como pendiente. Re-verificado
+  en la VPS: `copiloto-sede Up 3 weeks (healthy)`.
+- **Bloqueado**: reflejar `TAVILY_API_KEY` en `.env.example` — los permisos de la
+  sesión deniegan tocar `.env*` incluso en lectura. Lo tiene que hacer Mario a mano.
 
 ## En qué estamos
 
