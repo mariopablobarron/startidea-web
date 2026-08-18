@@ -1,0 +1,21 @@
+src/pages/redes-sociales-granada.astro
+  s_1ca4964106f2f9::t_0fdab26d4ae530 172
+src/pages/redes-sociales-ia.astro
+  s_1ca4964106f2f9::t_3474d97ef7a2a7 64,66,234-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "29d85858faf65ae1c809703fbae01cf9d34b15ad",
+  "prompts": {},
+  "sessions": {
+    "s_1ca4964106f2f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e92b848c-d166-4326-b361-f3f620363563",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
