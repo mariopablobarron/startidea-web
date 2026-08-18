@@ -4,7 +4,7 @@ import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { rangoPublico, fmtEur } from '@/data/servicios';
-import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const rango = rangoPublico('/publicidad');
 const casosSlugs = ['granada-social-5', 'down-granada', 'proyecto-hombre'];
@@ -33,6 +33,11 @@ const jsonLd = [
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Publicidad y SEM', url: `${SITE_URL}/publicidad` },
   ]),
+  // Era la única página de servicio comercial sin señal local: contacto, home,
+  // /redes-sociales-granada, /videopodcast y /diagnostico ya la emiten. Con 0
+  // impresiones en 30 días no hay cobertura que arriesgar, y "agencias de
+  // publicidad granada" es una búsqueda real donde el sitio está en pos. 61.
+  localBusinessSchema(),
   faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
   serviceSchema({
     name: 'Publicidad y SEM con propósito',
@@ -40,6 +45,13 @@ const jsonLd = [
       'Gestión de campañas de publicidad online (Google Ads, Meta Ads) y Google Ad Grants para tercer sector, instituciones y empresas con propósito. Estrategia, montaje, optimización y medición por objetivo —socios, donantes, leads—, no por clics vanidosos.',
     serviceType: 'Gestión de publicidad online (SEM)',
     url: `${SITE_URL}/publicidad`,
+    // El Service nombra la ciudad, como en /redes-sociales-granada: el
+    // #localbusiness describe a Startidea, no al servicio que se ofrece.
+    areaServed: [
+      { type: 'City', name: 'Granada' },
+      { type: 'AdministrativeArea', name: 'Andalucía' },
+      { type: 'Country', name: 'España' },
+    ],
     audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
     offers: [
       { name: 'Google Ad Grants', description: 'Hasta 10.000 $/mes en anuncios gratuitos para ESFL.', url: `${SITE_URL}/google-ad-grants` },
@@ -82,8 +94,8 @@ const proceso = [
 ---
 
 <Base
-  title="Publicidad y SEM para ONG — Google y Meta Ads"
-  description="Google Ad Grants (10.000 $/mes gratis para ESFL), Google Ads y Meta Ads para entidades con propósito. Medición por objetivo, no por clics vanidosos."
+  title="Publicidad y SEM para ONG en Granada — Google y Meta Ads"
+  description="Google Ad Grants (10.000 $/mes gratis para ESFL), Google Ads y Meta Ads para entidades con propósito. Agencia en Granada, medición por objetivo."
   ogSlug="page/publicidad"
   jsonLd={jsonLd}
 >
