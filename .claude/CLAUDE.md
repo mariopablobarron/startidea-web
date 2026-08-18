@@ -125,7 +125,7 @@ Ejemplos útiles:
 - ~~S4: newsletter segmentation + Google AdGrants landing~~ ✅ DONE (2026-05-26)
 - ~~S5: Startidea Lab Cursos~~ ✅ DONE (2026-05-26) — 3 cursos publicados
 
-- S6: Copiloto de Subvenciones — Fase 2 (Playwright sede electrónica) — EN CURSO
+- S6: Copiloto de Subvenciones — Fase 2 (Playwright sede electrónica) — ✅ DESPLEGADO (2026-07-11)
   - **Alcance: SOLO tramitación ASISTIDA** (decisión Mario 2026-07-10). El Copiloto
     captura la sede en vivo y entrega al cliente/apoderado una guía hiperconcreta
     (capturas de entrada + acceso, prefill del expediente, checklist de docs). NUNCA
@@ -138,9 +138,11 @@ Ejemplos útiles:
     captura entrada + modal de acceso (certificado/Cl@ve), no hay formulario público
     (el muro de auth aparece al pulsar INICIAR SOLICITUD). Admin `/admin/expedientes/[id]`
     pinta capturas + prefill + checklist.
-  - **Pendiente**: desplegar el container `copiloto-sede/` en la VPS (ver `copiloto-sede/DEPLOY.md`)
-    y setear `COPILOTO_SEDE_URL` + `COPILOTO_SEDE_SECRET` en el .env de startidea-web.
-    Otras sedes (BDNS/infosubvenciones.es, OEPM, Diputación) son V2.
+  - ~~Desplegar el container `copiloto-sede/` en la VPS~~ ✅ HECHO (2026-07-11): container
+    `copiloto-sede` vivo en la red coolify (:8090 interno), `COPILOTO_SEDE_URL` +
+    `COPILOTO_SEDE_SECRET` seteados en el .env de startidea-web, wiring verificado
+    (re-verificado healthy el 2026-08-18). Otras sedes (BDNS/infosubvenciones.es,
+    OEPM, Diputación) son V2.
 
 - ~~S7 (editorial): 2-3 notas adicionales~~ ✅ DONE (2026-05-26)
   - roi-tramitar-subvenciones-agencia.md
