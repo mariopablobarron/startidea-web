@@ -183,7 +183,7 @@ const ORG = {
     {
       '@type': 'Organization',
       name: 'TodoMerchandising',
-      url: 'https://merchandising.hubstartidea.es',
+      url: 'https://merchandising.startidea.es',
       description: 'Catálogo B2B online de merchandising promocional sostenible.',
     },
     {
