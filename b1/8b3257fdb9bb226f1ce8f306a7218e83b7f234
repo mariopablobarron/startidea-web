@@ -1,0 +1,21 @@
+src/pages/llms.txt.ts
+  s_1ca4964106f2f9::t_7708758e6456fa 32-33
+src/pages/publicidad.astro
+  s_1ca4964106f2f9::t_db60ef4f8c75d9 7,36-40,48-54,97-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b18b3257fdb9bb226f1ce8f306a7218e83b7f234",
+  "prompts": {},
+  "sessions": {
+    "s_1ca4964106f2f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e92b848c-d166-4326-b361-f3f620363563",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
