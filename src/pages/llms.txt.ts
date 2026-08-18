@@ -29,6 +29,8 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 - [Comunicación eclesial](${SITE_URL}/comunicacion-eclesial): comunicación estratégica para diócesis, congregaciones, movimientos laicales y fundaciones de la Iglesia en toda España, con respeto a su lenguaje y sensibilidad.
 - [Agencia de comunicación y social media en Granada](${SITE_URL}/redes-sociales-granada): gestión de redes sociales y comunicación para ONG y entidades de Granada, con estudio propio en la ciudad.
 - [Fundraising para ONG y entidades sociales](${SITE_URL}/fundraising): diversificación de ingresos, base social, captación de fondos y alianzas.
+- [Publicidad y SEM para ONG en Granada](${SITE_URL}/publicidad): Google Ads, Meta Ads y Google Ad Grants (hasta 10.000 $/mes en anuncios gratuitos para entidades sin ánimo de lucro). Honorarios de gestión y presupuesto de medios van separados, sin comisión sobre la inversión.
+- [Gestión de redes sociales asistida por IA](${SITE_URL}/redes-sociales-ia): producto de publicación y medición con cerebro de marca propio. Para la gestión llevada por personas, con estudio en Granada, la página es /redes-sociales-granada.
 - [Tramitación de subvenciones](${SITE_URL}/subvenciones/presentar): diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica con certificado digital. Comisión a éxito.
 - [Precios de tramitación de subvenciones](${SITE_URL}/precios): comisión a éxito del 12% del importe concedido, sin coste si no se concede. Para entidades del tercer sector.
 - [Subvenciones de inclusión social del BOJA 2026 (Andalucía)](${SITE_URL}/subvenciones/boja-2026-inclusion-social): las 15 líneas de la convocatoria andaluza de inclusión social, con tramitación y justificación asistidas.
