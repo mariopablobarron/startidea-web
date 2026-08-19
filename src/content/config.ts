@@ -137,4 +137,58 @@ const cursos = defineCollection({
   }),
 });
 
-export const collections = { notas, diagnosticos, knowledge, cursos };
+const herramientas = defineCollection({
+  type: 'content',
+  schema: z.object({
+    // Nombre de la herramienta tal como se muestra (H1 de la ficha).
+    title: z.string(),
+    seoTitle: z.string().min(20).max(48).optional(),
+    // Entradilla visible de la ficha y meta description por defecto.
+    description: z.string(),
+    metaDescription: z.string().min(80).max(158).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    // URL oficial de la herramienta.
+    web: z.string().url(),
+    // Para qué necesidad principal sirve (filtro del directorio).
+    necesidad: z.enum([
+      'Escribir y comunicar',
+      'Diseñar y crear',
+      'Analizar datos',
+      'Automatizar',
+      'Audio y vídeo',
+      'Investigar',
+      'Gestionar y organizar',
+    ]),
+    // Reutiliza las audiencias de la casa (mismo lenguaje que notas).
+    audience: z.array(z.enum(['Tercer sector', 'Instituciones', 'Empresas con propósito', 'Todas'])).default(['Todas']),
+    precio: z.enum(['Gratis', 'Freemium', 'De pago']),
+    // Cuánto hay que saber para sacarle partido.
+    nivel: z.enum(['Sin conocimientos', 'Intermedio', 'Técnico']),
+    // Veredicto Startidea — el valor diferencial de la ficha.
+    para_que_si: z.array(z.string()).min(1),
+    para_que_no: z.array(z.string()).min(1),
+    riesgos: z.array(z.string()).default([]),
+    // Alternativa más abierta/europea/libre, si existe.
+    alternativa: z.string().optional(),
+    // Valoración editorial 1-5 según el criterio de docs/criterio-ia.md.
+    // Se muestra como sello; la argumentación DSI completa es interna.
+    valoracion: z.number().int().min(1).max(5),
+    tags: z.array(z.string()).default([]),
+    tldr: z.string().min(40).max(600).optional(),
+    faqs: z
+      .array(
+        z.object({
+          question: z.string().min(5).max(200),
+          answer: z.string().min(20).max(800),
+        }),
+      )
+      .max(8)
+      .optional(),
+    draft: z.boolean().default(false),
+    author: z.string().default('Mario Pablo Sánchez Barrón'),
+    authorRole: z.string().default('Fundador · Startidea'),
+  }),
+});
+
+export const collections = { notas, diagnosticos, knowledge, cursos, herramientas };

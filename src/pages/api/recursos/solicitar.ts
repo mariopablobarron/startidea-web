@@ -30,6 +30,10 @@ const RECURSOS: Record<string, { titulo: string; pdfUrl: string }> = {
     titulo: 'Diagnóstico modelo de fundraising',
     pdfUrl: '/recursos/diagnostico-modelo-fundraising.pdf',
   },
+  'plantilla-control-restaurante': {
+    titulo: 'Plantilla de control económico para restaurantes',
+    pdfUrl: '/recursos/plantilla-control-restaurante.xlsx',
+  },
 };
 
 async function buttondownSubscribe(email: string, tags: string[] = []): Promise<void> {

@@ -1,0 +1,150 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const herramientas = await getCollection('herramientas', ({ data }) => !data.draft);
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'IA para el bien común', url: `${SITE_URL}/laboratorio/ia` },
+  ]),
+];
+
+const principios = [
+  {
+    titulo: 'La persona en el centro',
+    texto: 'La IA es herramienta, no sustituta. Se adopta cuando libera a las personas para el trabajo que solo las personas pueden hacer: escuchar, decidir, acompañar. Nunca cuando degrada un trato humano que alguien necesitaba.',
+  },
+  {
+    titulo: 'Al servicio del bien común',
+    texto: 'Cada adopción se mide por a quién beneficia. Una herramienta que ahorra horas a la organización y las devuelve a su misión, suma. Una que optimiza a costa de terceros —sus datos, su trabajo, su confianza—, no.',
+  },
+  {
+    titulo: 'Quien la usa manda',
+    texto: 'La organización debe poder entender, corregir y abandonar cualquier herramienta. Se prefieren las opciones que dejan los datos en casa, las europeas y las de código abierto cuando existen. La dependencia también es un coste.',
+  },
+  {
+    titulo: 'Verdad y transparencia',
+    texto: 'Lo generado con IA se revisa antes de publicarse y se declara cuando importa. Un dato inventado con seguridad aparente hace más daño que un error honesto. Verificar no es desconfiar de la herramienta: es respetar al lector.',
+  },
+  {
+    titulo: 'Cuidado del más vulnerable',
+    texto: 'La vara de medir definitiva: qué pasa con los datos y la dignidad de las personas más frágiles que toca cada herramienta — beneficiarios, menores, víctimas. Ahí no hay eficiencia que justifique un atajo.',
+  },
+];
+---
+
+<Base
+  title="IA para el bien común — Laboratorio Startidea"
+  description="Herramientas de IA evaluadas con criterio: para qué sí, para qué no, riesgos y alternativas. El directorio del Laboratorio de Startidea y los cinco principios con los que se evalúa cada una."
+  ogSlug="page/laboratorio-ia"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        <a href="/laboratorio" class="link-underline text-ink/70 hover:text-ink">← Laboratorio</a>
+      </p>
+      <span class="label mt-6 block">— IA para el bien común</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        La IA tiene que<br/>
+        <em class="italic text-magenta">hacernos mejores</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Hay miles de listados de herramientas de IA. Este no es uno más: cada herramienta de este espacio está probada y evaluada con un criterio explícito — para qué sirve, para qué no, qué riesgos tiene y qué alternativa existe. Lo que Startidea usa y lo que recomienda a las organizaciones con las que trabaja.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/laboratorio/ia/herramientas" class="btn">
+          Ver el directorio ({herramientas.length} herramientas)
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/recursos/plantilla-control-restaurante" class="btn-ghost">
+          Recursos descargables
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principios -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— El criterio</span>
+          <p class="mt-4 text-sm text-ink/70 lg:max-w-[26ch]">
+            Cinco principios. Cada ficha del directorio se evalúa contra ellos: la valoración que se ve en cada herramienta sale de aquí.
+          </p>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ol class="divide-y divide-ink/15 border-y border-ink/15">
+            {principios.map((p, i) => (
+              <li class="grid grid-cols-12 gap-x-6 py-6">
+                <span class="num-edit col-span-2 text-3xl">{String(i + 1).padStart(2, '0')}</span>
+                <div class="col-span-10">
+                  <h3 class="font-display text-lg leading-tight text-ink md:text-xl">{p.titulo}</h3>
+                  <p class="mt-1 text-sm text-ink/75">{p.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué hay dentro -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 gap-y-10 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué hay aquí</span>
+        </div>
+        <div class="col-span-12 grid gap-8 sm:grid-cols-2 lg:col-span-9">
+          <a href="/laboratorio/ia/herramientas" class="group border-2 border-ink bg-paper-warm p-7 transition-colors hover:bg-paper">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Directorio</p>
+            <h3 class="mt-3 font-display text-2xl leading-tight text-ink">Herramientas evaluadas</h3>
+            <p class="mt-3 text-sm text-ink/75">
+              Fichas con veredicto: para qué sí, para qué no, riesgos, alternativa y valoración según el criterio. Filtrable por necesidad, precio y nivel.
+            </p>
+            <p class="mt-5 font-mono text-[11px] uppercase tracking-widest text-magenta">Explorar →</p>
+          </a>
+          <a href="/recursos/plantilla-control-restaurante" class="group border-2 border-ink bg-paper-warm p-7 transition-colors hover:bg-paper">
+            <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Recursos propios</p>
+            <h3 class="mt-3 font-display text-2xl leading-tight text-ink">Herramientas de la casa</h3>
+            <p class="mt-3 text-sm text-ink/75">
+              Plantillas y utilidades construidas por Startidea, gratuitas. La primera: la plantilla de control económico para restaurantes y pequeños negocios.
+            </p>
+            <p class="mt-5 font-mono text-[11px] uppercase tracking-widest text-magenta">Descargar →</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— El siguiente paso</span>
+          <h2 class="mt-4 font-display text-display-lg leading-[0.98] text-paper">
+            ¿Qué puede hacer la IA<br/>
+            <em class="italic text-magenta">en tu organización</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-paper/80">
+            Las herramientas son la parte fácil. Saber cuáles encajan en tus procesos, con tus datos y tu equipo, es el trabajo de verdad. Startidea lo hace con diagnóstico, no con catálogo.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+            <a href="/contacto" class="btn-ghost !border-paper/40 !text-paper hover:!bg-paper/10">Reservar llamada de 30 min</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

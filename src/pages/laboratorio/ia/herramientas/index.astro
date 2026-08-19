@@ -1,0 +1,223 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+const herramientas = (await getCollection('herramientas', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.valoracion - a.data.valoracion || a.data.title.localeCompare(b.data.title, 'es'),
+);
+
+const NECESIDADES = [
+  'Escribir y comunicar',
+  'Diseñar y crear',
+  'Analizar datos',
+  'Automatizar',
+  'Audio y vídeo',
+  'Investigar',
+  'Gestionar y organizar',
+] as const;
+const PRECIOS = ['Gratis', 'Freemium', 'De pago'] as const;
+const NIVELES = ['Sin conocimientos', 'Intermedio', 'Técnico'] as const;
+
+// Solo se pintan los filtros con al menos una herramienta.
+const necesidadesActivas = NECESIDADES.filter((n) => herramientas.some((h) => h.data.necesidad === n));
+
+function sello(valoracion: number): string {
+  return '●'.repeat(valoracion) + '○'.repeat(5 - valoracion);
+}
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'IA para el bien común', url: `${SITE_URL}/laboratorio/ia` },
+    { name: 'Directorio de herramientas', url: `${SITE_URL}/laboratorio/ia/herramientas` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Directorio de herramientas de IA evaluadas por Startidea',
+    numberOfItems: herramientas.length,
+    itemListElement: herramientas.map((h, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: h.data.title,
+      url: `${SITE_URL}/laboratorio/ia/herramientas/${h.slug}`,
+    })),
+  },
+];
+---
+
+<Base
+  title={`Directorio de herramientas de IA evaluadas — Startidea`}
+  description={`${herramientas.length} herramientas de IA probadas y evaluadas con criterio: para qué sí, para qué no, riesgos y alternativas. Filtrable por necesidad, precio y nivel técnico.`}
+  ogSlug="page/laboratorio-ia-herramientas"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        <a href="/laboratorio/ia" class="link-underline text-ink/70 hover:text-ink">← IA para el bien común</a>
+      </p>
+      <span class="label mt-6 block">— Directorio</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Herramientas<br/>
+        <em class="italic text-magenta">con veredicto</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Ninguna herramienta entra aquí sin haberse usado. Cada ficha dice para qué sí, para qué no, qué riesgos tiene y qué alternativa existe — evaluada con <a href="/laboratorio/ia" class="link-underline">el criterio del Laboratorio</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filtros + listado -->
+  <section class="bg-paper-warm py-14 md:py-20">
+    <div class="container-x">
+      <!-- Filtros -->
+      <div class="space-y-4 border-b border-ink/15 pb-8">
+        <div class="flex flex-wrap items-center gap-2" data-grupo="necesidad">
+          <span class="mr-2 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Necesidad</span>
+          <button type="button" data-valor="" class="filtro-btn is-active">Todas</button>
+          {necesidadesActivas.map((n) => (
+            <button type="button" data-valor={n} class="filtro-btn">{n}</button>
+          ))}
+        </div>
+        <div class="flex flex-wrap items-center gap-2" data-grupo="precio">
+          <span class="mr-2 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Precio</span>
+          <button type="button" data-valor="" class="filtro-btn is-active">Todos</button>
+          {PRECIOS.map((p) => (
+            <button type="button" data-valor={p} class="filtro-btn">{p}</button>
+          ))}
+        </div>
+        <div class="flex flex-wrap items-center gap-2" data-grupo="nivel">
+          <span class="mr-2 font-mono text-[11px] uppercase tracking-widest text-ink-mute">Nivel</span>
+          <button type="button" data-valor="" class="filtro-btn is-active">Todos</button>
+          {NIVELES.map((n) => (
+            <button type="button" data-valor={n} class="filtro-btn">{n}</button>
+          ))}
+        </div>
+      </div>
+
+      <p id="contador" class="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-mute" aria-live="polite">
+        {herramientas.length} herramientas
+      </p>
+
+      <div id="listado" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {herramientas.map((h) => (
+          <a
+            href={`/laboratorio/ia/herramientas/${h.slug}`}
+            class="ficha group flex flex-col border-2 border-ink bg-paper p-6 transition-colors hover:bg-paper-warm"
+            data-necesidad={h.data.necesidad}
+            data-precio={h.data.precio}
+            data-nivel={h.data.nivel}
+          >
+            <div class="flex items-baseline justify-between gap-3">
+              <h2 class="font-display text-2xl leading-tight text-ink">{h.data.title}</h2>
+              <span class="whitespace-nowrap font-mono text-xs tracking-widest text-magenta" title={`Valoración Startidea: ${h.data.valoracion} de 5`}>
+                {sello(h.data.valoracion)}
+              </span>
+            </div>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-ink/75">{h.data.description}</p>
+            <div class="mt-5 flex flex-wrap gap-2 border-t border-ink/15 pt-4 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              <span>{h.data.necesidad}</span>
+              <span aria-hidden="true">·</span>
+              <span>{h.data.precio}</span>
+              <span aria-hidden="true">·</span>
+              <span>{h.data.nivel}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <p id="vacio" class="mt-10 hidden border-2 border-dashed border-ink/30 p-8 text-center text-sm text-ink/60">
+        Ninguna herramienta cumple esa combinación de filtros. Prueba a quitar alguno — o
+        <a href="/contacto" class="link-underline">cuéntale a Startidea qué buscas</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-ink py-16 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <h2 class="font-display text-display-lg leading-[0.98] text-paper">
+            ¿Cuáles encajan<br/>
+            <em class="italic text-magenta">en tu organización</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-paper/80">
+            El directorio dice qué existe. El diagnóstico dice qué te conviene: procesos, datos, equipo y por dónde empezar.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .filtro-btn {
+    border: 1px solid rgb(23 23 23 / 0.3);
+    padding: 0.35rem 0.85rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgb(23 23 23 / 0.7);
+    background: transparent;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+  .filtro-btn:hover {
+    border-color: rgb(23 23 23 / 0.8);
+    color: rgb(23 23 23);
+  }
+  .filtro-btn.is-active {
+    background: rgb(23 23 23);
+    border-color: rgb(23 23 23);
+    color: #fff;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var grupos = document.querySelectorAll('[data-grupo]');
+    var fichas = document.querySelectorAll('.ficha');
+    var contador = document.getElementById('contador');
+    var vacio = document.getElementById('vacio');
+    var listado = document.getElementById('listado');
+
+    var estado = { necesidad: '', precio: '', nivel: '' };
+
+    function aplicar() {
+      var visibles = 0;
+      fichas.forEach(function (f) {
+        var ok =
+          (!estado.necesidad || f.dataset.necesidad === estado.necesidad) &&
+          (!estado.precio || f.dataset.precio === estado.precio) &&
+          (!estado.nivel || f.dataset.nivel === estado.nivel);
+        f.classList.toggle('hidden', !ok);
+        if (ok) visibles++;
+      });
+      if (contador) contador.textContent = visibles === 1 ? '1 herramienta' : visibles + ' herramientas';
+      if (vacio) vacio.classList.toggle('hidden', visibles > 0);
+      if (listado) listado.classList.toggle('hidden', visibles === 0);
+    }
+
+    grupos.forEach(function (grupo) {
+      var clave = grupo.dataset.grupo || '';
+      grupo.querySelectorAll('button[data-valor]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          estado[clave] = btn.dataset.valor || '';
+          grupo.querySelectorAll('button').forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
+          aplicar();
+        });
+      });
+    });
+  })();
+</script>

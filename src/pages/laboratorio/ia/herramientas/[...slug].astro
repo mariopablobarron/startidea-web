@@ -1,0 +1,212 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+export async function getStaticPaths() {
+  const herramientas = await getCollection('herramientas', ({ data }) => !data.draft);
+  return herramientas.map((h) => ({ params: { slug: h.slug }, props: { h } }));
+}
+
+interface Props {
+  h: CollectionEntry<'herramientas'>;
+}
+
+const { h } = Astro.props;
+const { Content } = await h.render();
+const d = h.data;
+
+function sello(valoracion: number): string {
+  return '●'.repeat(valoracion) + '○'.repeat(5 - valoracion);
+}
+
+// Nombre de dominio legible para el enlace externo (sin regex en JSX).
+function dominio(url: string): string {
+  try {
+    return new URL(url).hostname.replace('www.', '');
+  } catch {
+    return url;
+  }
+}
+
+const jsonLd: object[] = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'IA para el bien común', url: `${SITE_URL}/laboratorio/ia` },
+    { name: 'Herramientas', url: `${SITE_URL}/laboratorio/ia/herramientas` },
+    { name: d.title, url: `${SITE_URL}/laboratorio/ia/herramientas/${h.slug}` },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    itemReviewed: {
+      '@type': 'SoftwareApplication',
+      name: d.title,
+      url: d.web,
+      applicationCategory: d.necesidad,
+    },
+    reviewRating: { '@type': 'Rating', ratingValue: d.valoracion, bestRating: 5, worstRating: 1 },
+    author: { '@type': 'Organization', name: 'Startidea', url: SITE_URL },
+    datePublished: d.pubDate.toISOString().slice(0, 10),
+    inLanguage: 'es',
+  },
+];
+if (d.faqs && d.faqs.length > 0) {
+  jsonLd.push(faqPageSchema(d.faqs));
+}
+---
+
+<Base
+  title={d.seoTitle ? `${d.seoTitle} · Startidea` : `${d.title}: análisis y veredicto · Startidea`}
+  description={d.metaDescription ?? d.description}
+  ogSlug={`page/herramienta-${h.slug}`}
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        <a href="/laboratorio/ia/herramientas" class="link-underline text-ink/70 hover:text-ink">← Directorio de herramientas</a>
+      </p>
+      <div class="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+        <h1 class="font-display text-display-xl leading-[0.96] text-ink">{d.title}</h1>
+        <span class="font-mono text-lg tracking-widest text-magenta" title={`Valoración Startidea: ${d.valoracion} de 5, según el criterio del Laboratorio`}>
+          {sello(d.valoracion)}
+        </span>
+      </div>
+      <p class="mt-6 max-w-measure text-lede text-ink/80">{d.description}</p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+        <span>{d.necesidad}</span>
+        <span aria-hidden="true">·</span>
+        <span>{d.precio}</span>
+        <span aria-hidden="true">·</span>
+        <span>{d.nivel}</span>
+        <span aria-hidden="true">·</span>
+        <a href={d.web} target="_blank" rel="noopener nofollow" class="link-underline text-ink/70 hover:text-ink">
+          {dominio(d.web)} ↗
+        </a>
+      </div>
+
+      {d.tldr && (
+        <div class="mt-10 max-w-3xl border-l-4 border-magenta bg-paper-warm p-6">
+          <p class="label">— En síntesis</p>
+          <p class="mt-2 text-base leading-relaxed text-ink/90">{d.tldr}</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Veredicto -->
+  <section class="bg-paper-warm py-14 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— El veredicto</span>
+          <p class="mt-4 text-sm text-ink/70 lg:max-w-[26ch]">
+            Evaluada según <a href="/laboratorio/ia" class="link-underline">el criterio del Laboratorio</a>: la persona en el centro, bien común, autonomía, verdad, cuidado del vulnerable.
+          </p>
+        </div>
+        <div class="col-span-12 mt-6 grid gap-8 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
+          <div class="border-2 border-ink bg-paper p-6">
+            <h2 class="font-display text-xl text-ink">Para qué sí</h2>
+            <ul class="mt-4 space-y-3">
+              {d.para_que_si.map((item) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-ink/80">
+                  <span class="text-magenta" aria-hidden="true">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="border-2 border-ink bg-paper p-6">
+            <h2 class="font-display text-xl text-ink">Para qué no</h2>
+            <ul class="mt-4 space-y-3">
+              {d.para_que_no.map((item) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-ink/80">
+                  <span class="text-ink/50" aria-hidden="true">✕</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {d.riesgos.length > 0 && (
+            <div class="border-2 border-ink bg-paper p-6 sm:col-span-2">
+              <h2 class="font-display text-xl text-ink">Ojo con</h2>
+              <ul class="mt-4 space-y-3">
+                {d.riesgos.map((item) => (
+                  <li class="flex gap-3 text-sm leading-relaxed text-ink/80">
+                    <span aria-hidden="true">⚠</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              {d.alternativa && (
+                <p class="mt-5 border-t border-ink/15 pt-4 text-sm text-ink/70">
+                  <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Alternativa — </span>
+                  {d.alternativa}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cuerpo -->
+  <section class="bg-paper py-14 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <article class="prose-editorial col-span-12 max-w-none lg:col-span-8 lg:col-start-3">
+          <Content />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  {d.faqs && d.faqs.length > 0 && (
+    <section class="bg-paper-warm py-14 md:py-20">
+      <div class="container-x">
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Preguntas frecuentes</span>
+          </div>
+          <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+            <dl class="divide-y divide-ink/15 border-y border-ink/15">
+              {d.faqs.map((faq) => (
+                <div class="py-6">
+                  <dt class="font-display text-lg leading-tight text-ink">{faq.question}</dt>
+                  <dd class="mt-2 text-sm leading-relaxed text-ink/75">{faq.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="bg-ink py-16 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <h2 class="font-display text-display-lg leading-[0.98] text-paper">
+            ¿Encaja {d.title}<br/>
+            <em class="italic text-magenta">en tu organización</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-lede text-paper/80">
+            Una herramienta bien elegida ahorra meses; una mal elegida los cuesta. Startidea ayuda a decidirlo con diagnóstico: procesos, datos, equipo y por dónde empezar.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="/diagnostico" class="btn">Empezar diagnóstico →</a>
+            <a href="/laboratorio/ia/herramientas" class="btn-ghost !border-paper/40 !text-paper hover:!bg-paper/10">Ver más herramientas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

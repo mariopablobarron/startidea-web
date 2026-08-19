@@ -25,6 +25,28 @@ al cerrar una tanda larga, se reescribe.
 
 ## En qué estamos
 
+### NUEVO 2026-08-19 — Rama «IA para el bien común» del Laboratorio (commit 2c9b3c2, pusheado)
+
+Desplegada a producción vía push a main (Coolify). Verificar tras el deploy: /laboratorio/ia, el directorio y el lead magnet:
+
+- **Colección `herramientas`** en `src/content/config.ts` + 15 fichas en
+  `src/content/herramientas/` (Claude, ChatGPT, Gemini, Mistral, Perplexity, NotebookLM,
+  Canva, Gamma, Whisper, ElevenLabs, Make, n8n, Brevo, Notion, DeepL). Cada ficha:
+  para_que_si/no, riesgos, alternativa, valoracion 1-5, tldr, faqs.
+- **Páginas**: `/laboratorio/ia` (portada con los 5 principios), `/laboratorio/ia/herramientas`
+  (directorio con filtros cliente por necesidad/precio/nivel) y `[...slug]` (ficha con
+  JSON-LD Review + FAQPage). Rama añadida al array `ramas` de `/laboratorio`.
+- **Lead magnet restaurantes**: `/recursos/plantilla-control-restaurante` (formulario →
+  `/api/recursos/solicitar`, slug registrado ahí y en `gracias.astro`; el .xlsx está en
+  `public/recursos/`). Origen: piloto con Juan Pablo (restaurante de su padre).
+- **`docs/criterio-ia.md`** — INTERNO: mapeo de los 5 principios públicos a la DSI
+  (decisión de Mario: la DSI no se explicita en la web).
+- Gotcha aprendido: `<script lang="ts">` NO se transpila (cualquier atributo → is:inline);
+  el filtro del directorio va en `<script is:inline>` con JS plano.
+- Build verificado OK. Estrategia general validada por Mario: Laboratorio ampliado (no
+  marca nueva), sin subdominios, empezar por manifiesto+directorio.
+
+
 Campaña SEO/GEO continua sobre `startidea.es` y `granadasocial.org` (repo `~/HUB`),
 coordinada por la rutina `equipo-seo-geo-diario`. Estrategia rectora: **keywords
 monopolio** — fabricar números 1 en intersecciones servicio + sector + territorio sin

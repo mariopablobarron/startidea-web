@@ -10,14 +10,19 @@ const RECURSOS: Record<string, { titulo: string; pdfUrl: string; tamano: string 
     pdfUrl: '/recursos/diagnostico-modelo-fundraising.pdf',
     tamano: '~ 800 KB · 12 páginas',
   },
+  'plantilla-control-restaurante': {
+    titulo: 'Plantilla de control económico para restaurantes',
+    pdfUrl: '/recursos/plantilla-control-restaurante.xlsx',
+    tamano: '~ 32 KB · Excel · 9 hojas',
+  },
 };
 
 const recurso = RECURSOS[slug] || RECURSOS['diagnostico-modelo-fundraising'];
 ---
 
 <Base
-  title="Gracias — Tu PDF está listo · Startidea"
-  description="Tu copia del diagnóstico está lista para descargar."
+  title="Gracias — Tu descarga está lista · Startidea"
+  description="Tu recurso está listo para descargar."
   ogSlug="page/recursos-diagnostico"
   noindex={true}
 >
@@ -38,7 +43,7 @@ const recurso = RECURSOS[slug] || RECURSOS['diagnostico-modelo-fundraising'];
           download
           class="btn !py-4 !px-6 text-base"
         >
-          Descargar PDF
+          Descargar
           <span aria-hidden="true">↓</span>
         </a>
         <a href="/laboratorio/fundraising" class="btn-ghost">
