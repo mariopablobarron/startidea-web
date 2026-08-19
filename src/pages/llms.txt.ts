@@ -14,7 +14,7 @@ export async function GET(_context: APIContext) {
   notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   const notaLines = notas
-    .map((n) => `- [${n.data.title}](${SITE_URL}/notas/${n.slug}/): ${n.data.description}`)
+    .map((n) => `- [${n.data.title}](${SITE_URL}/notas/${n.slug}): ${n.data.description}`)
     .join('\n');
 
   const body = `# Startidea
