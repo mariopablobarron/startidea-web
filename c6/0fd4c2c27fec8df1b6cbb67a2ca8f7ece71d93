@@ -1,0 +1,20 @@
+.claude/CLAUDE.md
+  s_64a3be92fcb9b0::t_e158fd5fcd8dc2 128
+  s_64a3be92fcb9b0::t_868e93536a5b68 141-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c60fd4c2c27fec8df1b6cbb67a2ca8f7ece71d93",
+  "prompts": {},
+  "sessions": {
+    "s_64a3be92fcb9b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d2aebd8-af1d-4189-9e1e-03d75db13dc7",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

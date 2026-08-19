@@ -1,0 +1,31 @@
+src/pages/merchandising.astro
+  s_64a3be92fcb9b0::t_18aae4044eedd6 41,118-119,126
+src/content/knowledge/03-faq.md
+  s_64a3be92fcb9b0::t_18aae4044eedd6 26
+src/components/Nav.astro
+  s_64a3be92fcb9b0::t_18aae4044eedd6 37
+src/components/Ecosistema.astro
+  s_64a3be92fcb9b0::t_18aae4044eedd6 52-53
+src/lib/jsonld.ts
+  s_64a3be92fcb9b0::t_18aae4044eedd6 186
+src/components/MerchPromo.astro
+  s_64a3be92fcb9b0::t_18aae4044eedd6 56,65
+src/content/knowledge/01-servicios-y-precios.md
+  s_64a3be92fcb9b0::t_18aae4044eedd6 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6c38ad0dfe52789c584546ebb8e7b7235a868e2c",
+  "prompts": {},
+  "sessions": {
+    "s_64a3be92fcb9b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d2aebd8-af1d-4189-9e1e-03d75db13dc7",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

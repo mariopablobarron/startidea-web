@@ -1,0 +1,20 @@
+ESTADO-AGENTE.md
+  s_64a3be92fcb9b0::t_1a619ae03c3608 6,10-24
+  s_64a3be92fcb9b0::t_ba29bdd72ad4cb 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9f06f62e65b29be4604ec874af276579cb6cd2ed",
+  "prompts": {},
+  "sessions": {
+    "s_64a3be92fcb9b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d2aebd8-af1d-4189-9e1e-03d75db13dc7",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
