@@ -1,0 +1,19 @@
+src/pages/llms.txt.ts
+  s_7d35fb3f1ab9f3::t_bf68ce34403d71 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ae7c1f64077719e6228fe8b81f533798c861be6c",
+  "prompts": {},
+  "sessions": {
+    "s_7d35fb3f1ab9f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d27edc1-2057-4e68-aa80-ba521b641321",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
