@@ -1,0 +1,72 @@
+src/content/herramientas/brevo.md
+  s_4d8478e4ebf981::t_01d41df04ca436 1-44
+src/content/herramientas/chatgpt.md
+  s_4d8478e4ebf981::t_a4449e674f1d78 1-45
+src/content/herramientas/mistral-le-chat.md
+  s_4d8478e4ebf981::t_6694be44d49dd5 1-44
+src/content/herramientas/claude.md
+  s_4d8478e4ebf981::t_0db56f7a81842a 1-47
+src/content/herramientas/make.md
+  s_4d8478e4ebf981::t_7707f51b9edb02 1-45
+src/content/herramientas/notion.md
+  s_4d8478e4ebf981::t_e74b0e4bdcb882 1-42
+src/pages/laboratorio/ia/herramientas/index.astro
+  s_4d8478e4ebf981::t_fcda57658536b0 185-191,193,195-208,210-219,222
+  s_4d8478e4ebf981::t_38de6345b39dc3 1-184,192,194,209,220-221,223
+src/pages/recursos/gracias.astro
+  s_4d8478e4ebf981::t_1503ebfc50877e 24-25
+  s_4d8478e4ebf981::t_09a08fc3c37709 46
+  s_4d8478e4ebf981::t_8dfd8abda282fe 13-17
+src/content/herramientas/perplexity.md
+  s_4d8478e4ebf981::t_a952103d5def30 1-44
+src/pages/recursos/plantilla-control-restaurante.astro
+  s_4d8478e4ebf981::t_9ed6ca81833461 1-241
+src/pages/laboratorio/index.astro
+  s_4d8478e4ebf981::t_c09270db97a1be 14-20
+  s_4d8478e4ebf981::t_5e96b0eb9b3ca0 13
+docs/criterio-ia.md
+  s_4d8478e4ebf981::t_cfeda1ab19af28 1-45
+src/pages/laboratorio/ia/herramientas/[...slug].astro
+  s_4d8478e4ebf981::t_01e065a5b16ec6 162
+  s_4d8478e4ebf981::t_8cc4fa383c0705 1-161,163-212
+src/content/herramientas/whisper.md
+  s_4d8478e4ebf981::t_94028fa2989c0d 1-44
+src/pages/laboratorio/ia/index.astro
+  s_4d8478e4ebf981::t_a2591524843ce1 1-150
+src/content/config.ts
+  s_4d8478e4ebf981::t_f03e731614da91 140-194
+ESTADO-AGENTE.md
+  s_4d8478e4ebf981::t_b2a2654be7e1bc 28-49
+src/content/herramientas/gamma.md
+  s_4d8478e4ebf981::t_f32dd43c2b5573 1-42
+src/content/herramientas/gemini.md
+  s_4d8478e4ebf981::t_092a5bb5e2eee4 1-43
+src/content/herramientas/n8n.md
+  s_4d8478e4ebf981::t_402082c16bd752 1-44
+src/content/herramientas/deepl.md
+  s_4d8478e4ebf981::t_5106846806f936 1-44
+src/content/herramientas/canva.md
+  s_4d8478e4ebf981::t_f04d7a57170e50 1-45
+src/pages/api/recursos/solicitar.ts
+  s_4d8478e4ebf981::t_df8a9ea266ac10 33-36
+src/content/herramientas/notebooklm.md
+  s_4d8478e4ebf981::t_73f2d03e37b85f 1-44
+src/content/herramientas/elevenlabs.md
+  s_4d8478e4ebf981::t_c2c2dc6ba48c25 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6b3293839e6d9dd3142c82523ecfd7c6c8e73653",
+  "prompts": {},
+  "sessions": {
+    "s_4d8478e4ebf981": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e2f7a69d-2a48-4dfc-98d9-620c0855c157",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
