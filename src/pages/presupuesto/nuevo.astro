@@ -61,6 +61,10 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
           aria-hidden="true"
         />
 
+        <p class="text-xs text-ink-mute">
+          <span class="text-magenta" aria-hidden="true">*</span> Campo obligatorio.
+        </p>
+
         <!-- ============ PASO 1: TIPO + SERVICIO ============ -->
         <fieldset data-step="1" class="space-y-8">
           <div>
@@ -68,7 +72,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
           </div>
 
           <div class="space-y-3">
-            <span id="lbl-audience" class="block text-sm font-medium text-ink">Tipo de organización</span>
+            <span id="lbl-audience" class="block text-sm font-medium text-ink">Tipo de organización <span class="text-magenta" aria-hidden="true">*</span></span>
             <div role="radiogroup" aria-labelledby="lbl-audience" class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
                 ["empresa", "Empresa"],
@@ -117,7 +121,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
           <div class="space-y-2">
             <label for="challenge" class="block text-sm font-medium text-ink">
-              Cuéntanos en una frase qué quieres
+              Cuéntanos en una frase qué quieres <span class="text-magenta" aria-hidden="true">*</span>
             </label>
             <textarea
               id="challenge"
@@ -133,7 +137,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
           </div>
 
           <div class="space-y-3">
-            <span id="lbl-budget" class="block text-sm font-medium text-ink">Presupuesto orientativo</span>
+            <span id="lbl-budget" class="block text-sm font-medium text-ink">Presupuesto orientativo <span class="text-magenta" aria-hidden="true">*</span></span>
             <div role="radiogroup" aria-labelledby="lbl-budget" class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
                 ["<1k", "< 1.000 €"],
@@ -151,7 +155,7 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
           </div>
 
           <div class="space-y-3">
-            <span id="lbl-timeframe" class="block text-sm font-medium text-ink">Plazo</span>
+            <span id="lbl-timeframe" class="block text-sm font-medium text-ink">Plazo <span class="text-magenta" aria-hidden="true">*</span></span>
             <div role="radiogroup" aria-labelledby="lbl-timeframe" class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
                 ["asap", "Cuanto antes"],
@@ -182,19 +186,19 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
           <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div class="space-y-2">
-              <label for="name" class="block text-sm font-medium text-ink">Tu nombre</label>
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre <span class="text-magenta" aria-hidden="true">*</span></label>
               <input type="text" id="name" name="name" required minlength="2" maxlength="100"
                 class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
             </div>
             <div class="space-y-2">
-              <label for="email" class="block text-sm font-medium text-ink">Tu email</label>
+              <label for="email" class="block text-sm font-medium text-ink">Tu email <span class="text-magenta" aria-hidden="true">*</span></label>
               <input type="email" id="email" name="email" required maxlength="200"
                 class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
             </div>
           </div>
 
           <div class="space-y-2">
-            <label for="organizationName" class="block text-sm font-medium text-ink">Organización o proyecto</label>
+            <label for="organizationName" class="block text-sm font-medium text-ink">Organización o proyecto <span class="text-magenta" aria-hidden="true">*</span></label>
             <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
               placeholder="Nombre o razón social"
               class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
