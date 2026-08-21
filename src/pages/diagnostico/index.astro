@@ -1,25 +1,22 @@
 ---
-// /diagnostico — Diagnóstico "árbol" adaptativo (página principal).
+// /diagnostico — Diagnóstico adaptativo (página principal).
 //
 // Antes había una landing intermedia en /diagnostico que mandaba a
-// /diagnostico/nuevo. Se eliminó ese paso: el árbol vive directamente aquí y
-// /diagnostico/nuevo redirige a esta URL (compatibilidad de enlaces antiguos).
+// /diagnostico/nuevo. Se eliminó ese paso: el formulario vive directamente aquí
+// y /diagnostico/nuevo redirige a esta URL (compatibilidad de enlaces antiguos).
 //
-// Paso 1 es un ÁRBOL interactivo: la raíz es el isotipo real de Startidea
-// (trazado vectorial exacto desde public/brand/isotipo-lazos.png con potrace),
-// y de él nacen las ramas del perfil (audience) → subtipo. Al elegir subtipo,
-// el árbol fija dos <input hidden> (audience, subType) y entrega el resto del
-// formulario (contacto → servicios → reto → recursos), que sigue siendo el
-// wizard adaptativo de siempre.
+// Rediseño 2026-08-22 (dato: 81 sesiones tocaron el embudo en 8 semanas, 0
+// envíos). El paso 1 dejó de ser el árbol SVG generado por JS: las 4 ramas y
+// sus subtipos se renderizan ahora server-side como tarjetas visibles de un
+// vistazo (rastreables por Google, legibles en móvil). Elegir un subtipo fija
+// dos <input hidden> (audience, subType) y avanza el wizard. El contacto pasó
+// del paso 2 al paso FINAL: primero se pide implicación barata (qué necesitas,
+// tu reto), y el email solo al cierre.
 //
-// Categorías (audience):
-//   - empresa            → PYME / Gran empresa / Startup / Autónomo
-//   - institucion        → Eclesial / Pública / Educativa / Sanitaria
-//   - entidad-social     → Asociación / Fundación / Cooperativa social / ONG / Red
-//   - emprendedor        → Idea / MVP / Validación / Escalado
+// Orden de pasos: perfil → servicios → reto → recursos → contacto (+envío).
 //
 // Backend: POST a /api/diagnosticos/intake del HUB con kind="diagnostico"
-// + answers JSON con campos extra (mission, fundingMix, legalStatus, ASE…).
+// + answers JSON con campos extra (mission, fundingSources, legalStatus, ASE…).
 
 import Base from "@/layouts/Base.astro";
 import { breadcrumbList, localBusinessSchema, SITE_URL } from "@/lib/jsonld";
@@ -40,8 +37,58 @@ const jsonLd = [
 
 const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 
-// Isotipo real de Startidea, contorno vectorial exacto (potrace del PNG oficial).
-const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4 -505 26 -97 97 -251 148 -322 19 -27 34 -52 34 -57 0 -22 -89 -105 -144 -134 -53 -27 -71 -32 -138 -32 -101 0 -106 6 -79 87 33 99 51 222 51 350 0 196 -41 342 -128 460 -50 68 -138 142 -188 158 -83 28 -176 -10 -235 -96 -38 -56 -86 -180 -95 -246 -6 -40 -13 -52 -58 -91 -164 -142 -204 -392 -94 -586 44 -77 126 -157 195 -189 52 -24 70 -27 163 -27 89 0 113 4 158 24 l52 24 63 -32 c124 -60 256 -59 385 6 71 35 176 125 218 186 l20 29 75 -24 c102 -32 235 -32 339 0 177 55 316 201 352 373 13 62 6 101 -22 129 -20 20 -74 27 -96 12 -6 -4 -33 -49 -60 -100 -65 -124 -101 -164 -182 -204 -59 -29 -75 -33 -147 -32 -86 1 -161 23 -159 45 1 8 11 60 23 116 27 131 27 263 1 395 -44 214 -181 464 -277 504 -45 19 -57 18 -92 -11z m126 -342 c57 -103 85 -209 86 -328 1 -98 -17 -215 -32 -215 -10 0 -64 117 -91 199 -12 37 -23 103 -27 160 -6 106 4 251 17 251 5 0 26 -30 47 -67z m-680 -58 c28 -19 84 -119 116 -205 35 -96 51 -191 51 -315 -1 -205 -58 -253 -147 -121 -80 118 -120 250 -121 401 -1 121 8 180 34 223 22 36 35 39 67 17z m-256 -482 c25 -103 76 -195 173 -317 38 -48 30 -71 -21 -61 -85 16 -156 75 -197 164 -36 80 -23 302 17 288 6 -2 19 -35 28 -74z";
+// Ramas del perfil, renderizadas server-side (visibles de un vistazo y
+// rastreables). Elegir un subtipo fija audience+subType y avanza el wizard.
+const AUDIENCES = [
+  {
+    id: "empresa",
+    label: "Empresa",
+    desc: "Vendes productos o servicios y quieres crecer con propósito.",
+    subs: [
+      { id: "pyme", label: "PYME" },
+      { id: "gran-empresa", label: "Gran empresa" },
+      { id: "startup", label: "Startup" },
+      { id: "autonomo", label: "Autónomo/a" },
+    ],
+  },
+  {
+    id: "institucion",
+    label: "Institución",
+    desc: "Organización pública, eclesial, educativa o sanitaria.",
+    subs: [
+      { id: "eclesial", label: "Eclesial" },
+      { id: "publica", label: "Pública" },
+      { id: "educativa", label: "Educativa" },
+      { id: "sanitaria", label: "Sanitaria" },
+    ],
+  },
+  {
+    id: "entidad-social",
+    label: "Entidad social",
+    desc: "Tercer sector: la misión es la causa, no el beneficio.",
+    subs: [
+      { id: "asociacion", label: "Asociación" },
+      { id: "fundacion", label: "Fundación" },
+      { id: "cooperativa-social", label: "Cooperativa social" },
+      { id: "ong", label: "ONG" },
+      { id: "red", label: "Red / Federación" },
+    ],
+  },
+  {
+    id: "emprendedor",
+    label: "Emprendedor/a",
+    desc: "Un proyecto en marcha o en la cabeza, con o sin nombre aún.",
+    subs: [
+      { id: "idea", label: "Idea" },
+      { id: "mvp", label: "MVP" },
+      { id: "validacion", label: "Validación" },
+      { id: "escalado", label: "Escalando" },
+    ],
+  },
+];
+
+const STEP_NAMES = ["Perfil", "Necesidades", "Reto", "Recursos", "Contacto"];
+
 ---
 
 <Base
@@ -60,8 +107,8 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
       </h1>
       <p class="mt-6 max-w-measure text-ink/80">
         La raíz es quién eres; de ahí crecen las preguntas que sí aplican a tu
-        caso. Sin coste. Cuando termines, Startidea recibe el briefing antes de
-        llamarte.
+        caso. Sin coste y en unos 3 minutos. Cuando termines, Startidea recibe
+        el briefing antes de llamarte.
       </p>
       <p class="mt-3 max-w-measure text-sm text-ink-mute">
         ¿Buscas concretamente una web? Usa el
@@ -69,8 +116,19 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
         respondes, subes tu logo y colores, y obtienes un documento listo para empezar.
       </p>
 
-      <!-- Progress bar -->
-      <div class="mt-8 flex max-w-md items-center gap-2" aria-hidden="true">
+      <!-- Stepper: los 5 pasos siempre visibles -->
+      <ol
+        class="mt-8 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-widest"
+        aria-hidden="true"
+      >
+        {STEP_NAMES.map((nombre, i) => (
+          <li data-step-dot class="flex items-center gap-2 text-ink-mute transition-colors">
+            <span class="dot inline-block h-1.5 w-1.5 bg-ink/25 transition-colors"></span>
+            {i + 1} · {nombre}
+          </li>
+        ))}
+      </ol>
+      <div class="mt-3 flex max-w-2xl items-center gap-2" aria-hidden="true">
         <div class="h-1 flex-1 overflow-hidden bg-ink/15">
           <div
             data-progress
@@ -108,162 +166,59 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           <span class="text-magenta" aria-hidden="true">*</span> Campo obligatorio.
         </p>
 
-        <!-- ============ PASO 1: EL ÁRBOL (audience + subType) ============ -->
+        <!-- ============ PASO 1: PERFIL (audience + subType) ============ -->
         <fieldset data-step="1" class="space-y-6">
           <div>
             <h2 class="font-display text-2xl text-ink">¿Quién eres?</h2>
             <p class="mt-2 text-sm text-ink-mute">
-              Toca la raíz y sigue las ramas. Cada elección abre la siguiente.
+              Las cuatro ramas, a la vista. Toca el tipo que mejor te describe
+              y el formulario se adapta a tu caso.
             </p>
           </div>
 
-          <div class="st-tree-wrap" data-tree-wrap>
-            <div class="st-tree-hud">
-              <div class="st-tree-crumbs" data-tree-crumbs></div>
-              <button type="button" class="st-tree-back" data-tree-back disabled>
-                ← Volver a la raíz
-              </button>
-            </div>
-            <svg
-              class="st-tree-svg"
-              data-tree-svg
-              viewBox="0 0 1000 820"
-              preserveAspectRatio="xMidYMid meet"
-              role="group"
-              aria-label="Árbol de diagnóstico: elige tu perfil"
-            >
-              <defs>
-                <filter id="stNodeShadow" x="-60%" y="-60%" width="220%" height="220%">
-                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1c1a15" flood-opacity="0.22"></feDropShadow>
-                </filter>
-              </defs>
-              <g data-tree-camera></g>
-            </svg>
-            <p class="st-tree-hint" data-tree-hint>
-              También puedes usar el teclado: Tab para moverte, Enter para elegir.
-            </p>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {AUDIENCES.map((aud) => (
+              <div class="space-y-3 border border-ink/20 bg-paper p-5">
+                <div>
+                  <span class="block font-mono text-[10px] uppercase tracking-widest text-magenta">
+                    {aud.label}
+                  </span>
+                  <p class="mt-1 text-xs text-ink-mute">{aud.desc}</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  {aud.subs.map((sub) => (
+                    <button
+                      type="button"
+                      data-pick
+                      data-audience={aud.id}
+                      data-audience-label={aud.label}
+                      data-sub={sub.id}
+                      data-sub-label={sub.label}
+                      class="min-h-[44px] border border-ink/25 px-4 py-2 text-sm text-ink transition-colors hover:border-magenta hover:text-magenta focus:outline-none focus-visible:border-magenta focus-visible:ring-1 focus-visible:ring-magenta"
+                    >
+                      {sub.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
+          <p class="text-xs text-ink-mute">
+            ¿Ninguna encaja del todo? Elige la más parecida: en el paso del reto
+            podrás contarlo con tus palabras.
+          </p>
         </fieldset>
 
-        <!-- ============ PASO 2: CONTACTO ============ -->
+        <!-- ============ PASO 2: SERVICIOS + ETAPA ============ -->
         <fieldset data-step="2" class="hidden space-y-8">
-          <div>
-            <h2 class="font-display text-2xl text-ink">Tu contacto</h2>
-            <p class="mt-2 text-sm text-ink-mute">
-              Perfil elegido:
-              <span class="font-medium text-magenta" data-profile-recap>—</span>.
-              Para poder llamarte, cuéntanos quién eres.
-            </p>
-          </div>
-
-          <div class="space-y-5">
-            <div class="space-y-2">
-              <label for="name" class="block text-sm font-medium text-ink">Tu nombre <span class="text-magenta" aria-hidden="true">*</span></label>
-              <input type="text" id="name" name="name" required minlength="2" maxlength="100"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-
-            <div class="space-y-2">
-              <label for="email" class="block text-sm font-medium text-ink">Tu email <span class="text-magenta" aria-hidden="true">*</span></label>
-              <input type="email" id="email" name="email" required maxlength="200"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-
-            <div class="space-y-2">
-              <label for="organizationName" class="block text-sm font-medium text-ink">
-                <span data-org-label-default>Organización</span>
-                <span data-org-label-emprendedor class="hidden">Nombre del proyecto (si lo tiene)</span>
-                <span class="text-magenta" aria-hidden="true">*</span>
-              </label>
-              <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
-                placeholder="Nombre o razón social"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div class="space-y-2">
-                <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
-                <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-              <div class="space-y-2">
-                <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
-                <input type="tel" id="phone" name="phone" maxlength="40"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-            </div>
-
-            <div class="space-y-2">
-              <label for="website" class="block text-sm font-medium text-ink">Web (opcional)</label>
-              <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-          </div>
-
-          <!-- Redes sociales + rastreo de posicionamiento -->
-          <div class="space-y-5 border-t border-ink/15 pt-8">
-            <div>
-              <h3 class="font-display text-lg text-ink">Tu presencia online</h3>
-              <p class="mt-1 text-sm text-ink-mute">
-                Pon el usuario (@) o la URL de las redes que uséis. Nos sirve para
-                entender de qué partís antes de proponer nada.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div class="space-y-2">
-                <label for="social_instagram" class="block text-sm font-medium text-ink">Instagram</label>
-                <input type="text" id="social_instagram" name="social_instagram" maxlength="120" placeholder="@usuario o URL"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-              <div class="space-y-2">
-                <label for="social_facebook" class="block text-sm font-medium text-ink">Facebook</label>
-                <input type="text" id="social_facebook" name="social_facebook" maxlength="120" placeholder="@página o URL"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-              <div class="space-y-2">
-                <label for="social_linkedin" class="block text-sm font-medium text-ink">LinkedIn</label>
-                <input type="text" id="social_linkedin" name="social_linkedin" maxlength="120" placeholder="URL de la página"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-              <div class="space-y-2">
-                <label for="social_tiktok" class="block text-sm font-medium text-ink">TikTok / YouTube</label>
-                <input type="text" id="social_tiktok" name="social_tiktok" maxlength="120" placeholder="@usuario o URL"
-                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-              </div>
-            </div>
-            <div class="space-y-2">
-              <label for="social_other" class="block text-sm font-medium text-ink">Otras (opcional)</label>
-              <input type="text" id="social_other" name="social_other" maxlength="200" placeholder="Newsletter, Twitch, otra red…"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-
-            <label class="flex cursor-pointer items-start gap-3 border border-ink/20 bg-paper-warm/40 p-4 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
-              <input type="checkbox" name="seoScan" value="si" class="mt-1 accent-magenta" />
-              <span>
-                <span class="block font-medium text-ink">Quiero un rastreo de mi posicionamiento en internet</span>
-                <span class="mt-1 block text-ink-mute">
-                  Analizamos cómo apareces hoy en Google y redes (visibilidad, palabras
-                  clave, comparación con entidades similares) y lo incluimos en tu hoja de ruta.
-                </span>
-              </span>
-            </label>
-          </div>
-
-          <div class="flex justify-between pt-4">
-            <button type="button" data-prev class="btn-ghost">← Al árbol</button>
-            <button type="button" data-next class="btn">Siguiente →</button>
-          </div>
-        </fieldset>
-
-        <!-- ============ PASO 3: SERVICIOS + ETAPA ============ -->
-        <fieldset data-step="3" class="hidden space-y-8">
           <div>
             <h2 class="font-display text-2xl text-ink">¿Qué necesitas?</h2>
             <p class="mt-2 text-sm text-ink-mute">
-              Marca todo lo que te interese, sin compromiso. Con esto preparamos
-              tu presupuesto orientativo y una hoja de ruta a medida para tu
-              entidad — te la enviamos por email, no aquí.
+              Perfil elegido:
+              <span class="font-medium text-magenta" data-profile-recap>—</span>.
+              Marca todo lo que te interese, sin compromiso: con esto Startidea
+              prepara tu presupuesto orientativo y una hoja de ruta a medida —
+              la recibirás por email, no aquí.
             </p>
           </div>
 
@@ -316,13 +271,13 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           </div>
 
           <div class="flex justify-between pt-4">
-            <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-prev class="btn-ghost">← Al perfil</button>
             <button type="button" data-next class="btn">Siguiente →</button>
           </div>
         </fieldset>
 
-        <!-- ============ PASO 4: RETO + PREGUNTAS ADAPTATIVAS ============ -->
-        <fieldset data-step="4" class="hidden space-y-8">
+        <!-- ============ PASO 3: RETO + PREGUNTAS ADAPTATIVAS ============ -->
+        <fieldset data-step="3" class="hidden space-y-8">
           <div>
             <h2 class="font-display text-2xl text-ink">El reto concreto</h2>
             <p class="mt-2 text-sm text-ink-mute">
@@ -378,28 +333,63 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
               </div>
               <p class="text-xs text-ink-mute">Esto cambia la estrategia (ej. deducción fiscal solo aplica si hay utilidad pública o fundación constituida).</p>
             </div>
-            <div class="space-y-2">
-              <label for="fundingMix" class="block text-sm font-medium text-ink">Mezcla actual de financiación</label>
-              <input type="text" id="fundingMix" name="fundingMix" maxlength="200"
-                placeholder="ej. 60% subvenciones públicas, 30% socios, 10% empresas"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">Fuentes de financiación actuales</span>
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+                {[
+                  ["subvenciones", "Subvenciones públicas"],
+                  ["cuotas", "Cuotas de socios/as"],
+                  ["donaciones", "Donaciones puntuales"],
+                  ["empresas", "Empresas (patrocinio, RSC)"],
+                  ["ventas", "Venta de servicios o productos"],
+                  ["otras", "Otras"],
+                ].map(([v, label]) => (
+                  <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                    <input type="checkbox" name="fundingSources" value={v} class="accent-magenta" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-            <div class="space-y-2">
-              <label for="currentBase" class="block text-sm font-medium text-ink">Base actual de socios/seguidores</label>
-              <input type="text" id="currentBase" name="currentBase" maxlength="200"
-                placeholder="ej. ~300 seguidores en Europa, sin base de socios de pago todavía"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Qué peso tiene tu fuente principal?</span>
+              <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+                {[
+                  ["<25", "< 25%"],
+                  ["25-50", "25 - 50%"],
+                  ["50-75", "50 - 75%"],
+                  [">75", "> 75%"],
+                ].map(([v, label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="fundingMainShare" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="text-xs text-ink-mute">Una entidad con más del 75% en una sola fuente tiene un riesgo de dependencia que cambia la estrategia.</p>
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">Base actual de socios/donantes/seguidores</span>
+              <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
+                {[
+                  ["ninguna", "Ninguna todavía"],
+                  ["<50", "< 50"],
+                  ["50-200", "50 - 200"],
+                  ["200-500", "200 - 500"],
+                  ["500-2000", "500 - 2.000"],
+                  ["2000+", "+ 2.000"],
+                ].map(([v, label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="memberCount" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
             <div class="space-y-2">
               <label for="captationGoal" class="block text-sm font-medium text-ink">Objetivo de captación concreto</label>
               <input type="text" id="captationGoal" name="captationGoal" maxlength="200"
                 placeholder="ej. 100 socios a 150€/año con retención a largo plazo"
-                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
-            </div>
-            <div class="space-y-2">
-              <label for="activeChannels" class="block text-sm font-medium text-ink">Redes y canales activos hoy</label>
-              <input type="text" id="activeChannels" name="activeChannels" maxlength="200"
-                placeholder="ej. Instagram y Facebook sin cuidar, web propia desactualizada"
                 class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
             </div>
           </div>
@@ -408,6 +398,23 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
             <div>
               <h3 class="font-display text-lg text-ink">Sobre tu empresa</h3>
               <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="sector" class="block text-sm font-medium text-ink">Sector de actividad</label>
+              <input type="text" id="sector" name="sector" maxlength="120"
+                placeholder="ej. hostelería, tecnología, retail, servicios profesionales"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Tenéis hoy equipo interno o agencia externa de comunicación?</span>
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+                {[["interno","Equipo interno"],["agencia","Agencia externa"],["ninguno","Ninguno de los dos"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="hasAgency" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
             <div class="space-y-3">
               <span class="block text-sm font-medium text-ink">¿Tenéis programa ASE o de propósito activo?</span>
@@ -431,6 +438,12 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
             <div>
               <h3 class="font-display text-lg text-ink">Sobre tu proyecto</h3>
               <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
+            </div>
+            <div class="space-y-2">
+              <label for="target" class="block text-sm font-medium text-ink">¿A quién va dirigido? (tu cliente ideal)</label>
+              <input type="text" id="target" name="target" maxlength="200"
+                placeholder="ej. pymes de menos de 20 empleados en Andalucía"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
             </div>
             <div class="space-y-2">
               <label for="emp_team" class="block text-sm font-medium text-ink">¿Lo haces solo/a o en equipo?</label>
@@ -461,6 +474,24 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
               <h3 class="font-display text-lg text-ink">Sobre tu institución</h3>
               <p class="mt-1 text-sm text-ink-mute">Solo si te resulta natural responder.</p>
             </div>
+            <div class="space-y-2">
+              <label for="communitySize" class="block text-sm font-medium text-ink">Tamaño aproximado de la comunidad a la que atendéis</label>
+              <input type="text" id="communitySize" name="communitySize" maxlength="200"
+                placeholder="ej. 4.000 feligreses, 800 alumnos, 200 empleados…"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+            <div class="space-y-3">
+              <span class="block text-sm font-medium text-ink">¿Quién decide sobre proyectos de comunicación o digitales?</span>
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+                {[["direccion","La dirección directamente"],["comite","Un comité o patronato"],["superior","Depende de una entidad superior"]].map(([v,label]) => (
+                  <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
+                    <input type="radio" name="decisionMaker" value={v} class="sr-only" />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="text-xs text-ink-mute">Si depende de una diócesis, administración central u otra entidad, el plazo de decisión suele ser más largo.</p>
+            </div>
             <div class="space-y-3">
               <span class="block text-sm font-medium text-ink">¿Existe comité o área de comunicación interna?</span>
               <div class="grid grid-cols-3 gap-2">
@@ -480,8 +511,8 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           </div>
         </fieldset>
 
-        <!-- ============ PASO 5: RECURSOS + PLAZO + FUENTE ============ -->
-        <fieldset data-step="5" class="hidden space-y-8">
+        <!-- ============ PASO 4: RECURSOS + PLAZO + FUENTE ============ -->
+        <fieldset data-step="4" class="hidden space-y-8">
           <div>
             <h2 class="font-display text-2xl text-ink">Recursos y plazo</h2>
             <p class="mt-2 text-sm text-ink-mute">
@@ -490,13 +521,26 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           </div>
 
           <div class="space-y-3">
+            <span class="block text-sm font-medium text-ink">Modelo de colaboración que prefieres <span class="text-magenta" aria-hidden="true">*</span></span>
+            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {[
+                ["puntual", "Proyecto puntual (pago único)"],
+                ["recurrente", "Colaboración recurrente (cuota fija)"],
+                ["exito", "Por resultados / éxito (ej. por socio o venta conseguida)"],
+                ["no-claro", "Aún no lo tengo claro"],
+              ].map(([v, label]) => (
+                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+                  <input type="radio" name="collaborationModel" value={v} required />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div data-budget-for="recurrente,no-claro" class="hidden space-y-3">
             <span class="block text-sm font-medium text-ink">
-              ¿Cuánto podéis destinar al mes?
+              ¿Cuánto podéis destinar al mes? <span class="text-magenta" aria-hidden="true">*</span>
             </span>
-            <p class="text-xs text-ink-mute">
-              Aunque trabajemos algún proyecto puntual, saber tu capacidad mensual
-              es lo que nos deja ajustar la hoja de ruta a algo sostenible para ti.
-            </p>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-3">
               {[
                 ["<150","< 150 €/mes"],
@@ -507,16 +551,16 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
                 ["no-se","Aún no lo sé"],
               ].map(([v,label]) => (
                 <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
-                  <input type="radio" name="monthlyBudget" value={v} class="sr-only" />
+                  <input type="radio" name="monthlyBudget" value={v} class="sr-only" required />
                   <span>{label}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          <div class="space-y-3">
+          <div data-budget-for="puntual,no-claro" class="hidden space-y-3">
             <span class="block text-sm font-medium text-ink">
-              Presupuesto total para un proyecto puntual <span class="text-ink-mute">(opcional)</span>
+              Presupuesto total para el proyecto puntual <span class="text-magenta" aria-hidden="true">*</span>
             </span>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
@@ -526,15 +570,19 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
                 ["15k+","15k +"],
               ].map(([v,label]) => (
                 <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
-                  <input type="radio" name="budgetRange" value={v} class="sr-only" />
+                  <input type="radio" name="budgetRange" value={v} class="sr-only" required />
                   <span>{label}</span>
                 </label>
               ))}
             </div>
           </div>
 
+          <div data-budget-for="exito" class="hidden border border-ink/20 bg-paper-warm/40 p-4 text-sm text-ink-mute">
+            De acuerdo — en la llamada concretamos juntos el umbral de éxito y la cuota o porcentaje asociado.
+          </div>
+
           <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">Plazo en mente</span>
+            <span class="block text-sm font-medium text-ink">Plazo en mente <span class="text-magenta" aria-hidden="true">*</span></span>
             <div class="grid grid-cols-2 gap-2 md:grid-cols-4">
               {[
                 ["asap","Cuanto antes"],
@@ -543,24 +591,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
                 ["6m+","6 meses +"],
               ].map(([v,label]) => (
                 <label class="flex cursor-pointer items-center justify-center border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm has-[input:checked]:font-medium has-[input:checked]:text-magenta">
-                  <input type="radio" name="timeframe" value={v} class="sr-only" />
-                  <span>{label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <span class="block text-sm font-medium text-ink">Modelo de colaboración que prefieres</span>
-            <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
-              {[
-                ["puntual", "Proyecto puntual (pago único)"],
-                ["recurrente", "Colaboración recurrente (cuota fija)"],
-                ["exito", "Por resultados / éxito (ej. por socio o venta conseguida)"],
-                ["no-claro", "Aún no lo tengo claro"],
-              ].map(([v, label]) => (
-                <label class="flex cursor-pointer items-center gap-3 border border-ink/20 p-3 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
-                  <input type="radio" name="collaborationModel" value={v} />
+                  <input type="radio" name="timeframe" value={v} class="sr-only" required />
                   <span>{label}</span>
                 </label>
               ))}
@@ -568,7 +599,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
           </div>
 
           <div class="space-y-2">
-            <label for="source" class="block text-sm font-medium text-ink">¿Cómo nos has conocido? (opcional)</label>
+            <label for="source" class="block text-sm font-medium text-ink">¿Cómo has conocido Startidea? (opcional)</label>
             <select id="source" name="source"
               class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none">
               <option value="">Elige una opción…</option>
@@ -591,6 +622,118 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
 
           <div class="flex justify-between pt-4">
             <button type="button" data-prev class="btn-ghost">← Atrás</button>
+            <button type="button" data-next class="btn">Siguiente →</button>
+          </div>
+        </fieldset>
+
+        <!-- ============ PASO 5: CONTACTO + ENVÍO ============ -->
+        <fieldset data-step="5" class="hidden space-y-8">
+          <div>
+            <h2 class="font-display text-2xl text-ink">Tu contacto</h2>
+            <p class="mt-2 text-sm text-ink-mute">
+              Último paso. Deja tus datos para recibir el presupuesto orientativo
+              y la hoja de ruta de tu diagnóstico
+              (<span class="font-medium text-magenta" data-profile-recap>—</span>).
+            </p>
+          </div>
+
+          <div class="space-y-5">
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-medium text-ink">Tu nombre <span class="text-magenta" aria-hidden="true">*</span></label>
+              <input type="text" id="name" name="name" required minlength="2" maxlength="100"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-medium text-ink">Tu email <span class="text-magenta" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" required maxlength="200"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="organizationName" class="block text-sm font-medium text-ink">
+                <span data-org-label-default>Organización</span>
+                <span data-org-label-emprendedor class="hidden">Nombre del proyecto (si lo tiene)</span>
+                <span class="text-magenta" aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="organizationName" name="organizationName" required minlength="2" maxlength="150"
+                placeholder="Nombre o razón social"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="role" class="block text-sm font-medium text-ink">Tu rol (opcional)</label>
+                <input type="text" id="role" name="role" maxlength="100" placeholder="ej. directora de comunicación"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="phone" class="block text-sm font-medium text-ink">Teléfono (opcional)</label>
+                <input type="tel" id="phone" name="phone" maxlength="40"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label for="website" class="block text-sm font-medium text-ink">Web (opcional)</label>
+              <input type="url" id="website" name="website" maxlength="200" placeholder="https://..."
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Redes sociales + rastreo de posicionamiento -->
+          <div class="space-y-5 border-t border-ink/15 pt-8">
+            <div>
+              <h3 class="font-display text-lg text-ink">Tu presencia online (opcional)</h3>
+              <p class="mt-1 text-sm text-ink-mute">
+                Pon el usuario (@) o la URL de las redes que uséis. Sirve para
+                entender el punto de partida antes de proponer nada.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <label for="social_instagram" class="block text-sm font-medium text-ink">Instagram</label>
+                <input type="text" id="social_instagram" name="social_instagram" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_facebook" class="block text-sm font-medium text-ink">Facebook</label>
+                <input type="text" id="social_facebook" name="social_facebook" maxlength="120" placeholder="@página o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_linkedin" class="block text-sm font-medium text-ink">LinkedIn</label>
+                <input type="text" id="social_linkedin" name="social_linkedin" maxlength="120" placeholder="URL de la página"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label for="social_tiktok" class="block text-sm font-medium text-ink">TikTok / YouTube</label>
+                <input type="text" id="social_tiktok" name="social_tiktok" maxlength="120" placeholder="@usuario o URL"
+                  class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="social_other" class="block text-sm font-medium text-ink">Otras (opcional)</label>
+              <input type="text" id="social_other" name="social_other" maxlength="200" placeholder="Newsletter, Twitch, otra red…"
+                class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+
+            <label class="flex cursor-pointer items-start gap-3 border border-ink/20 bg-paper-warm/40 p-4 text-sm hover:border-magenta/60 has-[input:checked]:border-magenta has-[input:checked]:bg-paper-warm">
+              <input type="checkbox" name="seoScan" value="si" class="mt-1 accent-magenta" />
+              <span>
+                <span class="block font-medium text-ink">Quiero un rastreo de mi posicionamiento en internet</span>
+                <span class="mt-1 block text-ink-mute">
+                  Startidea analiza cómo apareces hoy en Google y redes (visibilidad,
+                  palabras clave, comparación con entidades similares) y lo incluye
+                  en tu hoja de ruta.
+                </span>
+              </span>
+            </label>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button type="button" data-prev class="btn-ghost">← Atrás</button>
             <button type="submit" class="btn">Enviar diagnóstico →</button>
           </div>
         </fieldset>
@@ -602,109 +745,11 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
   </section>
 </Base>
 
-<!-- Estilos del árbol (globales pero acotados a .st-tree-wrap, porque los
-     nodos SVG se crean en JS y no reciben el hash de los estilos scoped). -->
-<style is:global>
-  .st-tree-wrap{
-    position:relative;
-    border:1px solid rgba(28,26,21,.14);
-    background:
-      radial-gradient(ellipse 120% 80% at 50% 108%, var(--tw-paper-warm,#ece2cf), transparent 62%),
-      var(--tw-paper,#f3ede1);
-    overflow:hidden;
-  }
-  .st-tree-hud{
-    position:absolute; top:0; left:0; right:0; z-index:2;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:1rem; padding:.75rem 1rem;
-  }
-  .st-tree-crumbs{
-    display:flex; flex-wrap:wrap; align-items:center; gap:.3em;
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-    color:rgba(28,26,21,.55); max-width:60%;
-  }
-  .st-tree-crumbs .sep{ opacity:.45; }
-  .st-tree-back{
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:10px; letter-spacing:.12em; text-transform:uppercase;
-    background:none; border:1px solid rgba(28,26,21,.16);
-    color:#1c1a15; padding:.5em .9em; cursor:pointer; white-space:nowrap;
-    transition:border-color .2s,color .2s;
-  }
-  .st-tree-back:hover{ border-color:#c81d5c; color:#c81d5c; }
-  .st-tree-back:disabled{ opacity:.3; cursor:default; }
-  .st-tree-back:disabled:hover{ border-color:rgba(28,26,21,.16); color:#1c1a15; }
+<!-- Estilos del árbol retirados en el rediseño 2026-08-22: el paso 1 son ahora
+     tarjetas HTML server-side (ver AUDIENCES en el frontmatter). -->
 
-  .st-tree-svg{ display:block; width:100%; height:clamp(360px,58vh,560px); }
-  .st-tree-hint{
-    position:absolute; bottom:.5rem; left:0; right:0; text-align:center;
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:9px; letter-spacing:.08em; text-transform:uppercase;
-    color:rgba(28,26,21,.4); pointer-events:none;
-  }
-
-  .st-tree-wrap .branch-path{
-    fill:none; stroke:#1c1a15; stroke-width:2.4; stroke-linecap:round; opacity:.82;
-  }
-  .st-tree-wrap .branch-path.dim{ opacity:.16; }
-  .st-tree-wrap .branch-path.active{ stroke:#c81d5c; opacity:1; stroke-width:3; }
-  .st-tree-wrap .branch-path.grow{ animation:st-branch-grow .7s cubic-bezier(.22,.8,.3,1) both; }
-  @keyframes st-branch-grow{ from{ stroke-dashoffset:var(--len); } to{ stroke-dashoffset:0; } }
-
-  .st-tree-wrap .node{ cursor:pointer; }
-  .st-tree-wrap .node:focus{ outline:none; }
-  .st-tree-wrap .node circle.halo{
-    fill:none; stroke:#c81d5c; stroke-width:1; opacity:0; transition:opacity .25s,r .25s;
-  }
-  .st-tree-wrap .node:hover circle.halo, .st-tree-wrap .node:focus circle.halo{ opacity:.55; }
-  .st-tree-wrap .node circle.core{
-    fill:#f3ede1; stroke:#1c1a15; stroke-width:1.6;
-    transition:fill .25s,stroke .25s,transform .25s;
-    transform-origin:center; transform-box:fill-box; filter:url(#stNodeShadow);
-  }
-  .st-tree-wrap .node:hover circle.core, .st-tree-wrap .node:focus circle.core{
-    stroke:#c81d5c; transform:scale(1.12);
-  }
-  .st-tree-wrap .node.chosen circle.core{ fill:#c81d5c; stroke:#c81d5c; }
-  .st-tree-wrap .node.dim{ opacity:.22; }
-  .st-tree-wrap .node.dim circle.core{ filter:none; }
-
-  .st-tree-wrap .node .label-pill{
-    fill:#f3ede1; stroke:rgba(28,26,21,.14); stroke-width:1; transition:stroke .2s;
-  }
-  .st-tree-wrap .node:hover .label-pill, .st-tree-wrap .node:focus .label-pill{ stroke:#c81d5c; }
-  .st-tree-wrap .node text{
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:19px; font-weight:700; letter-spacing:-.01em; fill:#1c1a15; user-select:none;
-  }
-  .st-tree-wrap .node text tspan{ font-size:19px; }
-  .st-tree-wrap .node.dim text{ fill:rgba(28,26,21,.55); }
-
-  .st-tree-wrap .node.sprout{ animation:st-node-sprout .5s cubic-bezier(.2,1.5,.4,1) both; }
-  @keyframes st-node-sprout{
-    0%{ opacity:0; transform:translate(var(--tx),var(--ty)) scale(.2); }
-    100%{ opacity:1; transform:translate(var(--tx),var(--ty)) scale(1); }
-  }
-
-  .st-tree-wrap .root-caption{
-    font-family:"JetBrains Mono",ui-monospace,monospace;
-    font-size:10px; letter-spacing:.14em; text-transform:uppercase; fill:rgba(28,26,21,.55);
-  }
-
-  @media (max-width:640px){
-    .st-tree-wrap .node text, .st-tree-wrap .node text tspan{ font-size:22px; }
-    .st-tree-svg{ height:clamp(340px,64vh,520px); }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .st-tree-wrap .branch-path.grow{ animation:none; stroke-dashoffset:0 !important; }
-    .st-tree-wrap .node.sprout{ animation:none; }
-  }
-</style>
-
-<script define:vars={{ ISOTIPO_PATH_D }}>
-  // ─── Árbol de diagnóstico (Paso 1) ──────────────────────────────
+<script>
+  // ─── Wizard de diagnóstico ──────────────────────────────────────
   const form = document.getElementById("diag-form");
   if (!form) throw new Error("form missing");
 
@@ -712,190 +757,46 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
   const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
   const stepLabel = document.querySelector("[data-step-label]");
   const progress = document.querySelector("[data-progress]");
+  const stepDots = Array.from(document.querySelectorAll("[data-step-dot]"));
   const statusBox = form.querySelector("[data-status]");
   const challengeCounter = form.querySelector("[data-count-challenge]");
   const challenge = form.querySelector("[name='challenge']");
   const audienceInput = form.querySelector("[name='audience']");
   const subTypeInput = form.querySelector("[name='subType']");
-  const profileRecap = form.querySelector("[data-profile-recap]");
+  const profileRecaps = Array.from(form.querySelectorAll("[data-profile-recap]"));
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Nombres legibles para los mensajes de validación.
+  const FIELD_LABELS = {
+    name: "tu nombre",
+    email: "tu email",
+    organizationName: "la organización",
+    stage: "la etapa",
+    challenge: "el reto",
+    collaborationModel: "el modelo de colaboración",
+    timeframe: "el plazo",
+    monthlyBudget: "el presupuesto mensual",
+    budgetRange: "el presupuesto del proyecto",
+  };
+  const fieldLabel = (k) => FIELD_LABELS[k] || k;
 
-  const AUDIENCES = [
-    { id: "empresa", label: "Empresa", subs: [
-      { id: "pyme", label: "PYME" }, { id: "gran-empresa", label: "Gran empresa" },
-      { id: "startup", label: "Startup" }, { id: "autonomo", label: "Autónomo/a" },
-    ]},
-    { id: "institucion", label: "Institución", subs: [
-      { id: "eclesial", label: "Eclesial" }, { id: "publica", label: "Pública" },
-      { id: "educativa", label: "Educativa" }, { id: "sanitaria", label: "Sanitaria" },
-    ]},
-    { id: "entidad-social", label: "Entidad social", subs: [
-      { id: "asociacion", label: "Asociación" }, { id: "fundacion", label: "Fundación" },
-      { id: "cooperativa-social", label: "Cooperativa social" }, { id: "ong", label: "ONG" },
-      { id: "red", label: "Red / Federación" },
-    ]},
-    { id: "emprendedor", label: "Emprendedor/a", subs: [
-      { id: "idea", label: "Idea" }, { id: "mvp", label: "MVP" },
-      { id: "validacion", label: "Validación" }, { id: "escalado", label: "Escalando" },
-    ]},
-  ];
-
-  const camera = form.querySelector("[data-tree-camera]");
-  const treeBack = form.querySelector("[data-tree-back]");
-  const treeCrumbs = form.querySelector("[data-tree-crumbs]");
-
-  const BASE_X = 500, BASE_Y = 690, TRUNK_TOP_Y = 520;
-  let chosenAudience = null; // objeto de AUDIENCES o null
-
-  const NS = "http://www.w3.org/2000/svg";
-  function svgEl(tag, attrs) {
-    const el = document.createElementNS(NS, tag);
-    for (const k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
-  }
-  function quad(x1, y1, x2, y2, bulge) {
-    const mx = (x1 + x2) / 2 + bulge, my = (y1 + y2) / 2;
-    return `M${x1},${y1} Q${mx},${my} ${x2},${y2}`;
-  }
-  function layout(nodes, cx, cy, spread, len) {
-    const n = nodes.length;
-    const startAngle = -90 - spread / 2;
-    return nodes.map((node, i) => {
-      const angle = n === 1 ? -90 : startAngle + (spread * i / (n - 1));
-      const rad = angle * Math.PI / 180;
-      return { node, x: cx + Math.cos(rad) * len, y: cy + Math.sin(rad) * len, angle };
-    });
-  }
-  function wrapLabel(label) {
-    if (label.length <= 10 || !label.includes(" ")) return [label];
-    const w = label.split(" "), mid = Math.ceil(w.length / 2);
-    return [w.slice(0, mid).join(" "), w.slice(mid).join(" ")];
-  }
-  function makeNode(x, y, label, angle, opts) {
-    opts = opts || {};
-    const coreR = 30, fontSize = 19, charW = fontSize * 0.62, lineH = fontSize * 1.22;
-    const PAD_X = 9, PAD_Y = 6, GAP = coreR + 16;
-    const g = svgEl("g", {
-      class: "node" + (opts.dim ? " dim" : "") + (opts.chosen ? " chosen" : ""),
-      tabindex: "0", role: "button", "aria-label": label, transform: `translate(${x},${y})`,
-    });
-    g.appendChild(svgEl("circle", { class: "halo", r: 40 }));
-    g.appendChild(svgEl("circle", { class: "core", r: coreR }));
-    const lines = wrapLabel(label);
-    const textW = Math.max(...lines.map((l) => l.length * charW));
-    const textH = lines.length * lineH;
-    let side = "center";
-    if (angle !== undefined) { if (angle <= -100) side = "left"; else if (angle >= -80) side = "right"; }
-    let anchorX, anchor, pillX, firstLineY;
-    if (side === "left") { anchor = "end"; anchorX = -GAP; pillX = anchorX - textW - PAD_X; firstLineY = -(textH / 2) + lineH * 0.78; }
-    else if (side === "right") { anchor = "start"; anchorX = GAP; pillX = anchorX - PAD_X; firstLineY = -(textH / 2) + lineH * 0.78; }
-    else { anchor = "middle"; anchorX = 0; pillX = -(textW / 2) - PAD_X; firstLineY = coreR + 20 + lineH * 0.78; }
-    const pillY = (side === "center" ? coreR + 20 : -(textH / 2)) - PAD_Y;
-    g.appendChild(svgEl("rect", { class: "label-pill", x: pillX, y: pillY, width: textW + PAD_X * 2, height: textH + PAD_Y * 2, rx: 4 }));
-    const t = svgEl("text", { x: anchorX, y: firstLineY, "text-anchor": anchor });
-    lines.forEach((line, i) => {
-      const ts = svgEl("tspan", { x: anchorX, dy: i === 0 ? "0" : `${lineH}px` });
-      ts.textContent = line; t.appendChild(ts);
-    });
-    g.appendChild(t);
-    return g;
-  }
-  function growBranch(p, delay) {
-    if (reduceMotion) return;
-    const len = p.getTotalLength();
-    p.style.setProperty("--len", len);
-    p.style.strokeDasharray = len;
-    p.style.animationDelay = `${delay}s`;
-    p.classList.add("grow");
-  }
-  function sproutNode(g, x, y, delay) {
-    if (reduceMotion) return;
-    g.style.setProperty("--tx", `${x}px`);
-    g.style.setProperty("--ty", `${y}px`);
-    g.style.animationDelay = `${delay}s`;
-    g.classList.add("sprout");
-  }
-
-  function renderTree() {
-    if (!camera) return;
-    camera.innerHTML = "";
-
-    // Tronco
-    const trunk = svgEl("path", { class: "branch-path active", d: `M${BASE_X},${BASE_Y} L${BASE_X},${TRUNK_TOP_Y}` });
-    camera.appendChild(trunk);
-
-    // Raíz = isotipo real (vectorial, escala uniforme)
-    const ISO = 150;
-    const isoSvg = svgEl("svg", { x: BASE_X - ISO / 2, y: BASE_Y - ISO + 22, width: ISO, height: ISO, viewBox: "0 0 256 256" });
-    const isoG = svgEl("g", { transform: "translate(0,256) scale(0.1,-0.1)", fill: "#c81d5c", stroke: "none" });
-    isoG.appendChild(svgEl("path", { d: ISOTIPO_PATH_D }));
-    isoSvg.appendChild(isoG);
-    camera.appendChild(isoSvg);
-    const cap = svgEl("text", { x: BASE_X, y: BASE_Y + 30, class: "root-caption", "text-anchor": "middle" });
-    cap.textContent = "raíz"; camera.appendChild(cap);
-
-    if (!chosenAudience) {
-      // Estado A: elegir perfil
-      const placed = layout(AUDIENCES, BASE_X, TRUNK_TOP_Y, 150, 200);
-      placed.forEach(({ node, x, y, angle }, i) => {
-        const p = svgEl("path", { class: "branch-path", d: quad(BASE_X, TRUNK_TOP_Y, x, y, (x - BASE_X) * 0.35) });
-        camera.appendChild(p); growBranch(p, i * 0.05);
-        const g = makeNode(x, y, node.label, angle);
-        sproutNode(g, x, y, 0.12 + i * 0.06);
-        g.addEventListener("click", () => pickAudience(node));
-        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickAudience(node); } });
-        camera.appendChild(g);
+  // ─── Paso 1: tarjetas de perfil (audience + subType) ────────────
+  const CHOSEN = ["bg-magenta", "text-paper", "border-magenta"];
+  const pickButtons = Array.from(form.querySelectorAll("[data-pick]"));
+  pickButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      pickButtons.forEach((b) => b.classList.remove(...CHOSEN));
+      btn.classList.add(...CHOSEN);
+      if (audienceInput) audienceInput.value = btn.dataset.audience || "";
+      if (subTypeInput) subTypeInput.value = btn.dataset.sub || "";
+      audienceInput?.dispatchEvent(new Event("change", { bubbles: true }));
+      profileRecaps.forEach((el) => {
+        el.textContent = `${btn.dataset.audienceLabel} · ${btn.dataset.subLabel}`;
       });
-    } else {
-      // Estado B: perfil elegido → rama corta al nodo del perfil (centrado) y subtipos
-      const midY = 430;
-      const p0 = svgEl("path", { class: "branch-path active", d: `M${BASE_X},${TRUNK_TOP_Y} L${BASE_X},${midY}` });
-      camera.appendChild(p0); growBranch(p0, 0);
-      const audNode = makeNode(BASE_X, midY, chosenAudience.label, undefined, { chosen: true });
-      audNode.addEventListener("click", resetToRoot);
-      audNode.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); resetToRoot(); } });
-      camera.appendChild(audNode);
+      setStep(1);
+    });
+  });
 
-      const spread = chosenAudience.subs.length >= 5 ? 165 : 145;
-      const placed = layout(chosenAudience.subs, BASE_X, midY, spread, 175);
-      placed.forEach(({ node, x, y, angle }, i) => {
-        const p = svgEl("path", { class: "branch-path", d: quad(BASE_X, midY, x, y, (x - BASE_X) * 0.32) });
-        camera.appendChild(p); growBranch(p, i * 0.05);
-        const g = makeNode(x, y, node.label, angle);
-        sproutNode(g, x, y, 0.12 + i * 0.06);
-        g.addEventListener("click", () => pickSubType(node));
-        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickSubType(node); } });
-        camera.appendChild(g);
-      });
-    }
-    updateTreeCrumbs();
-  }
-
-  function updateTreeCrumbs() {
-    if (!treeCrumbs) return;
-    const parts = ["raíz"];
-    if (chosenAudience) parts.push(chosenAudience.label.toLowerCase());
-    treeCrumbs.innerHTML = parts.map((p, i) => (i > 0 ? '<span class="sep">/</span>' : "") + `<span>${p}</span>`).join(" ");
-    if (treeBack) treeBack.disabled = !chosenAudience;
-  }
-
-  function pickAudience(node) { chosenAudience = node; renderTree(); }
-  function resetToRoot() { chosenAudience = null; renderTree(); }
-
-  function pickSubType(node) {
-    if (!chosenAudience) return;
-    if (audienceInput) audienceInput.value = chosenAudience.id;
-    if (subTypeInput) subTypeInput.value = node.id;
-    // Refresca la lógica adaptativa (equivale al antiguo change de audience)
-    if (audienceInput) audienceInput.dispatchEvent(new Event("change", { bubbles: true }));
-    if (profileRecap) profileRecap.textContent = `${chosenAudience.label} · ${node.label}`;
-    setStep(1); // → contacto
-  }
-
-  treeBack?.addEventListener("click", resetToRoot);
-
-  // ─── Wizard (contacto → servicios → reto → recursos) ────────────
+  // ─── Wizard (perfil → servicios → reto → recursos → contacto) ───
   let current = 0;
   const total = steps.length;
 
@@ -904,12 +805,24 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     steps.forEach((s, idx) => s.classList.toggle("hidden", idx !== current));
     if (stepLabel) stepLabel.textContent = String(current + 1);
     if (progress) progress.style.width = `${((current + 1) / total) * 100}%`;
+    stepDots.forEach((dot, idx) => {
+      dot.classList.toggle("text-magenta", idx === current);
+      dot.classList.toggle("text-ink", idx < current);
+      dot.classList.toggle("text-ink-mute", idx > current);
+      const d = dot.querySelector(".dot");
+      if (d) {
+        d.classList.toggle("bg-magenta", idx <= current);
+        d.classList.toggle("bg-ink/25", idx > current);
+      }
+    });
     refreshAdaptive();
-    if (current === 0) renderTree();
+    refreshBudget();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function getAudience() { return audienceInput?.value ?? ""; }
+  function getAudience() {
+    return audienceInput?.value ?? "";
+  }
 
   function refreshAdaptive() {
     const audience = getAudience();
@@ -925,17 +838,26 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     if (orgInput instanceof HTMLInputElement) orgInput.required = !isEmp;
   }
 
+  // ─── Paso 4: qué pregunta de presupuesto mostrar según el modelo ──
+  function refreshBudget() {
+    const model = form.querySelector("[name='collaborationModel']:checked")?.value ?? "";
+    form.querySelectorAll("[data-budget-for]").forEach((el) => {
+      const options = (el.dataset.budgetFor || "").split(",");
+      el.classList.toggle("hidden", !options.includes(model));
+    });
+  }
+
   function validateStep() {
     const fs = steps[current];
     const required = Array.from(fs.querySelectorAll("[required]")).filter((el) => !el.closest(".hidden"));
     for (const el of required) {
       if (el instanceof HTMLInputElement && el.type === "radio") {
         const anyChecked = form.querySelector(`input[name='${el.name}']:checked`);
-        if (!anyChecked) return `Falta elegir: ${el.name}`;
+        if (!anyChecked) return `Falta elegir: ${fieldLabel(el.name)}`;
       } else if (!el.value || (el instanceof HTMLInputElement && el.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value))) {
-        return `Falta o no es válido: ${el.name || el.id}`;
+        return `Falta o no es válido: ${fieldLabel(el.name || el.id)}`;
       } else if (el.minLength && el.value.length < el.minLength) {
-        return `Muy corto: ${el.name || el.id}`;
+        return `Muy corto: ${fieldLabel(el.name || el.id)}`;
       }
     }
     return null;
@@ -943,6 +865,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
 
   form.addEventListener("click", (e) => {
     const t = e.target;
+    if (!(t instanceof Element)) return;
     if (t.matches("[data-next]")) {
       const err = validateStep();
       if (err) { showStatus(err, true); return; }
@@ -955,6 +878,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
   form.addEventListener("change", (e) => {
     const t = e.target;
     if (t.name === "audience") refreshAdaptive();
+    if (t.name === "collaborationModel") refreshBudget();
     if (t.name === "challenge" && challengeCounter) challengeCounter.textContent = String(t.value.length);
     if (t.name === "source") {
       const otherWrap = form.querySelector("[data-source-other]");
@@ -978,7 +902,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     e.preventDefault();
     const err = validateStep();
     if (err) { showStatus(err, true); return; }
-    if (!getAudience()) { showStatus("Vuelve al árbol y elige tu perfil.", true); return; }
+    if (!getAudience()) { showStatus("Vuelve al paso 1 y elige tu perfil.", true); return; }
     showStatus("Enviando…", false);
     const fd = new FormData(form);
     const data = { kind: "diagnostico" };
@@ -986,7 +910,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
       const v = fd.get(k); if (typeof v === "string" && v) data[k] = v;
     });
     if (!data.organizationName && typeof data.name === "string") data.organizationName = data.name;
-    // "Otros" en ¿cómo nos has conocido? → concatenar el texto libre
+    // "Otros" en ¿cómo has conocido Startidea? → concatenar el texto libre
     if (data.source === "otros") {
       const other = fd.get("sourceOther");
       data.source = typeof other === "string" && other.trim() ? `otros: ${other.trim()}` : "otros";
@@ -1003,7 +927,16 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     if (Object.keys(socials).length) answers.socials = socials;
     // seoScan (opt-in de rastreo de posicionamiento) → booleano
     answers.seoScan = fd.get("seoScan") === "si";
-    ["mission","fundingMix","teamSize","emp_team","emp_funding","inst_committee","legalStatus","currentBase","captationGoal","activeChannels","collaborationModel","servicesOther","monthlyBudget"].forEach((k) => {
+    // Fuentes de financiación (entidad-social) → array, como services
+    const fundingSources = fd.getAll("fundingSources").map(String).filter(Boolean);
+    if (fundingSources.length) answers.fundingSources = fundingSources;
+    [
+      "mission","fundingMainShare","memberCount","captationGoal",
+      "sector","hasAgency","teamSize",
+      "target","emp_team","emp_funding",
+      "communitySize","decisionMaker","inst_committee",
+      "legalStatus","collaborationModel","servicesOther","monthlyBudget",
+    ].forEach((k) => {
       const v = fd.get(k); if (typeof v === "string" && v) answers[k] = v;
     });
     const ase = fd.get("asePresent");
@@ -1022,7 +955,7 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
         try {
           sessionStorage.setItem("st_diag_result", JSON.stringify({
             audience: data.audience, subType: data.subType, stage: data.stage, services,
-            legalStatus: answers.legalStatus, fundingMix: answers.fundingMix,
+            legalStatus: answers.legalStatus, fundingMainShare: answers.fundingMainShare,
             captationGoal: answers.captationGoal, asePresent: data.asePresent,
             inst_committee: answers.inst_committee, emp_funding: answers.emp_funding,
             collaborationModel: answers.collaborationModel, timeframe: data.timeframe,
