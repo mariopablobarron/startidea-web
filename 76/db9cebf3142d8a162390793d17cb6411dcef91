@@ -1,0 +1,30 @@
+src/content/notas/enisa-o-cdti-cual-pedir.md
+  s_e1d8d35da0c81e::t_519d6888070bef 1-95
+src/pages/financiacion-empresas.astro
+  s_e1d8d35da0c81e::t_ed8f031fe66170 206-211
+  s_e1d8d35da0c81e::t_8215b847ed592e 348-369
+src/content/notas/financiacion-startup-enisa-prestamos-participativos.md
+  s_e1d8d35da0c81e::t_1af6bc7126d226 2-5,7-8,11,14-25,27-29,32,34,36-46,50-60,62-64,66,74-78,82-84,88-90,92,94,96,98,102,104,106,108,112,115,117-118,120,122-124,126-154,160,166-168,170,175
+src/content/notas/cdti-ayudas-innovacion-empresas.md
+  s_e1d8d35da0c81e::t_401358436ead3f 129-130
+  s_e1d8d35da0c81e::t_17a3ab816e8bda 7
+  s_e1d8d35da0c81e::t_92b7b0ead368d0 113
+src/content/notas/solicitar-enisa-cdti-con-consultora.md
+  s_e1d8d35da0c81e::t_77c21f7f033fd8 1-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "76db9cebf3142d8a162390793d17cb6411dcef91",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
