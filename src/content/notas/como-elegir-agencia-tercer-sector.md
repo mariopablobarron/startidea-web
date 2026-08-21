@@ -107,6 +107,8 @@ Si la agencia responde a las siete con seguridad y claridad, vas bien. Si tres o
 
 Startidea no entrega propuestas sin diagnóstico previo. La primera reunión es gratuita y sirve para que ambas partes decidan si encajan. Si encaja, Startidea hace un diagnóstico breve (con coste, no gratis — porque tiene valor en sí mismo aunque luego no contrates el proyecto completo) y la propuesta de trabajo sale de ahí.
 
+Sobre la duda de si la agencia debe ser local: para estrategia y contenidos pesa más el encaje sectorial que el código postal, pero para grabaciones, cobertura de eventos y relación con medios de la ciudad la cercanía sí cambia el resultado. Startidea tiene estudio en el centro de Granada, y la ficha de [gestión de redes sociales en Granada](/redes-sociales-granada) detalla qué parte de ese trabajo se hace sobre el terreno y cuál en remoto.
+
 Esto evita el patrón habitual de propuestas en frío que prometen cualquier cosa. Y evita que tú firmes un contrato basado en lo que la agencia adivinó, sin haber visto realmente cómo funciona tu organización.
 
 Si tienes que elegir agencia esta semana, [empieza por aquí](/diagnostico). Si quieres conversarlo directamente, [reserva una llamada de 30 minutos](/contacto). Y si decides que Startidea no es la agencia adecuada para tu caso, lo importante es que tomes una decisión informada — eso ya hace que esta nota haya valido la pena.
