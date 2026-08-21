@@ -59,11 +59,9 @@ const FOUNDER = {
   ],
   // Solo perfiles referenciados en el propio sitio. mariopablo.es es la web
   // personal enlazada desde /sobre y desde el bloque de fundador.
-  // OJO (pendiente de decisión): el sitio enlaza dos URLs de LinkedIn para
-  // la misma persona — esta y www.linkedin.com/in/mariopablobarron/ en
-  // Fundador.astro. Declarar las dos como sameAs afirmaría dos identidades,
-  // así que aquí se mantiene solo la canónica histórica hasta confirmar cuál
-  // es el perfil vivo.
+  // LinkedIn: es.linkedin.com/in/mariobarron es el único perfil vivo
+  // (verificado 2026-08-22; /in/mariopablobarron devuelve "perfil no
+  // encontrado"). Todo el sitio debe enlazar solo esta URL.
   sameAs: ['https://es.linkedin.com/in/mariobarron', 'https://mariopablo.es'],
 };
 
