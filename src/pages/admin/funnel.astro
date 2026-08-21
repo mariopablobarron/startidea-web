@@ -34,7 +34,7 @@ let economico   = { facturadoTotal: 0, pipelineTotal: 0, pendienteFacturar: 0 };
 let acProfiles  = { total: 0, active: 0, confirmed: 0, pendingConfirm: 0, paused: 0 };
 let acLog       = { total: 0, enviados: 0, errores: 0, ultimas_24h: 0 };
 let conversion  = { perfilesActivos: 0 as number | null, expedientesAutogenerados: 0, expedientesConversion: 0, conversionContratoFirmado: 0, conversionPresentados: 0, facturadoConversion: 0 };
-let ga4 = { days_covered: 0, sessions_total: 0, page_views_total: 0, sessions_subvenciones: 0, sessions_diagnostico: 0, sessions_presentar: 0, sessions_catalogo: 0, last_synced_at: null as number | null, last_date: null as string | null };
+let ga4 = { days_covered: 0, sessions_total: 0, page_views_total: 0, sessions_subvenciones: 0, sessions_diagnostico: 0, sessions_presentar: 0, sessions_catalogo: 0, umami_sessions: 0, umami_page_views: 0, umami_sessions_subvenciones: 0, umami_sessions_diagnostico: 0, umami_sessions_presentar: 0, umami_sessions_catalogo: 0, umami_days_covered: 0, last_synced_at: null as number | null, last_date: null as string | null };
 
 try {
   stats        = statsExpedientes() as typeof stats;
@@ -62,17 +62,28 @@ function pct(a: number, b: number): string {
 // Si hay datos GA4 sincronizados, anteponemos 2 etapas al embudo (visitas
 // globales → visitas a subvenciones). Si la BD del snapshot está vacía
 // (cron no implementado aún), arrancamos directamente en "perfiles".
-const etapasGa4 = ga4.days_covered > 0 ? [
+// Volumen: Umami (sin gate de consentimiento, ve todo el tráfico). GA4 solo
+// cuenta a quienes aceptan el banner (~3-5% desde jul-2026) — se muestra como
+// muestra consentida, no como volumen. Si Umami aún no tiene datos, se cae a
+// GA4 para no dejar el embudo sin cabecera.
+const usaUmami = ga4.umami_days_covered > 0;
+const etapasGa4 = (usaUmami || ga4.days_covered > 0) ? [
   {
-    nombre:   `Visitas web (últimos ${ga4.days_covered} d)`,
-    valor:    ga4.sessions_total,
-    detalle:  `${ga4.page_views_total} páginas vistas · top: ${ga4.last_date ?? '—'}`,
+    nombre:   usaUmami
+      ? `Visitas web · Umami (últimos ${ga4.umami_days_covered} d)`
+      : `Visitas web · GA4 (últimos ${ga4.days_covered} d)`,
+    valor:    usaUmami ? ga4.umami_sessions : ga4.sessions_total,
+    detalle:  usaUmami
+      ? `${ga4.umami_page_views} páginas vistas · GA4 (muestra consentida): ${ga4.sessions_total} sesiones · hasta: ${ga4.last_date ?? '—'}`
+      : `${ga4.page_views_total} páginas vistas · top: ${ga4.last_date ?? '—'}`,
     desde:    '/admin',
   },
   {
-    nombre:   'Visitas a /subvenciones/*',
-    valor:    ga4.sessions_subvenciones,
-    detalle:  `Catálogo ${ga4.sessions_catalogo} · Diagnóstico ${ga4.sessions_diagnostico} · Wizard ${ga4.sessions_presentar}`,
+    nombre:   usaUmami ? 'Visitas a /subvenciones/* · Umami' : 'Visitas a /subvenciones/* · GA4',
+    valor:    usaUmami ? ga4.umami_sessions_subvenciones : ga4.sessions_subvenciones,
+    detalle:  usaUmami
+      ? `Catálogo ${ga4.umami_sessions_catalogo} · Diagnóstico ${ga4.umami_sessions_diagnostico} · Wizard ${ga4.umami_sessions_presentar}`
+      : `Catálogo ${ga4.sessions_catalogo} · Diagnóstico ${ga4.sessions_diagnostico} · Wizard ${ga4.sessions_presentar}`,
     desde:    '/admin',
   },
 ] : [];

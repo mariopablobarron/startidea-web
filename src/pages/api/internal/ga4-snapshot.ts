@@ -91,6 +91,14 @@ export const POST: APIRoute = async ({ request }) => {
         sessions_catalogo:     Number(row.sessions_catalogo ?? 0),
         top_path:              typeof row.top_path === 'string' ? row.top_path : null,
         top_path_sessions:     Number(row.top_path_sessions ?? 0),
+        // Umami es opcional: un POST sin estos campos no pisa el valor guardado
+        // (COALESCE en el upsert). null explícito tampoco lo pisa.
+        umami_sessions:        row.umami_sessions == null ? null : Number(row.umami_sessions),
+        umami_page_views:      row.umami_page_views == null ? null : Number(row.umami_page_views),
+        umami_sessions_subvenciones: row.umami_sessions_subvenciones == null ? null : Number(row.umami_sessions_subvenciones),
+        umami_sessions_diagnostico:  row.umami_sessions_diagnostico == null ? null : Number(row.umami_sessions_diagnostico),
+        umami_sessions_presentar:    row.umami_sessions_presentar == null ? null : Number(row.umami_sessions_presentar),
+        umami_sessions_catalogo:     row.umami_sessions_catalogo == null ? null : Number(row.umami_sessions_catalogo),
       });
       upserted++;
     } catch (e) {

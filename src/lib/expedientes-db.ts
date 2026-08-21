@@ -248,6 +248,22 @@ function getDb(): Database.Database {
     );
     CREATE INDEX IF NOT EXISTS idx_ga4_snap_date ON ga4_snapshot (date DESC);
   `);
+  // Migración 2026-08: Umami (analytics.hubstartidea.es) como fuente de volumen.
+  // GA4 solo cuenta visitantes que aceptan el banner (Consent Mode v2) — desde
+  // jul-2026 eso es un 3-5% del tráfico real. NULL = día sin dato Umami, para
+  // distinguirlo de un día con 0 visitas.
+  for (const sql of [
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_sessions INTEGER`,
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_page_views INTEGER`,
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_sessions_subvenciones INTEGER`,
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_sessions_diagnostico INTEGER`,
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_sessions_presentar INTEGER`,
+    `ALTER TABLE ga4_snapshot ADD COLUMN umami_sessions_catalogo INTEGER`,
+  ]) {
+    try { _db.exec(sql); } catch (e) {
+      if (!/duplicate column/i.test(String(e))) console.error('[expedientes-db] migración falló:', sql, e);
+    }
+  }
   // Tabla scraper_runs — histórico de ejecuciones de scrapers (BDNS, IDAE, BOJA...)
   // Permite mostrar en /admin si los scrapers están vivos, cuántas convocatorias
   // han traído y si han fallado. Sin esta tabla solo se podía inferir por
@@ -1627,6 +1643,13 @@ export type Ga4Snapshot = {
   sessions_catalogo:      number;
   top_path:               string | null;
   top_path_sessions:      number;
+  // Umami: tráfico real sin gate de consentimiento. NULL = sin dato ese día.
+  umami_sessions:               number | null;
+  umami_page_views:             number | null;
+  umami_sessions_subvenciones:  number | null;
+  umami_sessions_diagnostico:   number | null;
+  umami_sessions_presentar:     number | null;
+  umami_sessions_catalogo:      number | null;
   synced_at:              number;
 };
 
@@ -1634,15 +1657,26 @@ export type Ga4Snapshot = {
  * Upsert de una fila de snapshot GA4. Idempotente por (date).
  * Llamado por /api/internal/ga4-snapshot que recibe el POST del cron VPS.
  */
-export function upsertGa4Snapshot(snap: Omit<Ga4Snapshot, 'synced_at'> & { synced_at?: number }): void {
+type UmamiFields =
+  | 'umami_sessions' | 'umami_page_views' | 'umami_sessions_subvenciones'
+  | 'umami_sessions_diagnostico' | 'umami_sessions_presentar' | 'umami_sessions_catalogo';
+
+export function upsertGa4Snapshot(
+  snap: Omit<Ga4Snapshot, 'synced_at' | UmamiFields> &
+    Partial<Pick<Ga4Snapshot, UmamiFields>> & { synced_at?: number },
+): void {
   const db = getDb();
   const syncedAt = snap.synced_at ?? Math.floor(Date.now() / 1000);
   db.prepare(`
     INSERT INTO ga4_snapshot (
       date, sessions_total, page_views_total,
       sessions_subvenciones, sessions_diagnostico, sessions_presentar, sessions_catalogo,
-      top_path, top_path_sessions, synced_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      top_path, top_path_sessions,
+      umami_sessions, umami_page_views,
+      umami_sessions_subvenciones, umami_sessions_diagnostico,
+      umami_sessions_presentar, umami_sessions_catalogo,
+      synced_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(date) DO UPDATE SET
       sessions_total        = excluded.sessions_total,
       page_views_total      = excluded.page_views_total,
@@ -1652,6 +1686,12 @@ export function upsertGa4Snapshot(snap: Omit<Ga4Snapshot, 'synced_at'> & { synce
       sessions_catalogo     = excluded.sessions_catalogo,
       top_path              = excluded.top_path,
       top_path_sessions     = excluded.top_path_sessions,
+      umami_sessions        = COALESCE(excluded.umami_sessions, ga4_snapshot.umami_sessions),
+      umami_page_views      = COALESCE(excluded.umami_page_views, ga4_snapshot.umami_page_views),
+      umami_sessions_subvenciones = COALESCE(excluded.umami_sessions_subvenciones, ga4_snapshot.umami_sessions_subvenciones),
+      umami_sessions_diagnostico  = COALESCE(excluded.umami_sessions_diagnostico, ga4_snapshot.umami_sessions_diagnostico),
+      umami_sessions_presentar    = COALESCE(excluded.umami_sessions_presentar, ga4_snapshot.umami_sessions_presentar),
+      umami_sessions_catalogo     = COALESCE(excluded.umami_sessions_catalogo, ga4_snapshot.umami_sessions_catalogo),
       synced_at             = excluded.synced_at
   `).run(
     snap.date,
@@ -1663,6 +1703,12 @@ export function upsertGa4Snapshot(snap: Omit<Ga4Snapshot, 'synced_at'> & { synce
     snap.sessions_catalogo,
     snap.top_path,
     snap.top_path_sessions,
+    snap.umami_sessions ?? null,
+    snap.umami_page_views ?? null,
+    snap.umami_sessions_subvenciones ?? null,
+    snap.umami_sessions_diagnostico ?? null,
+    snap.umami_sessions_presentar ?? null,
+    snap.umami_sessions_catalogo ?? null,
     syncedAt,
   );
 }
@@ -1693,6 +1739,13 @@ export function statsGa4(days = 30): {
   sessions_diagnostico:   number;
   sessions_presentar:     number;
   sessions_catalogo:      number;
+  umami_sessions:         number;
+  umami_page_views:       number;
+  umami_sessions_subvenciones: number;
+  umami_sessions_diagnostico:  number;
+  umami_sessions_presentar:    number;
+  umami_sessions_catalogo:     number;
+  umami_days_covered:     number;        // días del rango con dato Umami
   last_synced_at:         number | null;
   last_date:              string | null;
 } {
@@ -1708,6 +1761,13 @@ export function statsGa4(days = 30): {
       COALESCE(SUM(sessions_diagnostico), 0)   AS sessions_diagnostico,
       COALESCE(SUM(sessions_presentar), 0)     AS sessions_presentar,
       COALESCE(SUM(sessions_catalogo), 0)      AS sessions_catalogo,
+      COALESCE(SUM(umami_sessions), 0)         AS umami_sessions,
+      COALESCE(SUM(umami_page_views), 0)       AS umami_page_views,
+      COALESCE(SUM(umami_sessions_subvenciones), 0) AS umami_sessions_subvenciones,
+      COALESCE(SUM(umami_sessions_diagnostico), 0)  AS umami_sessions_diagnostico,
+      COALESCE(SUM(umami_sessions_presentar), 0)    AS umami_sessions_presentar,
+      COALESCE(SUM(umami_sessions_catalogo), 0)     AS umami_sessions_catalogo,
+      COUNT(umami_sessions)            AS umami_days_covered,
       MAX(synced_at)                   AS last_synced_at,
       MAX(date)                        AS last_date
     FROM ga4_snapshot
@@ -1716,6 +1776,10 @@ export function statsGa4(days = 30): {
     days_covered: number; sessions_total: number; page_views_total: number;
     sessions_subvenciones: number; sessions_diagnostico: number;
     sessions_presentar: number; sessions_catalogo: number;
+    umami_sessions: number; umami_page_views: number;
+    umami_sessions_subvenciones: number; umami_sessions_diagnostico: number;
+    umami_sessions_presentar: number; umami_sessions_catalogo: number;
+    umami_days_covered: number;
     last_synced_at: number | null; last_date: string | null;
   };
 
@@ -1727,6 +1791,13 @@ export function statsGa4(days = 30): {
     sessions_diagnostico:  row.sessions_diagnostico ?? 0,
     sessions_presentar:    row.sessions_presentar ?? 0,
     sessions_catalogo:     row.sessions_catalogo ?? 0,
+    umami_sessions:        row.umami_sessions ?? 0,
+    umami_page_views:      row.umami_page_views ?? 0,
+    umami_sessions_subvenciones: row.umami_sessions_subvenciones ?? 0,
+    umami_sessions_diagnostico:  row.umami_sessions_diagnostico ?? 0,
+    umami_sessions_presentar:    row.umami_sessions_presentar ?? 0,
+    umami_sessions_catalogo:     row.umami_sessions_catalogo ?? 0,
+    umami_days_covered:    row.umami_days_covered ?? 0,
     last_synced_at:        row.last_synced_at,
     last_date:             row.last_date,
   };
