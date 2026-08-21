@@ -1,0 +1,21 @@
+scripts/import-convocatorias-curadas.mjs
+  s_297161b4e2e980::t_0885c0bba7c2a2 1-57
+data/convocatorias-curadas-2026-08.json
+  s_297161b4e2e980::t_c5303055a3231f 1-372
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "4b37507c979abe41fc44b286e875dfbdc6f1226d",
+  "prompts": {},
+  "sessions": {
+    "s_297161b4e2e980": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "261d802c-bbc3-4751-8ebf-49a5ff220715",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
