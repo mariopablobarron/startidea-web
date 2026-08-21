@@ -59,7 +59,8 @@ Startidea ayuda a organizaciones con propósito a comunicar mejor, diversificar 
 ## Sobre Startidea
 
 - [Qué hace Startidea](${SITE_URL}/que-hacemos): página paraguas de todos los servicios de la agencia, con preguntas frecuentes sobre comunicación, fundraising, subvenciones, consultoría y producción audiovisual.
-- [Sobre Startidea y el método](${SITE_URL}/sobre): historia, equipo y forma de trabajar.
+- [Sobre Startidea y el método](${SITE_URL}/sobre): historia, equipo y forma de trabajar. Página canónica de la entidad: Startidea, agencia de innovación social con sede en Granada (España), fundada en febrero de 2011 por Mario Pablo Sánchez Barrón.
+- [Manifiesto](${SITE_URL}/manifiesto): qué entiende Startidea por innovación social y desde qué criterio trabaja.
 - [Casos](${SITE_URL}/casos): proyectos con organizaciones sociales.
 - Autor de los contenidos: Mario Pablo Sánchez Barrón, fundador y director (https://es.linkedin.com/in/mariobarron).
 

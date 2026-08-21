@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import { Picture } from 'astro:assets';
 import marioPortrait from '@/assets/brand/mario-fundador.jpg';
-import { organizationSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { organizationSchema, founderSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const hitos = [
   { year: '2011', title: 'Fundación de Startidea', body: 'Febrero de 2011, Granada. Mario Pablo Sánchez Barrón funda la agencia. Primera asignación: comunicación estratégica para una plataforma confesional nacional. Lo que iba a ser un encargo se convirtió en relación de tres años.' },
@@ -38,6 +38,9 @@ const valores = [
 
 const jsonLd = [
   organizationSchema(),
+  // Esta es la página donde la biografía del fundador es verificable, así que
+  // aquí se emite la Person completa (mismo @id que ORG.founder).
+  founderSchema(),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Sobre Startidea', url: `${SITE_URL}/sobre` },
