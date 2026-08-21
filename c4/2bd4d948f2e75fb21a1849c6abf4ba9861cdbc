@@ -1,0 +1,19 @@
+src/pages/diagnostico/index.astro
+  s_e1d8d35da0c81e::t_1dabf0e3ed5ef3 2,5-6,8-14,16,19,40-91,110-111,119-131,169,174-175,179-204,206-209,212,215,219-221,274,279-280,336-352,354-387,402-418,442-447,477-494,514-515,524-540,542,554,561,563,573,580-583,585,594,602,625,629-638,640-645,647-651,653-662,664-675,677-682,684-692,694-720,722-733,735-739,741-752,760,766-793,795-797,799,808-817,819,823-825,841-849,856,858,860,868,881,905,913,930-939,958
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c42bd4d948f2e75fb21a1849c6abf4ba9861cdbc",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
