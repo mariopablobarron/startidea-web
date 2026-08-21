@@ -1,0 +1,495 @@
+[
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-comunicacion-ong-granada",
+    "cat": "monopolio",
+    "q": "¿Qué agencia de comunicación para ONG hay en Granada?",
+    "content": "La agencia de comunicación específica para ONG en Granada es **CIPÓ Company**, que se define como una \"agencia de comunicación para el cambio social\" y transforma causas de ONG en comunicación que moviliza [6].\n\nSin embargo, es importante considerar el contexto de su ubicación:\n\n*   **CIPÓ Company** no menciona explícitamente una oficina física en Granada en su perfil principal, aunque ofrece servicios para ONG [6].\n*   En Granada opera **Giro Comunicación**, la primera cooperativa granadina de expertos en comunicación, que desde 2010 ha prestado servicios a diversas **organizaciones** (incluyendo la CEAPA), instituciones y empresas, con especialización en comunicación offline y online [1].\n*   Existen otras agencias generales en la ciudad como **doctortrece** ([3]) y listadas en plataformas como **ProntoPro** ([2]) o **Celebrents** ([4]), que aunque no se declaran exclusivamente para ONG, pueden ofrecer servicios de marketing social o comunicación adaptados a este sector.\n\nSi buscas una agencia con oficinas físicas en Granada y experiencia previa trabajando con organizaciones sociales, **Giro Comunicación** es la opción más consolidada localmente [1]. Si buscas una agencia especializada exclusivamente en el sector ONG (cambio social), **CIPÓ Company** es la marca especializada, pero se debería verificar su ubicación exacta o si operan a distancia [6].",
+    "sources": [
+      "https://www.girocomunicacion.es/agencia-de-comunicacion/",
+      "https://prontopro.es/granada-agencia-de-comunicacion",
+      "https://doctortrececomunicacion.es/servicios/",
+      "https://www.celebrents.es/granada/agencias-de-comunicacion/",
+      "https://empresite.eleconomista.es/Actividad/AGENCIAS-COMUNICACION/provincia/GRANADA/",
+      "https://cipocompany.com/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-subvencion-boja-inclusion",
+    "cat": "monopolio",
+    "q": "¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?",
+    "content": "Para tramitar y justificar una subvención de inclusión social del BOJA en Andalucía, puedes acudir a los **servicios sociales comunitarios de tu localidad** (municipio), que son el primer punto de orientación y acompañamiento para personas físicas, o a la **Consejería de Inclusión Social, Juventud, Familias e Igualdad**, la entidad responsable que gestiona estas convocatorias [1].\n\n**Detalles clave sobre quién puede ayudarte según tu perfil:**\n\n*   **Si eres una persona física (individual):** Debes acudir a los **servicios sociales de tu Ayuntamiento** para obtener el *informe social* necesario (que acredita la situación de necesidad) y recibir asesoramiento para rellenar la documentación [1][5]. La solicitud se presenta telemáticamente en el Registro Electrónico Único de la Junta o, en algunos casos, en el registro del Ayuntamiento [1][4].\n*   **Si eres una entidad (tercer sector, ONG, sin ánimo de lucro):** Las entidades pueden presentar sus solicitudes directamente a través del **registro de la Consejería** y suelen ser asesoradas por sus propias estructuras de gestión o por consultores especializados en subvenciones [2][6]. La resolución de estas convocatorias puede tardar hasta cinco meses [2].\n\n**Procedimiento y recursos oficiales:**\n1.  **Uso de simulador:** La Consejería ofrece un **simulador** en su web para que verifiques si tienes derecho a la prestación antes de iniciar el trámite [1].\n2.  **Presentación telemática:** Las solicitudes se presentan exclusivamente a través del **Registro Electrónico Único de la Administración de la Junta de Andalucía** [3][4].\n3.  **Contacto directo:** Puedes contactar con la Sede de la Consejería en Sevilla (Avda. de Hytasa, nº 14) al teléfono **955 048 000** para consultas específicas sobre la convocatoria o la justificación [1].\n\nEs fundamental consultar el **BOJA específico** de la convocatoria que te interesa, ya que cada orden de subvención define plazos (generalmente 15 días hábiles desde la publicación) y requisitos documentales distintos [2][3].",
+    "sources": [
+      "https://www.juntadeandalucia.es/organismos/inclusionsocialjuventudfamiliaseigualdad.html",
+      "https://rinconemprendedora.mujerrural.com/ayuda/73/",
+      "https://www.afandaluzas.org/subvenciones-de-la-consejeria-de-inclusion-social-juventud-familias-e-igualdad/",
+      "https://www.juntadeandalucia.es/boja/2024/143/5",
+      "https://www.juntadeandalucia.es/boja/2006/31/6",
+      "https://www.juntadeandalucia.es/organismos/inclusionsocialjuventudfamiliaseigualdad/servicios/actualidad/noticias/detalle/525037.html",
+      "https://www.misionandalucia.es/boja/2026/43/2",
+      "https://es.scribd.com/document/464241496/BOJA-del-3-de-juny-sobre-subvencions"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-fundraising-ong-espana",
+    "cat": "monopolio",
+    "q": "¿Qué agencia o consultora ofrece fundraising y captación de fondos para fundaciones y ONG en España?",
+    "content": "En España, varias agencias y consultoras ofrecen servicios de **fundraising** y **captación de fondos** para fundaciones y ONG; entre las más especializadas destacan:\n\n- **Socialraising**: Agencia de *fundraising digital* especializada en ayudar a **ONGs a captar donantes individuales** mediante la gestión de plataformas digitales de pauta [3].\n- **Dgtl Fundraising**: Agencia centrada en obtener apoyo económico y social a través de canales digitales, con experiencia en **España e Italia** [4].\n- **The Fundraising Company (FRC)**: Agencia española con más de **20 años de experiencia**, especializada en el diseño y ejecución de campañas de captación y fidelización para el tercer sector, operando principalmente como un *call center* de alto valor añadido [8].\n- **Conciencia Fundraising**: Agencia especializada en captación **Face to Face (F2F)**, con más de 15 años en el sector, enfocada en aumentar la base social y los ingresos regulares de las organizaciones [5].\n- **International Fundraising**: Agencia de captación de fondos F2F con sede en Madrid [5].\n- **Meydis**: Consultora con **más de 40 años** apoyando ONG en captación de fondos, fidelización y comunicación estratégica [5].\n- **Fundraisers We Are S.L.**: Agencia barcelonesa dedicada al cambio sostenible impulsado por jóvenes, que trabaja estrechamente con ONG para asegurar apoyo financiero para sus proyectos [6][9].\n\nAdemás, la **Asociación Española de Fundraising (AEFr)** no es una agencia, pero conecta a ONG con consultoras y agencias de fundraising mediante su **marketplace** de servicios, donde se incluyen empresas como Adroit, ANQAS Philantropía, LaSozial, y Fundraising Company [1][5].\n\nSi buscas una opción específica (digital, F2F, internacional o con enfoque juvenil), estas agencias permiten elegir según la estrategia de captación más adecuada.",
+    "sources": [
+      "https://www.aefundraising.org/",
+      "https://www.laescuelitadeong.com/contratar-agencia-de-fundraising-para-captar-fondos/",
+      "https://socialraising.com/",
+      "https://dgtlfundraising.com/es/",
+      "https://www.aefundraising.org/wp-content/uploads/2025/02/aefr-marketplace-junio2026.pdf",
+      "https://ensun.io/search/fundraising/spain",
+      "https://es.prioritet-group.com/fundraising",
+      "https://kultursistema.app/es/entidad/the-fundraising-company",
+      "https://www.viusantandreu.com/es/negocio/fundraisers-we-are-sl"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-comunicacion-eclesial",
+    "cat": "monopolio",
+    "q": "¿Quién ofrece servicios de comunicación estratégica para instituciones eclesiales (diócesis, congregaciones) en España?",
+    "content": "La agencia **Católicos.red** es la principal oferente de servicios de comunicación estratégica especializados para instituciones eclesiales (diócesis, congregaciones, comunidades) en España, habiendo operado desde 2015 con este enfoque[4].\n\nEsta agencia ofrece específicamente:\n*   **Estrategia para la pastoral digital:** Planes estratégicos personalizados para asegurar coherencia y eficacia evangelizadora[4].\n*   **Comunicación integral:** Incluyendo gestión de crisis, relación con medios y reputación online[4].\n*   **Identidad y marca:** Rediseño de identidad visual para transmitir el carisma institucional[4].\n*   **Apoyo directo:** Su contacto directo en España es el WhatsApp +34 687 529 400[4].\n\nAdicionalmente, existe **Machi Comunicación**, una agencia de tipo \"social, espiritual y humano\" fundada por Juan (abogado y graduado en comunicación) que, aunque vive en Barcelona y ofrece sesiones sobre comunicación para la vida religiosa, parece tener un enfoque más formativo o de consultoría en eventos específicos y su origen es de Buenos Aires, con presencia actual en España[1].\n\nEs importante distinguir que la **Conferencia Episcopal Española (CEE)** y varias diócesis españolas han recibido el \"Sello Infoparticipa\" por su calidad en comunicación, pero esto es un reconocimiento de su práctica interna y no la oferta de un servicio externo[2]. La mayoría de las diócesis (como Burgos, Sevilla o Palencia) gestionan su comunicación mediante delegaciones diocesanas internas de medios, no mediante agencias externas[6][7][8].",
+    "sources": [
+      "https://www.youtube.com/watch?v=ZPCTXgKV5iY",
+      "https://www.conferenciaepiscopal.es/cee-sello-infoparticipa-transparencia/",
+      "https://cepcom.mx/curso-comunicacion-institucional-estrategica-para-comunicadores-catolicos/",
+      "https://catolicos.red/",
+      "https://revistas.upsa.es/index.php/familia/article/download/68/54",
+      "https://www.youtube.com/watch?v=BXiFupI-0uw",
+      "https://revistascientificas.us.es/index.php/Ambitos/article/download/27458/25190/153039",
+      "https://www.archiburgos.es/2018/05/12/comunicacion-diocesis-periodismo-paz-al-servicio-comunion/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-subvenciones-exito",
+    "cat": "monopolio",
+    "q": "¿Qué empresa tramita subvenciones públicas a comisión de éxito para entidades del tercer sector?",
+    "content": "La empresa que tramita subvenciones públicas a **comisión de éxito** específicamente para entidades del **tercer sector** es **Impulsa y Summa** (también conocida como **ImpulsaySumma**).\n\nEsta entidad ofrece un servicio de **tramitación completa** de subvenciones, incluyendo la gestión de ayudas del **Ministerio de Derechos Sociales y Agenda 2030** destinadas a programas de interés general con cargo al IRPF, adaptadas a las necesidades de organizaciones sin ánimo de lucro [1]. Su modelo de negocio se basa en el pago de una comisión únicamente si se obtiene la concesión de la ayuda (\"comisión de éxito\"), lo que reduce el riesgo financiero para las entidades del tercer sector.\n\nA diferencia de las convocatorias públicas directas gestionadas por órganos como el Ministerio de Derechos Sociales y Agenda 2030 o las Generalidades (que no operan bajo comisión de éxito al ser administraciones), Impulsa y Summa actúa como un gestor privado especializado en este nicho [1][2].",
+    "sources": [
+      "https://impulsaysumma.com/tramitacion-completa-de-subvenciones-para-entidades-del-tercer-sector/",
+      "https://planderecuperacion.gob.es/como-acceder-a-los-fondos/convocatorias/DRU/5484/subvenciones-para-el-apoyo-a-la-modernizacion-de-las-entidades-del-tercer-sector-financiadas-a-cargo-del-fondo-europeo-de-recuperacion-transformacion-y-resiliencia",
+      "https://www.cef.com/sites/cef.es/files/CEF-ayudas-publicas.pdf",
+      "https://cuidadodepersonasmayores.social/guia-de-financiacion-y-subvenciones-para-entidades-sin-animo-de-lucro/",
+      "https://www.caib.es/seucaib/es/201/Empresas/tramites/tramite/5158169",
+      "https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=5fc8e90f36a40910VgnVCM2000001f4a900aRCRD&vgnextchannel=aec8a38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=pd",
+      "https://sede.gva.es/es/detall-tramit?id_proc=G22500",
+      "https://sede.gva.es/es/detall-tramit?id_proc=G105613",
+      "https://sede.mscbs.gob.es/gl/ciudadanos/procAdministrativos.do?tipo=detallar&cod=2858326"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-innovacion-social-granada",
+    "cat": "monopolio",
+    "q": "¿Qué consultora de innovación social hay en Granada?",
+    "content": "La consultora de innovación social registrada en Granada es **A Z INNOVACION SOCIAL SL** [2].\n\nEsta empresa tiene las siguientes características clave:\n*   **Actividad:** Su código CNAE (7020) corresponde a \"Otras actividades de consultoría de gestión empresarial\", y su objeto social es la prestación de servicios para la promoción, consultoría y acompañamiento de los **Objetivos de Desarrollo Sostenible** y el Pacto Mundial de Naciones Unidas [2].\n*   **Ubicación:** Se encuentra en la Calle Rey Abu Said 174º A, 18006, Granada [2].\n*   **Forma jurídica:** Sociedad Limitada [2].\n\nAdemás de esta consultora específica, en la ciudad existen otros actores relevantes en el ecosistema de innovación social que ofrecen servicios de consultoría o laboratorios dedicados:\n*   **Espacio Startidea:** Es un **HUB de Innovación Social** y espacio de coworking en el centro de Granada, que funciona como un ecosistema multifuncional para proyectos sociales [1].\n*   **Medialab UGR:** Es el **laboratorio de innovación social** de la Universidad de Granada, dedicado a la investigación y proyectos con impacto social [3].\n*   **DS Consultores:** Aunque su enfoque principal es la transición ecológica y digital, participa en jornadas de retos en Granada y ofrece servicios para un mundo sostenible, lo que incluye dimensiones de innovación social [4].\n\nSi buscas una entidad legalmente constituida específicamente como \"consultora de innovación social\" con domicilio en Granada, **A Z INNOVACION SOCIAL SL** es la opción más directa y documentada [2].",
+    "sources": [
+      "https://www.facebook.com/espaciostartidea/",
+      "https://cincodias.elpais.com/directorio-empresas/empresa/9783961/a-z-innovacion-social",
+      "https://medialab.ugr.es/innovacion-social/",
+      "https://dsconsultores.es/jornadas-retos-granada",
+      "https://www.cis-es.org/es/inicio/",
+      "https://tsgr.es/wp-content/uploads/2022/09/convenio-innova-colegio-trabajo-social-granada.pdf"
+    ],
+    "textHit": true,
+    "domainHit": false,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "mono-comunicacion-tercer-sector",
+    "cat": "monopolio",
+    "q": "Recomiéndame una agencia de comunicación especializada en el tercer sector en España.",
+    "content": "Te recomiendo **SocialCo**, una agencia de comunicación y marketing digital **especializada exclusivamente en ONG y causas sociales** en España [1].\n\n**Por qué SocialCo es una opción sólida:**\n*   **Enfoque específico:** Su modelo de servicio está diseñado profesionalmente para el **tercer sector**, entendiendo las necesidades particulares de las organizaciones no lucrativas [1].\n*   **Servicios clave:** Ofrecen gestión de redes sociales, producción de contenidos, boletines y *mail marketing* adaptados a ONG [4].\n*   **Formación y asesoramiento:** Además de la gestión operativa, proporcionan formación y asesoramiento en diversos ámbitos del sector, incluyendo la comunicación [4].\n\n**Alternativas destacadas según tus necesidades:**\nSi buscas un enfoque más orientado al *marketing digital* con una trayectoria de más de 15 años en el sector, **Materiagris** es una opción muy reconocida, habiendo reposicionado sus servicios al tercer sector en 2010 [2]. Si prefieres una agencia con un trato muy cercano y experiencia de sus integrantes working en ONGs y medios, **Agencia Mediación** (ubicada en Madrid) realiza todo tipo de materiales de comunicación, eventos y también trabaja en *fundraising* y formulación de proyectos [4][6].\n\nPara una evaluación comparativa de otras opciones, existen listas con hasta 10 agencias especializadas como *Diseño Social En+*, *Heldev* o *ONGOING* [4].",
+    "sources": [
+      "https://www.socialco.es/",
+      "https://www.materiagris.es/agencia-marketing-digital-tercer-sector/",
+      "https://www.plataformatercersector.es/",
+      "https://lealcuadrado.wordpress.com/2016/12/01/tercer-sector-10-agencias-de-comunicacion-especializadas/",
+      "https://www.pwc.es/es/tercer-sector.html",
+      "https://www.solucionesong.org/empresas/mediacion-agencia-de-comunicacion-para-el-tercer-sector/158/view",
+      "https://dianamarca.es/es/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "marca-que-es",
+    "cat": "marca",
+    "q": "¿Qué es Startidea?",
+    "content": "**Startidea** es una **agencia de innovación social** especializada en **comunicación estratégica**, **marketing social** y **consultoría social**, ubicada en **Granada** (España) y fundada en **2011** por **Mario Pablo Sánchez** [2][3][4].\n\nSu misión principal es **visibilizar y posicionar la imagen** de empresas, instituciones, ONGs y entidades del tercer sector comprometidas con la responsabilidad social, utilizando la comunicación como herramienta para generar **impacto positivo** en la sociedad [1][4].\n\n### Características clave:\n| Aspecto | Descripción |\n|---------|-------------|\n| **Enfoque** | Combina comunicación estratégica y consultoría social para crear proyectos con propósito [3] |\n| **Metodología** | Utiliza la metodología **IDEA**: Ideación, Diseño, Evaluación y Acción [5] |\n| **Clientes** | Empresas con propósito, PYMES de economía social, fundaciones, ONGs, centros educativos y administraciones públicas [3][7] |\n| **Servicios** | Campañas de sensibilización, planes estratégicos, captación de fondos, producción audiovisual, formación en IA y automatización [5][7] |\n| **Proyecto destacado** | **HUB Startidea**, un espacio colaborativo en el centro de Granada para impulsar creatividad, innovación y emprendimiento social [2] |\n\nLa agencia se describe como **\"el Tinder de lo social\"**, actuando como conectora entre personas, ideas y organizaciones para transformar retos en acciones concretas [3]. No es una ONG ni asociación, sino una **empresa** que busca ser un catalizador de.change y aliado estratégico para organizaciones que necesitan impulso y orientación [3][6].",
+    "sources": [
+      "https://filmgranada.com/empresasaudiovisuale/startidea/",
+      "https://hubstartidea.es/",
+      "https://www.granadahoy.com/granada/startidea-innovacion-social-conecta-personas_0_2002953503.html",
+      "https://startidea.es/quienes-somos/",
+      "https://startidea.es/wp-content/uploads/2024/06/DOSSIER-SERVICIOS-STARTIDEA-2023-V3.pdf",
+      "https://www.youtube.com/watch?v=9LkUsM6ShbE",
+      "https://www.youtube.com/watch?v=scZfSLy8F84"
+    ],
+    "textHit": true,
+    "domainHit": true,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "marca-fundador",
+    "cat": "marca",
+    "q": "¿Quién fundó la agencia Startidea de Granada y en qué año?",
+    "content": "La agencia Startidea de Granada fue fundada por **Mario Pablo Sánchez Barrón** (también conocido como Mario Pablo Sánchez) en el año **2011**.\n\nDetalles de apoyo:\n- Mario Pablo Sánchez es identificado consistentemente como el **fundador y CEO** de la agencia en múltiples fuentes, incluyendo su perfil de LinkedIn y artículos de Granada Hoy [1][2][3].\n- La empresa fue creada en **2011** como un emprendimiento con vocación de servicio, según el propio fundador en un podcast y datos de LinkedIn [2][3].\n- Aunque la sociedad limitada \"STARTIDEA MALAGA SL\" se constituyó formalmente el **23 de abril de 2015** (fecha de constitución legal), la agencia comenzó su actividad y surgió como proyecto en 2011 [3][7].\n\nStartidea se define como una **agencia de innovación social y comunicación estratégica** ubicada en Granada, Andalucía [1][2].",
+    "sources": [
+      "https://www.granadahoy.com/granada/startidea-innovacion-social-conecta-personas_0_2002953503.html",
+      "https://es.linkedin.com/company/agenciastartidea",
+      "https://www.youtube.com/watch?v=scZfSLy8F84",
+      "https://www.youtube.com/watch?v=9LkUsM6ShbE",
+      "https://ajeandalucia.org/granada/2021/02/17/meet-aje-start-idea/",
+      "https://ajeandalucia.org/granada/2020/07/15/startidea-un-proyecto-inspirador-que-cumple-5-anos/",
+      "https://www.datoscif.es/empresa/startidea-malaga-sl"
+    ],
+    "textHit": true,
+    "domainHit": false,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "marca-servicios",
+    "cat": "marca",
+    "q": "¿Qué servicios ofrece la agencia Startidea?",
+    "content": "Startidea es una **agencia de Innovación Social** especializada en **comunicación** y **consultoría social**, que ofrece servicios para potenciar el impacto positivo de empresas y organizaciones en su entorno digital y social. Sus principales servicios se dividen en las siguientes áreas:\n\n*   **Marketing Digital:** Incluye posicionamiento SEO, campañas SEM, gestión de redes sociales (RRSS), diseño gráfico, desarrollo web y móvil, y campañas de concienciación social [1][2][4][6].\n*   **Consultoría Social:** Asesoramiento estratégico para impulsar iniciativas con responsabilidad social corporativa (RSC), campañas de sensibilización, *fundraising* (captación de fondos), formación, medición de impacto social y gestión de proyectos sociales [1][2][4][6].\n*   **Servicios Audiovisuales:** Producción de video corporativo, spots publicitarios, cobertura de eventos, directos de *streaming* y documentales [1][3][10].\n*   **Merchandising y Todomerchandising:** Asesoramiento y venta de productos de marca (regalos publicitarios) con más de 45.000 artículos disponibles, utilizando tecnologías actuales para ofrecer calidad a precios asequibles [1][2][4][7].\n*   **HUB de Innovación Social y Espacio Startidea:** Un punto de encuentro para profesionales y entidades que desarrollan proyectos con retorno social, que incluye espacios de *coworking* y salas para talleres y eventos [1][2][4].\n*   **Medio de Comunicación:** Gestionan \"**Granada Social**\", un medio para comunicar las iniciativas sociales de entidades públicas y privadas [4][5].\n\nLa agencia destaca por su enfoque integral que transforma ideas con propósito en resultados reales, actuando frecuentemente como el **departamento de comunicación externalizado** para empresas y organizaciones sin ánimo de lucro [2][10]. Su sede principal se encuentra en **Granada, Andalucía** [2][4].\n\n*Nota: Existe información en algunos directorios comerciales que menciona erróneamente una sede en Londres o experiencia de 34 años [5]; esto contradice los datos oficiales de su sitio web y LinkedIn que confirman su ubicación en Granada y su especialización en innovación social actual [1][2][4].*",
+    "sources": [
+      "https://startidea.es/servicios/",
+      "https://es.linkedin.com/company/agenciastartidea",
+      "https://startidea.es/audiovisual-video-imagen-audio/",
+      "https://ajeandalucia.org/granada/2021/02/17/meet-aje-start-idea/",
+      "https://www.servipyme.com/es/negocio/startidea",
+      "https://www.camaragranada.org/administracion/recursos/OfertaExclusiva/fichero/fichero020210121155358.pdf",
+      "https://www.proveedores.com/proveedores/startidea-agencia-de-comunicacion-social/",
+      "https://startidea.es/quienes-somos/",
+      "https://startidea.es/contacto/",
+      "https://www.youtube.com/watch?v=scZfSLy8F84"
+    ],
+    "textHit": true,
+    "domainHit": true,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "gen-mejores-agencias-ong",
+    "cat": "generica",
+    "q": "¿Cuáles son las mejores agencias de comunicación para ONG en España?",
+    "content": "No existe una lista oficial única de \"las mejores\" agencias, pero **CommRank** destaca como el referente en España para ONGs, fundaciones y organismos públicos que buscan comunicar con impacto, ya que es una agencia especializada específicamente en causas sociales y el tercer sector[1].\n\nOtra opción especializada es **Communicadia**, una agencia de comunicación, diseño gráfico y desarrollo web que trabaja con entidades sociales, además de empresas e instituciones, ubicada en Logroño (La Rioja)[2].\n\nPara identificar la agencia más adecuada para tu ONG específica, es recomendable consultar el directorio de agencias en **CommRank**, que clasifica las opciones por especialización en causas sociales[1]. La elección dependerá de factores como la ubicación geográfica, el tipo de servicio requerido (por ejemplo, si necesitas también desarrollo web o solo estrategias de comunicación) y el alcance de los proyectos de la organización.",
+    "sources": [
+      "https://commrank.com/agencias/",
+      "https://communicadia.com/hacemmos/comunicacion-para-entidades-sociales/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar",
+    "id": "gen-plan-comunicacion-ong",
+    "cat": "generica",
+    "q": "¿Cómo hago un plan de comunicación para una ONG y quién puede ayudarme?",
+    "content": "Para hacer un plan de comunicación en una ONG, debes seguir una estructura de **preparación, análisis, definición de objetivos, identificación de públicos, creación de mensajes, elección de canales, estrategia y tácticas, y control con indicadores**, todo ello calendarizado y presupuestado [3][4].\n\n### **Pasos clave para elaborarlo**\n\n1.  **Preparación y análisis del entorno**: Recopila información sobre la organización y su entorno, revisa planes anteriores y realiza un análisis **DAFO** (Debilidades, Amenazas, Fortalezas, Oportunidades) de tu área de comunicación para identificar recursos y capacidades [3][4].\n2.  **Definición de objetivos**: Establece metas claras y específicas (ej. aumentar visibilidad, mejorar interacción, conseguir sostenibilidad económica) y asigna fechas concretas en un calendario [3][5].\n3.  **Identificación de públicos**: Clasifica y prioriza los públicos según los objetivos definidos (donantes, beneficiarios, voluntarios, sociedad general) y crea *buyer personas* si es necesario [3][4].\n4.  **Creación del mensaje**: Construye el mensaje basándote en tres premisas: qué quieres decir, qué espera tu base social y qué te diferencia de otras ONG; el mensaje debe informar, sensibilizar y llamar a la acción [3].\n5.  **Selección de canales y estrategias**: Elige los canales adecuados para cada público (web, redes sociales, email, eventos) y define la estrategia general y las tácticas específicas (\"cómo\" se hará) [3][4].\n6.  **Calendarización y presupuesto**: Calendariza todas las acciones (incluyendo campañas de donación) y asigna un presupuesto a cada una [4].\n7.  **Control y evaluación**: Establece **indicadores** (KPIs) relacionados directamente con los objetivos para medir resultados de gestión y de impacto, y etiqueta los enlaces para analizar el origen de las visitas [3][5].\n\n### **Quiénes pueden ayudarte**\n\nNo es recomendable hacerlo en solitario; la formación de un **equipo de trabajo variado** es fundamental para el éxito del plan [7]. Puedes contar con:\n\n*   **Personal interno clave**: Responsable de voluntariado, atención a la base social, personas que tratan con beneficiarios y el equipo de comunicación/marketing de la ONG [7].\n*   **Un \"grupo motor\"**: Crea un grupo dinámico que impulse la creación del plan y coordine las diferentes personas involucradas en su elaboración [6].\n*   **Consultores especializados o ONGs de apoyo**: Organizaciones como **La Escuelita de ONG** ofrecen guías específicas para causas sociales [3], y existen consultoras de *fundraising* y comunicación que ofrecen plantillas y metodologías (ej. AEFr, Shofund) [2][4].\n*   **Voluntarios con perfil diverso**: Busca personas con habilidades en análisis, diseño, redacción o gestión de redes sociales para formar un equipo con perfiles complementarios [7].\n\nEste enfoque colaborativo asegura que el plan sea coherente con la realidad de la organización y cubra todas las necesidades de comunicación [3][7].",
+    "sources": [
+      "https://openaccess.uoc.edu/bitstream/10609/147588/4/cvarelavTFG0123memoria.pdf",
+      "https://www.aefundraising.org/wp-content/uploads/2022/02/AEFr-Como_hacer_un_plan_de_comunicacion.pdf",
+      "https://www.laescuelitadeong.com/plan-de-comunicacion-para-causas-sociales/",
+      "https://shofund.com/como-hacer-un-plan-de-comunicacion-para-tu-ong-en-6-pasos/",
+      "https://blog.teaming.net/es/como-hacer-un-plan-de-comunicacion/",
+      "http://tienda-asociaciones.org/upload/descargas/plan-comunicacion-ong-v1-2016.pdf",
+      "https://www.socialco.es/wp-content/uploads/2019/07/Plantilla-Descargable-Plan-de-comunicacion-digital-para-ONG-indice.pdf"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-comunicacion-ong-granada",
+    "cat": "monopolio",
+    "q": "¿Qué agencia de comunicación para ONG hay en Granada?",
+    "content": "En Granada tienes varias **agencias de comunicación** que trabajan con organizaciones y entidades, pero la única que aparece claramente posicionada como **especializada en ONG y cambio social** es **CIPÓ Company**, que aunque no está basada en Granada, se presenta como *agencia de comunicación para ONG y causas sociales* y trabaja en remoto con organizaciones de toda España.[8]\n\nPara opciones concretas en Granada:\n\n- **Giro Comunicación**: cooperativa granadina de expertos en comunicación, con experiencia trabajando con organizaciones como la Confederación Española de Asociaciones de Madres y Padres (CEAPA), por lo que tiene trayectoria en el tercer sector.[1]  \n- **Doctor Trece Comunicación**: agencia de comunicación en Granada que ofrece consultoría estratégica, planes de comunicación y contenidos para organizaciones y empresas; puede ser útil para una ONG aunque no esté especializada solo en ellas.[4]  \n- En directorios de agencias de comunicación en Granada (Celebrents, Empresite, Prontopro) aparecen otras agencias locales como **TRAZALIA Publicidad y Comunicación**, **COMUNIQAR Consultores de Marketing**, **Pinto Comunicación**, **Ukiyo Comunicación**, etc., que ofrecen servicios de comunicación y marketing generalistas.[5][6][3]\n\nSi lo que buscas es **especialización en ONG y causas sociales**, te conviene considerar **CIPÓ Company** y, a nivel local en Granada, contactar con **Giro Comunicación** y **Doctor Trece Comunicación** para ver su experiencia específica con entidades sin ánimo de lucro.[8][1][4]",
+    "sources": [
+      "https://www.girocomunicacion.es/agencia-de-comunicacion/",
+      "https://quienesquien.ideal.es/sector/medios-de-comunicacion-y-agencias-de-publicidad",
+      "https://prontopro.es/granada-agencia-de-comunicacion",
+      "https://doctortrececomunicacion.es/servicios/",
+      "https://www.celebrents.es/granada/agencias-de-comunicacion/",
+      "https://empresite.eleconomista.es/Actividad/AGENCIAS-COMUNICACION/provincia/GRANADA/",
+      "https://www.sortlist.es/publicidad/granada-es",
+      "https://cipocompany.com/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-subvencion-boja-inclusion",
+    "cat": "monopolio",
+    "q": "¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?",
+    "content": "Para una **subvención de inclusión social de la Junta de Andalucía publicada en el BOJA**, las dos vías principales de ayuda son:\n\n- **Servicios Sociales Comunitarios de tu Ayuntamiento** (trabajador/a social).\n- **Profesionales especializados en subvenciones / gestoría o asesoría** familiarizada con las convocatorias de la Consejería de Inclusión Social, Juventud, Familias e Igualdad.\n\n### 1. Primera opción: Servicios Sociales Comunitarios\n\nLa propia Junta de Andalucía indica que, para prestaciones y ayudas de inclusión social, debes **rellenar la documentación y acudir a los servicios sociales comunitarios de tu localidad**.[1]  \n\nAllí pueden ayudarte a:\n\n- Ver si cumples requisitos de la subvención concreta.\n- Tramitar la solicitud (modelos del BOJA, anexos, certificados).\n- Elaborar y **justificar la situación de necesidad** mediante informe social, cuando la convocatoria lo exige.[5]  \n- Orientarte sobre plazos y documentación (certificados de desempleo, pensiones, etc.).[5]  \n\nPara pedir cita:\n\n- Contacta con **Servicios Sociales** de tu Ayuntamiento (Presupuestos: “Servicios Sociales Comunitarios”, “Centro de Servicios Sociales”, “Unidad de Trabajo Social”).\n- Explica que quieres tramitar una **subvención/ayuda de inclusión social publicada en el BOJA** y que necesitas ayuda con la solicitud y la justificación.\n\n### 2. Segunda opción: entidades del tercer sector y asesorías\n\nSegún la Junta, muchas **subvenciones de inclusión social** van dirigidas a **entidades del tercer sector (ONG, asociaciones, fundaciones)**, que presentan las solicitudes de forma telemática en el **Registro Electrónico Único de la Junta de Andalucía**.[3][4][6]  \n\nTe pueden ayudar:\n\n- **ONG y asociaciones de tu zona** que trabajen con inclusión social, exclusión, familias vulnerables, etc.  \n  - Suelen tener experiencia en convocatorias de la Consejería y pueden asesorarte o incluso incluirte en programas subvencionados.\n- **Gestorías / asesorías especializadas en subvenciones públicas**:\n  - Conocen la tramitación electrónica (Registro Electrónico Único y formularios oficiales).[3][4]  \n  - Pueden ayudarte a preparar la memoria, presupuesto y documentación justificativa si la ayuda es para un proyecto o entidad.[8]  \n\nSi la subvención es **para una entidad (asociación, fundación, empresa)** y no a título individual, es muy recomendable que te apoyes en:\n\n- Tu propio **servicio de administración/contabilidad**.\n- Una **asesoría externa** con experiencia en ayudas del BOJA (Orden de 20 de julio de 2021 y convocatorias derivadas).[4]\n\n### 3. Órganos competentes y dónde se tramita técnicamente\n\nLas subvenciones de inclusión social se gestionan por la **Consejería de Inclusión Social, Juventud, Familias e Igualdad** de la Junta de Andalucía.[1]  \n\nDatos de contacto institucional (si quieres aclarar dudas sobre la convocatoria concreta):\n\n- **Consejería de Inclusión Social, Juventud, Familias e Igualdad**  \n  Avda. de Hytasa, nº 14, Sevilla 41071  \n  Teléfono: 955 048 000[1]  \n\nLa mayoría de convocatorias indican que:\n\n- La solicitud se presenta en el **Registro Electrónico Único** de la Junta de Andalucía, mediante la plataforma de procedimientos electrónicos.[3][4][7]  \n- En subvenciones a personas físicas, también pueden presentarse en registros previstos en la **Ley 39/2015** (registro presencial, oficinas de asistencia, etc.), según el BOJA de la convocatoria.[4]  \n\n### 4. Cómo organizarte en la práctica\n\n1. **Localiza la subvención concreta** en el BOJA (número de boletín, fecha y Orden/Resolución que la regula).\n2. **Acude o llama a Servicios Sociales de tu Ayuntamiento** y lleva:\n   - DNI/NIE.\n   - Certificados de ingresos, desempleo, pensiones, etc., según pida el BOJA.[5]  \n   - Empadronamiento si lo solicitan.[5]  \n3. Pide ayuda explícitamente para:\n   - **Rellenar la solicitud oficial** (anexos del BOJA).[4][5]  \n   - Obtener el **informe social** que suele justificar la necesidad.[5]  \n4. Si la ayuda es para una **entidad/proyecto**, busca:\n   - Una **asesoría o consultor de subvenciones**.\n   - Alguna **ONG o federación de entidades sociales** que tenga experiencia en estas convocatorias y pueda orientarte.\n\nSi me dices si la subvención es **para ti como persona** o **para una asociación/entidad**, y el número o fecha del BOJA, puedo concretarte mucho más: requisitos, documentación y quién exactamente te conviene contactar.",
+    "sources": [
+      "https://www.juntadeandalucia.es/organismos/inclusionsocialjuventudfamiliaseigualdad.html",
+      "https://rinconemprendedora.mujerrural.com/ayuda/73/",
+      "https://www.afandaluzas.org/subvenciones-de-la-consejeria-de-inclusion-social-juventud-familias-e-igualdad/",
+      "https://www.juntadeandalucia.es/boja/2024/143/5",
+      "https://www.juntadeandalucia.es/boja/2006/31/6",
+      "https://www.juntadeandalucia.es/organismos/inclusionsocialjuventudfamiliaseigualdad/servicios/actualidad/noticias/detalle/525037.html",
+      "https://www.misionandalucia.es/boja/2026/43/2",
+      "https://es.scribd.com/document/464241496/BOJA-del-3-de-juny-sobre-subvencions"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-fundraising-ong-espana",
+    "cat": "monopolio",
+    "q": "¿Qué agencia o consultora ofrece fundraising y captación de fondos para fundaciones y ONG en España?",
+    "content": "En España hay varias **agencias y consultoras especializadas en fundraising y captación de fondos para fundaciones y ONG**, tanto generales como digitales y F2F (face to face).\n\nTe dejo una selección útil, con breve descripción para que puedas valorar qué encaja mejor:\n\n### 1. Punto de partida: listado amplio de consultoras\n\n- **Asociación Española de Fundraising (AEF)**  \n  Agrupa ONG y consultoras de fundraising en España y ofrece un *marketplace* donde aparecen muchas de las principales agencias y consultoras especializadas (F2F, digital, estrategia, comunicación, etc.).[1][5]  \n  Es un buen lugar para buscar y comparar proveedores según tipo de servicio, tamaño y zona geográfica.[1][5]\n\n### 2. Agencias y consultoras de fundraising (selección)\n\n**Orientadas a captación de fondos de forma integral o multicanal**\n\n- **The Fundraising Company (FRC)** – Madrid  \n  Agencia española especializada en diseño y ejecución de campañas de captación de fondos y fidelización para el tercer sector.[9]  \n  Trabaja sobre todo como *call center* de alto valor añadido para captar nuevos socios y cuidar la base social (fidelización, recuperación de donantes).[9]\n\n- **Meydis**  \n  Más de 40 años apoyando a ONG y organizaciones del Tercer Sector en captación de fondos, fidelización y comunicación estratégica.[5]\n\n- **Fundraising Company (otra entidad listada en AEF)**  \n  Agencia de captación de fondos para organizaciones no lucrativas, con servicios de campañas y gestión de socios.[5]\n\n- **ANQAS Filantropía y Fundraising**  \n  Ofrece soluciones de estrategia organizacional y captación de fondos, comunicación visual y storytelling, adaptadas a cada organización.[5]\n\n- **Todoencomún**  \n  Acompaña a asociaciones y fundaciones en gestión de proyectos sociales, subvenciones, captación de fondos, asesoría y formación.[5]\n\n**Especializadas en captación F2F (street, stands, puerta a puerta)**\n\n- **Conciencia Fundraising**  \n  Agencia especializada en captación **F2F**; desde 2005 ayuda a organizaciones a aumentar base social e ingresos regulares, con campañas presenciales, consultoría y digitalización.[5]\n\n- **International Fundraising**  \n  Agencia de captación de fondos F2F para organizaciones no lucrativas.[5]\n\n- **Lasozial**  \n  Agencia incluida en el marketplace AEF, con servicios de captación y comunicación para ONG.[5]\n\n**Especializadas en fundraising digital**\n\n- **Socialraising**  \n  Agencia de fundraising digital para ONGs, centrada en ayudar a captar donantes individuales mediante gestión de plataformas digitales de pauta (publicidad online, redes, etc.).[3]\n\n- **dgtl fundraising**  \n  Agencia centrada exclusivamente en fundraising digital y captación de nuevos donantes a través de canales online; trabaja con organizaciones en España e Italia.[6]\n\n- **GoodProfits**  \n  Agencia de fundraising digital que combina fundraising, marketing digital y tecnología para ayudar a organizaciones a conectar con personas y mejorar campañas.[7]\n\n**Otros servicios relacionados con fundraising**\n\n- **Prioritet Group – Recaudación de fondos llave en mano**  \n  Servicio de “recaudación de fondos llave en mano” que abarca desde la planificación de campañas hasta el informe final.[8]\n\n- **PLUSCONTACTO**  \n  Contact center que tiene la captación de fondos para ONG como uno de sus pilares, apoyando la obtención de financiación sostenible.[7]\n\n### 3. Cómo elegir la agencia adecuada\n\nLa *Escuelita de ONG* recomienda, antes de contratar una agencia, contar con un consultor que asesore sobre la mejor estrategia de fundraising según la situación concreta de la entidad.[2] En la práctica, puedes:\n\n- Definir claramente objetivos (socios regulares, donantes puntuales, legados, subvenciones, digital vs. F2F).\n- Preguntar por:\n  - Experiencia específica con entidades similares (tipo de causa, tamaño, ámbito territorial).\n  - Modelo de trabajo (solo captación, también estrategia, fidelización, formación).\n  - Indicadores clave: coste por donante, tasa de retención, transparencia en reporting.\n- Usar el **marketplace de la Asociación Española de Fundraising** para obtener contactos de varias agencias y pedir propuestas comparables.[1][5]\n\nSi me dices tipo de organización (tamaño, ámbito, si buscáis socios o donaciones puntuales, si queréis más digital o calle), puedo sugerirte un perfil de agencia más concreto dentro de estos nombres.",
+    "sources": [
+      "https://www.aefundraising.org/",
+      "https://www.laescuelitadeong.com/contratar-agencia-de-fundraising-para-captar-fondos/",
+      "https://socialraising.com/",
+      "https://www.instagram.com/aefundraising/",
+      "https://www.aefundraising.org/wp-content/uploads/2025/02/aefr-marketplace-junio2026.pdf",
+      "https://dgtlfundraising.com/es/",
+      "https://ensun.io/search/fundraising/spain",
+      "https://es.prioritet-group.com/fundraising",
+      "https://kultursistema.app/es/entidad/the-fundraising-company"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-comunicacion-eclesial",
+    "cat": "monopolio",
+    "q": "¿Quién ofrece servicios de comunicación estratégica para instituciones eclesiales (diócesis, congregaciones) en España?",
+    "content": "En España, los **propios equipos diocesanos** y algunas **agencias especializadas en comunicación católica/institucional** ofrecen este tipo de servicios para instituciones eclesiales. [3][8][9]\n\nEntre los ejemplos que aparecen en los resultados están:\n\n- **Católicos.red**, que se presenta como “agencia de comunicación católica” y ofrece **estrategia para la pastoral digital**, **comunicación integral**, **gestión de crisis**, **relación con medios** y **reputación online**. [5]\n- **Machi Comunicación** (mencionada en una sesión sobre “comunicación institucional para la vida religiosa”), una agencia orientada a **causas sociales, espirituales y humanas** y con experiencia en **comunicación religiosa**. [1]\n- **La Fundación Pablo VI**, cuyo equipo de comunicación participa en la elaboración y revisión de planes de comunicación para diócesis, como se ve en la presentación del **Plan de Comunicación de la Diócesis de Palencia**. [7]\n- Las **delegaciones diocesanas de medios/comunicación**, que en casos como Burgos realizan **notas de prensa, ruedas de prensa, comunicados oficiales, asesoría en portavocía y formación** a agentes de pastoral comunicativa. [9]\n- La **Delegación de Medios de Comunicación Social de la Archidiócesis de Sevilla**, que desarrolla herramientas de comunicación institucional dentro de la acción pastoral misionera. [8]\n\nSi quieres, puedo darte una lista más útil y ordenada por **tipo de proveedor**: **agencias externas**, **fundaciones/consultoras**, o **servicios internos de diócesis en España**.",
+    "sources": [
+      "https://www.youtube.com/watch?v=ZPCTXgKV5iY",
+      "https://cepcom.mx/curso-comunicacion-institucional-estrategica-para-comunicadores-catolicos/",
+      "https://www.conferenciaepiscopal.es/cee-sello-infoparticipa-transparencia/",
+      "https://josemartinezdetoda.wordpress.com/2013/10/10/planificacion-de-la-pastoral-de-comunicacion-en-una-diocesis/",
+      "https://catolicos.red/",
+      "https://revistas.upsa.es/index.php/familia/article/download/68/54",
+      "https://www.youtube.com/watch?v=BXiFupI-0uw",
+      "https://revistascientificas.us.es/index.php/Ambitos/article/download/27458/25190/153039",
+      "https://www.archiburgos.es/2018/05/12/comunicacion-diocesis-periodismo-paz-al-servicio-comunion/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-subvenciones-exito",
+    "cat": "monopolio",
+    "q": "¿Qué empresa tramita subvenciones públicas a comisión de éxito para entidades del tercer sector?",
+    "content": "La empresa que encaja exactamente con lo que preguntas es **Impulsa y Summa**, que ofrece **tramitación completa de subvenciones para entidades del tercer sector** y trabaja con un modelo de **comisión de éxito**.\n\nSegún su propia información, Impulsa y Summa:\n\n- Está especializada en **subvenciones públicas para entidades del tercer sector** (ONG, asociaciones, fundaciones, etc.).[1]  \n- Tramita, entre otras, ayudas del **Ministerio de Derechos Sociales y Agenda 2030** (programas de interés general con cargo al IRPF), típicas del tercer sector.[1]  \n- Ofrece un servicio integral: análisis de convocatorias, diseño/redacción del proyecto, presentación telemática y acompañamiento en la justificación.[1][3]  \n- Trabaja con un esquema de **honorarios ligados al éxito de la subvención (comisión de éxito)**; este tipo de modelo se menciona habitualmente en servicios de consultoría y acompañamiento a entidades sin ánimo de lucro, donde se cobra solo si se obtiene la ayuda.[3] *(Esta parte es inferencia basada en prácticas habituales del sector y en cómo la empresa se posiciona; no aparece descrita línea a línea en la ficha de la convocatoria.)*\n\nSi lo que buscas es:\n\n- Una empresa que **analice convocatorias**,  \n- **Redacte y presente** solicitudes para entidades del tercer sector,  \n- Y **cobre solo si se concede la subvención** (o con un fijo muy reducido más comisión de éxito),\n\nImpulsa y Summa es a día de hoy una de las opciones específicas en España que se publicita precisamente como consultora para **entidades del tercer sector**.[1]\n\nSi me indicas tu comunidad autónoma y tipo de entidad (asociación, fundación, cooperativa de iniciativa social, etc.), puedo afinar más y sugerirte otras consultoras o despachos que trabajan con esquemas similares (éxito/mixto) en tu ámbito territorial.",
+    "sources": [
+      "https://impulsaysumma.com/tramitacion-completa-de-subvenciones-para-entidades-del-tercer-sector/",
+      "https://planderecuperacion.gob.es/como-acceder-a-los-fondos/convocatorias/DRU/5484/subvenciones-para-el-apoyo-a-la-modernizacion-de-las-entidades-del-tercer-sector-financiadas-a-cargo-del-fondo-europeo-de-recuperacion-transformacion-y-resiliencia",
+      "https://cuidadodepersonasmayores.social/guia-de-financiacion-y-subvenciones-para-entidades-sin-animo-de-lucro/",
+      "https://www.cef.com/sites/cef.es/files/CEF-ayudas-publicas.pdf",
+      "https://www.caib.es/seucaib/es/201/Empresas/tramites/tramite/5158169",
+      "https://sede.madrid.es/portal/site/tramites/menuitem.62876cb64654a55e2dbd7003a8a409a0/?vgnextoid=5fc8e90f36a40910VgnVCM2000001f4a900aRCRD&vgnextchannel=aec8a38813180210VgnVCM100000c90da8c0RCRD&vgnextfmt=pd",
+      "https://sede.gva.es/es/detall-tramit?id_proc=G22500",
+      "https://sede.gva.es/es/detall-tramit?id_proc=G105613",
+      "https://sede.mscbs.gob.es/gl/ciudadanos/procAdministrativos.do?tipo=detallar&cod=2858326"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-innovacion-social-granada",
+    "cat": "monopolio",
+    "q": "¿Qué consultora de innovación social hay en Granada?",
+    "content": "En Granada existe al menos una **consultora de innovación social** identificada claramente: **A Z Innovación Social, S.L.**[3].\n\n### 1. Consultora de innovación social en Granada\n\n- **A Z Innovación Social, S.L.**  \n  - Ubicación: Calle Rey Abu Said, 17, 4º A, **18006 Granada**[3].  \n  - Forma jurídica: sociedad limitada[3].  \n  - Actividad CNAE: **7020 – Otras actividades de consultoría de gestión empresarial**[3].  \n  - Objeto social: prestación de servicios de **promoción, consultoría, acompañamiento, formación, ejecución y/o dirección** vinculados a la consecución de los **17 Objetivos de Desarrollo Sostenible (ODS)** y del **Pacto Mundial de Naciones Unidas**, en línea con los objetivos de la Unión Europea[3].  \n\nPor su objeto social centrado en ODS y pacto mundial, se trata claramente de una **consultora especializada en innovación social y sostenibilidad** en Granada[3].\n\n### 2. Otros actores relacionados con innovación social en Granada\n\nNo son exactamente “consultoras” clásicas, pero pueden ser relevantes si buscas servicios o ecosistema de innovación social en la ciudad:\n\n- **Espacio Startidea – HUB de Innovación Social**  \n  - Espacio multifuncional y *coworking* en el centro de Granada, que se define como **HUB de innovación social**[2].  \n  - Dirección: C/ Conde Cifuentes 33, Granada[2].  \n  - Ofrece espacios y actividades ligados a emprendimiento e innovación social, más como **hub / espacio de trabajo colaborativo** que como consultora pura[2].\n\n- **Medialab UGR – Laboratorio de innovación social de la Universidad de Granada**  \n  - Se presenta como **laboratorio de innovación social** de la UGR, con proyectos y actividades de impacto social e innovación[4].  \n  - Es un entorno universitario y de investigación, no una consultora empresarial, pero muy relevante si buscas colaboración en innovación social en Granada[4].\n\nSi lo que necesitas es **servicio de consultoría mercantil en innovación social en Granada**, la opción más clara por ahora es **A Z Innovación Social S.L.**; si buscas **ecosistema, espacios y proyectos de innovación social**, también pueden interesarte **Espacio Startidea** y **Medialab UGR**.",
+    "sources": [
+      "https://www.zabala.es/servicios/innovacion-social/",
+      "https://www.facebook.com/espaciostartidea/",
+      "https://cincodias.elpais.com/directorio-empresas/empresa/9783961/a-z-innovacion-social",
+      "https://medialab.ugr.es/innovacion-social/",
+      "https://dsconsultores.es/jornadas-retos-granada",
+      "https://www.cis-es.org/es/inicio/",
+      "https://tsgr.es/wp-content/uploads/2022/09/convenio-innova-colegio-trabajo-social-granada.pdf"
+    ],
+    "textHit": true,
+    "domainHit": false,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "mono-comunicacion-tercer-sector",
+    "cat": "monopolio",
+    "q": "Recomiéndame una agencia de comunicación especializada en el tercer sector en España.",
+    "content": "Te puedo recomendar varias **agencias de comunicación claramente especializadas en el Tercer Sector en España**, todas con experiencia trabajando con ONG y entidades sociales:\n\n**1. SocialCo**  \nAgencia de comunicación y marketing centrada específicamente en **ONG y causas sociales**; su misión declarada es dar un servicio profesional y especializado a organizaciones del Tercer Sector.[1][5]  \n- Fuerte enfoque en comunicación digital para ONG: redes sociales, contenidos, boletines y email marketing.[5]  \n- Referenciada como agencia especializada en comunicación digital para el Tercer Sector.[5]  \n\n**2. Materiagris**  \nAgencia de **marketing digital especializada en ONGs y empresas con impacto social**.[2]  \n- Trabajan con organizaciones del Tercer Sector desde hace más de quince años y señalan conocer muy bien el día a día de las ONG.[2]  \n- Ofrecen soluciones adaptadas a las necesidades específicas de cada organización.[2]  \n\n**3. Mediación – Agencia de Comunicación para el Tercer Sector**  \nSe define explícitamente como **“Agencia de Comunicación para el Tercer Sector”**.[7]  \n- Equipo con experiencia previa en ONG y medios, lo que refuerza su especialización.[7]  \n- Servicios de comunicación integral: notas y ruedas de prensa, eventos, diseño web, gestión de redes sociales, además de formulación de proyectos y fundraising.[7]  \n- Delegaciones en Madrid y A Coruña.[7]  \n\n**4. Dianamarca**  \nAgencia de **marketing digital para ONGs**, orientada a entidades que buscan un equipo externo que entienda los retos del Tercer Sector.[8]  \n- Enfatizan comunicación estratégica, marketing y tecnología aplicados a organizaciones sociales.[8]  \n\n**5. ILUNION Comunicación Social**  \nAgencia de comunicación y marketing digital con enfoque en **sostenibilidad y acción social**, dirigida a empresas y organizaciones comprometidas con el impacto social.[4]  \n- Presencia en Madrid y Barcelona, con servicio a todo el país.[4]  \n- Integra valores sociales en su ADN y lleva décadas trabajando para el bien común.[4]  \n\nSi quieres acotar más la recomendación, dime:  \n- tipo de entidad (ONG pequeña, fundación grande, red de entidades, etc.),  \n- si te interesa más **comunicación digital**, **fundraising**, **eventos** o **estrategia corporativa**,  \ny te puedo sugerir cuál de estas encajaría mejor como primera opción de contacto.",
+    "sources": [
+      "https://www.socialco.es/",
+      "https://www.materiagris.es/agencia-marketing-digital-tercer-sector/",
+      "https://www.plataformatercersector.es/",
+      "https://www.ilunionconsultoria.com/es/agencia-comunicacion-marketing",
+      "https://lealcuadrado.wordpress.com/2016/12/01/tercer-sector-10-agencias-de-comunicacion-especializadas/",
+      "https://www.pwc.es/es/tercer-sector.html",
+      "https://www.solucionesong.org/empresas/mediacion-agencia-de-comunicacion-para-el-tercer-sector/158/view",
+      "https://dianamarca.es/es/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "marca-que-es",
+    "cat": "marca",
+    "q": "¿Qué es Startidea?",
+    "content": "Startidea es una **agencia de innovación social**, especializada en **comunicación**, **marketing responsable** y **consultoría social**, que ayuda a empresas y entidades con propósito a generar impacto social positivo a través de proyectos y campañas estratégicas.[2][4][5][7]\n\n### Qué hace Startidea\n\n- Es una **agencia de comunicación y consultoría social** que convierte ideas en proyectos con impacto, usando una metodología propia basada en ideación, diseño, evaluación y acción.[5][7]  \n- Está **especializada en comunicación social y marketing responsable**, sobre todo en el entorno digital, para posicionar y dar visibilidad a empresas, instituciones, ONG y entidades con conciencia social.[2][4][7]  \n- Se define como una **agencia de innovación social**, que utiliza herramientas de marketing, comunicación y consultoría como un “servicio 360” para afrontar problemáticas de empresas, tercer sector y administraciones públicas.[3][6][7]  \n\n### Misión y enfoque\n\n- Su misión central es **generar impacto social positivo** mediante campañas de sensibilización, comunicación estratégica y proyectos que cambian realidades.[3][4][6]  \n- Trabaja con **empresas con propósito**, entidades del tercer sector, fundaciones, ONG, centros educativos y administraciones públicas, actuando como conector entre estos actores.[3][5][7]  \n- El propio CEO la describe como “**el Tinder de lo social**”, por su papel de conectar personas, ideas y organizaciones para transformar retos en acciones concretas.[3]  \n\n### Universo Startidea y HUB Startidea\n\n- Han desarrollado el llamado **“Universo Startidea”**, entendido como un espacio de empoderamiento personal y profesional al servicio de sus clientes desde la gestación de sus proyectos hasta la consecución de objetivos.[5][7]  \n- Dentro de este universo está **HUB Startidea**, un hub de innovación y espacio colaborativo en el centro de Granada donde personas, empresas y organizaciones trabajan juntas en proyectos sociales, educativos y culturales, fomentando creatividad, emprendimiento e impacto positivo.[1]  \n\nEn resumen, Startidea no es una ONG ni una fundación, sino una **empresa de comunicación e innovación social** que utiliza la comunicación y el marketing como herramientas de cambio social, acompañando a organizaciones en todo el ciclo de sus proyectos para lograr impacto real en la sociedad.[3][4][6][7]",
+    "sources": [
+      "https://hubstartidea.es/",
+      "https://filmgranada.com/empresasaudiovisuale/startidea/",
+      "https://www.granadahoy.com/granada/startidea-innovacion-social-conecta-personas_0_2002953503.html",
+      "https://startidea.es/quienes-somos/",
+      "https://startidea.es/wp-content/uploads/2024/06/DOSSIER-SERVICIOS-STARTIDEA-2023-V3.pdf",
+      "https://www.youtube.com/watch?v=9LkUsM6ShbE",
+      "https://www.youtube.com/watch?v=scZfSLy8F84"
+    ],
+    "textHit": true,
+    "domainHit": true,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "marca-fundador",
+    "cat": "marca",
+    "q": "¿Quién fundó la agencia Startidea de Granada y en qué año?",
+    "content": "La agencia **Startidea de Granada** fue fundada por **Mario Pablo Sánchez Barrón** en el año **2011**.[1][2][3][5]\n\nAlgunos datos que lo respaldan:\n- El diario *Granada Hoy* indica que Startidea está “liderada por su fundador y CEO **Mario Pablo Sánchez**” y que la agencia existe “desde su creación en **2011**”.[1]  \n- El perfil de empresa en LinkedIn de STARTIDEA señala como año de fundación **2011**.[2]  \n- El propio Mario Pablo Sánchez Barrón aparece como “consultor y fundador en STARTIDEA” y “Fundador y CEO – STARTIDEA (February **2011** – Present)” en su LinkedIn.[5]  \n- AJE Granada presenta a “la Agencia de Comunicación Social StartIdea, de la mano de su director y fundador **Mario Pablo Sánchez Barón**”.[3]",
+    "sources": [
+      "https://www.granadahoy.com/granada/startidea-innovacion-social-conecta-personas_0_2002953503.html",
+      "https://es.linkedin.com/company/agenciastartidea",
+      "https://ajeandalucia.org/granada/2021/02/17/meet-aje-start-idea/",
+      "https://www.youtube.com/watch?v=scZfSLy8F84",
+      "https://www.linkedin.com/in/mariobarron",
+      "https://www.youtube.com/watch?v=9LkUsM6ShbE",
+      "https://ajeandalucia.org/granada/2020/07/15/startidea-un-proyecto-inspirador-que-cumple-5-anos/",
+      "https://www.datoscif.es/empresa/startidea-malaga-sl",
+      "https://elbiensocial.org/startidea-y-el-bien-social-firman-una-alianza-estrategica-para-promocionar-los-proyectos-y-empresas-sostenibles-en-espana-y-latam/",
+      "https://startidea.es/wp-content/uploads/2024/06/DOSSIER-SERVICIOS-STARTIDEA-2023-V3.pdf"
+    ],
+    "textHit": true,
+    "domainHit": true,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "marca-servicios",
+    "cat": "marca",
+    "q": "¿Qué servicios ofrece la agencia Startidea?",
+    "content": "Startidea ofrece principalmente **comunicación y consultoría social**, junto con varios servicios de **marketing digital** y **producción de contenidos**.[1][4][6]\n\nEntre sus servicios destacados están:\n\n- **Marketing digital**: SEO, SEM, social media, diseño gráfico y desarrollo web.[1][4][6]\n- **Consultoría social**: campañas de sensibilización, fundraising, formación, RSC, medición de impacto social y gestión de proyectos.[1][4][6]\n- **Merchandising**: productos promocionales y personalización de artículos para marca.[1][4][6]\n- **Audiovisuales**: vídeos corporativos, spots publicitarios, cobertura de eventos, directos de streaming y documentales.[3][6]\n- **Gabinete de prensa / comunicación**: campañas de publicidad y comunicación adaptadas a empresas y entidades sociales.[6]\n- **Espacios y proyectos de innovación social**: el **HUB de Innovación Social** y el **Espacio Startidea** para coworking, talleres, formaciones y eventos.[1][4]\n- **Granada Social**: un medio propio para comunicar iniciativas sociales.[4][5]\n\nEn otras fuentes también aparecen servicios como **desarrollo de apps**, **UI/UX design** e **impresión en gran formato**, aunque lo más consistente en los resultados es su enfoque en comunicación, marketing digital, consultoría social, audiovisual y merchandising.[5][7]\n\n",
+    "sources": [
+      "https://startidea.es/servicios/",
+      "https://es.linkedin.com/company/agenciastartidea",
+      "https://startidea.es/audiovisual-video-imagen-audio/",
+      "https://ajeandalucia.org/granada/2021/02/17/meet-aje-start-idea/",
+      "https://www.servipyme.com/es/negocio/startidea",
+      "https://www.camaragranada.org/administracion/recursos/OfertaExclusiva/fichero/fichero020210121155358.pdf",
+      "https://www.proveedores.com/proveedores/startidea-agencia-de-comunicacion-social/",
+      "https://startidea.es/quienes-somos/",
+      "https://startidea.es/contacto/",
+      "https://www.youtube.com/watch?v=scZfSLy8F84"
+    ],
+    "textHit": true,
+    "domainHit": true,
+    "cited": true
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "gen-mejores-agencias-ong",
+    "cat": "generica",
+    "q": "¿Cuáles son las mejores agencias de comunicación para ONG en España?",
+    "content": "Las agencias más reconocidas y especializadas en **comunicación para ONG y tercer sector en España** incluyen sobre todo agencias dedicadas a causas sociales y entidades no lucrativas, más que grandes agencias generalistas de marketing.\n\n### 1. Agencias específicamente orientadas a ONG y tercer sector\n\n- **Agencia especializada en causas sociales (CommRank)**  \n  Directorios profesionales de agencias en España destacan una **agencia de comunicación especializada en causas sociales y tercer sector**, señalándola como *referente* para **ONG, fundaciones y organismos públicos que buscan comunicar con impacto**.[2]  \n  Este tipo de agencia suele ofrecer:\n  - Estrategia de comunicación social y de incidencia.\n  - Campañas de sensibilización.\n  - Relación con medios y gestión de reputación en temas sociales.\n  - Comunicación para captación de fondos y socios.\n\n- **Communicadia**  \n  Es una agencia de comunicación, **diseño gráfico y desarrollo web** que trabaja específicamente con **entidades sociales, centros educativos, instituciones y empresas**, con servicios adaptados a organizaciones con misión social.[3]  \n  Entre sus servicios relevantes para ONG:\n  - Comunicación corporativa para entidades sociales.\n  - Diseño de materiales de campañas (cartelería, branding, memorias de impacto).\n  - Desarrollo web para ONG, asociaciones y proyectos sociales.[3]\n\nEstas agencias están mejor alineadas con las necesidades de ONG que muchas agencias generalistas, porque comprenden el lenguaje del tercer sector, la importancia de la transparencia, el impacto social y la comunicación de campañas de sensibilización.\n\n### 2. Grandes agencias de comunicación útiles para ONG (aunque no específicas)\n\nExisten agencias de comunicación y marketing muy bien posicionadas en España que, aunque no están centradas exclusivamente en ONG, pueden ser opción para proyectos concretos (grandes campañas, reputación, crisis, etc.):\n\n- **Evercom** – especializada en **relaciones públicas, gabinete de prensa y creatividad**, con oficinas en Madrid y Barcelona y clientes como SEAT, Vodafone o Kellogg’s.[1]  \n- **LLYC** – firma internacional con fuerte área de **asuntos públicos y comunicación corporativa**, presente en Madrid y otros países, con clientes como Telefónica, Repsol y Coca-Cola.[1]  \n\nPara ONG grandes o fundaciones con campañas de alto presupuesto, estas agencias pueden aportar experiencia en medios, reputación y relaciones institucionales, aunque no estén centradas en tercer sector.\n\n### 3. Cómo elegir la mejor agencia para tu ONG\n\nAl seleccionar la mejor agencia para tu ONG en España, es recomendable valorar:\n\n- **Experiencia previa con ONG, fundaciones o administraciones públicas** (casos y proyectos similares).[2][3]  \n- Capacidad para trabajar en **comunicación de impacto social** y campañas de sensibilización, no solo marketing comercial.[2]  \n- Servicios adaptados al tercer sector:\n  - Estrategia y narrativa de misión e impacto.\n  - Captación de fondos y socios.\n  - Gestión de prensa en temas sensibles (pobreza, medio ambiente, derechos humanos).\n- Conocimiento de marcos como **ODS, ESG, RSC** y de la normativa aplicable a entidades sin ánimo de lucro.\n\nSi me indicas el tipo de ONG (social, ambiental, de cooperación, cultural, etc.) y el presupuesto aproximado, puedo orientarte mejor hacia el perfil de agencia más adecuado y qué servicios priorizar.",
+    "sources": [
+      "https://escuelaeuropeadeempresa.eu/top-10-mejores-agencias-de-comunicacion-y-marketing-en-espana/",
+      "https://commrank.com/agencias/",
+      "https://communicadia.com/hacemmos/comunicacion-para-entidades-sociales/"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  },
+  {
+    "date": "2026-07-10",
+    "model": "perplexity/sonar-pro",
+    "id": "gen-plan-comunicacion-ong",
+    "cat": "generica",
+    "q": "¿Cómo hago un plan de comunicación para una ONG y quién puede ayudarme?",
+    "content": "Un **plan de comunicación para una ONG** se hace en varias fases claras: analizar la organización y su entorno, definir objetivos y públicos, elegir mensajes y canales, planificar acciones con calendario y presupuesto, y medir resultados con indicadores. Para hacerlo, pueden ayudarte personas del equipo interno (dirección, comunicación, voluntariado, programas) y también consultores o entidades especializadas en comunicación social y fundraising.\n\nA continuación tienes una guía práctica paso a paso y quién puede ayudarte en cada fase.\n\n---\n\n### 1. Preparar el terreno\n\nAntes de escribir nada:\n\n- Revisa si ya existe algún plan o documento de comunicación anterior en la ONG.[4]\n- Analiza qué acciones de comunicación han funcionado y cuáles no (campañas, redes sociales, notas de prensa, eventos).[4]\n- Aclara qué espera la dirección de este plan (aumentar visibilidad, captar fondos, mejorar comunicación interna, etc.).[4]\n\n**Quién te ayuda aquí:**\n\n- Dirección o coordinación de la ONG.\n- Personas que lleven tiempo en la organización (con memoria histórica).\n- Si la ONG es muy pequeña, puede ser una sola persona entrevistando al resto.\n\n---\n\n### 2. Análisis de la ONG y del entorno\n\nEl plan empieza siempre con un **diagnóstico**:\n\n- **Análisis del entorno**: contexto social, político y mediático, otras organizaciones similares, tendencias en tu tema (migraciones, medioambiente, infancia, etc.).[3]\n- **Análisis interno**: recursos, canales actuales (web, redes, boletines), tono de comunicación, resultados previos.[3][4]\n- **Análisis DAFO** (debilidades, amenazas, fortalezas, oportunidades) aplicado a comunicación.[4][6]\n\nPuedes usar:\n\n- Cuestionarios y encuestas internas para saber cómo se percibe la comunicación.[6]\n- Revisión de estadísticas de web y redes sociales.\n\n**Quién te ayuda aquí:**\n\n- Equipo de comunicación (si existe).\n- Personas de programas, voluntariado, captación de fondos, atención a base social.[7]\n- Alguien con experiencia en marketing/comunicación (interno o externo) para conducir el DAFO.[6][7]\n\n---\n\n### 3. Definir objetivos de comunicación\n\nCon el diagnóstico hecho, define **qué quieres conseguir** con la comunicación:\n\n- Los objetivos deben ser **claros, específicos y realistas**.[3][4]\n- Ejemplos para una ONG:\n  - Aumentar la **visibilidad** de la entidad en medios locales.[5]\n  - Incrementar el número de **socios/donantes** activos.[5]\n  - Mejorar la **participación del voluntariado**.[5]\n  - Sensibilizar sobre una causa concreta en un territorio.[3]\n\nSi puedes, hazlos medibles (por ejemplo: “Aumentar en un 20 % los seguidores en redes que interactúan con nuestras publicaciones en 12 meses”).\n\n**Quién te ayuda aquí:**\n\n- Dirección (para alinear con el plan estratégico).\n- Responsables de proyectos, voluntariado y captación de fondos.[7]\n- Si trabajas con consultor externo, aquí es clave su apoyo para definir objetivos medibles.[2]\n\n---\n\n### 4. Definir públicos objetivo\n\nDecide **con quién necesitas comunicarte** para lograr esos objetivos:\n\n- Personas beneficiarias.\n- Base social (socios, donantes, teamers, seguidores).\n- Voluntariado y personal.\n- Administraciones, financiadores, empresas aliadas, medios de comunicación.[3][4]\n\nNo solo identifícalos, también:\n\n- Clasifícalos y priorízalos según tus objetivos.[4]\n- Crea perfiles tipo (buyer persona o similares) para entender necesidades y motivaciones.[1][3]\n\n**Quién te ayuda aquí:**\n\n- Responsable de voluntariado, atención a socios/donantes, personal que trata con beneficiarios.[7]\n- Equipo de programas (conoce bien la realidad de las personas a las que atendéis).\n\n---\n\n### 5. Mensajes clave y posicionamiento\n\nDefine qué vais a decir y cómo:\n\n- Mensajes construidos desde tres preguntas:  \n  1) Qué quiere decir la organización.  \n  2) Qué espera de vosotros la base social.  \n  3) Qué os hace diferentes de otras entidades.[3]\n- Los mensajes deben **informar, sensibilizar y llamar a la acción**.[3]\n- Adapta el tono y el lenguaje a cada público (no es lo mismo hablar con una fundación que con jóvenes en Instagram).\n\n**Quién te ayuda aquí:**\n\n- Equipo de comunicación o la persona que redacta contenidos.\n- Equipo de proyectos (para asegurar rigor).\n- Si hay presupuesto: una agencia o consultor especializado en ONG puede ayudar a encontrar el “relato” y narrativa.\n\n---\n\n### 6. Elegir canales y estrategia\n\nEn función de tus públicos y mensajes, define:\n\n- **Canales**: web, blog, redes sociales (¿cuáles exactamente?), boletín/email, notas de prensa, eventos, cartelería, WhatsApp, etc.[3][2][5]\n- **Estrategias**: por ejemplo, comunicación digital, presencia en medios, comunicación comunitaria/barrial, campañas de sensibilización, etc.[3][4][7]\n\nLa estrategia es el “camino general”: por ejemplo, “posicionarnos como referente local en infancia a través de historias reales de beneficiarios en redes y medios”.\n\n**Quién te ayuda aquí:**\n\n- Persona responsable de comunicación digital (si la hay).[7]\n- Voluntariado con conocimientos en redes o diseño.\n- Consultores/agencias especializados en comunicación para ONG y fundraising digital.[2][4]\n\n---\n\n### 7. Diseñar tácticas y plan de acciones\n\nLas **tácticas** son el “cómo exacto” llevarás a cabo la estrategia:\n\n- Qué acciones concretas harás:  \n  - Publicaciones semanales en redes.  \n  - Boletín mensual.  \n  - Notas de prensa en fechas clave.  \n  - Campañas de captación de fondos.  \n  - Eventos o charlas.[3][4][5]\n- Para cada acción define:\n  - Objetivo al que responde.\n  - Público.\n  - Canal.\n  - Responsable.\n  - Recursos necesarios (tiempo, dinero, materiales).[6]\n  - Calendario (fechas y frecuencia).[4][5]\n\nSe recomienda usar una **hoja de planificación de acciones** por objetivo, con responsables y plazos.[6]\n\n**Quién te ayuda aquí:**\n\n- Quien coordina comunicación.\n- Personas responsables de cada área (voluntariado, proyectos, fundraising) para asignar tareas realistas.[6][7]\n- Voluntariado de apoyo en tareas concretas (foto, vídeo, redes, etc.).\n\n---\n\n### 8. Presupuesto y recursos\n\nCalcula qué necesitas:\n\n- Horas de trabajo (personal contratado y voluntario).\n- Diseño gráfico, vídeo, fotografía.\n- Publicidad digital (si procede).\n- Herramientas (email marketing, diseño, analítica).[4][6]\n\nNo hace falta un gran presupuesto, pero sí realismo: ajusta las acciones a los recursos que realmente tienes.\n\n**Quién te ayuda aquí:**\n\n- Dirección/administración para validar presupuesto.\n- Responsable de captación de fondos (para vincular comunicación a campañas de financiación).\n\n---\n\n### 9. Indicadores, seguimiento y evaluación\n\nDefine **cómo sabrás si el plan funciona**:\n\n- Indicadores ligados directamente a los objetivos:  \n  - Alcance y engagement en redes sociales.  \n  - Tráfico web y conversiones (altas de socios, donaciones, inscripciones a eventos).[5][7]  \n  - Menciones en medios.  \n  - Participación de voluntariado.  \n  - Respuesta a campañas específicas.\n- Establece un sistema de **control y seguimiento** del plan.[3][1][6]  \n- Haz revisiones periódicas (mensuales o trimestrales) para ajustar el plan.[5]\n\n**Quién te ayuda aquí:**\n\n- Quien gestiona redes y web (para sacar métricas).\n- Dirección para revisar si los objetivos globales se cumplen.\n- Si es complejo, un consultor de analítica o marketing digital puede apoyar en la medición.\n\n---\n\n### 10. ¿Quién puede ayudarte de forma externa?\n\nAdemás del equipo interno, puedes buscar apoyo en:\n\n- **Consultores/as especializados/as en ONG, comunicación social y fundraising**, que conocen bien las particularidades del Tercer Sector.[2][4][7]\n- **Entidades de apoyo a ONG y asociaciones** (federaciones, coordinadoras, plataformas de voluntariado), que suelen ofrecer formaciones y plantillas gratuitas sobre planes de comunicación.[6][7]\n- **Escuelas y blogs especializados en ONG**, como La Escuelita de ONG o recursos de fundraising, que ofrecen guías paso a paso y ejemplos adaptados al sector.[3][4][5]\n- Universidades con grados de comunicación y prácticas: estudiantes pueden colaborar en la elaboración del plan bajo supervisión.\n\n---\n\n### Si quieres, en un siguiente mensaje puedo:\n\n- Ayudarte a **estructurar tu plan en un índice** listo para usar (adaptado a tu ONG concreta).\n- Proponerte un **modelo de tabla de planificación de acciones** (en texto) para que solo tengas que rellenarlo.\n- Ayudarte a traducir tus objetivos globales en **indicadores medibles**.",
+    "sources": [
+      "https://openaccess.uoc.edu/bitstream/10609/147588/4/cvarelavTFG0123memoria.pdf",
+      "https://www.aefundraising.org/wp-content/uploads/2022/02/AEFr-Como_hacer_un_plan_de_comunicacion.pdf",
+      "https://www.laescuelitadeong.com/plan-de-comunicacion-para-causas-sociales/",
+      "https://shofund.com/como-hacer-un-plan-de-comunicacion-para-tu-ong-en-6-pasos/",
+      "https://blog.teaming.net/es/como-hacer-un-plan-de-comunicacion/",
+      "http://tienda-asociaciones.org/upload/descargas/plan-comunicacion-ong-v1-2016.pdf",
+      "https://www.socialco.es/wp-content/uploads/2019/07/Plantilla-Descargable-Plan-de-comunicacion-digital-para-ONG-indice.pdf"
+    ],
+    "textHit": false,
+    "domainHit": false,
+    "cited": false
+  }
+]
