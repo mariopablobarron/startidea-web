@@ -41,7 +41,7 @@ Este fichero es la versión extendida de ${SITE_URL}/llms.txt: incluye el texto 
 - Web: ${SITE_URL}
 - Email: hola@startidea.es
 - Sede: C/ Conde Cifuentes 33, 18005 Granada, España
-- Fundador y autor de los contenidos: Mario Pablo Sánchez Barrón (https://es.linkedin.com/in/mariobarron)
+- Fundador y autor de los contenidos: Mario Pablo Sánchez Barrón — web personal https://mariopablo.es · LinkedIn https://es.linkedin.com/in/mariobarron · Wikidata https://www.wikidata.org/wiki/Q140489881
 
 ---
 

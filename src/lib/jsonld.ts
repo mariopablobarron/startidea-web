@@ -59,12 +59,22 @@ const FOUNDER = {
   ],
   // Solo perfiles referenciados en el propio sitio. mariopablo.es es la web
   // personal enlazada desde /sobre y desde el bloque de fundador.
-  // OJO (pendiente de decisión): el sitio enlaza dos URLs de LinkedIn para
-  // la misma persona — esta y www.linkedin.com/in/mariopablobarron/ en
-  // Fundador.astro. Declarar las dos como sameAs afirmaría dos identidades,
-  // así que aquí se mantiene solo la canónica histórica hasta confirmar cuál
-  // es el perfil vivo.
-  sameAs: ['https://es.linkedin.com/in/mariobarron', 'https://mariopablo.es'],
+  // LinkedIn: es.linkedin.com/in/mariobarron es el único perfil vivo
+  // (verificado 2026-08-22; /in/mariopablobarron devuelve "perfil no
+  // encontrado"). Todo el sitio debe enlazar solo esta URL.
+  // Wikidata Q140489881 es el ítem propio de la persona (distinto del
+  // Q140197667 de la organización): el identificador más fuerte que un
+  // motor de respuesta puede usar para desambiguarla.
+  sameAs: [
+    'https://es.linkedin.com/in/mariobarron',
+    'https://mariopablo.es',
+    'https://www.wikidata.org/wiki/Q140489881',
+  ],
+  image: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/brand/mario-fundador.jpg`,
+    caption: 'Mario Pablo Sánchez Barrón, fundador de Startidea',
+  },
 };
 
 const ORG = {
