@@ -13,7 +13,7 @@
  * Cache: 1h (las convocatorias cambian poco durante el día).
  */
 import type { APIRoute } from 'astro';
-import { listConvocatoriasActivas } from '@/lib/expedientes-db';
+import { listConvocatoriasActivas, isConvocatoriaVigente } from '@/lib/expedientes-db';
 import { SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
@@ -21,6 +21,12 @@ export const prerender = false;
 export const GET: APIRoute = async () => {
   let convs: ReturnType<typeof listConvocatoriasActivas> = [];
   try { convs = listConvocatoriasActivas(); } catch {}
+
+  // `activa = 1` es una marca manual y no caduca sola: una convocatoria puede
+  // seguir marcada activa con el plazo vencido. El sitemap solo debe anunciar
+  // lo que la ficha va a servir en index — mismo criterio que el `noindex` de
+  // /subvenciones/catalogo/[slug].
+  convs = convs.filter((c) => isConvocatoriaVigente(c));
 
   const today = new Date().toISOString().split('T')[0];
 

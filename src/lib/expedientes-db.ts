@@ -1163,6 +1163,30 @@ function parseConv(row: Convocatoria): ConvocatoriaView {
   };
 }
 
+/**
+ * Vigencia real de una convocatoria.
+ *
+ * `activa` es una marca manual del admin; el plazo es un dato con fecha. Una
+ * convocatoria puede seguir marcada activa y tener el plazo vencido, y en ese
+ * caso NO debe indexarse ni entrar en el sitemap. Este helper es el criterio
+ * único: lo usan la ficha (/subvenciones/catalogo/[slug]) para decidir el
+ * `noindex` y el sitemap para decidir qué lista.
+ *
+ * Sin `deadlineIso` no se puede afirmar que haya caducado → se considera
+ * vigente (el plazo puede ser abierto o estar por publicar).
+ */
+export function isConvocatoriaVigente(
+  conv: Pick<ConvocatoriaView, 'activa' | 'deadlineIso'>,
+  hoy: Date = new Date(),
+): boolean {
+  if (!conv.activa) return false;
+  if (!conv.deadlineIso) return true;
+  const hoyIso = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 10);
+  return conv.deadlineIso >= hoyIso;
+}
+
 /** Convocatorias activas para el formulario y la API pública. */
 export function listConvocatoriasActivas(tipo?: string): ConvocatoriaView[] {
   const db = getDb();
