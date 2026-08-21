@@ -720,6 +720,7 @@ const features = [
     fd.set("audience", radio("audienceWeb") === "institucion" || radio("audienceWeb") === "entidad-social" ? radio("audienceWeb") : "empresa");
     fd.set("brief", brief);
     fd.set("answers", JSON.stringify(buildAnswers()));
+    fd.set("attribution", JSON.stringify((window.stAttribution && window.stAttribution()) || {}));
     files.forEach((f) => fd.append("files", f));
 
     try {

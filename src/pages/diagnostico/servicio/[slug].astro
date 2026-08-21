@@ -125,6 +125,22 @@ const src = `${HUB}/diagnostico/${WORKSPACE}/${slug}`;
     var marco = document.getElementById('diagnostico');
     if (!marco) return;
 
+    // Propagar la atribución first-touch (utm_*, landing, referrer, guardada
+    // por AnalyticsTracker en localStorage) al iframe por query params: el
+    // wizard del HUB la lee de su propia location y la persiste con el run.
+    // JavaScript plano a propósito (define:vars no transpila TS).
+    try {
+      var attr = (window.stAttribution && window.stAttribution()) || {};
+      var p = new URLSearchParams();
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (k) {
+        if (attr[k]) p.set(k, attr[k]);
+      });
+      if (attr.landing_page) p.set('st_landing', attr.landing_page);
+      if (attr.referrer) p.set('st_ref', attr.referrer);
+      var qs = p.toString();
+      if (qs) marco.src = marco.src + (marco.src.indexOf('?') === -1 ? '?' : '&') + qs;
+    } catch (_) { /* sin atribución no pasa nada */ }
+
     window.addEventListener('message', function (e) {
       // Aceptar SOLO mensajes del HUB. Sin esta comprobación, cualquier otra
       // ventana o extensión podría redimensionar el iframe a su antojo.

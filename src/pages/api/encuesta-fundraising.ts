@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { randomUUID } from 'node:crypto';
 import { saveRespuesta, countRespuestas } from '@/lib/encuesta-db';
 import { sendTelegram } from '@/lib/telegram';
+import { formatAttribution } from '@/lib/attribution';
 
 export const prerender = false;
 
@@ -102,10 +103,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   // Aviso no bloqueante a Telegram con el total acumulado.
   try {
+    // El mensaje va en parse_mode HTML y la atribución llega del cliente: escapar.
+    const origen = formatAttribution(body.attribution)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const total = countRespuestas();
     sendTelegram(
       `<b>Nueva respuesta · Encuesta fundraising</b>\n` +
         `${r.tipo_entidad} · ${r.presupuesto} · ${r.pct_publico}% público\n` +
+        (origen ? `Origen: ${origen}\n` : '') +
         `Total acumulado: <b>${total}</b>`,
     ).catch(() => {});
   } catch { /* noop */ }

@@ -261,6 +261,7 @@ const hintCls = 'mt-1 text-sm text-ink/75';
         mayor_reto: val('mayor_reto'),
         email: val('email'),
         consent: true,
+        attribution: (window.stAttribution && window.stAttribution()) || {},
       };
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando…'; }

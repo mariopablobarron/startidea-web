@@ -205,6 +205,7 @@ const areas = [
         btn.textContent = 'Enviando…';
         try {
           var fd = new FormData(form);
+          try { fd.set('attribution', JSON.stringify((window.stAttribution && window.stAttribution()) || {})); } catch (_) {}
           var res = await fetch('/api/candidatura', { method: 'POST', body: fd });
           var data = {};
           try { data = await res.json(); } catch (_) {}

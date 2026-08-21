@@ -563,9 +563,24 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
 
           <div class="space-y-2">
             <label for="source" class="block text-sm font-medium text-ink">¿Cómo nos has conocido? (opcional)</label>
-            <input type="text" id="source" name="source" maxlength="200"
-              placeholder="Google, recomendación, evento, etc."
-              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            <select id="source" name="source"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none">
+              <option value="">Elige una opción…</option>
+              <option value="recomendacion">Recomendación de otra entidad o persona</option>
+              <option value="google">Búsqueda en Google</option>
+              <option value="redes-sociales">Redes sociales</option>
+              <option value="ia">ChatGPT u otro asistente de IA</option>
+              <option value="evento">Un evento o jornada</option>
+              <option value="prensa">Prensa o medios</option>
+              <option value="cliente-anterior">Ya habíamos trabajado con Startidea</option>
+              <option value="otros">Otros</option>
+            </select>
+            <div data-source-other class="hidden pt-2">
+              <label for="sourceOther" class="block text-sm font-medium text-ink">Cuéntanos cómo</label>
+              <input type="text" id="sourceOther" name="sourceOther" maxlength="180"
+                placeholder="Ej: nos habló de vosotros la federación X"
+                class="mt-2 w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
           </div>
 
           <div class="flex justify-between pt-4">
@@ -935,6 +950,10 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
     const t = e.target;
     if (t.name === "audience") refreshAdaptive();
     if (t.name === "challenge" && challengeCounter) challengeCounter.textContent = String(t.value.length);
+    if (t.name === "source") {
+      const otherWrap = form.querySelector("[data-source-other]");
+      otherWrap?.classList.toggle("hidden", t.value !== "otros");
+    }
   });
   challenge?.addEventListener("input", () => {
     if (challengeCounter) challengeCounter.textContent = String(challenge.value.length);
@@ -961,6 +980,11 @@ const ISOTIPO_PATH_D = "M1311 1995 c-34 -29 -60 -92 -87 -210 -29 -124 -27 -391 4
       const v = fd.get(k); if (typeof v === "string" && v) data[k] = v;
     });
     if (!data.organizationName && typeof data.name === "string") data.organizationName = data.name;
+    // "Otros" en ¿cómo nos has conocido? → concatenar el texto libre
+    if (data.source === "otros") {
+      const other = fd.get("sourceOther");
+      data.source = typeof other === "string" && other.trim() ? `otros: ${other.trim()}` : "otros";
+    }
     const services = fd.getAll("services").map(String).filter(Boolean);
     const answers = {};
     if (services.length) answers.services = services;
