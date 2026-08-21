@@ -59,6 +59,9 @@ export default defineConfig({
     '/consultoria-e-innovacion-social':                   '/consultoria',
     '/fundraising-alianzas':                              '/fundraising',
     '/hub-startidea-espacios-y-comunidad':                '/hub',
+    // Enlaces vivos desde granadasocial.org/sobre/startidea (verificados en 404 el 21-ago-2026)
+    '/espacios':                                          '/hub',
+    '/eventos':                                           '/hub',
 
     // Redirecciones desde slugs antiguos de casos
     '/casos/valientes':                                   '/casos/acogimiento-familiar-granada',
