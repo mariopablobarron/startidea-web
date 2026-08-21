@@ -1,11 +1,17 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { organizationSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
-const jsonLd = breadcrumbList([
-  { name: 'Inicio', url: `${SITE_URL}/` },
-  { name: 'Manifiesto', url: `${SITE_URL}/manifiesto` },
-]);
+// El manifiesto declara en prosa quién es Startidea y desde dónde trabaja.
+// Sin la Organization, esa declaración solo existe como texto libre: se
+// emite la entidad para que la página sea citable como fuente de identidad.
+const jsonLd = [
+  organizationSchema(),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Manifiesto', url: `${SITE_URL}/manifiesto` },
+  ]),
+];
 ---
 
 <Base

@@ -21,10 +21,28 @@ const FOUNDER = {
   '@type': 'Person',
   '@id': `${SITE_URL}/#founder`,
   name: FOUNDER_NAME,
+  givenName: 'Mario Pablo',
+  familyName: 'Sánchez Barrón',
   jobTitle: 'Fundador y director',
   description:
     'Fundador y director de Startidea, agencia de innovación social y comunicación con sede en Granada. Especialista en comunicación estratégica, fundraising y consultoría para el tercer sector, instituciones y empresas con propósito.',
+  // Biografía canónica dentro de startidea.es. Sin este ancla, los motores
+  // de respuesta que reconocen a la persona no tienen a qué URL propia
+  // enlazarla y acaban citando la ficha que otro sitio publica sobre ella.
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/sobre#fundador` },
+  url: `${SITE_URL}/sobre#fundador`,
   worksFor: { '@id': `${SITE_URL}/#organization` },
+  workLocation: {
+    '@type': 'Place',
+    name: 'Granada, España',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Granada',
+      addressRegion: 'Granada',
+      addressCountry: 'ES',
+    },
+  },
+  nationality: { '@type': 'Country', name: 'España' },
   affiliation: [
     { '@type': 'Organization', name: 'Asociación Católica de Propagandistas (ACdP)' },
     { '@type': 'Organization', name: 'Acción Social Empresarial (ASE)' },
@@ -36,8 +54,17 @@ const FOUNDER = {
     'Fundraising',
     'Tercer sector',
     'Subvenciones públicas',
+    'Comunicación eclesial',
+    'Inteligencia artificial aplicada al tercer sector',
   ],
-  sameAs: ['https://es.linkedin.com/in/mariobarron'],
+  // Solo perfiles referenciados en el propio sitio. mariopablo.es es la web
+  // personal enlazada desde /sobre y desde el bloque de fundador.
+  // OJO (pendiente de decisión): el sitio enlaza dos URLs de LinkedIn para
+  // la misma persona — esta y www.linkedin.com/in/mariopablobarron/ en
+  // Fundador.astro. Declarar las dos como sameAs afirmaría dos identidades,
+  // así que aquí se mantiene solo la canónica histórica hasta confirmar cuál
+  // es el perfil vivo.
+  sameAs: ['https://es.linkedin.com/in/mariobarron', 'https://mariopablo.es'],
 };
 
 const ORG = {
@@ -67,8 +94,29 @@ const ORG = {
   description:
     'Startidea es una agencia de innovación social y comunicación con sede en Granada, España, fundada en 2011. Consultora especializada en tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Servicios: comunicación estratégica y marketing social, consultoría e innovación social, fundraising para fundaciones y ONGs, producción audiovisual y podcast.',
   slogan: 'Innovación social que cambia la conversación',
+  // Página canónica de la entidad dentro de startidea.es. Los motores de
+  // respuesta que ya reconocen la marca necesitan una URL propia a la que
+  // enlazar; sin ella citan la ficha que otro sitio publica sobre Startidea.
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/sobre` },
   foundingDate: '2011-02',
+  foundingLocation: {
+    '@type': 'Place',
+    name: 'Granada, España',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Granada',
+      addressRegion: 'Granada',
+      addressCountry: 'ES',
+    },
+  },
   founder: FOUNDER,
+  // Las tres audiencias del negocio, declaradas para que un modelo pueda
+  // resolver "¿a quién sirve Startidea?" sin inferirlo del texto libre.
+  audience: [
+    { '@type': 'Audience', audienceType: 'Tercer sector: ONG, fundaciones y asociaciones' },
+    { '@type': 'Audience', audienceType: 'Instituciones públicas y eclesiales' },
+    { '@type': 'Audience', audienceType: 'Empresas con propósito' },
+  ],
   taxID: 'B19583632',
   vatID: 'ESB19583632',
   email: 'hola@startidea.es',
@@ -112,6 +160,10 @@ const ORG = {
     'Bolsa de empleo',
     'Coaching personal',
     'Acompañamiento personal con inteligencia artificial',
+    'Inteligencia artificial aplicada a ONG',
+    'Inteligencia artificial para administraciones públicas',
+    'Agentes de inteligencia artificial',
+    'Transformación digital del tercer sector',
   ],
   // hasOfferCatalog: cada servicio principal expuesto como Offer + Service
   // para que LLMs entiendan exactamente qué vende Startidea.
@@ -218,11 +270,28 @@ const ORG = {
     'https://open.spotify.com/show/3c3Pm70Up3v1GOdYuSxj05',
     'https://www.wikidata.org/wiki/Q140197667',
     'https://www.crunchbase.com/organization/startidea-9326',
+    // Ficha de la entidad en Granada Social (medio editado por Startidea).
+    // Medición 2026-08: Perplexity recomienda a Startidea en consultas
+    // no-marca pero enlaza esta ficha en lugar de startidea.es. Declararla
+    // como sameAs reconcilia las dos URLs en la misma entidad, cuyo `url`
+    // canónico es startidea.es.
+    'https://granadasocial.org/sobre/startidea',
   ],
 };
 
 export function organizationSchema() {
   return { '@context': 'https://schema.org', ...ORG };
+}
+
+/**
+ * Person del fundador como nodo suelto, para la página que cuenta su
+ * biografía (/sobre). Mismo `@id` que ORG.founder: no duplica la entidad,
+ * la refuerza desde la URL donde el dato es verificable. `worksFor` la
+ * vincula a #organization, de modo que un motor que reconozca a la persona
+ * llegue a la organización, y al revés.
+ */
+export function founderSchema() {
+  return { '@context': 'https://schema.org', ...FOUNDER };
 }
 
 /**
@@ -239,9 +308,17 @@ export function localBusinessSchema() {
     '@type': 'LocalBusiness',
     '@id': `${SITE_URL}/#localbusiness`,
     name: ORG.name,
+    // Los mismos datos de entidad que #organization: nombre alternativo,
+    // fecha de fundación, fundador y materias. Un LocalBusiness que solo
+    // declara dirección y horario obliga al motor a decidir si es la misma
+    // entidad que la Organization o una distinta.
+    alternateName: ORG.alternateName,
     url: SITE_URL,
     image: ORG.logo.url,
     description: ORG.description,
+    foundingDate: ORG.foundingDate,
+    founder: { '@id': `${SITE_URL}/#founder` },
+    knowsAbout: ORG.knowsAbout,
     telephone: ORG.telephone,
     email: ORG.email,
     address: ORG.address,
