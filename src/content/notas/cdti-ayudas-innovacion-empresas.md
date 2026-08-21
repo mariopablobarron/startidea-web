@@ -4,7 +4,7 @@ seoTitle: 'Ayudas CDTI para innovación empresarial'
 description: 'CDTI (Centro para el Desarrollo Tecnológico Industrial) es el principal organismo público español de apoyo a la I+D+i empresarial. Esta nota explica las cuatro líneas más usadas (NEOTEC, PID, Línea Directa de Innovación, Cervera) con sus rangos de financiación, requisitos reales y cuándo conviene cada una.'
 metaDescription: 'Ayudas CDTI para innovación empresarial: NEOTEC, PID, Línea Directa y Cervera, con rangos de financiación y cuándo conviene cada línea.'
 pubDate: 2026-05-25
-updatedDate: 2026-08-04
+updatedDate: 2026-08-22
 tldr: 'CDTI es el principal organismo público español de apoyo a la I+D+i empresarial. Sus cuatro líneas más usadas —NEOTEC, PID, Línea Directa de Innovación y Cervera— cubren fines y rangos distintos, entre subvención y crédito blando. La elección depende del estado del proyecto y de si interesa ayuda a fondo perdido o financiación a devolver.'
 audience: 'Empresas con propósito'
 category: 'Financiación'
@@ -110,7 +110,7 @@ Decisión que toda empresa innovadora se acaba haciendo:
 | Proyecto territorial Andalucía + internacionalización | **Andalucía TRADE** (no CDTI) |
 | Proyecto de transición energética | **IDAE** o autonómica + complementaria CDTI |
 
-No son mutuamente excluyentes. Una startup tecnológica madura puede combinar NEOTEC (primera fase) + PID (escalado) + [ENISA](/notas/financiacion-startup-enisa-prestamos-participativos) (capital circulante) en distintos años. El mapa completo de fuentes está en la guía de [financiación pública para empresas](/financiacion-empresas).
+No son mutuamente excluyentes. Una startup tecnológica madura puede combinar NEOTEC (primera fase) + PID (escalado) + [ENISA](/notas/financiacion-startup-enisa-prestamos-participativos) (capital circulante) en distintos años. La decisión entre las dos vías, con los criterios caso a caso y los errores que más caros salen, está desarrollada en [ENISA o CDTI: cuál pedir](/notas/enisa-o-cdti-cual-pedir). El mapa completo de fuentes está en la guía de [financiación pública para empresas](/financiacion-empresas).
 
 ## Cómo lo aborda Startidea
 
@@ -125,6 +125,8 @@ CDTI es un terreno técnico donde el lenguaje y la estructura de las memorias im
 4. **Presentación electrónica**: envío del expediente con el certificado digital de representante de la empresa + seguimiento de cualquier requerimiento de subsanación.
 
 5. **Acompañamiento post-resolución** (opcional): justificación de hitos, gestión de pagos parciales, comunicación con el técnico CDTI asignado.
+
+Qué firma la empresa, qué prepara la consultora y cuándo no compensa externalizar el expediente está explicado en la nota sobre [solicitar ENISA o CDTI con una consultora](/notas/solicitar-enisa-cdti-con-consultora).
 
 ---
 

@@ -1,45 +1,69 @@
 ---
-title: 'Préstamos ENISA para startups y PYMES: cómo funcionan, cuánto piden y cuándo conviene pedirlos'
-seoTitle: 'Préstamos ENISA para startups: cómo funcionan'
-description: 'ENISA otorga préstamos participativos a startups y pequeñas empresas españolas para crecer sin diluir capital. Esta nota explica las tres líneas (Jóvenes Emprendedores, Crecimiento, Emprendedores), el rango de importes, qué pide ENISA en su análisis y cuándo conviene pedirlo frente a una ronda de inversión.'
-metaDescription: 'Préstamos participativos ENISA para startups y pymes: las tres líneas, los importes y cuándo conviene pedirlos frente a una ronda de inversión.'
+title: 'Préstamos ENISA para startups y PYMES: qué es, líneas, requisitos, avales y cómo solicitarlo'
+seoTitle: 'Préstamos ENISA: requisitos, líneas y avales'
+description: 'ENISA otorga préstamos participativos a startups y pequeñas empresas españolas para crecer sin diluir capital. Esta nota explica qué es ENISA, las tres líneas (Jóvenes Emprendedores, Emprendedores, Crecimiento), los requisitos reales, por qué no se piden avales personales, cómo se solicita paso a paso y en qué se diferencia del CDTI.'
+metaDescription: 'Qué es ENISA, sus tres líneas, los requisitos, por qué no pide avales personales, cómo solicitar el préstamo paso a paso y en qué se diferencia del CDTI.'
 pubDate: 2026-05-25
-updatedDate: 2026-08-04
-tldr: 'ENISA concede préstamos participativos a startups y pymes para crecer sin diluir capital, en tres líneas —Jóvenes Emprendedores, Crecimiento y Emprendedores— con importes y requisitos distintos. Conviene frente a una ronda de inversión cuando se quiere financiar el crecimiento sin ceder participación, siempre que el proyecto pueda devolver el préstamo.'
+updatedDate: 2026-08-22
+tldr: 'ENISA concede préstamos participativos a startups y pymes para crecer sin diluir capital, en tres líneas —Jóvenes Emprendedores, Emprendedores y Crecimiento— con importes y requisitos distintos. No exige avales personales ni garantías reales: la garantía es el propio proyecto, y por eso el análisis de viabilidad es exigente. Se solicita de forma telemática, con las líneas abiertas de forma continua, y la resolución tarda meses. Frente al CDTI, la regla corta: ENISA financia crecimiento, CDTI financia I+D.'
 audience: 'Empresas con propósito'
 category: 'Financiación'
-tags: ['enisa', 'préstamos participativos', 'startups', 'financiación', 'emprendimiento']
+tags: ['enisa', 'préstamos participativos', 'startups', 'financiación', 'emprendimiento', 'cdti']
 draft: false
 faqs:
-  - question: '¿Qué es un préstamo participativo de ENISA?'
-    answer: 'Es una línea de financiación pública gestionada por ENISA (Empresa Nacional de Innovación, dependiente del Ministerio de Industria) que combina características de préstamo bancario y capital. La empresa devuelve el principal en cuotas pero el interés es variable y depende de los resultados anuales, hay carencias largas (1-7 años) y se contabiliza como patrimonio neto a efectos contables. ENISA no entra en el capital ni en el consejo: financia y se va cuando la empresa devuelve el préstamo.'
-  - question: '¿Cuánto presta ENISA y qué tipos de líneas tiene?'
-    answer: 'Tres líneas: Jóvenes Emprendedores (25.000-75.000 € para empresas con menos de 24 meses y socios principales menores de 40), Emprendedores (25.000-300.000 € para empresas con menos de 24 meses sin límite de edad de socios), y Crecimiento (25.000-1.500.000 € para empresas consolidadas con un proyecto de expansión o internacionalización). Las cuantías reales aprobadas son habitualmente la mitad de lo solicitado.'
-  - question: '¿Cuándo conviene un préstamo ENISA frente a una ronda de inversión?'
-    answer: 'ENISA conviene cuando la empresa necesita crecer pero no quiere diluir capital, cuando tiene proyecciones de caja realistas que permiten devolver el préstamo en 5-9 años, y cuando los socios mantienen el control estratégico de la empresa. Una ronda conviene cuando el crecimiento exige inversión que ENISA no cubre (>1,5M€), cuando los inversores aportan red comercial o conocimiento sectorial estratégico, o cuando la empresa necesita capital para validar un modelo que aún no genera caja. Las dos opciones son compatibles: muchas startups combinan ENISA + ronda en distintas fases.'
-  - question: '¿Qué pide ENISA en su análisis para aprobar un préstamo?'
-    answer: 'Plan de negocio con proyecciones financieras a 5 años justificadas, modelo de negocio escalable y diferenciado, equipo emprendedor con experiencia y dedicación exclusiva, capacidad de devolución demostrable con escenario conservador, contraste técnico del producto/servicio (especialmente si es innovador), y declaración de no estar en sectores excluidos (inmobiliaria, financiero, juegos de azar). El proceso completo —desde envío hasta resolución— suele tardar 4-6 meses.'
-  - question: '¿Cómo se solicita un préstamo ENISA?'
-    answer: 'La solicitud es 100% telemática en la sede electrónica de ENISA: alta en el portal, formulario online (empresa, línea, importe y destino de los fondos) y documentación adjunta (plan de negocio, proyecciones financieras, últimas cuentas, escrituras y CV del equipo). Tras el envío, ENISA analiza el expediente —casi siempre pide alguna aclaración— en un plazo de 4-6 meses; si la resolución es favorable, el préstamo se formaliza ante notario y se desembolsa. ENISA no funciona por convocatorias con plazo: las líneas están abiertas de forma continua mientras haya presupuesto anual.'
+  - question: '¿Qué es ENISA y qué es un préstamo participativo?'
+    answer: 'ENISA (Empresa Nacional de Innovación) es una sociedad mercantil pública dependiente del Ministerio de Industria y Turismo que financia proyectos empresariales viables e innovadores mediante préstamos participativos. Un préstamo participativo es una figura intermedia entre deuda y capital: la empresa devuelve el principal, pero el interés tiene un tramo variable ligado a los resultados del ejercicio, la deuda queda subordinada al resto de acreedores y se considera patrimonio neto a efectos de reducción de capital y disolución. ENISA no entra en el accionariado ni en el consejo: financia y sale cuando la empresa termina de devolver.'
+  - question: '¿ENISA pide avales o garantías personales?'
+    answer: 'No. ENISA no exige avales personales ni garantías reales sobre el patrimonio de los socios: la garantía del préstamo es la viabilidad del propio proyecto. Esa es su diferencia práctica más importante frente a un crédito bancario. La contrapartida es que el análisis previo es más exigente que el de un banco: ENISA revisa a fondo el plan de negocio, las proyecciones y la capacidad de devolución, y suele exigir que los socios acompañen la operación con fondos propios en el proyecto. Que no haya aval no significa que no haya deuda: el préstamo se devuelve íntegro y la empresa responde de él.'
+  - question: '¿Cuáles son las líneas de financiación de ENISA?'
+    answer: 'Tres líneas principales. Jóvenes Emprendedores, para pymes de reciente constitución cuyos socios mayoritarios son menores de 40 años, con importes pequeños orientados a validar el modelo. Emprendedores, para pymes de reciente constitución sin límite de edad de los socios, con importes intermedios. Crecimiento, para empresas ya consolidadas con un proyecto concreto de expansión, modernización o internacionalización, con los importes más altos del catálogo. Los rangos, plazos y condiciones económicas exactos se publican por ejercicio en la ficha de cada producto en enisa.es y conviene comprobarlos antes de preparar el expediente.'
+  - question: '¿Qué requisitos pide ENISA para conceder el préstamo?'
+    answer: 'Ser pyme con forma societaria mercantil y domicilio social en España, tener las cuentas depositadas cuando corresponda, estar al corriente con Hacienda y Seguridad Social, y presentar un modelo de negocio innovador o con ventaja competitiva clara. En el análisis pesan cuatro cosas: plan de negocio coherente, proyecciones financieras justificadas en supuestos verificables, equipo con dedicación real al proyecto y capacidad de devolución sostenida incluso en escenario conservador. Quedan fuera los sectores excluidos, entre ellos el inmobiliario y el financiero.'
+  - question: '¿Cómo se solicita un préstamo ENISA paso a paso?'
+    answer: 'La solicitud es íntegramente telemática en la web de ENISA. El recorrido: alta en el portal y elección de la línea que encaja con la empresa; formulario con datos societarios, importe solicitado y destino de los fondos; carga de la documentación (plan de negocio, proyecciones financieras, últimas cuentas, escrituras, composición societaria y CV del equipo); envío y análisis, fase en la que ENISA casi siempre emite un requerimiento de aclaración que hay que atender en plazo; y resolución. Si es favorable, el préstamo se formaliza y se desembolsa. ENISA no funciona por convocatorias con plazo cerrado: las líneas están abiertas de forma continua mientras haya presupuesto anual disponible.'
+  - question: '¿Cuánto tarda ENISA en resolver una solicitud?'
+    answer: 'Es un proceso de meses, no de semanas: al análisis inicial hay que sumarle el requerimiento de subsanación —que es la norma, no la excepción— y la formalización posterior al acuerdo favorable. Conviene planificarlo como una operación de medio plazo y no contar con ese dinero para una necesidad de tesorería inmediata. Si la empresa necesita liquidez en pocas semanas, ENISA no es el instrumento: ahí encaja mejor una póliza bancaria puente, y ENISA se plantea en paralelo para el crecimiento.'
   - question: '¿ENISA o CDTI: cuál pedir?'
-    answer: 'ENISA financia crecimiento; CDTI financia I+D. Si el proyecto necesita caja para escalar y la empresa quiere evitar la dilución, la vía es ENISA: préstamo participativo de hasta 1,5 millones que se devuelve íntegro, con carencia larga y sin entrada en el capital. Si hay desarrollo técnico que defender ante un evaluador, el CDTI ofrece algo que ENISA no tiene: tramo no reembolsable, vía NEOTEC para startups tecnológicas de menos de 3 años o PID y Cervera para I+D por encima de 500.000 €. Las dos fuentes son compatibles y suelen combinarse en ejercicios distintos. El detalle de cada línea está en la nota sobre ayudas CDTI para innovación empresarial.'
-  - question: '¿Startidea ayuda a presentar la solicitud ENISA?'
-    answer: 'Sí. Startidea acompaña en la preparación del expediente completo: plan de negocio adaptado al lenguaje y los criterios de ENISA, proyecciones financieras realistas y justificables, memoria técnica del proyecto, dossier del equipo, y revisión cruzada por un segundo redactor antes del envío. Para startups y PYMES con proyecto definido, el tiempo de preparación es 3-5 semanas. Si el proyecto aún no está cerrado, Startidea lo trabaja primero en una sesión de diagnóstico para que el plan que se presenta a ENISA sea consistente con la realidad operativa de la empresa.'
+    answer: 'ENISA financia crecimiento; CDTI financia I+D. Si el proyecto necesita caja para escalar y la empresa quiere evitar la dilución, la vía es ENISA: préstamo participativo que se devuelve íntegro, con carencia larga, sin avales personales y sin entrada en el capital. Si hay desarrollo técnico con riesgo tecnológico que defender ante un evaluador, el CDTI ofrece algo que ENISA no tiene: tramo no reembolsable, con NEOTEC para startups tecnológicas jóvenes y PID o Cervera para proyectos de I+D de mayor tamaño. Las dos fuentes son compatibles y suelen combinarse en ejercicios distintos.'
+  - question: '¿Se puede solicitar ENISA con una consultora?'
+    answer: 'Sí, y es lo habitual en expedientes de cierto tamaño. La solicitud la firma siempre la empresa con su certificado digital de representante, pero la preparación del expediente —plan de negocio en el lenguaje y los criterios de ENISA, proyecciones financieras defendibles, memoria del proyecto, dossier del equipo y respuesta a los requerimientos— es donde una consultora aporta. Startidea acompaña ese ciclo completo, con revisión cruzada por un segundo redactor antes del envío. Lo que ninguna consultora seria puede ofrecer es garantía de aprobación: quien resuelve es ENISA.'
 ---
 
-ENISA (Empresa Nacional de Innovación) es uno de los instrumentos públicos de financiación menos conocidos por las startups españolas — y uno de los más útiles cuando se entiende bien para qué sirve. No es una subvención (no es dinero a fondo perdido), no es una ronda de inversión (no diluye capital), no es un crédito bancario clásico (el interés y la devolución están vinculados a resultados). Es **un préstamo participativo**: una figura que combina lo mejor de varios mundos.
+ENISA (Empresa Nacional de Innovación) es uno de los instrumentos públicos de financiación menos conocidos por las startups españolas — y uno de los más útiles cuando se entiende bien para qué sirve. No es una subvención (no es dinero a fondo perdido), no es una ronda de inversión (no diluye capital), no es un crédito bancario clásico (no pide avales personales y la retribución está vinculada a resultados). Es **un préstamo participativo**.
 
-Esta nota explica las tres líneas que opera ENISA, cuándo conviene pedir uno y qué pide ENISA en su análisis. Si tu empresa está considerando crecer y no quiere diluir capital con una ronda, ENISA debería estar en la conversación.
+Esta nota explica qué es ENISA, sus tres líneas, los requisitos reales, por qué no se piden avales, cómo se solicita paso a paso y en qué se diferencia del CDTI.
 
-## Qué es exactamente un préstamo participativo
+## Qué es ENISA
+
+ENISA es una sociedad mercantil estatal adscrita al Ministerio de Industria y Turismo. Su función es cubrir un hueco concreto del mercado: empresas jóvenes o pequeñas con un proyecto viable que la banca no financia porque no hay histórico ni garantías que ejecutar, y que tampoco quieren —o no necesitan— vender participación a un inversor.
+
+Tres consecuencias prácticas de esa naturaleza:
+
+- **ENISA no es una subvención.** El dinero se devuelve. Quien busque fondo perdido debería mirar primero las convocatorias de la BDNS o el tramo no reembolsable del CDTI.
+- **ENISA no entra en el capital.** No hay consejero, ni pacto de socios, ni derecho de arrastre. Cuando la empresa termina de devolver, la relación se acaba.
+- **ENISA sí analiza como un inversor.** Al no haber garantías que ejecutar, todo el riesgo está en el proyecto, y el análisis se parece más al de un fondo que al de una oficina bancaria.
+
+### Qué es exactamente un préstamo participativo
 
 Tres características que lo hacen distinto a un préstamo bancario tradicional:
 
-1. **Subordinado a otros acreedores**: en caso de concurso, ENISA cobra después de la banca tradicional. Eso significa que ENISA asume más riesgo que un banco — y por eso se contabiliza como **patrimonio neto** a efectos contables, lo que mejora el ratio de endeudamiento de la empresa.
+1. **Subordinado a otros acreedores**: en caso de concurso, ENISA cobra después de la banca tradicional. Asume más riesgo que un banco — y por eso se considera patrimonio neto a efectos de reducción de capital y disolución, lo que refuerza la posición contable de la empresa.
 
-2. **Interés variable según resultados**: el tipo de interés tiene una parte fija (Euribor + 1,25-2%) y una parte variable que depende de la rentabilidad de la empresa. Si la empresa va bien, se paga más; si va mal, se paga menos. ENISA se alinea con el rendimiento real del negocio.
+2. **Interés en dos tramos**: hay una parte fija referenciada a un índice de mercado y una parte variable que depende de la rentabilidad de la empresa. Si el negocio va bien, se paga más; si va peor, se paga menos. Los tipos concretos se publican por ejercicio en la ficha de cada producto en enisa.es: conviene mirarlos ahí y no fiarse de cifras de terceros, porque cambian.
 
-3. **Carencia larga y plazos amplios**: las devoluciones suelen empezar tras 1-7 años de carencia (solo se pagan intereses) y se extienden hasta 9 años en total. Eso da tiempo a la empresa a generar caja antes de empezar a devolver el principal.
+3. **Carencia larga y plazos amplios**: el calendario típico incluye varios años de carencia en los que solo se pagan intereses, antes de empezar a amortizar principal. Eso da margen para generar caja antes de devolver.
+
+## ¿ENISA pide avales? La respuesta corta es no
+
+Es la duda más repetida y merece una respuesta sin rodeos: **ENISA no exige avales personales ni garantías reales**. No hay hipoteca sobre la vivienda del fundador ni fianza solidaria de los socios. La garantía es la viabilidad del proyecto.
+
+Eso no significa que el dinero sea gratis ni que el riesgo desaparezca:
+
+- **Sigue siendo deuda.** La sociedad responde del préstamo con su patrimonio. Si el negocio no genera caja, el problema es real, aunque no alcance al patrimonio personal de los socios.
+- **El filtro se traslada al análisis.** Un banco se protege con la garantía; ENISA se protege con el estudio previo. Por eso el expediente pesa tanto y por eso se deniegan solicitudes con producto bueno y números flojos.
+- **Se espera compromiso de los socios.** ENISA valora que el proyecto tenga fondos propios detrás. No es un aval, pero sí una señal de que quien pide también arriesga.
+
+Para muchas empresas jóvenes esta es la razón principal para acudir a ENISA antes que a una entidad bancaria: el acceso no depende de tener patrimonio que hipotecar.
 
 ## Las tres líneas de financiación
 
@@ -47,26 +71,53 @@ ENISA opera tres productos diferenciados según el momento de la empresa:
 
 ### Jóvenes Emprendedores
 
-- **Importe**: 25.000 € – 75.000 €
-- **Requisitos**: PYME con menos de 24 meses desde constitución + socios mayoritarios menores de 40 años
-- **Plazo de devolución**: hasta 7 años (4 de carencia)
-- **Ideal para**: validación de mercado, primeros 12 meses de operación
+- **Para quién**: pyme de reciente constitución con socios mayoritarios menores de 40 años
+- **Importe**: el tramo más bajo del catálogo
+- **Para qué sirve bien**: validación de mercado y primeros meses de operación
+
+Es la puerta de entrada habitual y la que concentra buena parte de las consultas sobre financiación ENISA para jóvenes emprendedores.
 
 ### Emprendedores
 
-- **Importe**: 25.000 € – 300.000 €
-- **Requisitos**: PYME con menos de 24 meses desde constitución (sin límite de edad de socios)
-- **Plazo de devolución**: hasta 7 años (5 de carencia)
-- **Ideal para**: equipos senior emprendiendo, equipos mixtos sin límite de edad
+- **Para quién**: pyme de reciente constitución, sin límite de edad de los socios
+- **Importe**: tramo intermedio
+- **Para qué sirve bien**: equipos senior emprendiendo, o equipos mixtos que no encajan en el límite de edad
 
 ### Crecimiento
 
-- **Importe**: 25.000 € – 1.500.000 €
-- **Requisitos**: PYME consolidada con un proyecto concreto de expansión, modernización o internacionalización
-- **Plazo de devolución**: hasta 9 años (7 de carencia)
-- **Ideal para**: empresas con caja positiva que quieren acelerar un crecimiento ya validado
+- **Para quién**: pyme consolidada con un proyecto concreto de expansión, modernización o internacionalización
+- **Importe**: el tramo más alto del catálogo
+- **Para qué sirve bien**: empresas con caja positiva que quieren acelerar un crecimiento ya validado
 
-En las tres líneas, las **cuantías reales aprobadas** suelen ser entre el 40% y el 60% del importe solicitado. Pedir el máximo no garantiza recibirlo; ENISA calibra según lo que la empresa puede devolver.
+Los rangos exactos de importe, los plazos de amortización y las condiciones económicas se publican por ejercicio en la ficha de cada producto en enisa.es. Dos avisos que sí se sostienen con independencia del año: los importes concedidos suelen quedar por debajo de lo solicitado —ENISA calibra según lo que la empresa puede devolver, no según lo que pide— y el importe del préstamo guarda relación con los fondos propios de la sociedad.
+
+## Requisitos: qué mira ENISA de verdad
+
+Los requisitos formales son los previsibles: pyme con forma societaria mercantil, domicilio social en España, cuentas depositadas cuando corresponda, estar al corriente con Hacienda y Seguridad Social, y quedar fuera de los sectores excluidos (inmobiliario y financiero, entre otros).
+
+Lo que decide el expediente es otra cosa. Cinco bloques:
+
+1. **Plan de negocio narrativo** que explique con claridad el problema, la solución, el mercado y el modelo de monetización. Sin jerga, sin pitch deck recargado: ENISA premia coherencia y honestidad.
+
+2. **Proyecciones financieras justificadas** en supuestos verificables. ENISA detecta las hojas de cálculo infladas para llegar al rango deseado. Mejor una proyección moderada bien argumentada que una ambiciosa sin base.
+
+3. **Equipo con dedicación real**. ENISA mira el CV de los socios principales: si están a tiempo parcial, si tienen experiencia previa en el sector, si han cofundado proyectos antes.
+
+4. **Capacidad de devolución demostrable**, también en escenario conservador. Si en el escenario base ya va justo, la resolución será denegatoria.
+
+5. **Carácter innovador o ventaja competitiva**. No hace falta patente ni laboratorio: vale un modelo de negocio diferenciado. Pero un negocio idéntico al de la calle de al lado no encaja.
+
+## Cómo solicitar un préstamo ENISA, paso a paso
+
+La solicitud es **íntegramente telemática**. El recorrido, en orden:
+
+1. **Alta en el portal de ENISA** y selección de la línea —Jóvenes Emprendedores, Emprendedores o Crecimiento— que encaja con la empresa.
+2. **Formulario de solicitud**: datos societarios, importe solicitado, destino de los fondos y resumen del proyecto.
+3. **Documentación adjunta**: plan de negocio, proyecciones financieras justificadas, últimas cuentas depositadas (si las hay), escrituras y composición societaria, y CV del equipo.
+4. **Envío y análisis**: ENISA revisa el expediente y casi siempre emite un requerimiento de aclaración o documentación adicional, que hay que atender en plazo.
+5. **Resolución**: si es favorable, se formaliza el préstamo y se desembolsa. Si es denegatoria, ENISA indica el motivo y cabe volver a presentar más adelante con el expediente corregido.
+
+Dos matices de calendario que conviene tener presentes. Primero, a diferencia de las subvenciones, ENISA **no funciona por convocatorias con plazo cerrado**: las líneas están abiertas de forma continua mientras haya presupuesto anual disponible, así que el momento de solicitar lo marca la empresa. Segundo, entre el envío y el desembolso pasan **meses**, no semanas: si hace falta liquidez inmediata, ENISA no es la respuesta y conviene una línea bancaria puente mientras el expediente avanza.
 
 ## ENISA vs ronda de inversión: cuándo cada cosa
 
@@ -74,61 +125,51 @@ Decisión que tarde o temprano toda startup tiene que tomar:
 
 | Criterio | ENISA conviene | Ronda conviene |
 |---|---|---|
-| Necesidad de capital | < 1,5 M€ | > 1,5 M€ |
+| Volumen de capital | Encaja en el rango de las líneas ENISA | Por encima de lo que ENISA puede cubrir |
 | Caja del negocio | Positiva o cercana en 12 meses | Necesita financiar pérdidas operativas largas |
-| Control accionarial | Quieres mantener mayoría | Estás dispuesto a diluir por aceleración |
-| Valor del inversor más allá del dinero | No necesitas red ni conocimiento sectorial extra | Quieres un partner con peso en tu mercado |
-| Plazo de devolución | Aceptas 5-9 años de devolución | No quieres devolver, prefieres exit a largo |
+| Control accionarial | Se quiere mantener la mayoría | Se acepta diluir a cambio de aceleración |
+| Valor del inversor más allá del dinero | No hace falta red ni conocimiento sectorial extra | Se busca un socio con peso en el mercado |
+| Devolución | Se asume devolver el préstamo con carencia previa | No se quiere devolver, se prefiere un exit a largo |
 | Validación de mercado | Modelo ya validado | Modelo aún en exploración |
 
-No son excluyentes: muchas startups combinan ENISA + ronda en distintas fases. Un orden típico que funciona: bootstrap → ENISA Jóvenes Emprendedores → primera ronda seed → ENISA Crecimiento como complemento a la Serie A → ronda Serie B sin ENISA.
+No son excluyentes: muchas startups combinan ENISA y ronda en distintas fases. Un orden que se ve a menudo: bootstrap → ENISA Jóvenes Emprendedores → primera ronda seed → ENISA Crecimiento como complemento → ronda posterior.
 
-## Qué pide ENISA en su análisis
+## ENISA o CDTI: en qué se diferencian
 
-El expediente que ENISA evalúa tiene cinco bloques que conviene preparar bien:
+Es la pregunta que más se repite cuando una empresa innovadora empieza a mirar financiación pública. La regla corta: **ENISA financia crecimiento, CDTI financia I+D**.
 
-1. **Plan de negocio narrativo** que explique con claridad el problema, la solución, el mercado y el modelo de monetización. Sin jerga, sin pitch deck recargado: ENISA premia coherencia y honestidad.
+| | ENISA | CDTI |
+|---|---|---|
+| Qué financia | Crecimiento, expansión, circulante del proyecto | Proyectos de I+D+i con riesgo tecnológico |
+| Instrumento | Préstamo participativo (se devuelve íntegro) | Ayuda parcialmente reembolsable, con tramo no reembolsable; NEOTEC es subvención |
+| Dilución de capital | Ninguna | Ninguna |
+| Avales personales | No exige | No exige (puede pedir garantías en determinadas líneas y situaciones) |
+| Qué se defiende | Viabilidad del negocio y capacidad de devolución | Calidad técnica del proyecto y riesgo tecnológico |
+| Quién evalúa | Analista financiero | Evaluador técnico + análisis económico |
+| Calendario | Líneas abiertas de forma continua | Depende de la línea: NEOTEC por convocatoria anual, PID abierto |
+| Encaja si | Hay negocio que escalar, con o sin tecnología propia | Hay desarrollo técnico que aún no existe en el mercado |
 
-2. **Proyecciones financieras a 5 años** justificadas en supuestos verificables. ENISA detecta hojas Excel que se han inflado para llegar al rango deseado. Mejor proyección moderada justificada que ambiciosa sin base.
+En la práctica se combinan: NEOTEC o PID para financiar el desarrollo técnico, ENISA para financiar el crecimiento comercial que viene después. El detalle de cada línea del CDTI está en la nota sobre [ayudas CDTI para innovación empresarial](/notas/cdti-ayudas-innovacion-empresas), y la comparación completa —con los criterios de decisión caso a caso— en [ENISA o CDTI: cuál pedir](/notas/enisa-o-cdti-cual-pedir).
 
-3. **Equipo emprendedor con experiencia y dedicación exclusiva**. ENISA mira el CV de los socios principales: si están a tiempo parcial, si tienen experiencia previa en el sector, si han cofundado proyectos antes.
-
-4. **Capacidad de devolución demostrable**: ENISA hace un escenario conservador (escenario "pesimista realista") y verifica que la empresa puede devolver el préstamo incluso en ese escenario. Si en el escenario base ya está justo, ENISA no aprueba.
-
-5. **Sectores excluidos**: ENISA no financia inmobiliario, financiero, juegos de azar, sectores en crisis estructural ni proyectos contrarios a los criterios ESG básicos.
-
-El proceso completo desde envío hasta resolución suele tardar **4-6 meses**. Hay que contarlo: si tu empresa necesita liquidez en 60 días, ENISA no es la respuesta — entonces conviene una línea de crédito bancaria puente.
-
-## Cómo solicitar un préstamo ENISA, paso a paso
-
-La solicitud es **100% telemática** a través de la sede electrónica de ENISA. El recorrido, en orden:
-
-1. **Alta en el portal de ENISA** y selección de la línea —Jóvenes Emprendedores, Emprendedores o Crecimiento— que encaja con la empresa.
-2. **Formulario de solicitud online**: datos de la empresa, importe solicitado, destino de los fondos y resumen del proyecto.
-3. **Documentación adjunta**: plan de negocio, proyecciones financieras justificadas, últimas cuentas depositadas (si las hay), escrituras y composición societaria, y CV del equipo.
-4. **Envío y análisis**: ENISA revisa el expediente y casi siempre emite un requerimiento de aclaración o documentación adicional, que hay que atender en plazo. El análisis completo lleva **4-6 meses**.
-5. **Resolución**: si es favorable, se formaliza el préstamo (con intervención notarial) y se desembolsa. Si es denegatoria, ENISA indica el motivo y cabe volver a presentar más adelante con el expediente corregido.
-
-A diferencia de las subvenciones, ENISA **no funciona por convocatorias con plazo cerrado**: las líneas están abiertas de forma continua mientras haya presupuesto anual disponible, así que el momento de solicitar lo marca la empresa, no el calendario. La línea de **Jóvenes Emprendedores** suele ser la puerta de entrada para empresas de menos de 24 meses con socios menores de 40 años.
-
-## ENISA no es la única puerta
-
-Si el proyecto tiene un componente fuerte de I+D+i, conviene comparar con las [ayudas CDTI (NEOTEC, PID, Línea Directa)](/notas/cdti-ayudas-innovacion-empresas): ahí hay tramos no reembolsables que ENISA no ofrece, a cambio de más exigencia técnica. Y para situar ENISA dentro del mapa completo de financiación pública —BDNS, CDTI, IDAE, ENISA y Andalucía TRADE—, la referencia es la guía de [financiación pública para empresas con propósito](/financiacion-empresas). Las fuentes no son excluyentes: la combinación correcta depende de la fase y del proyecto.
+Para situar ENISA dentro del mapa completo de financiación pública —BDNS, CDTI, IDAE, ENISA y Andalucía TRADE—, la referencia es la guía de [financiación pública para empresas con propósito](/financiacion-empresas).
 
 ## Cómo lo aborda Startidea
 
 Startidea acompaña a startups y PYMES en el ciclo completo del expediente ENISA:
 
-1. **Diagnóstico inicial** (1-2 sesiones, 1 semana): si tu proyecto realmente encaja con alguna de las tres líneas, qué importe es realista pedir, y si hay alternativas mejores en tu caso concreto.
+1. **Diagnóstico inicial** (1-2 sesiones, 1 semana): si el proyecto encaja con alguna de las tres líneas, qué importe es realista pedir, y si hay alternativas mejores en el caso concreto.
 
 2. **Construcción del expediente** (3-4 semanas): plan de negocio narrativo, proyecciones financieras justificadas, memoria del proyecto, dossier del equipo. Trabajo conjunto con la dirección de la empresa para que el documento refleje la realidad operativa, no solo lo que ENISA "quiere oír".
 
 3. **Revisión cruzada** (1 semana): un segundo redactor de Startidea revisa el expediente con criterios ENISA antes del envío. Bucle final con la empresa para validar números.
 
-4. **Envío y seguimiento**: presentación electrónica del expediente y seguimiento de la respuesta de ENISA. Si pide aclaración (típico), Startidea gestiona la subsanación.
+4. **Envío y seguimiento**: presentación electrónica del expediente y seguimiento de la respuesta de ENISA. Si pide aclaración (lo habitual), Startidea gestiona la subsanación.
 
-Para startups que aún no tienen el proyecto cerrado, conviene empezar primero por una **sesión de diagnóstico** para definir el proyecto antes de redactar el expediente. Presentar un plan ENISA sobre un modelo de negocio que aún no está claro suele acabar en una resolución denegatoria.
+Cómo se trabaja con una consultora, qué firma la empresa y qué no debería prometerse nunca está detallado en la nota sobre [solicitar ENISA o CDTI con una consultora](/notas/solicitar-enisa-cdti-con-consultora).
+
+Para startups que aún no tienen el proyecto cerrado, conviene empezar por una **sesión de diagnóstico** y definir el proyecto antes de redactar el expediente. Presentar un plan ENISA sobre un modelo de negocio que aún no está claro suele acabar en resolución denegatoria.
 
 ---
 
 Si tu empresa está considerando un préstamo ENISA, [reserva 30 minutos con Startidea](/contacto). Esa llamada sirve para ver cuál de las tres líneas encaja con tu momento, qué importe es realista solicitar, y si conviene un préstamo ENISA solo o combinado con otra fuente de financiación. Sin coste, sin compromiso.
+</content>
