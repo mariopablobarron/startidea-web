@@ -7,8 +7,8 @@
  * CTA: enlaza directamente al wizard con ?slug=SLUG pre-seleccionado.
  */
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
-import { getConvocatoria } from '@/lib/expedientes-db';
+import { breadcrumbList, faqPageSchema, howToSchema, SITE_URL } from '@/lib/jsonld';
+import { getConvocatoria, isConvocatoriaVigente } from '@/lib/expedientes-db';
 
 export const prerender = false;
 
@@ -21,6 +21,14 @@ try { conv = getConvocatoria(slug); } catch {}
 if (!conv || !conv.activa) {
   return Astro.redirect('/subvenciones/catalogo', 302);
 }
+
+// ─── Política de caducidad ───────────────────────────────────────────────────
+// Una convocatoria con el plazo vencido sigue siendo alcanzable (hay enlaces
+// vivos y visitas desde buscadores), pero deja de ser indexable: `noindex` en
+// la meta robots, fuera del sitemap (`isConvocatoriaVigente` filtra igual en
+// sitemap-catalogo.xml.ts) y sin FAQ/HowTo en el JSON-LD, para no publicar
+// como vigente un plazo que ya cerró.
+const caducada = !isConvocatoriaVigente(conv);
 
 // ─── JSON-LD ──────────────────────────────────────────────────────────────────
 const pageUrl = `${SITE_URL}/subvenciones/catalogo/${slug}`;
@@ -58,6 +66,93 @@ const governmentServiceLd = {
   } : {}),
 };
 
+// ─── TL;DR ───────────────────────────────────────────────────────────────────
+// Resumen extractable en el primer scroll: qué financia, a quién y hasta
+// cuándo. Es el bloque que copian los motores de respuesta (AI Overviews,
+// Perplexity) cuando resumen la convocatoria, así que va todo en frases
+// cortas y con los datos, no con adjetivos.
+const queFinancia = conv.financiaResumen.length
+  ? conv.financiaResumen.slice(0, 2).join(' y ').toLowerCase()
+  : null;
+
+const tldr = [
+  queFinancia
+    ? `${conv.tituloFull || conv.titulo} financia ${queFinancia}.`
+    : `${conv.tituloFull || conv.titulo} es una convocatoria de ${conv.organo || 'una administración pública'}.`,
+  `Pueden solicitarla ${(conv.tipoEntidades || conv.beneficiarioLabel || '').replace(/\.$/, '')}.`,
+  conv.importeRange && conv.importeRange !== '—'
+    ? `Importe orientativo: ${conv.importeRange}.`
+    : null,
+  caducada
+    ? `El plazo cerró el ${conv.deadline}: esta ficha se mantiene como referencia histórica.`
+    : `El plazo de presentación termina el ${conv.deadline}.`,
+].filter(Boolean).join(' ');
+
+// ─── Checklist de documentación ──────────────────────────────────────────────
+// Documentación que piden prácticamente todas las convocatorias públicas
+// españolas (Ley 38/2003 General de Subvenciones y sus bases tipo). NO es la
+// lista de esta convocatoria en concreto —eso está en sus bases— y así se
+// rotula en la página, para no dar por cierto lo que no consta.
+const CHECKLIST_BASE = [
+  'Solicitud firmada por la persona con representación legal de la entidad',
+  'CIF de la entidad y DNI de quien la representa',
+  'Estatutos y acreditación de la inscripción en el registro que corresponda',
+  'Certificados de estar al corriente con la AEAT y con la Seguridad Social',
+  'Certificado de titularidad de la cuenta bancaria de la entidad',
+  'Memoria del proyecto o de la actividad, con objetivos, metodología y calendario',
+  'Presupuesto desglosado por partidas y declaración de otras ayudas solicitadas',
+];
+
+const checklist = conv.requisitos.length
+  ? [...conv.requisitos, ...CHECKLIST_BASE]
+  : CHECKLIST_BASE;
+
+// ─── Cómo se justifica ───────────────────────────────────────────────────────
+// Fase que hunde más expedientes que la propia solicitud: se concede la ayuda
+// y luego se reintegra por una justificación mal montada.
+const PASOS_JUSTIFICACION = [
+  {
+    titulo: 'Contabilidad separada desde el día uno',
+    texto: 'Cada gasto imputado a la subvención se registra en una cuenta o centro de coste propio. Reconstruirlo al final del ejercicio es la causa más común de reintegro.',
+  },
+  {
+    titulo: 'Facturas a nombre de la entidad y pagadas por banco',
+    texto: 'El pago en efectivo o desde una cuenta personal no se admite como gasto justificado. La fecha de la factura debe caer dentro del periodo de ejecución.',
+  },
+  {
+    titulo: 'Memoria técnica con los indicadores comprometidos',
+    texto: 'Se justifica lo que se prometió: si la memoria de solicitud hablaba de 60 personas atendidas, la memoria final tiene que medir esas 60.',
+  },
+  {
+    titulo: 'Cuenta justificativa dentro del plazo',
+    texto: 'El plazo de justificación es independiente del de solicitud y suele contarse desde el fin del periodo de ejecución. Presentarla tarde equivale a no presentarla.',
+  },
+];
+
+// ─── Cómo se solicita (HowTo — extractable por AI Overviews) ─────────────────
+const pasosSolicitud = [
+  {
+    name: 'Comprobar el encaje con las bases',
+    text: `Verificar que la entidad reúne las condiciones exigidas y que el proyecto entra en lo que financia ${conv.titulo}.`,
+  },
+  {
+    name: 'Reunir la documentación administrativa',
+    text: 'Estatutos, inscripción registral, certificados de estar al corriente con la AEAT y la Seguridad Social, y titularidad de la cuenta bancaria.',
+  },
+  {
+    name: 'Redactar la memoria contra el baremo',
+    text: 'La memoria se escribe siguiendo los criterios de valoración de las bases, punto por punto, no como un relato libre del proyecto.',
+  },
+  {
+    name: 'Presentar en la sede electrónica',
+    text: `La solicitud se registra en la sede electrónica de ${conv.organo || 'el organismo convocante'} con certificado digital, dentro del plazo (${conv.deadline}).`,
+  },
+  {
+    name: 'Atender los requerimientos de subsanación',
+    text: 'Tras el registro suele abrirse un plazo breve de subsanación. Vigilar la notificación electrónica: el plazo corre aunque nadie la abra.',
+  },
+];
+
 // ─── FAQ (visible + FAQPage JSON-LD para rich snippets) ─────────────────────
 // Preguntas que la gente busca de verdad ("[X] requisitos / plazo / cómo
 // solicitar"), respondidas con los datos de la convocatoria. La sección
@@ -73,7 +168,9 @@ const faqs = ([
   conv.deadline
     ? {
         q: `¿Cuál es el plazo para presentar ${conv.titulo}?`,
-        a: `El plazo de presentación es: ${conv.deadline}.` + (conv.nota ? ` ${conv.nota}` : ''),
+        a: caducada
+          ? `El plazo de esta edición terminó el ${conv.deadline} y ya no admite solicitudes. Suele reabrirse en la edición siguiente; el catálogo de Startidea recoge las convocatorias que siguen abiertas.`
+          : `El plazo de presentación es: ${conv.deadline}.` + (conv.nota ? ` ${conv.nota}` : ''),
       }
     : null,
   (conv.importeRange || conv.importe)
@@ -83,22 +180,18 @@ const faqs = ([
       }
     : null,
   {
+    q: `¿Qué documentación hace falta para solicitarla?`,
+    a: `La lista definitiva está en las bases reguladoras. En la práctica, toda convocatoria pública pide: ${CHECKLIST_BASE.slice(0, 5).join('; ')}.`,
+  },
+  {
+    q: `¿Cómo se justifica la subvención una vez concedida?`,
+    a: `Con una cuenta justificativa: memoria técnica de lo ejecutado, relación de gastos con facturas a nombre de la entidad y justificantes de pago bancario. El plazo de justificación es distinto del de solicitud. Una justificación mal montada obliga a reintegrar la ayuda, aunque el proyecto se haya hecho.`,
+  },
+  {
     q: `¿Cómo se solicita ${conv.titulo}?`,
-    a: `La solicitud se presenta en la sede electrónica de ${conv.organo || 'el organismo convocante'} con certificado digital, dentro del plazo. Startidea puede preparar la memoria adaptada al baremo y presentar el expediente en tu nombre, sin coste si no se concede.`,
+    a: `La solicitud se presenta en la sede electrónica de ${conv.organo || 'el organismo convocante'} con certificado digital, dentro del plazo. Startidea prepara la memoria adaptada al baremo y presenta el expediente en nombre de la entidad, sin coste si no se concede.`,
   },
 ].filter(Boolean)) as { q: string; a: string }[];
-
-const faqLd = faqs.length
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqs.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    }
-  : null;
 
 const jsonLd = [
   breadcrumbList([
@@ -108,17 +201,28 @@ const jsonLd = [
     { name: conv.codigo,    url: pageUrl },
   ]),
   governmentServiceLd,
-  ...(faqLd ? [faqLd] : []),
+  // Una convocatoria cerrada no publica FAQ ni HowTo: dejaría en el índice
+  // instrucciones para presentar algo que ya no admite solicitudes.
+  ...(!caducada && faqs.length ? [faqPageSchema(faqs)] : []),
+  ...(!caducada ? [howToSchema({
+    name: `Cómo solicitar ${conv.titulo}`,
+    description: `Pasos para presentar la solicitud de ${conv.tituloFull || conv.titulo} dentro de plazo.`,
+    steps: pasosSolicitud,
+  })] : []),
 ];
 
 // Título y meta SEO
-const metaTitle = `${conv.titulo} — requisitos, plazo y cómo solicitarla | Startidea`;
-const metaDesc = [
-  conv.tipoEntidades ? `Para ${conv.tipoEntidades}.` : `Convocatoria ${conv.codigo}.`,
-  conv.importeRange ? ` Importe: ${conv.importeRange}.` : '',
-  ` Plazo: ${conv.deadline}.`,
-  ' Requisitos, gastos elegibles y cómo presentarla paso a paso, explicado por Startidea.',
-].join('');
+const metaTitle = caducada
+  ? `${conv.titulo} — convocatoria cerrada | Startidea`
+  : `${conv.titulo} — requisitos, plazo y cómo solicitarla | Startidea`;
+const metaDesc = caducada
+  ? `El plazo de ${conv.titulo} cerró el ${conv.deadline}. Ficha de referencia y convocatorias abiertas equivalentes en el catálogo de Startidea.`
+  : [
+      conv.tipoEntidades ? `Para ${conv.tipoEntidades}.` : `Convocatoria ${conv.codigo}.`,
+      conv.importeRange ? ` Importe: ${conv.importeRange}.` : '',
+      ` Plazo: ${conv.deadline}.`,
+      ' Requisitos, gastos elegibles y cómo presentarla paso a paso, explicado por Startidea.',
+    ].join('');
 
 const TIPO_LABEL: Record<string, string> = {
   privada: 'Tercer sector',
@@ -150,17 +254,42 @@ if (conv.deadlineIso) {
   title={metaTitle}
   description={metaDesc.slice(0, 160)}
   jsonLd={jsonLd}
+  noindex={caducada}
 >
-  <!-- Breadcrumb -->
-  <div class="border-b border-ink/10 bg-paper-warm py-3">
-    <div class="container-x flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-ink/75">
-      <a href="/subvenciones" class="hover:text-magenta">Subvenciones</a>
-      <span>/</span>
-      <a href="/subvenciones/catalogo" class="hover:text-magenta">Catálogo</a>
-      <span>/</span>
-      <span class="text-magenta">{conv.codigo}</span>
+  <!-- Breadcrumb visible — mismos nodos y mismo orden que el BreadcrumbList
+       del JSON-LD. Google exige que se correspondan. -->
+  <nav class="border-b border-ink/10 bg-paper-warm py-3" aria-label="Ruta de navegación">
+    <ol class="container-x flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-ink/75">
+      <li><a href="/" class="hover:text-magenta">Inicio</a></li>
+      <li aria-hidden="true">/</li>
+      <li><a href="/subvenciones" class="hover:text-magenta">Subvenciones</a></li>
+      <li aria-hidden="true">/</li>
+      <li><a href="/subvenciones/catalogo" class="hover:text-magenta">Catálogo</a></li>
+      <li aria-hidden="true">/</li>
+      <li><span class="text-magenta" aria-current="page">{conv.codigo}</span></li>
+    </ol>
+  </nav>
+
+  <!-- Convocatoria con el plazo vencido: la página sigue accesible (hay
+       enlaces y visitas vivas) pero va en noindex y sin CTA de tramitación. -->
+  {caducada && (
+    <div class="border-b border-ink/20 bg-ink py-4 text-paper">
+      <div class="container-x flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p class="font-display text-lg leading-tight">Convocatoria cerrada</p>
+          <p class="mt-0.5 text-sm text-paper/75">
+            El plazo terminó el {conv.deadline}. Esta ficha se mantiene como referencia; ya no admite solicitudes.
+          </p>
+        </div>
+        <a
+          href="/subvenciones/catalogo"
+          class="shrink-0 inline-block border-2 border-paper bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink transition-colors hover:bg-transparent hover:text-paper"
+        >
+          Ver convocatorias abiertas →
+        </a>
+      </div>
     </div>
-  </div>
+  )}
 
   <!-- Banner de urgencia por plazo (solo si <14 días) -->
   {urgencyLevel && diasParaPlazo !== null && (
@@ -222,8 +351,13 @@ if (conv.deadlineIso) {
 
         <!-- Badge estado + tipo -->
         <div class="mb-4 flex flex-wrap gap-2">
-          <span class="inline-flex items-center gap-1.5 border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-emerald-700">
-            ● Abierta
+          <span class:list={[
+            'inline-flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest',
+            caducada
+              ? 'border-ink/25 bg-ink/5 text-ink/75'
+              : 'border-emerald-200 bg-emerald-50 text-emerald-700',
+          ]}>
+            {caducada ? '● Cerrada' : '● Abierta'}
           </span>
           <span class:list={[
             'inline-flex items-center px-2.5 py-1 border font-mono text-[9px] uppercase tracking-widest',
@@ -255,6 +389,12 @@ if (conv.deadlineIso) {
           </div>
         </div>
 
+        <!-- TL;DR — resumen extractable en el primer scroll -->
+        <div class="mt-6 border-l-4 border-magenta bg-paper-warm px-5 py-4">
+          <p class="font-mono text-[9px] uppercase tracking-widest text-magenta">En resumen</p>
+          <p class="mt-2 text-base leading-relaxed text-ink/90">{tldr}</p>
+        </div>
+
         <!-- Resumen de datos clave -->
         <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 border border-ink/10 bg-paper-warm p-5">
           <div>
@@ -278,12 +418,18 @@ if (conv.deadlineIso) {
 
         <!-- CTA principal -->
         <div class="mt-8 flex flex-col sm:flex-row gap-3">
-          <a
-            href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=hero&utm_campaign=detail-${conv.slug}`}
-            class="btn text-base py-3 px-6"
-          >
-            Tramitar con Startidea →
-          </a>
+          {caducada ? (
+            <a href="/diagnostico?utm_source=catalogo&utm_medium=hero&utm_campaign=convocatoria-cerrada" class="btn text-base py-3 px-6">
+              Buscar una convocatoria que encaje →
+            </a>
+          ) : (
+            <a
+              href={`/subvenciones/presentar/nuevo?slug=${conv.slug}&title=${encodeURIComponent(conv.titulo)}&utm_source=catalogo&utm_medium=hero&utm_campaign=detail-${conv.slug}`}
+              class="btn text-base py-3 px-6"
+            >
+              Tramitar con Startidea →
+            </a>
+          )}
           {conv.bojaUrl && (
             <a
               href={conv.bojaUrl}
@@ -406,10 +552,89 @@ if (conv.deadlineIso) {
           </div>
         </div>
 
-        <!-- CTA final: 2 vías de servicio -->
+        <!-- Checklist de documentación -->
+        <div class="border border-ink/10 p-6">
+          <h2 class="font-display text-2xl text-ink">Checklist de documentación</h2>
+          <p class="mt-2 text-sm text-ink/75">
+            La lista definitiva está en las bases reguladoras de la convocatoria. Esta es la
+            documentación que se pide en la práctica totalidad de convocatorias públicas
+            españolas: sirve para empezar a reunir papeles sin esperar a leerlas enteras.
+          </p>
+          <ul class="mt-4 space-y-2">
+            {checklist.map(item => (
+              <li class="flex items-start gap-2 text-sm text-ink/80">
+                <span class="shrink-0 mt-0.5 text-xs leading-none text-magenta" aria-hidden="true">☐</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 text-xs text-ink/75">
+            Los certificados de estar al corriente con la AEAT y la Seguridad Social caducan
+            a los seis meses. Pedirlos al principio y presentarlos al final es un motivo
+            frecuente de subsanación.
+          </p>
+        </div>
+
+        <!-- Cómo se solicita (mismos pasos que el HowTo del JSON-LD) -->
+        {!caducada && (
+          <div class="border border-ink/10 p-6">
+            <h2 class="font-display text-2xl text-ink">Cómo se solicita, paso a paso</h2>
+            <ol class="mt-4 space-y-4">
+              {pasosSolicitud.map((p, i) => (
+                <li class="flex items-start gap-4">
+                  <span class="shrink-0 flex h-7 w-7 items-center justify-center border border-magenta/40 bg-magenta/5 font-mono text-xs font-bold text-magenta">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p class="font-semibold text-ink">{p.name}</p>
+                    <p class="mt-1 text-sm leading-relaxed text-ink/75">{p.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        <!-- Cómo se justifica -->
+        <div class="border border-ink/10 p-6">
+          <h2 class="font-display text-2xl text-ink">Cómo se justifica una vez concedida</h2>
+          <p class="mt-2 text-sm text-ink/75">
+            Conceder no es cobrar. La subvención se cobra del todo cuando la justificación
+            se acepta, y un expediente bien resuelto se puede perder aquí.
+          </p>
+          <div class="mt-4 space-y-4">
+            {PASOS_JUSTIFICACION.map(p => (
+              <div>
+                <p class="font-semibold text-ink">{p.titulo}</p>
+                <p class="mt-1 text-sm leading-relaxed text-ink/75">{p.texto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Puente al diagnóstico: para quien aún no sabe si esta es su convocatoria -->
+        <div class="border border-ink/10 bg-paper-warm p-6">
+          <h2 class="font-display text-xl text-ink">¿No está claro si esta es la convocatoria?</h2>
+          <p class="mt-2 text-sm leading-relaxed text-ink/75">
+            El diagnóstico gratuito de Startidea revisa la situación de la entidad y devuelve
+            qué líneas de financiación encajan de verdad con lo que ya hace, esta incluida.
+            Son diez minutos y no hay que preparar nada.
+          </p>
+          <a
+            href={`/diagnostico?utm_source=catalogo&utm_medium=puente-diagnostico&utm_campaign=detail-${conv.slug}`}
+            class="btn-ghost mt-4 inline-block"
+          >
+            Hacer el diagnóstico gratuito →
+          </a>
+        </div>
+
+        <!-- CTA final: 2 vías de servicio.
+             Con el plazo cerrado no se ofrece tramitar esta convocatoria; el
+             puente al diagnóstico y el Copiloto siguen teniendo sentido. -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <!-- Vía premium: Servicio gestionado -->
+          {!caducada && (
           <div class="border-2 border-magenta bg-ink p-6 text-paper relative">
             <span class="absolute top-0 right-0 bg-magenta text-paper font-mono text-[10px] uppercase tracking-widest px-3 py-1">
               Recomendado
@@ -428,6 +653,7 @@ if (conv.deadlineIso) {
               Pedir presupuesto →
             </a>
           </div>
+          )}
 
           <!-- Vía gratis: Copiloto Autónomo -->
           <div class="border-2 border-ink/15 bg-paper-warm p-6">
