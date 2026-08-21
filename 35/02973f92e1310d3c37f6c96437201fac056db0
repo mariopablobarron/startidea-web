@@ -1,0 +1,21 @@
+src/components/Fundador.astro
+  s_44b8c660731f68::t_6edf141018c18d 62
+src/lib/jsonld.ts
+  s_44b8c660731f68::t_6f0a40dc40612a 62-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "3502973f92e1310d3c37f6c96437201fac056db0",
+  "prompts": {},
+  "sessions": {
+    "s_44b8c660731f68": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6e6c9b87-f940-478b-94d3-b6d41a7ded5a",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
