@@ -1,0 +1,47 @@
+src/pages/empleo.astro
+  s_e91c61aace0342::t_039a5c79b46f04 208
+src/pages/api/encuesta-fundraising.ts
+  s_e91c61aace0342::t_fc9f3b9353f91b 5
+  s_e91c61aace0342::t_0a4af66c8b97e5 113
+  s_e91c61aace0342::t_c12abf862f6aa0 106-108
+src/pages/diagnostico/servicio/[slug].astro
+  s_e91c61aace0342::t_5f4cf5af70aa04 128-143
+src/pages/diagnostico/brief-web.astro
+  s_e91c61aace0342::t_4c897e6f8c384f 723
+src/pages/encuesta-fundraising.astro
+  s_e91c61aace0342::t_18c8ac98ba5343 264
+src/pages/impulsa/index.astro
+  s_e91c61aace0342::t_017f6e1acb98ee 346
+src/pages/diagnostico/index.astro
+  s_e91c61aace0342::t_0aacb6322df5b8 953-956
+  s_e91c61aace0342::t_b3d7731e2230fb 566-583
+  s_e91c61aace0342::t_6f226253363703 983-987
+src/pages/api/impulsa-solicitud.ts
+  s_e91c61aace0342::t_601222f43354a6 137
+  s_e91c61aace0342::t_6182387e7c736e 6
+  s_e91c61aace0342::t_ed247796e1c2d9 114,122
+src/pages/presupuesto/nuevo.astro
+  s_e91c61aace0342::t_343178f905bde2 287-294
+  s_e91c61aace0342::t_b040a131e442a8 325,329-333
+  s_e91c61aace0342::t_0ecaa26b730403 216-237
+src/pages/api/candidatura.ts
+  s_e91c61aace0342::t_66157571145507 209
+  s_e91c61aace0342::t_7b8a4f15966e0d 25
+  s_e91c61aace0342::t_f08fc2f2efbbd9 180-185,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7a03b91603518abf7bac6bcdb2303305adec808d",
+  "prompts": {},
+  "sessions": {
+    "s_e91c61aace0342": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5d9d66a2-5472-429d-aee5-8726f3775201",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
