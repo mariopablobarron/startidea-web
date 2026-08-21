@@ -12,6 +12,13 @@ const rango = rangoPublico('/comunicacion');
 // Prueba local: casos de Granada.
 const casosSlugs = ['granada-social-5', 'down-granada', 'acogimiento-familiar-granada'];
 
+// Respuesta corta, en el primer scroll y sin depender de JavaScript: es el
+// párrafo que un buscador o un asistente puede citar entero. Cubre las tres
+// formas con las que se busca lo mismo — "social media", "redes sociales" y
+// "gestión de redes sociales" — sin repetirlas de forma mecánica.
+const tldr =
+  'Startidea es la agencia de social media de Granada para entidades del tercer sector, instituciones y empresas con propósito. La gestión de redes sociales incluye estrategia y mapa de canales, calendario editorial, producción de piezas, programación, moderación y cobertura de eventos en la ciudad. Parte de 800 €/mes, con estudio propio en el centro de Granada y trabajo también en remoto para Andalucía y el resto de España.';
+
 const faqs = [
   {
     question: '¿Qué agencia de comunicación para ONG hay en Granada?',
@@ -24,6 +31,10 @@ const faqs = [
   {
     question: '¿Cuánto cuesta la gestión de redes sociales en Granada?',
     answer: 'La gestión continua de redes parte de 800 €/mes e incluye estrategia, calendario editorial, producción de piezas, programación y moderación. El precio formal se cierra tras un diagnóstico de 30 minutos según el número de canales, la frecuencia de publicación y si hace falta producción audiovisual propia. No hay packs cerrados que no encajen con nadie: el alcance se ajusta a cada organización.',
+  },
+  {
+    question: '¿Ofrece Startidea servicios de social media para negocios y empresas de Granada?',
+    answer: 'Sí, para empresas con propósito: negocios de Granada que tienen algo que defender más allá del producto —impacto social o ambiental, comercio de proximidad, economía social, cultura—. Ahí el trabajo es el mismo que en el tercer sector: estrategia de canales, calendario, contenidos y comunidad. Startidea no lleva cuentas de marcas cuyo único encargo es vender más rápido; para eso hay agencias de marketing en Granada mejor preparadas. Cuando el objetivo es captación pura, encaja mejor la publicidad digital que la gestión de redes.',
   },
   {
     question: '¿Hay que estar en Granada para trabajar con Startidea?',
@@ -122,7 +133,17 @@ const local = [
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
     <div class="container-x">
-      <span class="label">— Redes sociales · Social media · Granada</span>
+      <!-- Breadcrumb visible: tiene que existir en la página, no solo en el
+           JSON-LD. Google pide correspondencia entre uno y otro. -->
+      <nav class="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-mute" aria-label="Migas">
+        <a href="/" class="link-underline hover:text-ink">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/comunicacion" class="link-underline hover:text-ink">Comunicación estratégica</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-ink">Redes sociales en Granada</span>
+      </nav>
+
+      <span class="label mt-8 block">— Redes sociales · Social media · Granada</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
         Redes sociales y social media<br/>
         <em class="italic text-magenta">en Granada</em>.
@@ -130,6 +151,13 @@ const local = [
       <p class="mt-8 max-w-measure text-lede text-ink/80">
         Startidea gestiona las redes sociales de entidades del tercer sector, instituciones y empresas con propósito en Granada —y en toda Andalucía—: estrategia, calendario editorial, contenidos y comunidad, con una agencia que conoce el terreno y tiene estudio en el centro de la ciudad. Social media con criterio editorial, no por inercia.
       </p>
+      <!-- Respuesta corta extractable: el bloque que copia un buscador o una IA.
+           Mismo patrón que el "En corto" de las notas. -->
+      <aside class="mt-10 max-w-measure border-l-2 border-magenta bg-paper-warm p-6 md:p-8" aria-label="Respuesta corta">
+        <p class="label text-magenta">— En corto</p>
+        <p class="mt-3 text-lg leading-relaxed text-ink/85">{tldr}</p>
+      </aside>
+
       <div class="mt-10">
         <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_redes_granada_hero">
           Habla de tus redes sociales
@@ -212,6 +240,9 @@ const local = [
           <p class="mt-10 max-w-measure text-ink/80">
             La gestión de redes es una pieza de un trabajo mayor: la <a href="/comunicacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación estratégica</a> completa —relato, contenidos, campañas con causa e identidad— se detalla en la página de servicio.
           </p>
+          <p class="mt-4 max-w-measure text-ink/80">
+            Alrededor hay dos piezas que suelen ir con ella: la <a href="/publicidad" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">publicidad digital en Google y Meta</a>, cuando hace falta alcance que lo orgánico no da, y la <a href="/audiovisual" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">producción audiovisual con estudio en Granada</a>, que alimenta el calendario con vídeo y foto propios en lugar de banco de imágenes.
+          </p>
         </div>
       </div>
     </div>
@@ -273,7 +304,9 @@ const local = [
       <p class="max-w-measure text-sm text-ink/70">
         ¿Quieres profundizar antes de hablar? Esta guía explica el
         <a href="/notas/social-media-tercer-sector-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">social media para entidades sociales en Granada</a>:
-        qué publicar, con qué frecuencia y cómo medirlo sin métricas de vanidad.
+        qué publicar, con qué frecuencia y cómo medirlo sin métricas de vanidad. Y si el proyecto está empezando, esta otra ordena cómo
+        <a href="/notas/organizacion-sin-animo-de-lucro-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">sostener una organización sin ánimo de lucro en Granada</a>
+        —financiación, visibilidad e impacto— antes de pensar en el calendario de redes.
       </p>
     </div>
   </section>
