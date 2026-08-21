@@ -1,0 +1,27 @@
+src/content/notas/como-elegir-agencia-tercer-sector.md
+  s_e1d8d35da0c81e::t_cf1d5bf5c2ab1c 110-111
+src/pages/redes-sociales-granada.astro
+  s_e1d8d35da0c81e::t_b7dc686d58f11d 36-38
+  s_e1d8d35da0c81e::t_b4d22bfc81acd8 15-21
+  s_e1d8d35da0c81e::t_cd3b9b2567e2af 136-146
+  s_e1d8d35da0c81e::t_4481ee6de99215 307-309
+  s_e1d8d35da0c81e::t_8bb5bded294e88 154-160
+  s_e1d8d35da0c81e::t_c1d1dab37567fd 243-245
+  s_e1d8d35da0c81e::t_5c191535efa329 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7c2d658330f4640619b1ece9081792575343452c",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
