@@ -213,6 +213,28 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
             </div>
           </div>
 
+          <div class="space-y-2">
+            <label for="source" class="block text-sm font-medium text-ink">¿Cómo nos has conocido? (opcional)</label>
+            <select id="source" name="source"
+              class="w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none">
+              <option value="">Elige una opción…</option>
+              <option value="recomendacion">Recomendación de otra entidad o persona</option>
+              <option value="google">Búsqueda en Google</option>
+              <option value="redes-sociales">Redes sociales</option>
+              <option value="ia">ChatGPT u otro asistente de IA</option>
+              <option value="evento">Un evento o jornada</option>
+              <option value="prensa">Prensa o medios</option>
+              <option value="cliente-anterior">Ya habíamos trabajado con Startidea</option>
+              <option value="otros">Otros</option>
+            </select>
+            <div data-source-other class="hidden pt-2">
+              <label for="sourceOther" class="block text-sm font-medium text-ink">Cuéntanos cómo</label>
+              <input type="text" id="sourceOther" name="sourceOther" maxlength="180"
+                placeholder="Ej: nos habló de vosotros la federación X"
+                class="mt-2 w-full border border-ink/20 bg-paper px-4 py-3 text-ink focus:border-magenta focus:outline-none" />
+            </div>
+          </div>
+
           <div class="flex justify-between pt-4">
             <button type="button" data-prev class="btn-ghost">← Atrás</button>
             <button type="submit" class="btn">Enviar petición →</button>
@@ -262,6 +284,14 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     return null;
   }
 
+  form.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t instanceof HTMLSelectElement && t.name === "source") {
+      const otherWrap = form.querySelector("[data-source-other]");
+      otherWrap?.classList.toggle("hidden", t.value !== "otros");
+    }
+  });
+
   form.addEventListener("click", (e) => {
     const t = e.target;
     if (t.matches("[data-next]")) {
@@ -292,10 +322,15 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     showStatus("Enviando…", false);
     const fd = new FormData(form);
     const data: Record<string, unknown> = { kind: "presupuesto" };
-    ["name", "email", "phone", "organizationName", "website", "audience", "challenge", "budgetRange", "timeframe", "honeypot"].forEach((k) => {
+    ["name", "email", "phone", "organizationName", "website", "audience", "challenge", "budgetRange", "timeframe", "source", "honeypot"].forEach((k) => {
       const v = fd.get(k);
       if (typeof v === "string" && v) data[k] = v;
     });
+    // "Otros" en ¿cómo nos has conocido? → concatenar el texto libre
+    if (data.source === "otros") {
+      const other = fd.get("sourceOther");
+      data.source = typeof other === "string" && other.trim() ? `otros: ${other.trim()}` : "otros";
+    }
     const services = fd.getAll("services").map(String).filter(Boolean);
     if (services.length) data.answers = { services };
     data.attribution = (window.stAttribution && window.stAttribution()) || {};

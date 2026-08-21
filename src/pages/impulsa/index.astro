@@ -343,6 +343,7 @@ const servicios = [
         contacto_email: val('contacto_email'),
         contacto_telefono: val('contacto_telefono'),
         consent: true,
+        attribution: (window.stAttribution && window.stAttribution()) || {},
       };
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando…'; }

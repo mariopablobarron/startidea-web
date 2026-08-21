@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { saveSolicitud, countSolicitudes } from '@/lib/impulsa-db';
 import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
+import { formatAttribution } from '@/lib/attribution';
 
 export const prerender = false;
 
@@ -110,6 +111,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // Avisos no bloqueantes
+  const origen = formatAttribution(body.attribution);
   try {
     const total = countSolicitudes();
     sendTelegram(
@@ -117,6 +119,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         `${esc(s.org_nombre)} (${esc(s.org_tipo)})\n` +
         `Contacto: ${esc(s.contacto_nombre)} · ${esc(s.contacto_email)}\n` +
         `Interés: ${esc(servicios.join(', ')) || '—'}\n` +
+        (origen ? `Origen: ${esc(origen)}\n` : '') +
         `Total acumulado: <b>${total}</b>`,
     ).catch(() => {});
   } catch { /* noop */ }
@@ -131,6 +134,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       <p style="margin:0 0 4px 0"><strong>Servicios de interés:</strong> ${esc(servicios.join(', ')) || '—'}</p>
       <p style="margin:0 0 4px 0"><strong>Retos:</strong> ${esc(s.retos)}</p>
       <p style="margin:0 0 4px 0"><strong>Objetivo:</strong> ${esc(s.objetivo)}</p>
+      ${origen ? `<p style="margin:0 0 4px 0"><strong>Origen:</strong> ${esc(origen)}</p>` : ''}
     `,
   }).catch((err) => console.error('[impulsa] email fail:', err));
 

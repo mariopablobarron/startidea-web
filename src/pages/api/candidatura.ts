@@ -22,6 +22,7 @@ import {
 } from '@/lib/candidaturas-db';
 import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
+import { formatAttribution } from '@/lib/attribution';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const prerender = false;
@@ -176,6 +177,12 @@ async function handle(request: Request, clientAddress: string): Promise<Response
     ? adjuntos.map((a) => `${a.nombre} (${a.kb} KB)`).join(', ')
     : '— sin adjuntos —';
 
+  // Atribución first-touch (JSON-string en el multipart)
+  let origen = '';
+  try {
+    origen = formatAttribution(JSON.parse(clean(form.get('attribution'), 2000) || 'null'));
+  } catch { /* atribución malformada: se ignora */ }
+
   try {
     const total = countCandidaturas();
     sendTelegram(
@@ -183,6 +190,7 @@ async function handle(request: Request, clientAddress: string): Promise<Response
         `${esc(nombre)} · ${esc(email)}${telefono ? ' · ' + esc(telefono) : ''}\n` +
         `Área: ${esc(area)}${ubicacion ? ' · ' + esc(ubicacion) : ''}\n` +
         `Adjuntos: ${esc(adjList)}\n` +
+        (origen ? `Origen: ${esc(origen)}\n` : '') +
         `Ref: <b>${esc(id)}</b> · Total acumulado: <b>${total}</b>`,
     ).catch(() => {});
   } catch { /* noop */ }
@@ -198,6 +206,7 @@ async function handle(request: Request, clientAddress: string): Promise<Response
       ${web ? `<p style="margin:0 0 4px 0"><strong>Web/Portfolio:</strong> ${esc(web)}</p>` : ''}
       <p style="margin:0 0 4px 0"><strong>Mensaje:</strong><br>${esc(mensaje) || '—'}</p>
       <p style="margin:12px 0 4px 0"><strong>Adjuntos:</strong> ${esc(adjList)}</p>
+      ${origen ? `<p style="margin:0 0 4px 0"><strong>Origen:</strong> ${esc(origen)}</p>` : ''}
       <p style="margin:12px 0 0 0"><a href="https://startidea.es/admin/candidaturas">Ver en el panel →</a></p>
     `,
   }).catch((err) => console.error('[candidatura] email owner fail:', err));
