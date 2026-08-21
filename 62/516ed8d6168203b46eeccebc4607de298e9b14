@@ -1,0 +1,31 @@
+src/pages/presupuesto/nuevo.astro
+  s_e91c61aace0342::t_d8e598cb8bca83 140
+  s_e91c61aace0342::t_1a6bf6887c60ac 64-67
+  s_e91c61aace0342::t_edf5828d091279 75
+  s_e91c61aace0342::t_e16ff65f886912 124
+  s_e91c61aace0342::t_d6d53fc737cddf 158
+  s_e91c61aace0342::t_13eecb703d4e88 189,194,201
+src/pages/diagnostico/index.astro
+  s_e91c61aace0342::t_43d38d1ae18b71 176
+  s_e91c61aace0342::t_66600fa42427fc 161
+  s_e91c61aace0342::t_21c0e61a940848 301
+  s_e91c61aace0342::t_e5570692a4aaea 335
+  s_e91c61aace0342::t_64703ee7b1e8c6 167
+  s_e91c61aace0342::t_055725ec83004a 107-110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "62516ed8d6168203b46eeccebc4607de298e9b14",
+  "prompts": {},
+  "sessions": {
+    "s_e91c61aace0342": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5d9d66a2-5472-429d-aee5-8726f3775201",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
