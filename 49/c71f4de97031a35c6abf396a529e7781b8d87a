@@ -1,0 +1,24 @@
+src/lib/scrapers/bdns-enrich.ts
+  s_297161b4e2e980::t_a504445b827b14 1-213
+src/pages/api/admin/enrich-convocatorias.ts
+  s_297161b4e2e980::t_ac902619e96bd5 1-119,125-146
+  s_297161b4e2e980::t_d0572d0f1efb62 120-124
+scripts/scraper-bdns-daily.sh
+  s_297161b4e2e980::t_b7e53cca960a23 4-7,9-17,21-23,25-31,34,36-47,50,52,54-56,58-68,70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "49c71f4de97031a35c6abf396a529e7781b8d87a",
+  "prompts": {},
+  "sessions": {
+    "s_297161b4e2e980": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "261d802c-bbc3-4751-8ebf-49a5ff220715",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
