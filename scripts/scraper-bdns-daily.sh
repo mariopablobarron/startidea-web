@@ -1,47 +1,70 @@
 #!/usr/bin/env bash
 # scraper-bdns-daily.sh
 #
-# Ejecuta el scraper BDNS contra la web de Startidea.
-# Instalar en VPS: /usr/local/bin/scraper-bdns-daily.sh
-# Cron sugerido (06:30 UTC todos los días laborables):
-#   30 6 * * 1-5 /usr/local/bin/scraper-bdns-daily.sh >> /var/log/startidea-scraper-bdns.log 2>&1
+# Copia de referencia del cron real de la VPS (KVM8):
+#   /usr/local/bin/subvenciones-scraper-startidea.sh
+#   crontab: 30 8 * * * cron-global-guard <base64 de la ruta>
+# Si editas esto, replica el cambio en la VPS (y viceversa).
 #
-# Variables de entorno necesarias (en container Coolify):
-#   ADMIN_TOKEN  — valor en startidea-web env vars
+# Paso 1 — scraper BDNS (/api/admin/scraper-bdns): encola convocatorias nuevas
+#   como inactivas para revisión en /admin/convocatorias.
+# Paso 2 — enriquecimiento (/api/admin/enrich-convocatorias): baja el PDF
+#   oficial de BDNS y pre-rellena con IA los campos que la API no da
+#   (requisitos, gastos, importes por beneficiario). Endpoint separado a
+#   propósito: PDF grande + LLM no caben en el --max-time del scraper.
+#
+# Auth: ADMIN_TOKEN del container startidea-web → sha256 → header x-admin-token.
+# Ligero (curl, sin build). flock evita solapes. NUNCA docker build en cron.
 
 set -euo pipefail
 
-CONTAINER_NAME="${CONTAINER_NAME:-startidea-web}"
-WEB_URL="${WEB_URL:-https://startidea.es}"
-LOGPFX="[scraper-bdns $(date '+%Y-%m-%d %H:%M:%S')]"
+LOG=/var/log/subvenciones-scraper-startidea.log
+BASE="https://startidea.es"
+LOCK=/var/run/subvenciones-scraper-startidea.lock
 
-# Obtener ADMIN_TOKEN desde el container Docker
-ADMIN_TOKEN="$(docker exec "${CONTAINER_NAME}" printenv ADMIN_TOKEN 2>/dev/null || echo '')"
-if [ -z "${ADMIN_TOKEN}" ]; then
-  echo "${LOGPFX} ERROR: No se pudo obtener ADMIN_TOKEN del container '${CONTAINER_NAME}'" >&2
+ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
+log() { echo "[$(ts)] $*" >> "$LOG"; }
+
+exec 9>"$LOCK"
+if ! flock -n 9; then
+  log "Otra ejecucion en curso (flock). Salgo."
+  exit 0
+fi
+
+log "Inicio scraper BDNS -> startidea-web"
+
+# Hash del ADMIN_TOKEN (NO loguea el valor en claro)
+ADMIN_HASH=$(docker exec startidea-web sh -c 'echo -n "$ADMIN_TOKEN" | sha256sum | cut -d" " -f1')
+if [ -z "$ADMIN_HASH" ]; then
+  log "ERROR: ADMIN_TOKEN no leido del container startidea-web"
   exit 1
 fi
 
-echo "${LOGPFX} Iniciando scraper BDNS…"
-
-RESPONSE=$(curl -fsSL \
-  --max-time 60 \
-  --retry 2 \
-  --retry-delay 5 \
-  -X POST \
+# Paso 1: scraper (hasta ~72 fetches secuenciales → --max-time 120)
+RESPONSE=$(curl -sS --max-time 120 -X POST \
+  -H "x-admin-token: $ADMIN_HASH" \
+  -H "x-cron: 1" \
+  -H "Origin: https://startidea.es" \
   -H "Content-Type: application/json" \
-  -H "x-admin-token: ${ADMIN_TOKEN}" \
   -d '{}' \
-  "${WEB_URL}/api/admin/scraper-bdns" || echo '{"ok":false,"error":"curl_failed"}')
+  "$BASE/api/admin/scraper-bdns" 2>>"$LOG" || echo '{"ok":false,"error":"curl_failed"}')
 
-echo "${LOGPFX} Respuesta: ${RESPONSE}"
+log "Respuesta: $RESPONSE"
 
-# Extraer inserted con jq si está disponible
-if command -v jq &>/dev/null; then
-  INSERTED=$(echo "${RESPONSE}" | jq -r '.inserted // 0')
-  FETCHED=$(echo "${RESPONSE}" | jq -r '.fetched // 0')
-  ERRORS=$(echo "${RESPONSE}" | jq -r '.errors | length // 0')
-  echo "${LOGPFX} Resultados: fetched=${FETCHED} inserted=${INSERTED} errors=${ERRORS}"
+if ! echo "$RESPONSE" | grep -q '"ok":true'; then
+  log "ERROR en respuesta del scraper"
+  exit 1
 fi
+INS=$(echo "$RESPONSE" | grep -o '"inserted":[0-9]*' | cut -d: -f2 || true)
+log "Scraper OK (inserted=${INS:-?})"
 
-echo "${LOGPFX} Fin."
+# Paso 2: enriquecer borradores (activa=0, campos vacios) desde el PDF oficial.
+# limit 5/dia: el backlog se drena en dias y el gasto queda en centimos (Haiku).
+ENRICH=$(curl -sS --max-time 300 -X POST \
+  -H "x-admin-token: $ADMIN_HASH" \
+  -H "Content-Type: application/json" \
+  -d '{"limit":5}' \
+  "$BASE/api/admin/enrich-convocatorias" 2>>"$LOG" || echo '{"ok":false,"error":"curl_failed"}')
+log "Enrich: $ENRICH"
+
+exit 0
