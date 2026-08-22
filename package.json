@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "test": "vitest run",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -35,6 +36,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/pdf-parse": "^1.1.5"
+    "@types/pdf-parse": "^1.1.5",
+    "vitest": "^3.2.4"
   }
 }
