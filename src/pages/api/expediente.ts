@@ -20,8 +20,12 @@ import {
 } from '@/lib/expedientes-db';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { writeFile, mkdir } from 'node:fs/promises';
-import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import {
+  getExpedienteStorageDir,
+  normalizeSpanishTaxId,
+  resolveExpedienteFile,
+} from '@/lib/expediente-storage';
 
 export const prerender = false;
 
@@ -91,7 +95,7 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
 
   // Campos requeridos
   const orgName = clean(formData.get('orgName'), 200);
-  const cif = clean(formData.get('cif'), 20).toUpperCase();
+  const cifInput = clean(formData.get('cif'), 20);
   const orgType = clean(formData.get('orgType'), 50);
   const representante = clean(formData.get('representante'), 120);
   const email = clean(formData.get('email'), 120);
@@ -111,8 +115,15 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
   const comentarios = clean(formData.get('comentarios'), 800);
   const comoConocio = clean(formData.get('comoConocio'), 60);
 
-  if (!orgName || !cif || !representante || !email || !provincia || !descripcionProyecto) {
+  if (!orgName || !cifInput || !representante || !email || !provincia || !descripcionProyecto) {
     return new Response(JSON.stringify({ ok: false, error: 'fields' }), { status: 400 });
+  }
+  const cif = normalizeSpanishTaxId(cifInput);
+  if (!cif) {
+    return new Response(JSON.stringify({ ok: false, error: 'cif' }), {
+      status: 400,
+      headers: { 'content-type': 'application/json' },
+    });
   }
   if (!isEmail(email)) {
     return new Response(JSON.stringify({ ok: false, error: 'email' }), { status: 400 });
@@ -120,7 +131,7 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
 
   // Generar ID único del expediente
   const expedienteId = randomUUID().split('-')[0].toUpperCase();
-  const expedienteDir = join(EXPEDIENTES_DIR, `${expedienteId}-${cif}`);
+  const expedienteDir = getExpedienteStorageDir(EXPEDIENTES_DIR, expedienteId);
 
   // Guardar archivos
   const fileFields = ['docMemoriaAnual', 'docMemoria', 'docPresupuesto', 'docHacienda', 'docSS', 'docEstatutos', 'docOtros'];
@@ -137,7 +148,7 @@ async function handlePost(request: Request, clientAddress: string): Promise<Resp
           continue;
         }
         const safeName = entry.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-        const filePath = join(expedienteDir, `${fieldName}_${safeName}`);
+        const filePath = resolveExpedienteFile(expedienteDir, `${fieldName}_${safeName}`);
         await writeFile(filePath, Buffer.from(await entry.arrayBuffer()));
         savedFiles.push(`${fieldName}: ${entry.name} (${(entry.size / 1024).toFixed(0)} KB)`);
       }

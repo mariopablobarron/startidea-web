@@ -22,9 +22,9 @@ import { getExpediente, saveAiOutput, updateStatus } from '@/lib/expedientes-db'
 import { isValidAdminHeader, isAdminLoggedIn } from '@/lib/admin-session';
 import { buildConvContext, runAiGeneration } from '@/lib/copiloto-engine';
 import { extractDocsFromExpediente, formatExtractedDocsForPrompt } from '@/lib/doc-extractor';
+import { findExpedienteStorageDir } from '@/lib/expediente-storage';
 import { sendEmail } from '@/lib/email-resend';
 import { notifyError } from '@/lib/notify-error';
-import { join } from 'node:path';
 import { sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
@@ -74,7 +74,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   // Extraer texto de los documentos subidos por el cliente (si existen)
   const expedientesDir = process.env.EXPEDIENTES_DIR ?? '/data/expedientes';
-  const expedienteDir = join(expedientesDir, `${id}-${exp.org_cif}`);
+  const expedienteDir = findExpedienteStorageDir(expedientesDir, exp.id, exp.org_cif);
   const docsExtraction = await extractDocsFromExpediente(expedienteDir);
   const docsContext = formatExtractedDocsForPrompt(docsExtraction);
   if (docsExtraction.docs.length > 0) {

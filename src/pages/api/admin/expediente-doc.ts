@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
 import { getExpediente } from '@/lib/expedientes-db';
+import { findExpedienteStorageDir, resolveExpedienteFile } from '@/lib/expediente-storage';
 import { readFile } from 'node:fs/promises';
-import { join, resolve, extname } from 'node:path';
+import { extname } from 'node:path';
 
 export const prerender = false;
 
@@ -60,10 +61,11 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   const diskName = diskNameFrom(entry);
   if (!diskName) return new Response('Documento ilegible', { status: 404 });
 
-  const dir = join(EXPEDIENTES_DIR, `${exp.id}-${exp.org_cif}`);
-  const filePath = join(dir, diskName);
-  // Defensa anti path-traversal: el archivo debe quedar dentro de su carpeta.
-  if (!resolve(filePath).startsWith(resolve(dir) + '/')) {
+  let filePath: string;
+  try {
+    const dir = findExpedienteStorageDir(EXPEDIENTES_DIR, exp.id, exp.org_cif);
+    filePath = resolveExpedienteFile(dir, diskName);
+  } catch {
     return new Response('Ruta inválida', { status: 400 });
   }
 
