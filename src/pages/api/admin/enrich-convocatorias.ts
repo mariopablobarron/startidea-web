@@ -67,6 +67,10 @@ export const POST: APIRoute = async ({ request }) => {
           (body.incluirActivas ? true : !c.activa) &&
           c.requisitos.length === 0 &&
           c.gastosOk.length === 0 &&
+          // La nota-IA marca "ya intentado": si el PDF no traía esas secciones
+          // los campos siguen vacíos, y sin este filtro la ficha se
+          // reprocesaría cada día en bucle. Reintento explícito: por slugs.
+          !(c.nota ?? '').includes(NOTA_IA) &&
           codigoFromSlug(c.slug) !== null,
       )
       .map((c) => c.slug)
