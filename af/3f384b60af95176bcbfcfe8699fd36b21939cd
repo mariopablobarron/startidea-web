@@ -1,0 +1,19 @@
+src/pages/api/admin/enrich-convocatorias.ts
+  s_297161b4e2e980::t_ff9ee2f16d1d5f 70-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "af3f384b60af95176bcbfcfe8699fd36b21939cd",
+  "prompts": {},
+  "sessions": {
+    "s_297161b4e2e980": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "261d802c-bbc3-4751-8ebf-49a5ff220715",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
