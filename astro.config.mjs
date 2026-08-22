@@ -81,6 +81,9 @@ export default defineConfig({
 
     // Categorías de WP — redirigir a /notas
     '/category/news':                                     '/notas',
+
+    // Post viejo de WP sobre tecnología/robots e innovación social → nota equivalente
+    '/robots-que-impulsan-el-trabajo-a-distancia-innovacion-social-en-accion': '/notas/que-es-la-innovacion-social',
   },
   integrations: [
     tailwind({
