@@ -1203,11 +1203,24 @@ export function isConvocatoriaVigente(
   return conv.deadlineIso >= hoyIso;
 }
 
-/** Convocatorias activas para el formulario y la API pública. */
+/**
+ * Convocatorias activas para el formulario y la API pública.
+ *
+ * El plazo manda sobre el flag: `activa` es manual y nadie lo baja cuando una
+ * convocatoria vence (ver `statsCatalogo` → `expiradas`), así que una ficha
+ * cerrada seguía anunciándose como abierta en /subvenciones/catalogo, en el
+ * sitemap y en el desplegable de «presentar expediente». Se excluyen las de
+ * `deadline_iso` pasado con el mismo criterio que `statsCatalogo()`; las de
+ * `deadline_iso` NULL (plazo abierto o sin fecha conocida) se mantienen.
+ * La ficha individual no se filtra: `getConvocatoria` sigue resolviéndola,
+ * así que ninguna URL ya indexada pasa a 404.
+ */
 export function listConvocatoriasActivas(tipo?: string): ConvocatoriaView[] {
   const db = getDb();
-  const where = tipo ? 'WHERE activa = 1 AND tipo_beneficiario = ?' : 'WHERE activa = 1';
-  const params = tipo ? [tipo] : [];
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const vigente = 'activa = 1 AND (deadline_iso IS NULL OR deadline_iso >= ?)';
+  const where = tipo ? `WHERE ${vigente} AND tipo_beneficiario = ?` : `WHERE ${vigente}`;
+  const params: string[] = tipo ? [todayIso, tipo] : [todayIso];
   const rows = db.prepare(
     `SELECT * FROM convocatorias ${where} ORDER BY destacada DESC, deadline_iso ASC, codigo ASC`,
   ).all(...params) as Convocatoria[];
