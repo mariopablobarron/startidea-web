@@ -1,0 +1,36 @@
+src/pages/api/auto-copiloto/register.ts
+  s_b110e72096e1e5::t_c55de4a70a16ae 114,204,215-219
+  s_b110e72096e1e5::t_5b514e2d862a26 14,32,74-76,79-110,113,116,148-149
+tests/portal-registration-db.test.ts
+  s_b110e72096e1e5::t_e0222207c5aa57 1,24-27,76-87
+  s_b110e72096e1e5::t_724f6ab6cbef74 2-23,28-55,57-66,68-71,74,88-99
+  s_b110e72096e1e5::t_2ff76e0f378cb2 67,72-73,75
+  s_b110e72096e1e5::t_b3934e1731bf89 56
+src/lib/expedientes-db.ts
+  s_b110e72096e1e5::t_eaaed8c4777b5b 180-181,183-193,215,740,746-747,751,753
+  s_b110e72096e1e5::t_a540ff85313a0b 844-856,858-862,871-876,880-882,892-909,911-912,946,952,956
+  s_b110e72096e1e5::t_c55de4a70a16ae 182,857,863-870,910
+tests/portal-registro-route-auth.test.ts
+  s_b110e72096e1e5::t_724f6ab6cbef74 1-93
+src/pages/api/portal-registro.ts
+  s_b110e72096e1e5::t_6943a6ac84c3e8 4-5,9,13,61-78,81,94,99-100,159
+tests/auto-copiloto-register-auth.test.ts
+  s_b110e72096e1e5::t_724f6ab6cbef74 1-84,90-95
+  s_b110e72096e1e5::t_2ff76e0f378cb2 85-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "4c21a5ab3b47e41475711a36a9ddac64e3229b1c",
+  "prompts": {},
+  "sessions": {
+    "s_b110e72096e1e5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02c90-fc6f-7d30-bcac-ef6c4c7cab6f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
