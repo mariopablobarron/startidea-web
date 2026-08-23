@@ -11,6 +11,7 @@ import { createProfile, getProfileByEmail } from '@/lib/auto-copiloto-db';
 import { sendEmail } from '@/lib/email-resend';
 import { sendTelegram } from '@/lib/telegram';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
 
@@ -28,7 +29,7 @@ const ORG_TIPOS: Record<string, string> = {
   otro: 'Otra entidad',
 };
 
-export const POST: APIRoute = async ({ request, url }) => {
+export const POST: APIRoute = async ({ request }) => {
   // ── Rate limit por IP: máx 3 registros / hora ───────────────────────────
   // Protege contra spam de creación de perfiles y abuso del email de confirmación.
   const ip = getClientIp(request);
@@ -70,20 +71,49 @@ export const POST: APIRoute = async ({ request, url }) => {
     );
   }
 
-  // ── Prevenir duplicados: si ya hay perfil con ese email, devolver info útil ──
-  // No revelamos si está confirmado o no (para no facilitar enumeración),
-  // pero sí evitamos crear otro registro al mismo email.
+  // ── Prevenir duplicados sin revelar el bearer de gestión ─────────────────
+  // El enlace se reenvía únicamente al buzón ya registrado. La respuesta HTTP
+  // es genérica y nunca contiene el manage_token ni confirma el estado del perfil.
   const existing = getProfileByEmail(email);
   if (existing) {
-    const manageUrl = `${url.origin}/subvenciones/mi-copiloto?t=${existing.manage_token}`;
+    const manageUrl = `${SITE_URL}/subvenciones/mi-copiloto?t=${existing.manage_token}`;
+    await sendEmail({
+      to: existing.email,
+      subject: `Tu enlace de gestión del Copiloto de Subvenciones — Startidea`,
+      html: `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:Georgia,serif;color:#1f1f22;background:#f9fafb;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;padding:32px 24px">
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin:0 0 24px">
+    — Startidea · Copiloto Autónomo de Subvenciones
+  </p>
+  <h1 style="font-size:22px;font-weight:700;margin:0 0 16px;color:#1f1f22">
+    Gestiona el Copiloto de ${esc(existing.org_nombre)}
+  </h1>
+  <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 24px">
+    Hemos recibido una solicitud para recuperar el acceso de gestión. Usa el enlace
+    siguiente para pausar, reactivar o cancelar el Copiloto.
+  </p>
+  <a href="${esc(manageUrl)}"
+     style="display:inline-block;background:#e6356b;color:#fff;text-decoration:none;padding:12px 28px;font-family:monospace;font-size:13px;letter-spacing:0.05em;font-weight:600;margin-bottom:24px">
+    Gestionar Copiloto →
+  </a>
+  <p style="font-size:13px;color:#888;margin:24px 0 8px">
+    Si no solicitaste este enlace, puedes ignorar este email.
+  </p>
+</div>
+</body>
+</html>`,
+      replyTo: 'hola@startidea.es',
+    });
+
     return new Response(
       JSON.stringify({
-        ok: false,
-        error: 'email_already_registered',
-        detail: `Ya hay un Copiloto registrado con este email. Si lo gestiona tu organización, busca el email de gestión recibido al darse de alta. Si crees que es un error, escribe a hola@startidea.es.`,
-        manage_url: manageUrl, // útil para el frontend si quiere mostrar link directo
+        ok: true,
+        detail: 'Revisa ese buzón para confirmar el alta o recuperar el acceso de gestión.',
       }),
-      { status: 409 },
+      { status: 202, headers: { 'content-type': 'application/json' } },
     );
   }
 
@@ -115,8 +145,8 @@ export const POST: APIRoute = async ({ request, url }) => {
   });
 
   // Email de confirmación
-  const confirmUrl = `${url.origin}/api/auto-copiloto/confirm?token=${profile.confirm_token}`;
-  const manageUrl = `${url.origin}/subvenciones/mi-copiloto?t=${profile.manage_token}`;
+  const confirmUrl = `${SITE_URL}/api/auto-copiloto/confirm?token=${profile.confirm_token}`;
+  const manageUrl = `${SITE_URL}/subvenciones/mi-copiloto?t=${profile.manage_token}`;
 
   const html = `
 <!DOCTYPE html>
@@ -171,7 +201,7 @@ export const POST: APIRoute = async ({ request, url }) => {
 </body>
 </html>`;
 
-  const emailOk = await sendEmail({
+  await sendEmail({
     to: email,
     subject: `Confirma el Copiloto de Subvenciones para ${org_nombre} — Startidea`,
     html,
@@ -182,7 +212,10 @@ export const POST: APIRoute = async ({ request, url }) => {
   void sendTelegram(`🤖 <b>Nuevo Copiloto Autónomo registrado</b>\n\n<b>Org:</b> ${org_nombre}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${ORG_TIPOS[org_tipo] ?? org_tipo}\n<b>Estado:</b> Pendiente de confirmación`);
 
   return new Response(
-    JSON.stringify({ ok: true, emailSent: emailOk, id: profile.id }),
-    { status: 201 },
+    JSON.stringify({
+      ok: true,
+      detail: 'Revisa ese buzón para confirmar el alta o recuperar el acceso de gestión.',
+    }),
+    { status: 202, headers: { 'content-type': 'application/json' } },
   );
 };
