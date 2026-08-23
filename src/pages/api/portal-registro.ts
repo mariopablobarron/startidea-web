@@ -1,16 +1,16 @@
 /**
  * POST /api/portal-registro
  *
- * Crea (o actualiza) el perfil del usuario en portal_users,
- * genera un magic token y envía el enlace de acceso por email.
+ * Prepara el perfil hasta verificar el email o, si ya existe, genera un enlace
+ * de acceso sin mutar los datos registrados.
  * Notifica a Mario vía Telegram.
  *
  * Campos: email, nombre, orgNombre, orgCif, orgTipo, telefono,
- *         provincia, comoConocio, consentAt (timestamp Unix)
+ *         provincia, comoConocio
  */
 import type { APIRoute } from 'astro';
 import {
-  createPortalUser,
+  createPendingPortalRegistration,
   getPortalUser,
   createMagicToken,
 } from '@/lib/expedientes-db';
@@ -36,7 +36,6 @@ export const POST: APIRoute = async ({ request }) => {
     telefono?:    string;
     provincia?:   string;
     comoConocio?: string;
-    consentAt?:   number;
   };
 
   try {
@@ -59,30 +58,27 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ ok: false, error: 'org_tipo_required' }), { status: 400 });
   }
 
-  const esNuevo = !getPortalUser(email);
+  const existingUser = getPortalUser(email);
+  const esNuevo = !existingUser;
 
-  // Timestamp de consentimiento: usar el del cliente si es razonable, o el servidor
-  const now        = Math.floor(Date.now() / 1000);
-  const consentAt  = (typeof body.consentAt === 'number' && body.consentAt > 0)
-    ? body.consentAt
-    : now;
+  // Una cuenta nueva solo se materializa cuando el dueño del buzón consume
+  // este token. Para cuentas existentes no se acepta ningún dato de perfil
+  // enviado por esta ruta anónima y no se invalidan otros enlaces vigentes.
+  const token = esNuevo
+    ? createPendingPortalRegistration({
+        email,
+        nombre:       body.nombre.trim(),
+        org_nombre:   body.orgNombre.trim(),
+        org_cif:      body.orgCif?.trim() ?? '',
+        org_tipo:     body.orgTipo.trim(),
+        telefono:     body.telefono?.trim() ?? '',
+        provincia:    body.provincia?.trim() ?? '',
+        como_conocio: body.comoConocio?.trim() ?? '',
+      })
+    : createMagicToken(email, { invalidateExisting: false });
 
-  createPortalUser({
-    email,
-    nombre:       body.nombre.trim(),
-    org_nombre:   body.orgNombre.trim(),
-    org_cif:      body.orgCif?.trim() ?? '',
-    org_tipo:     body.orgTipo.trim(),
-    telefono:     body.telefono?.trim() ?? '',
-    provincia:    body.provincia?.trim() ?? '',
-    como_conocio: body.comoConocio?.trim() ?? '',
-    consent_at:   consentAt,
-  });
-
-  // Generar magic token y enviar email de bienvenida/acceso
-  const token    = createMagicToken(email);
   const magicUrl = `https://startidea.es/portal/link/${token}`;
-  const primerNombre = body.nombre.trim().split(' ')[0];
+  const primerNombre = (existingUser?.nombre ?? body.nombre.trim()).split(' ')[0];
 
   const html = `<!DOCTYPE html>
 <html lang="es">
@@ -95,13 +91,13 @@ export const POST: APIRoute = async ({ request }) => {
   </p>
 
   <h1 style="font-size:22px;font-weight:700;margin:0 0 12px;color:#1f1f22">
-    ${esNuevo ? `¡Bienvenido/a, ${esc(primerNombre)}!` : `Hola de nuevo, ${esc(primerNombre)}`}
+    ${esNuevo ? `Confirma tu email, ${esc(primerNombre)}` : `Hola de nuevo, ${esc(primerNombre)}`}
   </h1>
 
   <p style="font-size:15px;line-height:1.7;color:#444;margin:0 0 20px">
     ${esNuevo
-      ? `Tu cuenta en el portal de Startidea está lista. Haz clic en el enlace para acceder y gestionar tus proyectos.`
-      : `Hemos actualizado tu perfil. Usa el enlace de abajo para acceder al portal.`
+      ? `Hemos recibido tu solicitud. Haz clic en el enlace para verificar el email, crear la cuenta y acceder al portal.`
+      : `Hemos recibido una solicitud de acceso. Tu perfil no se ha modificado. Usa el enlace de abajo para entrar al portal.`
     }
   </p>
 
@@ -160,7 +156,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Notificar a Mario cuando hay un alta nueva
   if (esNuevo) {
-    void sendTelegram(`🆕 <b>Nuevo registro en el portal</b>\n\n<b>Nombre:</b> ${esc(body.nombre!.trim())}\n<b>Organización:</b> ${esc(body.orgNombre!.trim())}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${body.orgTipo ?? '—'}\n<b>Provincia:</b> ${body.provincia ?? '—'}\n<b>Cómo nos conoció:</b> ${body.comoConocio ?? '—'}`);
+    void sendTelegram(`🕓 <b>Solicitud de registro pendiente de verificar</b>\n\n<b>Nombre:</b> ${esc(body.nombre!.trim())}\n<b>Organización:</b> ${esc(body.orgNombre!.trim())}\n<b>Email:</b> ${email}\n<b>Tipo:</b> ${body.orgTipo ?? '—'}\n<b>Provincia:</b> ${body.provincia ?? '—'}\n<b>Cómo nos conoció:</b> ${body.comoConocio ?? '—'}`);
   }
 
   return new Response(JSON.stringify({ ok: true }), { status: 200 });

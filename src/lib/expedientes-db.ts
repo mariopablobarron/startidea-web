@@ -177,6 +177,20 @@ function getDb(): Database.Database {
       expires_at INTEGER NOT NULL,
       created_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS portal_pending_registrations (
+      token        TEXT PRIMARY KEY,
+      email        TEXT NOT NULL,
+      nombre       TEXT NOT NULL,
+      org_nombre   TEXT NOT NULL,
+      org_cif      TEXT NOT NULL DEFAULT '',
+      org_tipo     TEXT NOT NULL DEFAULT '',
+      telefono     TEXT NOT NULL DEFAULT '',
+      provincia    TEXT NOT NULL DEFAULT '',
+      como_conocio TEXT NOT NULL DEFAULT '',
+      consent_at   INTEGER NOT NULL,
+      expires_at   INTEGER NOT NULL,
+      created_at   INTEGER NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS portal_sessions (
       token      TEXT PRIMARY KEY,
       email      TEXT NOT NULL,
@@ -198,6 +212,7 @@ function getDb(): Database.Database {
       updated_at   INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_portal_magic_email  ON portal_magic_tokens (email);
+    CREATE INDEX IF NOT EXISTS idx_portal_pending_email ON portal_pending_registrations (email);
     CREATE INDEX IF NOT EXISTS idx_portal_session_email ON portal_sessions (email);
     CREATE INDEX IF NOT EXISTS idx_portal_users_email  ON portal_users (email);
   `);
@@ -722,18 +737,20 @@ export function getPortalUser(email: string): PortalUser | null {
 
 export function createPortalUser(
   data: Omit<PortalUser, 'id' | 'created_at' | 'updated_at'>,
-): void {
+): boolean {
   const db  = getDb();
   const now = Math.floor(Date.now() / 1000);
   // ID corto: USR-YYYY-XXXXXX (6 hex chars)
   const hex = Array.from({ length: 6 }, () => Math.floor(Math.random() * 16).toString(16)).join('').toUpperCase();
   const id  = `USR-${new Date().getFullYear()}-${hex}`;
-  db.prepare(`
-    INSERT OR REPLACE INTO portal_users
+  const result = db.prepare(`
+    INSERT INTO portal_users
       (id, email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, consent_at, created_at, updated_at)
     VALUES
       (@id, LOWER(@email), @nombre, @org_nombre, @org_cif, @org_tipo, @telefono, @provincia, @como_conocio, @consent_at, @created_at, @updated_at)
+    ON CONFLICT(email) DO NOTHING
   `).run({ ...data, email: data.email.toLowerCase(), id, created_at: now, updated_at: now });
+  return result.changes === 1;
 }
 
 export function updatePortalUser(
@@ -824,12 +841,45 @@ export function countUnreadMessages(expId: string, readerDirection: 'admin' | 'c
 
 import { randomBytes } from 'node:crypto';
 
-export function createMagicToken(email: string): string {
+export interface PendingPortalRegistrationData {
+  email:        string;
+  nombre:       string;
+  org_nombre:   string;
+  org_cif:      string;
+  org_tipo:     string;
+  telefono:     string;
+  provincia:    string;
+  como_conocio: string;
+}
+
+/**
+ * Conserva los datos como pendientes hasta que el dueño del buzón consume el
+ * enlace. Cada solicitud conserva su propio token y sus propios datos.
+ */
+export function createPendingPortalRegistration(data: PendingPortalRegistrationData): string {
+  const db = getDb();
+  const now = Math.floor(Date.now() / 1000);
+  const email = data.email.toLowerCase();
+  const token = randomBytes(24).toString('hex');
+  db.prepare(`
+    INSERT INTO portal_pending_registrations
+      (token, email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, consent_at, expires_at, created_at)
+    VALUES
+      (@token, @email, @nombre, @org_nombre, @org_cif, @org_tipo, @telefono, @provincia, @como_conocio, @consent_at, @expires_at, @created_at)
+  `).run({ ...data, email, token, consent_at: now, expires_at: now + 3600, created_at: now });
+  return token;
+}
+
+export function createMagicToken(
+  email: string,
+  options: { invalidateExisting?: boolean } = {},
+): string {
   const db = getDb();
   const token = randomBytes(24).toString('hex');
   const now = Math.floor(Date.now() / 1000);
-  // Limpiar tokens anteriores del mismo email
-  db.prepare(`DELETE FROM portal_magic_tokens WHERE email = LOWER(?)`).run(email);
+  if (options.invalidateExisting !== false) {
+    db.prepare(`DELETE FROM portal_magic_tokens WHERE email = LOWER(?)`).run(email);
+  }
   db.prepare(
     `INSERT INTO portal_magic_tokens (token, email, expires_at, created_at) VALUES (?, LOWER(?), ?, ?)`,
   ).run(token, email, now + 3600, now); // 1h de validez
@@ -839,12 +889,27 @@ export function createMagicToken(email: string): string {
 export function validateMagicToken(token: string): string | null {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
-  const row = db.prepare(
-    `SELECT email FROM portal_magic_tokens WHERE token = ? AND expires_at > ?`,
-  ).get(token, now) as { email: string } | undefined;
-  if (!row) return null;
-  db.prepare(`DELETE FROM portal_magic_tokens WHERE token = ?`).run(token);
-  return row.email;
+
+  return db.transaction(() => {
+    const magic = db.prepare(
+      `SELECT email FROM portal_magic_tokens WHERE token = ? AND expires_at > ?`,
+    ).get(token, now) as { email: string } | undefined;
+    if (magic) {
+      db.prepare(`DELETE FROM portal_magic_tokens WHERE token = ?`).run(token);
+      return magic.email;
+    }
+
+    const pending = db.prepare(`
+      SELECT email, nombre, org_nombre, org_cif, org_tipo, telefono, provincia, como_conocio, consent_at
+      FROM portal_pending_registrations
+      WHERE token = ? AND expires_at > ?
+    `).get(token, now) as (PendingPortalRegistrationData & { consent_at: number }) | undefined;
+    if (!pending) return null;
+
+    createPortalUser(pending);
+    db.prepare(`DELETE FROM portal_pending_registrations WHERE email = LOWER(?)`).run(pending.email);
+    return pending.email;
+  })();
 }
 
 export function createPortalSession(email: string): string {
@@ -878,14 +943,17 @@ export function getPortalSessionEmail(token: string): string | null {
  */
 export function cleanupExpiredPortalTokens(): {
   magic_tokens: number;
+  pending_registrations: number;
   sessions: number;
 } {
   const db = getDb();
   const now = Math.floor(Date.now() / 1000);
   const m = db.prepare(`DELETE FROM portal_magic_tokens WHERE expires_at < ?`).run(now);
+  const p = db.prepare(`DELETE FROM portal_pending_registrations WHERE expires_at < ?`).run(now);
   const s = db.prepare(`DELETE FROM portal_sessions WHERE expires_at < ?`).run(now);
   return {
     magic_tokens: m.changes ?? 0,
+    pending_registrations: p.changes ?? 0,
     sessions:     s.changes ?? 0,
   };
 }
