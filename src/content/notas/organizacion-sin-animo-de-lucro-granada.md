@@ -35,7 +35,7 @@ La sostenibilidad económica es el verdadero examen. Y casi siempre se suspende 
 
 Una organización sin ánimo de lucro sólida combina tres vías que no se excluyen:
 
-- **Financiación pública:** subvenciones de la Junta de Andalucía, Diputación de Granada, Ayuntamiento, la casilla del IRPF y fondos europeos. Importante, pero lenta y discontinua.
+- **Financiación pública:** subvenciones de la Junta de Andalucía, Diputación de Granada, Ayuntamiento, la casilla del IRPF y fondos europeos. Importante, pero lenta y discontinua. Quién convoca qué, en qué boletín se publica y en qué mes abre cada plazo está ordenado en esta [guía de financiación para entidades sociales de Granada](/notas/financiacion-entidades-sociales-granada).
 - **Captación privada:** cuotas de personas socias, donaciones puntuales y recurrentes, empresas con propósito y crowdfunding. Es la base más estable a medio plazo, y la más descuidada.
 - **Actividad propia:** servicios, formación o productos coherentes con la misión que generan ingresos sin desvirtuarla.
 
