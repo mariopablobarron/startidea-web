@@ -1,0 +1,36 @@
+package.json
+  s_5cc4671b80d79c::t_3d10e69186defa 11,39-40
+tests/expediente-api.test.ts
+  s_5cc4671b80d79c::t_8765da7f08da2d 1-52
+src/pages/api/expediente.ts
+  s_5cc4671b80d79c::t_3d10e69186defa 24-28,98,118,121-127,134,151
+src/lib/expediente-storage.ts
+  s_5cc4671b80d79c::t_3d10e69186defa 1-69
+src/lib/expediente-storage.test.ts
+  s_5cc4671b80d79c::t_83733932344efc 54
+  s_5cc4671b80d79c::t_3d10e69186defa 1-53,55-94
+vitest.config.ts
+  s_5cc4671b80d79c::t_960f952b178034 1-10
+src/pages/api/generar-expediente.ts
+  s_5cc4671b80d79c::t_3d10e69186defa 25,77
+src/pages/api/admin/expediente-doc.ts
+  s_5cc4671b80d79c::t_3d10e69186defa 4,6,64-68
+package-lock.json
+  s_5cc4671b80d79c::t_88ddfcbf6aae29 33-34,8443-8864
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "b3423d3508a51ec4b4e06ca42f4b897c34567d4e",
+  "prompts": {},
+  "sessions": {
+    "s_5cc4671b80d79c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a026e9-cdb5-7833-a5ac-183a923ec421",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
