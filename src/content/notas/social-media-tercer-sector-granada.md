@@ -90,4 +90,8 @@ Una [agencia de social media en Granada](/redes-sociales-granada) con experienci
 
 ---
 
+Y si la pregunta de fondo es cómo se paga todo esto, el mapa de organismos que financian al tercer sector en la provincia —quién convoca, dónde publica y cuándo abre el plazo— está en la [guía de financiación para entidades sociales de Granada](/notas/financiacion-entidades-sociales-granada).
+
+---
+
 Startidea trabaja la comunicación digital de organizaciones sociales en Granada desde 2011, tanto en la [gestión de redes sociales en Granada](/redes-sociales-granada) como en la [comunicación estratégica](/comunicacion) completa. Si tu entidad está en este punto y quiere hablar sobre qué dedicación tiene sentido en tu caso, [reserva 30 minutos](/contacto): la conversación cubre qué tienes, qué te falta y si hay encaje. Sin compromiso.
