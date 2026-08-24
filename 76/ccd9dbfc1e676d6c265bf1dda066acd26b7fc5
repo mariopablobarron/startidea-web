@@ -1,0 +1,51 @@
+src/lib/expedientes-db.ts
+  s_297161b4e2e980::t_d1c569aa7cc42a 1121
+  s_297161b4e2e980::t_953ce3c6780ce9 1190,1193
+  s_297161b4e2e980::t_aaca354c73b338 1153,1156
+  s_297161b4e2e980::t_99dca977ca343d 327-336
+  s_297161b4e2e980::t_945e9caf4977c3 1320-1326
+scripts/import-convocatorias-curadas.mjs
+  s_297161b4e2e980::t_d6e63c4965a015 15,21,23,28-33
+  s_e1d8d35da0c81e::t_09ff8059a7172c 34
+infra/install-crons.sh
+  s_297161b4e2e980::t_688ab51080bbf3 84-85
+  s_297161b4e2e980::t_67405bb94abd29 41-45
+src/lib/scrapers/bdns-enrich.ts
+  s_297161b4e2e980::t_e1ec97c8b9f4bd 128
+  s_297161b4e2e980::t_d8a7cb9b06d5a5 18-19
+  s_297161b4e2e980::t_53d6730a0e840c 102,105
+src/pages/api/admin/enrich-convocatorias.ts
+  s_297161b4e2e980::t_4c4d611621a5b7 10-14,25-31,36-44,53-54,60-129,144-145,152,155,158,164-175,177
+scripts/scraper-bdns-daily.sh
+  s_297161b4e2e980::t_16549c29b50a3a 43-45
+  s_297161b4e2e980::t_5774e1a07ba7c4 64-66,73-76
+  s_297161b4e2e980::t_434ae034c827e8 77
+src/lib/scrapers/bdns.ts
+  s_297161b4e2e980::t_5f6c8c68be203c 221
+src/lib/doc-extractor.ts
+  s_297161b4e2e980::t_f23d8171d45c0b 61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "76ccd9dbfc1e676d6c265bf1dda066acd26b7fc5",
+  "prompts": {},
+  "sessions": {
+    "s_297161b4e2e980": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "261d802c-bbc3-4751-8ebf-49a5ff220715",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
