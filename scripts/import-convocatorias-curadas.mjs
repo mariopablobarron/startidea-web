@@ -12,17 +12,25 @@
  * requisitos) como texto multilínea; aquí se convierten desde arrays.
  */
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith('--'));
 const base = args.includes('--base') ? args[args.indexOf('--base') + 1] : 'https://startidea.es';
 const activar = args.includes('--activar');
-const token = process.env.ADMIN_TOKEN;
+const rawToken = process.env.ADMIN_TOKEN;
 
-if (!file || !token) {
+if (!file || !rawToken) {
   console.error('Uso: ADMIN_TOKEN=xxx node scripts/import-convocatorias-curadas.mjs <fichero.json> [--base URL] [--activar]');
   process.exit(1);
 }
+
+// El endpoint compara x-admin-token contra sha256(ADMIN_TOKEN) — ver
+// isValidAdminHeader en src/lib/admin-session.ts. Se acepta el token en claro
+// (se hashea aquí) o ya hasheado (64 hex).
+const token = /^[0-9a-f]{64}$/i.test(rawToken)
+  ? rawToken
+  : createHash('sha256').update(rawToken).digest('hex');
 
 const fichas = JSON.parse(readFileSync(file, 'utf8'));
 const joinLines = (v) => (Array.isArray(v) ? v.join('\n') : (v ?? ''));

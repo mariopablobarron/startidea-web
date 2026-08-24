@@ -324,6 +324,16 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_conv_tipo        ON convocatorias (tipo_beneficiario, activa);
     CREATE INDEX IF NOT EXISTS idx_conv_fuente      ON convocatorias (fuente, activa);
   `);
+  // Migraciones seguras de convocatorias — columnas añadidas tras el despliegue
+  // inicial. enrich_attempted_at: cuándo se intentó el enriquecimiento IA desde
+  // el PDF de BDNS (estado propio, NO va en el texto libre `nota`).
+  for (const sql of [
+    `ALTER TABLE convocatorias ADD COLUMN enrich_attempted_at INTEGER`,
+  ]) {
+    try { _db.exec(sql); } catch (e) {
+      if (!/duplicate column/i.test(String(e))) console.error('[expedientes-db] migración convocatorias falló:', sql, e);
+    }
+  }
   // Seed inicial — solo si la tabla está vacía
   const nConv = (_db.prepare('SELECT COUNT(*) as n FROM convocatorias').get() as { n: number }).n;
   if (nConv === 0) {
@@ -1108,6 +1118,7 @@ export interface Convocatoria {
   fuente_id: string | null;
   activa: number;
   destacada: number;
+  enrich_attempted_at: number | null;
   created_at: number;
   updated_at: number;
 }
@@ -1139,8 +1150,10 @@ export interface ConvocatoriaView {
   basesUrl: string | null;
   sedeUrl: string | null;
   fuente: string;
+  fuenteId: string | null;
   activa: boolean;
   destacada: boolean;
+  enrichAttemptedAt: number | null;
 }
 
 function parseConv(row: Convocatoria): ConvocatoriaView {
@@ -1174,8 +1187,10 @@ function parseConv(row: Convocatoria): ConvocatoriaView {
     basesUrl:         row.url_bases,
     sedeUrl:          row.url_sede,
     fuente:           row.fuente,
+    fuenteId:         row.fuente_id,
     activa:           row.activa === 1,
     destacada:        row.destacada === 1,
+    enrichAttemptedAt: row.enrich_attempted_at ?? null,
   };
 }
 
@@ -1300,6 +1315,13 @@ export function upsertConvocatoria(data: {
     requisitos:       JSON.stringify(data.requisitos),
     now,
   });
+}
+
+/** Marca cuándo se intentó el enriquecimiento IA (con o sin resultado). Estado
+ *  propio: el filtro de candidatas se apoya aquí, nunca en el texto de `nota`. */
+export function setConvocatoriaEnrichAttempted(slug: string, ts = Math.floor(Date.now() / 1000)): void {
+  const db = getDb();
+  db.prepare('UPDATE convocatorias SET enrich_attempted_at = ? WHERE slug = ?').run(ts, slug);
 }
 
 export function toggleConvocatoriaActiva(slug: string): boolean {

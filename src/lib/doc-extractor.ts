@@ -58,7 +58,7 @@ const FIELD_LABELS: Record<string, string> = {
 
 // ─── Extractores por tipo ─────────────────────────────────────────────────────
 
-async function extractPdf(buffer: Buffer): Promise<string> {
+export async function extractPdf(buffer: Buffer): Promise<string> {
   try {
     // pdf-parse v1 exporta directamente una función (pdf-parse/lib/pdf-parse.js)
     // Usamos createRequire para compatibilidad con ESM de Astro

@@ -218,7 +218,7 @@ const BDNS_API = 'https://www.infosubvenciones.es/bdnstrans/api';
  * Fetch con timeout + guarda de content-type. Lanza si la respuesta NO es JSON
  * (defensa contra la regresión de pegar al front-end HTML).
  */
-async function fetchJson<T>(url: string, timeoutMs: number): Promise<T> {
+export async function fetchJson<T>(url: string, timeoutMs: number): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
