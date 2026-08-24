@@ -14,10 +14,9 @@
  * con cita) produjo las 7 fichas curadas del catálogo sin un solo dato
  * inventado que sobreviviera a la verificación adversarial.
  */
-import { createRequire } from 'node:module';
 import { pickModel } from '@/lib/model-router';
-
-const _require = createRequire(import.meta.url);
+import { extractPdf } from '@/lib/doc-extractor';
+import { fetchJson } from './bdns';
 
 const BDNS_API = 'https://www.infosubvenciones.es/bdnstrans/api';
 const MAX_PDF_BYTES = 25 * 1024 * 1024; // la Orden del Plan Corresponsables pesa 12,9 MB
@@ -50,21 +49,6 @@ interface BDNSDocumento {
   descripcion?: string;
   nombreFic?: string;
   long?: number;
-}
-
-async function fetchJson(url: string, timeoutMs: number): Promise<unknown> {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { Accept: 'application/json', 'User-Agent': 'startidea-scraper/1.0' },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } finally {
-    clearTimeout(timer);
-  }
 }
 
 const SYSTEM = [
@@ -115,10 +99,10 @@ export async function enrichFromPdf(
   // 1. Detalle BDNS → documentos adjuntos
   let docs: BDNSDocumento[];
   try {
-    const detail = (await fetchJson(
+    const detail = await fetchJson<{ documentos?: BDNSDocumento[] }>(
       `${BDNS_API}/convocatorias?vpd=GE&numConv=${encodeURIComponent(codigoBDNS)}`,
       timeoutMs,
-    )) as { documentos?: BDNSDocumento[] };
+    );
     docs = detail.documentos ?? [];
   } catch (e) {
     return { ok: false, error: `detalle: ${e instanceof Error ? e.message : String(e)}` };
@@ -141,10 +125,7 @@ export async function enrichFromPdf(
     clearTimeout(timer);
     if (!res.ok) return { ok: false, error: `pdf HTTP ${res.status}` };
     const buffer = Buffer.from(await res.arrayBuffer());
-    // pdf-parse v1 exporta directamente una función (mismo patrón que doc-extractor.ts)
-    const pdfParse = _require('pdf-parse') as typeof import('pdf-parse');
-    const data = await pdfParse(buffer, { max: 0 });
-    text = (data.text ?? '').replace(/\s+\n/g, '\n').trim();
+    text = (await extractPdf(buffer)).replace(/\s+\n/g, '\n').trim();
   } catch (e) {
     return { ok: false, error: `pdf: ${e instanceof Error ? e.message : String(e)}` };
   }

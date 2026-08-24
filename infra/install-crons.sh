@@ -36,9 +36,13 @@ declare -A SCRIPTS=(
   ["$INFRA_DIR/auto-copiloto-cron.sh"]="auto-copiloto-cron.sh"
   ["$INFRA_DIR/deadline-reminders-cron.sh"]="deadline-reminders-cron.sh"
   ["$INFRA_DIR/cleanup-cron.sh"]="startidea-cleanup-cron.sh"
-  ["$SCRIPTS_DIR/scraper-bdns-daily.sh"]="startidea-scraper-bdns.sh"
   ["$SCRIPTS_DIR/backup-db.sh"]="startidea-backup-db.sh"
 )
+# OJO: el scraper BDNS NO se instala desde aquí. Ya corre en la VPS como
+# /usr/local/bin/subvenciones-scraper-startidea.sh (crontab real: 30 8 * * *
+# via cron-global-guard). Instalarlo aquí con otro nombre y otro horario
+# duplicaba el scrape y el enriquecimiento IA diarios. Fuente de verdad de su
+# contenido: scripts/scraper-bdns-daily.sh (replicar a mano en la VPS).
 
 # ───── Instalación ─────
 for SRC in "${!SCRIPTS[@]}"; do
@@ -77,8 +81,8 @@ Bloque sugerido de crontab (ejecutar: crontab -e):
 # Backup diario seguro de la BD (02:00 UTC, integridad verificada)
 0 2 * * *   $BIN_DIR/startidea-backup-db.sh         >> $LOG_DIR/startidea-backup.log 2>&1
 
-# Scraper BDNS diario (05:00 UTC)
-0 5 * * *   $BIN_DIR/startidea-scraper-bdns.sh      >> $LOG_DIR/startidea-scraper-bdns.log 2>&1
+# Scraper BDNS diario: YA instalado aparte como subvenciones-scraper-startidea.sh
+# (30 8 * * * via cron-global-guard) — no añadir otra línea aquí.
 
 # Auto-Copiloto: ciclo diario que detecta convocatorias y envía docs (07:30 UTC)
 30 7 * * *  $BIN_DIR/auto-copiloto-cron.sh          >> $LOG_DIR/auto-copiloto.log 2>&1

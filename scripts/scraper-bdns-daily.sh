@@ -40,8 +40,9 @@ if [ -z "$ADMIN_HASH" ]; then
   exit 1
 fi
 
-# Paso 1: scraper (hasta ~72 fetches secuenciales → --max-time 120)
-RESPONSE=$(curl -sS --max-time 120 -X POST \
+# Paso 1: scraper (hasta ~72 fetches secuenciales → --max-time 120).
+# --retry absorbe blips transitorios (502 de un recreate, corte de red).
+RESPONSE=$(curl -sS --max-time 120 --retry 2 --retry-delay 5 -X POST \
   -H "x-admin-token: $ADMIN_HASH" \
   -H "x-cron: 1" \
   -H "Origin: https://startidea.es" \
@@ -60,11 +61,18 @@ log "Scraper OK (inserted=${INS:-?})"
 
 # Paso 2: enriquecer borradores (activa=0, campos vacios) desde el PDF oficial.
 # limit 5/dia: el backlog se drena en dias y el gasto queda en centimos (Haiku).
-ENRICH=$(curl -sS --max-time 300 -X POST \
+# --max-time 600: 5 candidatas a ~2 en paralelo con PDFs grandes caben; SIN
+# --retry a proposito (reintentar un timeout duplicaria el gasto LLM).
+ENRICH=$(curl -sS --max-time 600 -X POST \
   -H "x-admin-token: $ADMIN_HASH" \
   -H "Content-Type: application/json" \
   -d '{"limit":5}' \
   "$BASE/api/admin/enrich-convocatorias" 2>>"$LOG" || echo '{"ok":false,"error":"curl_failed"}')
 log "Enrich: $ENRICH"
+
+if ! echo "$ENRICH" | grep -q '"ok":true'; then
+  log "ERROR en respuesta del enrich"
+  exit 1
+fi
 
 exit 0
