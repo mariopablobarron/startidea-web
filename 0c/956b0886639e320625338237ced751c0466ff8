@@ -1,0 +1,25 @@
+src/content/notas/financiacion-entidades-sociales-granada.md
+  s_e1d8d35da0c81e::t_bd6ecc380c15f9 1-181
+src/pages/redes-sociales-granada.astro
+  s_e1d8d35da0c81e::t_e1d4e0623a59f9 310-312
+src/content/notas/social-media-tercer-sector-granada.md
+  s_e1d8d35da0c81e::t_e8ef44ad38e839 93-96
+src/content/notas/organizacion-sin-animo-de-lucro-granada.md
+  s_e1d8d35da0c81e::t_88732bc459d564 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "0c956b0886639e320625338237ced751c0466ff8",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
