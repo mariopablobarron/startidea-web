@@ -1,0 +1,21 @@
+src/pages/comunicacion.astro
+  s_06dc96874ab6d8::t_1bc56729a11f12 197
+src/content/notas/agencia-comunicacion-ong-que-pedir-cuanto-cuesta.md
+  s_06dc96874ab6d8::t_c974ca4f4fcd7f 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "cb09a0ae5d687771f18468eba39597077157863f",
+  "prompts": {},
+  "sessions": {
+    "s_06dc96874ab6d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6787d432-f7ff-459c-8b72-20502c5f4a37",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
