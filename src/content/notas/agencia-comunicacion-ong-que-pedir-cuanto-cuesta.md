@@ -1,6 +1,6 @@
 ---
 title: 'Agencia de comunicación para ONG: qué pedir y cuánto cuesta'
-seoTitle: 'Agencia de comunicación para ONG: precios'
+seoTitle: 'Qué pedir a una agencia de comunicación para ONG'
 description: 'Contratar una agencia de comunicación para una ONG tiene trampas concretas: propuestas genéricas, precios sin anclaje y expectativas mal calibradas. Esta guía explica qué hace de verdad una agencia en el tercer sector, qué preguntar antes de firmar, rangos de precio orientativos y cuándo es mejor no contratarla.'
 metaDescription: 'Agencia de comunicación para ONG: qué pedir antes de contratar, qué preguntar y precios orientativos, desde 2.500 € por un plan de comunicación.'
 pubDate: 2026-06-21
