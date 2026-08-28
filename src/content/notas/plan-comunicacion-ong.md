@@ -1,10 +1,10 @@
 ---
 title: 'Plan de comunicación para una ONG: estructura, pasos y errores frecuentes'
-seoTitle: 'Plan de comunicación ONG: estructura y errores'
+seoTitle: 'Plan de comunicación ONG: los 8 apartados'
 description: 'Guía del plan de comunicación de una ONG o fundación: los 6 elementos que lo sostienen, el calendario de 12 meses, los 5 errores más frecuentes y un checklist de estructura para empezar.'
-metaDescription: 'Plan de comunicación para una ONG: los seis elementos que lo sostienen, el calendario de doce meses y los cinco errores más frecuentes al hacerlo.'
+metaDescription: 'Los ocho apartados del plan de comunicación de una ONG, el calendario de doce meses, los cinco errores más frecuentes y quién puede ayudar a redactarlo.'
 pubDate: 2026-05-26
-updatedDate: 2026-07-14
+updatedDate: 2026-08-28
 tldr: 'Un plan de comunicación útil para una ONG no es el documento que nadie lee, sino el que orienta decisiones durante doce meses. Se sostiene sobre seis elementos —objetivos, públicos, mensajes, canales, calendario y medición— y reconoce con honestidad lo que la comunicación no puede resolver por sí sola.'
 category: 'Comunicación'
 audience: 'Tercer sector'
@@ -57,7 +57,7 @@ El diagnóstico honesto suele revelar que la organización está haciendo demasi
 Una audiencia útil se define con cuatro variables:
 - **Quién es** (perfil demográfico, profesional o relacional con la organización)
 - **Qué le preocupa** en relación con la misión de la organización
-- **Qué necesita de nosotros** para actuar (información, inspiración, confianza, urgencia)
+- **Qué necesita de la organización** para actuar (información, inspiración, confianza, urgencia)
 - **Dónde está** (qué canales usa, con qué frecuencia, en qué formato consume)
 
 Una ONG media tiene entre cuatro y seis audiencias reales. El plan tiene que hablarle a cada una con mensajes distintos, aunque la narrativa de fondo sea la misma.
@@ -126,6 +126,16 @@ Un plan de comunicación no compensa problemas estructurales de la organización
 
 Antes del plan de comunicación, a veces lo que la organización necesita es un diagnóstico organizacional. La comunicación es consecuencia del modelo: si el modelo no está claro, la comunicación tampoco puede estarlo.
 
+## Quién puede ayudar a redactar el plan
+
+Tres vías, según el punto de partida de la organización:
+
+- **El equipo interno.** Viable si hay al menos una persona dedicada a comunicación y tiempo protegido para hacer el diagnóstico. Es la opción más barata y la que mejor arraiga. Se atasca cuando nadie tiene mandato para descartar un canal.
+- **Un consultor externo.** Aporta criterio, estructura y una mirada que el equipo ya no tiene por estar dentro; la ejecución se queda en casa. Encaja cuando la organización sabe producir, pero no sabe priorizar.
+- **Una agencia con experiencia en tercer sector.** Tiene sentido cuando, además del plan, hace falta producir las piezas: contenidos, redes, memoria anual y campañas.
+
+Startidea elabora planes de comunicación para ONG, fundaciones e instituciones desde Granada, en el tercer sector desde 2011. El encargo empieza por el diagnóstico de la situación actual y termina con el calendario editorial y los indicadores de seguimiento; el plan de comunicación parte de 2.500 €. El detalle del servicio está en [comunicación estratégica](/comunicacion).
+
 ---
 
-Si reconoces a tu organización en alguno de estos errores y quieres construir un plan que oriente decisiones reales durante doce meses, [escríbenos](/contacto). La primera conversación es de treinta minutos sin compromiso.
+Si reconoces a tu organización en alguno de estos errores y quieres construir un plan que oriente decisiones reales durante doce meses, [escribe a Startidea](/contacto). La primera conversación es de treinta minutos sin compromiso.
