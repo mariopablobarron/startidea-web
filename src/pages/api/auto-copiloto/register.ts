@@ -12,6 +12,7 @@ import { sendEmail } from '@/lib/email-resend';
 import { sendTelegram } from '@/lib/telegram';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { SITE_URL } from '@/lib/jsonld';
+import { replicateHubIntake } from '@/lib/hub-intake-outbox';
 
 export const prerender = false;
 
@@ -142,6 +143,47 @@ export const POST: APIRoute = async ({ request }) => {
     presupuesto_anual: String(body.presupuesto_anual ?? '').trim(),
     proyectos_anteriores: String(body.proyectos_anteriores ?? '').trim(),
     logros_principales: String(body.logros_principales ?? '').trim(),
+  });
+
+  // El registro local ya existe: encolamos su copia al HUB antes del email.
+  const finalidades = Array.isArray(body.finalidades)
+    ? body.finalidades.filter((value): value is string => typeof value === 'string')
+    : [];
+  const territorios = Array.isArray(body.territorios)
+    ? body.territorios.filter((value): value is string => typeof value === 'string')
+    : ['nacional'];
+  await replicateHubIntake({
+    schemaVersion: 1,
+    submissionId: profile.id,
+    kind: 'registration',
+    form: 'auto-copiloto-register',
+    occurredAt: new Date(profile.created_at * 1000).toISOString(),
+    contact: {
+      email,
+      name: representante,
+      ...(profile.telefono ? { phone: profile.telefono } : {}),
+    },
+    organization: {
+      name: org_nombre,
+      ...(profile.web ? { website: profile.web } : {}),
+    },
+    subject: 'Registro Copiloto Autónomo de Subvenciones',
+    details: {
+      organizationType: org_tipo,
+      description: org_descripcion,
+      ...(profile.ccaa ? { region: profile.ccaa } : {}),
+      ...(profile.keywords ? { keywords: profile.keywords } : {}),
+      finalidades,
+      territorios,
+      minimumAmount: profile.importe_min,
+      ...(profile.importe_max !== null ? { maximumAmount: profile.importe_max } : {}),
+      autoGenerate: profile.auto_generar === 1,
+      activeYears: profile.anos_activos,
+      annualBeneficiaries: profile.beneficiarios_anuales,
+      ...(profile.presupuesto_anual ? { annualBudget: profile.presupuesto_anual } : {}),
+      ...(profile.proyectos_anteriores ? { previousProjects: profile.proyectos_anteriores } : {}),
+      ...(profile.logros_principales ? { mainAchievements: profile.logros_principales } : {}),
+    },
   });
 
   // Email de confirmación

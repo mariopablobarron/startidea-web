@@ -4,6 +4,7 @@ import { saveSolicitud, countSolicitudes } from '@/lib/impulsa-db';
 import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
 import { formatAttribution } from '@/lib/attribution';
+import { replicateHubIntake } from '@/lib/hub-intake-outbox';
 
 export const prerender = false;
 
@@ -109,6 +110,42 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     console.error('[impulsa] save fail:', err);
     return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500 });
   }
+
+  // El origen ya está persistido: la outbox debe existir antes de proveedores.
+  await replicateHubIntake({
+    schemaVersion: 1,
+    submissionId: s.id,
+    kind: 'proposal',
+    form: 'impulsa-solicitud',
+    occurredAt: new Date(now).toISOString(),
+    contact: {
+      email: s.contacto_email,
+      name: s.contacto_nombre,
+      ...(s.contacto_telefono ? { phone: s.contacto_telefono } : {}),
+    },
+    organization: {
+      name: s.org_nombre,
+      ...(s.web_actual ? { website: s.web_actual } : {}),
+    },
+    subject: 'Solicitud Startidea Impulsa',
+    message: s.objetivo || undefined,
+    details: {
+      organizationType: s.org_tipo,
+      ...(s.ambito ? { scope: s.ambito } : {}),
+      ...(s.anio_constitucion ? { foundedYear: s.anio_constitucion } : {}),
+      ...(s.num_personas ? { people: s.num_personas } : {}),
+      ...(s.presupuesto ? { budget: s.presupuesto } : {}),
+      ...(s.mision ? { mission: s.mision } : {}),
+      ...(s.web_estado ? { websiteStatus: s.web_estado } : {}),
+      ...(s.redes_estado ? { socialMediaStatus: s.redes_estado } : {}),
+      audiovisual: s.audiovisual === 'si',
+      managementSoftware: s.software_gestion === 'si',
+      ...(s.retos ? { challenges: s.retos } : {}),
+      services: servicios,
+      ...(s.contacto_cargo ? { contactRole: s.contacto_cargo } : {}),
+    },
+    consents: { privacy: true },
+  });
 
   // Avisos no bloqueantes
   const origen = formatAttribution(body.attribution);
