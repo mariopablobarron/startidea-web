@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
   getProfileByEmail: vi.fn(),
   sendEmail: vi.fn(),
   sendTelegram: vi.fn(),
+  replicateHubIntake: vi.fn(),
 }));
 
 vi.mock('@/lib/auto-copiloto-db', () => ({
@@ -13,6 +14,7 @@ vi.mock('@/lib/auto-copiloto-db', () => ({
 }));
 vi.mock('@/lib/email-resend', () => ({ sendEmail: mocks.sendEmail }));
 vi.mock('@/lib/telegram', () => ({ sendTelegram: mocks.sendTelegram }));
+vi.mock('@/lib/hub-intake-outbox', () => ({ replicateHubIntake: mocks.replicateHubIntake }));
 
 import { POST } from '../src/pages/api/auto-copiloto/register';
 
@@ -38,6 +40,7 @@ describe('POST /api/auto-copiloto/register', () => {
     vi.clearAllMocks();
     mocks.sendEmail.mockResolvedValue(true);
     mocks.sendTelegram.mockResolvedValue(true);
+    mocks.replicateHubIntake.mockResolvedValue(undefined);
   });
 
   it('no devuelve el bearer de gestión de un perfil existente y lo envía solo al buzón registrado', async () => {
@@ -76,6 +79,19 @@ describe('POST /api/auto-copiloto/register', () => {
       id: 'ACP-TEST',
       confirm_token: 'confirm-token-de-prueba',
       manage_token: 'manage-token-de-prueba',
+      created_at: 1_787_999_400,
+      telefono: '',
+      web: '',
+      ccaa: '',
+      keywords: '',
+      importe_min: 0,
+      importe_max: null,
+      auto_generar: 1,
+      anos_activos: 0,
+      beneficiarios_anuales: 0,
+      presupuesto_anual: '',
+      proyectos_anteriores: '',
+      logros_principales: '',
     });
 
     const response = await POST({
@@ -91,5 +107,13 @@ describe('POST /api/auto-copiloto/register', () => {
     const email = mocks.sendEmail.mock.calls[0][0];
     expect(email.to).toBe('nueva@example.com');
     expect(email.html).toContain('https://startidea.es/api/auto-copiloto/confirm?token=confirm-token-de-prueba');
+    expect(mocks.replicateHubIntake).toHaveBeenCalledWith(expect.objectContaining({
+      schemaVersion: 1,
+      submissionId: 'ACP-TEST',
+      kind: 'registration',
+      contact: { email: 'nueva@example.com', name: 'Persona de prueba' },
+    }));
+    expect(JSON.stringify(mocks.replicateHubIntake.mock.calls[0][0])).not.toContain('confirm-token-de-prueba');
+    expect(JSON.stringify(mocks.replicateHubIntake.mock.calls[0][0])).not.toContain('manage-token-de-prueba');
   });
 });

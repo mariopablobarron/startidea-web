@@ -24,6 +24,7 @@ import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
 import { formatAttribution } from '@/lib/attribution';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { replicateHubIntake } from '@/lib/hub-intake-outbox';
 
 export const prerender = false;
 
@@ -171,6 +172,28 @@ async function handle(request: Request, clientAddress: string): Promise<Response
     console.error('[candidatura] error SQLite:', err);
     return new Response(JSON.stringify({ ok: false, error: 'db' }), { status: 500 });
   }
+
+  // El origen ya está persistido: la outbox debe existir antes de proveedores.
+  // Solo metadatos básicos: nunca adjuntos, nombres de fichero ni IP.
+  await replicateHubIntake({
+    schemaVersion: 1,
+    submissionId: id,
+    kind: 'application',
+    form: 'candidatura',
+    occurredAt: new Date(now).toISOString(),
+    contact: {
+      email,
+      name: nombre,
+      ...(telefono ? { phone: telefono } : {}),
+    },
+    subject: `Candidatura ${TIPO_LABEL[tipo] ?? tipo} · ${area}`,
+    details: {
+      type: tipo,
+      area,
+      ...(ubicacion ? { location: ubicacion } : {}),
+    },
+    consents: { privacy: true },
+  });
 
   // ── Avisos no bloqueantes ────────────────────────────────────────────────
   const adjList = adjuntos.length

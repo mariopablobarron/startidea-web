@@ -1,7 +1,9 @@
 import type { APIRoute } from 'astro';
+import { randomUUID } from 'node:crypto';
 import { sendOwnerLeadEmail } from '@/lib/email-resend';
 import { sendTelegram, hasTelegramConfig } from '@/lib/telegram';
 import { formatAttribution } from '@/lib/attribution';
+import { replicateHubIntake } from '@/lib/hub-intake-outbox';
 
 export const prerender = false;
 
@@ -62,6 +64,20 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return new Response(JSON.stringify({ ok: false, error: 'rate' }), { status: 429 });
   }
   lastByIp.set(ip, now);
+
+  // La copia durable se guarda antes de depender de Telegram o del correo.
+  await replicateHubIntake({
+    schemaVersion: 1,
+    submissionId: randomUUID(),
+    kind: 'contact',
+    form: 'contacto',
+    occurredAt: new Date(now).toISOString(),
+    contact: { email, name },
+    subject: `Contacto desde ${path}`,
+    message,
+    details: { path },
+    consents: { privacy: consent },
+  });
 
   const origen = formatAttribution(body.attribution);
   const text =
