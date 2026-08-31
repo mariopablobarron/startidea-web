@@ -4,7 +4,7 @@ import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { rangoPublico, fmtEur } from '@/data/servicios';
-import { localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { organizationSchema, websiteSchema, localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 // Reutiliza el rango de Comunicación: la gestión de redes vive ahí (€/mes).
 const rango = rangoPublico('/comunicacion');
@@ -51,6 +51,12 @@ const faqs = [
 ];
 
 const jsonLd = [
+  // Organization y WebSite cierran referencias que hasta hoy colgaban: el
+  // Service declara provider {@id: #organization} y localBusinessSchema()
+  // apunta a #founder, pero ninguno de esos nodos se emitía en esta página
+  // (Base.astro no pinta schema sitewide). Mismo patrón que index.astro.
+  organizationSchema(),
+  websiteSchema(),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Comunicación estratégica', url: `${SITE_URL}/comunicacion` },
