@@ -24,9 +24,9 @@ const seccionesFaq: Array<{
     titulo: 'Comunicación estratégica y marketing social',
     intro: 'Startidea es una agencia de comunicación social en Granada especializada en organizaciones del tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Estrategia, plan editorial, gestión de medios y posicionamiento institucional.',
     href: '/comunicacion',
-    enlaces: [
-      { label: 'Gestión de redes sociales en Granada', href: '/redes-sociales-granada' },
-    ],
+    // Sin `enlaces` de menú: la landing local se enlaza desde el cuerpo, más
+    // abajo. Tener las dos anclas al mismo destino, adyacentes y casi
+    // idénticas, no añadía señal y duplicaba el enlace en pantalla.
     preguntas: [
       {
         q: '¿Cómo mejorar la comunicación de mi ONG?',
@@ -306,6 +306,16 @@ const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length,
             <p class="mt-6 max-w-measure text-ink/80">
               {seccion.intro}
             </p>
+            {/* Enlace de contenido, no de menú. Va aquí y no dentro de
+                `preguntas`: esa cadena alimenta también el faqPageSchema y no
+                admite HTML. */}
+            {seccion.label === '01' && (
+              <p class="mt-4 max-w-measure text-ink/80">
+                De esa línea, lo que más se pregunta es el día a día: la
+                <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta"> gestión de redes sociales para entidades de Granada</a>
+                tiene página propia, con el alcance mes a mes y desde cuánto parte.
+              </p>
+            )}
             <a href={seccion.href} class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
               Ver servicio completo
               <span aria-hidden="true">→</span>
