@@ -1,0 +1,157 @@
+---
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, jobPostingSchema, SITE_URL } from '@/lib/jsonld';
+
+const OFERTA_URL = `${SITE_URL}/empleo/desarrollo-negocio-project-manager`;
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Trabaja con Startidea', url: `${SITE_URL}/empleo` },
+    { name: 'Desarrollo de negocio y project manager', url: OFERTA_URL },
+  ]),
+  jobPostingSchema({
+    url: OFERTA_URL,
+    title: 'Desarrollo de negocio y project manager',
+    description:
+      'Startidea, agencia de innovación social y comunicación en Granada, incorpora un perfil de desarrollo de negocio y gestión de proyectos. La persona seleccionada trabajará junto al fundador para abrir y cuidar la relación con clientes (tercer sector, instituciones y empresas con propósito), preparar propuestas y presupuestos, y coordinar los proyectos y el equipo freelance que los ejecuta: planificación, plazos, calidad y rentabilidad. Se valora experiencia en consultoría, agencias o tercer sector, soltura con herramientas digitales e inteligencia artificial, y capacidad de trabajar con mucha autonomía. Jornada completa, trabajo híbrido con base en Granada. Condiciones según experiencia.',
+    datePosted: '2026-09-01',
+    validThrough: '2026-11-30',
+    employmentType: 'FULL_TIME',
+    telecommute: true,
+    skills: [
+      'Desarrollo de negocio',
+      'Gestión de proyectos',
+      'Elaboración de propuestas y presupuestos',
+      'Coordinación de equipos freelance',
+      'Relación con clientes',
+      'Tercer sector',
+    ],
+  }),
+];
+
+const responsabilidades = [
+  {
+    bloque: 'Desarrollo de negocio',
+    items: [
+      'Abrir y cuidar la relación con clientes: ONG y fundaciones, instituciones y empresas con propósito.',
+      'Preparar propuestas, presupuestos y ofertas a medida, y hacer el seguimiento comercial hasta el cierre.',
+      'Detectar oportunidades: licitaciones, subvenciones y convocatorias donde Startidea puede aportar.',
+      'Representar a la agencia en reuniones y presentaciones, junto al fundador o en solitario.',
+    ],
+  },
+  {
+    bloque: 'Gestión de proyectos',
+    items: [
+      'Coordinar los proyectos en marcha: alcance, plazos, entregas y calidad.',
+      'Organizar y hacer seguimiento del equipo freelance (comunicación, diseño, audiovisual, tecnología).',
+      'Ser interlocutor habitual del cliente durante la ejecución.',
+      'Vigilar la rentabilidad de cada proyecto: horas, costes y desviaciones.',
+    ],
+  },
+];
+
+const requisitos = [
+  'Experiencia demostrable (3+ años) en desarrollo de negocio, gestión de proyectos, consultoría o agencia.',
+  'Capacidad de trabajar con mucha autonomía: la estructura es pequeña y se espera criterio propio.',
+  'Comunicación escrita y oral cuidada en español. Redactar bien una propuesta es parte del trabajo.',
+  'Soltura con herramientas digitales; se valora experiencia real usando IA en el día a día.',
+  'Se valora conocer el tercer sector, las administraciones públicas o el mundo de las subvenciones.',
+];
+
+const ofrece = [
+  'Jornada completa con trabajo híbrido y base en Granada (Hub Startidea).',
+  'Condiciones según experiencia y valía; se hablan abiertamente en la primera entrevista.',
+  'Responsabilidad real desde el primer día, trabajando directamente con el fundador.',
+  'Proyectos con propósito: comunicación, tecnología y fundraising para organizaciones sociales.',
+];
+---
+
+<Base
+  title="Oferta de empleo: desarrollo de negocio y project manager — Startidea Granada"
+  description="Startidea busca un perfil de desarrollo de negocio y gestión de proyectos en Granada: captar y cuidar clientes, preparar propuestas y coordinar proyectos y equipo freelance. Jornada completa, híbrido."
+  ogSlug="page/empleo"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <a href="/empleo" class="label hover:text-magenta">— Trabaja con Startidea</a>
+      <h1 class="mt-4 max-w-4xl font-display text-display-xl leading-[0.96] text-ink">
+        Desarrollo de negocio<br/><em class="italic text-magenta">y project manager</em>.
+      </h1>
+      <div class="mt-6 flex flex-wrap gap-2 text-sm">
+        <span class="border border-ink/20 bg-paper px-3 py-1 text-ink/80">Jornada completa</span>
+        <span class="border border-ink/20 bg-paper px-3 py-1 text-ink/80">Granada · híbrido</span>
+        <span class="border border-ink/20 bg-paper px-3 py-1 text-ink/80">Incorporación inmediata</span>
+      </div>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea es hoy una estructura pequeña: un fundador que dirige y una red de freelance que ejecuta. Funciona, pero el negocio pide una segunda cabeza. Esta oferta busca a la persona que abra y cuide la relación con los clientes y, a la vez, ordene los proyectos para que se entreguen a tiempo, con calidad y con margen.
+      </p>
+    </div>
+  </section>
+
+  <!-- Detalle -->
+  <section class="bg-paper-warm py-16 md:py-20">
+    <div class="container-x space-y-14">
+      {responsabilidades.map((r) => (
+        <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— {r.bloque}</span>
+          </div>
+          <ul class="col-span-12 mt-4 space-y-3 lg:col-span-9 lg:mt-0">
+            {r.items.map((item) => (
+              <li class="flex gap-3 text-ink/80">
+                <span aria-hidden="true" class="text-magenta">→</span>
+                <span class="max-w-measure">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué se busca</span>
+        </div>
+        <ul class="col-span-12 mt-4 space-y-3 lg:col-span-9 lg:mt-0">
+          {requisitos.map((item) => (
+            <li class="flex gap-3 text-ink/80">
+              <span aria-hidden="true" class="text-magenta">→</span>
+              <span class="max-w-measure">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué se ofrece</span>
+        </div>
+        <ul class="col-span-12 mt-4 space-y-3 lg:col-span-9 lg:mt-0">
+          {ofrece.map((item) => (
+            <li class="flex gap-3 text-ink/80">
+              <span aria-hidden="true" class="text-magenta">→</span>
+              <span class="max-w-measure">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="border-t border-ink/15 bg-paper py-16">
+    <div class="container-x">
+      <h2 class="max-w-3xl font-display text-3xl text-ink md:text-4xl">¿Te encaja?</h2>
+      <p class="mt-4 max-w-measure text-ink/80">
+        Envía tu candidatura con el formulario de la página de empleo. Selecciona el área
+        «Desarrollo de negocio y gestión de proyectos» y cuenta en pocas líneas por qué este
+        puesto es para ti. Se responde a todas las candidaturas.
+      </p>
+      <a href="/empleo#cand-form" class="btn mt-8 inline-flex">
+        Enviar candidatura <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>
