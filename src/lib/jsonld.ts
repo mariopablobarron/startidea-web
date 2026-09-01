@@ -630,6 +630,59 @@ interface CourseInput {
   validFrom?: string;
 }
 
+/**
+ * JobPosting schema para ofertas de empleo publicadas bajo /empleo/*.
+ * hiringOrganization va inline (name + logo + sameAs) porque Google for Jobs
+ * no resuelve referencias @id a otros nodos del sitio.
+ */
+interface JobPostingInput {
+  url: string;
+  title: string;
+  description: string; // texto plano o HTML sencillo
+  datePosted: string; // YYYY-MM-DD
+  validThrough: string; // YYYY-MM-DD
+  employmentType?: 'FULL_TIME' | 'PART_TIME' | 'CONTRACTOR' | 'TEMPORARY';
+  /** Modalidad híbrida/remota: añade jobLocationType TELECOMMUTE además de la sede. */
+  telecommute?: boolean;
+  skills?: string[];
+}
+
+export function jobPostingSchema(j: JobPostingInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    '@id': `${j.url}#jobposting`,
+    title: j.title,
+    description: j.description,
+    url: j.url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': j.url },
+    datePosted: j.datePosted,
+    validThrough: j.validThrough,
+    employmentType: j.employmentType ?? 'FULL_TIME',
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: ORG.name,
+      url: SITE_URL,
+      logo: ORG.logo.url,
+      sameAs: ORG.sameAs,
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: ORG.address,
+    },
+    ...(j.telecommute
+      ? {
+          jobLocationType: 'TELECOMMUTE',
+          applicantLocationRequirements: { '@type': 'Country', name: 'España' },
+        }
+      : {}),
+    ...(j.skills && j.skills.length ? { skills: j.skills.join(', ') } : {}),
+    industry: 'Comunicación, innovación social y consultoría',
+    inLanguage: 'es-ES',
+    directApply: true,
+  };
+}
+
 export function courseSchema(c: CourseInput) {
   return {
     '@context': 'https://schema.org',
