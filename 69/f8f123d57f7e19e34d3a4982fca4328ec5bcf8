@@ -1,0 +1,23 @@
+src/pages/llms-full.txt.ts
+  s_44b8c660731f68::t_71d9bc78ee5f02 44
+src/pages/llms.txt.ts
+  s_44b8c660731f68::t_87dfd06b4737dd 65
+src/lib/jsonld.ts
+  s_44b8c660731f68::t_7896f5d405a188 65-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "69f8f123d57f7e19e34d3a4982fca4328ec5bcf8",
+  "prompts": {},
+  "sessions": {
+    "s_44b8c660731f68": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6e6c9b87-f940-478b-94d3-b6d41a7ded5a",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

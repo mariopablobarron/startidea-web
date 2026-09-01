@@ -1,0 +1,33 @@
+src/pages/manifiesto.astro
+  s_e1d8d35da0c81e::t_a8941a297951fc 3,5-14
+src/pages/llms.txt.ts
+  s_e1d8d35da0c81e::t_1f27888f3df9ba 62-63
+src/pages/sobre.astro
+  s_e1d8d35da0c81e::t_20bcb768701643 5
+  s_e1d8d35da0c81e::t_0026c28d6643e3 41-43
+src/lib/jsonld.ts
+  s_e1d8d35da0c81e::t_c946f951e20adc 273-278
+  s_e1d8d35da0c81e::t_3577398364df14 311-315,319-321
+  s_e1d8d35da0c81e::t_dc446f4b73c2cd 97-100,102-111,113-119
+  s_e1d8d35da0c81e::t_76824217e55fea 287-296
+  s_e1d8d35da0c81e::t_6893d61b4f18b4 24-25,29-33,35-45
+  s_e1d8d35da0c81e::t_6028c1e42d5442 57-58,60-67
+  s_e1d8d35da0c81e::t_112a306a2d6bc5 163-166
+  s_e1d8d35da0c81e::t_247ab97c4574a8 286
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "8d4a4c51cf92291ea37d000132a7766aba62d851",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

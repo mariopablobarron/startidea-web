@@ -1,0 +1,29 @@
+src/pages/que-hacemos.astro
+  s_dbfb41741a1f0c::t_5dbe0f103cdb95 27-29,309-318
+src/pages/redes-sociales-granada.astro
+  s_cd6ac685e24225::t_4d470591847a90 7,54-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "db02db72de359a731a80f67b32a9e9c40c256372",
+  "prompts": {},
+  "sessions": {
+    "s_cd6ac685e24225": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dcfc6160-4cd1-41bc-8dae-41568e913fe8",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_dbfb41741a1f0c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fda32b54-60e1-4e20-b80d-8200d1380cef",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

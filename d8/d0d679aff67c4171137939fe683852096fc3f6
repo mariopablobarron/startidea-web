@@ -1,0 +1,19 @@
+data/convocatorias-curadas-2026-08.json
+  s_297161b4e2e980::t_28964675b025f6 363,366
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "d8d0d679aff67c4171137939fe683852096fc3f6",
+  "prompts": {},
+  "sessions": {
+    "s_297161b4e2e980": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "261d802c-bbc3-4751-8ebf-49a5ff220715",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

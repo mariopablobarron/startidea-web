@@ -1,0 +1,19 @@
+src/lib/expedientes-db.ts
+  s_e72ca9b66b84de::t_33e4ea31273a2e 1206-1217,1220-1223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "d86fcacfc97bf2e8b59c948b7f046803cd46b9d1",
+  "prompts": {},
+  "sessions": {
+    "s_e72ca9b66b84de": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a12c2e04-4a64-4441-9b45-bbdc46041688",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

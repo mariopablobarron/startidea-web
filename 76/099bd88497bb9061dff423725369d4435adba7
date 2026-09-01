@@ -1,0 +1,19 @@
+src/content/notas/plan-comunicacion-ong.md
+  s_fab7d9dc57867d::t_61ad31ade90245 3,5,7,60,129-138,141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "76099bd88497bb9061dff423725369d4435adba7",
+  "prompts": {},
+  "sessions": {
+    "s_fab7d9dc57867d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "893a9041-4751-4d95-b592-52ca6618c92c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

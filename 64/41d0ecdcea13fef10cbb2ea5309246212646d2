@@ -1,0 +1,35 @@
+src/lib/expedientes-db.ts
+  s_e1d8d35da0c81e::t_f6958116c8fdd5 1166-1189
+src/pages/subvenciones/catalogo/[slug].astro
+  s_e1d8d35da0c81e::t_a0311e4dde117e 69-155,171-173,182-189,192,204-211,215-225
+  s_e1d8d35da0c81e::t_b5caabebc7659e 257,259-290,292
+  s_e1d8d35da0c81e::t_058ba73e894491 354-360
+  s_e1d8d35da0c81e::t_9c74ac0596f26a 624
+  s_e1d8d35da0c81e::t_751a6ae7f28c62 555-623,625-630
+  s_e1d8d35da0c81e::t_feaac8fee5c948 421-432
+  s_e1d8d35da0c81e::t_3ba1752f65c0c9 10-11,25-31
+  s_e1d8d35da0c81e::t_2932a35a6e6a2d 631-633,637
+  s_e1d8d35da0c81e::t_2f5c9510d0b89b 656
+  s_e1d8d35da0c81e::t_616c8fe9df6237 392-397
+  s_e1d8d35da0c81e::t_91ca7973d3fa25 32
+src/pages/sitemap-catalogo.xml.ts
+  s_e1d8d35da0c81e::t_e54cea12b8a0da 16,25-28
+  s_e1d8d35da0c81e::t_9b2f2083105eb5 29
+  s_e1d8d35da0c81e::t_a1ea5a20789c8d 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "6441d0ecdcea13fef10cbb2ea5309246212646d2",
+  "prompts": {},
+  "sessions": {
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

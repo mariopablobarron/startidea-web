@@ -1,0 +1,40 @@
+src/lib/expedientes-db.ts
+  s_33e22d22f8fb4f::t_1683133fb10e97 258-261
+  s_33e22d22f8fb4f::t_f38dca6d5e6181 1794-1795,1800
+  s_33e22d22f8fb4f::t_1632c0b162a8df 1674-1679
+  s_33e22d22f8fb4f::t_49dc7c83538c44 251-257,262-266
+  s_33e22d22f8fb4f::t_719c092ccbf555 1647-1652
+  s_33e22d22f8fb4f::t_5ccb929b580430 1744-1747
+  s_33e22d22f8fb4f::t_ec180aee386800 1660-1663,1665-1666
+  s_33e22d22f8fb4f::t_fa8a256a589d94 1742-1743,1748,1764-1765,1770
+  s_33e22d22f8fb4f::t_01d1cab0798db2 1646
+  s_33e22d22f8fb4f::t_6a338d40fe82aa 1664,1667
+  s_33e22d22f8fb4f::t_279fe734043815 1689-1690,1706-1707
+  s_33e22d22f8fb4f::t_ae68878c902397 1796-1799
+  s_33e22d22f8fb4f::t_82298d1d94262b 1691-1694,1708-1711
+  s_33e22d22f8fb4f::t_b0e7fcc0719642 1779-1782
+  s_33e22d22f8fb4f::t_de3a660b1cb897 1766-1769
+src/pages/api/internal/ga4-snapshot.ts
+  s_33e22d22f8fb4f::t_06f93e5e741504 94-97
+  s_33e22d22f8fb4f::t_d8aa32ed31930b 98-101
+src/pages/admin/funnel.astro
+  s_33e22d22f8fb4f::t_ed9c2a8dac5864 82-86
+  s_33e22d22f8fb4f::t_f490d842922d57 37
+  s_33e22d22f8fb4f::t_5a6312d41befff 65-70,72-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7f26d60c89f7e0af6e6feb53228419186f323e67",
+  "prompts": {},
+  "sessions": {
+    "s_33e22d22f8fb4f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bb95d2de-e798-4bd6-8b6e-f00adc45c075",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
