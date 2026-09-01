@@ -1,0 +1,28 @@
+src/pages/empleo/direccion-campanas-alianzas.astro
+  s_0335392301d46f::t_21e041b63cf508 89
+src/pages/empleo/desarrollo-negocio-project-manager.astro
+  s_0335392301d46f::t_2cf9480f87d9d2 17
+  s_0335392301d46f::t_204ec7dae6b2de 56
+  s_0335392301d46f::t_9ef1c8f7e4cebc 72
+  s_0335392301d46f::t_63384a60f61549 89
+  s_0335392301d46f::t_2507d668f83482 26
+  s_0335392301d46f::t_b823a868737bae 47
+src/pages/empleo.astro
+  s_0335392301d46f::t_84076550337b3a 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "24c58c4a87ced1c7ac28a90beebc3495e0fee65d",
+  "prompts": {},
+  "sessions": {
+    "s_0335392301d46f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "50da20b4-25bc-47b1-86cd-8cb2c62d3ada",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
