@@ -1,0 +1,42 @@
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_68e25fed81d0f2 304-308
+src/content/notas/plan-comunicacion-ong.md
+  s_0ab79ba551035b::t_3f0c8da7ec98c1 15
+  s_0ab79ba551035b::t_6b7484ee17fe05 4-5,7-8
+  s_0ab79ba551035b::t_09ad5309553a5e 14
+  s_0ab79ba551035b::t_f9f4a8c83f2d87 55-63
+  s_0ab79ba551035b::t_608983a5608c30 155-168
+  s_0ab79ba551035b::t_462d20df830987 196,199,203-212
+  s_0ab79ba551035b::t_98d6b4fddeacc7 76-89
+  s_0ab79ba551035b::t_d3f4d968acdd17 126-146
+  s_0ab79ba551035b::t_da3e2ef9d2457a 96-106
+  s_0ab79ba551035b::t_ef86d06f47abc7 213
+docs/SEO-GEO-PLAN.md
+  s_0ab79ba551035b::t_f635b8df06f512 304
+src/pages/precios.astro
+  s_0ab79ba551035b::t_665ff8773b8804 285-309
+src/content/notas/cuanto-cobra-consultora-subvenciones.md
+  s_0ab79ba551035b::t_5df030bdedbfce 1-115
+src/content/notas/consultora-fundraising-ong-como-elegir.md
+  s_0ab79ba551035b::t_69357305da75ef 101-102
+  s_0ab79ba551035b::t_1e63fcac80b744 1-13,15-100,103-122
+  s_0ab79ba551035b::t_a78d12560cef1e 14
+src/pages/glosario.astro
+  s_0ab79ba551035b::t_5a557dfb07df46 38-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "9b068c2138e250d0438d9c909b7b1c972d6c9d17",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
