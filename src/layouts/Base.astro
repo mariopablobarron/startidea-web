@@ -139,7 +139,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
     {jsonLd && <JsonLd data={jsonLd} />}
   </head>
-  <body class="pb-[72px] xl:pb-0">
+  <body style="padding-bottom: var(--st-barra-movil-h)">
     <!-- Analytics al final del body (antes vivían en <head>): eran ~42KB de JS
          inline síncrono que se ejecutaba ANTES de que el navegador descubriera
          los stylesheets (Astro los inyecta al final del head) → retrasaba el

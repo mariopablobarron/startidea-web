@@ -1,5 +1,12 @@
 ---
 import Logo from './Logo.astro';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+// CTA "Reservar diagnóstico": mismo destino que la Nav y el hero (calendario
+// externo si está configurado, si no /contacto). Antes iba fijo a /contacto y
+// el mismo botón llevaba a dos sitios distintos según dónde se pulsara.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 
 const year = new Date().getFullYear();
 
@@ -37,7 +44,7 @@ const cols = [
   {
     title: 'Hablar',
     links: [
-      { label: 'Reservar 30 min', href: '/contacto' },
+      { label: 'Reservar diagnóstico', href: reservaHref, external: hasBooking() },
       { label: 'Pedir presupuesto', href: '/presupuesto' },
       { label: 'Acceso clientes', href: '/portal' },
       { label: 'hola@startidea.es', href: 'mailto:hola@startidea.es' },
@@ -112,8 +119,8 @@ const redes = [
           Innovación social que se nota: estrategia, comunicación y herramientas para organizaciones que existen para algo más.
         </p>
         <div class="mt-7">
-          <a href="/contacto" class="btn-ghost">
-            Reservar 30 min
+          <a href={reservaHref} {...reservaExt} class="btn-ghost">
+            Reservar diagnóstico
             <span aria-hidden="true">→</span>
           </a>
         </div>
