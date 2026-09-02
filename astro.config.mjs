@@ -136,6 +136,10 @@ export default defineConfig({
             return true;  // índice/buscador
           if (page.includes('/subvenciones/boja-2026'))    return true; // landings curadas
           if (page.includes('/subvenciones/mapa'))         return true; // mapa interactivo
+          // Estudios con datos propios (contenido editorial, no fichas del
+          // scraper). Van uno a uno y de forma explícita: esta rama es una
+          // lista blanca justamente para que el catálogo BDNS no se cuele.
+          if (page.includes('/subvenciones/estudio-'))     return true;
           // Landing de tramitación asistida (línea de negocio principal), sin el
           // wizard /nuevo ni la confirmación /gracias (noindex).
           if (page.includes('/subvenciones/presentar') && !page.includes('/nuevo') && !page.includes('/gracias'))

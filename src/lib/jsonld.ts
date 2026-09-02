@@ -424,6 +424,67 @@ export function blogPostingSchema(b: BlogPostingInput) {
   };
 }
 
+interface DatasetInput {
+  /** URL canónica de la página que publica el estudio. */
+  url: string;
+  name: string;
+  description: string;
+  /** Fecha de publicación del estudio (YYYY-MM-DD). */
+  datePublished: string;
+  dateModified?: string;
+  /** Periodo cubierto por los datos, en formato ISO 8601 de intervalo:
+   *  'YYYY-MM-DD/YYYY-MM-DD'. */
+  temporalCoverage: string;
+  /** Ámbito geográfico legible ('España'). */
+  spatialCoverage?: string;
+  /** Palabras clave del conjunto de datos. */
+  keywords?: string[];
+  /** Fuente primaria de la que derivan los datos (nombre + URL). */
+  isBasedOn?: { name: string; url: string };
+  /** Licencia de reutilización. Por defecto CC BY 4.0: el estudio existe para
+   *  ser citado, y una licencia explícita es lo que permite a un medio o a un
+   *  motor generativo reproducir las cifras con atribución. */
+  license?: string;
+}
+
+/**
+ * Dataset (schema.org) para estudios con datos propios.
+ *
+ * No es intercambiable con blogPostingSchema: `Dataset` declara que la página
+ * publica un conjunto de datos analizable —con periodo, cobertura, fuente y
+ * licencia— y es el tipo que Google Dataset Search y los motores generativos
+ * usan para atribuir una cifra a quien la calculó.
+ */
+export function datasetSchema(d: DatasetInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    '@id': `${d.url}#dataset`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': d.url },
+    name: d.name,
+    description: d.description,
+    url: d.url,
+    datePublished: d.datePublished,
+    dateModified: d.dateModified ?? d.datePublished,
+    temporalCoverage: d.temporalCoverage,
+    spatialCoverage: d.spatialCoverage ?? 'España',
+    inLanguage: 'es-ES',
+    license: d.license ?? 'https://creativecommons.org/licenses/by/4.0/',
+    creator: { '@id': `${SITE_URL}/#organization` },
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    ...(d.keywords?.length ? { keywords: d.keywords } : {}),
+    ...(d.isBasedOn
+      ? {
+          isBasedOn: {
+            '@type': 'Dataset',
+            name: d.isBasedOn.name,
+            url: d.isBasedOn.url,
+          },
+        }
+      : {}),
+  };
+}
+
 interface CaseStudyInput {
   url: string;
   title: string;
