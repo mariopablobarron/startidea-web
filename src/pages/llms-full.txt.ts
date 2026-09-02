@@ -30,6 +30,7 @@ Este fichero es la versión extendida de ${SITE_URL}/llms.txt: incluye el texto 
 
 - Comunicación estratégica y marketing social: ${SITE_URL}/comunicacion
 - Fundraising para ONG y entidades sociales: ${SITE_URL}/fundraising
+- Bizum y sistema de donaciones para entidades sociales: ${SITE_URL}/donaciones-bizum-ong
 - Tramitación de subvenciones (comisión a éxito): ${SITE_URL}/subvenciones/presentar
 - Consultoría e innovación social: ${SITE_URL}/consultoria
 - Producción audiovisual y podcast: ${SITE_URL}/audiovisual
