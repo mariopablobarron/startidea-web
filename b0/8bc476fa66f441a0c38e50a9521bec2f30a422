@@ -1,0 +1,30 @@
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_beb0c14014c46f 319-325
+astro.config.mjs
+  s_0ab79ba551035b::t_2555ab9134cecc 139-142
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_b2c7f61638b671 427-487
+src/pages/subvenciones/estudio-tercer-sector-2026.astro
+  s_0ab79ba551035b::t_671219d6ce3921 192,195-202
+  s_0ab79ba551035b::t_cac271a44012f5 1-191,193-194,203-823
+src/pages/subvenciones/index.astro
+  s_0ab79ba551035b::t_ed11ddb5add3e7 123-140
+src/pages/llms.txt.ts
+  s_0ab79ba551035b::t_261e2c946bea0f 56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "b08bc476fa66f441a0c38e50a9521bec2f30a422",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
