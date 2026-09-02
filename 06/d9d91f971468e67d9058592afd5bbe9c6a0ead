@@ -1,0 +1,36 @@
+src/pages/glosario.astro
+  s_0ab79ba551035b::t_63cc9167a1b06b 63-77
+src/pages/fundraising.astro
+  s_0ab79ba551035b::t_6d9f986e637d60 320-327
+  s_0ab79ba551035b::t_b623137c50b8a3 319
+src/pages/llms.txt.ts
+  s_0ab79ba551035b::t_e039bff7a35221 32
+src/pages/llms-full.txt.ts
+  s_0ab79ba551035b::t_5cc0a3b66d9771 33
+docs/SEO-GEO-PLAN.md
+  s_0ab79ba551035b::t_d63109f0d91df1 340
+  s_0ab79ba551035b::t_1b6df6a6352caa 307-317
+  s_0ab79ba551035b::t_53e6ebe3dd9575 239-263
+src/pages/donaciones-bizum-ong.astro
+  s_0ab79ba551035b::t_a8c5416b5bec80 1-456
+src/content/notas/codigo-bizum-asociacion.md
+  s_0ab79ba551035b::t_1f56b99dcc5afc 1-116
+src/components/AnalyticsTracker.astro
+  s_0ab79ba551035b::t_6777e3a3af70f7 56-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "06d9d91f971468e67d9058592afd5bbe9c6a0ead",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
