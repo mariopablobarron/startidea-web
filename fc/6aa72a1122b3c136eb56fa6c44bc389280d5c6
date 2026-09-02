@@ -1,0 +1,25 @@
+astro.config.mjs
+  s_0ab79ba551035b::t_80f7c3cea898f5 143-145
+scripts/indexnow-ping.mjs
+  s_0ab79ba551035b::t_cfdab3b3cb7573 1-74
+public/d5b9f04f45f9c80335eaf44db84d0c8a.txt
+  s_0ab79ba551035b::t_3f574080fa9508 1
+src/lib/jsonld.ts
+  s_0ab79ba551035b::t_685a375e78ec04 72-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fc6aa72a1122b3c136eb56fa6c44bc389280d5c6",
+  "prompts": {},
+  "sessions": {
+    "s_0ab79ba551035b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17e496c-ecac-4f25-a63f-37337294bf7d",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
