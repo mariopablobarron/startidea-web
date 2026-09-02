@@ -69,6 +69,9 @@ const FOUNDER = {
     'https://es.linkedin.com/in/mariobarron',
     'https://mariopablo.es',
     'https://www.wikidata.org/wiki/Q140489881',
+    // GitHub del fundador — publica el GEO Citability Monitor (open source de
+    // Startidea): refuerza la entidad en un grafo que las IA consultan mucho.
+    'https://github.com/mariopablobarron',
   ],
   image: {
     '@type': 'ImageObject',
