@@ -1,0 +1,27 @@
+src/content/notas/voluntariado-corporativo-sin-postureo.md
+  s_82f530584afd6e::t_d292d1c909cd14 1-52
+src/content/diagnosticos/asociacion-igualdad-pacto-estado.md
+  s_82f530584afd6e::t_d292d1c909cd14 1-73
+src/content/diagnosticos/protectora-animalista-microdonantes.md
+  s_82f530584afd6e::t_d292d1c909cd14 1-73
+src/content/notas/transparencia-cuentas-claras-captacion.md
+  s_82f530584afd6e::t_d292d1c909cd14 1-55
+src/content/diagnosticos/federacion-pacientes-enfermedad-rara.md
+  s_82f530584afd6e::t_d292d1c909cd14 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "8222cbcf6ced178b983acf444157d33f36f0a068",
+  "prompts": {},
+  "sessions": {
+    "s_82f530584afd6e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80abd1f6-b08d-4c7f-a994-b23b4c130c22",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
