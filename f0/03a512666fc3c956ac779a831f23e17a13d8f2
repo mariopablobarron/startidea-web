@@ -1,0 +1,19 @@
+docs/SEO-GEO-PLAN.md
+  s_5590e7536cb663::t_138a828ccf112f 305
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "f003a512666fc3c956ac779a831f23e17a13d8f2",
+  "prompts": {},
+  "sessions": {
+    "s_5590e7536cb663": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a4ff108b3275d7d13",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
