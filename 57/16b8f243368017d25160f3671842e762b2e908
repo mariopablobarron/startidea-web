@@ -1,0 +1,27 @@
+src/pages/empleo.astro
+  s_0335392301d46f::t_4e073cae18817f 53,67-85
+  s_0335392301d46f::t_020603a2a79579 16
+  s_0335392301d46f::t_3dec1fac8a3034 46-52,54-66,86-95
+src/lib/jsonld.ts
+  s_0335392301d46f::t_eeef27c2bed710 633-685
+src/pages/empleo/desarrollo-negocio-project-manager.astro
+  s_0335392301d46f::t_bafa7fae4e7dfb 1-157
+src/pages/empleo/direccion-campanas-alianzas.astro
+  s_0335392301d46f::t_b147c5e96d07d7 1-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "5716b8f243368017d25160f3671842e762b2e908",
+  "prompts": {},
+  "sessions": {
+    "s_0335392301d46f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "50da20b4-25bc-47b1-86cd-8cb2c62d3ada",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
