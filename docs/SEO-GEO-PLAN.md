@@ -236,6 +236,31 @@ barata que queda y la que reparte autoridad hacia A, B y E.
 59 páginas emiten `breadcrumbList` en JSON-LD; solo unas pocas tienen el `<nav>` visible. Google
 espera correspondencia entre lo estructurado y lo renderizado.
 
+### L — Fase 2 del clúster Bizum: wizard «Comprobar gratis mi entidad» (PENDIENTE)
+
+La fase 1 (landing `/donaciones-bizum-ong` + nota `/notas/codigo-bizum-asociacion`) se desplegó el
+2026-09-02. El CTA apunta al intake genérico `/diagnostico`, que pregunta por perfil y necesidad
+pero **no** por los datos que deciden si un alta de Bizum va a atascarse. La fase 2 es un wizard
+propio, y no se construye hasta que la fase 1 demuestre demanda (impresiones en GSC para las
+queries Bizum listadas en §5). Especificación:
+
+- **Ruta**: `/donaciones-bizum-ong/comprobar` (fuera del sitemap, `noindex`, como el resto del
+  embudo). La landing sigue siendo la URL indexable.
+- **Preguntas** (todas de respuesta cerrada salvo la última): tipología jurídica (asociación /
+  fundación / federación / cooperativa / entidad religiosa); ¿tiene NIF definitivo?; registro en el
+  que está inscrita y si el certificado registral es del último año; ¿la junta o patronato vigente
+  está inscrito?; ¿la cuenta bancaria está a nombre de la entidad?; entidad financiera; ¿acogida a
+  la Ley 49/2002?; ¿se solicitó ya Bizum al banco y qué respondió? (sin solicitar / presentada sin
+  respuesta / requerimiento pendiente / denegada); campo abierto.
+- **Salida inmediata en pantalla**, que es lo que justifica el «gratis»: semáforo por bloque
+  (documentación, registro, cargos, cuenta, régimen fiscal) y la lista de lo que hay que resolver
+  antes de presentar. Sin promesa de plazo: Bizum no publica ninguno.
+- **Backend**: reutilizar `POST /api/diagnosticos/intake` del HUB con `kind="bizum"` y el detalle en
+  `answers`. Nada nuevo que mantener.
+- **Atribución**: `window.stAttribution()` es *first-touch* y vive en localStorage, así que los UTM
+  en enlaces internos no sirven de nada. La atribución real de este embudo son los `data-track-id`
+  (`cta_bizum_hero`, `cta_bizum_final`) y el `view_service` de `/donaciones-bizum-ong`.
+
 ---
 
 ## 2. Deuda detectada de paso
@@ -279,6 +304,17 @@ ya las multiplicó por 6 sin ganar un clic.
       citada y con qué URL.
 - [x] `merchandising.startidea.es` segmentado fuera de la medición (2026-08-06).
 - [ ] Revisión mensual: qué palanca movió los clics no-marca.
+- [ ] **Queries Bizum en vigilancia (alta 2026-09-02).** Clúster nuevo, sin baseline: en GSC no
+      había ninguna impresión de startidea.es para estos términos antes del 2026-09-02, así que el
+      punto de partida es cero y cualquier impresión es señal. Queries a seguir en GSC:
+      `bizum para asociaciones`, `código bizum ong`, `requisitos bizum asociación`,
+      `bizum donaciones ong`, `cómo conseguir bizum para una asociación`,
+      `bizum para fundaciones`, `certificado donativo bizum`.
+      Candidatas a entrar en la batería del monitor GEO (`geo-clients.json` del HUB) cuando Mario
+      decida ampliarla, con estos prompts: «¿Cómo consigue una asociación el código Bizum de
+      donaciones?», «¿Qué requisitos pide el banco para dar Bizum a una ONG?», «¿Hace falta la Ley
+      49/2002 para tener Bizum?». Son preguntas de proceso con respuesta verificable: el patrón que
+      la IA cita.
 
 Consulta de baseline reproducible (VPS KVM4, `hub-postgres`, solo lectura):
 
@@ -301,4 +337,5 @@ group by 1 order by 1;
 | 2026-08-06 | Baseline GSC medido; prioridades reordenadas (subvenciones deja de ser P1) | — | — |
 | 2026-08-06 | Baseline depurado: impresiones sintéticas en `/que-hacemos` + subdominio merchandising. Diagnóstico real = dilución (pos. 6,2 → 20,7) | — | — |
 | 2026-08-06 | Auditoría de dilución de las 88 URLs con impresiones | — | — |
+| 2026-09-02 | **Servicio nuevo: Bizum y sistema de donaciones.** Clúster de dos piezas con el patrón ya demostrado (la IA cita la pieza educativa, no la landing): (1) landing comercial `/donaciones-bizum-ong` con los 5 pasos del recorrido, los 4 bloqueos frecuentes de expediente, bloque «En síntesis» citable, breadcrumb VISIBLE + `breadcrumbList`, `serviceSchema`, `howToSchema`, `faqPageSchema` (7 FAQ) y `localBusinessSchema`; (2) nota citable `/notas/codigo-bizum-asociacion` con qué es Bizum Donaciones, requisitos habituales del banco, el papel real de la Ley 49/2002 y por qué se paran los expedientes (6 FAQ, sin solape con las de la landing). Hechos verificados contra bizum.com el 2026-09-02: código de 5 cifras, alta ante la entidad financiera, máximo 1.000 €/donación; Bizum NO publica requisitos ni plazos, escrito como «depende de la entidad financiera». Cableado: enlace desde `/fundraising` a las dos piezas, nota ↔ landing, alta en `llms.txt` y `llms-full.txt`, 3 términos nuevos al glosario (Bizum Donaciones, Ley 49/2002, Certificado de donativo) y `/donaciones-bizum-ong` añadida a `view_service` del tracker. CTA a `/diagnostico` (intake existente). | Clics no-marca de las queries Bizum (baseline = 0 impresiones antes del 2026-09-02) y citación en Perplexity/ChatGPT de «cómo consigue una asociación el código Bizum» | 2026-10-01 |
 | 2026-09-02 | **GEO — ataque a las 3 queries dinero sin citar** (monitor 28-ago: 10/18 citadas). Análisis de los rivales citados por Perplexity en las 3: el patrón es que la IA cita la **página educativa neutra con datos concretos**, no la landing comercial. Acciones: (1) nota nueva `cuanto-cobra-consultora-subvenciones` con la comparativa de las 3 modalidades de honorarios y rangos de mercado; (2) nota nueva `consultora-fundraising-ong-como-elegir` con la tipología de proveedores y la comparativa de canales de captación; (3) `plan-comunicacion-ong` ampliada con DAFO, matriz de públicos, mapa de mensajes, calendario, presupuesto por tamaño y cuadro de mando de KPIs (7 tablas); (4) 8 términos técnicos de captación añadidos al glosario (`DefinedTermSet`); (5) enlazado desde `/precios` y `/fundraising` a las notas nuevas | Citación en Perplexity (sonar y sonar-pro) de esas 3 queries: 0/3 → objetivo ≥2/3. Secundario: clics no-marca de `/precios`, `/fundraising` y las 3 notas | 2026-10-01 (siguiente pase del monitor GEO) |

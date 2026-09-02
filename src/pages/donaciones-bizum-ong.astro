@@ -1,0 +1,456 @@
+---
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import {
+  serviceSchema,
+  faqPageSchema,
+  howToSchema,
+  breadcrumbList,
+  localBusinessSchema,
+  SITE_URL,
+} from '@/lib/jsonld';
+
+// Delimitación deliberada para no canibalizar:
+//   /donaciones-bizum-ong          → intención COMERCIAL ("ayuda para conseguir
+//                                    Bizum", "gestionar el alta", "me lo han
+//                                    bloqueado"). Es la landing de servicio.
+//   /notas/codigo-bizum-asociacion → intención INFORMATIVA ("cómo conseguir el
+//                                    código Bizum", "requisitos"). Es la pieza
+//                                    citable, la que responde sin vender.
+//   /fundraising                   → el servicio matriz de captación.
+// Los enlaces del clúster apuntan siempre en ese orden: nota → landing → /fundraising.
+
+// Hechos verificados contra la web pública de Bizum (bizum.com/es/ong y
+// bizum.com/es/blog/bizum-para-ong, consultadas el 2026-09-02):
+//   · el identificador de la causa es un código de CINCO cifras;
+//   · el alta se inicia comunicándolo a la entidad financiera, que es quien
+//     activa el código;
+//   · el máximo por donación es de 1.000 €;
+//   · la web de Bizum NO publica requisitos documentales, plazos ni comisiones.
+// Todo lo que no está en esa lista se escribe como "depende de la entidad
+// financiera". No se inventan plazos ni requisitos de bancos concretos.
+
+const faqs = [
+  {
+    question: '¿Cómo consigue una asociación el código Bizum de donaciones?',
+    answer:
+      'El punto de partida es la entidad financiera donde la asociación tiene su cuenta: es el banco quien tramita el alta en Bizum Donaciones y quien activa el código de cinco cifras que identifica la causa. No se solicita en la web de Bizum ni lo puede conceder una agencia. El recorrido habitual es: la entidad manifiesta su interés al banco, aporta la documentación que este le pida, firma el contrato del servicio, y el banco comunica el código una vez resuelto el expediente. Bizum no publica plazos, así que el tiempo real depende de cada entidad financiera y del estado de la documentación aportada.',
+  },
+  {
+    question: '¿Qué requisitos pide el banco para dar el código Bizum a una ONG?',
+    answer:
+      'Bizum no publica una lista oficial de requisitos: cada entidad financiera aplica su propia política. Lo que se pide de forma habitual es documentación identificativa de la entidad (NIF y estatutos), acreditación de la inscripción registral, prueba de que los cargos del órgano de gobierno están vigentes, identificación de las personas titulares o autorizadas en la cuenta, y una cuenta bancaria a nombre de la entidad. Los departamentos de cumplimiento suelen añadir documentación por normativa de prevención de blanqueo. Conviene preguntar la lista concreta al banco antes de empezar, porque varía.',
+  },
+  {
+    question: '¿Qué pasa si el banco bloquea o paraliza el expediente de Bizum?',
+    answer:
+      'Un expediente parado casi nunca significa una negativa: significa que falta un documento, que un cargo figura caducado en el registro, que el nombre de la entidad no coincide exactamente entre estatutos, registro y cuenta, o que la solicitud se quedó sin interlocutor en la oficina. El trabajo consiste en identificar qué punto concreto está frenando el expediente, preparar la subsanación y volver a presentarla por el mismo canal. Startidea revisa expedientes ya iniciados y bloqueados, no solo altas desde cero.',
+  },
+  {
+    question: '¿Hace falta estar acogida a la Ley 49/2002 para tener Bizum?',
+    answer:
+      'La web pública de Bizum no establece el régimen fiscal especial de la Ley 49/2002 como requisito para obtener el código de donaciones, y hay entidades no acogidas que lo tienen. Lo que la Ley 49/2002 determina es otra cosa: si la entidad puede emitir certificados de donativo que den derecho a deducción en el IRPF de quien dona. Esa diferencia importa en la captación, porque la deducción fiscal es un argumento de peso. Algunas entidades financieras pueden pedir documentación sobre el régimen fiscal dentro de su propia política interna: eso depende del banco, no de Bizum.',
+  },
+  {
+    question: '¿En qué se diferencia el Bizum de donaciones del Bizum normal?',
+    answer:
+      'El Bizum entre particulares se envía a un número de móvil y no distingue un pago de un donativo. El Bizum de donaciones funciona con un código de cinco cifras asociado a la causa: quien dona entra en la sección de donaciones de la app de su banco, teclea ese código y el importe. Para la entidad, la diferencia práctica es que el ingreso llega identificado como donativo y no mezclado con cobros de cuotas o de actividades, lo que hace posible la contabilidad y la emisión de certificados. El máximo por donación es de 1.000 €.',
+  },
+  {
+    question: '¿Conseguir el código Bizum trae donaciones por sí solo?',
+    answer:
+      'No. El código es una vía de pago, no una campaña. Una entidad que activa Bizum y no lo cuenta recibe donaciones testimoniales. Lo que convierte el código en ingreso es lo que se hace después: publicarlo donde la gente ya mira, generar un QR para cartelería y eventos, ponerlo en la web con una explicación clara de a qué se destina el dinero, y tener preparado el circuito de agradecimiento y de certificado. Ese es el trabajo que sigue al alta y el que decide el resultado.',
+  },
+  {
+    question: '¿Puede Startidea conseguir el código Bizum por la entidad?',
+    answer:
+      'No, y ninguna agencia puede: el código lo concede la entidad financiera a la asociación o fundación titular de la cuenta. Lo que Startidea hace es preparar el expediente para que el banco no tenga motivos para pararlo, sostener el proceso mientras dura —requerimientos, subsanaciones, seguimiento— y montar el sistema de donaciones alrededor del código una vez concedido. Si el banco pide un documento adicional, el expediente vuelve a Startidea para analizar qué falta.',
+  },
+];
+
+const pasos = [
+  {
+    name: 'Paso 0 · Preparar la entidad',
+    text: 'Análisis de la situación administrativa antes de solicitar nada: tipología jurídica, NIF y documentación identificativa, inscripción registral, vigencia del órgano de gobierno, titulares y personas autorizadas en la cuenta, cuenta bancaria a nombre de la entidad y situación respecto a la Ley 49/2002 cuando sea relevante. Si el banco ya pidió documentación o paró el expediente, se analiza en qué punto está. Resultado: una hoja de ruta para iniciar o desbloquear el alta.',
+  },
+  {
+    name: 'Paso 1 · Solicitud ante la entidad financiera',
+    text: 'Preparación del expediente, presentación de la solicitud al banco, respuesta a los requerimientos que lleguen, subsanaciones y seguimiento hasta que la entidad financiera resuelve y comunica el código. El código lo concede el banco, no la agencia: lo que se sostiene aquí es que el expediente llegue completo y no se quede parado.',
+  },
+  {
+    name: 'Paso 2 · Alta en la plataforma de donaciones',
+    text: 'Con el código ya concedido, se monta el sistema: página de donaciones propia, Bizum integrado, QR, campañas y causas, formularios, objetivos visibles, analítica, gestión de donantes, automatizaciones y emisión de certificados de donativo cuando la entidad puede emitirlos.',
+  },
+  {
+    name: 'Paso 3 · Lanzar la captación',
+    text: 'El código solo rinde donde se ve. QR en cartelería, web, redes, eventos presenciales, campañas de correo y materiales impresos; y la conversión de donantes puntuales en campañas de socios cuando la entidad esté preparada para sostenerlas.',
+  },
+  {
+    name: 'Paso 4 · Convertir la donación en relación',
+    text: 'Conseguir Bizum es el principio, no el objetivo. El trabajo final es construir base de colaboradores y una captación sostenible, dentro de lo que permiten la identificación del donante y el consentimiento que cada canal recoge.',
+  },
+];
+
+const sintesis = [
+  'El código Bizum de donaciones es un identificador de cinco cifras que activa la entidad financiera de la asociación o fundación. No se solicita en la web de Bizum y ninguna agencia puede concederlo: la solicitud se inicia siempre en el banco donde la entidad tiene su cuenta.',
+  'Bizum no publica una lista oficial de requisitos ni plazos de alta. Lo que los bancos piden de forma habitual es documentación identificativa de la entidad, inscripción registral, vigencia de los cargos del órgano de gobierno, identificación de titulares y autorizados, y cuenta a nombre de la entidad. El detalle depende de cada entidad financiera.',
+  'Estar acogida a la Ley 49/2002 no figura como requisito público de Bizum para obtener el código. Lo que determina esa ley es si la entidad puede emitir certificados de donativo con derecho a deducción en el IRPF de quien dona.',
+  'Un expediente bloqueado casi nunca es una negativa: suele faltar un documento, haber un cargo caducado en el registro o una discordancia en el nombre de la entidad entre estatutos, registro y cuenta. Se desbloquea identificando el punto concreto y presentando la subsanación.',
+  'El máximo por donación con Bizum es de 1.000 €: las aportaciones mayores se agrupan en varias donaciones.',
+  'Startidea acompaña a entidades sociales de toda España desde la situación de no tener Bizum hasta tener un sistema de donaciones completo —código, página de donaciones, QR, campañas y gestión de donantes—, y también revisa expedientes ya iniciados que el banco ha parado.',
+];
+
+const bloqueos = [
+  {
+    num: '01',
+    title: 'Cargos caducados en el registro',
+    body: 'La junta directiva se renovó en asamblea pero la renovación no se inscribió, o se inscribió y el certificado que se aporta es anterior. El banco comprueba quién representa legalmente a la entidad hoy, no quién lo hacía cuando se abrió la cuenta. Es el motivo de parón más frecuente y el que más tarda en resolverse, porque depende del ritmo del registro.',
+  },
+  {
+    num: '02',
+    title: 'El nombre no coincide entre documentos',
+    body: 'Estatutos, certificado del registro, NIF y titularidad de la cuenta tienen que decir exactamente lo mismo. Una abreviatura, un artículo de más o el nombre comercial en lugar del legal bastan para que cumplimiento devuelva el expediente.',
+  },
+  {
+    num: '03',
+    title: 'La cuenta no está a nombre de la entidad',
+    body: 'Ocurre en asociaciones pequeñas que operaron años con la cuenta personal de la tesorería. Sin cuenta a nombre de la entidad no hay alta posible, y regularizarlo es un trámite previo que conviene abordar antes de solicitar nada.',
+  },
+  {
+    num: '04',
+    title: 'El expediente se quedó sin interlocutor',
+    body: 'La solicitud se presentó en la oficina, la persona que la llevaba cambió de destino y nadie retomó el hilo. No hay negativa, no hay requerimiento: simplemente no avanza. Se resuelve reabriendo el expediente por el canal que corresponda y dejando por escrito quién lo sostiene por ambas partes.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Fundraising y alianzas', url: `${SITE_URL}/fundraising` },
+    { name: 'Bizum y donaciones para entidades sociales', url: `${SITE_URL}/donaciones-bizum-ong` },
+  ]),
+  localBusinessSchema(),
+  faqPageSchema(faqs.map((f) => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Alta de Bizum Donaciones y sistema de donaciones para entidades sociales',
+    description:
+      'Acompañamiento a asociaciones, fundaciones y ONG desde la situación de no tener Bizum hasta disponer de un sistema de donaciones propio: preparación del expediente, solicitud y seguimiento del código de donaciones ante la entidad financiera, desbloqueo de expedientes parados, alta en la plataforma de donaciones con QR y campañas, y gestión de donantes. El código lo concede el banco; Startidea prepara y sostiene el proceso.',
+    serviceType: 'Bizum Donaciones para entidades sin ánimo de lucro',
+    url: `${SITE_URL}/donaciones-bizum-ong`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Institución eclesial'],
+    offers: [
+      {
+        name: 'Preparación de la entidad',
+        description:
+          'Revisión de tipología, NIF, inscripción registral, vigencia de cargos, titulares y autorizados, cuenta bancaria y situación respecto a la Ley 49/2002. Hoja de ruta para iniciar o desbloquear el alta.',
+      },
+      {
+        name: 'Solicitud y seguimiento del código de donaciones',
+        description:
+          'Preparación del expediente, presentación ante la entidad financiera, respuesta a requerimientos, subsanaciones y seguimiento hasta la resolución del banco.',
+      },
+      {
+        name: 'Sistema de donaciones',
+        description:
+          'Página de donaciones con Bizum, QR, campañas y causas, formularios, analítica, gestión de donantes y certificados de donativo cuando procedan.',
+      },
+      {
+        name: 'Captación y fidelización',
+        description:
+          'Lanzamiento del código en los canales de la entidad y conversión de donaciones puntuales en base social sostenible.',
+        url: `${SITE_URL}/fundraising`,
+      },
+    ],
+  }),
+  howToSchema({
+    name: 'Cómo pasa una asociación de no tener Bizum a tener un sistema de donaciones',
+    description:
+      'Los cinco pasos del recorrido completo: preparar la documentación de la entidad, solicitar el código de donaciones a la entidad financiera, montar la plataforma de donaciones, lanzar la captación y convertir las donaciones puntuales en base social.',
+    steps: pasos,
+  }),
+];
+---
+
+<Base
+  title="Bizum para ONG y asociaciones: alta y donaciones"
+  description="¿Tu asociación todavía no tiene Bizum? Cómo se consigue el código de donaciones, qué pide el banco, cómo se desbloquea un expediente parado y qué viene después."
+  ogSlug="page/donaciones-bizum-ong"
+  jsonLd={jsonLd}
+>
+  <!-- Hero + breadcrumb visible (correspondencia con el breadcrumbList del JSON-LD) -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <nav aria-label="Ruta de navegación" class="mb-8">
+        <ol class="flex flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-widest text-ink/60">
+          <li><a href="/" class="hover:text-magenta">Inicio</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="/fundraising" class="hover:text-magenta">Fundraising</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="text-ink/80">Bizum y donaciones</li>
+        </ol>
+      </nav>
+      <span class="label">— Bizum Donaciones · Entidades sociales</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        ¿Tu asociación todavía<br/>
+        no tiene <em class="italic text-magenta">Bizum</em>?
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Empieza desde cero. Termina con tu propio sistema de donaciones. Startidea prepara el
+        expediente, sostiene la solicitud ante el banco hasta que resuelve y monta después todo lo
+        que convierte un código de cinco cifras en ingresos: página de donaciones, QR, campañas y
+        gestión de donantes.
+      </p>
+      <p class="mt-6 max-w-measure text-ink/75">
+        Y si la solicitud ya se presentó y el banco la tiene parada, ese también es el punto de partida.
+      </p>
+      <div class="mt-10">
+        <a href="/diagnostico" class="btn" data-track="cta" data-track-id="cta_bizum_hero">
+          Comprobar gratis mi entidad
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="mt-4 max-w-measure text-sm text-ink/70">
+        Sin coste y sin ser cliente. Son unas preguntas sobre la entidad y su situación; en el campo
+        abierto conviene indicar si ya se solicitó Bizum al banco y qué respondió.
+      </p>
+    </div>
+  </section>
+
+  <!-- Qué es y qué no es. Honestidad de entrada: el código lo concede el banco. -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué es</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            El código lo concede <em class="italic text-magenta">el banco</em>.
+          </h2>
+          <div class="mt-10 max-w-measure space-y-5 text-ink/80">
+            <p>
+              Bizum Donaciones es la modalidad de Bizum pensada para entidades sin ánimo de lucro.
+              Cada causa tiene un código de cinco cifras: quien quiere donar entra en la sección de
+              donaciones de la app de su banco, teclea ese código y el importe, y el dinero llega a
+              la entidad identificado como donativo. No es el Bizum entre particulares, que va a un
+              número de móvil y no distingue un donativo de un pago cualquiera.
+            </p>
+            <p>
+              Conviene decir de entrada lo que casi ninguna página dice: <strong>ese código lo
+              concede la entidad financiera donde la organización tiene su cuenta</strong>. No se
+              pide en la web de Bizum, no lo tramita una plataforma y ninguna agencia —Startidea
+              incluida— puede concederlo. Lo que sí se puede hacer es que el expediente llegue
+              completo al banco, que las respuestas a sus requerimientos no tarden semanas y que
+              nadie se quede esperando a que otro mueva ficha.
+            </p>
+            <p>
+              La web pública de Bizum tampoco publica requisitos documentales, plazos ni comisiones
+              para las entidades. Sí publica dos datos que conviene tener claros: el identificador es
+              de cinco cifras y el importe máximo por donación es de 1.000 €, de modo que una
+              aportación mayor se agrupa en varias. Todo lo demás depende de la entidad financiera, y
+              cualquiera que prometa un plazo cerrado está prometiendo algo que no controla.
+            </p>
+            <p>
+              La explicación completa del proceso, con los requisitos habituales y el papel de la
+              Ley 49/2002, está en la guía
+              <a href="/notas/codigo-bizum-asociacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">cómo conseguir el código Bizum para una asociación</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Los cinco pasos (Paso 0 → Paso 4) -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— El recorrido</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            De cero a <em class="italic text-magenta">sistema de donaciones</em>.
+          </h2>
+          <p class="mt-8 max-w-measure text-ink/80">
+            Cinco pasos. El primero es el que casi nadie da y el que evita la mitad de los bloqueos:
+            revisar la documentación de la entidad <em>antes</em> de pedir nada al banco.
+          </p>
+          <ol class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {pasos.map((p, i) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-7">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {String(i).padStart(2, '0')}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <h3 class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{p.name}</h3>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{p.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloqueos frecuentes -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Cuando se para</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Un expediente parado <em class="italic text-magenta">no es una negativa</em>.
+          </h2>
+          <p class="mt-8 max-w-measure text-ink/80">
+            Muchas entidades llegan a Startidea con la solicitud ya presentada y sin respuesta desde
+            hace meses. Casi siempre el motivo está en uno de estos cuatro puntos, y ninguno es
+            irreversible.
+          </p>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {bloqueos.map((b) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {b.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{b.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{b.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-10 max-w-measure text-ink/80">
+            Cuando el banco pide un documento adicional, el expediente vuelve a Startidea para
+            analizar qué falta exactamente y preparar la subsanación. Esa es la parte del trabajo que
+            no se ve y la que decide si el alta se resuelve o se queda dormida en una bandeja.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Después del código: el trabajo que produce el ingreso -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Después del código</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Conseguir Bizum es <em class="italic text-magenta">el principio</em>.
+          </h2>
+          <div class="mt-10 max-w-measure space-y-5 text-ink/80">
+            <p>
+              El código no capta solo. Una entidad que lo activa y no lo cuenta recibe donaciones
+              testimoniales, y el trámite acaba archivado como una gestión más. Lo que produce
+              ingreso es el sistema que se monta alrededor: una página de donaciones que explica a
+              qué se destina el dinero, un QR que funciona en cartelería y en eventos, campañas con
+              causas y objetivos visibles, formularios que recogen el consentimiento necesario para
+              volver a hablar con quien dona, y un circuito de agradecimiento y de certificado.
+            </p>
+            <p>
+              El paso siguiente es el más rentable y el que menos entidades dan: convertir la
+              donación puntual en relación. Una persona que ha donado una vez es la candidata más
+              barata a socia, siempre dentro de lo que permitan la identificación del donante en cada
+              canal y el consentimiento que se haya recogido. Ese trabajo es
+              <a href="/fundraising" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">la estrategia de fundraising completa de la entidad</a>,
+              y Bizum es una pieza dentro de ella, no un sustituto.
+            </p>
+            <p>
+              Si lo que falla no es el canal de pago sino la falta de gente que sostenga la
+              organización, la guía de referencia es
+              <a href="/notas/fundraising-individual-asociaciones-pequenas" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">fundraising individual en asociaciones pequeñas</a>.
+              Y si las personas donantes ya existen pero se marchan,
+              <a href="/notas/fuga-socios-retencion-base-social" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">por qué se van los socios de una base social</a>
+              es el punto de partida antes de captar más.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- En síntesis (bloque citable por asistentes de IA) -->
+  <section class="bg-ink py-16 text-paper md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-paper/20 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label !text-paper/70">— En síntesis</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ul class="space-y-5">
+            {sintesis.map((s) => (
+              <li class="max-w-measure border-l-2 border-magenta pl-5 text-paper/85">{s}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Comprobar gratis <em class="italic text-magenta">si tu entidad puede</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Startidea revisa sin coste y sin compromiso en qué situación está la entidad para pedir
+            el código: tipología, inscripción, vigencia de cargos, titularidad de la cuenta y estado
+            del expediente si ya se presentó. La respuesta es una hoja de ruta concreta, incluida la
+            de que todo está en orden y solo falta pedirlo.
+          </p>
+          <div class="mt-10">
+            <a
+              href="/diagnostico"
+              class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"
+              data-track="cta"
+              data-track-id="cta_bizum_final"
+            >
+              Comprobar gratis mi entidad
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p class="mt-4 max-w-measure text-sm text-paper/70">
+            ¿Prefieres escribir directamente? <a href="/contacto" class="underline decoration-magenta/60 underline-offset-4 hover:decoration-magenta">Contacto</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <NotasRelacionadas category="Financiación" />
+  <OtrosServicios current="fundraising" />
+</Base>
