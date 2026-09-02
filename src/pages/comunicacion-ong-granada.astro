@@ -1,0 +1,276 @@
+---
+// /comunicacion-ong-granada — Landing "monopolio" de intersección:
+// comunicación INTEGRAL + tercer sector + Granada.
+//
+// Es el PARAGUAS LOCAL del clúster de comunicación: se posiciona en la
+// intención local granadina y baja hacia los sub-servicios con página propia
+// (/comunicacion nacional, /redes-sociales-granada, /audiovisual, /fundraising).
+// Diferenciada de /comunicacion (pitch nacional) por el foco local real:
+// tejido asociativo de Granada, estudio en el centro, Granada Social.
+import Base from '@/layouts/Base.astro';
+import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import { rangoPublico, fmtEur } from '@/data/servicios';
+import { localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+
+// Reutiliza el rango de Comunicación: proyectos "desde" y €/mes viven ahí.
+const rango = rangoPublico('/comunicacion');
+
+// Prueba local: casos reales de Granada (caída elegante si algún slug no existe).
+const casosSlugs = ['granada-social-5', 'down-granada', 'acogimiento-familiar-granada'];
+
+const faqs = [
+  {
+    question: '¿Qué incluye la comunicación integral para una ONG en Granada?',
+    answer: 'Incluye el conjunto, no una pieza suelta: plan de comunicación y relato, contenidos editoriales (web, memorias, notas, boletines), gestión de redes sociales, producción audiovisual y cobertura de eventos, y campañas con causa cuando hay un objetivo concreto. Startidea coordina todo desde una sola mirada, en lugar de que la entidad tenga que encajar cinco proveedores distintos. El alcance se ajusta en el diagnóstico según lo que cada organización necesita y puede sostener.',
+  },
+  {
+    question: '¿Cuánto cuesta la comunicación de una entidad social en Granada?',
+    answer: 'Depende de qué haga falta. Un plan de comunicación parte de 2.500 €. La gestión continua de redes, de 800 €/mes. Una campaña con causa de tres meses ronda los 6.000 €. No hay packs cerrados: el precio formal se cierra tras un diagnóstico de 30 minutos, según los públicos, los canales y si hace falta producción audiovisual propia. Para una entidad pequeña se puede empezar por una sola pieza y crecer desde ahí.',
+  },
+  {
+    question: '¿En qué se diferencia esto de contratar solo las redes sociales?',
+    answer: 'La gestión de redes es una pieza dentro de un trabajo mayor. Contratar solo social media tiene sentido cuando lo demás ya está resuelto; si no, se acaba publicando sin un relato detrás. La comunicación integral parte de la estrategia y el relato, y de ahí bajan las redes, los contenidos, el audiovisual y las campañas de forma coherente. Quien solo necesita redes tiene su página específica de redes sociales en Granada.',
+  },
+  {
+    question: '¿Hay que estar en Granada para trabajar con Startidea?',
+    answer: 'No es imprescindible, pero el foco de esta página es el tercer sector granadino. Startidea tiene estudio en el centro de Granada y conoce de cerca el tejido asociativo local, lo que facilita las grabaciones, la cobertura de eventos y las reuniones presenciales. El trabajo editorial y de estrategia también se hace en remoto, así que acompaña además a entidades de toda Andalucía y del resto de España.',
+  },
+  {
+    question: '¿Por dónde empieza una organización que no sabe qué necesita?',
+    answer: 'Por el diagnóstico de 30 minutos, sin compromiso. En esa conversación se ve qué tiene la entidad, qué le falta y qué es prioritario: a veces es un plan de comunicación, a veces basta con ordenar las redes o cubrir un evento concreto. Startidea no llega con una propuesta genérica: primero escucha el punto de partida y luego propone un alcance realista para el equipo y el presupuesto disponibles.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Comunicación estratégica', url: `${SITE_URL}/comunicacion` },
+    { name: 'Comunicación para ONG en Granada', url: `${SITE_URL}/comunicacion-ong-granada` },
+  ]),
+  localBusinessSchema(),
+  faqPageSchema(faqs.map(f => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Comunicación integral para el tercer sector de Granada',
+    description:
+      'Comunicación integral para asociaciones, fundaciones y entidades sociales de Granada desde una sola mirada: plan y relato, contenidos editoriales, gestión de redes sociales, producción audiovisual y cobertura de eventos, y campañas con causa. Startidea, con estudio en el centro de Granada y quince años dentro del tejido asociativo granadino.',
+    serviceType: 'Comunicación para ONG y entidades sociales',
+    url: `${SITE_URL}/comunicacion-ong-granada`,
+    audience: ['ONG y asociaciones', 'Fundaciones', 'Entidades del tercer sector', 'Institución eclesial'],
+    offers: [
+      { name: 'Plan de comunicación y relato', description: 'Mapa de públicos, mensajes y calendario. Desde 2.500 €, tras un diagnóstico.' },
+      { name: 'Gestión continua de redes sociales', description: 'Estrategia de canales, calendario, producción y moderación mes a mes. Desde 800 €/mes.' },
+      { name: 'Contenidos editoriales', description: 'Web, memorias, notas y boletines con criterio, sin jerga vacía ni pornomiseria.' },
+      { name: 'Audiovisual y cobertura de eventos', description: 'Jornadas y acciones cubiertas en directo desde el estudio en el centro de Granada.' },
+      { name: 'Campaña con causa', description: 'Campaña con calendario, piezas y medición para un objetivo concreto. Tres meses, ~6.000 €.' },
+    ],
+  }),
+];
+
+const incluye = [
+  {
+    num: '01',
+    title: 'Estrategia y relato antes de producir nada',
+    body: 'Un plan de comunicación que ordena qué contar, a quién y por qué: mapa de públicos —base social, financiadores, administración, empresas—, mensajes y calendario. Para una entidad granadina pequeña, tener un relato claro rinde más que llenar canales sin rumbo. El plan de comunicación parte de 2.500 €.',
+  },
+  {
+    num: '02',
+    title: 'Contenidos editoriales con criterio',
+    body: 'Textos, memorias, notas, boletines y web escritos como quien conoce el sector social de Granada: sin jerga vacía y sin pornomiseria. Historias de proyectos e impacto contadas con dignidad y con datos honestos, no con épica simplista. El relato de una organización es su infraestructura, no su adorno.',
+  },
+  {
+    num: '03',
+    title: 'Redes sociales gestionadas de continuo',
+    body: 'Estrategia de canales, calendario, producción y moderación mes a mes, tratando el social media como canal editorial y no como tablón de anuncios. Es un servicio propio con su página detallada y aquí encaja dentro del conjunto. La gestión continua parte de 800 €/mes.',
+  },
+  {
+    num: '04',
+    title: 'Audiovisual y cobertura de eventos sobre el terreno',
+    body: 'Estudio en el centro de Granada: jornadas, presentaciones y acciones cubiertas en directo, con foto y vídeo, y montaje editorial después del evento. La cercanía resuelve la logística que a una agencia de fuera le cuesta. La producción audiovisual completa se detalla en su propia página.',
+  },
+  {
+    num: '05',
+    title: 'Campañas con causa, principio y fin',
+    body: 'Cuando hay un objetivo concreto —captar socios, dar a conocer un proyecto, movilizar en torno a una fecha—, una campaña con calendario, piezas y medición, no ruido suelto. Una campaña con causa de tres meses ronda los 6.000 € y suele apoyarse en el fundraising cuando el objetivo es captación.',
+  },
+];
+
+const local = [
+  {
+    title: 'Dentro del tejido, no de visita',
+    body: 'Quince años trabajando con organizaciones granadinas y el medio Granada Social. Startidea no llega a aprender el terreno: conoce las entidades, las fechas del sector y las dinámicas del tercer sector local de primera mano.',
+  },
+  {
+    title: 'Estudio en el centro de Granada',
+    body: 'Sede propia para grabaciones, coberturas y reuniones presenciales. Cuando la agencia está al lado, la logística de un evento o una jornada deja de ser el cuello de botella, y las decisiones se toman cara a cara.',
+  },
+  {
+    title: 'Pensado para equipos pequeños',
+    body: 'Buena parte del tejido social granadino son entidades con equipos reducidos. Startidea ajusta el alcance a lo que cada organización puede sostener, sin packs cerrados que obliguen a pagar por lo que no se va a usar.',
+  },
+];
+---
+
+<Base
+  title="Comunicación para ONG en Granada — Startidea"
+  description="Comunicación integral para el tercer sector de Granada: relato, contenidos, redes, audiovisual y campañas con causa. Plan desde 2.500 €, tras un diagnóstico."
+  ogSlug="page/comunicacion-ong-granada"
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
+    <div class="container-x">
+      <span class="label">— Comunicación · Tercer sector · Granada</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        Comunicación para el tercer sector<br/>
+        <em class="italic text-magenta">de Granada</em>.
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Startidea acompaña a asociaciones, fundaciones y entidades sociales de Granada en toda su comunicación: el relato, los contenidos, las redes, el audiovisual y las campañas con causa. Una sola mirada, no cinco proveedores sueltos. Desde un estudio en el centro de Granada, con quince años dentro del tejido social granadino y el medio Granada Social. El precio formal se cierra tras un diagnóstico de 30 minutos, sin packs cerrados.
+      </p>
+      <div class="mt-10">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_comunicacion_ong_granada_hero">
+          Habla de la comunicación de tu entidad
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {rango?.mensualDesde && (
+    <!-- Inversión orientativa — baja la fricción nº1 -->
+    <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+      <div class="container-x">
+        <div class="grid grid-cols-12 items-baseline gap-x-8 gap-y-3 border-t border-ink/15 pt-8">
+          <div class="col-span-12 lg:col-span-3">
+            <span class="label">— Inversión orientativa</span>
+          </div>
+          <div class="col-span-12 lg:col-span-9">
+            <p class="font-display text-2xl leading-tight text-ink md:text-3xl">
+              Plan de comunicación desde <span class="text-magenta">{fmtEur(rango.desde)}</span>.
+              <span class="mt-1 block text-xl text-ink/70 md:text-2xl">
+                Gestión continua de redes desde <span class="text-magenta">{fmtEur(rango.mensualDesde)}</span>/mes.
+              </span>
+            </p>
+            <p class="mt-3 max-w-measure text-sm leading-relaxed text-ink/75">
+              Es un orden de magnitud: el precio formal se cierra tras un diagnóstico de 30 minutos, según los públicos, los canales y si hace falta producción audiovisual propia. Sin packs cerrados que no encajan con nadie.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Qué incluye -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué incluye</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Toda la comunicación, <em class="italic text-magenta">una sola mirada</em>.
+          </h2>
+          <ul class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {incluye.map((it) => (
+              <li class="grid grid-cols-12 gap-x-6 gap-y-2 py-6">
+                <span class="col-span-12 font-mono text-xs uppercase tracking-widest text-ink/75 sm:col-span-2">
+                  {it.num}
+                </span>
+                <div class="col-span-12 sm:col-span-10">
+                  <p class="font-display text-xl font-bold leading-tight text-ink md:text-2xl">{it.title}</p>
+                  <p class="mt-2 max-w-measure text-sm leading-relaxed text-ink/75">{it.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-10 max-w-measure text-ink/80">
+            Cada pieza tiene su desarrollo propio: la <a href="/comunicacion" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación estratégica completa</a>, la <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">gestión de redes sociales en Granada</a>, la <a href="/audiovisual" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">producción audiovisual y cobertura de eventos</a> y el <a href="/fundraising" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">fundraising para captar recursos</a>. Aquí se coordinan; en cada página se explican a fondo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué una agencia de Granada -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Por qué local</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Una agencia <em class="italic text-magenta">dentro del tejido</em>.
+          </h2>
+          <ol class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-3">
+            {local.map((p, i) => (
+              <li class="bg-paper-warm p-8">
+                <span class="font-display text-5xl text-magenta">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="mt-4 font-display text-2xl leading-tight text-ink">{p.title}</h3>
+                <p class="mt-3 text-sm leading-relaxed text-ink/80">{p.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-10 max-w-measure text-ink/80">
+            El panorama del <a href="/notas/organizacion-sin-animo-de-lucro-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">tercer sector granadino</a> y una guía honesta sobre <a href="/notas/social-media-tercer-sector-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">social media para entidades sociales en Granada</a> ayudan a situar el punto de partida antes de decidir nada.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prueba: casos granadinos -->
+  <CasosRelacionados slugs={casosSlugs} titulo="Trabajo con organizaciones de Granada" />
+
+  <!-- FAQs visibles + FAQPage JSON-LD -->
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Preguntas frecuentes</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Lo que <em class="italic text-magenta">se pregunta</em>.
+          </h2>
+          <dl class="mt-12 divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-7">
+                <dt class="font-display text-xl text-ink">{f.question}</dt>
+                <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-4">
+          <h2 class="font-display text-display-lg leading-[1.02] text-paper">
+            Empieza por un <em class="italic text-magenta">diagnóstico de 30 min</em>.
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Sin compromiso y sin propuesta genérica. Startidea escucha el punto de partida de la entidad —lo que ya funciona y lo que falta— y propone un alcance realista para el equipo y el presupuesto. Desde una sola pieza hasta la comunicación integral.
+          </p>
+          <div class="mt-10">
+            <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_comunicacion_ong_granada_final">
+              Pide tu diagnóstico
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <NotasRelacionadas category="Comunicación" />
+  <OtrosServicios current="comunicacion" />
+</Base>
