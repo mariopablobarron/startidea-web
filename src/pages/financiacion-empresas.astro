@@ -8,8 +8,13 @@
 // dedicadas a cada fuente.
 
 import Base from '@/layouts/Base.astro';
+import { bookingHref, hasBooking } from '@/data/booking';
 import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+
+// CTA "Reservar diagnóstico": mismo destino que la Nav y el hero.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 
 const faqs = [
   {
@@ -394,7 +399,7 @@ const fases = [
       </p>
       <div class="mt-10 flex flex-wrap justify-center gap-3">
         <a href="/subvenciones/presentar" class="btn">Presentar mi subvención →</a>
-        <a href="/contacto" class="btn-ghost">Reservar 30 min</a>
+        <a href={reservaHref} {...reservaExt} class="btn-ghost">Reservar diagnóstico</a>
         <a href="/subvenciones" class="btn-ghost">Ver buscador completo</a>
       </div>
     </div>

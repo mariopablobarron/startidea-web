@@ -5,10 +5,13 @@
 //   2. Pedir presupuesto (selector + briefing)
 //   3. Llamar / WhatsApp (canal directo)
 //
-// Solo se muestra hasta el breakpoint xl (igual que el burger). En desktop
+// Solo se muestra hasta 1180px (igual que el burger de Nav.astro). En desktop
 // los CTAs están en el header sticky y en cada sección de la página.
 //
-// Padding-bottom del <body> añadido en Base.astro para que no tape contenido.
+// El hueco que reserva esta barra vive en `--st-barra-movil-h` (global.css):
+// lo consumen el padding-bottom del <body> (Base.astro) y la posición del FAB
+// (HubFlotante.astro). Si cambia el alto de la barra —copy más largo, otro
+// py— hay que actualizar esa variable, no cada consumidor por su cuenta.
 ---
 
 <nav

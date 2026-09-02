@@ -2,6 +2,11 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+// CTA "Reservar diagnóstico": mismo destino que la Nav y el hero.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 
 const principios = [
   {
@@ -142,8 +147,8 @@ const jsonLd = [
         Tercer sector, instituciones eclesiales y empresas con propósito gestionan datos especialmente sensibles —donantes, beneficiarios, voluntariado, en muchos casos menores— con presupuestos modestos y sin equipo TI dedicado. Startidea ofrece protección digital proporcional al riesgo real, en el idioma del sector, sin venderle miedo a nadie.
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
-        <a href="/contacto" class="btn">
-          Reservar 30 min sin coste
+        <a href={reservaHref} {...reservaExt} class="btn">
+          Reservar diagnóstico
           <span aria-hidden="true">→</span>
         </a>
         <a href="#faqs" class="btn-ghost">
