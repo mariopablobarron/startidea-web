@@ -140,6 +140,9 @@ export default defineConfig({
           // scraper). Van uno a uno y de forma explícita: esta rama es una
           // lista blanca justamente para que el catálogo BDNS no se cuele.
           if (page.includes('/subvenciones/estudio-'))     return true;
+          // Clúster local con demanda real (OK Mario 2026-09-02). Solo la
+          // landing de Granada; agenda-2030-2026 queda fuera (edición cerrada).
+          if (page.includes('/subvenciones/granada'))      return true;
           // Landing de tramitación asistida (línea de negocio principal), sin el
           // wizard /nuevo ni la confirmación /gracias (noindex).
           if (page.includes('/subvenciones/presentar') && !page.includes('/nuevo') && !page.includes('/gracias'))
