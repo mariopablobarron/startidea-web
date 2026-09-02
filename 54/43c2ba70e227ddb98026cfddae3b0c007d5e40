@@ -1,0 +1,211 @@
+src/content/notas/ayuntamiento-antes-de-renovar-convenio.md
+  s_788c5544619893::t_f4f20da10a171b 1-63
+src/content/notas/fin-proyecto-europeo-ano-sin-presupuestar.md
+  s_788c5544619893::t_8e54766e8d422b 1-79
+src/components/Footer.astro
+  s_788c5544619893::t_978b2a2dbb5648 47
+  s_788c5544619893::t_cb58656f07a9e9 3-9,122-123
+ESTADO-AGENTE.md
+  s_d7d1c224e4b8a0::t_9fd993bd5fc595 108-118
+  s_f1883691a4a618::t_ee8662797df148 70-94
+  s_51e02b56f2dad9::t_1d9441c2f69b7f 1-5,7-8,10-12,69,106-107,153-160,169-171,186,189,195-196
+  s_e1d8d35da0c81e::t_306f10425b7689 6
+  s_9fe872db64ac02::t_c42a8cf00d21b0 61-68,122-133,135,138,142,144,148,150
+  s_9fe872db64ac02::t_cceb14c6d8f533 13-30,45-60,119-121,136-137,139-141,143,145-147,149,151-152,161-168,172-185,187-188,190-194
+  s_e1d8d35da0c81e::t_af486c76f70af5 95-105
+  s_353efceba2e1cc::t_f0cb57d56fe75d 9
+  s_9fe872db64ac02::t_aa200ad22783e5 31-44
+  s_e1d8d35da0c81e::t_a4cc9a4058f90e 134
+src/pages/financiacion-empresas.astro
+  s_788c5544619893::t_cb58656f07a9e9 11,15-18,402
+src/components/GranadaSocialFeed.astro
+  s_c34283722dcf23::t_44eab1ab82b9b7 106
+  s_c34283722dcf23::t_2bf488247f96fe 23-26,29-67
+  s_c34283722dcf23::t_65ea8c9dd78da7 77
+  s_c34283722dcf23::t_e5aab736b94157 68
+data/geo-citability/history.csv
+  s_fab7d9dc57867d::t_3adae6ab7ed8d3 74-97
+  s_9fe872db64ac02::t_65281f754d70a6 1-73
+src/content/diagnosticos/red-animalista-base-social-sin-datos.md
+  s_788c5544619893::t_73418e2e5e0d0f 1-82
+src/content/config.ts
+  s_788c5544619893::t_2c94797b0911f2 77-79
+src/styles/global.css
+  s_5856a226e9e768::t_c15eeac34fed44 10-24
+src/content/diagnosticos/federacion-empleo-insercion-pago-por-resultado.md
+  s_788c5544619893::t_9a01f7d32570aa 1-82
+src/pages/proteccion-digital.astro
+  s_788c5544619893::t_cb58656f07a9e9 5-9,150-151
+src/content/diagnosticos/asociacion-igualdad-convocatorias-atomizadas.md
+  s_788c5544619893::t_5042dd620692bb 1-78
+src/components/MobileCtaBar.astro
+  s_5856a226e9e768::t_6ee328d408d05a 8,11-14
+data/geo-citability/2026-08-28.json
+  s_fab7d9dc57867d::t_3adae6ab7ed8d3 1-525
+src/components/HubFlotante.astro
+  s_5856a226e9e768::t_6a7bbac292bd1b 18-19
+data/geo-citability/altas-directorios-2026-08.md
+  s_51e02b56f2dad9::t_1d9441c2f69b7f 1-208
+src/content/notas/subvencion-que-no-deberias-pedir.md
+  s_788c5544619893::t_d780a0014849b3 1-87
+src/components/OtrosServicios.astro
+  s_788c5544619893::t_cb58656f07a9e9 6-10,54-55
+src/pages/diagnostico/index.astro
+  s_e1d8d35da0c81e::t_e52b138d70b359 40-91
+  s_e1d8d35da0c81e::t_824f2a581da7cf 219-221
+  s_e1d8d35da0c81e::t_061348a45b2b6a 274,279-280
+  s_e1d8d35da0c81e::t_b9308a42a0ce09 636
+  s_e1d8d35da0c81e::t_ed1204a0e80d5a 751-752,760,766-774,779-793,795-797,799,808-817,823-825,848,856,858,860,868,905,913
+  s_e1d8d35da0c81e::t_5ce74d1303a9c8 212
+  s_e1d8d35da0c81e::t_5d4b651075430e 2,5-6,8-14,16
+  s_e91c61aace0342::t_6f71451b805e50 930-939
+  s_e1d8d35da0c81e::t_45fe159e732238 110-111
+  s_e1d8d35da0c81e::t_85096738a94a2d 748-749
+  s_e1d8d35da0c81e::t_bf9390bd11004b 197
+  s_e91c61aace0342::t_cfc79fdac73a03 19
+  s_e91c61aace0342::t_18292b4f3a056c 958
+  s_e91c61aace0342::t_284ab7b17638d1 819
+  s_e1d8d35da0c81e::t_0a7bc8d071d7cc 514-515
+  s_e91c61aace0342::t_bef0623e295437 775-778
+  s_e91c61aace0342::t_a6697788896fb0 524-540,542,554,561,563,573,580-583,585,594
+  s_e1d8d35da0c81e::t_3ddddad9c24828 169,174-175,179-196,198-204,206-209
+  s_e1d8d35da0c81e::t_9dc591c557ccd9 119-131
+  s_e91c61aace0342::t_f43a6f835c9bd5 336-352,354-387,402-418,442-447,477-493
+  s_e1d8d35da0c81e::t_f1fa1515478eb8 494,625,629-635,637-638,640-645,647-651,653-662,664-675,677-682,684-692,694-720,722-733,738
+  s_e91c61aace0342::t_357238003d99a8 841-847
+  s_e1d8d35da0c81e::t_db5f446ea8cef6 602
+  s_e91c61aace0342::t_c45cc9d79d6416 881
+  s_e1d8d35da0c81e::t_58d21220786285 735-737
+  s_e1d8d35da0c81e::t_c6c2ebd34279fd 739
+  s_e1d8d35da0c81e::t_a2912f8bac8f3c 745-747
+  s_e1d8d35da0c81e::t_f8f4cd1c0a2b8e 750
+  s_e1d8d35da0c81e::t_5a0bdf4f70c0aa 849
+  s_e91c61aace0342::t_1a15881055a370 215,741-744
+src/components/HeroJourney.astro
+  s_c34283722dcf23::t_7c3ab51f2a0b3a 13-20
+  s_c34283722dcf23::t_0822010cac091f 44
+package.json
+  s_734dd461ca6588::t_f998af98a96fe4 30
+src/layouts/Base.astro
+  s_5856a226e9e768::t_2a037047dd8f0b 141
+data/geo-citability/2026-08-21.json
+  s_9fe872db64ac02::t_65281f754d70a6 1-496
+package-lock.json
+  s_734dd461ca6588::t_d5f2f37b8402ea 25,5755-5766
+boxes.json
+  s_9fe872db64ac02::t_5725d7d2fc05ac 1
+data/geo-citability/2026-07-10.json
+  s_9fe872db64ac02::t_7e622e74495062 1-495
+data/geo-citability/2026-07-17.json
+  s_9fe872db64ac02::t_645000fdfb3977 1-492
+gs-hero-check.html
+  s_9fe872db64ac02::t_d64138a5382f8f 1-58
+scripts/geo-citability-prompts.json
+  s_9fe872db64ac02::t_cc0dc6764b47b8 1-21
+scripts/geo-citability-test.mjs
+  s_9fe872db64ac02::t_04edf775be9712 1-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "5443c2ba70e227ddb98026cfddae3b0c007d5e40",
+  "prompts": {},
+  "sessions": {
+    "s_353efceba2e1cc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c504fb85-839a-4589-8b25-fe8b91ac8d7b",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_51e02b56f2dad9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e01e411-89f1-4ffb-b032-8b4071ff4357",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_5856a226e9e768": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d3aa4ed1-205c-4750-b21a-fcef5097f8c4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_734dd461ca6588": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "52566477-bf7b-46ba-a3f9-cce681484fe6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_788c5544619893": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "04a4e0a7-4364-48a1-b6c7-a4fc8be01494",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_9fe872db64ac02": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c6d861d7-1cb5-4182-967c-494f39a7c67e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_c34283722dcf23": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c9e6c71f-a5e6-4dbd-b56f-34d222f991d6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_d7d1c224e4b8a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0a4df459-f4b6-42e3-b8ce-6fafb6fa72d1",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_e1d8d35da0c81e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fae0d502-00b4-4da3-b673-aa40b727c6af",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_e91c61aace0342": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5d9d66a2-5472-429d-aee5-8726f3775201",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f1883691a4a618": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "03ece465-eecb-45bb-97ed-66b3221a7f31",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_fab7d9dc57867d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "893a9041-4751-4d95-b592-52ca6618c92c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
