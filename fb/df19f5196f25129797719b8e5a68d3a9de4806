@@ -1,0 +1,37 @@
+src/pages/financiacion-empresas.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 11,15-18,430
+src/components/OtrosServicios.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 6-10,54-55
+src/styles/global.css
+  s_82f530584afd6e::t_8e92eb12c3f877 10-24
+src/components/HubFlotante.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 18-19
+src/layouts/Base.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 142
+src/pages/proteccion-digital.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 5-9,150-151
+src/components/MobileCtaBar.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 8,11-14
+src/components/HeroJourney.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 13-20,44
+src/components/GranadaSocialFeed.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 23-26,29-68,77,106
+src/components/Footer.astro
+  s_82f530584afd6e::t_8e92eb12c3f877 3-9,47,122-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fbdf19f5196f25129797719b8e5a68d3a9de4806",
+  "prompts": {},
+  "sessions": {
+    "s_82f530584afd6e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80abd1f6-b08d-4c7f-a994-b23b4c130c22",
+        "model": "claude-fable-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
