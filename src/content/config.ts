@@ -194,4 +194,49 @@ const herramientas = defineCollection({
   }),
 });
 
-export const collections = { notas, diagnosticos, knowledge, cursos, herramientas };
+const productos = defineCollection({
+  type: 'content',
+  schema: z.object({
+    // Nombre del producto (H1 de la ficha). Mismo reparto que `notas`:
+    // `title`/`description` para la persona, `seoTitle`/`metaDescription` para Google.
+    title: z.string(),
+    seoTitle: z.string().min(20).max(48).optional(),
+    description: z.string(),
+    metaDescription: z.string().min(80).max(158).optional(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    // Posición en el ranking de rentabilidad (1 = el que se lanza antes).
+    orden: z.number().int().min(1).max(20),
+    // Una frase de venta para tarjetas y listados.
+    claim: z.string().max(120),
+    categoria: z.enum(['Comunicación', 'Financiación', 'Tecnología', 'Marca', 'Comunidad']),
+    audience: z.array(z.enum(['Tercer sector', 'Instituciones', 'Empresas con propósito', 'Todas'])).default(['Todas']),
+    // Cómo se cobra y desde cuánto. Texto libre porque los modelos son distintos.
+    modelo: z.string(),
+    precio_desde: z.string(),
+    // Fase del producto dentro del Laboratorio.
+    estado: z.enum(['Idea', 'Diseño', 'Construcción', 'Beta', 'Disponible']).default('Diseño'),
+    // Cuánto del producto ya existe en el HUB de Startidea.
+    base_hub: z.enum(['Alta', 'Media', 'Baja']),
+    // Rentabilidad esperada 1-5 (criterio interno: recurrencia × margen × coste de entrega).
+    rentabilidad: z.number().int().min(1).max(5),
+    // Fecha objetivo de la beta (texto: "Q4 2026").
+    beta: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    tldr: z.string().min(40).max(600).optional(),
+    faqs: z
+      .array(
+        z.object({
+          question: z.string().min(5).max(200),
+          answer: z.string().min(20).max(800),
+        }),
+      )
+      .max(8)
+      .optional(),
+    draft: z.boolean().default(false),
+    author: z.string().default('Mario Pablo Sánchez Barrón'),
+    authorRole: z.string().default('Fundador · Startidea'),
+  }),
+});
+
+export const collections = { notas, diagnosticos, knowledge, cursos, herramientas, productos };
