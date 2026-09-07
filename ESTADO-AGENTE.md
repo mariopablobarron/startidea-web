@@ -14,10 +14,22 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
 - **Nivel A (producción al fusionar):** Nav con «Qué hacemos ▾» (4 servicios +
   financiación + formación) y «Laboratorio» en escritorio; pie con columna
   «Aprender»; banda de formación de la home subida por encima de la prueba social.
-- **Nivel B (prototipo noindex):** `/lab/home-plano` = hero con ventana de pregunta +
-  Plano Startidea (SVG en servidor; datos en `src/data/plano.ts`), `/api/plano`
-  (atajos sin IA, texto libre → Haiku con JSON validado, fallback por patrones),
-  `src/lib/plano-db.ts` (SQLite `plano.db`, anonimizado) y `/admin/plano`.
+- **Nivel B (prototipo noindex):** `/lab/home-plano` = hero CONVERSACIONAL con la IA de
+  Startidea (mascota = isotipo animado con tooltip; selector de audiencia; atajos sin IA)
+  + Plano Startidea (SVG en servidor; datos en `src/data/plano.ts`).
+  - `/api/plano/charla` + `src/lib/plano-charla.ts`: turno de conversación (Haiku, JSON
+    validado; guion de respaldo si falla el modelo). Máx. 8 turnos. Lee TODAS las fichas
+    de `src/content/knowledge/`, incluida la nueva **`05-manual-conversacion.md`**
+    (BORRADOR de Claude: cómo conversa Mario en un diagnóstico; **Mario debe revisarla**).
+    Ojo: el chat flotante (`/api/chat`) también la carga.
+  - Regalos tangibles (`src/lib/regalos.ts`, `/api/plano/regalo`): post Instagram (con
+    tarjeta SVG descargable), publicación LinkedIn, letra de canción, informe SEO REAL
+    (`src/lib/seo-mini.ts`, con guardas SSRF). Límite 2/IP/día (`PLANO_REGALOS_POR_IP`)
+    y 150/día global (`PLANO_REGALOS_DIA`), en SQLite.
+  - `src/lib/plano-db.ts` (SQLite `plano.db`, anonimizado, tabla `regalos_plano`) y
+    `/admin/plano` (charlas con respuesta, regalos, por audiencia e intención).
+  - En local la `OPENROUTER_API_KEY` del `.env` devuelve 401 → todo cae al guion; en
+    producción usa la clave real del container.
 - **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
   nada de capas/motores/Hermes del Plan 5.0 (`~/startidea-plan`, plan.startidea.es).
 - **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes

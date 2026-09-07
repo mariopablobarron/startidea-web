@@ -1,19 +1,22 @@
 ---
 // Hero «Plano Startidea» — la home que pregunta antes de contar.
 //
-// Una ventana («¿A dónde quiere llegar tu organización?») y un plano de metro
-// con las cuatro puertas de entrada como líneas y el Lab como terminal común.
-// Los atajos y los clics en estaciones responden sin IA (mapa estático de
-// `src/data/plano.ts`). Solo el texto libre va a `/api/plano`, que clasifica
-// con el modelo y registra la pregunta (anonimizada) para saber qué busca la
-// gente. Toda respuesta termina en «Reservar 30 minutos».
+// Izquierda: conversación con la IA de Startidea (mascota = isotipo animado).
+// Es «la primera reunión con Startidea antes de tener agenda»: pregunta,
+// reformula, cambia de tema y propone servicios, el Lab o un regalo tangible
+// (post de Instagram, publicación de LinkedIn, letra de canción, informe SEO
+// real). Derecha: plano de metro con las cuatro puertas de entrada como
+// líneas y el Lab como terminal; se ilumina con lo que se habla.
 //
-// El SVG se renderiza en servidor: la página en reposo ya muestra el plano
-// completo; el script solo ilumina rutas y pinta la respuesta.
+// Sin IA: atajos y clics en estaciones (mapa estático de `src/data/plano.ts`).
+// Con IA: texto libre → `/api/plano/charla` (Haiku, JSON) · regalos →
+// `/api/plano/regalo` (límite por IP y día). Todo se registra anonimizado.
 //
-// Script en JS plano (`is:inline`): ver gotcha en ESTADO-AGENTE (los
-// atributos en <script> desactivan la transpilación TS).
+// El SVG se renderiza en servidor: la página en reposo ya muestra el plano y
+// el primer mensaje. Script en JS plano (`is:inline`): los atributos en
+// <script> desactivan la transpilación TS (gotcha ESTADO-AGENTE).
 import { LINEAS, ESTACIONES, CHIPS, INTENCIONES, AUDIENCIAS } from '@/data/plano';
+import { REGALOS } from '@/lib/regalos';
 import { bookingHref, hasBooking } from '@/data/booking';
 
 interface Props {
@@ -26,31 +29,63 @@ const reservaHref = bookingHref();
 const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 const color = (id: string) => LINEAS.find((l) => l.id === id)?.color ?? '#6E6C7C';
 
-// Datos que necesita el cliente (sin pistas ni patrones: no hace falta exponerlos).
+const SALUDO = 'Hola. Soy la IA de Startidea: converso como en una primera llamada de diagnóstico. Cuéntame qué quieres mover en tu organización o tu proyecto, y te pregunto, te llevo la contraria si hace falta y te propongo por dónde empezar.';
+
 const datosCliente = {
   pagina,
   reservaHref,
+  saludo: SALUDO,
   lineas: LINEAS.map((l) => ({ id: l.id, color: l.color })),
   estaciones: ESTACIONES.map((e) => ({ id: e.id, label: e.label, url: e.url, lineas: e.lineas })),
   intenciones: INTENCIONES.map((i) => ({ id: i.id, say: i.say, estaciones: i.estaciones, linea: i.linea })),
   audiencias: AUDIENCIAS,
+  regalos: REGALOS,
 };
 ---
 
 <section id="plano" class="relative border-b border-ink/15 bg-paper py-14 md:py-20" aria-labelledby="plano-h1">
   <div class="container-x">
     <div class="grid grid-cols-12 gap-x-8 gap-y-10">
-      <!-- Columna pregunta -->
+      <!-- Columna conversación -->
       <div class="col-span-12 lg:col-span-5">
         <span class="label">— Para empresas, instituciones, entidades sociales y quien emprende</span>
         <h1 id="plano-h1" class="mt-4 font-display text-4xl leading-[0.98] text-ink md:text-5xl xl:text-6xl">
           ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
         </h1>
-        <p class="mt-5 max-w-measure text-lede text-ink/80">
-          Cuéntalo con tus palabras o elige un atajo. El plano te enseña la ruta: qué hace Startidea para eso, un caso parecido y, si existe, un curso. Da igual si diriges una pyme, un ayuntamiento, una fundación o un proyecto que empieza.
+        <p class="mt-4 max-w-measure text-base text-ink/80">
+          Habla con la IA de Startidea como en una primera reunión. Sin agenda, sin formulario. El plano de la derecha se ilumina con lo que hablas.
         </p>
 
-        <div id="plano-aud" class="mt-7 flex flex-wrap items-center gap-2" role="group" aria-label="Quién eres">
+        <!-- Mascota + tooltip -->
+        <div class="relative mt-6 flex items-center gap-3">
+          <button
+            type="button"
+            id="plano-mascota"
+            class="plano-mascota group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-paper-warm focus:outline-none focus-visible:ring-2 focus-visible:ring-magenta/50"
+            data-estado="reposo"
+            aria-describedby="plano-tip"
+            aria-label="Qué es esta IA"
+          >
+            <img src="/brand/isotipo-lazos.png" alt="" width="40" height="40" class="h-9 w-9" />
+            <span class="absolute -bottom-1 -right-1 rounded-full bg-ink px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-paper">IA</span>
+          </button>
+          <div>
+            <p class="font-display text-base leading-tight text-ink">IA de Startidea</p>
+            <p id="plano-estado" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Escuchando</p>
+          </div>
+          <div
+            id="plano-tip"
+            role="tooltip"
+            class="pointer-events-none absolute left-0 top-full z-20 mt-2 w-80 max-w-[90vw] border border-ink bg-paper p-4 text-xs leading-relaxed text-ink/85 opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-opacity duration-200"
+          >
+            <p class="font-display text-sm text-ink">Qué pretende este módulo</p>
+            <p class="mt-1">Es una inteligencia artificial entrenada con el método y el criterio de Startidea. Conversa como su fundador en una llamada de diagnóstico: pregunta, reformula y propone. Cuando algo merece una persona, te lleva a reservar 30 minutos con Mario.</p>
+            <p class="mt-2">No guarda tu nombre ni tu correo. Lo que escribes se anonimiza y sirve para saber qué se pregunta más. Puede equivocarse: los precios y plazos los cierra siempre el equipo. <a href="/asistente" class="underline decoration-magenta/50 underline-offset-2">Más sobre esta IA</a>.</p>
+          </div>
+        </div>
+
+        <!-- Quién eres -->
+        <div id="plano-aud" class="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Quién eres">
           <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Soy</span>
           {AUDIENCIAS.map((a) => (
             <button
@@ -64,23 +99,32 @@ const datosCliente = {
           ))}
         </div>
 
-        <form id="plano-form" class="mt-3 flex flex-col gap-3 sm:flex-row" autocomplete="off">
-          <label for="plano-q" class="sr-only">Escribe qué necesita tu organización</label>
-          <input
+        <!-- Hilo -->
+        <div id="plano-hilo" class="mt-4 max-h-[420px] space-y-3 overflow-y-auto border-t border-ink/15 pt-4 text-sm leading-relaxed" aria-live="polite">
+          <div class="plano-msg asistente"><p>{SALUDO}</p></div>
+        </div>
+
+        <!-- Regalo (oferta, formulario, resultado) -->
+        <div id="plano-regalo" class="mt-3 hidden"></div>
+
+        <!-- Entrada -->
+        <form id="plano-form" class="mt-4 flex items-end gap-2" autocomplete="off">
+          <label for="plano-q" class="sr-only">Escribe lo que quieres mover</label>
+          <textarea
             id="plano-q"
             name="q"
-            type="text"
-            maxlength="300"
+            rows="2"
+            maxlength="1200"
             placeholder={`Ej.: ${AUDIENCIAS[0].ejemplo}`}
-            class="flex-1 border border-ink bg-paper px-4 py-3.5 text-sm text-ink placeholder:text-ink/60 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
-          />
-          <button type="submit" class="btn whitespace-nowrap">
-            Ver ruta
+            class="flex-1 resize-none border border-ink bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink/60 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          ></textarea>
+          <button type="submit" id="plano-enviar" class="btn whitespace-nowrap !px-5 disabled:opacity-50">
+            Hablar
             <span aria-hidden="true">→</span>
           </button>
         </form>
 
-        <div id="plano-chips" class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Atajos">
+        <div id="plano-chips" class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Atajos">
           {CHIPS.map((c) => (
             <button
               type="button"
@@ -94,12 +138,9 @@ const datosCliente = {
           ))}
         </div>
 
-        <p class="mt-3 text-xs text-ink/60">
-          Lo que escribas no se guarda con tu nombre. Sirve para orientarte y para saber qué se pregunta más.
-        </p>
-
-        <div id="plano-respuesta" class="mt-6 min-h-[120px] border-t border-ink/15 pt-5" aria-live="polite">
-          <p class="text-sm text-ink/70">Escribe o elige un atajo. La ruta aparece aquí y se ilumina en el plano.</p>
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-3 text-xs text-ink/70">
+          <span>Lo que escribas no se guarda con tu nombre. <button type="button" id="plano-reset" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Empezar de nuevo</button></span>
+          <a href={reservaHref} {...reservaExt} class="link-underline font-medium text-ink">Reservar 30 min con Mario →</a>
         </div>
       </div>
 
@@ -150,6 +191,22 @@ const datosCliente = {
           ))}
           <li>◎ transbordo</li>
         </ul>
+
+        <!-- Regalos: qué se puede pedir -->
+        <div class="mt-8 border border-ink/15 bg-paper-warm p-5">
+          <p class="label">— Lo tangible</p>
+          <p class="mt-2 text-sm text-ink/80">Cuando la conversación tiene contexto, la IA prepara al momento una muestra de cómo trabaja Startidea. Dos por persona y día.</p>
+          <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+            {REGALOS.map((r) => (
+              <li>
+                <button type="button" class="plano-pedir group flex w-full items-start gap-2 text-left" data-regalo={r.id}>
+                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-magenta" aria-hidden="true"></span>
+                  <span class="text-sm text-ink group-hover:text-magenta">{r.nombre}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -169,7 +226,32 @@ const datosCliente = {
   .plano-mapa.has-route .track, .plano-mapa.has-route .st, .plano-mapa.has-route .lbl { opacity: .16; }
   .plano-mapa.has-route .track.on, .plano-mapa.has-route .st.on, .plano-mapa.has-route .lbl.on { opacity: 1; }
   .st.on { stroke-width: 4; }
-  @media (prefers-reduced-motion: reduce) { .track, .st, .lbl { transition: none; } }
+
+  /* Mensajes del hilo (los pinta el script → :global) */
+  :global(.plano-msg) { max-width: 92%; padding: .6rem .85rem; }
+  :global(.plano-msg.asistente) { margin-right: auto; background: #fff; border: 1px solid rgba(61,61,64,.15); color: #3d3d40; }
+  :global(.plano-msg.usuario) { margin-left: auto; background: #3d3d40; color: #fff; }
+  :global(.plano-msg.error) { margin-right: auto; border: 1px solid #e6356b; color: #e6356b; background: #fff; }
+  :global(.plano-msg p + p) { margin-top: .4rem; }
+  :global(.plano-rutas) { margin-top: .5rem; display: grid; gap: .25rem; }
+  :global(.plano-ruta) { display: flex; align-items: center; gap: .5rem; font-size: .8rem; text-decoration: none; color: #3d3d40; }
+  :global(.plano-ruta:hover) { color: #e6356b; }
+  :global(.plano-ruta i) { width: .5rem; height: .5rem; border-radius: 9999px; flex-shrink: 0; }
+  :global(.plano-pensando) { display: inline-block; width: .5rem; height: .5rem; border-radius: 9999px; background: #e6356b; animation: plano-latir 1s ease-in-out infinite; }
+
+  /* Mascota: reposo (flota), pensando (late), hablando (se mece) */
+  .plano-mascota img { transform-origin: 50% 60%; animation: plano-flotar 4.5s ease-in-out infinite; }
+  .plano-mascota[data-estado="pensando"] img { animation: plano-latir 1.1s ease-in-out infinite; }
+  .plano-mascota[data-estado="hablando"] img { animation: plano-mecer .9s ease-in-out infinite; }
+  .plano-mascota:hover ~ #plano-tip, .plano-mascota:focus-visible ~ #plano-tip { opacity: 1; }
+  @keyframes plano-flotar { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(-4deg); } }
+  @keyframes plano-latir { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  @keyframes plano-mecer { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .track, .st, .lbl { transition: none; }
+    .plano-mascota img, .plano-mascota[data-estado] img { animation: none; }
+    :global(.plano-pensando) { animation: none; }
+  }
 </style>
 
 <script is:inline>
@@ -178,28 +260,106 @@ const datosCliente = {
     if (!datosEl) return;
     var D = JSON.parse(datosEl.textContent || '{}');
     var mapa = document.getElementById('plano-mapa');
-    var resp = document.getElementById('plano-respuesta');
+    var hilo = document.getElementById('plano-hilo');
     var form = document.getElementById('plano-form');
     var input = document.getElementById('plano-q');
+    var enviar = document.getElementById('plano-enviar');
     var chips = document.getElementById('plano-chips');
-    if (!mapa || !resp || !form || !input) return;
-
-    var EST = {};
-    D.estaciones.forEach(function (e) { EST[e.id] = e; });
-    var COL = {};
-    D.lineas.forEach(function (l) { COL[l.id] = l.color; });
-    var INT = {};
-    D.intenciones.forEach(function (i) { INT[i.id] = i; });
-    var aud = '';
     var audBox = document.getElementById('plano-aud');
+    var mascota = document.getElementById('plano-mascota');
+    var estadoEl = document.getElementById('plano-estado');
+    var regaloBox = document.getElementById('plano-regalo');
+    var resetBtn = document.getElementById('plano-reset');
+    if (!mapa || !hilo || !form || !input) return;
 
-    // Placeholder rotatorio: un ejemplo por audiencia, hasta que la persona
-    // elige quién es o empieza a escribir. Para que no parezca que solo
-    // se trabaja con entidades sociales.
+    var EST = {}; D.estaciones.forEach(function (e) { EST[e.id] = e; });
+    var COL = {}; D.lineas.forEach(function (l) { COL[l.id] = l.color; });
+    var INT = {}; D.intenciones.forEach(function (i) { INT[i.id] = i; });
+    var REG = {}; (D.regalos || []).forEach(function (r) { REG[r.id] = r; });
+    var KEY = 'startidea:plano:charla';
+
+    // Estado de la conversación (sobrevive recargas en la misma pestaña)
+    var S = { messages: [], aud: '', regaloOfrecido: '', cerrada: false };
+    try { var saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.messages)) S = saved; } catch (e) {}
+    function guardar() { try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+    }
+    // Markdown mínimo: **negrita**, saltos de línea, listas «- »
+    function md(s) {
+      var t = esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      return t.split(/\n{2,}/).map(function (p) {
+        var lines = p.split('\n');
+        if (lines.every(function (l) { return /^\s*[-•]\s+/.test(l); })) {
+          return '<ul class="list-disc pl-5">' + lines.map(function (l) { return '<li>' + l.replace(/^\s*[-•]\s+/, '') + '</li>'; }).join('') + '</ul>';
+        }
+        return '<p>' + lines.join('<br>') + '</p>';
+      }).join('');
+    }
+
+    function estado(e, texto) {
+      if (mascota) mascota.setAttribute('data-estado', e);
+      if (estadoEl) estadoEl.textContent = texto;
+    }
+
+    function registrar(payload) {
+      try {
+        payload.pagina = D.pagina;
+        if (S.aud) payload.audiencia = S.aud;
+        var body = JSON.stringify(payload);
+        if (navigator.sendBeacon) navigator.sendBeacon('/api/plano', new Blob([body], { type: 'application/json' }));
+        else fetch('/api/plano', { method: 'POST', headers: { 'content-type': 'application/json' }, body: body, keepalive: true });
+      } catch (e) {}
+    }
+
+    function iluminar(ids, lineas) {
+      mapa.classList.add('has-route');
+      mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
+      (lineas || []).forEach(function (l) { var t = mapa.querySelector('.track[data-linea="' + l + '"]'); if (t) t.classList.add('on'); });
+      (ids || []).forEach(function (id) { var g = mapa.querySelector('.estacion[data-id="' + id + '"]'); if (g) g.querySelectorAll('.st,.lbl').forEach(function (el) { el.classList.add('on'); }); });
+    }
+    function lineasDe(ids) { var o = {}; ids.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { o[l] = 1; }); }); return Object.keys(o); }
+
+    function rutasHtml(ids, intencion) {
+      if (!ids || !ids.length) return '';
+      var h = '<div class="plano-rutas">';
+      ids.slice(0, 3).forEach(function (id) {
+        var e = EST[id]; if (!e) return;
+        h += '<a href="' + esc(e.url) + '" class="plano-ruta" data-destino="' + esc(e.url) + '" data-intencion="' + esc(intencion || '') + '"><i style="background:' + esc(COL[e.lineas[0]] || '#666') + '"></i><span>' + esc(e.label) + '</span><span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">' + esc(e.url) + '</span></a>';
+      });
+      return h + '</div>';
+    }
+
+    function burbuja(rol, html) {
+      var div = document.createElement('div');
+      div.className = 'plano-msg ' + rol;
+      div.innerHTML = html;
+      hilo.appendChild(div);
+      hilo.scrollTop = hilo.scrollHeight;
+      return div;
+    }
+
+    function pintarHilo() {
+      hilo.innerHTML = '';
+      burbuja('asistente', '<p>' + esc(D.saludo) + '</p>');
+      S.messages.forEach(function (m) {
+        burbuja(m.role === 'user' ? 'usuario' : 'asistente', md(m.content) + rutasHtml(m.estaciones || [], m.intencion || ''));
+      });
+      var ultimo = S.messages[S.messages.length - 1];
+      if (ultimo && ultimo.estaciones && ultimo.estaciones.length) iluminar(ultimo.estaciones, lineasDe(ultimo.estaciones));
+      if (audBox) audBox.querySelectorAll('.plano-aud').forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === S.aud ? 'true' : 'false'); });
+    }
+
+    function marcarChip(id) {
+      chips.querySelectorAll('.plano-chip').forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-intencion') === id ? 'true' : 'false'); });
+    }
+
+    // Placeholder rotatorio: un ejemplo por audiencia hasta que la persona elige o escribe
     var ejemplos = (D.audiencias || []).map(function (a) { return a.ejemplo; });
     var rot = 0, rotTimer = null;
     function pararRotacion() { if (rotTimer) { clearInterval(rotTimer); rotTimer = null; } }
-    if (ejemplos.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (ejemplos.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && S.messages.length === 0) {
       rotTimer = setInterval(function () {
         if (document.activeElement === input || input.value) { pararRotacion(); return; }
         rot = (rot + 1) % ejemplos.length;
@@ -210,147 +370,227 @@ const datosCliente = {
 
     if (audBox) {
       audBox.addEventListener('click', function (ev) {
-        var b = ev.target.closest('.plano-aud');
-        if (!b) return;
+        var b = ev.target.closest('.plano-aud'); if (!b) return;
         var id = b.getAttribute('data-audiencia');
-        aud = (aud === id) ? '' : id;
-        audBox.querySelectorAll('.plano-aud').forEach(function (x) {
-          x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === aud ? 'true' : 'false');
-        });
+        S.aud = (S.aud === id) ? '' : id; guardar();
+        audBox.querySelectorAll('.plano-aud').forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === S.aud ? 'true' : 'false'); });
         pararRotacion();
-        var a = (D.audiencias || []).filter(function (x) { return x.id === aud; })[0];
+        var a = (D.audiencias || []).filter(function (x) { return x.id === S.aud; })[0];
         if (a) input.setAttribute('placeholder', 'Ej.: ' + a.ejemplo);
         input.focus();
       });
     }
 
-    function esc(s) {
-      return String(s).replace(/[&<>"']/g, function (c) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-      });
-    }
-
-    function registrar(payload) {
-      try {
-        payload.pagina = D.pagina;
-        if (aud) payload.audiencia = aud;
-        var body = JSON.stringify(payload);
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon('/api/plano', new Blob([body], { type: 'application/json' }));
-        } else {
-          fetch('/api/plano', { method: 'POST', headers: { 'content-type': 'application/json' }, body: body, keepalive: true });
-        }
-      } catch (e) { /* silencioso */ }
-    }
-
-    function iluminar(ids, lineas) {
-      mapa.classList.add('has-route');
-      mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
-      (lineas || []).forEach(function (l) {
-        var t = mapa.querySelector('.track[data-linea="' + l + '"]');
-        if (t) t.classList.add('on');
-      });
-      (ids || []).forEach(function (id) {
-        var g = mapa.querySelector('.estacion[data-id="' + id + '"]');
-        if (g) g.querySelectorAll('.st,.lbl').forEach(function (el) { el.classList.add('on'); });
-      });
-    }
-
-    function pintar(say, ids, intencion) {
-      var h = '<p class="text-sm leading-relaxed text-ink/85">' + esc(say) + '</p>';
-      if (ids.length) {
-        h += '<ul class="mt-4 divide-y divide-ink/10 border-y border-ink/10">';
-        ids.slice(0, 3).forEach(function (id) {
-          var e = EST[id];
-          if (!e) return;
-          h += '<li><a href="' + esc(e.url) + '" class="plano-ruta group flex items-center gap-3 py-2.5" data-destino="' + esc(e.url) + '" data-intencion="' + esc(intencion || '') + '">' +
-            '<i class="h-2.5 w-2.5 flex-shrink-0 rounded-full" style="background:' + esc(COL[e.lineas[0]] || '#666') + '" aria-hidden="true"></i>' +
-            '<span class="flex-1 font-display text-base text-ink group-hover:text-magenta">' + esc(e.label) + '</span>' +
-            '<span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">' + esc(e.url) + '</span></a></li>';
-        });
-        h += '</ul>';
-      }
-      h += '<p class="mt-4 text-sm text-ink/80">' + (ids.length ? '¿Prefieres contarlo? ' : '') +
-        '<a href="' + esc(D.reservaHref) + '" class="link-underline font-medium text-ink"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>Reservar 30 minutos de diagnóstico →</a></p>';
-      resp.innerHTML = h;
-    }
-
-    function marcarChip(id) {
-      chips.querySelectorAll('.plano-chip').forEach(function (c) {
-        c.setAttribute('aria-pressed', c.getAttribute('data-intencion') === id ? 'true' : 'false');
-      });
-    }
-
-    function porIntencion(id, origen) {
-      var i = INT[id];
-      if (!i) return;
-      var lineas = {};
-      i.estaciones.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { lineas[l] = 1; }); });
-      iluminar(i.estaciones, Object.keys(lineas));
-      pintar(i.say, i.estaciones, id);
-      marcarChip(id);
-      if (origen === 'atajo') registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
-    }
-
+    // Atajos: respuesta local (sin IA) que entra en el hilo como un turno más
     chips.addEventListener('click', function (ev) {
-      var b = ev.target.closest('.plano-chip');
-      if (b) porIntencion(b.getAttribute('data-intencion'), 'atajo');
+      var b = ev.target.closest('.plano-chip'); if (!b) return;
+      var id = b.getAttribute('data-intencion'); var i = INT[id]; if (!i) return;
+      var etiqueta = b.textContent.trim();
+      var pregunta = S.aud ? ' ¿Qué te gustaría que hubiera cambiado dentro de un año?' : ' ¿Desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
+      S.messages.push({ role: 'user', content: 'Quiero hablar de ' + etiqueta.toLowerCase() + '.' });
+      S.messages.push({ role: 'assistant', content: i.say + pregunta, estaciones: i.estaciones, intencion: id });
+      guardar(); pintarHilo(); marcarChip(id);
+      registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
+      input.focus();
     });
 
-    var estaciones = mapa.querySelector('svg');
+    // Estaciones del plano
+    var svg = mapa.querySelector('svg');
     function elegirEstacion(g) {
-      var id = g.getAttribute('data-id');
-      var e = EST[id];
-      if (!e) return;
+      var id = g.getAttribute('data-id'); var e = EST[id]; if (!e) return;
       iluminar([id], e.lineas);
-      pintar('Estación ' + e.label + '. Desde aquí se llega a la página del servicio. Si hay un curso relacionado, está en el Lab.', [id], '');
-      marcarChip('');
+      burbuja('asistente', '<p>Estación <strong>' + esc(e.label) + '</strong>. Desde aquí se llega a la página del servicio; si hay un curso relacionado, está en el Lab. ¿Es lo que buscabas o te cuento cómo encaja con lo tuyo?</p>' + rutasHtml([id], ''));
       registrar({ tipo: 'estacion', estaciones: [id] });
     }
-    estaciones.addEventListener('click', function (ev) {
-      var g = ev.target.closest('.estacion');
-      if (g) elegirEstacion(g);
-    });
-    estaciones.addEventListener('keydown', function (ev) {
-      if (ev.key !== 'Enter' && ev.key !== ' ') return;
-      var g = ev.target.closest('.estacion');
-      if (g) { ev.preventDefault(); elegirEstacion(g); }
-    });
+    svg.addEventListener('click', function (ev) { var g = ev.target.closest('.estacion'); if (g) elegirEstacion(g); });
+    svg.addEventListener('keydown', function (ev) { if (ev.key !== 'Enter' && ev.key !== ' ') return; var g = ev.target.closest('.estacion'); if (g) { ev.preventDefault(); elegirEstacion(g); } });
+
+    // Conversación con la IA
+    var ocupado = false;
+    function hablar(texto) {
+      if (ocupado || S.cerrada) return;
+      ocupado = true; enviar.disabled = true;
+      S.messages.push({ role: 'user', content: texto }); guardar();
+      burbuja('usuario', '<p>' + esc(texto) + '</p>');
+      var pensando = burbuja('asistente', '<p><span class="plano-pensando"></span></p>');
+      estado('pensando', 'Pensando');
+      fetch('/api/plano/charla', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: S.messages.map(function (m) { return { role: m.role, content: m.content }; }), audiencia: S.aud || undefined, pagina: D.pagina }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          pensando.remove();
+          if (!d || !d.ok) {
+            burbuja('error', '<p>' + esc((d && d.message) || 'No he podido responder. Prueba otra vez o reserva 30 minutos.') + '</p>');
+            estado('reposo', 'Escuchando');
+            return;
+          }
+          var ids = (d.estaciones || []).map(function (e) { return e.id; });
+          S.messages.push({ role: 'assistant', content: d.reply, estaciones: ids, intencion: d.intencion || '' });
+          if (d.cierre) S.cerrada = true;
+          guardar();
+          burbuja('asistente', md(d.reply) + rutasHtml(ids, d.intencion || ''));
+          if (ids.length) iluminar(ids, lineasDe(ids));
+          if (d.intencion) marcarChip(d.intencion);
+          estado('hablando', 'Respondiendo');
+          setTimeout(function () { estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando'); }, 1800);
+          if (d.regalo && REG[d.regalo] && !S.regaloOfrecido) { S.regaloOfrecido = d.regalo; guardar(); ofrecerRegalo(d.regalo); }
+          if (S.cerrada) burbuja('asistente', '<p>Si quieres seguir, lo honesto es hablarlo en persona: <a href="' + esc(D.reservaHref) + '" class="underline decoration-magenta/50 underline-offset-2"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>reserva 30 minutos con Mario</a>.</p>');
+        })
+        .catch(function () {
+          pensando.remove();
+          burbuja('error', '<p>Sin conexión con la IA. Prueba en un momento o reserva 30 minutos.</p>');
+          estado('reposo', 'Escuchando');
+        })
+        .then(function () { ocupado = false; enviar.disabled = false; });
+    }
 
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
       var q = input.value.trim();
-      if (q.length < 3) { input.focus(); return; }
-      marcarChip('');
-      resp.innerHTML = '<p class="text-sm text-ink/60">Buscando la ruta…</p>';
-      fetch('/api/plano', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ tipo: 'pregunta', texto: q, pagina: D.pagina, audiencia: aud || undefined }),
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (d) {
-          if (!d || !d.ok) {
-            pintar(d && d.message ? d.message : 'No se ha podido calcular la ruta. Cuéntalo en treinta minutos.', [], '');
-            return;
-          }
-          var ids = (d.estaciones || []).map(function (e) { return e.id; });
-          var lineas = {};
-          ids.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { lineas[l] = 1; }); });
-          if (ids.length) iluminar(ids, Object.keys(lineas));
-          else { mapa.classList.remove('has-route'); mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); }); }
-          pintar(d.say, ids, d.intencion || '');
-          if (d.intencion) marcarChip(d.intencion);
-        })
-        .catch(function () {
-          pintar('Sin conexión con el guía. Cuéntalo en treinta minutos.', [], '');
-        });
+      if (q.length < 2) { input.focus(); return; }
+      input.value = '';
+      hablar(q);
+    });
+    input.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); }
     });
 
-    // Clic en una tarjeta de ruta → registrar destino (beacon, no bloquea la navegación)
-    resp.addEventListener('click', function (ev) {
+    // Clic en tarjeta de ruta → registro
+    hilo.addEventListener('click', function (ev) {
       var a = ev.target.closest('a.plano-ruta');
       if (a) registrar({ tipo: 'clic', destino: a.getAttribute('data-destino'), intencion: a.getAttribute('data-intencion') });
     });
+
+    // ─── Regalos ───────────────────────────────────────────────────────
+    function contextoCharla() {
+      return S.messages.slice(-6).map(function (m) { return (m.role === 'user' ? 'Persona: ' : 'IA: ') + m.content; }).join('\n').slice(0, 1400);
+    }
+
+    function ofrecerRegalo(tipo) {
+      var r = REG[tipo]; if (!r || !regaloBox) return;
+      regaloBox.classList.remove('hidden');
+      regaloBox.innerHTML = '<div class="border border-magenta/40 bg-magenta/5 p-4">' +
+        '<p class="label text-magenta">— Regalo</p>' +
+        '<p class="mt-1 font-display text-base text-ink">' + esc(r.nombre) + '</p>' +
+        '<p class="mt-1 text-xs text-ink/75">' + esc(r.descripcion.charAt(0).toUpperCase() + r.descripcion.slice(1)) + '.</p>' +
+        '<div class="mt-3 flex gap-2"><button type="button" class="btn !py-2 !px-4 !text-xs" data-regalo-si="' + esc(tipo) + '">Sí, prepáralo</button><button type="button" class="btn-ghost !py-2 !px-4 !text-xs" data-regalo-no="1">Ahora no</button></div></div>';
+      regaloBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function formularioRegalo(tipo) {
+      var r = REG[tipo]; if (!r || !regaloBox) return;
+      regaloBox.classList.remove('hidden');
+      var campos = r.campos.map(function (c) {
+        var base = 'class="mt-1 w-full border border-ink bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/50 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" name="' + esc(c.id) + '" placeholder="' + esc(c.placeholder) + '"' + (c.requerido ? ' required' : '');
+        var ctrl = c.tipo === 'textarea' ? '<textarea rows="2" maxlength="800" ' + base + '></textarea>' : '<input type="' + (c.tipo === 'url' ? 'url' : 'text') + '" maxlength="300" ' + base + '>';
+        return '<label class="block text-xs text-ink/80">' + esc(c.label) + ctrl + '</label>';
+      }).join('');
+      regaloBox.innerHTML = '<form class="border border-magenta/40 bg-magenta/5 p-4 space-y-3" data-regalo-form="' + esc(tipo) + '">' +
+        '<p class="label text-magenta">— ' + esc(r.nombre) + '</p>' + campos +
+        '<div class="flex items-center gap-3"><button type="submit" class="btn !py-2 !px-4 !text-xs">Preparar</button><button type="button" class="text-xs underline decoration-ink/30 underline-offset-2" data-regalo-no="1">Cancelar</button><span class="text-[11px] text-ink/60">Dos por persona y día.</span></div></form>';
+      var first = regaloBox.querySelector('input,textarea'); if (first) first.focus();
+    }
+
+    function pedirRegalo(tipo, datos) {
+      var r = REG[tipo]; if (!r) return;
+      regaloBox.innerHTML = '<div class="border border-magenta/40 bg-magenta/5 p-4"><p class="text-sm text-ink/80"><span class="plano-pensando"></span> Preparando ' + esc(r.nombre.toLowerCase()) + '…' + (tipo === 'informe-seo' ? ' Se está leyendo la web de verdad; puede tardar unos segundos.' : '') + '</p></div>';
+      estado('pensando', 'Preparando el regalo');
+      fetch('/api/plano/regalo', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ tipo: tipo, datos: datos, contexto: contextoCharla(), audiencia: S.aud || undefined, pagina: D.pagina }),
+      })
+        .then(function (x) { return x.json(); })
+        .then(function (d) {
+          estado('reposo', 'Escuchando');
+          if (!d || !d.ok) { regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">' + esc((d && d.message) || 'No se ha podido preparar.') + '</div>'; return; }
+          mostrarRegalo(d);
+          S.messages.push({ role: 'assistant', content: 'Te he preparado ' + r.nombre.toLowerCase() + '. Está debajo del hilo. ¿Seguimos con lo que estábamos?' }); guardar();
+          burbuja('asistente', '<p>Te he preparado <strong>' + esc(r.nombre.toLowerCase()) + '</strong>. Lo tienes justo debajo. ¿Seguimos con lo que estábamos?</p>');
+        })
+        .catch(function () { estado('reposo', 'Escuchando'); regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">Sin conexión. Inténtalo en un momento.</div>'; });
+    }
+
+    function svgInstagram(x) {
+      var titular = String(x.titular || '').toUpperCase();
+      var palabras = titular.split(/\s+/), lineas = [], cur = '';
+      palabras.forEach(function (w) { if ((cur + ' ' + w).trim().length > 16 && cur) { lineas.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
+      if (cur) lineas.push(cur); lineas = lineas.slice(0, 4);
+      var fs = lineas.length > 3 ? 92 : 108;
+      var texto = lineas.map(function (l, i) { return '<text x="90" y="' + (430 + i * (fs * 1.05)) + '" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="' + fs + '" fill="#1c1b22">' + esc(l) + '</text>'; }).join('');
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080"><rect width="1080" height="1080" fill="#ffffff"/><rect x="0" y="0" width="1080" height="28" fill="#e6356b"/><rect x="90" y="330" width="120" height="14" fill="#e6356b"/>' + texto + '<text x="90" y="960" font-family="JetBrains Mono, Menlo, monospace" font-size="30" letter-spacing="4" fill="#6e6f70">' + esc(String(x.organizacion || '').toUpperCase()) + '</text></svg>';
+    }
+
+    function mostrarRegalo(d) {
+      var h = '<div class="border border-ink/20 bg-paper p-4"><p class="label text-magenta">— Tu regalo</p><p class="mt-1 font-display text-base text-ink">' + esc(d.titulo) + '</p>';
+      if (d.tipo === 'post-instagram' && d.extra) {
+        var svg = svgInstagram(d.extra);
+        h += '<div class="mt-3 border border-ink/15" data-ig-svg>' + svg.replace('width="1080" height="1080"', 'width="100%" height="auto"') + '</div>';
+        h += '<div class="mt-2 flex flex-wrap gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-ig-png="1">Descargar PNG (1080×1080)</button></div>';
+      }
+      h += '<div class="prose-plano mt-3 text-sm leading-relaxed text-ink/90">' + md(d.cuerpo) + '</div>';
+      h += '<div class="mt-3 flex flex-wrap items-center gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-copiar="1">Copiar texto</button><span class="text-ink/60">Hecho por la IA de Startidea a partir de lo que has contado. Revísalo antes de publicarlo.</span></div></div>';
+      regaloBox.innerHTML = h;
+      regaloBox.setAttribute('data-cuerpo', d.cuerpo);
+      var ig = regaloBox.querySelector('[data-ig-svg]'); if (ig) ig.setAttribute('data-svg', svgInstagram(d.extra || {}));
+    }
+
+    if (regaloBox) {
+      regaloBox.addEventListener('click', function (ev) {
+        var t = ev.target;
+        if (t.closest('[data-regalo-si]')) { formularioRegalo(t.closest('[data-regalo-si]').getAttribute('data-regalo-si')); return; }
+        if (t.closest('[data-regalo-no]')) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; return; }
+        if (t.closest('[data-copiar]')) {
+          var txt = (regaloBox.getAttribute('data-cuerpo') || '').replace(/\*\*/g, '');
+          if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = 'Copiado'; });
+          return;
+        }
+        if (t.closest('[data-ig-png]')) {
+          var wrap = regaloBox.querySelector('[data-ig-svg]'); if (!wrap) return;
+          var img = new Image();
+          var blob = new Blob([wrap.getAttribute('data-svg')], { type: 'image/svg+xml;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          img.onload = function () {
+            var c = document.createElement('canvas'); c.width = 1080; c.height = 1080;
+            c.getContext('2d').drawImage(img, 0, 0, 1080, 1080);
+            URL.revokeObjectURL(url);
+            var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = 'post-instagram-startidea.png'; document.body.appendChild(a); a.click(); a.remove();
+          };
+          img.src = url;
+        }
+      });
+      regaloBox.addEventListener('submit', function (ev) {
+        var f = ev.target.closest('[data-regalo-form]'); if (!f) return;
+        ev.preventDefault();
+        var datos = {}; new FormData(f).forEach(function (v, k) { datos[k] = String(v); });
+        pedirRegalo(f.getAttribute('data-regalo-form'), datos);
+      });
+    }
+
+    // «Lo tangible»: pedir un regalo directamente desde la lista
+    document.querySelectorAll('.plano-pedir').forEach(function (b) {
+      b.addEventListener('click', function () {
+        formularioRegalo(b.getAttribute('data-regalo'));
+        regaloBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      });
+    });
+
+    if (resetBtn) resetBtn.addEventListener('click', function () {
+      S = { messages: [], aud: '', regaloOfrecido: '', cerrada: false }; guardar();
+      pintarHilo(); marcarChip('');
+      mapa.classList.remove('has-route'); mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
+      if (regaloBox) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; }
+      estado('reposo', 'Escuchando'); input.focus();
+    });
+
+    // Tooltip también al tocar (móvil): alterna
+    if (mascota) mascota.addEventListener('click', function () {
+      var tip = document.getElementById('plano-tip'); if (!tip) return;
+      tip.style.opacity = tip.style.opacity === '1' ? '' : '1';
+    });
+
+    if (S.messages.length) pintarHilo();
   })();
 </script>

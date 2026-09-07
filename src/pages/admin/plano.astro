@@ -3,7 +3,7 @@
 // Lee plano.db (SQLite). Sin datos personales: texto anonimizado + hash diario.
 import Base from '@/layouts/Base.astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
-import { getEventos, getResumen } from '@/lib/plano-db';
+import { getEventos, getResumen, getRegalos } from '@/lib/plano-db';
 import { getIntencion, getEstacion, getAudiencia } from '@/data/plano';
 
 export const prerender = false;
@@ -14,6 +14,8 @@ if (!isAdminLoggedIn(Astro.cookies)) {
 
 const resumen = getResumen(30);
 const eventos = getEventos(300);
+const regalos = getRegalos(100);
+const charlas = eventos.filter((e) => e.tipo === 'charla').length;
 
 function fmt(ts: number): string {
   return new Date(ts).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -23,6 +25,14 @@ const TIPO_LABEL: Record<string, string> = {
   atajo: '⚡ Atajo',
   estacion: '◎ Estación',
   clic: '→ Clic',
+  charla: '🗣 Charla',
+  regalo: '🎁 Regalo',
+};
+const REGALO_LABEL: Record<string, string> = {
+  'post-instagram': 'Post Instagram',
+  'publicacion-linkedin': 'Publicación LinkedIn',
+  cancion: 'Canción',
+  'informe-seo': 'Informe SEO',
 };
 function nombreIntencion(id: string): string {
   return id ? (getIntencion(id)?.label ?? id) : '—';
@@ -41,14 +51,15 @@ function nombresEstaciones(csv: string): string {
         Últimos 30 días en <a href="/lab/home-plano" class="link-underline text-ink">/lab/home-plano</a>. Sin nombres ni correos: el texto se anonimiza y la IP se guarda como hash diario.
       </p>
 
-      <dl class="mt-8 grid grid-cols-2 gap-px border border-ink/15 bg-ink/15 sm:grid-cols-3 lg:grid-cols-6">
+      <dl class="mt-8 grid grid-cols-2 gap-px border border-ink/15 bg-ink/15 sm:grid-cols-4 lg:grid-cols-7">
         {[
           ['Visitantes', resumen.visitantes],
           ['Preguntas libres', resumen.preguntas],
           ['Atajos', resumen.atajos],
           ['Clics a ruta', resumen.clics],
           ['Sin ruta', resumen.sinRuta],
-          ['Eventos', resumen.total],
+          ['Turnos de charla', charlas],
+          ['Regalos', regalos.filter((r) => r.ok).length],
         ].map(([l, n]) => (
           <div class="bg-paper p-4">
             <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{l}</dt>
@@ -105,10 +116,38 @@ function nombresEstaciones(csv: string): string {
                 <td class="whitespace-nowrap py-3 pr-4 font-mono text-xs text-ink/60">{fmt(e.created_at)}</td>
                 <td class="whitespace-nowrap py-3 pr-4">{TIPO_LABEL[e.tipo] ?? e.tipo}</td>
                 <td class="whitespace-nowrap py-3 pr-4 text-ink/85">{e.audiencia ? (getAudiencia(e.audiencia)?.label ?? e.audiencia) : '—'}</td>
-                <td class="py-3 pr-4 text-ink">{e.texto ? `«${e.texto}»` : '—'}</td>
+                <td class="py-3 pr-4 text-ink">{e.texto ? `«${e.texto}»` : '—'}{e.respuesta && <span class="mt-1 block border-l-2 border-magenta/40 pl-2 text-xs text-ink/70">{e.respuesta}</span>}</td>
                 <td class="whitespace-nowrap py-3 pr-4 text-ink/85">{nombreIntencion(e.intencion)}</td>
                 <td class="py-3 pr-4 text-ink/85">{e.tipo === 'clic' ? e.destino : nombresEstaciones(e.estaciones)}</td>
                 <td class="whitespace-nowrap py-3 pr-4 font-mono text-xs text-ink/60">{e.fuente || '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="mt-12 font-display text-2xl text-ink">Regalos preparados ({regalos.length})</h2>
+      <p class="mt-1 text-sm text-ink/70">Límite de 2 por IP y día (variable PLANO_REGALOS_POR_IP) y tope global diario (PLANO_REGALOS_DIA, 150). Los fallidos también se listan.</p>
+      <div class="mt-4 overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-ink/20 text-left font-mono text-[10px] uppercase tracking-widest text-ink/60">
+              <th class="py-2 pr-4">Cuándo</th>
+              <th class="py-2 pr-4">Tipo</th>
+              <th class="py-2 pr-4">Quién</th>
+              <th class="py-2 pr-4">Datos</th>
+              <th class="py-2 pr-4">Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {regalos.length === 0 && (<tr><td colspan="5" class="py-6 text-ink/60">Todavía no se ha preparado ningún regalo.</td></tr>)}
+            {regalos.map((r) => (
+              <tr class="border-b border-ink/10 align-top">
+                <td class="whitespace-nowrap py-3 pr-4 font-mono text-xs text-ink/60">{fmt(r.created_at)}</td>
+                <td class="whitespace-nowrap py-3 pr-4">{r.ok ? '' : '⚠️ '}{REGALO_LABEL[r.tipo] ?? r.tipo}</td>
+                <td class="whitespace-nowrap py-3 pr-4 text-ink/85">{r.audiencia ? (getAudiencia(r.audiencia)?.label ?? r.audiencia) : '—'}</td>
+                <td class="py-3 pr-4 text-xs text-ink/80">{r.datos}</td>
+                <td class="py-3 pr-4 text-xs text-ink/80"><details><summary class="cursor-pointer text-magenta">Ver</summary><pre class="mt-2 whitespace-pre-wrap font-sans">{r.resultado}</pre></details></td>
               </tr>
             ))}
           </tbody>

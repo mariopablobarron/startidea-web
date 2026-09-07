@@ -19,7 +19,7 @@ import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 
-export type TipoEvento = 'pregunta' | 'atajo' | 'estacion' | 'clic';
+export type TipoEvento = 'pregunta' | 'atajo' | 'estacion' | 'clic' | 'charla' | 'regalo';
 
 export interface EventoPlano {
   id: number;
@@ -33,6 +33,7 @@ export interface EventoPlano {
   visitante: string; // hash diario de IP
   pagina: string;
   audiencia: string; // empresa | institucion | entidad-social | emprendedor | ''
+  respuesta: string; // tipo=charla: lo que contestó el asistente
 }
 
 let _db: Database.Database | null = null;
@@ -55,11 +56,26 @@ function getDb(): Database.Database {
       destino     TEXT NOT NULL DEFAULT '',
       visitante   TEXT NOT NULL DEFAULT '',
       pagina      TEXT NOT NULL DEFAULT '',
-      audiencia   TEXT NOT NULL DEFAULT ''
+      audiencia   TEXT NOT NULL DEFAULT '',
+      respuesta   TEXT NOT NULL DEFAULT ''
     );
     CREATE INDEX IF NOT EXISTS idx_plano_created ON eventos_plano (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_plano_tipo ON eventos_plano (tipo);
+    CREATE TABLE IF NOT EXISTS regalos_plano (
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at  INTEGER NOT NULL,
+      ip_hash     TEXT NOT NULL,
+      visitante   TEXT NOT NULL DEFAULT '',
+      tipo        TEXT NOT NULL,
+      datos       TEXT NOT NULL DEFAULT '',
+      resultado   TEXT NOT NULL DEFAULT '',
+      audiencia   TEXT NOT NULL DEFAULT '',
+      ok          INTEGER NOT NULL DEFAULT 1
+    );
+    CREATE INDEX IF NOT EXISTS idx_regalos_ip ON regalos_plano (ip_hash, created_at DESC);
   `);
+  // Migración suave: columnas añadidas después de la primera versión.
+  try { _db.exec(`ALTER TABLE eventos_plano ADD COLUMN respuesta TEXT NOT NULL DEFAULT ''`); } catch { /* ya existe */ }
   return _db;
 }
 
@@ -67,6 +83,11 @@ function getDb(): Database.Database {
 export function hashVisitante(ip: string): string {
   const dia = new Date().toISOString().slice(0, 10);
   return createHash('sha256').update(`${dia}|${ip}`).digest('hex').slice(0, 12);
+}
+
+/** Hash estable de la IP (sin día) para el límite diario de regalos. No es reversible. */
+export function hashIp(ip: string): string {
+  return createHash('sha256').update(`regalos|${ip}`).digest('hex').slice(0, 16);
 }
 
 /** Enmascara emails y teléfonos que la gente escribe sin querer. */
@@ -86,12 +107,13 @@ export function registrarEvento(e: {
   ip: string;
   pagina?: string;
   audiencia?: string;
+  respuesta?: string;
 }): void {
   try {
     getDb()
       .prepare(`
-        INSERT INTO eventos_plano (created_at, tipo, texto, intencion, estaciones, fuente, destino, visitante, pagina, audiencia)
-        VALUES (@created_at, @tipo, @texto, @intencion, @estaciones, @fuente, @destino, @visitante, @pagina, @audiencia)
+        INSERT INTO eventos_plano (created_at, tipo, texto, intencion, estaciones, fuente, destino, visitante, pagina, audiencia, respuesta)
+        VALUES (@created_at, @tipo, @texto, @intencion, @estaciones, @fuente, @destino, @visitante, @pagina, @audiencia, @respuesta)
       `)
       .run({
         created_at: Date.now(),
@@ -104,6 +126,7 @@ export function registrarEvento(e: {
         visitante: hashVisitante(e.ip),
         pagina: (e.pagina ?? '').slice(0, 120),
         audiencia: (e.audiencia ?? '').slice(0, 30),
+        respuesta: anonimizarTexto((e.respuesta ?? '').slice(0, 1500)),
       });
   } catch (err) {
     console.error('[plano-db] no se pudo registrar el evento', err);
@@ -149,4 +172,48 @@ export function getResumen(dias = 30): ResumenPlano {
     porIntencion,
     porAudiencia,
   };
+}
+
+// ─── Regalos ────────────────────────────────────────────────────────────
+
+export interface RegaloRow {
+  id: number;
+  created_at: number;
+  ip_hash: string;
+  visitante: string;
+  tipo: string;
+  datos: string;
+  resultado: string;
+  audiencia: string;
+  ok: number;
+}
+
+function inicioDia(): number {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+/** Regalos generados hoy por esta IP (solo los que salieron bien). */
+export function regalosHoyPorIp(ip: string): number {
+  return (getDb().prepare(`SELECT COUNT(*) AS n FROM regalos_plano WHERE ip_hash = ? AND created_at >= ? AND ok = 1`).get(hashIp(ip), inicioDia()) as { n: number }).n;
+}
+
+/** Regalos generados hoy en total (tope global de coste). */
+export function regalosHoyTotal(): number {
+  return (getDb().prepare(`SELECT COUNT(*) AS n FROM regalos_plano WHERE created_at >= ? AND ok = 1`).get(inicioDia()) as { n: number }).n;
+}
+
+export function registrarRegalo(r: { ip: string; tipo: string; datos: unknown; resultado: string; audiencia?: string; ok: boolean }): void {
+  try {
+    getDb()
+      .prepare(`INSERT INTO regalos_plano (created_at, ip_hash, visitante, tipo, datos, resultado, audiencia, ok) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(Date.now(), hashIp(r.ip), hashVisitante(r.ip), r.tipo, anonimizarTexto(JSON.stringify(r.datos ?? {}).slice(0, 2000)), anonimizarTexto(r.resultado.slice(0, 6000)), r.audiencia ?? '', r.ok ? 1 : 0);
+  } catch (err) {
+    console.error('[plano-db] no se pudo registrar el regalo', err);
+  }
+}
+
+export function getRegalos(limit = 100): RegaloRow[] {
+  return getDb().prepare(`SELECT * FROM regalos_plano ORDER BY created_at DESC LIMIT ?`).all(limit) as RegaloRow[];
 }
