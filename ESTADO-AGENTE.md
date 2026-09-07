@@ -3,56 +3,33 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, tras la respuesta competitiva a Lexy (mylexy.app) y los 10 planes de productos autoservicio.
+**Última actualización:** 2026-09-07, tras abrir el PR #89 (home que pregunta).
 
 ---
 
-## Hecho el 2026-09-08 — respuesta competitiva a Lexy (PR #91, `486906f`, desplegado y verificado en producción)
+## 2026-09-07 — «Home que pregunta» (PR #89, abierto, SIN fusionar)
 
-Origen: análisis del competidor Lexy (mylexy.app, SaaS de RRSS con IA, Barcelona; Starter 25 €/mes DIY,
-Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades implementadas:
+Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verificado en dev.
 
-- **Lead magnet `/auditoria-digital-gratuita`**: formulario → `POST /api/auditoria-digital` (honeypot,
-  rate-limit 3/h por IP, consentimiento obligatorio). Avisa a Mario por Telegram, manda acuse al lead
-  (Resend) y lanza en segundo plano `src/lib/auditoria-digital.ts`: web + Google (robots, sitemap,
-  JSON-LD, OG, PageSpeed móvil) + visibilidad IA (llms.txt, bots bloqueados, Organization) + redes.
-  El resultado llega a Mario por Telegram y email; **el lead NO recibe el análisis en bruto**: el
-  compromiso público es auditoría revisada por persona en 48 h laborables. Probado en vivo contra
-  startidea.es (11 ok) y mylexy.app (4 medios, 3 leves).
-- **Comparativa en `/redes-sociales-ia`** («herramienta de IA por 25 € o IA supervisada») + bloque
-  «Por sector» enlazando a los verticales + CTA a la auditoría.
-- **Verticales `/redes-sociales-ia/{tercer-sector,iglesia,empresas-con-proposito}`**: datos en
-  `src/data/redes-sociales-ia-verticales.ts` (getStaticPaths no ve el frontmatter: gotcha de Astro).
-  Cada uno con qué se publica, líneas rojas, mes tipo, plan recomendado, FAQ y Service/FAQ JSON-LD.
-- Registro: footer (Servicios + Explora), `llms.txt`, OG `page/auditoria-digital-gratuita`, sitemap
-  (automático, verificado en dist).
-- Verificado en prod (2026-09-08 01:10): las 4 URL nuevas 200, OG, comparativa, llms.txt, sitemap y
-  footer. Endpoint probado: email inválido → 400, honeypot → 200 falso, y un envío real de prueba
-  («PRUEBA Claude») contra mylexy.app para comprobar Telegram + acuse + análisis.
-- **Pendiente de Mario**: (1) confirmar que llegaron el Telegram y los dos correos de la prueba;
-  (2) opcional `PAGESPEED_API_KEY=` en `.env` del container y en `.env.example` (sin clave funciona
-  con cuota anónima); (3) decidir si Lexy interesa como partner de autoservicio barato para
-  clientes por debajo de 190 €/mes (no se implementa nada).
-- Disco del Mac al 99 % durante la sesión (ENOSPC en el build); se vació la caché npm. Revisar.
+- **Nivel A (producción al fusionar):** Nav con «Qué hacemos ▾» (4 servicios +
+  financiación + formación) y «Laboratorio» en escritorio; pie con columna
+  «Aprender»; banda de formación de la home subida por encima de la prueba social.
+- **Nivel B (prototipo noindex):** `/lab/home-plano` = hero con ventana de pregunta +
+  Plano Startidea (SVG en servidor; datos en `src/data/plano.ts`), `/api/plano`
+  (atajos sin IA, texto libre → Haiku con JSON validado, fallback por patrones),
+  `src/lib/plano-db.ts` (SQLite `plano.db`, anonimizado) y `/admin/plano`.
+- **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
+  nada de capas/motores/Hermes del Plan 5.0 (`~/startidea-plan`, plan.startidea.es).
+- **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes
+  de contar» y «Plano Startidea» (sesión 2026-09-07).
+- **Decisión de Mario pendiente:** fusionar el PR #89 (el agente no tiene permiso de
+  merge). Tras fusionar: verificar `curl -s -o /dev/null -w "%{http_code}" https://startidea.es/lab/home-plano`
+  (200) y que `/` muestra «Laboratorio» en el menú de escritorio.
+- **Siguiente acción:** con el PR en producción, dejar 3-4 semanas de datos en
+  `/admin/plano` + GA4 (scroll, clics en formación, reservas) y decidir si
+  `/lab/home-plano` sustituye a la home.
 
-
-## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio)
-
-- **Colección `productos`** en `src/content/config.ts` + 10 fichas en `src/content/productos/`
-  (piloto de redes, copiloto de subvenciones Pro, memorias y justificaciones, web en un día,
-  nota de voz a contenido, newsletter curada, kit de marca exprés, asistente para socios,
-  eventos con inscripciones, merchandising bajo demanda). Cada ficha: `orden` (ranking por
-  rentabilidad), `claim`, `modelo`, `precio_desde`, `estado`, `base_hub`, `rentabilidad` 1-5,
-  `beta`, `tldr`, `faqs`, y cuerpo con problema/cliente/producto/IA/ingresos/mercado/métricas/
-  90 días/riesgos/qué falta.
-- **Páginas**: `/laboratorio/productos` (ranking con filtros por área y estado, `<script is:inline>`)
-  y `/laboratorio/productos/[...slug]` (ficha + BlogPosting + FAQPage + anterior/siguiente).
-  Rama añadida en primera posición al array `ramas` de `/laboratorio`.
-- Precios coherentes con `knowledge/01-servicios-y-precios.md` y con el Copiloto gratuito + 12 % a
-  éxito de `/precios`: el Pro se presenta como plan de pago del Copiloto, no como producto nuevo.
-- Build verificado OK en worktree `claude-lab-productos`. Siguiente acción: comprobar en producción
-  `/laboratorio/productos` tras el deploy y decidir con Mario qué beta arranca primero (propuesta:
-  piloto de redes, que ya tiene el flujo en el HUB).
+---
 
 ## Hecho el 2026-08-18 (desplegado y verificado en producción)
 
