@@ -13,7 +13,7 @@
 //
 // Script en JS plano (`is:inline`): ver gotcha en ESTADO-AGENTE (los
 // atributos en <script> desactivan la transpilación TS).
-import { LINEAS, ESTACIONES, CHIPS, INTENCIONES } from '@/data/plano';
+import { LINEAS, ESTACIONES, CHIPS, INTENCIONES, AUDIENCIAS } from '@/data/plano';
 import { bookingHref, hasBooking } from '@/data/booking';
 
 interface Props {
@@ -33,6 +33,7 @@ const datosCliente = {
   lineas: LINEAS.map((l) => ({ id: l.id, color: l.color })),
   estaciones: ESTACIONES.map((e) => ({ id: e.id, label: e.label, url: e.url, lineas: e.lineas })),
   intenciones: INTENCIONES.map((i) => ({ id: i.id, say: i.say, estaciones: i.estaciones, linea: i.linea })),
+  audiencias: AUDIENCIAS,
 };
 ---
 
@@ -41,22 +42,36 @@ const datosCliente = {
     <div class="grid grid-cols-12 gap-x-8 gap-y-10">
       <!-- Columna pregunta -->
       <div class="col-span-12 lg:col-span-5">
-        <span class="label">— Agencia de comunicación e innovación social · Granada</span>
+        <span class="label">— Para empresas, instituciones, entidades sociales y quien emprende</span>
         <h1 id="plano-h1" class="mt-4 font-display text-4xl leading-[0.98] text-ink md:text-5xl xl:text-6xl">
           ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
         </h1>
         <p class="mt-5 max-w-measure text-lede text-ink/80">
-          Cuéntalo con tus palabras o elige un atajo. El plano te enseña la ruta: qué hace Startidea para eso, un caso parecido y, si existe, un curso.
+          Cuéntalo con tus palabras o elige un atajo. El plano te enseña la ruta: qué hace Startidea para eso, un caso parecido y, si existe, un curso. Da igual si diriges una pyme, un ayuntamiento, una fundación o un proyecto que empieza.
         </p>
 
-        <form id="plano-form" class="mt-7 flex flex-col gap-3 sm:flex-row" autocomplete="off">
+        <div id="plano-aud" class="mt-7 flex flex-wrap items-center gap-2" role="group" aria-label="Quién eres">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Soy</span>
+          {AUDIENCIAS.map((a) => (
+            <button
+              type="button"
+              class="plano-aud border border-ink/25 bg-paper px-3 py-1.5 text-xs text-ink/80 transition-colors hover:border-ink hover:text-ink aria-pressed:border-magenta aria-pressed:bg-magenta/10 aria-pressed:text-ink"
+              data-audiencia={a.id}
+              aria-pressed="false"
+            >
+              {a.label}
+            </button>
+          ))}
+        </div>
+
+        <form id="plano-form" class="mt-3 flex flex-col gap-3 sm:flex-row" autocomplete="off">
           <label for="plano-q" class="sr-only">Escribe qué necesita tu organización</label>
           <input
             id="plano-q"
             name="q"
             type="text"
             maxlength="300"
-            placeholder="Ej.: necesitamos captar fondos y no sabemos por dónde empezar"
+            placeholder={`Ej.: ${AUDIENCIAS[0].ejemplo}`}
             class="flex-1 border border-ink bg-paper px-4 py-3.5 text-sm text-ink placeholder:text-ink/60 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
           />
           <button type="submit" class="btn whitespace-nowrap">
@@ -175,6 +190,39 @@ const datosCliente = {
     D.lineas.forEach(function (l) { COL[l.id] = l.color; });
     var INT = {};
     D.intenciones.forEach(function (i) { INT[i.id] = i; });
+    var aud = '';
+    var audBox = document.getElementById('plano-aud');
+
+    // Placeholder rotatorio: un ejemplo por audiencia, hasta que la persona
+    // elige quién es o empieza a escribir. Para que no parezca que solo
+    // se trabaja con entidades sociales.
+    var ejemplos = (D.audiencias || []).map(function (a) { return a.ejemplo; });
+    var rot = 0, rotTimer = null;
+    function pararRotacion() { if (rotTimer) { clearInterval(rotTimer); rotTimer = null; } }
+    if (ejemplos.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      rotTimer = setInterval(function () {
+        if (document.activeElement === input || input.value) { pararRotacion(); return; }
+        rot = (rot + 1) % ejemplos.length;
+        input.setAttribute('placeholder', 'Ej.: ' + ejemplos[rot]);
+      }, 4000);
+    }
+    input.addEventListener('focus', pararRotacion);
+
+    if (audBox) {
+      audBox.addEventListener('click', function (ev) {
+        var b = ev.target.closest('.plano-aud');
+        if (!b) return;
+        var id = b.getAttribute('data-audiencia');
+        aud = (aud === id) ? '' : id;
+        audBox.querySelectorAll('.plano-aud').forEach(function (x) {
+          x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === aud ? 'true' : 'false');
+        });
+        pararRotacion();
+        var a = (D.audiencias || []).filter(function (x) { return x.id === aud; })[0];
+        if (a) input.setAttribute('placeholder', 'Ej.: ' + a.ejemplo);
+        input.focus();
+      });
+    }
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, function (c) {
@@ -185,6 +233,7 @@ const datosCliente = {
     function registrar(payload) {
       try {
         payload.pagina = D.pagina;
+        if (aud) payload.audiencia = aud;
         var body = JSON.stringify(payload);
         if (navigator.sendBeacon) {
           navigator.sendBeacon('/api/plano', new Blob([body], { type: 'application/json' }));
@@ -277,7 +326,7 @@ const datosCliente = {
       fetch('/api/plano', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ tipo: 'pregunta', texto: q, pagina: D.pagina }),
+        body: JSON.stringify({ tipo: 'pregunta', texto: q, pagina: D.pagina, audiencia: aud || undefined }),
       })
         .then(function (r) { return r.json(); })
         .then(function (d) {

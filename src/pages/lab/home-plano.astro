@@ -18,10 +18,10 @@ import CtaFinal from '@/components/CtaFinal.astro';
 import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
 
 const servicios = [
-  { nombre: 'Consultoría', linea: 'L1', tag: 'Innovación social · Proyectos', body: 'Diagnóstico, estrategia organizativa, formulación y captación de fondos, evaluación de impacto.', href: '/consultoria', color: '#E6356B' },
-  { nombre: 'Comunicación', linea: 'L2', tag: 'Estratégica · Marketing social', body: 'Marca, contenidos, redes y campañas con causa para ONG, fundaciones e instituciones.', href: '/comunicacion', color: '#2F6FD6' },
-  { nombre: 'Audiovisual', linea: 'L3', tag: 'Vídeo · Pódcast · Estudio', body: 'Vídeo, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.', href: '/audiovisual', color: '#D98A1C' },
-  { nombre: 'Tecnología', linea: 'L4', tag: 'Plataformas · Producto · IA', body: 'Webs editoriales, plataformas a medida, agentes de IA y protección digital.', href: '/tecnologia', color: '#2E9A6C' },
+  { nombre: 'Consultoría', linea: 'L1', tag: 'Innovación social · Proyectos', body: 'Diagnóstico, estrategia, financiación pública y medición de impacto o RSC. Para quien dirige una empresa, una institución, una entidad o un proyecto que empieza.', href: '/consultoria', color: '#E6356B' },
+  { nombre: 'Comunicación', linea: 'L2', tag: 'Estratégica · Marketing social', body: 'Marca, contenidos, redes y campañas. Comunicación corporativa, institucional o con causa, según quién seas.', href: '/comunicacion', color: '#2F6FD6' },
+  { nombre: 'Audiovisual', linea: 'L3', tag: 'Vídeo · Pódcast · Estudio', body: 'Vídeo corporativo o institucional, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.', href: '/audiovisual', color: '#D98A1C' },
+  { nombre: 'Tecnología', linea: 'L4', tag: 'Plataformas · Producto · IA', body: 'Webs que traen clientes o cuentan bien, plataformas a medida, agentes de IA y protección digital.', href: '/tecnologia', color: '#2E9A6C' },
 ];
 
 const marcas = [
@@ -38,7 +38,7 @@ const marcas = [
 
 <Base
   title="Prototipo · Home que pregunta — Startidea"
-  description="Prototipo interno: portada con el Plano Startidea. Comunicación, fundraising y herramientas digitales para tercer sector, instituciones y empresas con propósito."
+  description="Prototipo interno: portada con el Plano Startidea. Estrategia, comunicación, audiovisual y tecnología para empresas, instituciones, entidades sociales y personas que emprenden."
   ogSlug="home"
   noindex={true}
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
@@ -52,7 +52,7 @@ const marcas = [
       <div class="grid grid-cols-12 gap-x-8">
         <div class="col-span-12 lg:col-span-3">
           <span class="label">— Servicios</span>
-          <p class="mt-4 text-sm text-ink/70">Cuatro líneas. Se contratan juntas o por separado.</p>
+          <p class="mt-4 text-sm text-ink/70">Cuatro líneas. Se contratan juntas o por separado. Para empresas, instituciones, entidades sociales y personas que emprenden.</p>
         </div>
         <ul class="col-span-12 mt-8 grid gap-px border border-ink/15 bg-ink/15 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
           {servicios.map((s) => (

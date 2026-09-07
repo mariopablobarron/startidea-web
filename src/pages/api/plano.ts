@@ -23,6 +23,7 @@ import {
   clasificarPorPatron,
   getEstacion,
   getIntencion,
+  getAudiencia,
 } from '@/data/plano';
 
 export const prerender = false;
@@ -61,11 +62,11 @@ function rutaPorPatron(texto: string): Ruta {
   return { intencion: i.id, say: i.say, estaciones: i.estaciones, fuente: 'patron' };
 }
 
-async function rutaPorModelo(texto: string): Promise<Ruta | null> {
+async function rutaPorModelo(texto: string, audiencia: string): Promise<Ruta | null> {
   const apiKey = getEnv('OPENROUTER_API_KEY');
   if (!apiKey) return null;
 
-  const system = `Eres el guía del «Plano Startidea», el mapa de servicios de Startidea (agencia de innovación social en Granada, para tercer sector, instituciones y empresas con propósito). El visitante escribe qué necesita su organización y tú eliges hasta 3 estaciones del catálogo y escribes UNA frase de orientación (máximo 30 palabras), en español neutro, sin "nosotros" ni "nosotras", hablando de Startidea en tercera persona.
+  const system = `Eres el guía del «Plano Startidea», el mapa de servicios de Startidea (agencia de comunicación e innovación social en Granada). Trabaja con cuatro públicos por igual: empresas (pymes, grandes empresas, startups, autónomos), instituciones (públicas, educativas, sanitarias, eclesiales), entidades sociales (asociaciones, fundaciones, cooperativas, ONG, redes) y personas que emprenden. No des por hecho que quien escribe es una ONG ni que busca captar fondos: escucha lo que dice. El visitante escribe qué necesita su organización o proyecto y tú eliges hasta 3 estaciones del catálogo y escribes UNA frase de orientación (máximo 30 palabras), en español neutro, sin "nosotros" ni "nosotras", hablando de Startidea en tercera persona.
 
 Intenciones posibles (elige una): ${INTENCIONES.map((i) => i.id).join(', ')}. Si el texto no encaja con ningún servicio (spam, otro tema, sin sentido), devuelve intencion "" y estaciones [].
 
@@ -91,7 +92,7 @@ Responde SOLO con JSON válido, sin texto alrededor, con esta forma exacta:
         model: MODEL,
         messages: [
           { role: 'system', content: system },
-          { role: 'user', content: texto },
+          { role: 'user', content: (audiencia ? `[Se identifica como: ${audiencia}] ` : '') + texto },
         ],
         max_tokens: 220,
         temperature: 0.2,
@@ -143,6 +144,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const tipo = clean(body.tipo, 20);
   const pagina = clean(body.pagina, 120);
+  const audiencia = getAudiencia(clean(body.audiencia, 30))?.id ?? '';
 
   if (tipo === 'atajo' || tipo === 'estacion' || tipo === 'clic') {
     const estaciones = Array.isArray(body.estaciones)
@@ -156,6 +158,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       fuente: 'mapa',
       ip,
       pagina,
+      audiencia,
     });
     return json({ ok: true });
   }
@@ -165,7 +168,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const texto = clean(body.texto, 500);
   if (texto.length < 3) return json({ ok: false, error: 'empty' }, 400);
 
-  const ruta = (await rutaPorModelo(texto)) ?? rutaPorPatron(texto);
+  const ruta = (await rutaPorModelo(texto, getAudiencia(audiencia)?.label ?? '')) ?? rutaPorPatron(texto);
 
   registrarEvento({
     tipo: 'pregunta',
@@ -175,6 +178,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     fuente: ruta.fuente,
     ip,
     pagina,
+    audiencia,
   });
 
   return json({

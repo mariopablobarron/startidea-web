@@ -32,6 +32,7 @@ export interface EventoPlano {
   destino: string; // url pulsada (solo tipo=clic)
   visitante: string; // hash diario de IP
   pagina: string;
+  audiencia: string; // empresa | institucion | entidad-social | emprendedor | ''
 }
 
 let _db: Database.Database | null = null;
@@ -53,7 +54,8 @@ function getDb(): Database.Database {
       fuente      TEXT NOT NULL DEFAULT '',
       destino     TEXT NOT NULL DEFAULT '',
       visitante   TEXT NOT NULL DEFAULT '',
-      pagina      TEXT NOT NULL DEFAULT ''
+      pagina      TEXT NOT NULL DEFAULT '',
+      audiencia   TEXT NOT NULL DEFAULT ''
     );
     CREATE INDEX IF NOT EXISTS idx_plano_created ON eventos_plano (created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_plano_tipo ON eventos_plano (tipo);
@@ -83,12 +85,13 @@ export function registrarEvento(e: {
   destino?: string;
   ip: string;
   pagina?: string;
+  audiencia?: string;
 }): void {
   try {
     getDb()
       .prepare(`
-        INSERT INTO eventos_plano (created_at, tipo, texto, intencion, estaciones, fuente, destino, visitante, pagina)
-        VALUES (@created_at, @tipo, @texto, @intencion, @estaciones, @fuente, @destino, @visitante, @pagina)
+        INSERT INTO eventos_plano (created_at, tipo, texto, intencion, estaciones, fuente, destino, visitante, pagina, audiencia)
+        VALUES (@created_at, @tipo, @texto, @intencion, @estaciones, @fuente, @destino, @visitante, @pagina, @audiencia)
       `)
       .run({
         created_at: Date.now(),
@@ -100,6 +103,7 @@ export function registrarEvento(e: {
         destino: (e.destino ?? '').slice(0, 200),
         visitante: hashVisitante(e.ip),
         pagina: (e.pagina ?? '').slice(0, 120),
+        audiencia: (e.audiencia ?? '').slice(0, 30),
       });
   } catch (err) {
     console.error('[plano-db] no se pudo registrar el evento', err);
@@ -120,6 +124,7 @@ export interface ResumenPlano {
   visitantes: number;
   sinRuta: number;
   porIntencion: { intencion: string; n: number }[];
+  porAudiencia: { audiencia: string; n: number }[];
 }
 
 export function getResumen(dias = 30): ResumenPlano {
@@ -130,6 +135,9 @@ export function getResumen(dias = 30): ResumenPlano {
   const porIntencion = db
     .prepare(`SELECT intencion, COUNT(*) AS n FROM eventos_plano WHERE created_at >= ? AND tipo IN ('pregunta','atajo') AND intencion <> '' GROUP BY intencion ORDER BY n DESC`)
     .all(desde) as { intencion: string; n: number }[];
+  const porAudiencia = db
+    .prepare(`SELECT audiencia, COUNT(*) AS n FROM eventos_plano WHERE created_at >= ? AND tipo IN ('pregunta','atajo') AND audiencia <> '' GROUP BY audiencia ORDER BY n DESC`)
+    .all(desde) as { audiencia: string; n: number }[];
   const visitantes = (db.prepare(`SELECT COUNT(DISTINCT visitante) AS n FROM eventos_plano WHERE created_at >= ?`).get(desde) as { n: number }).n;
   return {
     total: cuenta(''),
@@ -139,5 +147,6 @@ export function getResumen(dias = 30): ResumenPlano {
     visitantes,
     sinRuta: cuenta(`AND tipo = 'pregunta' AND fuente = 'ninguna'`),
     porIntencion,
+    porAudiencia,
   };
 }
