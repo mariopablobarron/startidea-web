@@ -1,0 +1,221 @@
+---
+/**
+ * /redes-sociales-ia/<vertical> — Landings sectoriales del servicio de redes
+ * sociales con IA supervisada. Una por audiencia de Startidea:
+ *
+ *   - tercer-sector           asociaciones y fundaciones
+ *   - iglesia                 parroquias, diócesis, congregaciones, obras sociales
+ *   - empresas-con-proposito  pymes y empresas con RSC / ESG
+ *
+ * Los SaaS de contenido con IA venden el mismo modelo para una clínica y
+ * para una ONG. Estas páginas existen para decir lo contrario: qué se
+ * publica, qué no se publica nunca y qué plan encaja en cada sector.
+ * Comparten estructura; solo cambia el contenido de VERTICALES.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
+import { VERTICALES } from '@/data/redes-sociales-ia-verticales';
+
+export function getStaticPaths() {
+  return Object.keys(VERTICALES).map((vertical) => ({ params: { vertical } }));
+}
+
+const { vertical } = Astro.params;
+const v = VERTICALES[vertical!];
+const url = `${SITE_URL}/redes-sociales-ia/${vertical}`;
+
+const otros = Object.entries(VERTICALES).filter(([k]) => k !== vertical);
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Redes sociales con IA', url: `${SITE_URL}/redes-sociales-ia` },
+    { name: v.nombre, url },
+  ]),
+  faqPageSchema(v.faqs),
+  serviceSchema({
+    name: `Redes sociales con IA para ${v.nombre.toLowerCase()}`,
+    description: v.description,
+    serviceType: 'Gestión de redes sociales con IA supervisada',
+    url,
+    audience: v.audiencia,
+    offers: [
+      { name: 'Plan Presencia', description: '3 publicaciones por semana, 1 red principal con réplicas, aprobación mensual en bloque. 190 € al mes.' },
+      { name: 'Plan Crecimiento', description: 'Publicación diaria en 3 redes, doble aprobación, informe y reunión mensual. 390 € al mes.' },
+      { name: 'Plan Institucional', description: 'Todo lo de Crecimiento más cobertura de eventos, banco de imágenes y reels, y SLA de respuesta. 690 € al mes.' },
+    ],
+  }),
+];
+---
+
+<Base title={v.title} description={v.description} ogSlug="page/redes-sociales-ia" jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Redes sociales con IA · {v.nombre}</span>
+      <h1 class="mt-4 max-w-4xl font-display text-display-xl leading-[0.96] text-ink">
+        {v.h1}<br/>
+        <em class="italic text-magenta">{v.h1Acento}</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">{v.lede}</p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="/contacto" class="btn" data-track="cta" data-track-id={`rrssia_${vertical}_demo_hero`}>
+          Pedir una demo
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/redes-sociales-ia#planes" class="btn-ghost">Ver planes</a>
+      </div>
+      <p class="mt-6 text-sm text-ink/50">Sin permanencia · Primera propuesta de contenido en 2 semanas.</p>
+    </div>
+  </section>
+
+  <!-- Problema -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-8">
+        <span class="label">— El problema</span>
+        <p class="mt-6 font-display text-display-md leading-tight text-ink">{v.problema}</p>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">{v.problemaDetalle}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué se publica -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Qué se publica</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        Contenido que <em class="italic text-magenta">solo tiene sentido</em> en tu sector.
+      </h2>
+      <div class="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
+        {v.publica.map((p) => (
+          <div>
+            <h3 class="font-display text-2xl text-ink">{p.title}</h3>
+            <p class="mt-3 text-ink/70">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Un mes tipo + líneas rojas -->
+  <section class="border-b border-ink/15 bg-paper-warm py-16 md:py-24">
+    <div class="container-x grid grid-cols-1 gap-12 lg:grid-cols-2">
+      <div>
+        <span class="label">— Un mes tipo</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Así queda el calendario.</h2>
+        <ol class="mt-8 divide-y divide-ink/15 border-y border-ink/15">
+          {v.mes.map((m, i) => (
+            <li class="flex gap-4 py-4">
+              <span class="num-edit text-2xl">{String(i + 1).padStart(2, '0')}</span>
+              <p class="text-ink/80">{m}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="mt-4 text-sm text-ink/50">Ejemplo con el plan Presencia. Con Crecimiento, el calendario es diario.</p>
+      </div>
+      <div>
+        <span class="label">— Lo que no se publica nunca</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Líneas rojas de serie.</h2>
+        <ul class="mt-8 space-y-3">
+          {v.nunca.map((n) => (
+            <li class="flex gap-3 text-ink/80">
+              <span class="mt-1 font-mono text-xs text-magenta" aria-hidden="true">✕</span>
+              <span>{n}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-6 text-sm text-ink/50">Se cargan en el cerebro de marca el primer día y se añaden las tuyas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plan recomendado -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x grid grid-cols-12 gap-x-8 gap-y-8">
+      <div class="col-span-12 lg:col-span-7">
+        <span class="label">— Plan recomendado</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+          Para {v.nombre.toLowerCase()}, <em class="italic text-magenta">{v.plan.nombre}</em>.
+        </h2>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">{v.plan.porQue}</p>
+        <p class="mt-6 text-sm text-ink/50">
+          Los tres planes, con lo que incluye cada uno, en <a href="/redes-sociales-ia#planes" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">la página general del servicio</a>. Alta única de 350 € para calibrar el cerebro de marca.
+        </p>
+      </div>
+      <div class="col-span-12 lg:col-span-5">
+        <div class="flex flex-col rounded-lg border border-magenta bg-ink p-6 text-paper">
+          <span class="label !text-magenta">{v.plan.nombre}</span>
+          <p class="mt-4 font-display text-5xl leading-none">{v.plan.precio}&nbsp;€ <span class="text-lg text-paper/60">/mes</span></p>
+          <p class="mt-3 text-sm text-paper/70">Sin permanencia. Informe mensual de lo publicado.</p>
+          <a href="/contacto" class="btn mt-8 !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id={`rrssia_${vertical}_plan`}>
+            Empezar
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Preguntas frecuentes</span>
+      <div class="mt-10 max-w-measure divide-y divide-ink/15">
+        {v.faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="cursor-pointer list-none font-display text-xl text-ink">{f.q}</summary>
+            <p class="mt-3 text-ink/70">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Antes de contratar nada</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            Pide la auditoría gratuita<br/>
+            <em class="italic text-magenta">y mira dónde estás</em> en Google, en la IA y en redes.
+          </h2>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="/auditoria-digital-gratuita" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id={`rrssia_${vertical}_auditoria`}>
+              Auditoría gratuita
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/contacto" class="btn-ghost !border-paper/40 !text-paper hover:!border-paper" data-track="cta" data-track-id={`rrssia_${vertical}_demo_final`}>
+              Pedir demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enlaces hermanos -->
+  <section class="bg-paper pt-10 pb-6">
+    <div class="container-x grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div>
+        <span class="label">— Otros sectores</span>
+        <ul class="mt-4 space-y-2 text-sm">
+          {otros.map(([k, o]) => (
+            <li><a href={`/redes-sociales-ia/${k}`} class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">Redes con IA para {o.nombre.toLowerCase()}</a></li>
+          ))}
+          <li><a href="/redes-sociales-ia" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">El servicio, en general</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="label">— Relacionado</span>
+        <ul class="mt-4 space-y-2 text-sm">
+          {v.enlaces.map((e) => (
+            <li><a href={e.href} class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">{e.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
