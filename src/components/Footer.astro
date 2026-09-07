@@ -4,7 +4,8 @@ import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 
 // Footer aligerado (Mario 2026-06-21: "mucha info, los títulos"). De 4 columnas
-// (33 enlaces) a 3 equilibradas con lo esencial. Lo retirado sigue en la nav y
+// (33 enlaces) a 3 equilibradas con lo esencial; 2026-09-07 vuelve una 4ª
+// columna «Aprender» (6 enlaces) porque el Lab había quedado sin puerta. Lo retirado sigue en la nav y
 // el sitemap: Financiación pública, Catálogo, Impulsa, Precios, Comunidad,
 // Merchandising, Granada Social, Glosario, Prensa, Asistente IA, Changelog, pedidos@.
 const cols = [
@@ -28,12 +29,24 @@ const cols = [
       { label: 'Subvenciones', href: '/subvenciones' },
       { label: 'Auditoría digital gratuita', href: '/auditoria-digital-gratuita' },
       { label: 'Casos', href: '/casos' },
-      { label: 'Notas mensuales', href: '/notas' },
-      { label: 'Glosario', href: '/glosario' },
       { label: 'Sobre Startidea', href: '/sobre' },
       { label: 'Trabaja con Startidea', href: '/empleo' },
       { label: 'Manifiesto', href: '/manifiesto' },
       { label: 'Hub Startidea', href: '/hub' },
+    ],
+  },
+  // «Aprender» (2026-09-07): el Laboratorio y sus cursos no tenían ninguna
+  // entrada en el pie ni en el menú de escritorio; solo se llegaba desde la
+  // banda de formación al 73 % del scroll de la home.
+  {
+    title: 'Aprender',
+    links: [
+      { label: 'Laboratorio', href: '/laboratorio' },
+      { label: 'Cursos y talleres', href: '/laboratorio/cursos' },
+      { label: 'Herramientas de IA evaluadas', href: '/laboratorio/ia/herramientas' },
+      { label: 'Notas mensuales', href: '/notas' },
+      { label: 'Glosario', href: '/glosario' },
+      { label: 'Asistente IA', href: '/asistente' },
     ],
   },
   {
@@ -121,7 +134,7 @@ const redes = [
         </div>
       </div>
 
-      <div class="lg:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
+      <div class="lg:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
         {cols.map((col) => (
           <div>
             <h3 class="label">— {col.title}</h3>

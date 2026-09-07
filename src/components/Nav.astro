@@ -10,20 +10,33 @@ const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 // `desktop: false` → fuera del bar inline de escritorio (cabe en portátiles
 // 13-14" sin solapar el logo, fix Mario 2026-06-21); siguen en el menú
 // móvil/desplegable y en el footer.
+// Nivel A de la propuesta «home que pregunta» (2026-09-07): «Qué hacemos»
+// pasa a desplegable con las 4 puertas de entrada + financiación + formación,
+// «Laboratorio» entra en la barra de escritorio (antes solo en móvil) y
+// «Financiación» baja al desplegable para no ganar anchura en 1180-1360px.
 const links = [
   { label: 'Para quién', href: '/para-quien' },
-  { label: 'Qué hacemos', href: '/que-hacemos' },
+  { label: 'Qué hacemos', href: '/que-hacemos', menu: 'servicios' },
   { label: 'Casos', href: '/casos' },
   { label: 'Sobre', href: '/sobre' },
-  { label: 'Laboratorio', href: '/laboratorio', desktop: false },
+  { label: 'Laboratorio', href: '/laboratorio' },
   // Financiación apunta a la landing maestra que agrega las 5 fuentes
   // (BDNS + CDTI + IDAE + ENISA + Andalucía TRADE). Desde ahí el visitante
   // entra al buscador /subvenciones o lee las guías editoriales.
-  // Renombrado de "Subvenciones" a "Financiación" en 2026-05-26 para
-  // reflejar el alcance real del servicio (subvenciones + préstamos
-  // participativos + créditos blandos + misiones comerciales).
-  { label: 'Financiación', href: '/financiacion-empresas' },
+  { label: 'Financiación', href: '/financiacion-empresas', desktop: false },
   { label: 'Notas', href: '/notas', desktop: false },
+];
+
+// Desplegable «Qué hacemos»: una sola taxonomía (las 4 puertas de entrada
+// del Plan 5.0) + las dos entradas que más se buscan y no son un servicio
+// clásico. Misma lista en el menú móvil, indentada bajo «Qué hacemos».
+const servicios = [
+  { label: 'Consultoría', href: '/consultoria', tag: 'Estrategia · Fundraising · Impacto' },
+  { label: 'Comunicación', href: '/comunicacion', tag: 'Marca · Redes · Campañas' },
+  { label: 'Audiovisual', href: '/audiovisual', tag: 'Vídeo · Videopódcast · Estudio' },
+  { label: 'Tecnología', href: '/tecnologia', tag: 'Webs · Plataformas · Agentes IA' },
+  { label: 'Financiación y subvenciones', href: '/financiacion-empresas', tag: 'Buscador gratuito · Tramitación a éxito' },
+  { label: 'Formación · Startidea Lab', href: '/laboratorio/cursos', tag: 'Talleres y masterclasses', highlight: true },
 ];
 
 // Líneas editoriales / propiedades de Startidea.
@@ -51,11 +64,42 @@ const propiedades = [
     <nav class="hidden min-[1180px]:block" aria-label="Principal">
       <ul class="flex items-center gap-3">
         {links.filter((l) => l.desktop !== false).map((l) => (
-          <li>
-            <a href={l.href} class="link-underline whitespace-nowrap text-sm text-ink/85 hover:text-ink">
-              {l.label}
-            </a>
-          </li>
+          l.menu === 'servicios' ? (
+            <li class="relative group">
+              <a
+                href={l.href}
+                class="link-underline flex items-center gap-1 whitespace-nowrap text-sm text-ink/85 hover:text-ink"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {l.label}
+                <span aria-hidden="true" class="text-xs">▾</span>
+              </a>
+              <div class="invisible absolute left-0 top-full z-10 mt-3 w-80 border border-ink bg-paper opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <ul class="divide-y divide-ink/10">
+                  {servicios.map((sv) => (
+                    <li class:list={[sv.highlight && 'bg-magenta/5']}>
+                      <a href={sv.href} class="block px-5 py-3.5 transition-colors hover:bg-paper-warm">
+                        <p class="font-display text-base leading-tight text-ink">{sv.label}</p>
+                        <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink-mute">{sv.tag}</p>
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <a href="/que-hacemos" class="block px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-magenta hover:bg-paper-warm">
+                      Ver todo lo que hace Startidea →
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          ) : (
+            <li>
+              <a href={l.href} class="link-underline whitespace-nowrap text-sm text-ink/85 hover:text-ink">
+                {l.label}
+              </a>
+            </li>
+          )
         ))}
 
         <!-- Dropdown Propiedades -->
@@ -122,6 +166,15 @@ const propiedades = [
             <a href={l.href} class="block py-2.5 font-display text-lg text-ink hover:text-magenta sm:text-xl">
               {l.label}
             </a>
+            {l.menu === 'servicios' && (
+              <ul class="mb-2 grid grid-cols-2 gap-x-4 pl-4">
+                {servicios.map((sv) => (
+                  <li>
+                    <a href={sv.href} class="block py-1.5 text-sm text-ink/80 hover:text-magenta">{sv.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

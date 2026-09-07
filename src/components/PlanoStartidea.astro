@@ -1,0 +1,307 @@
+---
+// Hero «Plano Startidea» — la home que pregunta antes de contar.
+//
+// Una ventana («¿A dónde quiere llegar tu organización?») y un plano de metro
+// con las cuatro puertas de entrada como líneas y el Lab como terminal común.
+// Los atajos y los clics en estaciones responden sin IA (mapa estático de
+// `src/data/plano.ts`). Solo el texto libre va a `/api/plano`, que clasifica
+// con el modelo y registra la pregunta (anonimizada) para saber qué busca la
+// gente. Toda respuesta termina en «Reservar 30 minutos».
+//
+// El SVG se renderiza en servidor: la página en reposo ya muestra el plano
+// completo; el script solo ilumina rutas y pinta la respuesta.
+//
+// Script en JS plano (`is:inline`): ver gotcha en ESTADO-AGENTE (los
+// atributos en <script> desactivan la transpilación TS).
+import { LINEAS, ESTACIONES, CHIPS, INTENCIONES } from '@/data/plano';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+interface Props {
+  /** Etiqueta para el registro (qué página aloja el hero). */
+  pagina?: string;
+}
+const { pagina = '/lab/home-plano' } = Astro.props;
+
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
+const color = (id: string) => LINEAS.find((l) => l.id === id)?.color ?? '#6E6C7C';
+
+// Datos que necesita el cliente (sin pistas ni patrones: no hace falta exponerlos).
+const datosCliente = {
+  pagina,
+  reservaHref,
+  lineas: LINEAS.map((l) => ({ id: l.id, color: l.color })),
+  estaciones: ESTACIONES.map((e) => ({ id: e.id, label: e.label, url: e.url, lineas: e.lineas })),
+  intenciones: INTENCIONES.map((i) => ({ id: i.id, say: i.say, estaciones: i.estaciones, linea: i.linea })),
+};
+---
+
+<section id="plano" class="relative border-b border-ink/15 bg-paper py-14 md:py-20" aria-labelledby="plano-h1">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 gap-y-10">
+      <!-- Columna pregunta -->
+      <div class="col-span-12 lg:col-span-5">
+        <span class="label">— Agencia de comunicación e innovación social · Granada</span>
+        <h1 id="plano-h1" class="mt-4 font-display text-4xl leading-[0.98] text-ink md:text-5xl xl:text-6xl">
+          ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
+        </h1>
+        <p class="mt-5 max-w-measure text-lede text-ink/80">
+          Cuéntalo con tus palabras o elige un atajo. El plano te enseña la ruta: qué hace Startidea para eso, un caso parecido y, si existe, un curso.
+        </p>
+
+        <form id="plano-form" class="mt-7 flex flex-col gap-3 sm:flex-row" autocomplete="off">
+          <label for="plano-q" class="sr-only">Escribe qué necesita tu organización</label>
+          <input
+            id="plano-q"
+            name="q"
+            type="text"
+            maxlength="300"
+            placeholder="Ej.: necesitamos captar fondos y no sabemos por dónde empezar"
+            class="flex-1 border border-ink bg-paper px-4 py-3.5 text-sm text-ink placeholder:text-ink/60 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          />
+          <button type="submit" class="btn whitespace-nowrap">
+            Ver ruta
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <div id="plano-chips" class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Atajos">
+          {CHIPS.map((c) => (
+            <button
+              type="button"
+              class="plano-chip inline-flex items-center gap-2 border border-ink/25 bg-paper px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink/80 transition-colors hover:border-ink hover:text-ink aria-pressed:bg-ink aria-pressed:text-paper"
+              data-intencion={c.id}
+              aria-pressed="false"
+            >
+              <i class="h-2 w-2 rounded-full" style={`background:${color(c.linea)}`} aria-hidden="true"></i>
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        <p class="mt-3 text-xs text-ink/60">
+          Lo que escribas no se guarda con tu nombre. Sirve para orientarte y para saber qué se pregunta más.
+        </p>
+
+        <div id="plano-respuesta" class="mt-6 min-h-[120px] border-t border-ink/15 pt-5" aria-live="polite">
+          <p class="text-sm text-ink/70">Escribe o elige un atajo. La ruta aparece aquí y se ilumina en el plano.</p>
+        </div>
+      </div>
+
+      <!-- Columna plano -->
+      <div class="col-span-12 lg:col-span-7">
+        <div id="plano-mapa" class="plano-mapa">
+          <svg viewBox="0 0 980 470" role="img" aria-labelledby="plano-svg-t" class="block h-auto w-full">
+            <title id="plano-svg-t">Plano de servicios de Startidea: cuatro líneas y el Laboratorio como terminal común</title>
+            {LINEAS.filter((l) => l.y).map((l) => (
+              <polyline class="track" data-linea={l.id} points={`80,${l.y} 900,${l.y}`} style={`stroke:${l.color}`} />
+            ))}
+            <polyline class="track" data-linea="l5" points="900,70 900,420" style={`stroke:${color('l5')};stroke-dasharray:2 11`} />
+
+            {LINEAS.filter((l) => l.y).map((l) => (
+              <text class="lname" x="80" y={l.y! - 32}>{`${l.id.toUpperCase()} · ${l.nombre}`}</text>
+            ))}
+            <text class="lname" x="912" y="60">L5 · Lab</text>
+
+            {ESTACIONES.map((e) => {
+              const transbordo = e.lineas.length > 1;
+              const mid = (e.y1 + e.y2) / 2;
+              const lx = e.labelPos === 'right' ? e.x + 16 : e.x;
+              const ly =
+                e.labelPos === 'top' ? e.y1 - 15
+                : e.labelPos === 'bottom' ? e.y1 + 24
+                : e.labelPos === 'below-term' ? e.y2 + 38
+                : mid + 4;
+              const anchor = e.labelPos === 'right' ? 'start' : 'middle';
+              return (
+                <g class="estacion" tabindex="0" role="button" data-id={e.id} data-lineas={e.lineas.join(' ')} aria-label={`Estación ${e.label}`}>
+                  {transbordo ? (
+                    <rect class="st" x={e.x - 9} y={e.y1 - 9} width="18" height={e.y2 - e.y1 + 18} rx="9" style="stroke:var(--plano-ink)" />
+                  ) : (
+                    <circle class="st" cx={e.x} cy={e.y1} r="8" style={`stroke:${color(e.lineas[0])}`} />
+                  )}
+                  <text class:list={['lbl', transbordo && 'term']} x={lx} y={ly} text-anchor={anchor}>{e.label}</text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+        <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+          {LINEAS.map((l) => (
+            <li class="inline-flex items-center gap-2">
+              <i class="inline-block h-1 w-4" style={`background:${l.color}`} aria-hidden="true"></i>
+              {l.nombre}
+            </li>
+          ))}
+          <li>◎ transbordo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="plano-datos" set:html={JSON.stringify(datosCliente)}></script>
+
+<style>
+  .plano-mapa { --plano-ink: #3d3d40; }
+  .track { fill: none; stroke-width: 7; stroke-linecap: round; transition: opacity .25s; }
+  .st { fill: #fff; stroke-width: 3; transition: opacity .25s; }
+  .lbl { font-family: 'Montserrat Variable', Montserrat, system-ui, sans-serif; font-size: 11.5px; fill: #4a4a4d; pointer-events: none; transition: opacity .25s; }
+  .lbl.term { font-weight: 600; fill: #3d3d40; }
+  .lname { font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; fill: #6e6f70; }
+  .estacion { cursor: pointer; outline: none; }
+  .estacion:focus-visible .st { stroke: var(--plano-ink); stroke-width: 4; }
+  .plano-mapa.has-route .track, .plano-mapa.has-route .st, .plano-mapa.has-route .lbl { opacity: .16; }
+  .plano-mapa.has-route .track.on, .plano-mapa.has-route .st.on, .plano-mapa.has-route .lbl.on { opacity: 1; }
+  .st.on { stroke-width: 4; }
+  @media (prefers-reduced-motion: reduce) { .track, .st, .lbl { transition: none; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var datosEl = document.getElementById('plano-datos');
+    if (!datosEl) return;
+    var D = JSON.parse(datosEl.textContent || '{}');
+    var mapa = document.getElementById('plano-mapa');
+    var resp = document.getElementById('plano-respuesta');
+    var form = document.getElementById('plano-form');
+    var input = document.getElementById('plano-q');
+    var chips = document.getElementById('plano-chips');
+    if (!mapa || !resp || !form || !input) return;
+
+    var EST = {};
+    D.estaciones.forEach(function (e) { EST[e.id] = e; });
+    var COL = {};
+    D.lineas.forEach(function (l) { COL[l.id] = l.color; });
+    var INT = {};
+    D.intenciones.forEach(function (i) { INT[i.id] = i; });
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function registrar(payload) {
+      try {
+        payload.pagina = D.pagina;
+        var body = JSON.stringify(payload);
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/plano', new Blob([body], { type: 'application/json' }));
+        } else {
+          fetch('/api/plano', { method: 'POST', headers: { 'content-type': 'application/json' }, body: body, keepalive: true });
+        }
+      } catch (e) { /* silencioso */ }
+    }
+
+    function iluminar(ids, lineas) {
+      mapa.classList.add('has-route');
+      mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
+      (lineas || []).forEach(function (l) {
+        var t = mapa.querySelector('.track[data-linea="' + l + '"]');
+        if (t) t.classList.add('on');
+      });
+      (ids || []).forEach(function (id) {
+        var g = mapa.querySelector('.estacion[data-id="' + id + '"]');
+        if (g) g.querySelectorAll('.st,.lbl').forEach(function (el) { el.classList.add('on'); });
+      });
+    }
+
+    function pintar(say, ids, intencion) {
+      var h = '<p class="text-sm leading-relaxed text-ink/85">' + esc(say) + '</p>';
+      if (ids.length) {
+        h += '<ul class="mt-4 divide-y divide-ink/10 border-y border-ink/10">';
+        ids.slice(0, 3).forEach(function (id) {
+          var e = EST[id];
+          if (!e) return;
+          h += '<li><a href="' + esc(e.url) + '" class="plano-ruta group flex items-center gap-3 py-2.5" data-destino="' + esc(e.url) + '" data-intencion="' + esc(intencion || '') + '">' +
+            '<i class="h-2.5 w-2.5 flex-shrink-0 rounded-full" style="background:' + esc(COL[e.lineas[0]] || '#666') + '" aria-hidden="true"></i>' +
+            '<span class="flex-1 font-display text-base text-ink group-hover:text-magenta">' + esc(e.label) + '</span>' +
+            '<span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">' + esc(e.url) + '</span></a></li>';
+        });
+        h += '</ul>';
+      }
+      h += '<p class="mt-4 text-sm text-ink/80">' + (ids.length ? '¿Prefieres contarlo? ' : '') +
+        '<a href="' + esc(D.reservaHref) + '" class="link-underline font-medium text-ink"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>Reservar 30 minutos de diagnóstico →</a></p>';
+      resp.innerHTML = h;
+    }
+
+    function marcarChip(id) {
+      chips.querySelectorAll('.plano-chip').forEach(function (c) {
+        c.setAttribute('aria-pressed', c.getAttribute('data-intencion') === id ? 'true' : 'false');
+      });
+    }
+
+    function porIntencion(id, origen) {
+      var i = INT[id];
+      if (!i) return;
+      var lineas = {};
+      i.estaciones.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { lineas[l] = 1; }); });
+      iluminar(i.estaciones, Object.keys(lineas));
+      pintar(i.say, i.estaciones, id);
+      marcarChip(id);
+      if (origen === 'atajo') registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
+    }
+
+    chips.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.plano-chip');
+      if (b) porIntencion(b.getAttribute('data-intencion'), 'atajo');
+    });
+
+    var estaciones = mapa.querySelector('svg');
+    function elegirEstacion(g) {
+      var id = g.getAttribute('data-id');
+      var e = EST[id];
+      if (!e) return;
+      iluminar([id], e.lineas);
+      pintar('Estación ' + e.label + '. Desde aquí se llega a la página del servicio. Si hay un curso relacionado, está en el Lab.', [id], '');
+      marcarChip('');
+      registrar({ tipo: 'estacion', estaciones: [id] });
+    }
+    estaciones.addEventListener('click', function (ev) {
+      var g = ev.target.closest('.estacion');
+      if (g) elegirEstacion(g);
+    });
+    estaciones.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Enter' && ev.key !== ' ') return;
+      var g = ev.target.closest('.estacion');
+      if (g) { ev.preventDefault(); elegirEstacion(g); }
+    });
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var q = input.value.trim();
+      if (q.length < 3) { input.focus(); return; }
+      marcarChip('');
+      resp.innerHTML = '<p class="text-sm text-ink/60">Buscando la ruta…</p>';
+      fetch('/api/plano', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ tipo: 'pregunta', texto: q, pagina: D.pagina }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.ok) {
+            pintar(d && d.message ? d.message : 'No se ha podido calcular la ruta. Cuéntalo en treinta minutos.', [], '');
+            return;
+          }
+          var ids = (d.estaciones || []).map(function (e) { return e.id; });
+          var lineas = {};
+          ids.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { lineas[l] = 1; }); });
+          if (ids.length) iluminar(ids, Object.keys(lineas));
+          else { mapa.classList.remove('has-route'); mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); }); }
+          pintar(d.say, ids, d.intencion || '');
+          if (d.intencion) marcarChip(d.intencion);
+        })
+        .catch(function () {
+          pintar('Sin conexión con el guía. Cuéntalo en treinta minutos.', [], '');
+        });
+    });
+
+    // Clic en una tarjeta de ruta → registrar destino (beacon, no bloquea la navegación)
+    resp.addEventListener('click', function (ev) {
+      var a = ev.target.closest('a.plano-ruta');
+      if (a) registrar({ tipo: 'clic', destino: a.getAttribute('data-destino'), intencion: a.getAttribute('data-intencion') });
+    });
+  })();
+</script>

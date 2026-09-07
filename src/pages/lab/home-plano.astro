@@ -1,0 +1,113 @@
+---
+// Prototipo (noindex) de la «home que pregunta»: hero con el Plano Startidea
+// y 8 bloques en lugar de 16. Se mide unas semanas contra la home actual
+// antes de decidir si la sustituye (propuesta 2026-09-07).
+//
+// Orden: pregunta → 4 servicios (una sola taxonomía) → para quién → prueba
+// (logos + casos) → formación → marcas propias (franja compacta) → cómo
+// empezar → CTA final. Manifiesto, feed de Granada Social y promo de
+// merchandising se quedan en sus páginas.
+import Base from '@/layouts/Base.astro';
+import PlanoStartidea from '@/components/PlanoStartidea.astro';
+import LogosBanner from '@/components/LogosBanner.astro';
+import ParaQuien from '@/components/ParaQuien.astro';
+import Casos from '@/components/Casos.astro';
+import FormacionPromo from '@/components/FormacionPromo.astro';
+import PresupuestoHome from '@/components/PresupuestoHome.astro';
+import CtaFinal from '@/components/CtaFinal.astro';
+import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
+
+const servicios = [
+  { nombre: 'Consultoría', linea: 'L1', tag: 'Innovación social · Proyectos', body: 'Diagnóstico, estrategia organizativa, formulación y captación de fondos, evaluación de impacto.', href: '/consultoria', color: '#E6356B' },
+  { nombre: 'Comunicación', linea: 'L2', tag: 'Estratégica · Marketing social', body: 'Marca, contenidos, redes y campañas con causa para ONG, fundaciones e instituciones.', href: '/comunicacion', color: '#2F6FD6' },
+  { nombre: 'Audiovisual', linea: 'L3', tag: 'Vídeo · Pódcast · Estudio', body: 'Vídeo, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.', href: '/audiovisual', color: '#D98A1C' },
+  { nombre: 'Tecnología', linea: 'L4', tag: 'Plataformas · Producto · IA', body: 'Webs editoriales, plataformas a medida, agentes de IA y protección digital.', href: '/tecnologia', color: '#2E9A6C' },
+];
+
+const marcas = [
+  { nombre: 'Hub Startidea', tag: 'Coworking · Estudio', href: 'https://hubstartidea.es', ext: true },
+  { nombre: 'Granada Social', tag: 'Medio · Comunidad', href: 'https://granadasocial.org', ext: true },
+  { nombre: 'Merchandising', tag: 'Catálogo B2B', href: 'https://merchandising.startidea.es', ext: true },
+  { nombre: 'Subvenciones', tag: 'Buscador gratuito', href: '/subvenciones' },
+  { nombre: 'Startidea Lab', tag: 'Cursos · Herramientas', href: '/laboratorio' },
+  { nombre: '3.000M de Latidos', tag: 'IA · Salud mental', href: 'https://tresmilmillonesdelatidos.es', ext: true },
+  { nombre: 'Aceleradora', tag: 'Founders × inversores', href: 'https://app.aceleradora.hubstartidea.es', ext: true },
+  { nombre: 'Raíz y Acción', tag: 'Mentoría', href: 'https://raizyaccion.hubstartidea.es', ext: true },
+];
+---
+
+<Base
+  title="Prototipo · Home que pregunta — Startidea"
+  description="Prototipo interno: portada con el Plano Startidea. Comunicación, fundraising y herramientas digitales para tercer sector, instituciones y empresas con propósito."
+  ogSlug="home"
+  noindex={true}
+  jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
+>
+  <!-- 1. Pregunta + plano -->
+  <PlanoStartidea pagina="/lab/home-plano" />
+
+  <!-- 2. Servicios: una sola taxonomía, las 4 puertas de entrada -->
+  <section id="servicios" class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Servicios</span>
+          <p class="mt-4 text-sm text-ink/70">Cuatro líneas. Se contratan juntas o por separado.</p>
+        </div>
+        <ul class="col-span-12 mt-8 grid gap-px border border-ink/15 bg-ink/15 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
+          {servicios.map((s) => (
+            <li class="bg-paper">
+              <a href={s.href} class="group block h-full p-6 transition-colors hover:bg-paper-warm md:p-8">
+                <div class="flex items-center gap-3">
+                  <span class="inline-block h-1.5 w-8" style={`background:${s.color}`} aria-hidden="true"></span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{s.linea} · {s.tag}</span>
+                </div>
+                <h2 class="mt-4 font-display text-2xl text-ink group-hover:text-magenta md:text-3xl">{s.nombre}</h2>
+                <p class="mt-3 text-sm leading-relaxed text-ink/75">{s.body}</p>
+                <span class="mt-5 inline-block font-mono text-[11px] uppercase tracking-widest text-magenta">Ver servicio →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Para quién -->
+  <ParaQuien />
+
+  <!-- 4. Prueba: logos + casos -->
+  <LogosBanner />
+  <Casos />
+
+  <!-- 5. Formación: el Lab, terminal común -->
+  <FormacionPromo />
+
+  <!-- 6. Marcas propias: franja compacta, sin competir con los servicios -->
+  <section id="marcas" class="border-y border-ink/15 bg-paper-warm py-12 md:py-14">
+    <div class="container-x">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-baseline lg:gap-12">
+        <div class="lg:w-1/4">
+          <span class="label">— Marcas e iniciativas propias</span>
+          <p class="mt-3 text-sm text-ink/70">Plataformas con las que Startidea marca agenda en el sector.</p>
+        </div>
+        <ul class="grid flex-1 grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+          {marcas.map((m) => (
+            <li>
+              <a href={m.href} class="group block py-1" {...(m.ext ? { target: '_blank', rel: 'noopener' } : {})}>
+                <span class="font-display text-base text-ink group-hover:text-magenta">{m.nombre}{m.ext && <span aria-hidden="true" class="ml-1 text-magenta">↗</span>}</span>
+                <span class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">{m.tag}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Cómo empezar -->
+  <PresupuestoHome />
+
+  <!-- 8. CTA cierre -->
+  <CtaFinal />
+</Base>
