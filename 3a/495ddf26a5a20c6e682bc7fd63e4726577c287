@@ -1,0 +1,19 @@
+ESTADO-AGENTE.md
+  s_cfa8ceac6c3416::t_48d1faf7a9765f 10,29-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3a495ddf26a5a20c6e682bc7fd63e4726577c287",
+  "prompts": {},
+  "sessions": {
+    "s_cfa8ceac6c3416": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_cfa8ceac6c3416",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
