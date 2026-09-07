@@ -10,11 +10,14 @@
 //
 // Sin IA: atajos y clics en estaciones (mapa estático de `src/data/plano.ts`).
 // Con IA: texto libre → `/api/plano/charla` (Haiku, JSON) · regalos →
-// `/api/plano/regalo` (límite por IP y día). Todo se registra anonimizado.
+// `/api/plano/regalo` (límite por IP y día) · resumen por correo →
+// `/api/plano/resumen` (correo a la persona + alta en el CRM del HUB + reserva
+// prellenada). Todo se registra anonimizado; el email solo lo guarda el CRM.
 //
 // El SVG se renderiza en servidor: la página en reposo ya muestra el plano y
 // el primer mensaje. Script en JS plano (`is:inline`): los atributos en
-// <script> desactivan la transpilación TS (gotcha ESTADO-AGENTE).
+// script desactivan la transpilación TS (gotcha ESTADO-AGENTE); un «script» literal
+// en este comentario confundía además al escáner de dependencias de Vite.
 import { LINEAS, ESTACIONES, CHIPS, INTENCIONES, AUDIENCIAS } from '@/data/plano';
 import { REGALOS } from '@/lib/regalos';
 import { bookingHref, hasBooking } from '@/data/booking';
@@ -29,7 +32,7 @@ const reservaHref = bookingHref();
 const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 const color = (id: string) => LINEAS.find((l) => l.id === id)?.color ?? '#6E6C7C';
 
-const SALUDO = 'Hola. Soy la IA de Startidea: converso como en una primera llamada de diagnóstico. Cuéntame qué quieres mover en tu organización o tu proyecto, y te pregunto, te llevo la contraria si hace falta y te propongo por dónde empezar.';
+const SALUDO = 'Hola, soy Lazo, la IA de Startidea. Converso como en una primera llamada de diagnóstico. Cuéntame qué quieres mover en tu organización o tu proyecto, y te pregunto, te llevo la contraria si hace falta y te propongo por dónde empezar.';
 
 const datosCliente = {
   pagina,
@@ -53,7 +56,7 @@ const datosCliente = {
           ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
         </h1>
         <p class="mt-4 max-w-measure text-base text-ink/80">
-          Habla con la IA de Startidea como en una primera reunión. Sin agenda, sin formulario. El plano de la derecha se ilumina con lo que hablas.
+          Habla con Lazo, la IA de Startidea, como en una primera reunión. Sin agenda, sin formulario. El plano de la derecha se ilumina con lo que hablas.
         </p>
 
         <!-- Mascota + tooltip -->
@@ -64,13 +67,13 @@ const datosCliente = {
             class="plano-mascota group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-paper-warm focus:outline-none focus-visible:ring-2 focus-visible:ring-magenta/50"
             data-estado="reposo"
             aria-describedby="plano-tip"
-            aria-label="Qué es esta IA"
+            aria-label="Qué es Lazo, la IA de Startidea"
           >
             <img src="/brand/isotipo-lazos.png" alt="" width="40" height="40" class="h-9 w-9" />
             <span class="absolute -bottom-1 -right-1 rounded-full bg-ink px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-paper">IA</span>
           </button>
           <div>
-            <p class="font-display text-base leading-tight text-ink">IA de Startidea</p>
+            <p class="font-display text-base leading-tight text-ink">Lazo <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">· IA de Startidea</span></p>
             <p id="plano-estado" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Escuchando</p>
           </div>
           <div
@@ -78,9 +81,9 @@ const datosCliente = {
             role="tooltip"
             class="pointer-events-none absolute left-0 top-full z-20 mt-2 w-80 max-w-[90vw] border border-ink bg-paper p-4 text-xs leading-relaxed text-ink/85 opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-opacity duration-200"
           >
-            <p class="font-display text-sm text-ink">Qué pretende este módulo</p>
-            <p class="mt-1">Es una inteligencia artificial entrenada con el método y el criterio de Startidea. Conversa como su fundador en una llamada de diagnóstico: pregunta, reformula y propone. Cuando algo merece una persona, te lleva a reservar 30 minutos con Mario.</p>
-            <p class="mt-2">No guarda tu nombre ni tu correo. Lo que escribes se anonimiza y sirve para saber qué se pregunta más. Puede equivocarse: los precios y plazos los cierra siempre el equipo. <a href="/asistente" class="underline decoration-magenta/50 underline-offset-2">Más sobre esta IA</a>.</p>
+            <p class="font-display text-sm text-ink">Qué es Lazo</p>
+            <p class="mt-1">Lazo es una inteligencia artificial entrenada con el método y el criterio de Startidea. Conversa como su fundador en una llamada de diagnóstico: pregunta, reformula y propone. Cuando algo merece una persona, te lleva a reservar 30 minutos con Mario.</p>
+            <p class="mt-2">No guarda tu nombre ni tu correo salvo que pidas el resumen: entonces guarda tu correo y la conversación. El resto se anonimiza y sirve para saber qué se pregunta más. Puede equivocarse: los precios y plazos los cierra siempre el equipo. <a href="/asistente" class="underline decoration-magenta/50 underline-offset-2">Más sobre esta IA</a>.</p>
           </div>
         </div>
 
@@ -106,6 +109,9 @@ const datosCliente = {
 
         <!-- Regalo (oferta, formulario, resultado) -->
         <div id="plano-regalo" class="mt-3 hidden"></div>
+
+        <!-- Resumen por correo (oferta, formulario, resultado) -->
+        <div id="plano-resumen" class="mt-3 hidden"></div>
 
         <!-- Entrada -->
         <form id="plano-form" class="mt-4 flex items-end gap-2" autocomplete="off">
@@ -139,7 +145,7 @@ const datosCliente = {
         </div>
 
         <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-3 text-xs text-ink/70">
-          <span>Lo que escribas no se guarda con tu nombre. <button type="button" id="plano-reset" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Empezar de nuevo</button></span>
+          <span>Lo que escribas no se guarda con tu nombre. Si pides el resumen por correo, Startidea guarda tu email y la conversación para enviártelo y poder contactarte. <button type="button" id="plano-reset" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Empezar de nuevo</button> · <button type="button" id="plano-resumen-btn" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Enviar resumen por correo</button></span>
           <a href={reservaHref} {...reservaExt} class="link-underline font-medium text-ink">Reservar 30 min con Mario →</a>
         </div>
       </div>
@@ -195,7 +201,7 @@ const datosCliente = {
         <!-- Regalos: qué se puede pedir -->
         <div class="mt-8 border border-ink/15 bg-paper-warm p-5">
           <p class="label">— Lo tangible</p>
-          <p class="mt-2 text-sm text-ink/80">Cuando la conversación tiene contexto, la IA prepara al momento una muestra de cómo trabaja Startidea. Dos por persona y día.</p>
+          <p class="mt-2 text-sm text-ink/80">Cuando la conversación tiene contexto, Lazo prepara al momento una muestra de cómo trabaja Startidea. Dos por persona y día.</p>
           <ul class="mt-3 grid gap-2 sm:grid-cols-2">
             {REGALOS.map((r) => (
               <li>
@@ -269,6 +275,8 @@ const datosCliente = {
     var mascota = document.getElementById('plano-mascota');
     var estadoEl = document.getElementById('plano-estado');
     var regaloBox = document.getElementById('plano-regalo');
+    var resumenBox = document.getElementById('plano-resumen');
+    var resumenBtn = document.getElementById('plano-resumen-btn');
     var resetBtn = document.getElementById('plano-reset');
     if (!mapa || !hilo || !form || !input) return;
 
@@ -278,10 +286,26 @@ const datosCliente = {
     var REG = {}; (D.regalos || []).forEach(function (r) { REG[r.id] = r; });
     var KEY = 'startidea:plano:charla';
 
-    // Estado de la conversación (sobrevive recargas en la misma pestaña)
-    var S = { messages: [], aud: '', regaloOfrecido: '', cerrada: false };
-    try { var saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.messages)) S = saved; } catch (e) {}
-    function guardar() { try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+    // Estado de la conversación (sobrevive recargas en la misma pestaña).
+    // La misma clave la comparte el chat flotante: al guardar se avisa con el
+    // evento 'startidea:charla' y se ignoran los avisos propios (detail.origen).
+    var ORIGEN = 'plano';
+    function estadoVacio() { return { messages: [], aud: '', regaloOfrecido: '', cerrada: false, resumenOfrecido: false, resumenEnviado: false }; }
+    var S = estadoVacio();
+    function cargarEstado() {
+      try { var saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.messages)) { S = saved; return true; } } catch (e) {}
+      return false;
+    }
+    cargarEstado();
+    function guardar() {
+      // Quién escribió por última vez (se conservan los campos extra del flotante).
+      S.ultimoOrigen = ORIGEN;
+      try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+      try { window.dispatchEvent(new CustomEvent('startidea:charla', { detail: { origen: ORIGEN } })); } catch (e) {}
+    }
+    // Turnos «libres»: lo que la persona escribe de verdad; los atajos (chips) no cuentan.
+    // Mismo criterio que el servidor (sin_sustancia): texto propio de ≥25 caracteres.
+    function turnosLibres() { return S.messages.filter(function (m) { return m.role === 'user' && !m.atajo && String(m.content || '').trim().length >= 25; }).length; }
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
@@ -387,7 +411,7 @@ const datosCliente = {
       var id = b.getAttribute('data-intencion'); var i = INT[id]; if (!i) return;
       var etiqueta = b.textContent.trim();
       var pregunta = S.aud ? ' ¿Qué te gustaría que hubiera cambiado dentro de un año?' : ' ¿Desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
-      S.messages.push({ role: 'user', content: 'Quiero hablar de ' + etiqueta.toLowerCase() + '.' });
+      S.messages.push({ role: 'user', content: 'Quiero hablar de ' + etiqueta.toLowerCase() + '.', atajo: true });
       S.messages.push({ role: 'assistant', content: i.say + pregunta, estaciones: i.estaciones, intencion: id });
       guardar(); pintarHilo(); marcarChip(id);
       registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
@@ -407,10 +431,17 @@ const datosCliente = {
 
     // Conversación con la IA
     var ocupado = false;
+    function burbujaCierre() {
+      burbuja('asistente', '<p>Si quieres seguir, lo honesto es hablarlo en persona: <a href="' + esc(D.reservaHref) + '" class="underline decoration-magenta/50 underline-offset-2"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>reserva 30 minutos con Mario</a>.</p>');
+    }
     function hablar(texto) {
       if (ocupado || S.cerrada) return;
       ocupado = true; enviar.disabled = true;
+      // El flotante comparte la clave: se recarga el estado justo antes de
+      // escribir para no pisar lo que haya guardado mientras tanto.
+      cargarEstado();
       S.messages.push({ role: 'user', content: texto }); guardar();
+      var esperados = S.messages.length;
       burbuja('usuario', '<p>' + esc(texto) + '</p>');
       var pensando = burbuja('asistente', '<p><span class="plano-pensando"></span></p>');
       estado('pensando', 'Pensando');
@@ -422,7 +453,24 @@ const datosCliente = {
         .then(function (r) { return r.json(); })
         .then(function (d) {
           pensando.remove();
+          // Segunda recarga antes de escribir la respuesta. Si el flotante
+          // añadió mensajes durante la espera, se repinta el hilo entero.
+          cargarEstado();
+          var repintar = S.messages.length !== esperados;
+          if (d && !d.ok && d.error === 'fin') {
+            // El historial compartido ya superó los turnos (la charla siguió
+            // en el flotante): es un cierre, no un error.
+            var msgFin = d.message || 'Esta conversación ya llegó a su cierre. Reserva 30 minutos y seguimos en persona.';
+            S.messages.push({ role: 'assistant', content: msgFin });
+            S.cerrada = true; guardar();
+            if (repintar) pintarHilo(); else burbuja('asistente', md(msgFin));
+            estado('reposo', 'Conversación cerrada');
+            burbujaCierre();
+            quizasOfrecerResumen();
+            return;
+          }
           if (!d || !d.ok) {
+            if (repintar) pintarHilo();
             burbuja('error', '<p>' + esc((d && d.message) || 'No he podido responder. Prueba otra vez o reserva 30 minutos.') + '</p>');
             estado('reposo', 'Escuchando');
             return;
@@ -431,17 +479,22 @@ const datosCliente = {
           S.messages.push({ role: 'assistant', content: d.reply, estaciones: ids, intencion: d.intencion || '' });
           if (d.cierre) S.cerrada = true;
           guardar();
-          burbuja('asistente', md(d.reply) + rutasHtml(ids, d.intencion || ''));
+          if (repintar) pintarHilo(); else burbuja('asistente', md(d.reply) + rutasHtml(ids, d.intencion || ''));
           if (ids.length) iluminar(ids, lineasDe(ids));
           if (d.intencion) marcarChip(d.intencion);
           estado('hablando', 'Respondiendo');
           setTimeout(function () { estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando'); }, 1800);
-          if (d.regalo && REG[d.regalo] && !S.regaloOfrecido) { S.regaloOfrecido = d.regalo; guardar(); ofrecerRegalo(d.regalo); }
-          if (S.cerrada) burbuja('asistente', '<p>Si quieres seguir, lo honesto es hablarlo en persona: <a href="' + esc(D.reservaHref) + '" class="underline decoration-magenta/50 underline-offset-2"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>reserva 30 minutos con Mario</a>.</p>');
+          var regaloRecien = false;
+          if (d.regalo && REG[d.regalo] && !S.regaloOfrecido) { S.regaloOfrecido = d.regalo; guardar(); ofrecerRegalo(d.regalo); regaloRecien = true; }
+          if (S.cerrada) burbujaCierre();
+          // Resumen por correo: no se apila con la oferta de un regalo. Si el
+          // regalo se acaba de ofrecer, el resumen espera a que esa caja se
+          // resuelva («Ahora no» o regalo entregado).
+          if (!regaloRecien) quizasOfrecerResumen();
         })
         .catch(function () {
           pensando.remove();
-          burbuja('error', '<p>Sin conexión con la IA. Prueba en un momento o reserva 30 minutos.</p>');
+          burbuja('error', '<p>Sin conexión con Lazo. Prueba en un momento o reserva 30 minutos.</p>');
           estado('reposo', 'Escuchando');
         })
         .then(function () { ocupado = false; enviar.disabled = false; });
@@ -509,6 +562,9 @@ const datosCliente = {
           mostrarRegalo(d);
           S.messages.push({ role: 'assistant', content: 'Te he preparado ' + r.nombre.toLowerCase() + '. Está debajo del hilo. ¿Seguimos con lo que estábamos?' }); guardar();
           burbuja('asistente', '<p>Te he preparado <strong>' + esc(r.nombre.toLowerCase()) + '</strong>. Lo tienes justo debajo. ¿Seguimos con lo que estábamos?</p>');
+          // La caja del regalo ya está resuelta: si tocaba, ahora se ofrece el
+          // resumen sin desplazar la página (la persona está leyendo el regalo).
+          quizasOfrecerResumen({ silencioso: true });
         })
         .catch(function () { estado('reposo', 'Escuchando'); regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">Sin conexión. Inténtalo en un momento.</div>'; });
     }
@@ -531,7 +587,7 @@ const datosCliente = {
         h += '<div class="mt-2 flex flex-wrap gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-ig-png="1">Descargar PNG (1080×1080)</button></div>';
       }
       h += '<div class="prose-plano mt-3 text-sm leading-relaxed text-ink/90">' + md(d.cuerpo) + '</div>';
-      h += '<div class="mt-3 flex flex-wrap items-center gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-copiar="1">Copiar texto</button><span class="text-ink/60">Hecho por la IA de Startidea a partir de lo que has contado. Revísalo antes de publicarlo.</span></div></div>';
+      h += '<div class="mt-3 flex flex-wrap items-center gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-copiar="1">Copiar texto</button><span class="text-ink/60">Hecho por Lazo, la IA de Startidea, a partir de lo que has contado. Revísalo antes de publicarlo.</span></div></div>';
       regaloBox.innerHTML = h;
       regaloBox.setAttribute('data-cuerpo', d.cuerpo);
       var ig = regaloBox.querySelector('[data-ig-svg]'); if (ig) ig.setAttribute('data-svg', svgInstagram(d.extra || {}));
@@ -541,7 +597,7 @@ const datosCliente = {
       regaloBox.addEventListener('click', function (ev) {
         var t = ev.target;
         if (t.closest('[data-regalo-si]')) { formularioRegalo(t.closest('[data-regalo-si]').getAttribute('data-regalo-si')); return; }
-        if (t.closest('[data-regalo-no]')) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; return; }
+        if (t.closest('[data-regalo-no]')) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; quizasOfrecerResumen(); return; }
         if (t.closest('[data-copiar]')) {
           var txt = (regaloBox.getAttribute('data-cuerpo') || '').replace(/\*\*/g, '');
           if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = 'Copiado'; });
@@ -577,11 +633,175 @@ const datosCliente = {
       });
     });
 
+    // ─── Resumen por correo ────────────────────────────────────────────
+    var CAMPO = 'class="mt-1 w-full border border-ink bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/50 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"';
+
+    function formularioResumenHtml() {
+      return '<form class="border border-ink/20 bg-paper-warm p-4 space-y-3" data-resumen-form="1" novalidate>' +
+        '<p class="label text-magenta">— Resumen por correo</p>' +
+        '<p class="font-display text-base text-ink">¿Te mando el resumen y un plan de tres pasos por correo?</p>' +
+        '<label class="block text-xs text-ink/80">Tu correo<input type="email" name="email" required maxlength="120" autocomplete="email" placeholder="tu@correo.es" ' + CAMPO + '></label>' +
+        '<label class="block text-xs text-ink/80">Tu nombre (opcional)<input type="text" name="nombre" maxlength="80" autocomplete="name" placeholder="Cómo te llamas" ' + CAMPO + '></label>' +
+        '<div class="hidden" aria-hidden="true"><label>No rellenes este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
+        '<label class="flex items-start gap-2 text-xs text-ink/80"><input type="checkbox" name="consent" required class="mt-0.5 shrink-0"><span>Acepto la <a href="/privacidad" class="underline decoration-magenta/50 underline-offset-2" target="_blank" rel="noopener">política de privacidad</a>: Startidea guarda mi correo y el texto de esta conversación para enviarme el resumen y poder contactarme.</span></label>' +
+        '<label class="flex items-start gap-2 text-xs text-ink/80"><input type="checkbox" name="marketing" class="mt-0.5 shrink-0"><span>Quiero recibir la nota mensual.</span></label>' +
+        '<div class="flex flex-wrap items-center gap-3"><button type="submit" class="btn !py-2 !px-4 !text-xs">Enviar resumen</button><button type="button" class="btn-ghost !py-2 !px-4 !text-xs" data-resumen-no="1">Ahora no</button></div>' +
+        '</form>';
+    }
+
+    // Muestra la oferta/formulario del resumen. Si el formulario ya está en
+    // pantalla se conserva tal cual (con lo escrito); `mensaje` se pinta como
+    // aviso dentro. opts.silencioso → sin desplazar la página.
+    function ofrecerResumen(mensaje, opts) {
+      if (!resumenBox) return;
+      opts = opts || {};
+      resumenBox.classList.remove('hidden');
+      if (!resumenBox.querySelector('[data-resumen-form]')) resumenBox.innerHTML = formularioResumenHtml();
+      if (mensaje) errorResumen(mensaje, '');
+      if (!opts.silencioso) resumenBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    // Aviso dentro del formulario existente, sin reconstruirlo: inserta o
+    // reemplaza el <p role="alert"> y enfoca el campo relevante (o el aviso).
+    function errorResumen(mensaje, campo) {
+      var f = resumenBox && resumenBox.querySelector('[data-resumen-form]');
+      if (!f) { ofrecerResumen(mensaje); return; }
+      var p = f.querySelector('[data-resumen-error]');
+      if (!p) {
+        p = document.createElement('p');
+        p.setAttribute('role', 'alert');
+        p.setAttribute('data-resumen-error', '1');
+        p.setAttribute('tabindex', '-1');
+        p.className = 'text-xs text-magenta';
+        f.insertBefore(p, f.querySelector('label'));
+      }
+      p.textContent = mensaje;
+      var el = campo ? f.elements[campo] : null;
+      if (el && el.focus) el.focus(); else p.focus();
+    }
+
+    // Mientras se pide el resumen, el formulario se bloquea (sin perder lo escrito).
+    function bloquearResumen(f, on) {
+      Array.prototype.forEach.call(f.querySelectorAll('input,button'), function (el) { el.disabled = on; });
+      var est = f.querySelector('[data-resumen-estado]');
+      if (on) {
+        if (!est) { est = document.createElement('p'); est.setAttribute('data-resumen-estado', '1'); est.className = 'text-xs text-ink/70'; f.appendChild(est); }
+        est.innerHTML = '<span class="plano-pensando"></span> Preparando el resumen…';
+      } else if (est) est.remove();
+    }
+
+    // Oferta automática, una sola vez: al cierre de la conversación o a partir
+    // del quinto turno libre (los atajos no cuentan). Solo desde una
+    // interacción directa con el hero, nunca desde el flotante ni al recargar.
+    function quizasOfrecerResumen(opts) {
+      if (!resumenBox || S.resumenOfrecido || S.resumenEnviado) return;
+      if (!(S.cerrada || turnosLibres() >= 5)) return;
+      S.resumenOfrecido = true; guardar();
+      ofrecerResumen('', opts);
+    }
+
+    function mostrarResumen(d, email) {
+      var ids = (d.estaciones || []).map(function (e) { return e.id; });
+      var ext = /^https?:/.test(d.reservaHref || '') ? ' target="_blank" rel="noopener"' : '';
+      var h = '<div class="border border-ink/20 bg-paper p-4"><p class="label text-magenta">— Tu resumen</p>';
+      h += '<p class="mt-1 text-xs text-ink/70">' + (d.emailEnviado ? 'Te lo he enviado a <strong>' + esc(email) + '</strong>.' : 'No he podido enviarlo por correo; aquí lo tienes.') + '</p>';
+      h += '<p class="mt-2 text-sm leading-relaxed text-ink/90">' + esc(d.resumen || '') + '</p>';
+      if (d.pasos && d.pasos.length) {
+        h += '<p class="label mt-3">— Tres pasos</p><ol class="mt-1 list-decimal space-y-1 pl-5 text-sm text-ink/90">' + d.pasos.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>';
+      }
+      h += rutasHtml(ids, '');
+      if (d.reservaHref) {
+        h += '<a href="' + esc(d.reservaHref) + '" class="btn mt-4 !py-2 !px-4 !text-xs"' + ext + '>Reservar 30 min con Mario <span aria-hidden="true">→</span></a>';
+        h += '<p class="mt-1 text-xs text-ink/60">El enlace lleva tu nombre y correo; el resumen ya está en manos de Startidea.</p>';
+      }
+      h += '</div>';
+      resumenBox.classList.remove('hidden');
+      resumenBox.innerHTML = h;
+      if (ids.length) iluminar(ids, lineasDe(ids));
+    }
+
+    function enviarResumen(f) {
+      var email = (f.email && f.email.value || '').trim();
+      var nombre = (f.nombre && f.nombre.value || '').trim();
+      var consent = !!(f.consent && f.consent.checked);
+      var marketing = !!(f.marketing && f.marketing.checked);
+      var website = (f.website && f.website.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errorResumen('Revisa el correo: no parece válido.', 'email'); return; }
+      if (!consent) { errorResumen('Hace falta aceptar la política de privacidad para enviarte el resumen.', 'consent'); return; }
+      if (turnosLibres() < 1) { errorResumen('Cuéntame primero qué quieres mover y te preparo el resumen.', ''); return; }
+      var viejo = f.querySelector('[data-resumen-error]'); if (viejo) viejo.remove();
+      bloquearResumen(f, true);
+      estado('pensando', 'Preparando el resumen');
+      fetch('/api/plano/resumen', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          messages: S.messages.map(function (m) { return { role: m.role, content: m.content }; }),
+          audiencia: S.aud || undefined,
+          email: email, nombre: nombre, consent: true, marketing: marketing, website: website, pagina: D.pagina,
+        }),
+      })
+        .then(function (x) { return x.json(); })
+        .then(function (d) {
+          estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando');
+          if (!d || !d.ok) {
+            // Errores del servidor (email, consent, empty, sin_sustancia, rate, limite_global…):
+            // se enseñan en el propio formulario, con lo escrito intacto.
+            bloquearResumen(f, false);
+            var campo = d && (d.error === 'email' || d.error === 'consent') ? d.error : '';
+            errorResumen((d && d.message) || 'No se ha podido preparar el resumen. Inténtalo en un momento.', campo);
+            return;
+          }
+          if (!d.resumen) {
+            // Respuesta vacía (p. ej. honeypot): error suave, sin darlo por enviado.
+            bloquearResumen(f, false);
+            errorResumen('No se ha podido preparar el resumen. Inténtalo en un momento.', '');
+            return;
+          }
+          S.resumenOfrecido = true; S.resumenEnviado = true; guardar();
+          mostrarResumen(d, email);
+        })
+        .catch(function () {
+          estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando');
+          bloquearResumen(f, false);
+          errorResumen('Sin conexión. Inténtalo en un momento.', '');
+        });
+    }
+
+    if (resumenBox) {
+      resumenBox.addEventListener('click', function (ev) {
+        if (ev.target.closest('[data-resumen-no]')) { resumenBox.classList.add('hidden'); resumenBox.innerHTML = ''; }
+      });
+      resumenBox.addEventListener('submit', function (ev) {
+        var f = ev.target.closest('[data-resumen-form]'); if (!f) return;
+        ev.preventDefault();
+        enviarResumen(f);
+      });
+    }
+
+    // Botón permanente de la barra inferior: abre el formulario si hay al menos
+    // un turno libre (solo atajos no bastan para un resumen).
+    if (resumenBtn) resumenBtn.addEventListener('click', function () {
+      if (turnosLibres() < 1) { burbuja('asistente', '<p>Cuéntame primero qué quieres mover y te preparo el resumen con tres pasos.</p>'); input.focus(); return; }
+      ofrecerResumen('');
+      var first = resumenBox && resumenBox.querySelector('input[name="email"]'); if (first) first.focus();
+    });
+
+    // El chat flotante guarda en la misma clave: se recarga el hilo si no se
+    // está respondiendo. Solo se repinta; el resumen se ofrece en la siguiente
+    // interacción directa con el hero.
+    window.addEventListener('startidea:charla', function (ev) {
+      if (ev.detail && ev.detail.origen === ORIGEN) return;
+      if (ocupado) return;
+      if (!cargarEstado()) return;
+      pintarHilo();
+    });
+
     if (resetBtn) resetBtn.addEventListener('click', function () {
-      S = { messages: [], aud: '', regaloOfrecido: '', cerrada: false }; guardar();
+      S = estadoVacio(); guardar();
       pintarHilo(); marcarChip('');
       mapa.classList.remove('has-route'); mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
       if (regaloBox) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; }
+      if (resumenBox) { resumenBox.classList.add('hidden'); resumenBox.innerHTML = ''; }
       estado('reposo', 'Escuchando'); input.focus();
     });
 
@@ -591,6 +811,7 @@ const datosCliente = {
       tip.style.opacity = tip.style.opacity === '1' ? '' : '1';
     });
 
+    // Al cargar solo se repinta el hilo; el resumen se ofrece en la siguiente interacción.
     if (S.messages.length) pintarHilo();
   })();
 </script>

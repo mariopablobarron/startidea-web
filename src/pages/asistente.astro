@@ -4,20 +4,20 @@ import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
   {
-    q: '¿Qué hace exactamente el asistente?',
-    a: 'Responde preguntas sobre los servicios, precios orientativos, casos publicados y método de Startidea. Si encajáis, ayuda a empezar un diagnóstico humano. Si no encajáis, lo dice claro y orienta hacia otra alternativa.',
+    q: '¿Qué hace exactamente Lazo?',
+    a: 'Lazo es la IA de Startidea. Conversa como en una primera llamada de diagnóstico: pregunta, reformula el problema, lleva la contraria cuando hace falta y propone por dónde empezar, con los servicios, el Laboratorio o un regalo tangible (una creatividad, una publicación, la letra de una canción o un informe SEO real de tu web). Si Startidea encaja, ayuda a reservar una llamada humana. Si no, lo dice claro y orienta hacia otra alternativa.',
   },
   {
     q: '¿Qué modelo de IA usa?',
-    a: 'Claude Haiku 4.5 de Anthropic, vía OpenRouter como proxy. Modelo rápido y económico, suficiente para conversación corta orientativa. No se ha entrenado un modelo propio: se le pasa la knowledge base de la casa en cada consulta.',
+    a: 'Claude Haiku 4.5 de Anthropic, vía OpenRouter como proxy. Modelo rápido y económico, suficiente para conversación corta orientativa. No se ha entrenado un modelo propio: en cada consulta se le pasa la base de conocimiento de la casa, un manual de cómo conversa Startidea y, si aplica, fragmentos de la documentación que el equipo ha subido. La búsqueda en esa documentación es por texto; si Startidea activa la búsqueda semántica, se usa además un modelo de embeddings de OpenAI (text-embedding-3-small), también vía OpenRouter, para localizar los fragmentos relevantes. Por defecto está desactivada.',
   },
   {
     q: '¿Qué guarda de mi conversación?',
-    a: 'Por defecto, nada en servidores de Startidea. Solo si pulsas "Pasar al equipo" se envía la transcripción al canal de Telegram interno para que el equipo humano pueda responder. OpenRouter, como proveedor del modelo, tiene su propia política de privacidad — no almacena prompts más allá del procesado salvo que se configure expresamente, lo cual no se ha hecho aquí.',
+    a: 'Nada con tu nombre por defecto. Si pides el resumen por correo, Startidea guarda tu email (y tu nombre y organización si los indicas) junto con el texto de la conversación en su CRM, para enviártelo y poder contactarte, con tu consentimiento expreso. En el resto de casos, lo que escribes se guarda anonimizado (sin correo, sin teléfono, con la conexión convertida en un código diario) para saber qué se pregunta más y mejorar la web. Si pulsas "Pasar al equipo", la transcripción llega al canal interno para que una persona responda. OpenRouter, como proveedor del modelo, tiene su propia política de privacidad y no almacena prompts más allá del procesado.',
   },
   {
     q: '¿Qué información usa para responder?',
-    a: 'Cinco archivos de texto plano que viven en el repositorio público de la web (src/content/knowledge/): identidad, servicios y precios, método, FAQ y rol del asistente. No tiene acceso a CRM, ni a base de clientes, ni a datos de proyectos en curso.',
+    a: 'Seis fichas de texto que viven en el repositorio público de la web: identidad, servicios y precios, método, FAQ, rol del asistente y manual de conversación. Además, cuando la búsqueda en documentación está activada, fragmentos de documentos que el equipo de Startidea sube a propósito para que los consulte (dossieres, método, casos autorizados). No tiene acceso al CRM, ni a datos de clientes, ni a proyectos en curso, ni a documentos internos de estrategia.',
   },
   {
     q: '¿Puede equivocarse?',
@@ -47,21 +47,21 @@ const jsonLd = [
 ---
 
 <Base
-  title="Asistente IA — Startidea"
-  description="Cómo funciona el asistente conversacional de startidea.es: qué modelo usa, qué guarda, qué no hace, y cuándo conviene pasar a humano."
+  title="Lazo, la IA de Startidea"
+  description="Cómo funciona Lazo, la IA conversacional de startidea.es: qué modelo usa, qué guarda, qué no hace, y cuándo conviene pasar a una persona."
   ogSlug="page/asistente"
   jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24 lg:py-28">
     <div class="container-x">
-      <span class="label">— Asistente IA</span>
+      <span class="label">— Lazo · IA de Startidea</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
         Una IA<br/>
         <em class="italic text-magenta">con honestidad</em>.
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        El chip "Asistente IA" abajo a la derecha es un bot conversacional conectado a la base de conocimiento de Startidea. Está pensado para resolver dudas básicas y derivar a humano cuando la conversación lo merece. Esta página explica cómo funciona, qué guarda y qué no, y cuándo conviene saltarlo.
+        Lazo es la IA de Startidea: el botón «Asistente IA» abajo a la derecha y la conversación de la portada. No es un buscador con buenos modales: conversa como en una primera reunión, propone y deriva a una persona cuando la conversación lo merece. Esta página explica cómo funciona, qué guarda y qué no, y cuándo conviene saltarlo.
       </p>
       <div class="mt-10">
         <button
@@ -155,15 +155,15 @@ const jsonLd = [
             <div class="grid grid-cols-12 gap-x-8 py-6">
               <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Conocimiento</dt>
               <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
-                Cinco archivos Markdown públicos en
+                Seis archivos Markdown públicos en
                 <a href="https://github.com/mariopablobarron/startidea-web/tree/main/src/content/knowledge" class="link-underline" target="_blank" rel="noopener">src/content/knowledge/</a>
-                — identidad, servicios y precios, método, FAQ y rol del asistente.
+                — identidad, servicios y precios, método, FAQ, rol del asistente y manual de conversación. Más los documentos que el equipo sube para entrenar a Lazo.
               </dd>
             </div>
             <div class="grid grid-cols-12 gap-x-8 py-6">
               <dt class="col-span-12 font-mono text-[11px] uppercase tracking-widest text-ink-mute lg:col-span-4">Almacenamiento</dt>
               <dd class="col-span-12 mt-1 font-display text-xl text-ink lg:col-span-8 lg:mt-0">
-                Ninguno por defecto. Solo si pulsas "Pasar al equipo" se envía la transcripción al canal interno de Telegram, con consent explícito.
+                Ninguno con tu nombre por defecto. Si pides el resumen por correo, tu email y el texto de la conversación pasan al CRM de Startidea con tu consentimiento expreso; si pulsas "Pasar al equipo", la transcripción se envía al canal interno de Telegram.
               </dd>
             </div>
             <div class="grid grid-cols-12 gap-x-8 py-6">

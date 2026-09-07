@@ -19,7 +19,7 @@ import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 
-export type TipoEvento = 'pregunta' | 'atajo' | 'estacion' | 'clic' | 'charla' | 'regalo';
+export type TipoEvento = 'pregunta' | 'atajo' | 'estacion' | 'clic' | 'charla' | 'regalo' | 'resumen';
 
 export interface EventoPlano {
   id: number;
@@ -202,6 +202,21 @@ export function regalosHoyPorIp(ip: string): number {
 /** Regalos generados hoy en total (tope global de coste). */
 export function regalosHoyTotal(): number {
   return (getDb().prepare(`SELECT COUNT(*) AS n FROM regalos_plano WHERE created_at >= ? AND ok = 1`).get(inicioDia()) as { n: number }).n;
+}
+
+/**
+ * Resúmenes por correo generados hoy en total (eventos tipo 'resumen' desde el
+ * inicio del día). Tope global diario de /api/plano/resumen: acota el coste
+ * de modelo y los correos que startidea.es puede llegar a enviar en un día.
+ * Persistido en plano.db para sobrevivir a reinicios del container.
+ */
+export function resumenesHoyTotal(): number {
+  try {
+    return (getDb().prepare(`SELECT COUNT(*) AS n FROM eventos_plano WHERE tipo = 'resumen' AND created_at >= ?`).get(inicioDia()) as { n: number }).n;
+  } catch (err) {
+    console.error('[plano-db] no se pudo contar los resúmenes de hoy', err);
+    return 0;
+  }
 }
 
 export function registrarRegalo(r: { ip: string; tipo: string; datos: unknown; resultado: string; audiencia?: string; ok: boolean }): void {

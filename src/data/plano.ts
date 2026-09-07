@@ -2,10 +2,10 @@
  * plano.ts — Datos del «Plano Startidea»: el mapa de servicios en forma de
  * plano de metro que usa el hero del prototipo `/lab/home-plano`.
  *
- * Origen de la taxonomía: las «cuatro puertas de entrada» del Plan 5.0
+ * Origen de la taxonomía: las cuatro puertas de entrada públicas de Startidea
  * (Consultoría, Comunicación, Audiovisual, Tecnología) + el Laboratorio como
- * terminal común. SOLO usa lo que ya es público en la web: nada de capas,
- * motores de valor ni niveles del plan estratégico (confidencial).
+ * terminal común. SOLO usa lo que ya es público en la web; nada de documentación
+ * interna de estrategia.
  *
  * Lo comparten: el componente (render + atajos sin IA), el endpoint
  * `/api/plano` (clasificación por palabras clave y catálogo para el modelo)

@@ -18,6 +18,7 @@ import { getEnv } from '@/lib/env';
 import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
 import { INTENCIONES, catalogoParaModelo, clasificarPorPatron, getEstacion, getAudiencia } from '@/data/plano';
 import { REGALOS, esTipoRegalo } from '@/lib/regalos';
+import { contextoDocumentos } from '@/lib/knowledge-db';
 
 export type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -49,8 +50,14 @@ async function conocimiento(): Promise<string> {
   return kbCache;
 }
 
-async function systemPrompt(audienciaId: string, turnosUsuario: number): Promise<string> {
+async function systemPrompt(audienciaId: string, turnosUsuario: number, ultimoMensaje = ''): Promise<string> {
   const kb = await conocimiento();
+  // Fragmentos de los documentos subidos desde /admin/knowledge, recuperados
+  // por petición según el último mensaje (nunca se cachean; nunca lanza).
+  const docs = await contextoDocumentos(ultimoMensaje);
+  const notaDocs = docs
+    ? '\n\nDOCUMENTOS DE APOYO: si usas un fragmento de los documentos de apoyo, dilo con naturalidad ("según la documentación de Startidea…") sin citar nombres de fichero.'
+    : '';
   const aud = getAudiencia(audienciaId);
   const regalos = REGALOS.map((r) => `- ${r.id}: ${r.nombre} — ${r.descripcion}`).join('\n');
   const faseCierre = turnosUsuario >= MAX_TURNOS_USUARIO
@@ -59,7 +66,7 @@ async function systemPrompt(audienciaId: string, turnosUsuario: number): Promise
       ? '\n\nQuedan pocos turnos: empieza a encaminar hacia el resumen y el siguiente paso.'
       : '';
 
-  return `Eres el asistente conversacional del «Plano Startidea» en startidea.es. Conversas como lo haría el fundador de Startidea en una primera llamada de diagnóstico: escuchas, haces UNA pregunta por turno, reformulas el problema cuando hace falta, llevas la contraria con respeto, cambias de tema hacia lo que de verdad mueve y propones lo que no te han pedido. Sigue al pie de la letra la ficha «05-manual-conversacion». Eres una IA y lo dices si te lo preguntan; hablas en primera persona como asistente y de Startidea en tercera persona.
+  return `Eres Lazo, la IA de Startidea y el asistente conversacional del «Plano Startidea» en startidea.es. Te llamas Lazo por los lazos del isotipo de Startidea: lazo = vínculo. Carácter: curioso, directo, cercano, algo contestatario, nunca servil. Conversas como lo haría el fundador de Startidea en una primera llamada de diagnóstico: escuchas, haces UNA pregunta por turno, reformulas el problema cuando hace falta, llevas la contraria con respeto, cambias de tema hacia lo que de verdad mueve y propones lo que no te han pedido. Sigue al pie de la letra la ficha «05-manual-conversacion». Eres una IA y lo dices si te lo preguntan; hablas en primera persona como asistente y de Startidea en tercera persona.
 ${aud ? `\nLa persona se ha identificado como: ${aud.label}.` : '\nLa persona no ha dicho aún quién es: si no se deduce de lo que cuenta, pregúntalo en tu primera respuesta (empresa, institución, entidad social o proyecto que empieza).'}
 
 FORMA: dos o tres frases, termina en una pregunta salvo en el cierre. Sin listas, sin exclamaciones, sin "genial". Español neutro, tuteo.
@@ -79,7 +86,7 @@ Responde SOLO con JSON válido, sin texto alrededor:
 {"reply":"<tu respuesta>","estaciones":["<id>"],"intencion":"<id o vacío>","regalo":"<id o vacío>","cierre":false}${faseCierre}
 
 === CONOCIMIENTO DE STARTIDEA ===${kb}
-=== FIN CONOCIMIENTO ===
+=== FIN CONOCIMIENTO ===${notaDocs}${docs ? `\n\n${docs}` : ''}
 
 ${BRAND_CONSTITUTION}`;
 }
@@ -133,7 +140,8 @@ export async function charlar(messages: Msg[], audienciaId: string): Promise<Tur
   const turnosUsuario = messages.filter((m) => m.role === 'user').length;
   if (!apiKey) return turnoGuion(messages, audienciaId);
 
-  const system = await systemPrompt(audienciaId, turnosUsuario);
+  const ultimoMensaje = [...messages].reverse().find((m) => m.role === 'user')?.content ?? '';
+  const system = await systemPrompt(audienciaId, turnosUsuario, ultimoMensaje);
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 25_000);
   try {

@@ -3,7 +3,7 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-07, tras abrir el PR #89 (home que pregunta).
+**Última actualización:** 2026-09-08, PR #89 (home que pregunta + Lazo) ampliado con fases 2 y 3.
 
 ---
 
@@ -30,8 +30,30 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
     `/admin/plano` (charlas con respuesta, regalos, por audiencia e intención).
   - En local la `OPENROUTER_API_KEY` del `.env` devuelve 401 → todo cae al guion; en
     producción usa la clave real del container.
+  - **Mascota: Lazo** (decisión Claude 2026-09-08 delegada por Mario; «siempre hay tiempo
+    de cambiar»). Carácter: curioso, directo, cercano, algo contestatario.
+  - **Fase 2 (resumen por correo):** `/api/plano/resumen` + `src/lib/plano-resumen.ts`
+    → email al visitante (Resend), alta en el CRM del HUB vía `replicateHubIntake`
+    (form `plano-resumen`), aviso al owner, reserva Cal.com prellenada
+    (`bookingHrefWith` en `src/data/booking.ts`). Guardas: guion no envía correo,
+    1 correo/destinatario/día, tope global `PLANO_RESUMENES_DIA` (100), limpieza de
+    URLs/emails en el texto. Consentimiento explícito de correo + conversación.
+  - **Fase 3 (entrenar a Lazo):** `/admin/knowledge` sube PDF/DOCX/TXT/MD/CSV/XLSX →
+    `src/lib/knowledge-extract.ts` (mammoth nuevo en dependencies) → `knowledge.db`
+    (FTS5; embeddings OpenRouter solo si `PLANO_EMBEDDINGS=on`) → `contextoDocumentos()`
+    inyectado por petición en `plano-charla.ts` y `api/chat.ts`. Auth en
+    `src/lib/knowledge-auth.ts`. Doc: `docs/entrenar-lazo.md`. Tests: `tests/knowledge-db.test.ts`.
+  - **Continuidad:** el chat flotante (`AsistenteIA.astro`) comparte sessionStorage
+    `startidea:plano:charla` con el hero y se presenta como Lazo; `/api/chat` lleva el
+    prompt de Lazo y acepta `audiencia`.
+  - **Variables nuevas (opcionales), NO reflejadas en `.env.example` (Claude no edita
+    `.env*`; Mario a mano):** `MODELO_CHARLA`, `MODELO_REGALOS`, `MODELO_RESUMEN`,
+    `MODELO_EMBEDDING`, `PLANO_EMBEDDINGS=on|off`, `PLANO_REGALOS_POR_IP`,
+    `PLANO_REGALOS_DIA`, `PLANO_RESUMENES_DIA`, más `TAVILY_API_KEY` pendiente de antes.
+  - **Pendiente de Mario:** revisar `05-manual-conversacion.md` con su voz real; si Cal.com
+    pierde name/email al entrar por el perfil, apuntar `BOOKING_URL` al evento de 30 min.
 - **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
-  nada de capas/motores/Hermes del Plan 5.0 (`~/startidea-plan`, plan.startidea.es).
+  nada de documentación interna de estrategia (el detalle está en la memoria local de Claude, no en el repo).
 - **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes
   de contar» y «Plano Startidea» (sesión 2026-09-07).
 - **Decisión de Mario pendiente:** fusionar el PR #89 (el agente no tiene permiso de
