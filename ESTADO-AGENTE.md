@@ -3,9 +3,27 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-08-18, tras cerrar los enlaces de merchandising.
+**Última actualización:** 2026-09-08, tras publicar los 10 planes de productos autoservicio en el Laboratorio.
 
 ---
+
+## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio)
+
+- **Colección `productos`** en `src/content/config.ts` + 10 fichas en `src/content/productos/`
+  (piloto de redes, copiloto de subvenciones Pro, memorias y justificaciones, web en un día,
+  nota de voz a contenido, newsletter curada, kit de marca exprés, asistente para socios,
+  eventos con inscripciones, merchandising bajo demanda). Cada ficha: `orden` (ranking por
+  rentabilidad), `claim`, `modelo`, `precio_desde`, `estado`, `base_hub`, `rentabilidad` 1-5,
+  `beta`, `tldr`, `faqs`, y cuerpo con problema/cliente/producto/IA/ingresos/mercado/métricas/
+  90 días/riesgos/qué falta.
+- **Páginas**: `/laboratorio/productos` (ranking con filtros por área y estado, `<script is:inline>`)
+  y `/laboratorio/productos/[...slug]` (ficha + BlogPosting + FAQPage + anterior/siguiente).
+  Rama añadida en primera posición al array `ramas` de `/laboratorio`.
+- Precios coherentes con `knowledge/01-servicios-y-precios.md` y con el Copiloto gratuito + 12 % a
+  éxito de `/precios`: el Pro se presenta como plan de pago del Copiloto, no como producto nuevo.
+- Build verificado OK en worktree `claude-lab-productos`. Siguiente acción: comprobar en producción
+  `/laboratorio/productos` tras el deploy y decidir con Mario qué beta arranca primero (propuesta:
+  piloto de redes, que ya tiene el flujo en el HUB).
 
 ## Hecho el 2026-08-18 (desplegado y verificado en producción)
 

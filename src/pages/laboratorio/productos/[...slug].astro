@@ -1,0 +1,239 @@
+---
+// /laboratorio/productos/[slug] — Ficha con el plan de negocio completo de un
+// producto autoservicio. Cuerpo editorial en Markdown + ficha técnica + FAQ.
+import Base from '@/layouts/Base.astro';
+import { getCollection, getEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { blogPostingSchema, breadcrumbList, faqPageSchema, FOUNDER_NAME, SITE_URL } from '@/lib/jsonld';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const all = await getCollection('productos', ({ data }) => !data.draft);
+  return all.map((entry) => ({ params: { slug: entry.slug } }));
+};
+
+const { slug } = Astro.params;
+const entry = await getEntry('productos', slug as string);
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await entry.render();
+const d = entry.data;
+
+const fmt = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// Anterior y siguiente en el ranking, para recorrer los diez sin volver al índice.
+const todos = (await getCollection('productos', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.orden - b.data.orden,
+);
+const idx = todos.findIndex((e) => e.slug === entry.slug);
+const anterior = idx > 0 ? todos[idx - 1] : null;
+const siguiente = idx >= 0 && idx < todos.length - 1 ? todos[idx + 1] : null;
+
+const metaTitle = d.seoTitle ? `${d.seoTitle} · Startidea` : `${d.title} — Productos · Startidea`;
+const metaDesc = d.metaDescription ?? d.description;
+
+const url = `${SITE_URL}/laboratorio/productos/${entry.slug}`;
+const jsonLd: object[] = [
+  blogPostingSchema({
+    url,
+    title: d.title,
+    description: metaDesc,
+    datePublished: d.pubDate,
+    dateModified: d.updatedDate,
+    authorName: FOUNDER_NAME,
+    keywords: [d.categoria, 'producto autoservicio', 'plan de negocio', 'IA', ...d.tags],
+  }),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
+    { name: 'Productos autoservicio', url: `${SITE_URL}/laboratorio/productos` },
+    { name: d.title, url },
+  ]),
+];
+if (d.faqs?.length) jsonLd.push(faqPageSchema(d.faqs));
+---
+
+<Base
+  title={metaTitle}
+  description={metaDesc}
+  ogSlug="page/laboratorio-productos"
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="border-b border-ink/15 bg-paper py-16 md:py-24">
+      <div class="container-x">
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          <a href="/laboratorio/productos" class="link-underline text-ink/70 hover:text-ink">← Productos autoservicio</a>
+        </p>
+
+        <div class="mt-6 grid grid-cols-12 gap-x-8 gap-y-6">
+          <div class="col-span-12 lg:col-span-8">
+            <span class="label">— Producto {String(d.orden).padStart(2, '0')} de {todos.length} · Plan publicado el {fmt.format(d.pubDate)}</span>
+            <h1 class="mt-4 font-display text-display-lg leading-[1.02] text-ink">{d.title}</h1>
+            <p class="mt-4 font-display text-2xl italic text-magenta">{d.claim}</p>
+            <p class="mt-6 max-w-measure text-lede text-ink/85">{d.description}</p>
+          </div>
+
+          <aside class="col-span-12 lg:col-span-4 lg:border-l lg:border-ink/15 lg:pl-6">
+            <span class="label">— Ficha</span>
+            <dl class="mt-4 divide-y divide-ink/10 border-y border-ink/10 text-sm">
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Área</dt>
+                <dd class="text-right font-medium text-ink">{d.categoria}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Modelo</dt>
+                <dd class="text-right font-medium text-ink">{d.modelo}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Precio objetivo</dt>
+                <dd class="text-right font-medium text-ink">{d.precio_desde}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Estado</dt>
+                <dd class="text-right font-medium text-ink">{d.estado}</dd>
+              </div>
+              {d.beta && (
+                <div class="flex justify-between gap-4 py-3">
+                  <dt class="text-ink-mute">Beta prevista</dt>
+                  <dd class="text-right font-medium text-ink">{d.beta}</dd>
+                </div>
+              )}
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Base en el HUB</dt>
+                <dd class="text-right font-medium text-ink">{d.base_hub}</dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Rentabilidad</dt>
+                <dd class="text-right font-mono text-magenta" aria-label={`${d.rentabilidad} de 5`}>
+                  {'●'.repeat(d.rentabilidad)}<span class="text-ink/20">{'●'.repeat(5 - d.rentabilidad)}</span>
+                </dd>
+              </div>
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-mute">Para quién</dt>
+                <dd class="text-right font-medium text-ink">{d.audience.join(' · ')}</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    {d.tldr && (
+      <section class="bg-paper-warm py-12 md:py-16">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— En resumen</span>
+            </div>
+            <p class="col-span-12 mt-4 max-w-measure font-display text-xl leading-snug text-ink lg:col-span-9 lg:mt-0 md:text-2xl">
+              {d.tldr}
+            </p>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="bg-paper py-16 md:py-24">
+      <div class="container-narrow prose prose-startidea">
+        <Content />
+      </div>
+    </section>
+
+    {d.faqs?.length && (
+      <section class="border-t border-ink/15 bg-paper-warm py-16 md:py-20">
+        <div class="container-x">
+          <div class="grid grid-cols-12 gap-x-8">
+            <div class="col-span-12 lg:col-span-3">
+              <span class="label">— Preguntas</span>
+              <h2 class="mt-4 font-display text-3xl leading-tight text-ink">Lo que suele <em class="italic text-magenta">preguntarse</em>.</h2>
+            </div>
+            <dl class="col-span-12 mt-6 divide-y divide-ink/15 border-y border-ink/15 lg:col-span-9 lg:mt-0">
+              {d.faqs.map((f) => (
+                <div class="py-6">
+                  <dt class="font-display text-xl leading-tight text-ink">{f.question}</dt>
+                  <dd class="mt-3 max-w-measure text-ink/80">{f.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+    )}
+  </article>
+
+  <!-- Anterior / siguiente en el ranking -->
+  <nav class="border-t border-ink/15 bg-paper py-10" aria-label="Otros productos">
+    <div class="container-x grid grid-cols-12 gap-x-8 gap-y-6">
+      <div class="col-span-12 md:col-span-6">
+        {anterior && (
+          <a href={`/laboratorio/productos/${anterior.slug}`} class="group block">
+            <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">← Anterior · {String(anterior.data.orden).padStart(2, '0')}</span>
+            <p class="mt-2 font-display text-xl text-ink transition-colors group-hover:text-magenta">{anterior.data.title}</p>
+          </a>
+        )}
+      </div>
+      <div class="col-span-12 md:col-span-6 md:text-right">
+        {siguiente && (
+          <a href={`/laboratorio/productos/${siguiente.slug}`} class="group block">
+            <span class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">Siguiente · {String(siguiente.data.orden).padStart(2, '0')} →</span>
+            <p class="mt-2 font-display text-xl text-ink transition-colors group-hover:text-magenta">{siguiente.data.title}</p>
+          </a>
+        )}
+      </div>
+    </div>
+  </nav>
+
+  <!-- CTA -->
+  <section class="bg-ink py-20 text-paper md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9 lg:col-start-2">
+          <span class="label !text-paper/60">— Beta</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
+            ¿Tu organización <em class="italic text-magenta">lo probaría</em>?
+          </h2>
+          <p class="mt-6 max-w-measure text-paper/80">
+            Las betas son de pocas organizaciones, a mitad de precio y a cambio de opinión honesta. Si encaja, Startidea avisa cuando abra.
+          </p>
+          <div class="mt-12 flex flex-wrap gap-4">
+            <a href={`/contacto?asunto=beta-${entry.slug}`} class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
+              Apuntarme a la beta
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="/laboratorio/productos" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">
+              Ver los diez productos
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .prose-startidea {
+    @apply text-base leading-relaxed text-ink/90 md:text-lg;
+  }
+  .prose-startidea h2 {
+    @apply mt-12 mb-5 font-display text-2xl leading-tight text-ink md:text-3xl;
+  }
+  .prose-startidea h2:first-child { @apply mt-0; }
+  .prose-startidea h3 {
+    @apply mt-8 mb-3 font-display text-xl leading-tight text-ink md:text-2xl;
+  }
+  .prose-startidea p { @apply mb-5; }
+  .prose-startidea ul, .prose-startidea ol { @apply mb-5 ml-5 space-y-2; }
+  .prose-startidea ul { @apply list-disc; }
+  .prose-startidea ol { @apply list-decimal; }
+  .prose-startidea strong { @apply font-bold text-ink; }
+  .prose-startidea em { @apply italic; }
+  .prose-startidea a { @apply text-magenta underline; }
+  .prose-startidea hr { @apply my-12 border-ink/15; }
+  .prose-startidea table { @apply my-6 w-full border-collapse text-sm; }
+  .prose-startidea th, .prose-startidea td { @apply border border-ink/15 px-3 py-2 text-left align-top; }
+  .prose-startidea th { @apply bg-paper-warm font-display font-bold text-ink; }
+</style>
