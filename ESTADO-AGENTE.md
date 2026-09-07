@@ -7,7 +7,7 @@ al cerrar una tanda larga, se reescribe.
 
 ---
 
-## Hecho el 2026-09-08 — respuesta competitiva a Lexy (rama `claude/auditoria-digital-verticales-rrss`, PR abierta)
+## Hecho el 2026-09-08 — respuesta competitiva a Lexy (PR #91, `486906f`, desplegado y verificado en producción)
 
 Origen: análisis del competidor Lexy (mylexy.app, SaaS de RRSS con IA, Barcelona; Starter 25 €/mes DIY,
 Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades implementadas:
@@ -26,10 +26,13 @@ Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades im
   Cada uno con qué se publica, líneas rojas, mes tipo, plan recomendado, FAQ y Service/FAQ JSON-LD.
 - Registro: footer (Servicios + Explora), `llms.txt`, OG `page/auditoria-digital-gratuita`, sitemap
   (automático, verificado en dist).
-- **Pendiente de Mario**: (1) mergear la PR y verificar en prod `/auditoria-digital-gratuita` y
-  `/redes-sociales-ia/iglesia`; (2) opcional `PAGESPEED_API_KEY=` en `.env` del container y en
-  `.env.example` (sin clave funciona con cuota anónima); (3) decidir si Lexy interesa como partner
-  de autoservicio barato para clientes por debajo de 190 €/mes (no se implementa nada).
+- Verificado en prod (2026-09-08 01:10): las 4 URL nuevas 200, OG, comparativa, llms.txt, sitemap y
+  footer. Endpoint probado: email inválido → 400, honeypot → 200 falso, y un envío real de prueba
+  («PRUEBA Claude») contra mylexy.app para comprobar Telegram + acuse + análisis.
+- **Pendiente de Mario**: (1) confirmar que llegaron el Telegram y los dos correos de la prueba;
+  (2) opcional `PAGESPEED_API_KEY=` en `.env` del container y en `.env.example` (sin clave funciona
+  con cuota anónima); (3) decidir si Lexy interesa como partner de autoservicio barato para
+  clientes por debajo de 190 €/mes (no se implementa nada).
 - Disco del Mac al 99 % durante la sesión (ENOSPC en el build); se vació la caché npm. Revisar.
 
 
