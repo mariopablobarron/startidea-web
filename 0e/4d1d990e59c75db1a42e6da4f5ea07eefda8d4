@@ -1,0 +1,139 @@
+src/lib/plano-db.ts
+  s_f4711e85a048a0::t_fbabf7191fdbd9 207-221
+  s_cfd674561a4b66::t_b63167cadbdd5e 22
+src/components/PlanoStartidea.astro
+  s_f4711e85a048a0::t_c181fe744096c3 148
+  s_f4711e85a048a0::t_470027ec7abada 113-115
+  s_f4711e85a048a0::t_5d190dd7d562c1 289-304
+  s_f4711e85a048a0::t_102ac0d4d31011 278-279
+  s_f4711e85a048a0::t_78e9167b90b743 741
+  s_f4711e85a048a0::t_8f036ecc6cc307 13-15
+  s_f4711e85a048a0::t_2a723687c7ce0c 308,414,442,444,465,470,489,590,636-731
+  s_f4711e85a048a0::t_0f49fe7dcedcd9 86
+  s_f4711e85a048a0::t_a19e444edaf21d 19-20,35,59,70,76,84-85,204,305-307,434-436,440-441,456-464,466-469,471,473,482,487-488,490-493,497,565-567,600,732-740,742-798,800,804,814
+src/pages/api/plano/resumen.ts
+  s_f4711e85a048a0::t_937e4316b44eb7 1-7,13,22-23,25,28,30-39,45-58,71-90,92-103,106-110,114-115,117-138,149-156,158-164,183-211,214-220,222-231,236,238-242,244-251,254-262,264
+  s_f4711e85a048a0::t_41da8435006d71 8-12,14-21,24,26-27,29,40-44,59-70,91,104-105,111-113,116,139-148,157,165-182,212-213,221,232-235,237,243,252-253
+  s_f4711e85a048a0::t_9097434f8be1d4 263,265-267
+src/data/booking.ts
+  s_f4711e85a048a0::t_70e171a945f466 23-24,32,35-36,38-43,46
+  s_f4711e85a048a0::t_77838bb377c869 25-31,33-34,37,44-45
+src/pages/admin/knowledge.astro
+  s_f4711e85a048a0::t_81b335a07874fe 109-114
+  s_f4711e85a048a0::t_16f8fbf4c75e88 41-42,45-64
+  s_f4711e85a048a0::t_afa84bc4871a49 6
+  s_f4711e85a048a0::t_6c303f231f71a7 181,184,190
+  s_f4711e85a048a0::t_bb227b33ab54de 226
+  s_f4711e85a048a0::t_23359cb02c351c 36-40,43-44,65-92,99,103-104,143-151,157-158,168-180,182-183,185-189,191-225,227-318
+  s_f4711e85a048a0::t_059a335aaaf433 153,156,159-167
+  s_f4711e85a048a0::t_466fc9c2451996 152,154-155
+docs/entrenar-lazo.md
+  s_f4711e85a048a0::t_f8b00bf61eb0e6 1-5,7-13,15-17,19-24,26,28
+  s_f4711e85a048a0::t_818c601fcaada4 6,14,18,25,27,29-47
+tests/knowledge-db.test.ts
+  s_f4711e85a048a0::t_ee2b0b6e59c915 154-198
+  s_f4711e85a048a0::t_19617986c0a564 247-292
+  s_f4711e85a048a0::t_5d1e4bd07c7ccd 2-16,19-21,23-114,199-246
+  s_f4711e85a048a0::t_2cf023f8e5471b 18,22
+  s_f4711e85a048a0::t_5158da817e7f63 115-153
+  s_f4711e85a048a0::t_ac5e44a85c7397 17
+  s_f4711e85a048a0::t_9f3cb0a1eea1b5 1
+src/lib/knowledge-auth.ts
+  s_f4711e85a048a0::t_a5512b9da2abf3 1-91
+src/components/AsistenteIA.astro
+  s_f4711e85a048a0::t_46d4d7fc0f35fe 226-227
+  s_f4711e85a048a0::t_55337fa2cabe52 284-287
+  s_f4711e85a048a0::t_f7755105bc7ee2 167-180,185-219,228-234,369
+  s_f4711e85a048a0::t_ab49f8860629ce 25,39,56-57,235-242,270,273-283,288-289,292,295,316-318,320-322,362-368,370,396,413
+src/lib/knowledge-db.ts
+  s_f4711e85a048a0::t_937dde5e2df6ec 241-247
+  s_f4711e85a048a0::t_8b64d6581a6119 12-15
+  s_f4711e85a048a0::t_3485dfee9307d5 1-11,16-195,197-240,248-446
+  s_3736e3bcd2bf4b::t_a89bd0cf56a9ba 196
+src/lib/plano-charla.ts
+  s_f4711e85a048a0::t_35c153fff1aca6 89
+  s_f4711e85a048a0::t_c54b2a8eb6a1a2 21
+  s_f4711e85a048a0::t_fc86e5ab670d35 53,55-60
+  s_f4711e85a048a0::t_ba8fc1cf443f2c 143-144
+  s_7725ffd89c330e::t_dd8db58d09c809 69
+src/pages/api/chat.ts
+  s_f4711e85a048a0::t_f27795c1ca0b8c 6
+  s_f4711e85a048a0::t_ea76e81c5ab9d5 48-51,53-54
+  s_f4711e85a048a0::t_61cca8ebfc0bd8 7,55-60,117-119,121,173
+src/pages/api/admin/knowledge-upload.ts
+  s_f4711e85a048a0::t_654df58d6c85c4 1-5,8,15,17-18,20-22,24-29,32-33,45-52,55-57,61,67-72,74-76,79-108,110-119,125-126,128-129
+  s_f4711e85a048a0::t_2f0e6415b565ac 6-7,9-14,16,19,23,30-31,34-44,53-54,58-60,62-66,73,77-78,109,120-124,127
+src/pages/api/admin/knowledge-delete.ts
+  s_f4711e85a048a0::t_45c1c948a50afb 1-3,8-11,13-30,33-34,36-44,47-48,50-51
+  s_f4711e85a048a0::t_280d9b39081dd5 4-7,12,31-32,35,45-46,49
+src/lib/hub-intake-outbox.ts
+  s_f4711e85a048a0::t_b9c4ce90ea8844 365,384-387,392-402
+  s_f4711e85a048a0::t_d7b1d2870c52db 362-364,366-377,379
+src/lib/plano-resumen.ts
+  s_f4711e85a048a0::t_d2655a0a70638a 6-7,10-18,23,37-39,43-44,52-59,64-69,86-97,99,102,105,108,111-128,149-151,157-158,184,189-212,214,216-223,228-229,233-236,245-267
+  s_f4711e85a048a0::t_88daf3be69713a 237-244
+  s_f4711e85a048a0::t_a71502a71d6356 1-5,8-9,19-22,24-36,40-42,45-51,60-63,70-85,98,100-101,103-104,106-107,109-110,129-148,152-156,159-183,185-188,213,215,224-227,230-232,268-273
+  s_f4711e85a048a0::t_d93d1ab97d2b96 274-280
+ESTADO-AGENTE.md
+  s_f4711e85a048a0::t_589440b4a8b2d8 6,33-54,56
+package-lock.json
+  s_f4711e85a048a0::t_10b26564727662 24,1927-1937,1947-1953,2033-2156,2323-2332,2556-2561,2685-2694,2797-2813,2856-2865,3003-3008,3211-3220,3315-3320,3403-3411,3629-3638,4377-4382,4540-4545,4555-4563,4583-4630,4661-4669,4708-4725,4755-4807,5959-5964,6075-6083,6090-6106,6356-6361,6936-6941,7081-7087,7189-7194,7207-7213,7223-7229,7306-7318,7514-7520,7546-7575,7706-7711,8163-8185,8662-8666,8669-8807,8864-8872
+package.json
+  s_f4711e85a048a0::t_03e57860f4bbcd 30
+src/components/Nav.astro
+  s_f4711e85a048a0::t_9fea78d9d99549 31
+src/content/knowledge/05-manual-conversacion.md
+  s_f4711e85a048a0::t_6ce3fdde336ce3 8-12
+src/data/plano.ts
+  s_f4711e85a048a0::t_7c13aa05c947cc 5,7-8
+src/lib/knowledge-extract.ts
+  s_f4711e85a048a0::t_ba075e2d88051e 1-146
+src/pages/admin/index.astro
+  s_f4711e85a048a0::t_d3c92221d53dbf 820,822,830,832
+src/pages/admin/plano.astro
+  s_f4711e85a048a0::t_5de171519c3491 19,31,53,56,65
+src/pages/asistente.astro
+  s_f4711e85a048a0::t_623bac6c404a25 7-8,12,16,20,50-51,58,64,158,160,166
+src/pages/privacidad.astro
+  s_f4711e85a048a0::t_0d39d7870a5d17 8,26,71-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "0e4d1d990e59c75db1a42e6da4f5ea07eefda8d4",
+  "prompts": {},
+  "sessions": {
+    "s_3736e3bcd2bf4b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "20e66992-29f4-43f4-8999-34bc4b24e234",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_7725ffd89c330e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-aa47802953ae8ecff",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_cfd674561a4b66": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e44e7d66-bf90-4cca-9445-bcbf71e46315",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
