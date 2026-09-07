@@ -1,0 +1,37 @@
+ESTADO-AGENTE.md
+  s_ae70a9216c532f::t_4a43d37ea32061 10-34
+src/components/Footer.astro
+  s_ae70a9216c532f::t_f51d2aebb4df13 17,29
+src/data/redes-sociales-ia-verticales.ts
+  s_ae70a9216c532f::t_cff201836a471d 1-157
+src/lib/auditoria-digital.ts
+  s_ae70a9216c532f::t_47cd0db4533a97 1-264
+src/pages/api/auditoria-digital.ts
+  s_ae70a9216c532f::t_a7578c99bad2fa 1-157
+src/pages/auditoria-digital-gratuita.astro
+  s_ae70a9216c532f::t_e2e50498ccaf28 1-372
+src/pages/llms.txt.ts
+  s_ae70a9216c532f::t_66c4856266e2af 35-37,61
+src/pages/og/[...slug].png.ts
+  s_ae70a9216c532f::t_59263f2090ad0a 333-339
+src/pages/redes-sociales-ia.astro
+  s_ae70a9216c532f::t_6fe1bc37bbc7eb 63-77,156-191,246-268
+src/pages/redes-sociales-ia/[vertical].astro
+  s_ae70a9216c532f::t_da8fc446d89b3b 1-221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "2918e39a7573910af2a463885aeeceba462ae837",
+  "prompts": {},
+  "sessions": {
+    "s_ae70a9216c532f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "86d79481-ed8e-47f3-a9ce-8c0bced7a736",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
