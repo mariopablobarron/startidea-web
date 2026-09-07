@@ -60,6 +60,21 @@ const planes = [
   },
 ];
 
+const comparativa = [
+  { fila: 'Quién redacta', tool: 'Tú, a base de prompts', std: 'La IA, calibrada con tu voz' },
+  { fila: 'Quién revisa', tool: 'Nadie', std: 'Una persona de Startidea, cada pieza' },
+  { fila: 'Voz de marca', tool: 'Plantillas genéricas del sector', std: 'Cerebro de marca con tus textos y tus líneas rojas' },
+  { fila: 'Quién publica', tool: 'Tú, tras programarlo', std: 'Startidea, en todas tus redes' },
+  { fila: 'Tiempo que te cuesta', tool: '2-4 horas a la semana', std: 'Una aprobación al mes' },
+  { fila: 'Conoce tu sector', tool: 'No: el mismo modelo para una clínica y una ONG', std: 'Sí: tercer sector, instituciones y empresas con propósito' },
+  { fila: 'Si algo sale mal', tool: 'Lo ves publicado', std: 'No sale: nada se publica sin tu visto bueno' },
+  { fila: 'Precio orientativo', tool: '20-30 € al mes + tu tiempo', std: 'Desde 190 € al mes, sin permanencia' },
+];
+const sectores = [
+  { nombre: 'Asociaciones y fundaciones', href: '/redes-sociales-ia/tercer-sector', body: 'Obra, base social, transparencia y captación. Sin exponer a las personas atendidas. Justificable en subvenciones.' },
+  { nombre: 'Parroquias y entidades de la Iglesia', href: '/redes-sociales-ia/iglesia', body: 'Tiempo litúrgico, obra social y comunidad con el lenguaje de la Iglesia. El responsable aprueba cada pieza.' },
+  { nombre: 'Empresas con propósito', href: '/redes-sociales-ia/empresas-con-proposito', body: 'Acción social y ESG con datos, mezclados con producto y equipo. Reutilizable en la memoria anual.' },
+];
 const pasos = [
   { num: '01', title: 'Calibrado de tu marca', body: 'Una reunión y tus textos actuales bastan para afinar el cerebro de marca: tono, valores, líneas rojas y hashtags.' },
   { num: '02', title: 'La IA propone, tú apruebas', body: 'Cada semana tienes la cola de publicaciones lista para revisar. Apruebas en un clic, en bloque o pieza a pieza.' },
@@ -138,6 +153,42 @@ const pasos = [
     </div>
   </section>
 
+  <!-- Comparativa: herramienta suelta vs IA supervisada -->
+  <section id="comparativa" class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Antes de decidir</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        Herramienta de IA por 25&nbsp;€ <em class="italic text-magenta">o</em> IA supervisada por personas.
+      </h2>
+      <p class="mt-6 max-w-measure text-lede text-ink/70">
+        Hay plataformas que generan publicaciones por una cuota mensual baja. Son útiles si alguien del equipo puede dedicarle horas cada semana. Si no, el perfil vuelve a pararse. La diferencia no está en la IA: está en quién responde del resultado.
+      </p>
+      <div class="mt-10 overflow-x-auto">
+        <table class="w-full min-w-[640px] border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-ink/20 text-left">
+              <th scope="col" class="py-3 pr-4 font-normal text-ink/50"></th>
+              <th scope="col" class="py-3 pr-4 font-display text-lg text-ink">Herramienta de IA</th>
+              <th scope="col" class="py-3 font-display text-lg text-magenta">Startidea: IA supervisada</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-ink/10">
+            {comparativa.map((c) => (
+              <tr>
+                <th scope="row" class="py-3 pr-4 text-left font-normal text-ink/60">{c.fila}</th>
+                <td class="py-3 pr-4 text-ink/70">{c.tool}</td>
+                <td class="py-3 text-ink">{c.std}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 max-w-measure text-sm text-ink/50">
+        Si tu caso es el primero, adelante con la herramienta: es la opción honesta cuando hay tiempo y criterio propio. Si es el segundo, <a href="/contacto" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">pide una demo</a>.
+      </p>
+    </div>
+  </section>
+
   <!-- Cómo funciona -->
   <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
     <div class="container-x">
@@ -189,6 +240,29 @@ const pasos = [
         ))}
       </div>
       <p class="mt-6 text-sm text-ink/50">Alta única: 350&nbsp;€ (cerebro de marca + conexión de tus redes + 2 semanas de calibración).</p>
+    </div>
+  </section>
+
+  <!-- Por sector -->
+  <section class="border-b border-ink/15 bg-paper-warm py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Por sector</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        No es lo mismo una parroquia que una fundación. <em class="italic text-magenta">Ni se publica lo mismo.</em>
+      </h2>
+      <div class="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        {sectores.map((s) => (
+          <a href={s.href} class="group flex flex-col border border-ink/20 bg-paper p-6 transition-colors hover:border-magenta">
+            <h3 class="font-display text-2xl text-ink">{s.nombre}</h3>
+            <p class="mt-3 flex-1 text-sm text-ink/70">{s.body}</p>
+            <span class="mt-6 text-sm text-magenta">Ver qué se publica <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-8 max-w-measure text-sm text-ink/60">
+        ¿Todavía no sabes en qué punto estás? Antes de contratar nada, pide la
+        <a href="/auditoria-digital-gratuita" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">auditoría digital gratuita</a>: web, Google, asistentes de IA y redes, revisada por una persona en 48 horas.
+      </p>
     </div>
   </section>
 

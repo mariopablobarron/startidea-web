@@ -3,9 +3,35 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, tras publicar los 10 planes de productos autoservicio en el Laboratorio.
+**Última actualización:** 2026-09-08, tras la respuesta competitiva a Lexy (mylexy.app) y los 10 planes de productos autoservicio.
 
 ---
+
+## Hecho el 2026-09-08 — respuesta competitiva a Lexy (rama `claude/auditoria-digital-verticales-rrss`, PR abierta)
+
+Origen: análisis del competidor Lexy (mylexy.app, SaaS de RRSS con IA, Barcelona; Starter 25 €/mes DIY,
+Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades implementadas:
+
+- **Lead magnet `/auditoria-digital-gratuita`**: formulario → `POST /api/auditoria-digital` (honeypot,
+  rate-limit 3/h por IP, consentimiento obligatorio). Avisa a Mario por Telegram, manda acuse al lead
+  (Resend) y lanza en segundo plano `src/lib/auditoria-digital.ts`: web + Google (robots, sitemap,
+  JSON-LD, OG, PageSpeed móvil) + visibilidad IA (llms.txt, bots bloqueados, Organization) + redes.
+  El resultado llega a Mario por Telegram y email; **el lead NO recibe el análisis en bruto**: el
+  compromiso público es auditoría revisada por persona en 48 h laborables. Probado en vivo contra
+  startidea.es (11 ok) y mylexy.app (4 medios, 3 leves).
+- **Comparativa en `/redes-sociales-ia`** («herramienta de IA por 25 € o IA supervisada») + bloque
+  «Por sector» enlazando a los verticales + CTA a la auditoría.
+- **Verticales `/redes-sociales-ia/{tercer-sector,iglesia,empresas-con-proposito}`**: datos en
+  `src/data/redes-sociales-ia-verticales.ts` (getStaticPaths no ve el frontmatter: gotcha de Astro).
+  Cada uno con qué se publica, líneas rojas, mes tipo, plan recomendado, FAQ y Service/FAQ JSON-LD.
+- Registro: footer (Servicios + Explora), `llms.txt`, OG `page/auditoria-digital-gratuita`, sitemap
+  (automático, verificado en dist).
+- **Pendiente de Mario**: (1) mergear la PR y verificar en prod `/auditoria-digital-gratuita` y
+  `/redes-sociales-ia/iglesia`; (2) opcional `PAGESPEED_API_KEY=` en `.env` del container y en
+  `.env.example` (sin clave funciona con cuota anónima); (3) decidir si Lexy interesa como partner
+  de autoservicio barato para clientes por debajo de 190 €/mes (no se implementa nada).
+- Disco del Mac al 99 % durante la sesión (ENOSPC en el build); se vació la caché npm. Revisar.
+
 
 ## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio)
 

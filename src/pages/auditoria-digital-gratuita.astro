@@ -1,0 +1,372 @@
+---
+/**
+ * /auditoria-digital-gratuita — Lead magnet.
+ *
+ * Auditoría gratuita de web + Google + visibilidad en asistentes de IA +
+ * redes, con revisión humana y entrega en 48 h laborables. El formulario
+ * postea a /api/auditoria-digital, que avisa a Mario y lanza el análisis
+ * automático (src/lib/auditoria-digital.ts) en segundo plano.
+ *
+ * Diferencia buscada frente a los "auditores" automáticos de las
+ * plataformas SaaS: aquí el resultado lo revisa una persona y viene con
+ * tres correcciones priorizadas, no con un semáforo genérico.
+ */
+import Base from '@/layouts/Base.astro';
+import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
+
+const bloques = [
+  {
+    num: '01',
+    title: 'Web',
+    body: 'Si carga bien en móvil, si Google entiende de qué va cada página, si los títulos y descripciones dicen algo o están vacíos.',
+  },
+  {
+    num: '02',
+    title: 'Google',
+    body: 'Indexación, sitemap, datos estructurados y rendimiento medido con PageSpeed. Qué está impidiendo que aparezcas cuando te buscan por nombre o por lo que haces.',
+  },
+  {
+    num: '03',
+    title: 'Asistentes de IA',
+    body: 'Si ChatGPT, Perplexity o Claude pueden leer tu web, si tienen un resumen fiable de quién eres y si te confunden con otra organización de nombre parecido.',
+  },
+  {
+    num: '04',
+    title: 'Redes',
+    body: 'Qué perfiles enlazas, cuáles están vinculados a tu entidad, y una lectura rápida de ritmo y coherencia con lo que cuenta la web.',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Es gratis de verdad?',
+    a: 'Sí. No hay tarjeta, ni prueba, ni permanencia. Startidea la hace porque es la mejor forma de mostrar cómo trabaja, y porque una parte de quienes la reciben acaban pidiendo ayuda con alguna de las correcciones.',
+  },
+  {
+    q: '¿Qué recibo exactamente?',
+    a: 'Un correo con la auditoría: el estado de los cuatro bloques (web, Google, asistentes de IA y redes), los hallazgos ordenados por gravedad y las tres correcciones que más impacto tendrían, explicadas para que las pueda hacer quien lleve la web, sea quien sea.',
+  },
+  {
+    q: '¿Por qué tarda 48 horas si el análisis es automático?',
+    a: 'Porque el análisis automático es solo el punto de partida. Una persona de Startidea lo revisa, descarta los falsos positivos, mira las redes y redacta las recomendaciones para tu caso. Un informe generado sin mirar sirve de poco.',
+  },
+  {
+    q: '¿Sirve para una organización pequeña?',
+    a: 'Es para quien está pensada. Asociaciones, fundaciones, parroquias, ayuntamientos pequeños y pymes con propósito que no tienen a nadie mirando esto a diario.',
+  },
+  {
+    q: '¿Qué hacéis con mis datos?',
+    a: 'Solo lo que hace falta para enviarte la auditoría. No hay píxeles de seguimiento en el formulario y la suscripción a la nota mensual es opcional. Puedes pedir que se borren cuando quieras escribiendo a hola@startidea.es.',
+  },
+];
+
+const jsonLd = [
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Auditoría digital gratuita', url: `${SITE_URL}/auditoria-digital-gratuita` },
+  ]),
+  faqPageSchema(faqs),
+  serviceSchema({
+    name: 'Auditoría digital gratuita',
+    description:
+      'Auditoría gratuita de web, posicionamiento en Google, visibilidad en asistentes de IA y redes sociales para asociaciones, fundaciones, instituciones y empresas con propósito. Análisis automático más revisión humana, entregada en 48 horas laborables.',
+    serviceType: 'Auditoría digital',
+    url: `${SITE_URL}/auditoria-digital-gratuita`,
+    audience: ['Asociación', 'Fundación', 'Parroquia', 'Institución', 'Empresa con propósito'],
+    offers: [
+      { name: 'Auditoría web', description: 'Carga en móvil, títulos, descripciones y estructura.' },
+      { name: 'Auditoría Google', description: 'Indexación, sitemap, datos estructurados y PageSpeed.' },
+      { name: 'Visibilidad en asistentes de IA', description: 'Acceso de rastreadores, llms.txt y entidad declarada.' },
+      { name: 'Lectura de redes', description: 'Perfiles enlazados, vinculación y coherencia.' },
+    ],
+  }),
+];
+---
+
+<Base
+  title="Auditoría digital gratuita: web, Google, IA y redes — Startidea"
+  description="Pide una auditoría gratuita de tu web, tu posicionamiento en Google, tu visibilidad en ChatGPT y Perplexity y tus redes. Análisis automático más revisión humana. En 48 horas, sin compromiso."
+  ogSlug="page/auditoria-digital-gratuita"
+  jsonLd={jsonLd}
+>
+  <!-- Hero + formulario -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x grid grid-cols-12 gap-x-8 gap-y-12">
+      <div class="col-span-12 lg:col-span-7">
+        <span class="label">— Auditoría digital gratuita</span>
+        <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+          ¿Te encuentran?<br/>
+          <em class="italic text-magenta">En Google, en ChatGPT y en redes.</em>
+        </h1>
+        <p class="mt-8 max-w-measure text-lede text-ink/80">
+          Startidea revisa tu web, tu presencia en Google, si los asistentes de IA saben quién eres y qué cuentan tus redes. Un sistema automático hace las comprobaciones. Una persona las revisa y te manda las tres correcciones que más importan.
+        </p>
+        <ul class="mt-8 space-y-2 text-sm text-ink/70">
+          <li class="flex gap-2"><span class="text-magenta" aria-hidden="true">→</span> Sin coste, sin tarjeta, sin permanencia.</li>
+          <li class="flex gap-2"><span class="text-magenta" aria-hidden="true">→</span> Entrega en 48 horas laborables, por email.</li>
+          <li class="flex gap-2"><span class="text-magenta" aria-hidden="true">→</span> Pensada para asociaciones, fundaciones, parroquias, instituciones y pymes con propósito.</li>
+        </ul>
+      </div>
+
+      <aside class="col-span-12 lg:col-span-5">
+        <div class="border border-ink bg-paper-warm p-6 md:p-8">
+          <h2 class="font-display text-2xl leading-tight text-ink">Pide tu auditoría</h2>
+          <p class="mt-2 text-sm text-ink/70">Dos minutos. Solo hace falta la web.</p>
+
+          <form id="lead-form" class="mt-6 space-y-3" novalidate>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+            <div>
+              <label class="sr-only" for="lead-url">Dirección de tu web</label>
+              <input id="lead-url" name="url" type="url" required maxlength="200" inputmode="url" autocomplete="url" placeholder="www.tuorganizacion.org"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            </div>
+            <div>
+              <label class="sr-only" for="lead-name">Tu nombre</label>
+              <input id="lead-name" name="name" type="text" required maxlength="80" autocomplete="name" placeholder="Tu nombre"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            </div>
+            <div>
+              <label class="sr-only" for="lead-email">Email</label>
+              <input id="lead-email" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="tu@email.com"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            </div>
+            <div>
+              <label class="sr-only" for="lead-org">Organización</label>
+              <input id="lead-org" name="organization" type="text" maxlength="120" autocomplete="organization" placeholder="Tu organización (opcional)"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            </div>
+            <div>
+              <label class="sr-only" for="lead-tipo">Tipo de organización</label>
+              <select id="lead-tipo" name="tipo"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40">
+                <option value="">Tipo de organización</option>
+                <option value="asociacion">Asociación</option>
+                <option value="fundacion">Fundación</option>
+                <option value="iglesia">Parroquia, diócesis o congregación</option>
+                <option value="institucion">Institución o administración</option>
+                <option value="empresa">Empresa con propósito</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div>
+              <label class="sr-only" for="lead-redes">Redes sociales</label>
+              <input id="lead-redes" name="redes" type="text" maxlength="300" placeholder="Tus redes: @usuario o enlaces (opcional)"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" />
+            </div>
+            <div>
+              <label class="sr-only" for="lead-reto">Qué te preocupa</label>
+              <textarea id="lead-reto" name="reto" rows="2" maxlength="600" placeholder="¿Qué te preocupa? (opcional)"
+                class="w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"></textarea>
+            </div>
+
+            <label class="flex items-start gap-3 py-1 text-sm text-ink/85 cursor-pointer">
+              <input type="checkbox" name="consent" required class="mt-1 h-4 w-4 cursor-pointer accent-magenta" />
+              <span>Acepto que Startidea use estos datos para enviarme la auditoría. <a href="/privacidad" class="underline underline-offset-2">Privacidad</a>.</span>
+            </label>
+            <label class="flex items-start gap-3 py-1 text-sm text-ink/85 cursor-pointer">
+              <input type="checkbox" name="newsletter" class="mt-1 h-4 w-4 cursor-pointer accent-magenta" />
+              <span>Suscribirme también a la nota mensual de Startidea (cero ruido, baja cuando quieras)</span>
+            </label>
+
+            <button type="submit" id="lead-submit" class="btn w-full justify-center !py-3">
+              Pedir la auditoría gratuita
+              <span aria-hidden="true">→</span>
+            </button>
+
+            <p id="lead-status" class="min-h-[20px] font-mono text-[11px] leading-relaxed text-ink-mute" aria-live="polite"></p>
+
+            <p class="border-t border-ink/15 pt-3 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+              Sin tracking pixels · Sin spam · RGPD
+            </p>
+          </form>
+
+          <div id="lead-ok" class="hidden" role="status">
+            <p class="mt-6 font-display text-2xl leading-tight text-ink">Recibido.</p>
+            <p class="mt-3 text-sm text-ink/80">
+              El análisis automático ya está en marcha. En 48 horas laborables recibirás la auditoría revisada en el correo que has indicado. Si no la ves, mira en promociones o escribe a <a href="mailto:hola@startidea.es" class="underline underline-offset-2">hola@startidea.es</a>.
+            </p>
+            <p class="mt-6 text-sm text-ink/70">
+              Mientras tanto: <a href="/redes-sociales-ia" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">cómo Startidea lleva las redes con IA supervisada</a>.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Qué revisa -->
+  <section class="bg-paper-warm py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Qué revisa</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <ol class="divide-y divide-ink/15 border-y border-ink/15">
+            {bloques.map((b) => (
+              <li class="grid grid-cols-12 gap-x-6 py-6">
+                <span class="num-edit col-span-2 text-3xl">{b.num}</span>
+                <div class="col-span-10">
+                  <h3 class="font-display text-lg leading-tight text-ink md:text-xl">{b.title}</h3>
+                  <p class="mt-1 text-sm text-ink/75">{b.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo se hace -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Cómo se hace</span>
+      <h2 class="mt-4 max-w-measure font-display text-display-md leading-tight text-ink">
+        Máquina para comprobar. <em class="italic text-magenta">Persona</em> para decidir.
+      </h2>
+      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div class="border-t border-ink/20 pt-5">
+          <span class="font-display text-4xl text-magenta">01</span>
+          <h3 class="mt-3 font-display text-2xl text-ink">Comprobación automática</h3>
+          <p class="mt-3 text-ink/70">En cuanto envías el formulario, un sistema lee tu web, tu robots.txt, tu sitemap, tus datos estructurados y mide el rendimiento móvil con PageSpeed. Tarda un par de minutos.</p>
+        </div>
+        <div class="border-t border-ink/20 pt-5">
+          <span class="font-display text-4xl text-magenta">02</span>
+          <h3 class="mt-3 font-display text-2xl text-ink">Revisión humana</h3>
+          <p class="mt-3 text-ink/70">Alguien de Startidea mira el resultado, descarta lo que no aplica a tu caso, revisa las redes a mano y decide qué tres cosas cambiarían más tu visibilidad.</p>
+        </div>
+        <div class="border-t border-ink/20 pt-5">
+          <span class="font-display text-4xl text-magenta">03</span>
+          <h3 class="mt-3 font-display text-2xl text-ink">Auditoría en tu correo</h3>
+          <p class="mt-3 text-ink/70">En 48 horas laborables recibes el informe, escrito para que lo entienda quien lleve la web. Si quieres que Startidea haga las correcciones, se habla. Si no, te lo quedas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lo que no es -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x grid grid-cols-12 gap-x-8">
+      <div class="col-span-12 lg:col-span-8">
+        <span class="label">— Lo que no es</span>
+        <p class="mt-6 font-display text-display-md leading-tight text-ink">
+          No es un semáforo generado por un robot. No es una excusa para venderte un plan.
+        </p>
+        <p class="mt-6 max-w-measure text-lede text-ink/70">
+          Hay herramientas que pintan un informe automático en diez segundos y terminan en un botón de compra. Esta auditoría termina en un correo con tres tareas concretas. Lo que hagas después es cosa tuya.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Preguntas frecuentes</span>
+      <div class="mt-10 max-w-measure divide-y divide-ink/15">
+        {faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="cursor-pointer list-none font-display text-xl text-ink">{f.q}</summary>
+            <p class="mt-3 text-ink/70">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="bg-ink py-20 text-paper md:py-24">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-9">
+          <span class="label !text-paper/60">— Dos minutos ahora, 48 horas después</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-paper">
+            Sabrás qué ve Google,<br/>
+            <em class="italic text-magenta">qué ve la IA</em> y qué falta.
+          </h2>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="#lead-form" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="auditoria_cta_final">
+              Pedir la auditoría
+              <span aria-hidden="true">↑</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('lead-form');
+    var status = document.getElementById('lead-status');
+    var submit = document.getElementById('lead-submit');
+    var okBox = document.getElementById('lead-ok');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+
+      if ((data.get('website') || '').toString().trim() !== '') {
+        form.classList.add('hidden');
+        okBox.classList.remove('hidden');
+        return;
+      }
+      if (data.get('consent') !== 'on') {
+        status.style.color = '#b42318';
+        status.textContent = 'Hace falta aceptar el uso de los datos para enviarte la auditoría.';
+        return;
+      }
+
+      submit.setAttribute('disabled', 'true');
+      status.style.color = '';
+      status.textContent = 'Enviando…';
+
+      var payload = {
+        url: (data.get('url') || '').toString().trim(),
+        name: (data.get('name') || '').toString().trim(),
+        email: (data.get('email') || '').toString().trim(),
+        organization: (data.get('organization') || '').toString().trim(),
+        tipo: (data.get('tipo') || '').toString(),
+        redes: (data.get('redes') || '').toString().trim(),
+        reto: (data.get('reto') || '').toString().trim(),
+        consent: true,
+        newsletter: data.get('newsletter') === 'on',
+      };
+
+      try {
+        var r = await fetch('/api/auditoria-digital', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        var json = await r.json().catch(function () { return { ok: false }; });
+        if (r.ok && json.ok) {
+          window.stTrack && window.stTrack('generate_lead', {
+            method: 'lead_magnet',
+            file_name: 'auditoria-digital-gratuita',
+            page_path: '/auditoria-digital-gratuita',
+          });
+          form.classList.add('hidden');
+          okBox.classList.remove('hidden');
+          okBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          status.style.color = '#b42318';
+          status.textContent = json.error === 'rate'
+            ? 'Ya hay una auditoría en marcha desde esta conexión. Espera un rato o escribe a hola@startidea.es.'
+            : json.error === 'fields'
+              ? 'Revisa la dirección de la web, el nombre y el email.'
+              : 'No se pudo enviar. Escríbenos a hola@startidea.es.';
+          submit.removeAttribute('disabled');
+        }
+      } catch (_) {
+        status.style.color = '#b42318';
+        status.textContent = 'Sin conexión. Escríbenos a hola@startidea.es.';
+        submit.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>

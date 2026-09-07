@@ -330,6 +330,13 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
       accent: 'contacto directo',
       subtitle: 'Kit de prensa de Startidea: biografía, cifras y material gráfico. Innovación social desde Granada desde 2011.',
     },
+    'page/auditoria-digital-gratuita': {
+      kind: 'page',
+      eyebrow: '— Auditoría digital gratuita',
+      title: '¿Te encuentran? Google, ChatGPT y redes.',
+      accent: 'Google, ChatGPT y redes',
+      subtitle: 'Análisis automático de web, Google, asistentes de IA y redes, revisado por una persona. Tres correcciones en 48 horas. Sin coste.',
+    },
     'page/redes-sociales-ia': {
       kind: 'page',
       eyebrow: '— Redes sociales con IA',
