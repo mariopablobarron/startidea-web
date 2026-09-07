@@ -1,0 +1,55 @@
+ESTADO-AGENTE.md
+  s_35e98636369891::t_2c09000c26731a 6,10-27
+src/content/config.ts
+  s_f4711e85a048a0::t_52619a44f34a44 197-242
+src/content/productos/asistente-para-socios-y-voluntarios.md
+  s_35e98636369891::t_5d6c4c35dd42b8 1-91
+src/content/productos/copiloto-subvenciones-pro.md
+  s_f4711e85a048a0::t_1f4c42a919fa1d 1-91
+src/content/productos/eventos-con-landing-e-inscripciones.md
+  s_35e98636369891::t_76b19baf13c389 1-91
+src/content/productos/generador-memorias-justificaciones.md
+  s_35e98636369891::t_f74d813decde03 1-90
+src/content/productos/kit-de-marca-expres.md
+  s_35e98636369891::t_012e2fd6da6f35 1-90
+src/content/productos/merchandising-bajo-demanda.md
+  s_35e98636369891::t_e22ecd48356c3a 1-91
+src/content/productos/newsletter-curada-del-sector.md
+  s_f4711e85a048a0::t_cb86483b604afa 1-90
+src/content/productos/nota-de-voz-a-contenido.md
+  s_35e98636369891::t_a0fb5ffec8edff 1-90
+src/content/productos/piloto-redes-sociales.md
+  s_35e98636369891::t_2ea689a6b61518 1-92
+src/content/productos/web-asociacion-en-un-dia.md
+  s_35e98636369891::t_7ecac001d39170 1-90
+src/pages/laboratorio/index.astro
+  s_35e98636369891::t_8f7f11617d4573 13-20
+src/pages/laboratorio/productos/[...slug].astro
+  s_35e98636369891::t_5f4177f09f47d7 1-239
+src/pages/laboratorio/productos/index.astro
+  s_35e98636369891::t_42cb172f93771c 1-223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "67c36d9c2fdfbc4364c356fa351738a634c19054",
+  "prompts": {},
+  "sessions": {
+    "s_35e98636369891": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90a71132-7b4d-45c2-adfc-cd09dd169366",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
