@@ -1,0 +1,39 @@
+src/lib/seo-mini.ts
+  s_f4711e85a048a0::t_c8dd3abca5bd93 1-252
+src/lib/regalos.ts
+  s_f4711e85a048a0::t_08e73073902964 1-191
+src/components/PlanoStartidea.astro
+  s_f4711e85a048a0::t_a1f28146774362 4-9,11-13,15-17,19,32-33,37,42,49,55-56,59-88,102-113,116-117,119-122,127,141-143,194-209,229-254,263,266,269-273,275-279,281-284,287-303,309,311-313,319-329,331,334-340,343-347,349-367,369,371-381,384,386-394,397-398,400,402,405-406,408-417,420,424,426-427,431-435,437-440,443-458,461-462,466-594
+src/pages/api/plano/charla.ts
+  s_f4711e85a048a0::t_8aadcac36d8682 1-76
+src/pages/api/plano/regalo.ts
+  s_f4711e85a048a0::t_cc6ebf9d371991 1-82
+src/lib/plano-charla.ts
+  s_f4711e85a048a0::t_500f5e1ce4b77a 1-201
+src/content/knowledge/05-manual-conversacion.md
+  s_f4711e85a048a0::t_cf47aa3b2d2dd9 1-84
+ESTADO-AGENTE.md
+  s_f4711e85a048a0::t_0b353855cdf5a0 17-32
+src/lib/plano-db.ts
+  s_f4711e85a048a0::t_8f849fc4e6f922 22,36,59-60,64-75,77-78,88-92,110,115-116,129,176-219
+src/pages/admin/plano.astro
+  s_f4711e85a048a0::t_1897303f27b776 6,17-18,28-35,54,61-62,119,128-155
+src/pages/lab/home-plano.astro
+  s_f4711e85a048a0::t_a9f3ec66676ed1 2-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "acea8addd00051b0e899992283d0b5e89aba5abf",
+  "prompts": {},
+  "sessions": {
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
