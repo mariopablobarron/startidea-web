@@ -1,0 +1,77 @@
+src/pages/portal/index.astro
+  s_1c51cfd99bed79::t_69745e5237ab90 8,42-43
+src/pages/tecnologia.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 5-6,291-296
+src/components/FormacionPromo.astro
+  s_1c51cfd99bed79::t_96161b058664c3 15,18,22-25,54-57,61,78
+  s_1c51cfd99bed79::t_a1d1e71addbf48 12-14,16-17,21,36-37,68,92-93,104
+src/pages/subvenciones/presentar/gracias.astro
+  s_1c51cfd99bed79::t_69745e5237ab90 11
+src/pages/portal/registro.astro
+  s_1c51cfd99bed79::t_69745e5237ab90 8,70-71
+src/pages/laboratorio/cursos/[slug].astro
+  s_1c51cfd99bed79::t_1774cd6520737f 236
+  s_1c51cfd99bed79::t_7cde526be9eb77 165,196,237,240
+src/pages/contacto.astro
+  s_1c51cfd99bed79::t_1774cd6520737f 5-8,91,94-95,230,238-251,277-278,281
+src/pages/sitemap-catalogo.xml.ts
+  s_1c51cfd99bed79::t_69745e5237ab90 31-33
+src/pages/financiacion-empresas.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 13,432-437
+src/pages/consultoria.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 328-332
+src/pages/audiovisual.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 418-422
+src/pages/agentes-ia.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 4-5,281-286
+src/components/AnalyticsTracker.astro
+  s_1c51cfd99bed79::t_702103559bb363 3,14-16,45,47,49,81-88,90-93,95-106,112-117,120,130-141
+  s_1c51cfd99bed79::t_57e218f367156f 118-119
+  s_1c51cfd99bed79::t_8077ae9e06028e 23-34,37,39-44,46,48,89
+  s_1c51cfd99bed79::t_75f132a862bf7c 107-111
+  s_1c51cfd99bed79::t_7cde526be9eb77 121-129
+astro.config.mjs
+  s_1c51cfd99bed79::t_251d76520bd4ab 112-113
+  s_1c51cfd99bed79::t_69745e5237ab90 7-9,111,114-117
+src/pages/fundraising.astro
+  s_1c51cfd99bed79::t_f502049ec4e541 449-453
+src/components/NotasRelacionadas.astro
+  s_1c51cfd99bed79::t_a1d1e71addbf48 8-9,24,27,29-30,32,35-39,45,50-55,84,89
+  s_1c51cfd99bed79::t_96161b058664c3 69,71
+src/components/CursoRelacionado.astro
+  s_1c51cfd99bed79::t_a1d1e71addbf48 1-34
+src/pages/comunicacion.astro
+  s_1c51cfd99bed79::t_96161b058664c3 443-446
+  s_1c51cfd99bed79::t_f502049ec4e541 5,447-451
+src/pages/subvenciones/presentar/nuevo.astro
+  s_1c51cfd99bed79::t_57e218f367156f 32
+tests/seo-sitemaps.test.ts
+  s_1c51cfd99bed79::t_99bbaea8c30e94 1-88
+src/pages/notas/[...slug].astro
+  s_1c51cfd99bed79::t_be6d68ba9f1eb1 6,48,55-70,81-88,92,94,131,257-260,267,275,285-307,316
+  s_1c51cfd99bed79::t_8077ae9e06028e 277
+tests/analytics-tracker.test.ts
+  s_1c51cfd99bed79::t_6fe762f21f8684 8,17,39-42,49-52,61,98-116
+  s_1c51cfd99bed79::t_7cde526be9eb77 1-7,9-16,18-38,43-48,53-60,62-76,88-97,117-124
+  s_1c51cfd99bed79::t_75f132a862bf7c 77-87
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_1f62463062c031 3-54
+docs/seo-recorridos-2026-09.md
+  s_1c51cfd99bed79::t_6943a67e7bc933 1-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "59e55d5fa8dbe6e25f3fb5342bd04c28020536a9",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
