@@ -1,0 +1,255 @@
+---
+/**
+ * /memorias — Generador de memorias y justificaciones (producto autoservicio nº 3).
+ * Plan de negocio: /laboratorio/productos/generador-memorias-justificaciones
+ * Landing + carga guiada. Al enviar: POST /api/memorias/crear → guion → pedido.
+ */
+import Base from '@/layouts/Base.astro';
+import { MEMORIA_TIPOS } from '@/lib/memorias-engine';
+import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+
+const tipos = Object.values(MEMORIA_TIPOS);
+const tipoParam = Astro.url.searchParams.get('tipo') ?? '';
+
+const faqs = [
+  {
+    q: '¿La memoria la escribe una máquina sin revisión?',
+    a: 'La redacta un sistema de IA a partir de los datos reales de la organización y la revisa una persona de Startidea antes de entregarla. La organización aprueba primero el guion y después el documento.',
+  },
+  {
+    q: '¿Puede inventarse cifras?',
+    a: 'No. Cada cifra del documento tiene que estar en lo que has cargado. Si falta un dato, aparece marcado como [COMPLETAR] para que lo añadas tú.',
+  },
+  {
+    q: '¿Qué recibo y en qué formato?',
+    a: 'El documento completo en tu pedido, para leerlo, copiarlo a tu plantilla o imprimirlo en PDF. Con la identidad visual de tu organización en el siguiente hito.',
+  },
+];
+
+const jsonLd = [
+  faqPageSchema(faqs),
+  breadcrumbList([
+    { name: 'Inicio', url: `${SITE_URL}/` },
+    { name: 'Generador de memorias', url: `${SITE_URL}/memorias` },
+  ]),
+];
+
+const inputCls =
+  'mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40';
+const labelCls = 'block font-mono text-[10px] uppercase tracking-widest text-ink-mute';
+---
+
+<Base
+  title="Generador de memorias y justificaciones — Startidea"
+  description="La memoria anual, el informe de impacto o la justificación técnica de tu subvención, redactados con IA a partir de tus datos y revisados por una persona. Desde 150 € por documento."
+  ogSlug="page/memorias"
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <span class="label">— Generador de memorias y justificaciones</span>
+      <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
+        La memoria que nadie quiere escribir,<br />
+        <em class="italic text-magenta">lista en 48 horas.</em>
+      </h1>
+      <p class="mt-8 max-w-measure text-lede text-ink/80">
+        Cargas tus actividades, cifras y testimonios. El sistema propone un guion para que lo apruebes y, tras el
+        pago, redacta el documento completo en la voz de tu organización. Cada cifra sale de lo que cargas. Una
+        persona de Startidea lo lee antes de entregarlo.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper-warm py-12 md:py-16">
+    <div class="container-x">
+      <ol class="grid gap-px border-2 border-ink/15 bg-ink/15 md:grid-cols-3">
+        {tipos.map((t) => (
+          <li class="bg-paper p-6 md:p-8">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{t.precioEur} € por documento</p>
+            <h2 class="mt-3 font-display text-2xl leading-tight text-ink">{t.nombre}</h2>
+            <p class="mt-3 text-sm text-ink/75">{t.descripcion}</p>
+            <p class="mt-4 font-mono text-[11px] text-ink-mute">{t.secciones.length} secciones · {t.palabras[0]}-{t.palabras[1]} palabras</p>
+            <a href={`#carga`} data-tipo={t.key} class="tipo-link mt-6 inline-block btn-ghost !py-2 text-sm">Empezar →</a>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4 font-mono text-xs text-ink-mute">Precios sin IVA. El guion es gratis; se paga solo si decides que redactemos el documento.</p>
+    </div>
+  </section>
+
+  <section id="carga" class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl">
+        <span class="label">— Carga guiada</span>
+        <h2 class="mt-4 font-display text-display-md leading-tight text-ink">Cuéntanos qué pasó. <em class="italic text-magenta">Nosotros lo ordenamos.</em></h2>
+        <p class="mt-4 text-ink/75">Diez minutos. Cuantos más datos y cifras, mejor documento. Lo que falte quedará marcado para completarlo.</p>
+
+        <form id="memoria-form" class="mt-10 space-y-6" novalidate>
+          <div>
+            <label for="tipo" class={labelCls}>Tipo de documento *</label>
+            <select id="tipo" name="tipo" required class={inputCls}>
+              {tipos.map((t) => (
+                <option value={t.key} selected={tipoParam === t.key}>{t.nombre} · {t.precioEur} €</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="org_nombre" class={labelCls}>Organización *</label>
+              <input id="org_nombre" name="org_nombre" type="text" required maxlength="200" class={inputCls} />
+            </div>
+            <div>
+              <label for="org_tipo" class={labelCls}>Tipo de entidad</label>
+              <select id="org_tipo" name="org_tipo" class={inputCls}>
+                <option value="asociacion">Asociación</option>
+                <option value="fundacion">Fundación</option>
+                <option value="cooperativa">Cooperativa / Empresa social</option>
+                <option value="empresa">Empresa con propósito</option>
+                <option value="institucion">Institución / Entidad local</option>
+                <option value="otro">Otra</option>
+              </select>
+            </div>
+            <div>
+              <label for="representante" class={labelCls}>Quién firma el documento *</label>
+              <input id="representante" name="representante" type="text" required maxlength="150" placeholder="Nombre y cargo" class={inputCls} />
+            </div>
+            <div>
+              <label for="email" class={labelCls}>Email *</label>
+              <input id="email" name="email" type="email" required class={inputCls} />
+            </div>
+            <div>
+              <label for="periodo" class={labelCls}>Periodo *</label>
+              <input id="periodo" name="periodo" type="text" required maxlength="60" placeholder="2025 · o enero-junio 2026" class={inputCls} />
+            </div>
+            <div>
+              <label for="tono" class={labelCls}>Tono</label>
+              <input id="tono" name="tono" type="text" maxlength="200" placeholder="cercano, claro y honesto" class={inputCls} />
+            </div>
+          </div>
+
+          <div id="bloque-financiador" class="grid gap-5 sm:grid-cols-3">
+            <div class="sm:col-span-1">
+              <label for="financiador" class={labelCls}>Financiador / administración</label>
+              <input id="financiador" name="financiador" type="text" maxlength="200" placeholder="Junta de Andalucía, Fundación X…" class={inputCls} />
+            </div>
+            <div>
+              <label for="convocatoria" class={labelCls}>Convocatoria o programa</label>
+              <input id="convocatoria" name="convocatoria" type="text" maxlength="300" class={inputCls} />
+            </div>
+            <div>
+              <label for="importe" class={labelCls}>Importe concedido</label>
+              <input id="importe" name="importe" type="text" maxlength="80" placeholder="18.000 €" class={inputCls} />
+            </div>
+          </div>
+
+          <div>
+            <label for="que_hace" class={labelCls}>Qué hace la organización *</label>
+            <textarea id="que_hace" name="que_hace" required minlength="40" maxlength="1500" rows="3" placeholder="Como se lo contarías a alguien que no la conoce." class={`${inputCls} resize-y`}></textarea>
+          </div>
+          <div>
+            <label for="actividades" class={labelCls}>Actividades realizadas en el periodo * (una por línea)</label>
+            <textarea id="actividades" name="actividades" required minlength="60" maxlength="6000" rows="6" placeholder="24 talleres de respiro familiar en Granada y Motril&#10;3 campamentos de verano (julio, 45 niños)&#10;Atención psicológica individual a familias" class={`${inputCls} resize-y`}></textarea>
+          </div>
+          <div>
+            <label for="cifras" class={labelCls}>Cifras y datos * (una por línea)</label>
+            <textarea id="cifras" name="cifras" required maxlength="3000" rows="5" placeholder="120 familias atendidas&#10;312 sesiones&#10;18 personas voluntarias&#10;Presupuesto ejecutado: 17.850 €" class={`${inputCls} resize-y`}></textarea>
+            <p class="mt-1 font-mono text-[11px] text-ink-mute">Solo estas cifras aparecerán en el documento. Lo que no esté aquí saldrá como [COMPLETAR].</p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="objetivos" class={labelCls}>Objetivos previstos</label>
+              <textarea id="objetivos" name="objetivos" maxlength="2000" rows="3" placeholder="Lo que se comprometió en la solicitud o en el plan anual." class={`${inputCls} resize-y`}></textarea>
+            </div>
+            <div>
+              <label for="dificultades" class={labelCls}>Dificultades o desviaciones</label>
+              <textarea id="dificultades" name="dificultades" maxlength="2000" rows="3" placeholder="Qué no salió como estaba previsto y qué se hizo." class={`${inputCls} resize-y`}></textarea>
+            </div>
+          </div>
+          <div>
+            <label for="testimonios" class={labelCls}>Testimonios (uno por línea, entre comillas si es literal)</label>
+            <textarea id="testimonios" name="testimonios" maxlength="3000" rows="3" class={`${inputCls} resize-y`}></textarea>
+          </div>
+
+          <div class="border-t border-ink/15 pt-5">
+            <button type="submit" id="memoria-submit" class="btn">Preparar el guion (gratis) →</button>
+            <p class="mt-3 font-mono text-[11px] text-ink-mute">
+              Recibirás el guion por email en unos minutos. Se paga solo si decides que redactemos el documento.
+            </p>
+          </div>
+          <div id="memoria-result" class="hidden border p-4 text-sm" role="alert"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-ink/15 bg-paper-warm py-16">
+    <div class="container-x">
+      <dl class="mx-auto max-w-2xl divide-y divide-ink/15">
+        {faqs.map((f) => (
+          <div class="py-5">
+            <dt class="font-display text-lg text-ink">{f.q}</dt>
+            <dd class="mt-2 text-sm text-ink/75">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('memoria-form');
+    var tipoSel = document.getElementById('tipo');
+    var bloque = document.getElementById('bloque-financiador');
+    var result = document.getElementById('memoria-result');
+    var btn = document.getElementById('memoria-submit');
+
+    function syncTipo() {
+      var t = tipoSel.value;
+      bloque.style.opacity = t === 'memoria_anual' ? '0.6' : '1';
+    }
+    tipoSel.addEventListener('change', syncTipo);
+    syncTipo();
+    document.querySelectorAll('.tipo-link').forEach(function (a) {
+      a.addEventListener('click', function () {
+        tipoSel.value = a.getAttribute('data-tipo');
+        syncTipo();
+      });
+    });
+
+    function show(msg, isError) {
+      result.className = 'border p-4 text-sm ' + (isError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700');
+      result.textContent = msg;
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var fd = new FormData(form);
+      var body = {};
+      fd.forEach(function (v, k) { body[k] = v; });
+      btn.disabled = true;
+      var orig = btn.textContent;
+      btn.textContent = 'Preparando el guion…';
+      try {
+        var res = await fetch('/api/memorias/crear', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        var j = await res.json();
+        if (res.ok && j.ok && j.manage_url) {
+          window.location.href = j.manage_url;
+          return;
+        }
+        show(j.detail || j.error || 'No se pudo crear el pedido.', true);
+      } catch (err) {
+        show('No se pudo enviar. Inténtalo de nuevo o escribe a hola@startidea.es.', true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = orig;
+      }
+    });
+  })();
+</script>

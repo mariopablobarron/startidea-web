@@ -3,9 +3,20 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, Copiloto Pro: hito 1 + edición de perfil autoservicio.
+**Última actualización:** 2026-09-08, Generador de memorias y justificaciones, hito 1 (carga guiada + guion + pago + documento + revisión).
 
 ---
+
+## 2026-09-08 — Generador de memorias y justificaciones · hito 1 (loop autónomo, iteración 6)
+
+- Producto 3 de `/laboratorio/productos`, construido aquí (autoservicio público con pago único, mismo patrón
+  que cursos: Stripe `price_data`, SQLite `memoria_pedidos` en expedientes.db, OpenRouter vía `pickModel`).
+- `src/lib/memorias-engine.ts` (tipos/precios/secciones, `parseCarga`, guion y documento con LLM inyectable,
+  `cifrasNoRespaldadas`, `mdToHtml`; 10 pruebas), `src/lib/memorias-db.ts`, `/memorias` (landing + carga
+  guiada), `/memorias/pedido?t=`, APIs `crear` (guion gratis) → `checkout` → webhook `kind=memoria` →
+  `generar` (solo pagado, deja en `revision`) → `aprobar` (admin, entrega + email). Doc: `docs/generador-memorias.md`.
+- Sin prueba viva del modelo ni de Stripe desde aquí; el guion se genera en `crear` con OPENROUTER_API_KEY
+  del container. Hito 2: subida de documentos (doc-extractor), PDF con identidad, panel admin de pedidos.
 
 ## 2026-09-08 — Copiloto de subvenciones Pro · hito 1 (loop autónomo de productos, iteración 4)
 

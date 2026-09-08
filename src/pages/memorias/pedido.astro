@@ -1,0 +1,211 @@
+---
+/**
+ * /memorias/pedido?t=TOKEN — estado de un pedido del Generador de memorias.
+ * El manage_token es el bearer. Muestra el guion, el pago, el botón de
+ * redacción y el documento (en revisión o entregado).
+ */
+import Base from '@/layouts/Base.astro';
+import { getPedidoByToken } from '@/lib/memorias-db';
+import { MEMORIA_TIPOS, mdToHtml, type Guion } from '@/lib/memorias-engine';
+
+export const prerender = false;
+
+const token = Astro.url.searchParams.get('t') ?? '';
+const pago = Astro.url.searchParams.get('pago');
+const pedido = token ? getPedidoByToken(token) : null;
+const def = pedido ? MEMORIA_TIPOS[pedido.tipo] : null;
+let guion: Guion | null = null;
+try { guion = pedido?.guion_json ? (JSON.parse(pedido.guion_json) as Guion) : null; } catch {}
+let avisos: string[] = [];
+try { avisos = pedido?.avisos_json ? (JSON.parse(pedido.avisos_json) as string[]) : []; } catch {}
+const documentoHtml = pedido?.documento_md && pedido.status === 'entregado' ? mdToHtml(pedido.documento_md) : '';
+
+const PASOS = ['guion', 'pagado', 'redactando', 'revision', 'entregado'] as const;
+const LABEL: Record<string, string> = {
+  guion: 'Guion listo',
+  pagado: 'Pagado',
+  redactando: 'Redactando',
+  revision: 'En revisión',
+  entregado: 'Entregado',
+  error: 'Error al redactar',
+};
+const idx = pedido ? PASOS.indexOf(pedido.status as (typeof PASOS)[number]) : -1;
+---
+
+<Base
+  title={pedido && def ? `${def.nombre} · ${pedido.org_nombre} — Startidea` : 'Pedido — Generador de memorias · Startidea'}
+  description="Estado de tu documento en el Generador de memorias de Startidea."
+  ogSlug="page/memorias"
+  noindex={true}
+>
+  <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+    <div class="container-x">
+      <nav class="mb-4 font-mono text-[10px] uppercase tracking-widest text-ink/75">
+        <a href="/memorias" class="hover:text-magenta">← Generador de memorias</a>
+      </nav>
+      <span class="label">— Pedido {pedido ? pedido.id : ''}</span>
+      <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+        {pedido && def ? `${def.nombre}` : 'Enlace no válido'}
+      </h1>
+      {pedido && <p class="mt-2 text-ink/75">{pedido.org_nombre} · {pedido.periodo}</p>}
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mx-auto max-w-3xl space-y-8">
+        {!pedido || !def ? (
+          <div class="border border-red-200 bg-red-50 p-6 text-sm text-ink/70">Este enlace no es válido. Revisa el email que recibiste al crear el pedido.</div>
+        ) : (
+          <>
+            {pago === 'ok' && <div class="border border-green-200 bg-green-50 p-4 text-sm text-green-800">Pago recibido. En cuanto Stripe lo confirme (unos segundos) podrás pedir la redacción. Recarga si no ves el botón.</div>}
+            {pago === 'cancelado' && <div class="border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">Pago cancelado. Tu guion sigue aquí; puedes pagar cuando quieras.</div>}
+
+            <!-- Pasos -->
+            <ol class="grid grid-cols-5 gap-px border-2 border-ink/15 bg-ink/15 text-center font-mono text-[10px] uppercase tracking-widest">
+              {PASOS.map((p, i) => (
+                <li class={`p-3 ${i <= idx ? 'bg-ink text-paper' : 'bg-paper text-ink/50'}`}>{LABEL[p]}</li>
+              ))}
+            </ol>
+            {pedido.status === 'error' && (
+              <div class="border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                La redacción falló ({pedido.error}). Puedes reintentarla con el botón de abajo; si persiste, escribe a hola@startidea.es con el pedido {pedido.id}.
+              </div>
+            )}
+
+            <!-- Guion -->
+            <div class="border border-ink/15 p-6">
+              <h2 class="font-mono text-xs uppercase tracking-widest text-ink/75">Guion</h2>
+              {guion ? (
+                <div class="mt-4 space-y-5">
+                  <p class="font-display text-2xl text-ink">{guion.titulo}</p>
+                  {guion.mensajes_clave.length > 0 && (
+                    <div>
+                      <p class="font-mono text-[10px] uppercase tracking-wider text-ink-mute">Mensajes clave</p>
+                      <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-ink/85">{guion.mensajes_clave.map((m) => <li>{m}</li>)}</ul>
+                    </div>
+                  )}
+                  <div>
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-ink-mute">Índice</p>
+                    <ol class="mt-2 list-decimal space-y-2 pl-5 text-sm">
+                      {guion.secciones.map((s) => (
+                        <li><span class="font-medium text-ink">{s.titulo}</span>{s.contenido && <span class="text-ink/70"> · {s.contenido}</span>}</li>
+                      ))}
+                    </ol>
+                  </div>
+                  {guion.datos_destacados.length > 0 && (
+                    <div>
+                      <p class="font-mono text-[10px] uppercase tracking-wider text-ink-mute">Datos destacados</p>
+                      <ul class="mt-2 flex flex-wrap gap-2">{guion.datos_destacados.map((d) => <li class="border border-magenta/40 px-2 py-0.5 font-mono text-[11px] text-magenta">{d}</li>)}</ul>
+                    </div>
+                  )}
+                  {guion.preguntas.length > 0 && (
+                    <div class="border border-yellow-300 bg-yellow-50 p-4 text-sm text-yellow-900">
+                      <p class="font-bold">Para redactar mejor nos falta saber:</p>
+                      <ul class="mt-2 list-disc space-y-1 pl-5">{guion.preguntas.map((q) => <li>{q}</li>)}</ul>
+                      <p class="mt-2 text-xs">Responde al email del pedido con estos datos, o déjalos como [COMPLETAR] en el documento.</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p class="mt-3 text-sm text-ink/75">El guion no se pudo generar automáticamente. Startidea lo prepara a mano y te avisa por email.</p>
+              )}
+            </div>
+
+            <!-- Pago / redacción -->
+            {pedido.status === 'guion' && (
+              <div class="border border-magenta/40 bg-paper-warm p-6">
+                <p class="font-display text-xl text-ink">¿Te encaja el guion? Redactamos el documento completo.</p>
+                <p class="mt-2 text-sm text-ink/75">{def.precioEur} € sin IVA. Incluye redacción con tus datos, verificación de cifras y revisión por una persona de Startidea. Entrega en 48 horas.</p>
+                <a href={`/api/memorias/checkout?t=${encodeURIComponent(token)}`} class="btn mt-5 inline-block">Pagar y redactar · {def.precioEur} € →</a>
+              </div>
+            )}
+            {(pedido.status === 'pagado' || pedido.status === 'error') && (
+              <div class="border border-magenta/40 bg-paper-warm p-6">
+                <p class="font-display text-xl text-ink">Pago confirmado. Pulsa para redactar.</p>
+                <p class="mt-2 text-sm text-ink/75">La redacción tarda uno o dos minutos. Después pasa a revisión y te avisamos por email cuando esté entregado.</p>
+                <button id="btn-generar" data-token={token} class="btn mt-5">{pedido.status === 'error' ? 'Reintentar la redacción →' : 'Redactar el documento →'}</button>
+                <p id="generar-msg" class="mt-3 hidden text-sm"></p>
+              </div>
+            )}
+            {pedido.status === 'redactando' && (
+              <div class="border border-ink/15 bg-paper-warm p-6 text-sm text-ink/75">Redactando el documento… Recarga esta página en un par de minutos.</div>
+            )}
+            {pedido.status === 'revision' && (
+              <div class="border border-ink/15 bg-paper-warm p-6">
+                <p class="font-display text-xl text-ink">Documento redactado. Una persona de Startidea lo está revisando.</p>
+                <p class="mt-2 text-sm text-ink/75">Te llegará por email en menos de 48 horas.{avisos.length > 0 && ` Hemos detectado ${avisos.length} cifras que no estaban en tu carga y las estamos comprobando.`}</p>
+              </div>
+            )}
+
+            <!-- Documento -->
+            {pedido.status === 'entregado' && documentoHtml && (
+              <div class="border border-ink/15 p-6 md:p-10">
+                <div class="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-4">
+                  <h2 class="font-mono text-xs uppercase tracking-widest text-ink/75">Tu documento</h2>
+                  <div class="flex gap-2">
+                    <button id="btn-copiar" class="btn-ghost !py-2 text-xs">Copiar texto</button>
+                    <button onclick="window.print()" class="btn-ghost !py-2 text-xs">Imprimir / PDF</button>
+                  </div>
+                </div>
+                {pedido.notas_revision && (
+                  <p class="mb-6 border border-yellow-300 bg-yellow-50 p-4 text-sm text-yellow-900"><strong>Notas de la revisión:</strong> {pedido.notas_revision}</p>
+                )}
+                <article id="documento" class="prose-memoria" set:html={documentoHtml}></article>
+                <textarea id="documento-md" class="hidden" readonly>{pedido.documento_md}</textarea>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .prose-memoria { color: rgba(31,31,34,0.9); font-size: 1rem; line-height: 1.7; }
+  .prose-memoria h1 { font-family: var(--font-display, serif); font-size: 2rem; line-height: 1.1; margin: 0 0 1.5rem; }
+  .prose-memoria h2 { font-family: var(--font-display, serif); font-size: 1.4rem; margin: 2.2rem 0 0.8rem; }
+  .prose-memoria h3 { font-size: 1.1rem; margin: 1.6rem 0 0.5rem; font-weight: 700; }
+  .prose-memoria p { margin: 0 0 1rem; }
+  .prose-memoria ul { margin: 0 0 1rem 1.25rem; list-style: disc; }
+  .prose-memoria mark { background: #fef3c7; padding: 0 .2em; }
+  @media print { header, footer, nav, .btn, .btn-ghost, ol.grid { display: none !important; } .prose-memoria { font-size: 11pt; } }
+</style>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('btn-generar');
+    if (btn) {
+      btn.addEventListener('click', async function () {
+        var msg = document.getElementById('generar-msg');
+        btn.disabled = true;
+        btn.textContent = 'Redactando… (uno o dos minutos)';
+        try {
+          var res = await fetch('/api/memorias/generar', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ token: btn.getAttribute('data-token') }),
+          });
+          var j = await res.json();
+          if (j.ok) { window.location.reload(); return; }
+          msg.className = 'mt-3 text-sm text-red-700';
+          msg.textContent = j.detail || j.error || 'No se pudo redactar.';
+        } catch (e) {
+          msg.className = 'mt-3 text-sm text-red-700';
+          msg.textContent = 'No se pudo redactar. Recarga la página e inténtalo de nuevo.';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Reintentar la redacción →';
+        }
+      });
+    }
+    var copiar = document.getElementById('btn-copiar');
+    if (copiar) {
+      copiar.addEventListener('click', function () {
+        var ta = document.getElementById('documento-md');
+        navigator.clipboard.writeText(ta.value).then(function () { copiar.textContent = 'Copiado'; });
+      });
+    }
+  })();
+</script>
