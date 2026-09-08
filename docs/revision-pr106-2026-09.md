@@ -32,7 +32,7 @@ La docencia explícita usa [instructor en CourseInstance](https://schema.org/ins
 - Revisión independiente del diff: corregida la contradicción del pie de la ficha al caducar; sin bloqueantes pendientes.
 - Build completo correcto en 309,50 s. Prueba HTTP sobre ese artefacto: 212/212 comprobaciones en 19 GET locales. El mismo proceso y el mismo hash de todos los archivos del servidor pasan de 19/09 a 20/09 en Madrid: desaparecen fecha anunciada, oferta y formulario de la edición vencida; se conservan programa, canonical, indexabilidad y sitemap. Los otros tres cursos mantienen su oferta. El reloj del sistema no se modifica y el servidor de prueba queda cerrado.
 - Evidencia privada local: `pr106-runtime.json` y `pr106-public-before.json` en el directorio de evidencias SEO del 8 de septiembre; sin datos de usuarios.
-- Publicación de la corrección pendiente en este commit; el relevo registrará el SHA y la respuesta viva cuando termine.
+- [PR108](https://github.com/mariopablobarron/startidea-web/pull/108) integrada y desplegada: `8dd74134a4ab9fc70bd9a04d940a6f9b2e713b4b`. Verificada a las 19:32 de Madrid: imagen `8dd7413`, `running/healthy`, log OK y fuente completa coincidente. Los 14 recursos públicos, títulos/metas, docentes, cuatro fichas únicas en sitemap y redirect a consultoría pasan. Evidencia privada `pr106-public-after.json`. Sin peticiones de medición ni acciones comerciales de prueba.
 
 ## Riesgos y límites
 
@@ -43,3 +43,7 @@ Servir siete recursos por petición introduce trabajo de servidor frente al HTML
 No se cambia la lista de 35 landings, el recorte de FAQ sujeto a 21 días, Lazo, el plano, precios, política de privacidad ni el receptor del HUB. La apertura masiva de landings no se convierte en una aprobación pendiente. No se envían campañas ni se tramitan contactos de prueba.
 
 La recepción de la próxima aceptación real consentida en GA4 continúa pendiente, igual que el límite de idempotencia ante respuesta perdida descrito en [el cierre de privacidad](seo-medicion-privacidad-2026-09.md). Las pruebas de emisión no demuestran recepción en Google. El menor volumen de una muestra consentida no acredita pérdida de tráfico orgánico.
+
+## Siguiente microtanda separada
+
+La banda estática de portada `FormacionPromo.astro`, anterior a PR106, aún lee el estado original y puede mostrar «Próxima edición» tras pasar la fecha. No impide el bloqueo de checkout ni cambia la fecha evaluada por la ficha. Queda autorizada una corrección posterior, limitada a ese componente: etiqueta estable «Ver condiciones», manteniendo cursos y destinos. El cierre de PR108 no atribuye a esta etiqueta antigua la caducidad por petición.
