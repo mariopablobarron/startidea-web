@@ -1,80 +1,34 @@
 # Estado del trabajo — startidea-web
 
-Foto de relevo · 8 de septiembre de 2026, 18:40 (Madrid).
+Foto de relevo · 8 de septiembre de 2026.
 
 ## Encargo actual
 
-Ninguno abierto. Los quick wins de la auditoría SEO+GEO están desplegados y
-verificados en producción. Queda una decisión de Mario (QW1, abajo).
+Revisión acotada de PR106 dentro del loop SEO/GEO autorizado. Referencia editorial: [auditoría corregida en 8f48dec](https://github.com/mariopablobarron/startidea-web/blob/8f48dec/docs/auditoria-seo-geo-2026-09.md). La revisión y su evidencia están en [docs/revision-pr106-2026-09.md](docs/revision-pr106-2026-09.md).
 
 ## Código e integración
 
-- `origin/main` = PR #106 (`4e2acc7`), sobre #103 (`dca237f`), #104, #105.
-- PR #106 ejecuta QW2–QW10 de `docs/auditoria-seo-geo-2026-09.md`. Se reconstruyó
-  desde cero sobre `origin/main` tras descubrir que la base anterior (`30672da`)
-  había quedado atrás; regla aplicada: lo que ya estaba en producción gana, así
-  que `CursoRelacionado`, `FormacionPromo`, `NotasRelacionadas` y el sistema de
-  eventos de `AnalyticsTracker` se usan con la API de #101 sin tocarla.
-- El único fichero solapado con #103–#105 fue `src/content/config.ts`, en
-  colecciones distintas. Rebase limpio, sin conflictos.
-- Worktrees: `qw` (esta tanda, ya integrada) y `plano` (referencia, árbol sucio,
-  no commitear). El checkout de `/Users/STARTIDEA/startidea-web` sigue siendo
-  observador.
+- Base remota comprobada: `d9a030021267d89ac12d1becd1c4a17d09eee0f1` (PR107), incluye los quick wins de PR106 y la privacidad/medición de PR103–104.
+- Worktree propio: `/Users/STARTIDEA/startidea-web-wt/codex-seo-revision-pr106-20260908`, rama `codex/seo-revision-pr106-20260908`. Observador, `plano`, `qw` y HUB sin cambios de esta sesión.
+- Corregidas incorporaciones de PR106: públicos de páginas generales, promesa de formación audiovisual sin respaldo, docentes no acreditados y fechas de cursos congeladas al generar la web. Cursos, índice y llms pasan a evaluación por petición; se conserva sitemap y URL. La edición pasada no permite iniciar un pago.
+- Tipado de dos callbacks en pruebas de Google corregido. Componentes y lógica de consentimiento/medición sin cambios.
+- Código local validado y listo para integrar. Integración y despliegue pendientes en este commit.
 
-## Resultado
+## Validación y producción
 
-- Titles y metas de 15 páginas de servicio; redirect `/innovacion-social` →
-  `/consultoria`, que devolvía 404.
-- Cursos: la colección gana `seoTitle`, `metaDescription` y `faqs`; la ficha
-  emite `FAQPage` y un `Course` con `instructor` y `hasCourseInstance`.
-  Corregido `validFrom`, que usaba la fecha de la edición y dejaba la `Offer`
-  inválida justo mientras se venden las plazas.
-- `llms.txt` y `llms-full.txt` completos (formación, productos, herramientas,
-  casos, diagnósticos, contacto). Corregido un fallo vivo: `llms-full.txt`
-  emitía las 61 notas con barra final, que responde 301.
-- Home: ficha de entidad y bloque de puertas de entrada en HTML estático, porque
-  los rastreadores de IA no ejecutan el JavaScript de Lazo.
-- Ninguna fecha de edición caduca sola en el texto: helper `src/lib/cursos.ts`
-  con `edicionVigente()`, usado por ficha e índice de cursos y por los dos
-  endpoints `llms`. Se evalúa en el build.
-- Sin tocar: medición, consentimiento, precios, checkout, Lazo ni textos de
-  política. El aviso de #103 sobre la muestra de GA4 sigue vigente.
+- 261/261 pruebas y TypeScript sin errores. Checkout probado con simulaciones de proveedores, sin contactos, reservas, pagos ni eventos analíticos reales.
+- Build completo correcto en 309,50 s; 212/212 comprobaciones HTTP en 19 GET, con el mismo proceso y artefacto antes/después de medianoche de Madrid. Cursos, índice, llms, schema, sitemap, gracias y 404 correctos. Servidor de prueba cerrado.
+- Producción anterior verificada por SSH y HTTPS: imagen `4e2acc7`, `running/healthy`, fuente completa `4e2acc744792dc7cc04fc4de959bef952c59e74f`; 14 recursos públicos, sitemap de cuatro cursos y redirect a consultoría correctos. Esto acredita servicio, no posiciones en Google.
 
-## Despliegue y validación
+## Límites
 
-- Cron-pull KVM8: `4e2acc7` sirviendo hacia las 18:36 (Madrid), unos tres
-  minutos después del squash.
-- Local: `npm run build` en verde, `vitest` 237/237. `tsc --noEmit` deja dos
-  errores preexistentes en `tests/google-analytics-consent.test.ts`, llegados
-  con #103/#104 y ajenos a esta tanda.
-- Producción comprobada: cinco titles nuevos, redirect 301 correcto,
-  `llms-full.txt` sin barras finales, `llms.txt` con la sección de formación, y
-  diez destinos internos nuevos a 200.
+- No abrir las 35 landings masivamente ni recortar las FAQ sometidas a 21 días. No hay una aprobación QW1 pendiente que impida esta tanda.
+- No enviar campañas de correo, LinkedIn ni publicaciones. No cambiar HUB, Lazo, plano, precios o políticas.
+- La recepción de la próxima aceptación real consentida en GA4 sigue pendiente. Las pruebas acreditan emisión controlada, no recepción en Google. El límite de idempotencia del receptor ante una respuesta perdida sigue en [el cierre de privacidad](docs/seo-medicion-privacidad-2026-09.md).
+- No atribuir cambios de tráfico a estas correcciones sin periodos completos y comparables; la muestra de GA4 ahora requiere consentimiento.
 
-## Límites y siguiente acción
+## Acción de Mario y siguiente acción
 
-Bloqueos conocidos:
+Acción de Mario: ninguna para esta revisión, ya autorizada.
 
-- **QW6 fase 2** (recortar las 39 FAQ de `/que-hacemos` a 8 paraguas) espera 21
-  días y un paso previo en Search Console. Condiciones escritas en la cabecera
-  de `que-hacemos.astro`.
-- El compromiso comercial de «48 h» que proponía el informe para financiación de
-  empresas no se ha introducido: no está documentado como compromiso real.
-- `src/components/CtaConversion.astro` sigue definido y sin usar desde #39.
-  Montarlo o borrarlo, pero no dejarlo así.
-- Sigue abierto lo que dejó #104: verificar en GA4 la próxima aceptación real
-  consentida, sin fabricar conversiones. La recepción en los informes de Google
-  no está acreditada todavía, y el receptor no garantiza idempotencia ante una
-  respuesta de red perdida. Detalle en `docs/seo-medicion-privacidad-2026-09.md`.
-
-Decisión pendiente de Mario (**QW1**): abrir al índice las 35 landings de
-`/subvenciones/territorio/` y `/categoria/`. Revierte una lista blanca marcada
-«OK Mario 2026-09-02» y en la prueba disparó el rate-limit del HUB, 503 en 35 de
-35. Análisis en `docs/propuesta-landings-subvenciones.md`.
-
-Única siguiente acción, no técnica y con fecha: llenar el taller del sábado 19
-de septiembre. Los textos de Buttondown, LinkedIn y correo directo están
-redactados en `docs/auditoria-seo-geo-2026-09.md`, apartado QW5a.
-
-Detalle: `docs/auditoria-seo-geo-2026-09.md` y
-`docs/propuesta-landings-subvenciones.md`.
+Única siguiente acción: integrar y comprobar el SHA desplegado y la respuesta pública; actualizar este relevo con el cierre.

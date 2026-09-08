@@ -9,13 +9,17 @@
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { breadcrumbList, SITE_URL, itemListSchema } from '@/lib/jsonld';
-import { edicionVigente } from '@/lib/cursos';
+import { edicionVigente, estadoCursoPublico } from '@/lib/cursos';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'no-cache');
+const ahora = new Date();
 
 const allCursos = await getCollection('cursos', (c) => !c.data.draft);
 
-const ORDER = { abierto: 0, proximo: 1, 'a-demanda': 2, agotado: 3 };
+const ORDER = { abierto: 0, proximo: 1, 'a-demanda': 2, agotado: 3, 'edicion-finalizada': 4 };
 const cursos = allCursos.sort(
-  (a, b) => ORDER[a.data.estado] - ORDER[b.data.estado],
+  (a, b) => ORDER[estadoCursoPublico(a.data.estado, a.data.proxima_edicion, ahora)] - ORDER[estadoCursoPublico(b.data.estado, b.data.proxima_edicion, ahora)],
 );
 
 const ESTADO_LABEL: Record<string, string> = {
@@ -23,12 +27,14 @@ const ESTADO_LABEL: Record<string, string> = {
   proximo: 'Próximamente',
   'a-demanda': 'Bajo demanda',
   agotado: 'Sin plazas',
+  'edicion-finalizada': 'Edición anunciada finalizada',
 };
 const ESTADO_COLOR: Record<string, string> = {
   abierto: 'text-green-700 bg-green-50 border-green-200',
   proximo: 'text-magenta bg-magenta/8 border-magenta/20',
   'a-demanda': 'text-ink/70 bg-ink/5 border-ink/15',
   agotado: 'text-ink/75 bg-ink/5 border-ink/10',
+  'edicion-finalizada': 'text-ink/75 bg-ink/5 border-ink/10',
 };
 
 const FORMATO_ICON: Record<string, string> = {
@@ -61,8 +67,8 @@ const jsonLd = [
 ---
 
 <Base
-  title="Cursos y talleres para ONG: comunicación, subvenciones e IA"
-  description="Talleres, masterclasses y cursos de Startidea para responsables de comunicación, financiación y estrategia en el tercer sector. En Granada y online."
+  title="Cursos y talleres de comunicación, subvenciones e IA · Startidea Lab"
+  description="Formación práctica en comunicación, subvenciones e IA para entidades sociales, instituciones, empresas y personas que emprenden. En Granada y online."
   ogSlug="page/laboratorio"
   jsonLd={jsonLd}
 >
@@ -89,13 +95,13 @@ const jsonLd = [
       </h1>
       <p class="mt-6 max-w-measure text-lede text-ink/75">
         Startidea Lab es la formación práctica de Startidea: masterclasses de 4 horas
-        y talleres para equipos de entidades sociales, instituciones y pymes,
-        impartidos por Mario Pablo Sánchez Barrón.
+        y talleres para entidades sociales, instituciones, empresas y personas que emprenden.
+        Cada ficha indica su público, condiciones y docente cuando está confirmado.
       </p>
       <p class="mt-4 max-w-measure text-ink/75">
         Talleres y masterclasses basados en lo que Startidea hace con clientes reales.
         Sin teoría sin probar. Para responsables de comunicación, gestión
-        y financiación de entidades del tercer sector que quieren resultados aplicables
+        y financiación de organizaciones y proyectos que quieren resultados aplicables
         desde el primer día.
       </p>
     </div>
@@ -116,7 +122,7 @@ const jsonLd = [
         <ol class="space-y-6">
           {cursos.map((curso) => {
             const fmt = curso.data.formato;
-            const est = curso.data.estado;
+            const est = estadoCursoPublico(curso.data.estado, curso.data.proxima_edicion, ahora);
             return (
               <li class:list={['border border-ink/15 bg-paper-warm/40 transition-colors hover:border-ink/30', est === 'agotado' && 'opacity-60']}>
                 <a href={`/laboratorio/cursos/${curso.slug}`} class="block p-6 md:p-8">
@@ -145,9 +151,9 @@ const jsonLd = [
                       <!-- Meta row -->
                       <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink/75 font-mono">
                         <span>⏱ {curso.data.duracion}</span>
-                        {edicionVigente(curso.data.proxima_edicion) && (
+                        {edicionVigente(curso.data.proxima_edicion, ahora) && (
                           <span>
-                            📅 {curso.data.proxima_edicion.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            📅 {curso.data.proxima_edicion.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
                           </span>
                         )}
                         <span>👥 {curso.data.audience}</span>

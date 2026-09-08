@@ -2,21 +2,20 @@
 /**
  * /laboratorio/cursos/[slug] — Página de detalle de un curso.
  *
- * Genera estáticamente una página por curso publicado.
+ * Renderiza cada curso publicado en el servidor para actualizar la edición al pasar el día.
  * JSON-LD: Course + CourseInstance, breadcrumbs y FAQPage (si hay faqs).
  */
 
 import Base from '@/layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 import { breadcrumbList, SITE_URL, courseSchema, faqPageSchema, organizationSchema } from '@/lib/jsonld';
-import { edicionVigente } from '@/lib/cursos';
+import { edicionVigente, edicionFinalizada, estadoCursoPublico } from '@/lib/cursos';
 
-export async function getStaticPaths() {
-  const cursos = await getCollection('cursos', (c) => !c.data.draft);
-  return cursos.map((c) => ({ params: { slug: c.slug }, props: { curso: c } }));
-}
-
-const { curso } = Astro.props;
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'no-cache');
+const cursos = await getCollection('cursos', (c) => !c.data.draft);
+const curso = cursos.find((c) => c.slug === Astro.params.slug);
+if (!curso) return new Response('Curso no encontrado', { status: 404 });
 const { Content } = await render(curso);
 
 const ESTADO_LABEL: Record<string, string> = {
@@ -24,12 +23,14 @@ const ESTADO_LABEL: Record<string, string> = {
   proximo: 'Próximamente',
   'a-demanda': 'Bajo demanda',
   agotado: 'Plazas agotadas',
+  'edicion-finalizada': 'Edición anunciada finalizada',
 };
 const ESTADO_COLOR: Record<string, string> = {
   abierto: 'text-green-700 bg-green-50 border-green-200',
   proximo: 'text-magenta bg-magenta/8 border-magenta/20',
   'a-demanda': 'text-ink/70 bg-ink/5 border-ink/15',
   agotado: 'text-ink/75 bg-ink/5 border-ink/10',
+  'edicion-finalizada': 'text-ink/75 bg-ink/5 border-ink/10',
 };
 const FORMATO_LABEL: Record<string, string> = {
   online: 'Online en directo',
@@ -44,6 +45,9 @@ const MODALIDAD_LABEL: Record<string, string> = {
 };
 
 const d = curso.data;
+const ahora = new Date();
+const finalizada = edicionFinalizada(d.proxima_edicion, ahora);
+const estadoPublico = estadoCursoPublico(d.estado, d.proxima_edicion, ahora);
 
 // `duracion` es texto libre («8 horas (9:00-18:30 con pausa)»), pero siempre
 // empieza por el número de horas lectivas: de ahí sale el courseWorkload ISO
@@ -54,23 +58,15 @@ function isoWorkload(duracion: string): string | undefined {
   return m ? `PT${m[1]}H` : undefined;
 }
 
-// Una edición ya pasada no es una «próxima edición»: ni se pinta ni entra
-// como startDate en el JSON-LD. La guarda se evalúa en el build (la página
-// es estática), así que la fecha cae en el primer despliegue posterior.
-const edicionProxima = edicionVigente(d.proxima_edicion) ? d.proxima_edicion : undefined;
+// La fecha y la oferta se evalúan por petición, con corte diario en Madrid.
+const edicionProxima = edicionVigente(d.proxima_edicion, ahora) ? d.proxima_edicion : undefined;
 
 const cursoUrl = `${SITE_URL}/laboratorio/cursos/${curso.slug}`;
 
 // JSON-LD: Course + CourseInstance (schema.org) y, si el curso tiene FAQs,
 // un FAQPage adicional.
 //
-// `organizationSchema()` va primero porque el Course apunta por @id a dos
-// nodos que esta página no emitía: `provider` → #organization e `instructor` →
-// #founder. Sin ellos las dos referencias quedaban colgando y el instructor no
-// se resolvía a ninguna persona. El nodo de la organización trae dentro la
-// Person del fundador (ORG.founder, misma @id que /sobre), así que un solo
-// nodo cierra las dos referencias sin duplicar entidades — el mismo patrón que
-// /que-hacemos, /manifiesto y /copiloto-subvenciones.
+// Resuelve el proveedor y, solo cuando está acreditado, el docente del curso.
 const jsonLd = [
   organizationSchema(),
   breadcrumbList([
@@ -87,6 +83,8 @@ const jsonLd = [
     description: d.description,
     courseMode: d.formato === 'online' ? 'online' : d.formato === 'presencial' ? 'onsite' : 'blended',
     audience: d.audience,
+    instructor: d.docente,
+    editionExpired: finalizada,
     price: d.precio,
     availability: d.estado === 'abierto' ? 'InStock' : d.estado === 'agotado' ? 'SoldOut' : 'PreOrder',
     // validFrom = publicación del curso. La fecha de la edición va en
@@ -129,8 +127,8 @@ const jsonLd = [
       <div class="col-span-12 lg:col-span-7">
         <!-- Meta chips -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class:list={['rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest', ESTADO_COLOR[d.estado]]}>
-            {ESTADO_LABEL[d.estado]}
+          <span class:list={['rounded-full border px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest', ESTADO_COLOR[estadoPublico]]}>
+            {ESTADO_LABEL[estadoPublico]}
           </span>
           <span class="font-mono text-[10px] uppercase tracking-widest text-ink/75">
             {MODALIDAD_LABEL[d.modalidad]}
@@ -171,13 +169,17 @@ const jsonLd = [
               <div>
                 <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Próxima edición</dt>
                 <dd class="text-ink">
-                  {edicionProxima.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  {edicionProxima.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}
                 </dd>
               </div>
             )}
           </dl>
 
-          {d.estado === 'agotado' ? (
+          {finalizada ? (
+            <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`} data-course-intent="aviso" class="btn-ghost block text-center">
+              Consultar próximas ediciones →
+            </a>
+          ) : d.estado === 'agotado' ? (
             <p class="rounded border border-ink/15 bg-ink/5 px-4 py-3 text-center text-sm text-ink/75">
               Sin plazas disponibles
             </p>
@@ -196,11 +198,11 @@ const jsonLd = [
             </form>
           )}
 
-          <p class="text-[11px] text-ink/75 leading-snug">
+          {!finalizada && <p class="text-[11px] text-ink/75 leading-snug">
             La <strong>señal de {d.senal} €</strong> reserva tu plaza y se descuenta del precio total ({d.precio} €) al confirmarse la edición. {d.estado === 'a-demanda' || d.estado === 'proximo'
               ? 'La edición se abre cuando hay 6+ inscritos; si no llega a abrirse, se devuelve íntegra.'
               : 'Plazas limitadas.'} ¿Dudas? <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`} data-course-intent="consulta" class="link-underline text-ink">Escríbenos</a>.
-          </p>
+          </p>}
         </div>
 
         {d.precio_esfl && (
@@ -278,9 +280,11 @@ const jsonLd = [
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8 items-center">
         <div class="col-span-12 lg:col-span-7">
-          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/70">— ¿Listo para apuntarte?</span>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-paper/70">{finalizada ? '— Próximas ediciones' : '— ¿Listo para apuntarte?'}</span>
           <h2 class="mt-3 font-display text-display-md leading-tight text-paper">
-            {d.estado === 'abierto' ? (
+            {finalizada ? (
+              <>Consulta las próximas ediciones.<br /><em class="italic text-magenta">Startidea te informa.</em></>
+            ) : d.estado === 'abierto' ? (
               <>Plazas abiertas.<br /><em class="italic text-magenta">Reserva la tuya.</em></>
             ) : d.estado === 'proximo' ? (
               <>Próximamente.<br /><em class="italic text-magenta">Apúntate a la lista.</em></>
@@ -293,11 +297,11 @@ const jsonLd = [
         </div>
         <div class="col-span-12 mt-8 lg:col-span-4 lg:col-start-9 lg:mt-0 lg:text-right">
           <a
-            href={`/contacto?curso=${encodeURIComponent(curso.slug)}&intent=${d.estado === 'abierto' ? 'consulta' : d.estado === 'a-demanda' ? 'grupo' : 'aviso'}&ref=curso-footer`}
-            data-course-intent={d.estado === 'abierto' ? 'consulta' : d.estado === 'a-demanda' ? 'grupo' : 'aviso'}
+            href={`/contacto?curso=${encodeURIComponent(curso.slug)}&intent=${estadoPublico === 'abierto' ? 'consulta' : estadoPublico === 'a-demanda' ? 'grupo' : 'aviso'}&ref=curso-footer`}
+            data-course-intent={estadoPublico === 'abierto' ? 'consulta' : estadoPublico === 'a-demanda' ? 'grupo' : 'aviso'}
             class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta inline-flex px-8 py-4 text-base"
           >
-            {d.estado === 'abierto' ? 'Consultar antes de reservar →' : d.estado === 'a-demanda' ? 'Consultar una edición para mi equipo →' : 'Pedir aviso de próxima edición →'}
+            {estadoPublico === 'abierto' ? 'Consultar antes de reservar →' : estadoPublico === 'a-demanda' ? 'Consultar una edición para mi equipo →' : 'Pedir aviso de próxima edición →'}
           </a>
         </div>
       </div>

@@ -2,7 +2,9 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { SITE_URL } from '@/lib/jsonld';
 import { casos } from '@/data/casos';
-import { edicionVigente } from '@/lib/cursos';
+import { edicionVigente, estadoCursoPublico } from '@/lib/cursos';
+
+export const prerender = false;
 
 /**
  * /llms-full.txt — versión EXTENDIDA de /llms.txt (spec https://llmstxt.org).
@@ -31,7 +33,8 @@ const MODALIDAD_LABEL: Record<string, string> = {
 
 const ESTADO_CURSO_LABEL: Record<string, string> = {
   abierto: 'inscripción abierta',
-  proximo: 'próxima edición confirmada',
+  proximo: 'próximamente; consultar fecha publicada',
+  'edicion-finalizada': 'edición anunciada finalizada; consultar próximas ediciones',
   agotado: 'plazas agotadas',
   'a-demanda': 'se convoca a demanda',
 };
@@ -41,15 +44,14 @@ const fechaLarga = new Intl.DateTimeFormat('es-ES', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
+  timeZone: 'UTC',
 });
 
-// Solo se anuncia una edición cuando su fecha sigue por delante: el fichero se
-// sirve con cache de una hora y lo leen asistentes de IA, así que una edición
-// pasada se convertiría en una convocatoria falsa. Comparación por día, en UTC,
-// para que el corte no dependa de la zona horaria del servidor.
+// Fechas y disponibilidad se recalculan por petición, sin conservar convocatorias caducadas.
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 
 export async function GET(_context: APIContext) {
+  const ahora = new Date();
   const notas = await getCollection('notas', ({ data }) => !data.draft);
   notas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
@@ -72,11 +74,11 @@ export async function GET(_context: APIContext) {
       const precios = d.precio_esfl != null
         ? `${d.precio} € (${d.precio_esfl} € para entidades sin ánimo de lucro)`
         : `${d.precio} €`;
-      const estado = ESTADO_CURSO_LABEL[d.estado] ?? d.estado;
-      const cuando = edicionVigente(d.proxima_edicion) ? `\nPróxima edición: ${fechaLarga.format(d.proxima_edicion)}` : '';
+      const estado = ESTADO_CURSO_LABEL[estadoCursoPublico(d.estado, d.proxima_edicion, ahora)];
+      const cuando = edicionVigente(d.proxima_edicion, ahora) ? `\nPróxima edición: ${fechaLarga.format(d.proxima_edicion)}` : '';
       const modalidad = MODALIDAD_LABEL[d.modalidad] ?? d.modalidad;
       const formato = FORMATO_LABEL[d.formato] ?? d.formato;
-      return `# ${d.title}\nURL: ${SITE_URL}/laboratorio/cursos/${c.slug}\nFormato: ${modalidad} ${formato}\nDuración: ${d.duracion}\nPrecio: ${precios}\nEstado: ${estado}${cuando}\nPara quién: ${d.audience}\nImparte: Mario Pablo Sánchez Barrón, fundador de Startidea\n\n${d.description}\n\n${c.body.trim()}`;
+      return `# ${d.title}\nURL: ${SITE_URL}/laboratorio/cursos/${c.slug}\nFormato: ${modalidad} ${formato}\nDuración: ${d.duracion}\nPrecio: ${precios}\nEstado: ${estado}${cuando}\nPara quién: ${d.audience}${d.docente ? `\nImparte: ${d.docente.name}` : ''}\n\n${d.description}\n\n${c.body.trim()}`;
     })
     .join('\n\n---\n\n');
 
@@ -227,7 +229,7 @@ ${notasFull}
   return new Response(body, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
     },
   });
 }
