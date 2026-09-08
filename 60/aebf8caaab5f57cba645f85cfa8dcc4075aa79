@@ -1,0 +1,31 @@
+ESTADO-AGENTE.md
+  s_6c8bb6980942b5::t_d8d308ae8a834d 6,10,12,56-63
+src/lib/plano-charla.ts
+  s_f4711e85a048a0::t_d5dad016d3fbcd 19,181-187,190-191
+src/lib/seo-mini.ts
+  s_f4711e85a048a0::t_9d2c23e7ca7499 204-211,213-214,231
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "60aebf8caaab5f57cba645f85cfa8dcc4075aa79",
+  "prompts": {},
+  "sessions": {
+    "s_6c8bb6980942b5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d927fd05-20bc-478c-ba0a-dc5611fc78f4",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
