@@ -30,6 +30,7 @@ import {
   markLastRun,
   type AutoCopilotoProfile,
 } from '@/lib/auto-copiloto-db';
+import { COPILOTO_PLANS, encajeReal, planEfectivo, umbralEncaje, type EncajeResult } from '@/lib/copiloto-pro';
 
 // Normaliza un string eliminando acentos y pasando a minúsculas
 // Un perfil con territorios/finalidades corruptos no debe abortar el ciclo
@@ -86,6 +87,7 @@ function convScoreForProfile(
     amount_eur: number | null;
   },
   profile: AutoCopilotoProfile,
+  opts: { keywordsSuaves?: boolean } = {},
 ): number {
   let score = 0;
 
@@ -113,8 +115,9 @@ function convScoreForProfile(
     if (!hasFinalidad) return 0;
   }
 
-  // Keywords (filtro duro si el perfil las tiene definidas)
-  if (profile.keywords) {
+  // Keywords (filtro duro si el perfil las tiene definidas). En el Copiloto
+  // Pro son pista, no filtro: el encaje real con el modelo decide después.
+  if (profile.keywords && !opts.keywordsSuaves) {
     const kws = profile.keywords.split(',').map((k) => normalize(k.trim())).filter(Boolean);
     if (kws.length > 0) {
       const haystack = normalize(conv.title + ' ' + conv.organization);
@@ -285,9 +288,25 @@ async function sendAutoCopilotoEmail(opts: {
   eligibilityScore: number;
   datosFaltantes: string;
   manage_token: string;
+  /** Encaje real (Copiloto Pro); null en el plan gratuito. */
+  encaje?: EncajeResult | null;
 }): Promise<boolean> {
   const primerNombre = opts.representante.split(' ')[0];
   const manageUrl = `https://startidea.es/subvenciones/mi-copiloto?t=${opts.manage_token}`;
+
+  // Bloque de encaje real (solo Pro): por qué esta convocatoria y qué mirar.
+  const encajeHtml = opts.encaje
+    ? `
+  <div style="background:#fff;border:1px solid #e5e7eb;border-left:3px solid #e6356b;padding:16px 20px;margin:20px 0">
+    <p style="font-size:13px;font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;color:#888;margin:0 0 6px">
+      🎯 Encaje con ${esc(opts.org_nombre)} · <span style="color:#e6356b;font-weight:700">${opts.encaje.score}/100</span>
+    </p>
+    <p style="font-size:14px;color:#333;margin:0 0 8px">${esc(opts.encaje.motivo)}</p>
+    ${opts.encaje.requisitosClave.length
+      ? `<p style="font-size:12px;color:#888;margin:0 0 4px;font-weight:bold">Comprueba antes de presentarte:</p><ul style="margin:0;padding-left:18px;font-size:13px;color:#555">${opts.encaje.requisitosClave.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>`
+      : ''}
+  </div>`
+    : '';
 
   // Detectar sede para el enlace directo
   const sede = detectSede({
@@ -345,6 +364,8 @@ async function sendAutoCopilotoEmail(opts: {
     <code style="font-family:monospace;font-size:13px;background:#f3f4f6;padding:2px 6px">${esc(opts.expediente_id)}</code>).
     Revísala, completa los campos marcados con <strong>[COMPLETAR]</strong> y preséntala.
   </p>
+
+  ${encajeHtml}
 
   ${eligibilityBadge}
 
@@ -533,14 +554,36 @@ export const POST: APIRoute = async ({ request }) => {
 
   // 3. Procesar cada perfil
   for (const profile of profiles) {
-    const matching = recentConvs
-      .map((c) => ({ conv: c, score: convScoreForProfile(c, profile) }))
+    // Plan del perfil: el gratuito sigue igual que siempre; el Pro relaja las
+    // palabras clave, evalúa el encaje real con el modelo y admite más
+    // convocatorias por ciclo (ver lib/copiloto-pro.ts).
+    const planDef = COPILOTO_PLANS[planEfectivo(profile)];
+    const candidatos = recentConvs
+      .map((c) => ({ conv: c, score: convScoreForProfile(c, profile, { keywordsSuaves: planDef.keywordsSuaves }) }))
       .filter(({ conv, score }) => score > 0 && !isAlreadyProcessed(profile.id, conv.slug))
-      .sort((a, b) => b.score - a.score)   // mejores primero
-      .slice(0, MAX_PER_PROFILE)
-      .map(({ conv }) => conv);
+      .sort((a, b) => b.score - a.score); // mejores primero
+
+    const encajes = new Map<string, EncajeResult>();
+    let matching: typeof recentConvs;
+    if (planDef.encajeReal) {
+      // Encaje real: como máximo evaluamos el doble del cupo (coste acotado) y
+      // nos quedamos con las que superan el umbral, ordenadas por encaje.
+      const evaluados: Array<{ conv: (typeof recentConvs)[number]; encaje: EncajeResult }> = [];
+      for (const { conv, score } of candidatos.slice(0, planDef.maxPorCiclo * 2)) {
+        const encaje = await encajeReal(profile, conv, score);
+        encajes.set(conv.slug, encaje);
+        if (encaje.score >= umbralEncaje()) evaluados.push({ conv, encaje });
+      }
+      matching = evaluados
+        .sort((a, b) => b.encaje.score - a.encaje.score)
+        .slice(0, planDef.maxPorCiclo)
+        .map(({ conv }) => conv);
+    } else {
+      matching = candidatos.slice(0, Math.min(MAX_PER_PROFILE, planDef.maxPorCiclo)).map(({ conv }) => conv);
+    }
 
     for (const conv of matching) {
+      const encaje = encajes.get(conv.slug) ?? null;
       try {
         // 3a. Crear expediente
         const expId = `AC-${Date.now().toString(36).toUpperCase()}-${randomUUID().slice(0, 4).toUpperCase()}`;
@@ -663,6 +706,7 @@ export const POST: APIRoute = async ({ request }) => {
             eligibilityScore: eleg?.score ?? 50,
             datosFaltantes: gen.datosFaltantes,
             manage_token: profile.manage_token,
+            encaje,
           });
         }
 
@@ -676,6 +720,9 @@ export const POST: APIRoute = async ({ request }) => {
           expediente_id: expId,
           sent: emailSent,
           deadline: conv.deadline ?? null,
+          encaje_score: encaje?.score ?? null,
+          encaje_motivo: encaje?.motivo ?? null,
+          encaje_llm: encaje?.llm ?? false,
         });
 
         results.push({
