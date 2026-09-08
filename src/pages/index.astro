@@ -1,86 +1,110 @@
 ---
-// Home recortada — feedback cliente 7-may: "la página es muy larga, yo
-// recortaría cosas". Pasamos de 20 secciones a 11.
-//
-// Flujo narrativo: gancho → quiénes son → qué hacen → cómo → prueba social
-// → cómo empezar.
+// Home «que pregunta» (decisión Mario 2026-09-08: «IMPLEMENTA»): la portada es
+// la conversación con Lazo + el Plano Startidea, en lugar del hero inmersivo.
+// Orden: pregunta → 4 servicios (una sola taxonomía) → para quién → prueba
+// (logos + casos) → formación → marcas propias (franja compacta) → cómo
+// empezar → CTA final. Manifiesto, feed de Granada Social y promo de
+// merchandising siguen en sus páginas. La versión anterior queda en git
+// (HeroJourney + Ecosistema + …) y /lab/home-journey conserva el hero 3D.
 import Base from '@/layouts/Base.astro';
-import HeroJourney from '@/components/HeroJourney.astro';
-import TesisImpacto from '@/components/TesisImpacto.astro';
-import CtaConversion from '@/components/CtaConversion.astro';
-import FormacionPromo from '@/components/FormacionPromo.astro';
+import PlanoStartidea from '@/components/PlanoStartidea.astro';
 import LogosBanner from '@/components/LogosBanner.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
-import Ecosistema from '@/components/Ecosistema.astro';
-import MerchPromo from '@/components/MerchPromo.astro';
-import ComoTrabajamos from '@/components/ComoTrabajamos.astro';
-import HanConfiado from '@/components/HanConfiado.astro';
 import Casos from '@/components/Casos.astro';
+import FormacionPromo from '@/components/FormacionPromo.astro';
 import PresupuestoHome from '@/components/PresupuestoHome.astro';
-import Testimonios from '@/components/Testimonios.astro';
-import Manifesto from '@/components/Manifesto.astro';
-import GranadaSocialFeed from '@/components/GranadaSocialFeed.astro';
 import CtaFinal from '@/components/CtaFinal.astro';
 import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
+
+const servicios = [
+  { nombre: 'Consultoría', linea: 'L1', tag: 'Innovación social · Proyectos', body: 'Diagnóstico, estrategia, financiación pública y medición de impacto o RSC. Para quien dirige una empresa, una institución, una entidad o un proyecto que empieza.', href: '/consultoria', color: '#E6356B' },
+  { nombre: 'Comunicación', linea: 'L2', tag: 'Estratégica · Marketing social', body: 'Marca, contenidos, redes y campañas. Comunicación corporativa, institucional o con causa, según quién seas.', href: '/comunicacion', color: '#2F6FD6' },
+  { nombre: 'Audiovisual', linea: 'L3', tag: 'Vídeo · Pódcast · Estudio', body: 'Vídeo corporativo o institucional, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.', href: '/audiovisual', color: '#D98A1C' },
+  { nombre: 'Tecnología', linea: 'L4', tag: 'Plataformas · Producto · IA', body: 'Webs que traen clientes o cuentan bien, plataformas a medida, agentes de IA y protección digital.', href: '/tecnologia', color: '#2E9A6C' },
+];
+
+const marcas = [
+  { nombre: 'Hub Startidea', tag: 'Coworking · Estudio', href: 'https://hubstartidea.es', ext: true },
+  { nombre: 'Granada Social', tag: 'Medio · Comunidad', href: 'https://granadasocial.org', ext: true },
+  { nombre: 'Merchandising', tag: 'Catálogo B2B', href: 'https://merchandising.startidea.es', ext: true },
+  { nombre: 'Subvenciones', tag: 'Buscador gratuito', href: '/subvenciones' },
+  { nombre: 'Startidea Lab', tag: 'Cursos · Herramientas', href: '/laboratorio' },
+  { nombre: '3.000M de Latidos', tag: 'IA · Salud mental', href: 'https://tresmilmillonesdelatidos.es', ext: true },
+  { nombre: 'Aceleradora', tag: 'Founders × inversores', href: 'https://app.aceleradora.hubstartidea.es', ext: true },
+  { nombre: 'Raíz y Acción', tag: 'Mentoría', href: 'https://raizyaccion.hubstartidea.es', ext: true },
+];
 ---
 
 <Base
   title="Agencia de comunicación e innovación social · Startidea"
-  description="Comunicación, fundraising y herramientas digitales para tercer sector, instituciones y empresas con propósito. En Granada desde 2011."
+  description="Estrategia, comunicación, audiovisual y tecnología para empresas, instituciones, entidades sociales y personas que emprenden. Habla con Lazo, la IA de Startidea, como en una primera reunión. Granada, desde 2011."
+  ogSlug="home"
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
-  <!-- 1. Gancho — viaje inmersivo 3D (Plan A) -->
-  <HeroJourney />
+  <!-- 1. Pregunta + plano -->
+  <PlanoStartidea pagina="/" />
 
-  <!-- 1.5 Tesis + cifras animadas — sostiene la energía al salir del hero.
-       Incluye las 3 cifras de credibilidad (antes en MetricasHero, ahora
-       aquí para no duplicar). -->
-  <TesisImpacto />
+  <!-- 2. Servicios: una sola taxonomía, las 4 puertas de entrada -->
+  <section id="servicios" class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Servicios</span>
+          <p class="mt-4 text-sm text-ink/70">Cuatro líneas. Se contratan juntas o por separado. Para empresas, instituciones, entidades sociales y personas que emprenden.</p>
+        </div>
+        <ul class="col-span-12 mt-8 grid gap-px border border-ink/15 bg-ink/15 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
+          {servicios.map((s) => (
+            <li class="bg-paper">
+              <a href={s.href} class="group block h-full p-6 transition-colors hover:bg-paper-warm md:p-8">
+                <div class="flex items-center gap-3">
+                  <span class="inline-block h-1.5 w-8" style={`background:${s.color}`} aria-hidden="true"></span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{s.linea} · {s.tag}</span>
+                </div>
+                <h2 class="mt-4 font-display text-2xl text-ink group-hover:text-magenta md:text-3xl">{s.nombre}</h2>
+                <p class="mt-3 text-sm leading-relaxed text-ink/75">{s.body}</p>
+                <span class="mt-5 inline-block font-mono text-[11px] uppercase tracking-widest text-magenta">Ver servicio →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  <!-- 2. Social proof inmediato — banda de logos reconocibles -->
-  <LogosBanner />
-
-  <!-- 3. Qué hace Startidea — servicios + ecosistema (antes que el "a quién",
-       petición Mario 2026-06-14: enseñar primero qué ofrece, luego para quién). -->
-  <Ecosistema />
-
-  <!-- 3.5 Promo TodoMerchandising — único producto B2B online del ecosistema.
-       Insertado justo después de Ecosistema porque el visitante acaba de
-       leer "una de las 4 propiedades es Merchandising" y aquí lo aterrizamos
-       con CTA directo al catálogo. -->
-  <MerchPromo />
-
-  <!-- 4. A quién — audiencias -->
+  <!-- 3. Para quién -->
   <ParaQuien />
 
-  <ComoTrabajamos />
+  <!-- 4. Prueba: logos + casos -->
+  <LogosBanner />
+  <Casos />
 
-  <!-- Formación — entrada de bajo compromiso (petición Mario 2026-07-04:
-       destacar la formación en el portal). Subida por encima de la prueba
-       social el 2026-09-07: estaba al 73 % del scroll (18.226 px de 24.833)
-       y era invisible de facto. Banda compacta autoalimentada de `cursos`. -->
+  <!-- 5. Formación: el Lab, terminal común -->
   <FormacionPromo />
 
-  <!-- Prueba social consolidada (un solo beat): quién ha confiado + casos +
-       testimonios. Vender con prueba (decisión Mario 2026-06-15): se enseña el
-       trabajo ANTES de pedir nada. -->
-  <HanConfiado />
-  <Casos />
-  <Testimonios />
+  <!-- 6. Marcas propias: franja compacta, sin competir con los servicios -->
+  <section id="marcas" class="border-y border-ink/15 bg-paper-warm py-12 md:py-14">
+    <div class="container-x">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-baseline lg:gap-12">
+        <div class="lg:w-1/4">
+          <span class="label">— Marcas e iniciativas propias</span>
+          <p class="mt-3 text-sm text-ink/70">Plataformas con las que Startidea marca agenda en el sector.</p>
+        </div>
+        <ul class="grid flex-1 grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+          {marcas.map((m) => (
+            <li>
+              <a href={m.href} class="group block py-1" {...(m.ext ? { target: '_blank', rel: 'noopener' } : {})}>
+                <span class="font-display text-base text-ink group-hover:text-magenta">{m.nombre}{m.ext && <span aria-hidden="true" class="ml-1 text-magenta">↗</span>}</span>
+                <span class="block font-mono text-[10px] uppercase tracking-widest text-ink-mute">{m.tag}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  <!-- Conversión — formulario corto, ya entendido qué hace / para quién / cómo,
-       Y vista la prueba. Extiende la regla de Mario (2026-06-14: "primero se
-       entiende la oferta, luego se pide la reunión") con "y se ve la prueba". -->
-  <CtaConversion />
-
-  <!-- Cómo empezar -->
+  <!-- 7. Cómo empezar -->
   <PresupuestoHome />
-
-  <!-- Voz / Manifiesto (con video integrado) -->
-  <Manifesto />
-
-  <!-- 7. Ventana al medio editorial — Granada Social en directo -->
-  <GranadaSocialFeed />
 
   <!-- 8. CTA cierre -->
   <CtaFinal />

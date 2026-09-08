@@ -41,6 +41,8 @@ export default defineConfig({
   // normaliza ambas variantes (con y sin /) desde una sola entrada.
   // Duplicar con "/" causaba colisiones de ruta en el router.
   redirects: {
+    // El prototipo de la home con Lazo pasó a ser la portada (2026-09-08)
+    '/lab/home-plano':                                    '/',
     // Atajos del programa Startidea Impulsa (fáciles de dictar / cartelería)
     '/bases':                                             '/impulsa/bases',
     '/programa':                                          '/impulsa',

@@ -3,7 +3,7 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, Lazo desplegado y verificado en producción; ajustes post-prueba en curso.
+**Última actualización:** 2026-09-08, Lazo ES la portada (`/`), decisión Mario «IMPLEMENTA».
 
 ---
 
@@ -58,8 +58,13 @@ Verificado en producción (2026-09-08 06:25 UTC): `/lab/home-plano`, `/asistente
   - **Ajustes tras la prueba real (rama `fix/lazo-estaciones-sitemap`):** si el modelo devuelve
     intención sin estaciones, se iluminan las de la intención; el informe SEO reconoce
     `sitemap-index.xml` y la directiva `Sitemap:` de robots.txt (daba falso negativo en startidea.es).
-  - **Siguiente acción:** dejar 3-4 semanas de datos en `/admin/plano` y GA4 y decidir si
-    `/lab/home-plano` sustituye a la home. Pendiente de Mario: `.env.example` (ver
+  - **Home sustituida (2026-09-08, «IMPLEMENTA»):** `src/pages/index.astro` = Lazo + plano +
+    8 bloques; `/lab/home-plano` → 301 a `/`; el hero 3D anterior sigue en git y en
+    `/lab/home-journey`. Eventos GA4 nuevos: `lazo_mensaje`, `lazo_atajo`, `lazo_regalo`,
+    `lazo_resumen` y `generate_lead` (method `lazo_resumen`).
+  - **Siguiente acción:** vigilar 2-3 semanas `/admin/plano`, GA4 (eventos `lazo_*`) y GSC
+    (CTR/posición de `/`: el H1 cambió a «¿A dónde quiere llegar tu organización?»); si
+    cae la visibilidad de «agencia de comunicación» reforzar el copy del hero. Pendiente de Mario: `.env.example` (ver
     `docs/lazo-variables-entorno.md`) y borrar el contacto de prueba del CRM.
 - **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
   nada de documentación interna de estrategia (el detalle está en la memoria local de Claude, no en el repo).

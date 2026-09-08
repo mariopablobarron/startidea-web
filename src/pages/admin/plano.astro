@@ -1,5 +1,5 @@
 ---
-// Admin · Qué pregunta la gente en el Plano Startidea (hero de /lab/home-plano).
+// Admin · Qué pregunta la gente en el Plano Startidea (hero de la portada).
 // Lee plano.db (SQLite). Sin datos personales: texto anonimizado + hash diario.
 import Base from '@/layouts/Base.astro';
 import { isAdminLoggedIn } from '@/lib/admin-session';
@@ -50,7 +50,7 @@ function nombresEstaciones(csv: string): string {
       <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/60 hover:text-magenta">← Panel</a>
       <h1 class="mt-3 font-display text-3xl text-ink">Qué pregunta la gente en el plano</h1>
       <p class="mt-2 text-sm text-ink/70">
-        Últimos 30 días en <a href="/lab/home-plano" class="link-underline text-ink">/lab/home-plano</a>. Sin nombres ni correos: el texto se anonimiza y la IP se guarda como hash diario. Los resúmenes por correo solo cuentan aquí; el email vive en el CRM del HUB.
+        Últimos 30 días en la <a href="/" class="link-underline text-ink">portada</a>. Sin nombres ni correos: el texto se anonimiza y la IP se guarda como hash diario. Los resúmenes por correo solo cuentan aquí; el email vive en el CRM del HUB.
       </p>
 
       <dl class="mt-8 grid grid-cols-2 gap-px border border-ink/15 bg-ink/15 sm:grid-cols-4 lg:grid-cols-8">
@@ -112,7 +112,7 @@ function nombresEstaciones(csv: string): string {
           </thead>
           <tbody>
             {eventos.length === 0 && (
-              <tr><td colspan="7" class="py-6 text-ink/60">Todavía no hay eventos. Se registran al usar el plano en /lab/home-plano.</td></tr>
+              <tr><td colspan="7" class="py-6 text-ink/60">Todavía no hay eventos. Se registran al usar a Lazo en la portada.</td></tr>
             )}
             {eventos.map((e) => (
               <tr class="border-b border-ink/10 align-top">

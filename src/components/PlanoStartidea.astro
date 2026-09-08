@@ -26,7 +26,7 @@ interface Props {
   /** Etiqueta para el registro (qué página aloja el hero). */
   pagina?: string;
 }
-const { pagina = '/lab/home-plano' } = Astro.props;
+const { pagina = '/' } = Astro.props;
 
 const reservaHref = bookingHref();
 const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
@@ -51,7 +51,7 @@ const datosCliente = {
     <div class="grid grid-cols-12 gap-x-8 gap-y-10">
       <!-- Columna conversación -->
       <div class="col-span-12 lg:col-span-5">
-        <span class="label">— Para empresas, instituciones, entidades sociales y quien emprende</span>
+        <span class="label">— Agencia de comunicación e innovación social · Granada · para empresas, instituciones, entidades sociales y quien emprende</span>
         <h1 id="plano-h1" class="mt-4 font-display text-4xl leading-[0.98] text-ink md:text-5xl xl:text-6xl">
           ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
         </h1>
@@ -418,6 +418,7 @@ const datosCliente = {
       S.messages.push({ role: 'assistant', content: i.say + pregunta, estaciones: i.estaciones, intencion: id });
       guardar(); pintarHilo(); marcarChip(id);
       registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
+      if (window.stTrack) window.stTrack('lazo_atajo', { intencion: id, page_path: location.pathname });
       input.focus();
     });
 
@@ -444,6 +445,7 @@ const datosCliente = {
       // escribir para no pisar lo que haya guardado mientras tanto.
       cargarEstado();
       S.messages.push({ role: 'user', content: texto }); guardar();
+      if (window.stTrack) window.stTrack('lazo_mensaje', { turno: turnosLibres(), audiencia: S.aud || '', page_path: location.pathname });
       var esperados = S.messages.length;
       burbuja('usuario', '<p>' + esc(texto) + '</p>');
       var pensando = burbuja('asistente', '<p><span class="plano-pensando"></span></p>');
@@ -563,6 +565,7 @@ const datosCliente = {
           estado('reposo', 'Escuchando');
           if (!d || !d.ok) { regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">' + esc((d && d.message) || 'No se ha podido preparar.') + '</div>'; return; }
           mostrarRegalo(d);
+          if (window.stTrack) window.stTrack('lazo_regalo', { tipo: tipo, page_path: location.pathname });
           S.messages.push({ role: 'assistant', content: 'Te he preparado ' + r.nombre.toLowerCase() + '. Está debajo del hilo. ¿Seguimos con lo que estábamos?' }); guardar();
           burbuja('asistente', '<p>Te he preparado <strong>' + esc(r.nombre.toLowerCase()) + '</strong>. Lo tienes justo debajo. ¿Seguimos con lo que estábamos?</p>');
           // La caja del regalo ya está resuelta: si tocaba, ahora se ofrece el
@@ -761,6 +764,7 @@ const datosCliente = {
             return;
           }
           S.resumenOfrecido = true; S.resumenEnviado = true; guardar();
+          if (window.stTrack) { window.stTrack('lazo_resumen', { email_enviado: !!d.emailEnviado, page_path: location.pathname }); window.stTrack('generate_lead', { method: 'lazo_resumen', page_path: location.pathname }); }
           mostrarResumen(d, email);
         })
         .catch(function () {
