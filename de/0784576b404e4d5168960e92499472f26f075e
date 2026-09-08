@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_7a125fdeb00f49 3,11,13-14,22,28
+docs/piloto-precios-iva-2026-09.md
+  s_42946cec6cd017::t_15ed428c0b6dcc 15-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "de0784576b404e4d5168960e92499472f26f075e",
+  "prompts": {},
+  "sessions": {
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
