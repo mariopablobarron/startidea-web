@@ -1,0 +1,76 @@
+tests/course-expiry.test.ts
+  s_1c51cfd99bed79::t_d54267a2e95003 1-82
+src/pages/llms.txt.ts
+  s_1c51cfd99bed79::t_7d3d26e97b90b0 5-7,39-40,50,53,55,74-75,78,197,241
+src/content/cursos/comunicacion-estrategica-tercer-sector.md
+  s_1c51cfd99bed79::t_546b030f9ebb86 28
+  s_1c51cfd99bed79::t_7d3d26e97b90b0 30
+  s_1c51cfd99bed79::t_1bb2a450d69d9f 10-12
+src/pages/comunicacion.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 198,253
+tests/course-schema.test.ts
+  s_1c51cfd99bed79::t_7f70c7bd39b9fb 11
+  s_1c51cfd99bed79::t_1bb2a450d69d9f 1-10,12-32,34-43,45-47,76-77
+  s_1c51cfd99bed79::t_0e0c166828f425 33,44,48-75
+tests/google-analytics-consent.test.ts
+  s_1c51cfd99bed79::t_d5dc4ef9c06ce4 77,143
+tests/seo-sitemaps.test.ts
+  s_1c51cfd99bed79::t_546b030f9ebb86 22-23,29-38
+src/pages/api/curso-checkout.ts
+  s_1c51cfd99bed79::t_7d3d26e97b90b0 17,47,51
+src/pages/llms-full.txt.ts
+  s_1c51cfd99bed79::t_7d3d26e97b90b0 5-7,36-37,47,50,54,77-78,81,232
+src/pages/redes-sociales-ia/[vertical].astro
+  s_1c51cfd99bed79::t_bf860c507aef15 208
+astro.config.mjs
+  s_1c51cfd99bed79::t_546b030f9ebb86 25-35,111
+src/pages/tecnologia.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 140
+src/pages/consultoria.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 156
+src/pages/laboratorio/cursos/[slug].astro
+  s_1c51cfd99bed79::t_dfa6d185bf3080 5,12,14-18,26,33,48-50,61-62,69,86-87,130-131,172,178-182,201,205,283,285-287,300-301,304
+docs/revision-pr106-2026-09.md
+  s_1c51cfd99bed79::t_cd1664486db476 1-43
+  s_1c51cfd99bed79::t_086eb5b2cfbfa7 44-45
+src/lib/jsonld.ts
+  s_1c51cfd99bed79::t_0e0c166828f425 693-694,792-808,810-828
+  s_1c51cfd99bed79::t_1bb2a450d69d9f 691-692,704,769-772,774-776
+  s_1c51cfd99bed79::t_7f70c7bd39b9fb 809
+tests/course-checkout-expiry.test.ts
+  s_1c51cfd99bed79::t_567a01a6535f26 1-85,87-115
+  s_1c51cfd99bed79::t_77534c06527900 86
+src/pages/audiovisual.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 187
+src/content/config.ts
+  s_1c51cfd99bed79::t_1bb2a450d69d9f 134-138
+src/pages/que-hacemos.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 296-297
+src/pages/index.astro
+  s_1c51cfd99bed79::t_3f063e2548a793 89-90,92,201-202
+  s_1c51cfd99bed79::t_bf860c507aef15 101-104,107-110,113,125-128,146,177,210
+src/pages/redes-sociales-granada.astro
+  s_1c51cfd99bed79::t_bf860c507aef15 137-138
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_db5b8c5e688fc4 3,7,11-15,17,19-21,23,25-28,30,32,34
+src/lib/cursos.ts
+  s_1c51cfd99bed79::t_4082501047246c 1-4,6-24
+src/pages/laboratorio/cursos/index.astro
+  s_1c51cfd99bed79::t_158512818c257d 12-16,20,22,30,37,70-71,98-99,104,125,154,156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "3e227b1a1ca6ddd1d267174412b05a77f17c430a",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
