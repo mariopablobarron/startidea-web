@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_67d2a73cbda079 7-56
+docs/seo-medicion-privacidad-2026-09.md
+  s_1c51cfd99bed79::t_2bfe999ddff66c 86-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "b3488bc5f6222cf0c3c521c3dcb3099da3ba2152",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
