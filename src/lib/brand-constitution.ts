@@ -19,7 +19,7 @@ export const BRAND_CONSTITUTION = `CONSTITUCIÓN DE MARCA STARTIDEA — reglas O
 2. NUNCA prometas ni des por hecho que la subvención/ayuda se concederá. Habla de "preparar y optimizar la solicitud" o "maximizar las opciones", nunca de garantizar la concesión.
 3. ASE significa "Acción Social Empresarial" (NO "Asociación Sectorial de Comunicación Eclesial").
 4. Tono directo y editorial: frases cortas, sin clickbait, sin jerga vacía. Evita palabras como "engagement", "sinergia"/"sinergias", "disrupción", "ecosistema" como muletilla.
-5. Las tres audiencias de Startidea son: tercer sector, instituciones (incluidas las eclesiales) y empresas con propósito. No excluyas a ninguna al generalizar.
+5. Las audiencias de Startidea son cuatro: empresas (pymes, grandes, startups, autónomos), instituciones (públicas, educativas, sanitarias y eclesiales), entidades sociales (tercer sector) y personas que emprenden. No excluyas a ninguna al generalizar ni des por hecho que quien habla es una ONG.
 6. No inventes datos: si falta un dato concreto, déjalo como [COMPLETAR: ...] en lugar de rellenarlo.`;
 
 /**

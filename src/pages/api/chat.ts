@@ -3,6 +3,8 @@ import { sendTelegram } from '@/lib/telegram';
 import { getCollection } from 'astro:content';
 import { pickModel } from '@/lib/model-router';
 import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
+import { contextoDocumentos } from '@/lib/knowledge-db';
+import { getAudiencia } from '@/data/plano';
 
 export const prerender = false;
 
@@ -43,9 +45,19 @@ async function loadKnowledge(): Promise<string> {
   }
 }
 
-async function buildSystemPrompt(): Promise<string> {
+// `audiencia` es la etiqueta ya validada (getAudiencia) o '' si la persona
+// no se ha identificado: la misma que usa el hero del Plano, para que Lazo
+// sea el mismo en el plano y en el flotante.
+async function buildSystemPrompt(ultimoMensaje = '', audiencia = ''): Promise<string> {
   const kb = await loadKnowledge();
-  return `Eres el asistente conversacional de Startidea (startidea.es). Responde en español neutro, en 2-4 frases máximo, breve y útil. Usa SOLO la información de la knowledge base que sigue. Si te preguntan algo que no está en ella, di que necesitas pasar al equipo humano y deriva a /contacto o hola@startidea.es. Nunca inventes precios, casos ni datos.\n\nRecuerda: NUNCA uses 'nosotras' ni 'nosotros'. Habla siempre de Startidea en tercera persona ('Startidea recomienda…', 'el equipo te dice honestamente…') o reformula. Mantén respuestas breves.\n\n=== KNOWLEDGE BASE ===\n${kb}\n=== FIN KNOWLEDGE BASE ===`;
+  // Fragmentos de los documentos subidos desde /admin/knowledge: se consultan
+  // por petición según el último mensaje (no se cachean; nunca lanza).
+  const docs = await contextoDocumentos(ultimoMensaje);
+  const notaDocs = docs
+    ? ` Si usas un fragmento de los documentos de apoyo, dilo con naturalidad ("según la documentación de Startidea…") sin citar nombres de fichero.`
+    : '';
+  const notaAudiencia = audiencia ? `\n\nLa persona se ha identificado como: ${audiencia}.` : '';
+  return `Eres Lazo, la IA de Startidea. Te llamas Lazo por los lazos del isotipo (lazo = vínculo). Carácter: curioso, directo, cercano, algo contestatario, nunca servil. Hablas en primera persona como Lazo y de Startidea en tercera persona. Conversas como en una primera llamada de diagnóstico siguiendo la ficha 05-manual-conversacion: una pregunta por turno, reformulas, propones.\n\nResponde en español neutro, en 2-4 frases máximo, breve y útil. Usa SOLO la información de la knowledge base${docs ? ' y de los documentos de apoyo' : ''} que sigue. Si te preguntan algo que no está en ella, dilo con claridad y deriva a una persona del equipo de Startidea: /contacto o hola@startidea.es. Nunca inventes precios, casos ni datos.${notaDocs}\n\nRecuerda: NUNCA uses 'nosotras' ni 'nosotros'. Habla siempre de Startidea en tercera persona ('Startidea recomienda…', 'el equipo te dice honestamente…') o reformula. Mantén respuestas breves.${notaAudiencia}\n\n=== KNOWLEDGE BASE ===\n${kb}\n=== FIN KNOWLEDGE BASE ===${docs ? `\n\n${docs}` : ''}`;
 }
 
 // ─── Validación de input ────────────────────────────────────────────────
@@ -102,8 +114,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const lastUser = history[history.length - 1].content;
   const meta = clean(body?.meta, 200);
+  // Audiencia elegida en el hero del Plano (misma sessionStorage que el
+  // flotante). Solo pasa al prompt si es una de las cuatro de src/data/plano.ts.
+  const audiencia = getAudiencia(clean(body?.audiencia, 30))?.label ?? '';
 
-  const systemPrompt = await buildSystemPrompt();
+  const systemPrompt = await buildSystemPrompt(lastUser, audiencia);
   const messages = [
     { role: 'system' as const, content: `${systemPrompt}\n\n${BRAND_CONSTITUTION}` },
     ...history,
@@ -155,7 +170,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // Notificación silenciosa a Telegram para que veas conversaciones que llegan
-  void sendTelegram(`💬 Chat web · ${meta || ip}\n\n→ ${lastUser.slice(0, 240)}`, { parseMode: null });
+  void sendTelegram(`💬 Chat web · ${meta || ip}${audiencia ? ` · ${audiencia}` : ''}\n\n→ ${lastUser.slice(0, 240)}`, { parseMode: null });
 
   // Reenvío del SSE tal cual al cliente
   return new Response(upstream.body, {

@@ -359,15 +359,47 @@ export async function attemptHubIntakeDelivery(id: string): Promise<boolean> {
  * evento. Tras existir la fila, un fallo de entrega queda pendiente y no altera
  * la respuesta primaria.
  */
+
+// Purga best-effort de filas ya entregadas (>30 días) con datos personales.
+// Se dispara desde cada alta y como mucho una vez por hora por proceso, para
+// que la retención no dependa solo del cron del reintento.
+let ultimaPurga = 0;
+function purgarEntregadosConThrottle(): void {
+  const ahora = Date.now();
+  if (ahora - ultimaPurga < 3_600_000) return;
+  ultimaPurga = ahora;
+  try {
+    getDb().prepare(`DELETE FROM hub_intake_outbox WHERE status = 'sent' AND sent_at IS NOT NULL AND sent_at < ?`).run(ahora - 30 * 86_400_000);
+  } catch (error) {
+    console.error('[hub-intake-outbox] purga de entregados falló', errorMessage(error));
+  }
+}
+
 export async function replicateHubIntake(payload: HubIntakePayload): Promise<void> {
+  purgarEntregadosConThrottle();
   const id = enqueueHubIntake(payload);
   await attemptHubIntakeDelivery(id);
 }
+
+/** Retención de filas ya entregadas: el payload (correo, nombre, transcripción) no
+ * necesita vivir aquí una vez que el HUB lo tiene. */
+const SENT_RETENTION_MS = 30 * 24 * 60 * 60_000;
 
 /** Reprocesa eventos vencidos (y recupera leases abandonados). */
 export async function retryPendingHubIntake(limit = 50): Promise<HubIntakeRetryResult> {
   const safeLimit = Math.max(1, Math.min(Math.trunc(limit) || 50, 200));
   const now = Date.now();
+
+  // Purga de lo entregado hace más de 30 días. Nunca bloquea el reintento.
+  try {
+    getDb().prepare(`
+      DELETE FROM hub_intake_outbox
+       WHERE status = 'sent' AND sent_at IS NOT NULL AND sent_at < ?
+    `).run(now - SENT_RETENTION_MS);
+  } catch (error) {
+    console.error('[hub-intake-outbox] purga de entregados falló', errorMessage(error));
+  }
+
   const rows = getDb().prepare(`
     SELECT id FROM hub_intake_outbox
      WHERE (status = 'pending' AND next_attempt_at <= ?)

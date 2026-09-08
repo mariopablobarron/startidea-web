@@ -22,7 +22,7 @@
     <span aria-hidden="true">→</span>
   </span>
   <span class="font-mono text-[9px] normal-case tracking-normal text-paper/65">
-    Te responde el equipo · con IA
+    Lazo · IA de Startidea
   </span>
 </button>
 
@@ -36,7 +36,7 @@
   aria-haspopup="dialog"
   aria-controls="ai-panel"
   aria-expanded="false"
-  aria-label="Pregunta lo que sea — Asistente Startidea"
+  aria-label="Pregunta lo que sea — Lazo, IA de Startidea"
 >
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -53,8 +53,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between border-b-2 border-ink bg-ink px-5 py-3 text-paper">
     <div>
-      <p id="ai-title" class="font-mono text-[11px] uppercase tracking-widest">— Pregunta lo que sea</p>
-      <p class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/70">Te responde el equipo · con IA</p>
+      <p id="ai-title" class="font-mono text-[11px] uppercase tracking-widest">— Lazo · IA de Startidea</p>
+      <p class="mt-0.5 font-mono text-[10px] tracking-wider text-paper/70">Pasar al equipo para hablar con una persona</p>
     </div>
     <div class="flex items-center gap-3">
       <button
@@ -164,9 +164,58 @@
       }
     }
 
+    // ─── Estado compartido con Lazo en el hero del Plano ──────────────────
+    // Misma clave de sessionStorage que PlanoStartidea.astro. El hero guarda
+    // {messages, aud, regaloOfrecido, cerrada, ultimoOrigen}; aquí solo se
+    // tocan los messages (y ultimoOrigen al guardar) y se conserva el resto
+    // tal cual. Cada cargar() reemplaza S, por eso `history` se reasigna con
+    // `history = cargar()` antes de leer o hacer push: si no, se escribiría
+    // sobre un array ya desechado.
+    //
+    // S.ultimoOrigen ('plano' | 'flotante' | '') dice desde dónde se guardó
+    // por última vez y sobrevive recargas: la burbuja de contexto al reabrir
+    // solo habla del plano si la última escritura salió de allí.
+    var KEY = 'startidea:plano:charla';
+    var ORIGEN = 'flotante';
+    var S = { messages: [], aud: '', regaloOfrecido: '', cerrada: false, ultimoOrigen: '' };
     var history = [];
     var isStreaming = false;
     var welcomed = false;
+
+    function mensajeValido(m) {
+      return Boolean(m) && typeof m === 'object' &&
+        (m.role === 'user' || m.role === 'assistant') &&
+        typeof m.content === 'string' && m.content.trim() !== '';
+    }
+
+    function cargar() {
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { s = null; }
+      if (!s || typeof s !== 'object' || Array.isArray(s)) s = {};
+      // Se conservan los mensajes enteros (con estaciones/intencion del hero)
+      // para no perder nada al volver a escribir.
+      s.messages = Array.isArray(s.messages) ? s.messages.filter(mensajeValido) : [];
+      if (typeof s.aud !== 'string') s.aud = '';
+      if (typeof s.regaloOfrecido !== 'string') s.regaloOfrecido = '';
+      if (typeof s.ultimoOrigen !== 'string') s.ultimoOrigen = '';
+      s.cerrada = s.cerrada === true;
+      S = s;
+      history = S.messages;
+      return history;
+    }
+
+    function guardar() {
+      S.ultimoOrigen = ORIGEN;
+      try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+      try {
+        window.dispatchEvent(new CustomEvent('startidea:charla', { detail: { origen: ORIGEN } }));
+      } catch (e) {}
+    }
+
+    function repintarHilo() {
+      thread.innerHTML = '';
+      history.forEach(function (m) { appendBubble(m.role, m.content); });
+    }
 
     var trackedOpen = false;
     function setOpen(open) {
@@ -174,7 +223,23 @@
       panel.classList.toggle('hidden', !open);
       [chip, chipMobile].forEach(function (b) { b && b.setAttribute('aria-expanded', String(open)); });
       if (open) {
-        if (!welcomed) saludarInicio();
+        if (!isStreaming) {
+          history = cargar();
+          if (history.length) {
+            // Hay conversación previa (en el plano o aquí): se repinta entera
+            // y se añaden burbujas de contexto que NO se guardan en el hilo.
+            welcomed = true;
+            repintarHilo();
+            appendBubble('assistant', S.ultimoOrigen === 'plano'
+              ? 'Seguimos con lo que hablábamos en el plano. ¿Por dónde continuamos?'
+              : 'Seguimos donde lo dejamos. ¿Por dónde continuamos?');
+            if (S.cerrada) {
+              appendBubble('assistant', 'En el plano ya cerré la conversación con un siguiente paso; aquí puedes seguir preguntando.');
+            }
+          } else if (!welcomed) {
+            saludarInicio();
+          }
+        }
         if (!trackedOpen) {
           trackedOpen = true;
           window.stTrack && window.stTrack('chat_open', { page_path: location.pathname });
@@ -202,13 +267,32 @@
 
     function saludarInicio() {
       welcomed = true;
-      appendBubble('assistant', 'Hola, soy el asistente de Startidea. Puedo orientarte sobre servicios, precios orientativos, casos publicados y cómo arrancar un diagnóstico. ¿Qué te trae por aquí?');
+      appendBubble('assistant', 'Hola, soy Lazo, la IA de Startidea. Puedo orientarte sobre servicios, precios orientativos, casos publicados y cómo arrancar un diagnóstico. ¿Qué te trae por aquí?');
     }
+
+    // Si Lazo escribe desde el hero del Plano (misma pestaña), el panel
+    // abierto se resincroniza. Los eventos propios (origen 'flotante') se ignoran.
+    window.addEventListener('startidea:charla', function (ev) {
+      var origen = ev && ev.detail && ev.detail.origen;
+      if (origen === ORIGEN) return;
+      if (panel.classList.contains('hidden') || isStreaming) return;
+      history = cargar();
+      if (history.length) {
+        welcomed = true;
+        repintarHilo();
+      } else {
+        // El hero ha reiniciado la charla: se vuelve al saludo.
+        thread.innerHTML = '';
+        saludarInicio();
+      }
+    });
 
     async function enviarMensaje(texto) {
       if (!texto || isStreaming) return;
+      history = cargar();
       appendBubble('user', texto);
       history.push({ role: 'user', content: texto });
+      guardar();
       var userTurns = history.filter(function (m) { return m.role === 'user'; }).length;
       window.stTrack && window.stTrack('chat_message_sent', {
         turn: userTurns,
@@ -229,8 +313,13 @@
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
-            messages: history,
+            // Solo role/content: los campos del hero (estaciones, intencion)
+            // no viajan al modelo.
+            messages: history.map(function (m) { return { role: m.role, content: m.content }; }),
             meta: window.location.pathname,
+            // Audiencia elegida en el hero del Plano (misma sessionStorage);
+            // JSON.stringify omite la clave si es undefined.
+            audiencia: S.aud || undefined,
           }),
         });
 
@@ -270,7 +359,15 @@
           }
         }
 
-        if (fullText) history.push({ role: 'assistant', content: fullText });
+        if (fullText) {
+          // Se recarga antes del push por si el hero escribió durante el streaming.
+          var antes = history.length;
+          history = cargar();
+          history.push({ role: 'assistant', content: fullText });
+          guardar();
+          // Si el hero añadió mensajes mientras tanto, se repinta el hilo entero.
+          if (history.length !== antes + 1 && typeof repintarHilo === 'function') repintarHilo();
+        }
       } catch (e) {
         bubble.className = 'ai-bubble error';
         bubble.textContent = 'Sin conexión con el modelo. Inténtalo en un minuto o escribe a hola@startidea.es.';
@@ -296,6 +393,7 @@
 
     // "Pasar al equipo" — pide email y manda toda la conversación a Telegram
     sendTeam && sendTeam.addEventListener('click', function () {
+      history = cargar();
       if (history.length === 0) {
         alert('Cuéntame primero algo y luego paso la conversación al equipo.');
         return;
@@ -312,7 +410,7 @@
         body: JSON.stringify({
           name: email ? 'Visitante (' + email + ')' : 'Visitante anónimo',
           email: email || 'sin-email@startidea.local',
-          message: 'Conversacion con asistente IA:\n\n' + transcript,
+          message: 'Conversacion con Lazo (IA de Startidea)' + (S.aud ? ' · audiencia: ' + S.aud : '') + ':\n\n' + transcript,
           path: window.location.pathname,
           consent: true,
         }),

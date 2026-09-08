@@ -1,0 +1,820 @@
+---
+// Hero «Plano Startidea» — la home que pregunta antes de contar.
+//
+// Izquierda: conversación con la IA de Startidea (mascota = isotipo animado).
+// Es «la primera reunión con Startidea antes de tener agenda»: pregunta,
+// reformula, cambia de tema y propone servicios, el Lab o un regalo tangible
+// (post de Instagram, publicación de LinkedIn, letra de canción, informe SEO
+// real). Derecha: plano de metro con las cuatro puertas de entrada como
+// líneas y el Lab como terminal; se ilumina con lo que se habla.
+//
+// Sin IA: atajos y clics en estaciones (mapa estático de `src/data/plano.ts`).
+// Con IA: texto libre → `/api/plano/charla` (Haiku, JSON) · regalos →
+// `/api/plano/regalo` (límite por IP y día) · resumen por correo →
+// `/api/plano/resumen` (correo a la persona + alta en el CRM del HUB + reserva
+// prellenada). Todo se registra anonimizado; el email solo lo guarda el CRM.
+//
+// El SVG se renderiza en servidor: la página en reposo ya muestra el plano y
+// el primer mensaje. Script en JS plano (`is:inline`): los atributos en
+// script desactivan la transpilación TS (gotcha ESTADO-AGENTE); un «script» literal
+// en este comentario confundía además al escáner de dependencias de Vite.
+import { LINEAS, ESTACIONES, CHIPS, INTENCIONES, AUDIENCIAS } from '@/data/plano';
+import { REGALOS } from '@/lib/regalos';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+interface Props {
+  /** Etiqueta para el registro (qué página aloja el hero). */
+  pagina?: string;
+}
+const { pagina = '/lab/home-plano' } = Astro.props;
+
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
+const color = (id: string) => LINEAS.find((l) => l.id === id)?.color ?? '#6E6C7C';
+
+const SALUDO = 'Hola, soy Lazo, la IA de Startidea. Converso como en una primera llamada de diagnóstico. Cuéntame qué quieres mover en tu organización o tu proyecto, y te pregunto, te llevo la contraria si hace falta y te propongo por dónde empezar.';
+
+const datosCliente = {
+  pagina,
+  reservaHref,
+  saludo: SALUDO,
+  lineas: LINEAS.map((l) => ({ id: l.id, color: l.color })),
+  estaciones: ESTACIONES.map((e) => ({ id: e.id, label: e.label, url: e.url, lineas: e.lineas })),
+  intenciones: INTENCIONES.map((i) => ({ id: i.id, say: i.say, estaciones: i.estaciones, linea: i.linea })),
+  audiencias: AUDIENCIAS,
+  regalos: REGALOS,
+};
+---
+
+<section id="plano" class="relative border-b border-ink/15 bg-paper py-14 md:py-20" aria-labelledby="plano-h1">
+  <div class="container-x">
+    <div class="grid grid-cols-12 gap-x-8 gap-y-10">
+      <!-- Columna conversación -->
+      <div class="col-span-12 lg:col-span-5">
+        <span class="label">— Para empresas, instituciones, entidades sociales y quien emprende</span>
+        <h1 id="plano-h1" class="mt-4 font-display text-4xl leading-[0.98] text-ink md:text-5xl xl:text-6xl">
+          ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
+        </h1>
+        <p class="mt-4 max-w-measure text-base text-ink/80">
+          Habla con Lazo, la IA de Startidea, como en una primera reunión. Sin agenda, sin formulario. El plano se ilumina con lo que hablas.
+        </p>
+
+        <!-- Mascota + tooltip -->
+        <div class="relative mt-6 flex items-center gap-3">
+          <button
+            type="button"
+            id="plano-mascota"
+            class="plano-mascota group relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-ink/15 bg-paper-warm focus:outline-none focus-visible:ring-2 focus-visible:ring-magenta/50"
+            data-estado="reposo"
+            aria-describedby="plano-tip"
+            aria-label="Qué es Lazo, la IA de Startidea"
+          >
+            <img src="/brand/isotipo-lazos.png" alt="" width="40" height="40" class="h-9 w-9" />
+            <span class="absolute -bottom-1 -right-1 rounded-full bg-ink px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-paper">IA</span>
+          </button>
+          <div>
+            <p class="font-display text-base leading-tight text-ink">Lazo <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">· IA de Startidea</span></p>
+            <p id="plano-estado" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Escuchando</p>
+          </div>
+          <div
+            id="plano-tip"
+            role="tooltip"
+            class="pointer-events-none absolute left-0 top-full z-20 mt-2 w-80 max-w-[90vw] border border-ink bg-paper p-4 text-xs leading-relaxed text-ink/85 opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.18)] transition-opacity duration-200"
+          >
+            <p class="font-display text-sm text-ink">Qué es Lazo</p>
+            <p class="mt-1">Lazo es una inteligencia artificial entrenada con el método y el criterio de Startidea. Conversa como su fundador en una llamada de diagnóstico: pregunta, reformula y propone. Cuando algo merece una persona, te lleva a reservar 30 minutos con Mario.</p>
+            <p class="mt-2">No guarda tu nombre ni tu correo salvo que pidas el resumen: entonces guarda tu correo y la conversación. El resto se anonimiza y sirve para saber qué se pregunta más. Puede equivocarse: los precios y plazos los cierra siempre el equipo. <a href="/asistente" class="underline decoration-magenta/50 underline-offset-2">Más sobre esta IA</a>.</p>
+          </div>
+        </div>
+
+        <!-- Quién eres -->
+        <div id="plano-aud" class="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Quién eres">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Soy</span>
+          {AUDIENCIAS.map((a) => (
+            <button
+              type="button"
+              class="plano-aud border border-ink/25 bg-paper px-3 py-1.5 text-xs text-ink/80 transition-colors hover:border-ink hover:text-ink aria-pressed:border-magenta aria-pressed:bg-magenta/10 aria-pressed:text-ink"
+              data-audiencia={a.id}
+              aria-pressed="false"
+            >
+              {a.label}
+            </button>
+          ))}
+        </div>
+
+        <!-- Hilo -->
+        <div id="plano-hilo" class="mt-4 max-h-[420px] space-y-3 overflow-y-auto border-t border-ink/15 pt-4 text-sm leading-relaxed" aria-live="polite">
+          <div class="plano-msg asistente"><p>{SALUDO}</p></div>
+        </div>
+
+        <!-- Regalo (oferta, formulario, resultado) -->
+        <div id="plano-regalo" class="mt-3 hidden"></div>
+
+        <!-- Resumen por correo (oferta, formulario, resultado) -->
+        <div id="plano-resumen" class="mt-3 hidden"></div>
+
+        <!-- Entrada -->
+        <form id="plano-form" class="mt-4 flex items-end gap-2" autocomplete="off">
+          <label for="plano-q" class="sr-only">Escribe lo que quieres mover</label>
+          <textarea
+            id="plano-q"
+            name="q"
+            rows="2"
+            maxlength="1200"
+            placeholder={`Ej.: ${AUDIENCIAS[0].ejemplo}`}
+            class="flex-1 resize-none border border-ink bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink/60 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"
+          ></textarea>
+          <button type="submit" id="plano-enviar" class="btn whitespace-nowrap !px-5 disabled:opacity-50">
+            Hablar
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <div id="plano-chips" class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Atajos">
+          {CHIPS.map((c) => (
+            <button
+              type="button"
+              class="plano-chip inline-flex items-center gap-2 border border-ink/25 bg-paper px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink/80 transition-colors hover:border-ink hover:text-ink aria-pressed:bg-ink aria-pressed:text-paper"
+              data-intencion={c.id}
+              aria-pressed="false"
+            >
+              <i class="h-2 w-2 rounded-full" style={`background:${color(c.linea)}`} aria-hidden="true"></i>
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-3 text-xs text-ink/70">
+          <span>Lo que escribas no se guarda con tu nombre. Si pides el resumen por correo, Startidea guarda tu email y la conversación para enviártelo y poder contactarte. <button type="button" id="plano-reset" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Empezar de nuevo</button> · <button type="button" id="plano-resumen-btn" class="underline decoration-ink/30 underline-offset-2 hover:text-ink">Enviar resumen por correo</button></span>
+          <a href={reservaHref} {...reservaExt} class="link-underline font-medium text-ink">Reservar 30 min con Mario →</a>
+        </div>
+      </div>
+
+      <!-- Columna plano -->
+      <div class="col-span-12 lg:col-span-7">
+        <!-- En móvil el plano no cabe legible en 375 px: se desplaza en horizontal con un
+             ancho mínimo (las etiquetas quedan a ~9 px en vez de 5). -->
+        <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-ink-mute lg:hidden">Desliza para recorrer el plano →</p>
+        <div id="plano-mapa" class="plano-mapa overflow-x-auto overscroll-x-contain">
+          <svg viewBox="0 0 980 470" role="img" aria-labelledby="plano-svg-t" class="block h-auto w-full min-w-[720px] lg:min-w-0">
+            <title id="plano-svg-t">Plano de servicios de Startidea: cuatro líneas y el Laboratorio como terminal común</title>
+            {LINEAS.filter((l) => l.y).map((l) => (
+              <polyline class="track" data-linea={l.id} points={`80,${l.y} 900,${l.y}`} style={`stroke:${l.color}`} />
+            ))}
+            <polyline class="track" data-linea="l5" points="900,70 900,420" style={`stroke:${color('l5')};stroke-dasharray:2 11`} />
+
+            {LINEAS.filter((l) => l.y).map((l) => (
+              <text class="lname" x="80" y={l.y! - 32}>{`${l.id.toUpperCase()} · ${l.nombre}`}</text>
+            ))}
+            <text class="lname" x="912" y="60">L5 · Lab</text>
+
+            {ESTACIONES.map((e) => {
+              const transbordo = e.lineas.length > 1;
+              const mid = (e.y1 + e.y2) / 2;
+              const lx = e.labelPos === 'right' ? e.x + 16 : e.x;
+              const ly =
+                e.labelPos === 'top' ? e.y1 - 15
+                : e.labelPos === 'bottom' ? e.y1 + 24
+                : e.labelPos === 'below-term' ? e.y2 + 38
+                : mid + 4;
+              const anchor = e.labelPos === 'right' ? 'start' : 'middle';
+              return (
+                <g class="estacion" tabindex="0" role="button" data-id={e.id} data-lineas={e.lineas.join(' ')} aria-label={`Estación ${e.label}`}>
+                  {transbordo ? (
+                    <rect class="st" x={e.x - 9} y={e.y1 - 9} width="18" height={e.y2 - e.y1 + 18} rx="9" style="stroke:var(--plano-ink)" />
+                  ) : (
+                    <circle class="st" cx={e.x} cy={e.y1} r="8" style={`stroke:${color(e.lineas[0])}`} />
+                  )}
+                  <text class:list={['lbl', transbordo && 'term']} x={lx} y={ly} text-anchor={anchor}>{e.label}</text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+        <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-widest text-ink-mute">
+          {LINEAS.map((l) => (
+            <li class="inline-flex items-center gap-2">
+              <i class="inline-block h-1 w-4" style={`background:${l.color}`} aria-hidden="true"></i>
+              {l.nombre}
+            </li>
+          ))}
+          <li>◎ transbordo</li>
+        </ul>
+
+        <!-- Regalos: qué se puede pedir -->
+        <div class="mt-8 border border-ink/15 bg-paper-warm p-5">
+          <p class="label">— Lo tangible</p>
+          <p class="mt-2 text-sm text-ink/80">Cuando la conversación tiene contexto, Lazo prepara al momento una muestra de cómo trabaja Startidea. Dos por persona y día.</p>
+          <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+            {REGALOS.map((r) => (
+              <li>
+                <button type="button" class="plano-pedir group flex w-full items-start gap-2 text-left" data-regalo={r.id}>
+                  <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-magenta" aria-hidden="true"></span>
+                  <span class="text-sm text-ink group-hover:text-magenta">{r.nombre}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="plano-datos" set:html={JSON.stringify(datosCliente)}></script>
+
+<style>
+  .plano-mapa { --plano-ink: #3d3d40; }
+  .track { fill: none; stroke-width: 7; stroke-linecap: round; transition: opacity .25s; }
+  .st { fill: #fff; stroke-width: 3; transition: opacity .25s; }
+  .lbl { font-family: 'Montserrat Variable', Montserrat, system-ui, sans-serif; font-size: 11.5px; fill: #4a4a4d; pointer-events: none; transition: opacity .25s; }
+  .lbl.term { font-weight: 600; fill: #3d3d40; }
+  .lname { font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; fill: #6e6f70; }
+  .estacion { cursor: pointer; outline: none; }
+  .estacion:focus-visible .st { stroke: var(--plano-ink); stroke-width: 4; }
+  .plano-mapa.has-route .track, .plano-mapa.has-route .st, .plano-mapa.has-route .lbl { opacity: .16; }
+  .plano-mapa.has-route .track.on, .plano-mapa.has-route .st.on, .plano-mapa.has-route .lbl.on { opacity: 1; }
+  .st.on { stroke-width: 4; }
+
+  /* Mensajes del hilo (los pinta el script → :global) */
+  :global(.plano-msg) { max-width: 92%; padding: .6rem .85rem; }
+  :global(.plano-msg.asistente) { margin-right: auto; background: #fff; border: 1px solid rgba(61,61,64,.15); color: #3d3d40; }
+  :global(.plano-msg.usuario) { margin-left: auto; background: #3d3d40; color: #fff; }
+  :global(.plano-msg.error) { margin-right: auto; border: 1px solid #e6356b; color: #e6356b; background: #fff; }
+  :global(.plano-msg p + p) { margin-top: .4rem; }
+  :global(.plano-rutas) { margin-top: .5rem; display: grid; gap: .25rem; }
+  :global(.plano-ruta) { display: flex; align-items: center; gap: .5rem; font-size: .8rem; text-decoration: none; color: #3d3d40; }
+  :global(.plano-ruta:hover) { color: #e6356b; }
+  :global(.plano-ruta i) { width: .5rem; height: .5rem; border-radius: 9999px; flex-shrink: 0; }
+  :global(.plano-pensando) { display: inline-block; width: .5rem; height: .5rem; border-radius: 9999px; background: #e6356b; animation: plano-latir 1s ease-in-out infinite; }
+
+  /* Mascota: reposo (flota), pensando (late), hablando (se mece) */
+  .plano-mascota img { transform-origin: 50% 60%; animation: plano-flotar 4.5s ease-in-out infinite; }
+  .plano-mascota[data-estado="pensando"] img { animation: plano-latir 1.1s ease-in-out infinite; }
+  .plano-mascota[data-estado="hablando"] img { animation: plano-mecer .9s ease-in-out infinite; }
+  .plano-mascota:hover ~ #plano-tip, .plano-mascota:focus-visible ~ #plano-tip { opacity: 1; }
+  @keyframes plano-flotar { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(-4deg); } }
+  @keyframes plano-latir { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  @keyframes plano-mecer { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .track, .st, .lbl { transition: none; }
+    .plano-mascota img, .plano-mascota[data-estado] img { animation: none; }
+    :global(.plano-pensando) { animation: none; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var datosEl = document.getElementById('plano-datos');
+    if (!datosEl) return;
+    var D = JSON.parse(datosEl.textContent || '{}');
+    var mapa = document.getElementById('plano-mapa');
+    var hilo = document.getElementById('plano-hilo');
+    var form = document.getElementById('plano-form');
+    var input = document.getElementById('plano-q');
+    var enviar = document.getElementById('plano-enviar');
+    var chips = document.getElementById('plano-chips');
+    var audBox = document.getElementById('plano-aud');
+    var mascota = document.getElementById('plano-mascota');
+    var estadoEl = document.getElementById('plano-estado');
+    var regaloBox = document.getElementById('plano-regalo');
+    var resumenBox = document.getElementById('plano-resumen');
+    var resumenBtn = document.getElementById('plano-resumen-btn');
+    var resetBtn = document.getElementById('plano-reset');
+    if (!mapa || !hilo || !form || !input) return;
+
+    var EST = {}; D.estaciones.forEach(function (e) { EST[e.id] = e; });
+    var COL = {}; D.lineas.forEach(function (l) { COL[l.id] = l.color; });
+    var INT = {}; D.intenciones.forEach(function (i) { INT[i.id] = i; });
+    var REG = {}; (D.regalos || []).forEach(function (r) { REG[r.id] = r; });
+    var KEY = 'startidea:plano:charla';
+
+    // Estado de la conversación (sobrevive recargas en la misma pestaña).
+    // La misma clave la comparte el chat flotante: al guardar se avisa con el
+    // evento 'startidea:charla' y se ignoran los avisos propios (detail.origen).
+    var ORIGEN = 'plano';
+    function estadoVacio() { return { messages: [], aud: '', regaloOfrecido: '', cerrada: false, resumenOfrecido: false, resumenEnviado: false }; }
+    var S = estadoVacio();
+    function cargarEstado() {
+      try { var saved = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.messages)) { S = saved; return true; } } catch (e) {}
+      return false;
+    }
+    cargarEstado();
+    function guardar() {
+      // Quién escribió por última vez (se conservan los campos extra del flotante).
+      S.ultimoOrigen = ORIGEN;
+      try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+      try { window.dispatchEvent(new CustomEvent('startidea:charla', { detail: { origen: ORIGEN } })); } catch (e) {}
+    }
+    // Turnos «libres»: lo que la persona escribe de verdad; los atajos (chips) no cuentan.
+    // Mismo criterio que el servidor (sin_sustancia): texto propio de ≥25 caracteres.
+    function turnosLibres() { return S.messages.filter(function (m) { return m.role === 'user' && !m.atajo && String(m.content || '').trim().length >= 25; }).length; }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+    }
+    // Markdown mínimo: **negrita**, saltos de línea, listas «- »
+    function md(s) {
+      var t = esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      return t.split(/\n{2,}/).map(function (p) {
+        var lines = p.split('\n');
+        if (lines.every(function (l) { return /^\s*[-•]\s+/.test(l); })) {
+          return '<ul class="list-disc pl-5">' + lines.map(function (l) { return '<li>' + l.replace(/^\s*[-•]\s+/, '') + '</li>'; }).join('') + '</ul>';
+        }
+        return '<p>' + lines.join('<br>') + '</p>';
+      }).join('');
+    }
+
+    function estado(e, texto) {
+      if (mascota) mascota.setAttribute('data-estado', e);
+      if (estadoEl) estadoEl.textContent = texto;
+    }
+
+    function registrar(payload) {
+      try {
+        payload.pagina = D.pagina;
+        if (S.aud) payload.audiencia = S.aud;
+        var body = JSON.stringify(payload);
+        if (navigator.sendBeacon) navigator.sendBeacon('/api/plano', new Blob([body], { type: 'application/json' }));
+        else fetch('/api/plano', { method: 'POST', headers: { 'content-type': 'application/json' }, body: body, keepalive: true });
+      } catch (e) {}
+    }
+
+    function iluminar(ids, lineas) {
+      mapa.classList.add('has-route');
+      mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
+      (lineas || []).forEach(function (l) { var t = mapa.querySelector('.track[data-linea="' + l + '"]'); if (t) t.classList.add('on'); });
+      (ids || []).forEach(function (id) { var g = mapa.querySelector('.estacion[data-id="' + id + '"]'); if (g) g.querySelectorAll('.st,.lbl').forEach(function (el) { el.classList.add('on'); }); });
+    }
+    function lineasDe(ids) { var o = {}; ids.forEach(function (s) { (EST[s] ? EST[s].lineas : []).forEach(function (l) { o[l] = 1; }); }); return Object.keys(o); }
+
+    function rutasHtml(ids, intencion) {
+      if (!ids || !ids.length) return '';
+      var h = '<div class="plano-rutas">';
+      ids.slice(0, 3).forEach(function (id) {
+        var e = EST[id]; if (!e) return;
+        h += '<a href="' + esc(e.url) + '" class="plano-ruta" data-destino="' + esc(e.url) + '" data-intencion="' + esc(intencion || '') + '"><i style="background:' + esc(COL[e.lineas[0]] || '#666') + '"></i><span>' + esc(e.label) + '</span><span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">' + esc(e.url) + '</span></a>';
+      });
+      return h + '</div>';
+    }
+
+    function burbuja(rol, html) {
+      var div = document.createElement('div');
+      div.className = 'plano-msg ' + rol;
+      div.innerHTML = html;
+      hilo.appendChild(div);
+      hilo.scrollTop = hilo.scrollHeight;
+      return div;
+    }
+
+    function pintarHilo() {
+      hilo.innerHTML = '';
+      burbuja('asistente', '<p>' + esc(D.saludo) + '</p>');
+      S.messages.forEach(function (m) {
+        burbuja(m.role === 'user' ? 'usuario' : 'asistente', md(m.content) + rutasHtml(m.estaciones || [], m.intencion || ''));
+      });
+      var ultimo = S.messages[S.messages.length - 1];
+      if (ultimo && ultimo.estaciones && ultimo.estaciones.length) iluminar(ultimo.estaciones, lineasDe(ultimo.estaciones));
+      if (audBox) audBox.querySelectorAll('.plano-aud').forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === S.aud ? 'true' : 'false'); });
+    }
+
+    function marcarChip(id) {
+      chips.querySelectorAll('.plano-chip').forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-intencion') === id ? 'true' : 'false'); });
+    }
+
+    // Placeholder rotatorio: un ejemplo por audiencia hasta que la persona elige o escribe
+    var ejemplos = (D.audiencias || []).map(function (a) { return a.ejemplo; });
+    var rot = 0, rotTimer = null;
+    function pararRotacion() { if (rotTimer) { clearInterval(rotTimer); rotTimer = null; } }
+    if (ejemplos.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && S.messages.length === 0) {
+      rotTimer = setInterval(function () {
+        if (document.activeElement === input || input.value) { pararRotacion(); return; }
+        rot = (rot + 1) % ejemplos.length;
+        input.setAttribute('placeholder', 'Ej.: ' + ejemplos[rot]);
+      }, 4000);
+    }
+    input.addEventListener('focus', pararRotacion);
+
+    if (audBox) {
+      audBox.addEventListener('click', function (ev) {
+        var b = ev.target.closest('.plano-aud'); if (!b) return;
+        var id = b.getAttribute('data-audiencia');
+        S.aud = (S.aud === id) ? '' : id; guardar();
+        audBox.querySelectorAll('.plano-aud').forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-audiencia') === S.aud ? 'true' : 'false'); });
+        pararRotacion();
+        var a = (D.audiencias || []).filter(function (x) { return x.id === S.aud; })[0];
+        if (a) input.setAttribute('placeholder', 'Ej.: ' + a.ejemplo);
+        input.focus();
+      });
+    }
+
+    // Atajos: respuesta local (sin IA) que entra en el hilo como un turno más
+    chips.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.plano-chip'); if (!b) return;
+      var id = b.getAttribute('data-intencion'); var i = INT[id]; if (!i) return;
+      var etiqueta = b.textContent.trim();
+      var pregunta = S.aud ? ' ¿Cuál es el resultado concreto que mediría el éxito en un año?' : ' ¿Desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
+      S.messages.push({ role: 'user', content: 'Quiero hablar de ' + etiqueta.toLowerCase() + '.', atajo: true });
+      S.messages.push({ role: 'assistant', content: i.say + pregunta, estaciones: i.estaciones, intencion: id });
+      guardar(); pintarHilo(); marcarChip(id);
+      registrar({ tipo: 'atajo', intencion: id, estaciones: i.estaciones });
+      input.focus();
+    });
+
+    // Estaciones del plano
+    var svg = mapa.querySelector('svg');
+    function elegirEstacion(g) {
+      var id = g.getAttribute('data-id'); var e = EST[id]; if (!e) return;
+      iluminar([id], e.lineas);
+      burbuja('asistente', '<p>Estación <strong>' + esc(e.label) + '</strong>. Desde aquí se llega a la página del servicio; si hay un curso relacionado, está en el Lab. ¿Es lo que buscabas o te cuento cómo encaja con lo tuyo?</p>' + rutasHtml([id], ''));
+      registrar({ tipo: 'estacion', estaciones: [id] });
+    }
+    svg.addEventListener('click', function (ev) { var g = ev.target.closest('.estacion'); if (g) elegirEstacion(g); });
+    svg.addEventListener('keydown', function (ev) { if (ev.key !== 'Enter' && ev.key !== ' ') return; var g = ev.target.closest('.estacion'); if (g) { ev.preventDefault(); elegirEstacion(g); } });
+
+    // Conversación con la IA
+    var ocupado = false;
+    function burbujaCierre() {
+      burbuja('asistente', '<p>Si quieres seguir, lo honesto es hablarlo en persona: <a href="' + esc(D.reservaHref) + '" class="underline decoration-magenta/50 underline-offset-2"' + (/^https?:/.test(D.reservaHref) ? ' target="_blank" rel="noopener"' : '') + '>reserva 30 minutos con Mario</a>.</p>');
+    }
+    function hablar(texto) {
+      if (ocupado || S.cerrada) return;
+      ocupado = true; enviar.disabled = true;
+      // El flotante comparte la clave: se recarga el estado justo antes de
+      // escribir para no pisar lo que haya guardado mientras tanto.
+      cargarEstado();
+      S.messages.push({ role: 'user', content: texto }); guardar();
+      var esperados = S.messages.length;
+      burbuja('usuario', '<p>' + esc(texto) + '</p>');
+      var pensando = burbuja('asistente', '<p><span class="plano-pensando"></span></p>');
+      estado('pensando', 'Pensando');
+      fetch('/api/plano/charla', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: S.messages.map(function (m) { return { role: m.role, content: m.content }; }), audiencia: S.aud || undefined, pagina: D.pagina }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          pensando.remove();
+          // Segunda recarga antes de escribir la respuesta. Si el flotante
+          // añadió mensajes durante la espera, se repinta el hilo entero.
+          cargarEstado();
+          var repintar = S.messages.length !== esperados;
+          if (d && !d.ok && d.error === 'fin') {
+            // El historial compartido ya superó los turnos (la charla siguió
+            // en el flotante): es un cierre, no un error.
+            var msgFin = d.message || 'Esta conversación ya llegó a su cierre. Reserva 30 minutos y seguimos en persona.';
+            S.messages.push({ role: 'assistant', content: msgFin });
+            S.cerrada = true; guardar();
+            if (repintar) pintarHilo(); else burbuja('asistente', md(msgFin));
+            estado('reposo', 'Conversación cerrada');
+            burbujaCierre();
+            quizasOfrecerResumen();
+            return;
+          }
+          if (!d || !d.ok) {
+            if (repintar) pintarHilo();
+            burbuja('error', '<p>' + esc((d && d.message) || 'No he podido responder. Prueba otra vez o reserva 30 minutos.') + '</p>');
+            estado('reposo', 'Escuchando');
+            return;
+          }
+          var ids = (d.estaciones || []).map(function (e) { return e.id; });
+          S.messages.push({ role: 'assistant', content: d.reply, estaciones: ids, intencion: d.intencion || '' });
+          if (d.cierre) S.cerrada = true;
+          guardar();
+          if (repintar) pintarHilo(); else burbuja('asistente', md(d.reply) + rutasHtml(ids, d.intencion || ''));
+          if (ids.length) iluminar(ids, lineasDe(ids));
+          if (d.intencion) marcarChip(d.intencion);
+          estado('hablando', 'Respondiendo');
+          setTimeout(function () { estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando'); }, 1800);
+          var regaloRecien = false;
+          if (d.regalo && REG[d.regalo] && !S.regaloOfrecido) { S.regaloOfrecido = d.regalo; guardar(); ofrecerRegalo(d.regalo); regaloRecien = true; }
+          if (S.cerrada) burbujaCierre();
+          // Resumen por correo: no se apila con la oferta de un regalo. Si el
+          // regalo se acaba de ofrecer, el resumen espera a que esa caja se
+          // resuelva («Ahora no» o regalo entregado).
+          if (!regaloRecien) quizasOfrecerResumen();
+        })
+        .catch(function () {
+          pensando.remove();
+          burbuja('error', '<p>Sin conexión con Lazo. Prueba en un momento o reserva 30 minutos.</p>');
+          estado('reposo', 'Escuchando');
+        })
+        .then(function () { ocupado = false; enviar.disabled = false; });
+    }
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var q = input.value.trim();
+      if (q.length < 2) { input.focus(); return; }
+      input.value = '';
+      hablar(q);
+    });
+    input.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); }
+    });
+
+    // Clic en tarjeta de ruta → registro
+    hilo.addEventListener('click', function (ev) {
+      var a = ev.target.closest('a.plano-ruta');
+      if (a) registrar({ tipo: 'clic', destino: a.getAttribute('data-destino'), intencion: a.getAttribute('data-intencion') });
+    });
+
+    // ─── Regalos ───────────────────────────────────────────────────────
+    function contextoCharla() {
+      return S.messages.slice(-6).map(function (m) { return (m.role === 'user' ? 'Persona: ' : 'IA: ') + m.content; }).join('\n').slice(0, 1400);
+    }
+
+    function ofrecerRegalo(tipo) {
+      var r = REG[tipo]; if (!r || !regaloBox) return;
+      regaloBox.classList.remove('hidden');
+      regaloBox.innerHTML = '<div class="border border-magenta/40 bg-magenta/5 p-4">' +
+        '<p class="label text-magenta">— Regalo</p>' +
+        '<p class="mt-1 font-display text-base text-ink">' + esc(r.nombre) + '</p>' +
+        '<p class="mt-1 text-xs text-ink/75">' + esc(r.descripcion.charAt(0).toUpperCase() + r.descripcion.slice(1)) + '.</p>' +
+        '<div class="mt-3 flex gap-2"><button type="button" class="btn !py-2 !px-4 !text-xs" data-regalo-si="' + esc(tipo) + '">Sí, prepáralo</button><button type="button" class="btn-ghost !py-2 !px-4 !text-xs" data-regalo-no="1">Ahora no</button></div></div>';
+      regaloBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function formularioRegalo(tipo) {
+      var r = REG[tipo]; if (!r || !regaloBox) return;
+      regaloBox.classList.remove('hidden');
+      var campos = r.campos.map(function (c) {
+        var base = 'class="mt-1 w-full border border-ink bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/50 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40" name="' + esc(c.id) + '" placeholder="' + esc(c.placeholder) + '"' + (c.requerido ? ' required' : '');
+        var ctrl = c.tipo === 'textarea' ? '<textarea rows="2" maxlength="800" ' + base + '></textarea>' : '<input type="' + (c.tipo === 'url' ? 'url' : 'text') + '" maxlength="300" ' + base + '>';
+        return '<label class="block text-xs text-ink/80">' + esc(c.label) + ctrl + '</label>';
+      }).join('');
+      regaloBox.innerHTML = '<form class="border border-magenta/40 bg-magenta/5 p-4 space-y-3" data-regalo-form="' + esc(tipo) + '">' +
+        '<p class="label text-magenta">— ' + esc(r.nombre) + '</p>' + campos +
+        '<div class="flex items-center gap-3"><button type="submit" class="btn !py-2 !px-4 !text-xs">Preparar</button><button type="button" class="text-xs underline decoration-ink/30 underline-offset-2" data-regalo-no="1">Cancelar</button><span class="text-[11px] text-ink/60">Dos por persona y día.</span></div></form>';
+      var first = regaloBox.querySelector('input,textarea'); if (first) first.focus();
+    }
+
+    function pedirRegalo(tipo, datos) {
+      var r = REG[tipo]; if (!r) return;
+      regaloBox.innerHTML = '<div class="border border-magenta/40 bg-magenta/5 p-4"><p class="text-sm text-ink/80"><span class="plano-pensando"></span> Preparando ' + esc(r.nombre.toLowerCase()) + '…' + (tipo === 'informe-seo' ? ' Se está leyendo la web de verdad; puede tardar unos segundos.' : '') + '</p></div>';
+      estado('pensando', 'Preparando el regalo');
+      fetch('/api/plano/regalo', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ tipo: tipo, datos: datos, contexto: contextoCharla(), audiencia: S.aud || undefined, pagina: D.pagina }),
+      })
+        .then(function (x) { return x.json(); })
+        .then(function (d) {
+          estado('reposo', 'Escuchando');
+          if (!d || !d.ok) { regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">' + esc((d && d.message) || 'No se ha podido preparar.') + '</div>'; return; }
+          mostrarRegalo(d);
+          S.messages.push({ role: 'assistant', content: 'Te he preparado ' + r.nombre.toLowerCase() + '. Está debajo del hilo. ¿Seguimos con lo que estábamos?' }); guardar();
+          burbuja('asistente', '<p>Te he preparado <strong>' + esc(r.nombre.toLowerCase()) + '</strong>. Lo tienes justo debajo. ¿Seguimos con lo que estábamos?</p>');
+          // La caja del regalo ya está resuelta: si tocaba, ahora se ofrece el
+          // resumen sin desplazar la página (la persona está leyendo el regalo).
+          quizasOfrecerResumen({ silencioso: true });
+        })
+        .catch(function () { estado('reposo', 'Escuchando'); regaloBox.innerHTML = '<div class="border border-magenta p-4 text-sm text-magenta">Sin conexión. Inténtalo en un momento.</div>'; });
+    }
+
+    function svgInstagram(x) {
+      var titular = String(x.titular || '').toUpperCase();
+      var palabras = titular.split(/\s+/), lineas = [], cur = '';
+      palabras.forEach(function (w) { if ((cur + ' ' + w).trim().length > 16 && cur) { lineas.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
+      if (cur) lineas.push(cur); lineas = lineas.slice(0, 4);
+      var fs = lineas.length > 3 ? 92 : 108;
+      var texto = lineas.map(function (l, i) { return '<text x="90" y="' + (430 + i * (fs * 1.05)) + '" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="' + fs + '" fill="#1c1b22">' + esc(l) + '</text>'; }).join('');
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080"><rect width="1080" height="1080" fill="#ffffff"/><rect x="0" y="0" width="1080" height="28" fill="#e6356b"/><rect x="90" y="330" width="120" height="14" fill="#e6356b"/>' + texto + '<text x="90" y="960" font-family="JetBrains Mono, Menlo, monospace" font-size="30" letter-spacing="4" fill="#6e6f70">' + esc(String(x.organizacion || '').toUpperCase()) + '</text></svg>';
+    }
+
+    function mostrarRegalo(d) {
+      var h = '<div class="border border-ink/20 bg-paper p-4"><p class="label text-magenta">— Tu regalo</p><p class="mt-1 font-display text-base text-ink">' + esc(d.titulo) + '</p>';
+      if (d.tipo === 'post-instagram' && d.extra) {
+        var svg = svgInstagram(d.extra);
+        h += '<div class="mt-3 border border-ink/15" data-ig-svg>' + svg.replace('width="1080" height="1080"', 'width="100%" height="auto"') + '</div>';
+        h += '<div class="mt-2 flex flex-wrap gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-ig-png="1">Descargar PNG (1080×1080)</button></div>';
+      }
+      h += '<div class="prose-plano mt-3 text-sm leading-relaxed text-ink/90">' + md(d.cuerpo) + '</div>';
+      h += '<div class="mt-3 flex flex-wrap items-center gap-3 text-xs"><button type="button" class="underline decoration-magenta/50 underline-offset-2" data-copiar="1">Copiar texto</button><span class="text-ink/60">Hecho por Lazo, la IA de Startidea, a partir de lo que has contado. Revísalo antes de publicarlo.</span></div></div>';
+      regaloBox.innerHTML = h;
+      regaloBox.setAttribute('data-cuerpo', d.cuerpo);
+      var ig = regaloBox.querySelector('[data-ig-svg]'); if (ig) ig.setAttribute('data-svg', svgInstagram(d.extra || {}));
+    }
+
+    if (regaloBox) {
+      regaloBox.addEventListener('click', function (ev) {
+        var t = ev.target;
+        if (t.closest('[data-regalo-si]')) { formularioRegalo(t.closest('[data-regalo-si]').getAttribute('data-regalo-si')); return; }
+        if (t.closest('[data-regalo-no]')) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; quizasOfrecerResumen(); return; }
+        if (t.closest('[data-copiar]')) {
+          var txt = (regaloBox.getAttribute('data-cuerpo') || '').replace(/\*\*/g, '');
+          if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = 'Copiado'; });
+          return;
+        }
+        if (t.closest('[data-ig-png]')) {
+          var wrap = regaloBox.querySelector('[data-ig-svg]'); if (!wrap) return;
+          var img = new Image();
+          var blob = new Blob([wrap.getAttribute('data-svg')], { type: 'image/svg+xml;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          img.onload = function () {
+            var c = document.createElement('canvas'); c.width = 1080; c.height = 1080;
+            c.getContext('2d').drawImage(img, 0, 0, 1080, 1080);
+            URL.revokeObjectURL(url);
+            var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = 'post-instagram-startidea.png'; document.body.appendChild(a); a.click(); a.remove();
+          };
+          img.src = url;
+        }
+      });
+      regaloBox.addEventListener('submit', function (ev) {
+        var f = ev.target.closest('[data-regalo-form]'); if (!f) return;
+        ev.preventDefault();
+        var datos = {}; new FormData(f).forEach(function (v, k) { datos[k] = String(v); });
+        pedirRegalo(f.getAttribute('data-regalo-form'), datos);
+      });
+    }
+
+    // «Lo tangible»: pedir un regalo directamente desde la lista
+    document.querySelectorAll('.plano-pedir').forEach(function (b) {
+      b.addEventListener('click', function () {
+        formularioRegalo(b.getAttribute('data-regalo'));
+        regaloBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      });
+    });
+
+    // ─── Resumen por correo ────────────────────────────────────────────
+    var CAMPO = 'class="mt-1 w-full border border-ink bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/50 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40"';
+
+    function formularioResumenHtml() {
+      return '<form class="border border-ink/20 bg-paper-warm p-4 space-y-3" data-resumen-form="1" novalidate>' +
+        '<p class="label text-magenta">— Resumen por correo</p>' +
+        '<p class="font-display text-base text-ink">¿Te mando el resumen y un plan de tres pasos por correo?</p>' +
+        '<label class="block text-xs text-ink/80">Tu correo<input type="email" name="email" required maxlength="120" autocomplete="email" placeholder="tu@correo.es" ' + CAMPO + '></label>' +
+        '<label class="block text-xs text-ink/80">Tu nombre (opcional)<input type="text" name="nombre" maxlength="80" autocomplete="name" placeholder="Cómo te llamas" ' + CAMPO + '></label>' +
+        '<div class="hidden" aria-hidden="true"><label>No rellenes este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
+        '<label class="flex items-start gap-2 text-xs text-ink/80"><input type="checkbox" name="consent" required class="mt-0.5 shrink-0"><span>Acepto la <a href="/privacidad" class="underline decoration-magenta/50 underline-offset-2" target="_blank" rel="noopener">política de privacidad</a>: Startidea guarda mi correo y el texto de esta conversación para enviarme el resumen y poder contactarme.</span></label>' +
+        '<label class="flex items-start gap-2 text-xs text-ink/80"><input type="checkbox" name="marketing" class="mt-0.5 shrink-0"><span>Quiero recibir la nota mensual.</span></label>' +
+        '<div class="flex flex-wrap items-center gap-3"><button type="submit" class="btn !py-2 !px-4 !text-xs">Enviar resumen</button><button type="button" class="btn-ghost !py-2 !px-4 !text-xs" data-resumen-no="1">Ahora no</button></div>' +
+        '</form>';
+    }
+
+    // Muestra la oferta/formulario del resumen. Si el formulario ya está en
+    // pantalla se conserva tal cual (con lo escrito); `mensaje` se pinta como
+    // aviso dentro. opts.silencioso → sin desplazar la página.
+    function ofrecerResumen(mensaje, opts) {
+      if (!resumenBox) return;
+      opts = opts || {};
+      resumenBox.classList.remove('hidden');
+      if (!resumenBox.querySelector('[data-resumen-form]')) resumenBox.innerHTML = formularioResumenHtml();
+      if (mensaje) errorResumen(mensaje, '');
+      if (!opts.silencioso) resumenBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    // Aviso dentro del formulario existente, sin reconstruirlo: inserta o
+    // reemplaza el <p role="alert"> y enfoca el campo relevante (o el aviso).
+    function errorResumen(mensaje, campo) {
+      var f = resumenBox && resumenBox.querySelector('[data-resumen-form]');
+      if (!f) { ofrecerResumen(mensaje); return; }
+      var p = f.querySelector('[data-resumen-error]');
+      if (!p) {
+        p = document.createElement('p');
+        p.setAttribute('role', 'alert');
+        p.setAttribute('data-resumen-error', '1');
+        p.setAttribute('tabindex', '-1');
+        p.className = 'text-xs text-magenta';
+        f.insertBefore(p, f.querySelector('label'));
+      }
+      p.textContent = mensaje;
+      var el = campo ? f.elements[campo] : null;
+      if (el && el.focus) el.focus(); else p.focus();
+    }
+
+    // Mientras se pide el resumen, el formulario se bloquea (sin perder lo escrito).
+    function bloquearResumen(f, on) {
+      Array.prototype.forEach.call(f.querySelectorAll('input,button'), function (el) { el.disabled = on; });
+      var est = f.querySelector('[data-resumen-estado]');
+      if (on) {
+        if (!est) { est = document.createElement('p'); est.setAttribute('data-resumen-estado', '1'); est.className = 'text-xs text-ink/70'; f.appendChild(est); }
+        est.innerHTML = '<span class="plano-pensando"></span> Preparando el resumen…';
+      } else if (est) est.remove();
+    }
+
+    // Oferta automática, una sola vez: al cierre de la conversación o a partir
+    // del quinto turno libre (los atajos no cuentan). Solo desde una
+    // interacción directa con el hero, nunca desde el flotante ni al recargar.
+    function quizasOfrecerResumen(opts) {
+      if (!resumenBox || S.resumenOfrecido || S.resumenEnviado) return;
+      if (!(S.cerrada || turnosLibres() >= 5)) return;
+      S.resumenOfrecido = true; guardar();
+      ofrecerResumen('', opts);
+    }
+
+    function mostrarResumen(d, email) {
+      var ids = (d.estaciones || []).map(function (e) { return e.id; });
+      var ext = /^https?:/.test(d.reservaHref || '') ? ' target="_blank" rel="noopener"' : '';
+      var h = '<div class="border border-ink/20 bg-paper p-4"><p class="label text-magenta">— Tu resumen</p>';
+      h += '<p class="mt-1 text-xs text-ink/70">' + (d.emailEnviado ? 'Te lo he enviado a <strong>' + esc(email) + '</strong>.' : 'No he podido enviarlo por correo; aquí lo tienes.') + '</p>';
+      h += '<p class="mt-2 text-sm leading-relaxed text-ink/90">' + esc(d.resumen || '') + '</p>';
+      if (d.pasos && d.pasos.length) {
+        h += '<p class="label mt-3">— Tres pasos</p><ol class="mt-1 list-decimal space-y-1 pl-5 text-sm text-ink/90">' + d.pasos.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>';
+      }
+      h += rutasHtml(ids, '');
+      if (d.reservaHref) {
+        h += '<a href="' + esc(d.reservaHref) + '" class="btn mt-4 !py-2 !px-4 !text-xs"' + ext + '>Reservar 30 min con Mario <span aria-hidden="true">→</span></a>';
+        h += '<p class="mt-1 text-xs text-ink/60">El enlace lleva tu nombre y correo; el resumen ya está en manos de Startidea.</p>';
+      }
+      h += '</div>';
+      resumenBox.classList.remove('hidden');
+      resumenBox.innerHTML = h;
+      if (ids.length) iluminar(ids, lineasDe(ids));
+    }
+
+    function enviarResumen(f) {
+      var email = (f.email && f.email.value || '').trim();
+      var nombre = (f.nombre && f.nombre.value || '').trim();
+      var consent = !!(f.consent && f.consent.checked);
+      var marketing = !!(f.marketing && f.marketing.checked);
+      var website = (f.website && f.website.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errorResumen('Revisa el correo: no parece válido.', 'email'); return; }
+      if (!consent) { errorResumen('Hace falta aceptar la política de privacidad para enviarte el resumen.', 'consent'); return; }
+      if (turnosLibres() < 1) { errorResumen('Cuéntame primero qué quieres mover y te preparo el resumen.', ''); return; }
+      var viejo = f.querySelector('[data-resumen-error]'); if (viejo) viejo.remove();
+      bloquearResumen(f, true);
+      estado('pensando', 'Preparando el resumen');
+      fetch('/api/plano/resumen', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          messages: S.messages.map(function (m) { return { role: m.role, content: m.content }; }),
+          audiencia: S.aud || undefined,
+          email: email, nombre: nombre, consent: true, marketing: marketing, website: website, pagina: D.pagina,
+        }),
+      })
+        .then(function (x) { return x.json(); })
+        .then(function (d) {
+          estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando');
+          if (!d || !d.ok) {
+            // Errores del servidor (email, consent, empty, sin_sustancia, rate, limite_global…):
+            // se enseñan en el propio formulario, con lo escrito intacto.
+            bloquearResumen(f, false);
+            var campo = d && (d.error === 'email' || d.error === 'consent') ? d.error : '';
+            errorResumen((d && d.message) || 'No se ha podido preparar el resumen. Inténtalo en un momento.', campo);
+            return;
+          }
+          if (!d.resumen) {
+            // Respuesta vacía (p. ej. honeypot): error suave, sin darlo por enviado.
+            bloquearResumen(f, false);
+            errorResumen('No se ha podido preparar el resumen. Inténtalo en un momento.', '');
+            return;
+          }
+          S.resumenOfrecido = true; S.resumenEnviado = true; guardar();
+          mostrarResumen(d, email);
+        })
+        .catch(function () {
+          estado('reposo', S.cerrada ? 'Conversación cerrada' : 'Escuchando');
+          bloquearResumen(f, false);
+          errorResumen('Sin conexión. Inténtalo en un momento.', '');
+        });
+    }
+
+    if (resumenBox) {
+      resumenBox.addEventListener('click', function (ev) {
+        if (ev.target.closest('[data-resumen-no]')) { resumenBox.classList.add('hidden'); resumenBox.innerHTML = ''; }
+      });
+      resumenBox.addEventListener('submit', function (ev) {
+        var f = ev.target.closest('[data-resumen-form]'); if (!f) return;
+        ev.preventDefault();
+        enviarResumen(f);
+      });
+    }
+
+    // Botón permanente de la barra inferior: abre el formulario si hay al menos
+    // un turno libre (solo atajos no bastan para un resumen).
+    if (resumenBtn) resumenBtn.addEventListener('click', function () {
+      if (turnosLibres() < 1) { burbuja('asistente', '<p>Cuéntame primero qué quieres mover y te preparo el resumen con tres pasos.</p>'); input.focus(); return; }
+      ofrecerResumen('');
+      var first = resumenBox && resumenBox.querySelector('input[name="email"]'); if (first) first.focus();
+    });
+
+    // El chat flotante guarda en la misma clave: se recarga el hilo si no se
+    // está respondiendo. Solo se repinta; el resumen se ofrece en la siguiente
+    // interacción directa con el hero.
+    window.addEventListener('startidea:charla', function (ev) {
+      if (ev.detail && ev.detail.origen === ORIGEN) return;
+      if (ocupado) return;
+      if (!cargarEstado()) return;
+      pintarHilo();
+    });
+
+    if (resetBtn) resetBtn.addEventListener('click', function () {
+      S = estadoVacio(); guardar();
+      pintarHilo(); marcarChip('');
+      mapa.classList.remove('has-route'); mapa.querySelectorAll('.on').forEach(function (el) { el.classList.remove('on'); });
+      if (regaloBox) { regaloBox.classList.add('hidden'); regaloBox.innerHTML = ''; }
+      if (resumenBox) { resumenBox.classList.add('hidden'); resumenBox.innerHTML = ''; }
+      estado('reposo', 'Escuchando'); input.focus();
+    });
+
+    // Tooltip también al tocar (móvil): alterna
+    if (mascota) mascota.addEventListener('click', function () {
+      var tip = document.getElementById('plano-tip'); if (!tip) return;
+      tip.style.opacity = tip.style.opacity === '1' ? '' : '1';
+    });
+
+    // Al cargar solo se repinta el hilo; el resumen se ofrece en la siguiente interacción.
+    if (S.messages.length) pintarHilo();
+  })();
+</script>

@@ -27,6 +27,7 @@
     "astro": "^5.1.0",
     "better-sqlite3": "^12.9.0",
     "googleapis": "^171.4.0",
+    "mammoth": "^1.12.2",
     "pdf-parse": "^1.1.1",
     "satori": "^0.26.0",
     "satori-html": "^0.3.2",

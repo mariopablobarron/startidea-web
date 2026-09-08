@@ -3,7 +3,70 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, tras la respuesta competitiva a Lexy (mylexy.app) y los 10 planes de productos autoservicio.
+**Última actualización:** 2026-09-08, PR #89 (Lazo) rebasado sobre main con #90 (productos) y #91/#92 (Lexy).
+
+---
+
+## 2026-09-07 — «Home que pregunta» (PR #89, abierto, SIN fusionar)
+
+Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verificado en dev.
+
+- **Nivel A (producción al fusionar):** Nav con «Qué hacemos ▾» (4 servicios +
+  financiación + formación) y «Laboratorio» en escritorio; pie con columna
+  «Aprender»; banda de formación de la home subida por encima de la prueba social.
+- **Nivel B (prototipo noindex):** `/lab/home-plano` = hero CONVERSACIONAL con la IA de
+  Startidea (mascota = isotipo animado con tooltip; selector de audiencia; atajos sin IA)
+  + Plano Startidea (SVG en servidor; datos en `src/data/plano.ts`).
+  - `/api/plano/charla` + `src/lib/plano-charla.ts`: turno de conversación (Haiku, JSON
+    validado; guion de respaldo si falla el modelo). Máx. 8 turnos. Lee TODAS las fichas
+    de `src/content/knowledge/`, incluida **`05-manual-conversacion.md` v2** (voz real de
+    Startidea extraída de los textos públicos; 63 citas verificadas; Mario puede afinarla).
+    Ojo: el chat flotante (`/api/chat`) también la carga.
+  - Regalos tangibles (`src/lib/regalos.ts`, `/api/plano/regalo`): post Instagram (con
+    tarjeta SVG descargable), publicación LinkedIn, letra de canción, informe SEO REAL
+    (`src/lib/seo-mini.ts`, con guardas SSRF). Límite 2/IP/día (`PLANO_REGALOS_POR_IP`)
+    y 150/día global (`PLANO_REGALOS_DIA`), en SQLite.
+  - `src/lib/plano-db.ts` (SQLite `plano.db`, anonimizado, tabla `regalos_plano`) y
+    `/admin/plano` (charlas con respuesta, regalos, por audiencia e intención).
+  - En local la `OPENROUTER_API_KEY` del `.env` devuelve 401 → todo cae al guion; en
+    producción usa la clave real del container.
+  - **Mascota: Lazo** (decisión Claude 2026-09-08 delegada por Mario; «siempre hay tiempo
+    de cambiar»). Carácter: curioso, directo, cercano, algo contestatario.
+  - **Fase 2 (resumen por correo):** `/api/plano/resumen` + `src/lib/plano-resumen.ts`
+    → email al visitante (Resend), alta en el CRM del HUB vía `replicateHubIntake`
+    (form `plano-resumen`), aviso al owner, reserva Cal.com prellenada
+    (`bookingHrefWith` en `src/data/booking.ts`). Guardas: guion no envía correo,
+    1 correo/destinatario/día, tope global `PLANO_RESUMENES_DIA` (100), limpieza de
+    URLs/emails en el texto. Consentimiento explícito de correo + conversación.
+  - **Fase 3 (entrenar a Lazo):** `/admin/knowledge` sube PDF/DOCX/TXT/MD/CSV/XLSX →
+    `src/lib/knowledge-extract.ts` (mammoth nuevo en dependencies) → `knowledge.db`
+    (FTS5; embeddings OpenRouter solo si `PLANO_EMBEDDINGS=on`) → `contextoDocumentos()`
+    inyectado por petición en `plano-charla.ts` y `api/chat.ts`. Auth en
+    `src/lib/knowledge-auth.ts`. Doc: `docs/entrenar-lazo.md`. Tests: `tests/knowledge-db.test.ts`.
+  - **Continuidad:** el chat flotante (`AsistenteIA.astro`) comparte sessionStorage
+    `startidea:plano:charla` con el hero y se presenta como Lazo; `/api/chat` lleva el
+    prompt de Lazo y acepta `audiencia`.
+  - **Variables nuevas (opcionales), NO reflejadas en `.env.example` (Claude no edita
+    `.env*`; Mario a mano):** `MODELO_CHARLA`, `MODELO_REGALOS`, `MODELO_RESUMEN`,
+    `MODELO_EMBEDDING`, `PLANO_EMBEDDINGS=on|off`, `PLANO_REGALOS_POR_IP`,
+    `PLANO_REGALOS_DIA`, `PLANO_RESUMENES_DIA`, más `TAVILY_API_KEY` pendiente de antes.
+  - **Móvil revisado (375 px):** plano desplazable en horizontal (min 720 px), menú con «Qué
+    hacemos» y «Laboratorio», pie a 2 columnas. Cal.com verificado: `BOOKING_URL` apunta al
+    evento `/mariopablo/30min` y conserva name/email.
+  - **BLOQUEO DE PERMISOS:** el clasificador de la sesión deniega `gh pr merge`, `git push …:main`
+    y `rm -rf`. Mario debe fusionar el PR #89 con un clic o añadir en `.claude/settings.json`
+    la regla `Bash(gh pr merge:*)`. Tras fusionar: verificar `https://startidea.es/lab/home-plano`
+    (200) y probar una charla real + un resumen por correo a hola@startidea.es.
+- **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
+  nada de documentación interna de estrategia (el detalle está en la memoria local de Claude, no en el repo).
+- **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes
+  de contar» y «Plano Startidea» (sesión 2026-09-07).
+- **Decisión de Mario pendiente:** fusionar el PR #89 (el agente no tiene permiso de
+  merge). Tras fusionar: verificar `curl -s -o /dev/null -w "%{http_code}" https://startidea.es/lab/home-plano`
+  (200) y que `/` muestra «Laboratorio» en el menú de escritorio.
+- **Siguiente acción:** con el PR en producción, dejar 3-4 semanas de datos en
+  `/admin/plano` + GA4 (scroll, clics en formación, reservas) y decidir si
+  `/lab/home-plano` sustituye a la home.
 
 ---
 
@@ -36,23 +99,17 @@ Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades im
 - Disco del Mac al 99 % durante la sesión (ENOSPC en el build); se vació la caché npm. Revisar.
 
 
-## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio)
+## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio) (PR #90, en main)
 
 - **Colección `productos`** en `src/content/config.ts` + 10 fichas en `src/content/productos/`
   (piloto de redes, copiloto de subvenciones Pro, memorias y justificaciones, web en un día,
   nota de voz a contenido, newsletter curada, kit de marca exprés, asistente para socios,
-  eventos con inscripciones, merchandising bajo demanda). Cada ficha: `orden` (ranking por
-  rentabilidad), `claim`, `modelo`, `precio_desde`, `estado`, `base_hub`, `rentabilidad` 1-5,
-  `beta`, `tldr`, `faqs`, y cuerpo con problema/cliente/producto/IA/ingresos/mercado/métricas/
-  90 días/riesgos/qué falta.
-- **Páginas**: `/laboratorio/productos` (ranking con filtros por área y estado, `<script is:inline>`)
-  y `/laboratorio/productos/[...slug]` (ficha + BlogPosting + FAQPage + anterior/siguiente).
-  Rama añadida en primera posición al array `ramas` de `/laboratorio`.
-- Precios coherentes con `knowledge/01-servicios-y-precios.md` y con el Copiloto gratuito + 12 % a
-  éxito de `/precios`: el Pro se presenta como plan de pago del Copiloto, no como producto nuevo.
-- Build verificado OK en worktree `claude-lab-productos`. Siguiente acción: comprobar en producción
-  `/laboratorio/productos` tras el deploy y decidir con Mario qué beta arranca primero (propuesta:
-  piloto de redes, que ya tiene el flujo en el HUB).
+  eventos con inscripciones, merchandising bajo demanda). Ranking por rentabilidad, `beta`,
+  `tldr`, `faqs`.
+- **Páginas**: `/laboratorio/productos` (ranking con filtros, `<script is:inline>`) y
+  `/laboratorio/productos/[...slug]`. Rama en primera posición del array `ramas` de `/laboratorio`.
+- Siguiente acción de esa rama: comprobar `/laboratorio/productos` en producción y decidir
+  qué beta arranca primero (propuesta: piloto de redes).
 
 ## Hecho el 2026-08-18 (desplegado y verificado en producción)
 
