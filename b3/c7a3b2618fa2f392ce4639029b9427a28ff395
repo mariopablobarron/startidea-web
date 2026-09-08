@@ -1,0 +1,35 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_b16f5fa7ed2a62 3,7,9,11-14,16,18-22,26,28
+docs/auditoria-seo-geo-2026-09.md
+  s_1c51cfd99bed79::t_2b34ceb56138c5 1-2
+docs/auditoria-seo-geo-corregida-2026-09.md
+  s_1c51cfd99bed79::t_d20c34a2cfdf22 1-223
+docs/seo-conciliacion-2026-09.md
+  s_1c51cfd99bed79::t_9211026b736e71 1-75
+docs/seo-geo-evidencias/verificacion-2026-09-08.json
+  s_1c51cfd99bed79::t_41330e5e93f8e2 1-808
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "b3c7a3b2618fa2f392ce4639029b9427a28ff395",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
