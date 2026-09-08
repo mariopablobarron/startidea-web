@@ -24,9 +24,10 @@ desconocido no preselecciona nada. No se envía ninguna solicitud al abrir el en
 
 ## Eventos
 
-`stTrack` emite mediante la etiqueta GA4 (`gtag`) ya configurada. Conserva un
-respaldo `dataLayer` si no existe `gtag`; no emite por ambas vías a la vez. El
-consentimiento sigue definido por `GoogleTagManager.astro`.
+`stTrack` usa el transporte GA4 con aceptación explícita del banner. Sin
+aceptación, con «solo esenciales» o en páginas privadas no se cargan los SDK ni
+se guardan eventos para enviarlos después. La excepción del formulario de
+presupuesto se limita a su señal de aceptación, sin visita automática.
 
 | Evento | Cuándo ocurre | Qué acredita |
 |---|---|---|
@@ -45,7 +46,8 @@ Se sobrescriben también `page_location` y `page_referrer` en estos eventos:
 GA4 los obtiene de la URL completa si no se especifican. Los referentes
 externos y las rutas de utilidad se reducen al origen. `stTrack` no emite desde
 portal, administración, contratos, pedidos, Mi Copiloto ni confirmaciones.
-Esto no modifica la configuración previa de los pageviews automáticos.
+La corrección posterior también sanea las visitas automáticas de GA4 y Umami,
+y excluye los SDK de páginas privadas. Véase `seo-medicion-privacidad-2026-09.md`.
 
 Para desglosar estos parámetros en los informes estándar de GA4, revisar las
 definiciones personalizadas existentes y registrar solo las que falten, con

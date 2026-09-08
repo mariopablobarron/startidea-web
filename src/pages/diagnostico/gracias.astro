@@ -129,6 +129,13 @@ import Base from '@/layouts/Base.astro';
 </Base>
 
 <script>
+  import { emitDiagnosisAcceptance } from '@/lib/diagnosis-submission';
+
+  emitDiagnosisAcceptance({
+    getStorage: () => window.sessionStorage,
+    hasConsent: () => window.stPrivacy?.hasConsent() === true,
+  }, (event, fields) => window.stTrack?.(event, fields));
+
   // Adapta el mensaje superior según kind (diagnostico|presupuesto).
   // /presupuesto/nuevo redirige a /diagnostico/gracias?kind=presupuesto.
   const params = new URLSearchParams(window.location.search);
@@ -145,13 +152,6 @@ import Base from '@/layouts/Base.astro';
         'Startidea ha recibido tu briefing. El equipo lo analiza, calcula alcance y presupuesto, y te responde con una propuesta clara en las próximas <strong>48 horas laborales</strong>.';
     }
     document.title = 'Presupuesto recibido — Startidea';
-  }
-
-  // Tracking analítico (Umami + GA4 via stTrack)
-  type W = Window & { stTrack?: (e: string, p?: Record<string, unknown>) => void };
-  const w = window;
-  if (typeof w.stTrack === 'function') {
-    w.stTrack('form_submit', { form_type: kind });
   }
 
   // ─── Primera lectura personalizada ─────────────────────────────

@@ -1,20 +1,9 @@
 ---
 /**
- * Tracking analytics con Google Consent Mode v2 — carga GA4 (y opcional GTM)
- * SIEMPRE, con consent por defecto en "denied". Google sigue contando eventos
- * cookieless agregados (pageviews, sessions, conversions modeladas) sin
- * identificar al usuario hasta que acepta cookies. Esto es lo que pide la
- * RGPD/ePrivacy hecho bien — y lo que Google Ads exige desde marzo 2024.
- *
- * Cuando el usuario clica "Aceptar todas" en el banner se hace
- * gtag('consent', 'update', {...granted}) y se sube al tracking completo.
- *
- * Si rechaza ("essential"), Google sigue en cookieless mode — sin storage
- * personal, solo mediciones agregadas. Compliant.
- *
- * GA4 G-97JZVP7DM4 → propiedad limpia properties/410265807 "startidea.es".
- * GTM-N3SR8J → legacy con stream contaminado, deshabilitado por defecto
- *              (activar con PUBLIC_GTM_ENABLED='true').
+ * GA4 se carga con aceptación explícita. Las páginas de utilidad no generan
+ * visitas automáticas. Una aceptación probada y consumida en la confirmación
+ * puede emitir su única señal mínima, con el mismo consentimiento.
+ * GTM legacy permanece opcional y desactivado por defecto.
  */
 const ga4Id = import.meta.env.PUBLIC_GA4_ID || 'G-97JZVP7DM4';
 const gtmEnabled = import.meta.env.PUBLIC_GTM_ENABLED === 'true';
@@ -24,99 +13,106 @@ const gtmId = gtmEnabled ? (import.meta.env.PUBLIC_GTM_ID || 'GTM-N3SR8J') : '';
 {(ga4Id || gtmId) && (
   <script is:inline define:vars={{ gtmId, ga4Id }}>
     (function () {
-      var KEY = 'startidea.cookieconsent.v2';
-
-      // ─── Setup base: dataLayer + gtag stub ──────────────────────────
+      var privacy = window.stPrivacy;
+      if (!privacy) return;
       window.dataLayer = window.dataLayer || [];
-      function gtag() { window.dataLayer.push(arguments); }
-      window.gtag = gtag;
-
-      // ─── Consent Mode v2 — defaults ANTES de cualquier config ──────
-      // Por defecto todo "denied" → Google opera en cookieless mode.
-      // Si ya hay consent guardado, partimos directamente granted.
-      var existing = null;
-      try { existing = localStorage.getItem(KEY); } catch (_) {}
-      var defaults = existing === 'all'
-        ? {
-            ad_storage: 'granted',
-            ad_user_data: 'granted',
-            ad_personalization: 'granted',
-            analytics_storage: 'granted',
-            functionality_storage: 'granted',
-            personalization_storage: 'granted',
-            security_storage: 'granted',
-          }
-        : {
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied',
-            analytics_storage: 'denied',
-            functionality_storage: 'denied',
-            personalization_storage: 'denied',
-            security_storage: 'granted',  // siempre granted: cookies sesión, CSRF, etc.
-            wait_for_update: 500,         // espera 500ms al banner por si llega update inmediato
-          };
-      gtag('consent', 'default', defaults);
-
-      // Región EEA + UK con consent estricto (resto del mundo más permisivo)
-      gtag('consent', 'default', Object.assign({}, defaults, {
-        region: ['ES','PT','FR','DE','IT','GB','BE','NL','LU','IE','DK','SE','FI','AT','CZ','SK','PL','HU','RO','BG','GR','CY','MT','EE','LV','LT','SI','HR','NO','IS','LI'],
-      }));
-
-      // ─── Cargar GA4 (siempre) ──────────────────────────────────────
+      var loaded = false;
+      var gtmLoaded = false;
+      var pageViewed = false;
+      var path = location.pathname.replace(/\/$/, '') || '/';
+      var denied = {
+        ad_storage: 'denied', ad_user_data: 'denied',
+        ad_personalization: 'denied', analytics_storage: 'denied',
+      };
+      function enqueue() { window.dataLayer.push(arguments); }
+      function safeContext() {
+        return {
+          page_location: privacy.pageLocation,
+          page_referrer: privacy.pageReferrer,
+          page_title: privacy.isPublicPage ? document.title : 'Solicitud recibida',
+        };
+      }
+      function insert(src) {
+        var script = document.createElement('script');
+        script.async = true;
+        script.referrerPolicy = 'no-referrer';
+        script.src = src;
+        document.head.appendChild(script);
+        window.stNonessentialLoaded = true;
+      }
       function loadGa4() {
-        if (!ga4Id) return;
-        gtag('js', new Date());
-        gtag('config', ga4Id, {
-          anonymize_ip: true,
-          // url_passthrough permite continuar tracking entre páginas sin cookies
-          url_passthrough: true,
-          // ads_data_redaction → si Google Ads activado, no transmite info personal
+        if (!ga4Id || !privacy.hasConsent()) return false;
+        if (loaded) return true;
+        try {
+        window['ga-disable-' + ga4Id] = false;
+        enqueue('consent', 'default', denied);
+        enqueue('consent', 'update', Object.assign({}, denied, { analytics_storage: 'granted' }));
+        enqueue('js', new Date());
+        enqueue('set', safeContext());
+        enqueue('config', ga4Id, Object.assign({
+          send_page_view: false,
+          url_passthrough: false,
           ads_data_redaction: true,
+          allow_google_signals: false,
+          allow_ad_personalization_signals: false,
+        }, safeContext()));
+        insert('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id));
+        loaded = true;
+        return true;
+        } catch (_) { return false; }
+      }
+      function allowedEvent(name, params) {
+        if (!privacy.hasConsent()) return false;
+        if (privacy.isAllowed()) return true;
+        return path === '/diagnostico/gracias' && name === 'form_submit' &&
+          params && (params.form_type === 'presupuesto' || params.form_type === 'diagnostico');
+      }
+      function sendEvent(name, params) {
+        if (!allowedEvent(name, params)) return false;
+        if (!loadGa4()) return false;
+        // La excepción de utilidad nunca acepta campos adicionales.
+        var fields = privacy.isPublicPage ? (params || {}) : { form_type: params.form_type };
+        try { enqueue('event', name, Object.assign({}, fields, safeContext())); }
+        catch (_) { return false; }
+        return true; // Encolado en la etiqueta; no acredita recepción en Google.
+      }
+      window.stSendAnalyticsEvent = sendEvent;
+      // Compatibilidad con llamadas de eventos existentes; config/consent quedan
+      // bajo este controlador y nunca eluden la elección del banner.
+      window.gtag = function (command, name, params) {
+        return command === 'event' ? sendEvent(name, params) : false;
+      };
+      function activate() {
+        if (!privacy.isAllowed()) return;
+        var active = loadGa4();
+        if (active && !pageViewed) {
+          pageViewed = true;
+          sendEvent('page_view', {});
+        }
+        // No permitir que etiquetas legacy lean parámetros de un enlace personal.
+        if (gtmId && !gtmLoaded && !privacy.hasSensitiveContext && !location.search && !location.hash) {
+          try {
+            window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            insert('https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId));
+            gtmLoaded = true;
+          } catch (_) { /* Una etiqueta opcional no interrumpe la página. */ }
+        }
+      }
+      function revoke() {
+        if (ga4Id) window['ga-disable-' + ga4Id] = true;
+        // Solo cookies de Google Analytics; nunca cookies funcionales.
+        document.cookie.split(';').forEach(function (part) {
+          var name = part.split('=')[0].trim();
+          if (!/^_ga(?:_|$)|^_gid$|^_gat(?:_|$)/.test(name)) return;
+          [';', ';domain=' + location.hostname, ';domain=.' + location.hostname].forEach(function (domain) {
+            document.cookie = name + '=;max-age=0;path=/' + domain;
+          });
         });
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
-        var first = document.getElementsByTagName('script')[0];
-        first.parentNode.insertBefore(s, first);
       }
-
-      // Cargar siempre (con consent default ya configurado arriba)
-      loadGa4();
-      // GTM opcional — solo si PUBLIC_GTM_ENABLED=true en .env
-      if (gtmId) {
-        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var gs = document.createElement('script');
-        gs.async = true;
-        gs.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
-        var gf = document.getElementsByTagName('script')[0];
-        gf.parentNode.insertBefore(gs, gf);
-      }
-
-      // ─── Upgrade a granted cuando el usuario acepta ────────────────
-      function grantAll() {
-        gtag('consent', 'update', {
-          ad_storage: 'granted',
-          ad_user_data: 'granted',
-          ad_personalization: 'granted',
-          analytics_storage: 'granted',
-          functionality_storage: 'granted',
-          personalization_storage: 'granted',
-        });
-      }
-      function denyAll() {
-        gtag('consent', 'update', {
-          ad_storage: 'denied',
-          ad_user_data: 'denied',
-          ad_personalization: 'denied',
-          analytics_storage: 'denied',
-          functionality_storage: 'denied',
-          personalization_storage: 'denied',
-        });
-      }
-
-      document.addEventListener('cookieconsent:all', grantAll);
-      document.addEventListener('cookieconsent:essential', denyAll);
+      document.addEventListener('cookieconsent:all', activate);
+      document.addEventListener('cookieconsent:essential', revoke);
+      if (!privacy.hasConsent()) revoke();
+      activate();
     })();
   </script>
 )}

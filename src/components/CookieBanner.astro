@@ -19,6 +19,9 @@
           Este sitio usa cookies técnicas (necesarias para que el sitio funcione) y, si tú quieres, cookies de terceros para cargar el calendario de Cal.com y medir la web con Google Analytics, Microsoft Clarity y Spotify Pixel.
           <a href="/cookies" class="link-underline text-ink">Más detalles</a>.
         </p>
+        <p id="cookie-reload-notice" hidden class="mt-3 max-w-2xl text-sm leading-relaxed text-ink/85">
+          Al cambiar a solo esenciales se recargará la página. Guarda antes lo que hayas escrito.
+        </p>
       </div>
       <div class="col-span-12 flex flex-wrap items-center justify-start gap-3 lg:col-span-5 lg:justify-end">
         <button id="cookie-reject" type="button" class="btn-ghost">
@@ -38,6 +41,7 @@
     var KEY = 'startidea.cookieconsent.v2';
     var banner = document.getElementById('cookie-banner');
     if (!banner) return;
+    var reloadNotice = document.getElementById('cookie-reload-notice');
 
     function emit(value) {
       try {
@@ -46,11 +50,25 @@
     }
 
     function save(value) {
+      var previous = current;
+      var hadNonessential = window.stNonessentialLoaded === true;
       try {
         localStorage.setItem(KEY, value);
-      } catch (_) {}
+      } catch (_) {
+        // Si falla la escritura al revocar, no conservar un «all» antiguo
+        // que volvería a activar los SDK al recargar.
+        if (value === 'essential') {
+          try { localStorage.removeItem(KEY); } catch (_) {}
+        }
+      }
+      current = value;
       banner.classList.add('hidden');
       emit(value);
+      // Un SDK ya ejecutado conserva listeners aunque se retire su <script>.
+      // Recargar tras revocar corta esa instancia; la nueva página no lo carga.
+      if (previous === 'all' && value === 'essential' && hadNonessential) {
+        window.location.reload();
+      }
     }
 
     var current = null;
@@ -74,7 +92,10 @@
     // API mínima para que otras páginas puedan reabrir el banner.
     window.startideaConsent = {
       get: function () { try { return localStorage.getItem(KEY); } catch (_) { return null; } },
-      reopen: function () { banner.classList.remove('hidden'); },
+      reopen: function () {
+        if (reloadNotice) reloadNotice.hidden = !(current === 'all' && window.stNonessentialLoaded === true);
+        banner.classList.remove('hidden');
+      },
     };
   })();
 </script>
