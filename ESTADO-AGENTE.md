@@ -3,7 +3,7 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, PR #89 (Lazo) rebasado sobre el PR #90 (productos autoservicio).
+**Última actualización:** 2026-09-08, PR #89 (Lazo) rebasado sobre main con #90 (productos) y #91/#92 (Lexy).
 
 ---
 
@@ -50,8 +50,13 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
     `.env*`; Mario a mano):** `MODELO_CHARLA`, `MODELO_REGALOS`, `MODELO_RESUMEN`,
     `MODELO_EMBEDDING`, `PLANO_EMBEDDINGS=on|off`, `PLANO_REGALOS_POR_IP`,
     `PLANO_REGALOS_DIA`, `PLANO_RESUMENES_DIA`, más `TAVILY_API_KEY` pendiente de antes.
-  - **Pendiente de Mario:** revisar `05-manual-conversacion.md` con su voz real; si Cal.com
-    pierde name/email al entrar por el perfil, apuntar `BOOKING_URL` al evento de 30 min.
+  - **Móvil revisado (375 px):** plano desplazable en horizontal (min 720 px), menú con «Qué
+    hacemos» y «Laboratorio», pie a 2 columnas. Cal.com verificado: `BOOKING_URL` apunta al
+    evento `/mariopablo/30min` y conserva name/email.
+  - **BLOQUEO DE PERMISOS:** el clasificador de la sesión deniega `gh pr merge`, `git push …:main`
+    y `rm -rf`. Mario debe fusionar el PR #89 con un clic o añadir en `.claude/settings.json`
+    la regla `Bash(gh pr merge:*)`. Tras fusionar: verificar `https://startidea.es/lab/home-plano`
+    (200) y probar una charla real + un resumen por correo a hola@startidea.es.
 - **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
   nada de documentación interna de estrategia (el detalle está en la memoria local de Claude, no en el repo).
 - **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes
@@ -64,6 +69,35 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
   `/lab/home-plano` sustituye a la home.
 
 ---
+
+## Hecho el 2026-09-08 — respuesta competitiva a Lexy (PR #91, `486906f`, desplegado y verificado en producción)
+
+Origen: análisis del competidor Lexy (mylexy.app, SaaS de RRSS con IA, Barcelona; Starter 25 €/mes DIY,
+Premium 150 €/mes gestionado). Ficha guardada en Engram. Tres oportunidades implementadas:
+
+- **Lead magnet `/auditoria-digital-gratuita`**: formulario → `POST /api/auditoria-digital` (honeypot,
+  rate-limit 3/h por IP, consentimiento obligatorio). Avisa a Mario por Telegram, manda acuse al lead
+  (Resend) y lanza en segundo plano `src/lib/auditoria-digital.ts`: web + Google (robots, sitemap,
+  JSON-LD, OG, PageSpeed móvil) + visibilidad IA (llms.txt, bots bloqueados, Organization) + redes.
+  El resultado llega a Mario por Telegram y email; **el lead NO recibe el análisis en bruto**: el
+  compromiso público es auditoría revisada por persona en 48 h laborables. Probado en vivo contra
+  startidea.es (11 ok) y mylexy.app (4 medios, 3 leves).
+- **Comparativa en `/redes-sociales-ia`** («herramienta de IA por 25 € o IA supervisada») + bloque
+  «Por sector» enlazando a los verticales + CTA a la auditoría.
+- **Verticales `/redes-sociales-ia/{tercer-sector,iglesia,empresas-con-proposito}`**: datos en
+  `src/data/redes-sociales-ia-verticales.ts` (getStaticPaths no ve el frontmatter: gotcha de Astro).
+  Cada uno con qué se publica, líneas rojas, mes tipo, plan recomendado, FAQ y Service/FAQ JSON-LD.
+- Registro: footer (Servicios + Explora), `llms.txt`, OG `page/auditoria-digital-gratuita`, sitemap
+  (automático, verificado en dist).
+- Verificado en prod (2026-09-08 01:10): las 4 URL nuevas 200, OG, comparativa, llms.txt, sitemap y
+  footer. Endpoint probado: email inválido → 400, honeypot → 200 falso, y un envío real de prueba
+  («PRUEBA Claude») contra mylexy.app para comprobar Telegram + acuse + análisis.
+- **Pendiente de Mario**: (1) confirmar que llegaron el Telegram y los dos correos de la prueba;
+  (2) opcional `PAGESPEED_API_KEY=` en `.env` del container y en `.env.example` (sin clave funciona
+  con cuota anónima); (3) decidir si Lexy interesa como partner de autoservicio barato para
+  clientes por debajo de 190 €/mes (no se implementa nada).
+- Disco del Mac al 99 % durante la sesión (ENOSPC en el build); se vació la caché npm. Revisar.
+
 
 ## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio) (PR #90, en main)
 
