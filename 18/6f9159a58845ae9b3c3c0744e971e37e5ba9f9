@@ -1,0 +1,23 @@
+src/components/FormacionPromo.astro
+  s_1c51cfd99bed79::t_796f47596eddc5 72
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_585448ee299049 7,12,15,34
+docs/revision-pr106-2026-09.md
+  s_1c51cfd99bed79::t_5f23cb0daa97ef 49-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "186f9159a58845ae9b3c3c0744e971e37e5ba9f9",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
