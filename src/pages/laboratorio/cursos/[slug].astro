@@ -162,7 +162,7 @@ const jsonLd = [
           <p class="text-[11px] text-ink/75 leading-snug">
             La <strong>señal de {d.senal} €</strong> reserva tu plaza y se descuenta del precio total ({d.precio} €) al confirmarse la edición. {d.estado === 'a-demanda' || d.estado === 'proximo'
               ? 'La edición se abre cuando hay 6+ inscritos; si no llega a abrirse, se devuelve íntegra.'
-              : 'Plazas limitadas.'} ¿Dudas? <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`} class="link-underline text-ink">Escríbenos</a>.
+              : 'Plazas limitadas.'} ¿Dudas? <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso`} data-course-intent="consulta" class="link-underline text-ink">Escríbenos</a>.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ const jsonLd = [
               <p class="mt-3 text-sm text-ink/70 leading-relaxed">
                 Llama o escribe sin compromiso. Si no encaja contigo, Startidea te lo dice antes de cobrar.
               </p>
-              <a href="/contacto" class="btn-ghost mt-4 block text-center text-sm">
+              <a href={`/contacto?curso=${encodeURIComponent(curso.slug)}`} data-course-intent="consulta" class="btn-ghost mt-4 block text-center text-sm">
                 Hablar con Startidea →
               </a>
               <a href="tel:+34958045789" class="mt-2 block text-center font-mono text-[10px] uppercase tracking-widest text-ink/75 hover:text-ink">
@@ -233,10 +233,11 @@ const jsonLd = [
         </div>
         <div class="col-span-12 mt-8 lg:col-span-4 lg:col-start-9 lg:mt-0 lg:text-right">
           <a
-            href={`/contacto?curso=${encodeURIComponent(curso.slug)}&ref=curso-footer`}
+            href={`/contacto?curso=${encodeURIComponent(curso.slug)}&intent=${d.estado === 'abierto' ? 'consulta' : d.estado === 'a-demanda' ? 'grupo' : 'aviso'}&ref=curso-footer`}
+            data-course-intent={d.estado === 'abierto' ? 'consulta' : d.estado === 'a-demanda' ? 'grupo' : 'aviso'}
             class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta inline-flex px-8 py-4 text-base"
           >
-            {d.estado === 'abierto' ? 'Inscribirme →' : 'Avísame →'}
+            {d.estado === 'abierto' ? 'Consultar antes de reservar →' : d.estado === 'a-demanda' ? 'Consultar una edición para mi equipo →' : 'Pedir aviso de próxima edición →'}
           </a>
         </div>
       </div>

@@ -5,6 +5,7 @@
  * Si ya hay sesión activa, redirige al dashboard.
  */
 import { getPortalSessionEmail } from '@/lib/expedientes-db';
+import { SITE_URL } from '@/lib/jsonld';
 
 export const prerender = false;
 
@@ -38,6 +39,8 @@ const googleConfigured = !!(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Portal de clientes · Startidea</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href={`${SITE_URL}/portal`}>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {

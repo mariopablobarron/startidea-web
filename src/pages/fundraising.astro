@@ -446,6 +446,10 @@ const proceso = [
   <!-- Prueba: casos reales (slugs vacío — el componente renderiza enlace a /casos) -->
   <CasosRelacionados slugs={casosSlugs} titulo="Resultados, no promesas" />
 
-  <NotasRelacionadas category="Financiación" />
+  <NotasRelacionadas category="Financiación" slugs={[
+    'fundraising-individual-asociaciones-pequenas',
+    'base-social-cuota-mensual-ong',
+    'que-evalua-empresa-antes-convenio-ong',
+  ]} />
   <OtrosServicios current="fundraising" />
 </Base>

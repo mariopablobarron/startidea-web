@@ -2,6 +2,10 @@
 import Base from '@/layouts/Base.astro';
 import { faqPageSchema, breadcrumbList, localBusinessSchema, SITE_URL } from '@/lib/jsonld';
 import { bookingHref, hasBooking } from '@/data/booking';
+import { getCollection } from 'astro:content';
+
+const cursosContacto = (await getCollection('cursos', ({ data }) => !data.draft))
+  .map((curso) => ({ slug: curso.slug, title: curso.data.title }));
 
 const faqs = [
   {
@@ -84,8 +88,10 @@ const jsonLd = [
             Cuéntalo en <em class="italic text-magenta">tres líneas</em>.
           </h2>
           <p class="mt-5 max-w-measure text-ink/80">
-            Startidea te devuelve la llamada en las próximas 24 horas laborales por el medio que prefieras — Google Meet, teléfono o WhatsApp. Si necesitas algo más estructurado, empieza por el <a href="/diagnostico" class="link-underline text-ink">diagnóstico inicial</a> de 3 minutos.
+            Startidea revisa tu consulta y responde por el medio que prefieras — Google Meet, teléfono o WhatsApp. Si necesitas algo más estructurado, empieza por el <a href="/diagnostico" class="link-underline text-ink">diagnóstico inicial</a> de 3 minutos.
           </p>
+
+          <p id="curso-contexto" hidden class="mt-5 border-l-2 border-magenta pl-4 text-sm text-ink/80"></p>
 
           <form id="contacto-form" class="mt-10 space-y-4" novalidate>
             <input type="text" name="website" tabindex="-1" autocomplete="off" class="absolute -left-[9999px]" aria-hidden="true" />
@@ -221,7 +227,7 @@ const jsonLd = [
     </div>
   </section>
 
-  <script is:inline>
+  <script is:inline define:vars={{ cursosContacto }}>
     // Form de contacto directo — POST a /api/contacto (mismo endpoint que
     // usa el CTA de la home y los recursos). Si Resend/Telegram falla, el
     // form muestra error legible y Mario se entera por logs.
@@ -229,6 +235,20 @@ const jsonLd = [
       var form = document.getElementById('contacto-form');
       if (!form) return;
       var status = document.getElementById('contacto-status');
+      var params = new URLSearchParams(location.search);
+      var curso = cursosContacto.find(function (item) { return item.slug === params.get('curso'); });
+      var intent = ['consulta', 'grupo', 'aviso'].indexOf(params.get('intent')) !== -1 ? params.get('intent') : 'consulta';
+      if (curso) {
+        var context = document.getElementById('curso-contexto');
+        context.textContent = 'Consulta sobre «' + curso.title + '». Puedes completar o cambiar el mensaje antes de enviarlo.';
+        context.hidden = false;
+        var message = form.querySelector('[name="message"]');
+        if (message && !message.value) {
+          var prefix = intent === 'grupo' ? 'Quiero consultar una edición para mi equipo de' :
+            intent === 'aviso' ? 'Quiero pedir un aviso sobre la próxima edición de' : 'Quiero información sobre';
+          message.value = prefix + ' «' + curso.title + '».\n\n';
+        }
+      }
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -254,10 +274,11 @@ const jsonLd = [
           var json = await r.json().catch(function () { return { ok: false }; });
           if (r.ok && json.ok) {
             window.stTrack && window.stTrack('generate_lead', {
-              method: 'contacto_form',
+              method: curso ? 'curso_' + intent : 'contacto_form',
+              ...(curso ? { course_id: curso.slug } : {}),
               page_path: '/contacto',
             });
-            form.innerHTML = '<div class="border-2 border-magenta p-6"><p class="font-display text-2xl text-ink">Recibido. Startidea te llama en menos de 24 horas laborales.</p><p class="mt-2 text-sm text-ink/70">Si es urgente, escribe directamente a <a href="mailto:hola@startidea.es" class="link-underline">hola@startidea.es</a>.</p></div>';
+            form.innerHTML = '<div class="border-2 border-magenta p-6"><p class="font-display text-2xl text-ink">Consulta recibida. Startidea revisará tu mensaje y se pondrá en contacto contigo.</p><p class="mt-2 text-sm text-ink/70">Si es urgente, escribe directamente a <a href="mailto:hola@startidea.es" class="link-underline">hola@startidea.es</a>.</p></div>';
           } else {
             status.textContent =
               json.error === 'rate' ? 'Espera unos segundos antes de reenviar.' :

@@ -4,9 +4,9 @@ import sitemap from '@astrojs/sitemap';
 import node from '@astrojs/node';
 import { readdirSync, readFileSync } from 'node:fs';
 
-// Mapa slug→fecha de las notas (updatedDate || pubDate) para emitir <lastmod>
-// en el sitemap. Frescura = re-crawl más rápido de Google/Bing y mejor señal
-// para AI Overviews. Defensivo: si algo falla, se queda vacío y no rompe build.
+// Mapa slug→fecha editorial de las notas (updatedDate || pubDate) para emitir
+// <lastmod> sin confundir la fecha de build con un cambio del contenido.
+// Defensivo: si algo falla, se queda vacío y no rompe build.
 const notaLastmod = {};
 try {
   const dir = new URL('./src/content/notas/', import.meta.url);
@@ -108,10 +108,13 @@ export default defineConfig({
         return item;
       },
       filter: (page) => {
-        // Excluir siempre rutas internas/admin/utilidad
-        if (page.includes('/admin/'))              return false;
-        if (page.includes('/api/'))                return false;
-        if (page.includes('/404'))                 return false;
+        const pathname = new URL(page).pathname;
+        // Acceso, registro y gestión del portal son utilidades. Las landings
+        // comerciales (/memorias, /precios, /diagnostico...) se conservan.
+        if (/^\/(?:admin|api|portal|contrato)(?:\/|$)/.test(pathname)) return false;
+        if (/^\/(?:404|500)\/?$/.test(pathname))    return false;
+        // La landing /memorias sí es pública; el pedido requiere un enlace personal.
+        if (/^\/memorias\/pedido(?:\/|$)/.test(pathname)) return false;
         if (page.includes('/recursos/gracias'))    return false;
         // Páginas de formularios y confirmaciones (noindex).
         // OJO: excluir subpáginas del árbol/brief, pero NO la landing /diagnostico
@@ -119,11 +122,6 @@ export default defineConfig({
         if (page.includes('/diagnostico/') && !/\/diagnostico\/?$/.test(page)) return false;
         if (page.includes('/presupuesto/nuevo'))   return false;
         if (page.includes('/encuesta-fundraising')) return false;
-        // Portal privado: dashboard (302 a /portal) y confirmación de envío.
-        // Estaban filtrándose al índice de Google. Se conservan /portal/ y
-        // /portal/registro/ (landing + alta públicas).
-        if (page.includes('/portal/dashboard'))    return false;
-        if (page.includes('/portal/enviado'))      return false;
         // Preview interna del laboratorio inmersivo (sin contenido indexable).
         if (page.includes('/lab/inmersivo'))       return false;
         // Experimentos de home + "gracias" de cursos: son noindex; fuera del

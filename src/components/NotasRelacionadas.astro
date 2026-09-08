@@ -5,8 +5,8 @@
  * con la nota actual) y no solo por recencia — antes solo enlazaba las 3 más
  * recientes de cada categoría, dejando a la mayoría de notas sin ningún enlace
  * interno automático (auditoría 2026-07). Con `tags`, cada nota enlaza a sus
- * vecinas temáticas; sin `tags` (landings de servicio), rota de forma
- * determinista con el mes para repartir enlazado interno entre todas.
+ * vecinas temáticas. Las páginas comerciales pueden fijar una selección
+ * editorial con `slugs`, sin rellenarla con notas ajenas al servicio.
  *
  * Props:
  *   category  — categoría a mostrar ('Comunicación' | 'Financiación' | 'Estrategia' | 'Agencia')
@@ -21,32 +21,38 @@ interface Props {
   exclude?: string;
   limit?: number;
   tags?: string[];
+  slugs?: string[];
 }
 
-const { category, exclude, limit = 3, tags = [] } = Astro.props;
+const { category, exclude, limit = 3, tags = [], slugs } = Astro.props;
 
-const allNotas = await getCollection('notas', ({ data }) => !data.draft && data.category === category);
-allNotas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const allNotas = await getCollection('notas', ({ data }) => !data.draft);
+allNotas.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime() || a.slug.localeCompare(b.slug));
 
-const candidatas = allNotas.filter((n) => n.slug !== exclude);
+const candidatas = allNotas.filter((n) => n.slug !== exclude && n.data.category === category);
 
 let notas: typeof candidatas;
-if (tags.length > 0) {
+if (slugs) {
+  notas = [...new Set(slugs)]
+    .flatMap((slug) => allNotas.filter((n) => n.slug === slug && n.slug !== exclude))
+    .slice(0, limit);
+} else if (tags.length > 0) {
   // Relevancia: nº de tags compartidos (desc); recencia como desempate (el
   // sort de arriba ya deja las recientes primero y el sort es estable).
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
   notas = candidatas
     .map((n) => ({ n, score: (n.data.tags ?? []).filter((t) => tagSet.has(t.toLowerCase())).length }))
+    .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(({ n }) => n);
 } else {
-  // Sin tags de referencia (landings): rotación determinista mensual — ventana
-  // que se desplaza con el mes para que TODAS las notas reciban enlaces internos
-  // a lo largo del tiempo (el build corre en cada deploy, ≥1/mes de sobra).
-  const monthIdx = new Date().getFullYear() * 12 + new Date().getMonth();
-  const start = candidatas.length > limit ? monthIdx % candidatas.length : 0;
-  notas = Array.from({ length: Math.min(limit, candidatas.length) }, (_, i) => candidatas[(start + i) % candidatas.length]);
+  // Sin selección editorial ni etiquetas, conservar un orden estable por fecha.
+  notas = candidatas.slice(0, limit);
+}
+
+function minutosLectura(body: string): number {
+  return Math.max(1, Math.round(body.trim().split(/\s+/).length / 200));
 }
 
 const fmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'short' });
@@ -60,9 +66,9 @@ const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
     <div class="container-x">
       <div class="mb-8 flex items-end justify-between border-t border-ink/15 pt-8">
         <div>
-          <span class="label">— Notas · {category}</span>
+          <span class="label">{slugs ? '— Lecturas relacionadas' : `— Notas · ${category}`}</span>
           <h2 class="mt-2 font-display text-2xl leading-tight text-ink md:text-3xl">
-            Más sobre <em class="italic text-magenta">{category.toLowerCase()}</em>.
+            {slugs ? <>Ideas para <em class="italic text-magenta">dar el siguiente paso</em>.</> : <>Más sobre <em class="italic text-magenta">{category.toLowerCase()}</em>.</>}
           </h2>
         </div>
         <a
@@ -75,12 +81,12 @@ const catUrl = `/notas?cat=${encodeURIComponent(category)}`;
 
       <ol class="divide-y divide-ink/15 border-y border-ink/15">
         {notas.map((nota) => {
-          const words = nota.body.trim().split(/\s+/).length;
-          const min = Math.max(1, Math.round(words / 200));
+          const min = minutosLectura(nota.body);
           return (
             <li>
               <a
                 href={`/notas/${nota.slug}`}
+                data-link-type="nota"
                 class="group grid grid-cols-12 gap-x-8 gap-y-3 py-7 transition-colors hover:bg-paper"
               >
                 <div class="col-span-12 lg:col-span-2">

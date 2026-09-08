@@ -1,6 +1,8 @@
 ---
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CursoRelacionado from '@/components/CursoRelacionado.astro';
 import { serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 const faqs = [
@@ -276,4 +278,10 @@ const proceso = [
   </section>
 
   <OtrosServicios current="agentes-ia" />
+  <CursoRelacionado slug="crea-tu-primer-agente-ia-sin-codigo" />
+  <NotasRelacionadas category="Estrategia" slugs={[
+    'agentes-ia-para-ong-tercer-sector',
+    'ia-sin-ceder-tus-datos-plataforma-propia',
+    'ia-ong-sin-comite-etica-tres-reglas',
+  ]} />
 </Base>

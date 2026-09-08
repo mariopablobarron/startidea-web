@@ -1,6 +1,6 @@
 ---
 /**
- * Sistema de tracking de eventos al dataLayer (GA4 vía GTM).
+ * Eventos a la etiqueta GA4 activa, con respaldo dataLayer si solo hay GTM.
  *
  * Expone window.stTrack(event, params) para llamadas programáticas
  * (chat, form submit, etc.) y monta listeners que disparan
@@ -11,18 +11,42 @@
  *   - file_download   en <a> con [data-track="download"]
  *                     leyendo file_name y file_extension del href
  *
- * Si el usuario rechaza cookies, GTM no se carga y los push al dataLayer
- * caen al vacío (window.dataLayer existe pero nadie lo lee). Es seguro.
+ * GoogleTagManager configura Consent Mode antes de este componente. No se
+ * modifica ese consentimiento. Los recorridos usan solo rutas públicas,
+ * nunca parámetros de URL, texto de formularios ni conversaciones.
  */
 ---
 
 <script is:inline>
   (function () {
     window.dataLayer = window.dataLayer || [];
+    var pagePath = location.pathname.replace(/\/$/, '') || '/';
+    var utilityPage = /^\/(?:portal|admin|api|contrato)(?:\/|$)/.test(pagePath) ||
+      /^\/memorias\/pedido(?:\/|$)/.test(pagePath) || /\/gracias$/.test(pagePath) ||
+      /^\/subvenciones\/mi-copiloto(?:\/|$)/.test(pagePath);
+
+    function safeReferrer() {
+      try {
+        var ref = new URL(document.referrer);
+        return ref.origin === location.origin && publicKind(ref.pathname)
+          ? ref.origin + ref.pathname : ref.origin + '/';
+      } catch (_) { return ''; }
+    }
 
     window.stTrack = function (event, params) {
+      if (utilityPage) return;
       try {
-        window.dataLayer.push(Object.assign({ event: event }, params || {}));
+        // GA4 añade document.location/document.referrer si no se sobrescriben.
+        // Sanear también estos campos automáticos, no solo los propios.
+        var eventParams = Object.assign({}, params || {}, {
+          page_location: location.origin + pagePath,
+          page_referrer: safeReferrer(),
+        });
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', event, eventParams);
+        } else {
+          window.dataLayer.push(Object.assign({ event: event }, eventParams));
+        }
       } catch (_) { /* no-op */ }
     };
 
@@ -54,10 +78,67 @@
     //    tocar cada página). Mide qué servicios se ven, no solo los que convierten.
     var SERVICES = ['/comunicacion', '/redes-sociales-granada', '/publicidad', '/consultoria', '/audiovisual', '/tecnologia',
       '/mantenimiento-web', '/ia-administraciones', '/fundraising', '/donaciones-bizum-ong',
-      '/proteccion-digital', '/google-ad-grants', '/hub', '/merchandising'];
-    if (SERVICES.indexOf(location.pathname) !== -1) {
-      window.stTrack('view_service', { service: location.pathname.slice(1), page_path: location.pathname });
+      '/proteccion-digital', '/google-ad-grants', '/hub', '/merchandising',
+      '/agentes-ia', '/financiacion-empresas', '/copiloto-subvenciones', '/redes-sociales-ia'];
+    if (SERVICES.indexOf(pagePath) !== -1) {
+      window.stTrack('view_service', { service: pagePath.slice(1), page_path: pagePath });
     }
+
+    function publicKind(path) {
+      if (SERVICES.indexOf(path) !== -1) return 'servicio';
+      if (path !== '/laboratorio/cursos/gracias' && /^\/laboratorio\/cursos\/[a-z0-9-]+$/.test(path)) return 'curso';
+      if (/^\/notas\/[a-z0-9-]+$/.test(path)) return 'nota';
+      if (path === '/contacto') return 'contacto';
+      if (['/', '/que-hacemos', '/notas', '/laboratorio', '/laboratorio/cursos'].indexOf(path) !== -1) return 'indice';
+      return null;
+    }
+    if (publicKind(pagePath) === 'curso') {
+      window.stTrack('view_course', { course_id: pagePath.split('/').pop(), page_path: pagePath });
+    }
+
+    // Clic editorial dentro de <main>: permite distinguir nota → servicio,
+    // servicio → curso y consulta. Un clic no equivale a un lead ni a una venta.
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest && e.target.closest('a[href]');
+      if (!link || !link.closest('main') || !publicKind(pagePath)) return;
+      try {
+        var url = new URL(link.getAttribute('href'), location.href);
+        var targetPath = url.pathname.replace(/\/$/, '') || '/';
+        var kind = publicKind(targetPath) || {
+          '/subvenciones/presentar/nuevo': 'solicitud',
+          '/subvenciones/crear-alerta': 'aviso',
+          '/subvenciones/catalogo': 'catalogo',
+        }[targetPath];
+        if (url.origin !== location.origin || !kind || targetPath === pagePath) return;
+        window.stTrack('internal_link_click', {
+          source_path: pagePath,
+          target_path: targetPath,
+          source_type: publicKind(pagePath),
+          target_type: kind,
+          link_type: ['servicio', 'curso', 'nota'].indexOf(link.getAttribute('data-link-type')) !== -1
+            ? link.getAttribute('data-link-type') : 'editorial',
+        });
+        var courseIntent = link.getAttribute('data-course-intent');
+        if (publicKind(pagePath) === 'curso' && targetPath === '/contacto' &&
+            ['consulta', 'grupo', 'aviso'].indexOf(courseIntent) !== -1) {
+          window.stTrack('course_contact_intent', {
+            course_id: pagePath.split('/').pop(),
+            intent_type: courseIntent,
+            page_path: pagePath,
+          });
+        }
+      } catch (_) { /* href no navegable */ }
+    }, { capture: true });
+
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (publicKind(pagePath) !== 'curso' || !form.getAttribute ||
+          form.getAttribute('action') !== '/api/curso-checkout') return;
+      window.stTrack('course_checkout_intent', {
+        course_id: pagePath.split('/').pop(),
+        page_path: pagePath,
+      });
+    }, { capture: true });
 
     // ── form_start: primer foco en un campo de cualquier <form>, una vez por form.
     //    Revela dónde fuga el embudo (hoy solo se medía el submit final).

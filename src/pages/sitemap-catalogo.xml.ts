@@ -28,7 +28,9 @@ export const GET: APIRoute = async () => {
   // /subvenciones/catalogo/[slug].
   convs = convs.filter((c) => isConvocatoriaVigente(c));
 
-  const today = new Date().toISOString().split('T')[0];
+  // El catálogo no expone una fecha de modificación editorial significativa.
+  // Omitir lastmod es preferible a anunciar un cambio nuevo en cada petición.
+  // El updated_at de la base también cambia en upserts sin cambio de contenido.
 
   // Páginas SSR (prerender=false) que NO cubre el sitemap estático de
   // @astrojs/sitemap. /precios es la landing de "cuánto cuesta tramitar una
@@ -42,21 +44,18 @@ export const GET: APIRoute = async () => {
     // Índice del catálogo
     `  <url>
     <loc>${SITE_URL}/subvenciones/catalogo</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>`,
     // Páginas SSR sueltas de alta intención
     ...staticSsr.map(s => `  <url>
     <loc>${s.loc}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>${s.changefreq}</changefreq>
     <priority>${s.priority}</priority>
   </url>`),
     // Una entrada por convocatoria activa
     ...convs.map(c => `  <url>
     <loc>${SITE_URL}/subvenciones/catalogo/${c.slug}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`),

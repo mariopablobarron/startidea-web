@@ -2,6 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import FormacionPromo from '@/components/FormacionPromo.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { rangoPublico, fmtEur } from '@/data/servicios';
 import { serviceSchema, faqPageSchema, howToSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
@@ -439,6 +440,14 @@ const proceso = [
     </div>
   </section>
 
-  <NotasRelacionadas category="Comunicación" />
+  <FormacionPromo category="Comunicación" context="comunicacion" slugs={[
+    'comunicacion-estrategica-tercer-sector',
+    'email-marketing-segmentado-tercer-sector',
+  ]} />
+  <NotasRelacionadas category="Comunicación" slugs={[
+    'plan-comunicacion-ong',
+    'newsletter-segmentacion-ong-tercer-sector',
+    'licitar-comunicacion-administracion-publica',
+  ]} />
   <OtrosServicios current="comunicacion" />
 </Base>
