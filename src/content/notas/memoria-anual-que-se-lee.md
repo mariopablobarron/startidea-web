@@ -64,3 +64,5 @@ Termina con lo que vas a hacer el próximo año. Tres compromisos concretos, med
 Cada una de estas cinco decisiones es discutible. Lo que no es discutible es que **la memoria es probablemente el documento más importante que produce tu organización al año**: condensa lo hecho, justifica lo invertido y pone a la siguiente conversación con donantes en un punto u otro de partida.
 
 Tratarlo como un trámite editorial es perder una de las pocas oportunidades anuales de defender tu causa con seriedad.
+
+Y si el destinatario concreto es una empresa que financia o que se está planteando hacerlo, la memoria anual no basta: [el informe de impacto que sí lee un patrono](/notas/informe-impacto-para-patrono-empresarial) recorre qué se espera de ese documento y en qué se diferencia del que se publica para todos.

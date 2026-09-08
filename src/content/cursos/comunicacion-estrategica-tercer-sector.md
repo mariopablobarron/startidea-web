@@ -1,6 +1,8 @@
 ---
 title: 'Comunicación estratégica para entidades del tercer sector'
+seoTitle: 'Curso de comunicación para ONG en Granada · Startidea Lab'
 description: 'Taller de un día para responsables de comunicación de ONGs y fundaciones: construye un plan realista con los recursos de una organización pequeña. Sin plantillas genéricas.'
+metaDescription: 'Taller presencial de 8 h en Granada para responsables de comunicación de ONG: sales con un plan de comunicación realista. 320 €, 240 € para ESFL.'
 pubDate: 2026-05-26
 formato: presencial
 modalidad: taller
@@ -12,6 +14,17 @@ proxima_edicion: 2026-09-19
 audience: 'Responsables de comunicación, directivos y técnicos de entidades del tercer sector'
 category: Comunicación
 tags: ['comunicación', 'plan de comunicación', 'tercer sector', 'ONG', 'formación']
+faqs:
+  - question: '¿Cuánto dura el taller y en qué horario se imparte?'
+    answer: 'Ocho horas en una sola jornada, de 9:00 a 18:30 con pausa. No es un taller teórico: cada participante sale con un borrador real de plan de comunicación para su organización.'
+  - question: '¿Para quién es este taller?'
+    answer: 'Para responsables de comunicación, directivos y técnicos de entidades del tercer sector: quien lleva la comunicación de una ONG, una fundación o una asociación, aunque no sea su único cometido.'
+  - question: '¿Cuánto cuesta y hay precio reducido para entidades sin ánimo de lucro?'
+    answer: 'El taller cuesta 320 €. Las entidades sin ánimo de lucro pagan 240 €; el precio reducido se verifica con la documentación de la entidad.'
+  - question: '¿Cuándo es la próxima edición y dónde se imparte?'
+    answer: 'El taller es presencial en Granada, en una sola jornada de ocho horas. La fecha de la próxima edición aparece en la ficha del curso; las plazas están limitadas a 12 participantes.'
+  - question: '¿Cómo se reserva la plaza?'
+    answer: 'Con una señal de 50 € que reserva la plaza y se descuenta del precio total al confirmarse la edición. También se puede escribir a Startidea antes de reservar para comprobar si el taller encaja.'
 draft: false
 ---
 
@@ -68,6 +81,6 @@ Para grupos cerrados de más de 6 personas de la misma organización, el formato
 
 ## Próximas ediciones
 
-La siguiente edición es el **19 de septiembre de 2026** en Granada. Plazas limitadas a 12 participantes.
+La fecha de la siguiente edición se anuncia en la ficha del curso, arriba. Se imparte en Granada, con plazas limitadas a 12 participantes.
 
 Si necesitas una edición en otra fecha o en formato grupo cerrado para tu organización, [escríbenos](/contacto) y buscamos el momento.

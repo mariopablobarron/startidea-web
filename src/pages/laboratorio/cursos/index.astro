@@ -8,7 +8,8 @@
 
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, SITE_URL, itemListSchema } from '@/lib/jsonld';
+import { edicionVigente } from '@/lib/cursos';
 
 const allCursos = await getCollection('cursos', (c) => !c.data.draft);
 
@@ -36,17 +37,31 @@ const FORMATO_ICON: Record<string, string> = {
   hibrido: '🔄',
 };
 
+const CURSOS_URL = `${SITE_URL}/laboratorio/cursos`;
+
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Laboratorio', url: `${SITE_URL}/laboratorio` },
-    { name: 'Cursos y formaciones', url: `${SITE_URL}/laboratorio/cursos` },
+    { name: 'Cursos y formaciones', url: CURSOS_URL },
   ]),
+  // ItemList: declara el catálogo completo en el mismo orden en que se pinta,
+  // para que un motor de respuesta pueda citar «los cursos de Startidea» sin
+  // inferirlo del HTML.
+  itemListSchema(
+    'Cursos y talleres de Startidea Lab',
+    CURSOS_URL,
+    cursos.map((c) => ({
+      name: c.data.title,
+      url: `${CURSOS_URL}/${c.slug}`,
+      description: c.data.metaDescription ?? c.data.description,
+    })),
+  ),
 ];
 ---
 
 <Base
-  title="Cursos y formaciones · Startidea Lab"
+  title="Cursos y talleres para ONG: comunicación, subvenciones e IA"
   description="Talleres, masterclasses y cursos de Startidea para responsables de comunicación, financiación y estrategia en el tercer sector. En Granada y online."
   ogSlug="page/laboratorio"
   jsonLd={jsonLd}
@@ -73,6 +88,11 @@ const jsonLd = [
         <em class="italic text-magenta">Formación directa.</em>
       </h1>
       <p class="mt-6 max-w-measure text-lede text-ink/75">
+        Startidea Lab es la formación práctica de Startidea: masterclasses de 4 horas
+        y talleres para equipos de entidades sociales, instituciones y pymes,
+        impartidos por Mario Pablo Sánchez Barrón.
+      </p>
+      <p class="mt-4 max-w-measure text-ink/75">
         Talleres y masterclasses basados en lo que Startidea hace con clientes reales.
         Sin teoría sin probar. Para responsables de comunicación, gestión
         y financiación de entidades del tercer sector que quieren resultados aplicables
@@ -88,7 +108,7 @@ const jsonLd = [
         <div class="border border-ink/15 bg-paper-warm p-12 text-center">
           <p class="font-display text-2xl text-ink">Próximas formaciones en preparación.</p>
           <p class="mt-3 text-ink/75">
-            Déjanos tu email y Startidea te avisa en cuanto se abra la inscripción.
+            Deja tu email y Startidea te avisa en cuanto se abra la inscripción.
           </p>
           <a href="/contacto" class="btn mt-6 inline-flex">Avísame cuando haya cursos →</a>
         </div>
@@ -125,7 +145,7 @@ const jsonLd = [
                       <!-- Meta row -->
                       <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-ink/75 font-mono">
                         <span>⏱ {curso.data.duracion}</span>
-                        {curso.data.proxima_edicion && (
+                        {edicionVigente(curso.data.proxima_edicion) && (
                           <span>
                             📅 {curso.data.proxima_edicion.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </span>
@@ -188,7 +208,7 @@ const jsonLd = [
       </h2>
       <p class="mt-5 mx-auto max-w-prose text-paper/70">
         Las plazas son limitadas y se comunican primero a la lista de alumni y contactos.
-        Déjanos tu email y serás de los primeros en saberlo.
+        Deja tu email y serás de los primeros en saberlo.
       </p>
       <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta mt-8 inline-flex px-8 py-4 text-base">
         Apuntarme a la lista →

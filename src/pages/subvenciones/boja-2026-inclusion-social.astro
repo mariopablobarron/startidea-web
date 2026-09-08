@@ -10,7 +10,7 @@
  * Excepción: Línea 7 Modalidad 2 (Escuelas de verano) cierra el 2 de junio.
  */
 import Base from '@/layouts/Base.astro';
-import { breadcrumbList, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, faqPageSchema, organizationSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
 
 export const prerender = true;
 
@@ -201,6 +201,31 @@ const jsonLd = [
     { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
     { name: 'BOJA 2026 — Inclusión Social', url: `${SITE_URL}/subvenciones/boja-2026-inclusion-social` },
   ]),
+  // La página no declaraba ningún servicio: para Google y para los motores de
+  // respuesta era una guía sin oferta detrás (auditoría 2026-09-08, QW3).
+  // `organizationSchema()` va delante porque `serviceSchema()` referencia
+  // `#organization` por @id: sin ese nodo en la página, la referencia cuelga.
+  organizationSchema(),
+  serviceSchema({
+    name: 'Tramitación de las subvenciones de inclusión social del BOJA',
+    description:
+      'Startidea prepara y presenta el expediente de las 16 líneas de inclusión social de la Junta de Andalucía: diagnóstico de encaje, memoria técnica, presupuesto justificado y presentación en el Registro Electrónico Único. Comisión a éxito del 12 % del importe concedido; sin coste si no se concede.',
+    serviceType: 'Tramitación de subvenciones',
+    url: `${SITE_URL}/subvenciones/boja-2026-inclusion-social`,
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Entidad local', 'Institución eclesial'],
+    areaServed: [
+      { type: 'AdministrativeArea', name: 'Andalucía' },
+      { type: 'Country', name: 'España' },
+    ],
+    offers: [
+      {
+        name: 'Tramitación a comisión de éxito (12 %)',
+        description:
+          'Expediente completo de una línea de inclusión social del BOJA. Solo se cobra si la Junta concede la subvención.',
+        url: `${SITE_URL}/precios`,
+      },
+    ],
+  }),
   faqPageSchema([
     {
       q: '¿Quién puede ayudarme a tramitar y justificar una subvención de inclusión social del BOJA en Andalucía?',
@@ -241,7 +266,7 @@ function buildLink(linea: Linea) {
 
 <Base
   title="Subvenciones Inclusión Social Junta de Andalucía 2026 (BOJA)"
-  description="Las 16 líneas de la Consejería de Inclusión Social (BOJA nº 99). La edición 2026 cerró el 16 de junio. Guía de referencia para la próxima convocatoria."
+  description="Las 16 líneas de inclusión social de la Junta de Andalucía: quién puede pedir cada una y cómo preparar el expediente para 2027. Startidea las tramita."
   ogSlug="page/boja-2026-inclusion-social"
   jsonLd={jsonLd}
 >
@@ -250,7 +275,7 @@ function buildLink(linea: Linea) {
   <div class="border-b border-amber-300 bg-amber-100 py-3">
     <div class="container-x flex flex-wrap items-center justify-between gap-3">
       <p class="text-sm text-amber-900">
-        <strong>Convocatoria 2026 cerrada.</strong> El plazo general finalizó el {DEADLINE}. Esta página se mantiene como referencia de las 16 líneas.
+        <strong>Convocatoria 2026 cerrada.</strong> El plazo general finalizó el {DEADLINE}. Esta guía se mantiene para preparar el expediente de la edición 2027.
       </p>
       <a
         href="/subvenciones"
@@ -270,10 +295,16 @@ function buildLink(linea: Linea) {
       </div>
       <h1 class="font-display text-display-xl leading-[0.96] text-ink">
         16 líneas del BOJA.<br />
-        <em class="italic text-magenta">Startidea las tramita todas.</em>
+        <em class="italic text-magenta">Prepara el expediente 2027.</em>
       </h1>
       <p class="mt-6 max-w-measure text-lede text-ink/75">
-        En 2026 la Consejería de Inclusión Social publicó 16 líneas de subvención (BOJA nº 99, 26 mayo 2026); el plazo general cerró el <strong>{DEADLINE}</strong>. Esta guía se mantiene como referencia de las 16 líneas. Cuando la Junta reabra la convocatoria, Startidea gestiona el expediente completo: diagnóstico de encaje, memoria técnica, presupuesto y presentación electrónica. Solo pagas si se concede.
+        La Consejería de Inclusión Social convoca cada año estas 16 líneas: en 2026 salieron en el BOJA nº 99 (26 mayo 2026) y el plazo general cerró el <strong>{DEADLINE}</strong>, quince días hábiles después. Ese es el margen real, y por eso el expediente de la siguiente edición se monta antes de que salga la orden. Aquí está quién puede pedir cada línea y qué documentación exige, para tenerlo listo cuando abra la de 2027.
+      </p>
+      <p class="mt-4 max-w-measure text-ink/75">
+        Startidea gestiona el expediente completo —diagnóstico de encaje, memoria
+        técnica, presupuesto y presentación electrónica— a{' '}
+        <a href="/precios" class="text-magenta hover:underline">comisión de éxito del 12 %</a>:
+        si la Junta no concede la subvención, no hay coste.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#elegibilidad" class="btn">¿Podemos pedir? Comprobarlo →</a>
@@ -315,6 +346,11 @@ function buildLink(linea: Linea) {
         </h2>
         <p class="mt-4 max-w-prose text-ink/70">
           Introducid el CIF de vuestra organización. Si añadís una frase de lo que hacéis, Startidea afina mucho más el resultado. En menos de 10 segundos sabéis a qué líneas podéis optar.
+        </p>
+        <p class="mt-3 max-w-prose text-sm text-ink/70">
+          <a href="/notas/boja-2026-subvenciones-inclusion-social-andalucia" data-link-type="nota" class="text-magenta hover:underline">
+            Guía: quién puede pedir cada una de las 16 líneas
+          </a>{' '}— el detalle por tipo de entidad, línea a línea.
         </p>
 
         <form id="el-form" class="mt-8 space-y-5" novalidate>
@@ -545,10 +581,10 @@ function buildLink(linea: Linea) {
   <section class="border-t border-ink/15 bg-ink py-14 md:py-20 text-paper">
     <div class="container-x text-center">
       <h2 class="font-display text-display-md leading-tight">
-        El plazo cierra el <em class="italic text-magenta">{DEADLINE}.</em>
+        La edición 2027 se prepara <em class="italic text-magenta">ahora.</em>
       </h2>
       <p class="mt-4 text-paper/70 max-w-measure mx-auto">
-        Startidea recomienda iniciar el expediente antes del 9 de junio para tener margen ante incidencias técnicas en la sede electrónica de la Junta de Andalucía.
+        Quince días hábiles no dan para reunir estatutos, certificados de la AEAT y la TGSS, memoria de actividades y presupuesto. Startidea deja el expediente montado antes de que salga la orden y lo presenta el primer día de plazo.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">
         <a href="#lineas" class="bg-magenta text-paper font-mono text-sm font-bold uppercase tracking-widest px-8 py-3 hover:bg-magenta/90 transition-colors">
@@ -559,6 +595,12 @@ function buildLink(linea: Linea) {
         </a>
       </div>
       <p class="mt-6 text-sm text-paper/70">
+        ¿Prefieres presentarla tú? →
+        <a href="/laboratorio/cursos/subvenciones-como-presentar-solicitud" class="text-paper/60 hover:text-magenta underline underline-offset-2">
+          Masterclass: preparar y presentar la solicitud en sede electrónica
+        </a>
+      </p>
+      <p class="mt-3 text-sm text-paper/70">
         ¿Buscas otras convocatorias? →
         <a href="/subvenciones/catalogo" class="text-paper/60 hover:text-magenta underline underline-offset-2">
           Catálogo completo de Startidea

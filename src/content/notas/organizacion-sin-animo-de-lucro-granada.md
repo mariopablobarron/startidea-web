@@ -51,4 +51,6 @@ Y lo que sostiene la confianza de financiadores y aliados es poder **demostrar e
 
 Startidea es una agencia de innovación social con sede en Granada que acompaña a organizaciones del tercer sector justo en esas tres preguntas. En lo económico, a través de la [consultoría e innovación social](/consultoria), el [fundraising y la diversificación de ingresos](/fundraising) y el [copiloto de subvenciones](/subvenciones). En lo que tiene que ver con que se conozca y se entienda el proyecto, a través de la [comunicación estratégica](/comunicacion) y la [gestión de redes sociales en Granada](/redes-sociales-granada).
 
+Cuando la entidad deja de ser un grupo de voluntarios y empieza a tener equipo, plazos y cuentas que rendir, las dos lecturas que siguen a esta son [profesionalizar una asociación sin perder alma](/notas/profesionalizar-asociacion-sin-perder-alma), sobre cómo ordenar roles y gobierno sin volverse una empresa, y [cultura participativa en el tercer sector](/notas/cultura-participativa-tercer-sector), sobre cómo mantener al equipo dentro de las decisiones mientras eso pasa.
+
 Si hay una organización sin ánimo de lucro en marcha —o a punto de arrancar— y la duda es por dónde empezar a hacerla sostenible, el primer paso es [pedir un diagnóstico de 30 minutos](/contacto): sin compromiso y sin propuesta genérica.

@@ -70,6 +70,8 @@ Cultura participativa no significa que no haya liderazgo. Significa que el lider
 
 Sin esto, la participación se convierte en ruido. Todos hablan, nadie avanza, y la gente se frustra porque sus aportes no llevan a nada.
 
+Por eso la participación se sostiene mejor cuando los roles están escritos y se sabe quién decide qué: es el mismo trabajo que describe [profesionalizar una asociación sin perder alma](/notas/profesionalizar-asociacion-sin-perder-alma).
+
 ## Herramientas que ayudan
 
 La tecnología no crea cultura, pero la facilita. Plataformas simples para documentar decisiones, espacios donde se ven las propuestas en curso, sistemas de feedback anónimo si es necesario. Startidea ha trabajado con organizaciones que usan [herramientas de tecnología](/tecnologia) para hacer visible lo que antes estaba en conversaciones de pasillo.

@@ -92,4 +92,6 @@ El Copiloto no es la solución a todas las subvenciones. Pero para las que sí f
 
 Si aún no tienes una convocatoria identificada, el [catálogo de Startidea](/subvenciones/catalogo) lista las que el equipo revisa y tramita activamente.
 
+Y si lo que hace falta es que el aviso llegue antes que la convocatoria, existe la [versión Pro con alertas y checklist desde 19 €/mes](/laboratorio/productos/copiloto-subvenciones-pro): filtra la BDNS por encaje real con la entidad y entrega la checklist de elegibilidad y el borrador de memoria empezado.
+
 [Empezar el expediente →](/subvenciones/presentar/nuevo)

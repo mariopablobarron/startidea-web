@@ -92,4 +92,3 @@ A partir de esa decisión, el trabajo cambia bastante según la vía: el expedie
 ---
 
 Si hay dudas sobre cuál de las dos vías encaja con el proyecto, [reserva 30 minutos con Startidea](/contacto). Esa llamada sirve para decidir el instrumento antes de invertir semanas en el expediente equivocado. Sin coste, sin compromiso.
-</content>

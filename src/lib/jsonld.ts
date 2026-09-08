@@ -691,7 +691,20 @@ interface CourseInput {
   audience?: string;
   price?: number | string;
   availability?: 'InStock' | 'SoldOut' | 'PreOrder';
+  // Fecha desde la que la oferta es válida (ISO YYYY-MM-DD): la de
+  // PUBLICACIÓN del curso, no la de la edición. Hasta 2026-09 se pasaba aquí
+  // `proxima_edicion`, lo que dejaba la Offer inválida hasta el día del
+  // taller — justo mientras se vende la plaza. La fecha de la edición va en
+  // `startDate`.
   validFrom?: string;
+  // Duración lectiva en ISO 8601 (PT8H, PT4H). Google la exige en la
+  // CourseInstance salvo que se den startDate + endDate + repeatFrequency.
+  courseWorkload?: string;
+  // Fecha de inicio de la edición (ISO YYYY-MM-DD), si ya está fijada.
+  startDate?: string;
+  // Localidad de la sede cuando hay presencialidad ('Granada'). Se omite en
+  // los cursos íntegramente online.
+  location?: string;
 }
 
 /**
@@ -747,7 +760,25 @@ export function jobPostingSchema(j: JobPostingInput) {
   };
 }
 
+/**
+ * Course + CourseInstance para las fichas de Startidea Lab.
+ *
+ * Google no emite el resultado enriquecido de Course sin `hasCourseInstance`,
+ * y la instancia usa los valores capitalizados de CourseMode (Online, Onsite,
+ * Blended), distintos de los del Course. `instructor` apunta al mismo @id
+ * #founder que /sobre: es lo que ata la formación a una persona identificada
+ * en lugar de a una marca suelta.
+ *
+ * OJO: este helper solo emite las REFERENCIAS por @id a #organization
+ * (`provider`) y a #founder (`instructor`). La página que lo monte tiene que
+ * emitir además `organizationSchema()`, que trae los dos nodos dentro
+ * (ORG.founder es la Person completa); si no, las dos referencias quedan
+ * colgando.
+ */
 export function courseSchema(c: CourseInput) {
+  const instanceMode =
+    c.courseMode === 'online' ? 'Online' : c.courseMode === 'onsite' ? 'Onsite' : 'Blended';
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
@@ -756,9 +787,31 @@ export function courseSchema(c: CourseInput) {
     description: c.description,
     url: c.url,
     provider: { '@id': `${SITE_URL}/#organization` },
+    instructor: { '@id': `${SITE_URL}/#founder` },
     courseMode: c.courseMode,
     inLanguage: 'es-ES',
     ...(c.audience ? { audience: { '@type': 'Audience', audienceType: c.audience } } : {}),
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: instanceMode,
+      inLanguage: 'es-ES',
+      instructor: { '@id': `${SITE_URL}/#founder` },
+      ...(c.courseWorkload ? { courseWorkload: c.courseWorkload } : {}),
+      ...(c.startDate ? { startDate: c.startDate } : {}),
+      ...(c.location
+        ? {
+            location: {
+              '@type': 'Place',
+              name: c.location,
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: c.location,
+                addressCountry: 'ES',
+              },
+            },
+          }
+        : {}),
+    },
     ...(c.price !== undefined
       ? {
           offers: {
@@ -770,5 +823,37 @@ export function courseSchema(c: CourseInput) {
           },
         }
       : {}),
+  };
+}
+
+interface ItemListEntry {
+  name: string;
+  url: string;
+  description?: string;
+}
+
+/**
+ * ItemList para páginas de índice (catálogo de cursos, de productos…).
+ *
+ * Declara explícitamente qué contiene el listado y en qué orden, que es lo que
+ * un motor de respuesta necesita para citar «los cursos de Startidea» sin
+ * tener que inferirlo del HTML.
+ */
+export function itemListSchema(name: string, url: string, items: ItemListEntry[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${url}#itemlist`,
+    name,
+    url,
+    numberOfItems: items.length,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: it.name,
+      url: it.url,
+      ...(it.description ? { description: it.description } : {}),
+    })),
   };
 }

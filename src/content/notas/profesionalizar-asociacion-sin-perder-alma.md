@@ -76,6 +76,8 @@ Crecer cambia una organización. Si nadie lo cuida, la cercanía y el sentido se
 - **No dejar que el reporte expulse a las personas**: medir está bien mientras la métrica no sustituya a la relación con quien se atiende.
 - **Mantener la voz de los beneficiarios y el voluntariado** en el gobierno, no solo en la ejecución.
 
+Esa última línea tiene nombre propio y método: es lo que se trabaja en [cultura participativa en el tercer sector](/notas/cultura-participativa-tercer-sector), donde está explicado cómo abrir decisiones sin que el equipo se paralice.
+
 Una organización puede ser muy profesional y muy humana a la vez. De hecho, las que duran lo son.
 
 ## Profesionalizar es una decisión de futuro, no una traición

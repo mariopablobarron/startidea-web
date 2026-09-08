@@ -33,7 +33,7 @@ La tasa de apertura total de una newsletter mixta (donantes + voluntarios + simp
 
 Si tus donantes activos abren el 45% de tus emails y tus simpatizantes el 18%, estás comunicando bien con quien ya te apoya y mal con quien todavía no. Eso es información accionable: el contenido que funciona con donantes no llega bien a los simpatizantes, o los simpatizantes no esperan lo mismo de ti.
 
-La tasa de apertura global es marketing vanity. La tasa por segmento es diagnóstico.
+La tasa de apertura global es marketing vanity. La tasa por segmento es diagnóstico. Si la lista todavía no está partida por tipo de suscriptor, el punto de partida es [por qué tu newsletter llega a todos y no interesa a nadie](/notas/newsletter-segmentacion-ong-tercer-sector).
 
 **2. Tasa de clic en el enlace de mayor importancia**
 

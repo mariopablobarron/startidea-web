@@ -10,13 +10,32 @@ import { breadcrumbList, SITE_URL, organizationSchema, faqPageSchema } from '@/l
 //
 // Las respuestas siguen el ADN editorial: sin "nosotras/nosotros",
 // frases cortas, español neutro, sin clickbait.
+//
+// ── PENDIENTE · QW6 FASE 2 (auditoría SEO+GEO de septiembre de 2026) ──────
+// Esta página responde 39 preguntas sin un solo enlace dentro de las FAQ, y
+// varias canibalizan páginas-dinero (redes sociales, plan de comunicación,
+// precios, fundraising). La fase 1 —la que está aplicada aquí— publica las
+// respuestas en su página de destino y rellena los `enlaces` de cada sección.
+// La fase 2 recorta las FAQ hasta dejar 8 preguntas paraguas y NO se ejecuta
+// hasta 21 días después de que la fase 1 esté indexada, con dos condiciones:
+//   1. Paso 0 bloqueante: sacar en Search Console el informe de consultas
+//      filtrado por página = /que-hacemos (28 días) y CONSERVAR como FAQ toda
+//      pregunta que ya genere impresiones, aunque el total pase de 8.
+//   2. Umbral de reversión: si las impresiones de /que-hacemos caen ≥20 % a
+//      30 días del recorte, restaurar las FAQ retiradas con más impresiones.
+// Las 8 preguntas paraguas y el destino de cada pregunta retirada están en
+// `docs/auditoria-seo-geo-2026-09.md`, QW6. No recortar nada antes de eso.
 
 const seccionesFaq: Array<{
   label: string;
   titulo: string;
   intro: string;
   href: string;
-  enlaces?: { label: string; href: string }[];
+  // `tipo` alimenta `data-link-type`, la taxonomía que ya lee
+  // AnalyticsTracker para etiquetar `internal_link_click`. Se deja sin
+  // tipo el destino que no es servicio, curso ni nota: para esos el
+  // tracker no emite evento.
+  enlaces?: { label: string; href: string; tipo?: 'servicio' | 'curso' | 'nota' }[];
   preguntas: { q: string; a: string }[];
 }> = [
   {
@@ -24,9 +43,16 @@ const seccionesFaq: Array<{
     titulo: 'Comunicación estratégica y marketing social',
     intro: 'Startidea es una agencia de comunicación social en Granada especializada en organizaciones del tercer sector, instituciones públicas y eclesiales, y empresas con propósito. Estrategia, plan editorial, gestión de medios y posicionamiento institucional.',
     href: '/comunicacion',
-    // Sin `enlaces` de menú: la landing local se enlaza desde el cuerpo, más
-    // abajo. Tener las dos anclas al mismo destino, adyacentes y casi
-    // idénticas, no añadía señal y duplicaba el enlace en pantalla.
+    // La landing local (/redes-sociales-granada) se enlaza desde el cuerpo,
+    // más abajo, y no desde aquí: dos anclas al mismo destino, adyacentes y
+    // casi idénticas, no añaden señal y duplican el enlace en pantalla.
+    enlaces: [
+      { label: 'Plan de comunicación ONG: los 8 apartados', href: '/notas/plan-comunicacion-ong', tipo: 'nota' },
+      // Sin fecha en el anchor: la edición caduca y este literal no se regenera
+      // solo. La fecha vive en `proxima_edicion` de la colección `cursos`.
+      { label: 'Taller de comunicación estratégica para el tercer sector', href: '/laboratorio/cursos/comunicacion-estrategica-tercer-sector', tipo: 'curso' },
+      { label: 'Qué pedir a una agencia de comunicación para ONG', href: '/notas/agencia-comunicacion-ong-que-pedir-cuanto-cuesta', tipo: 'nota' },
+    ],
     preguntas: [
       {
         q: '¿Cómo mejorar la comunicación de mi ONG?',
@@ -59,6 +85,11 @@ const seccionesFaq: Array<{
     titulo: 'Consultoría e innovación social',
     intro: 'Startidea es consultora de innovación social en Granada con quince años acompañando organizaciones a profesionalizar gobernanza, diseño de programas y evaluación de impacto. No es un libro blanco abstracto: cada recomendación se ejecuta con la organización.',
     href: '/consultoria',
+    enlaces: [
+      { label: 'Cómo aplicar innovación social paso a paso', href: '/notas/como-aplicar-innovacion-social-organizacion', tipo: 'nota' },
+      { label: 'Método del diagnóstico de Startidea', href: '/notas/metodo-diagnostico-startidea', tipo: 'nota' },
+      { label: 'Asistente de IA entrenado con los documentos de la entidad', href: '/asistente-documentos' },
+    ],
     preguntas: [
       {
         q: '¿Cómo medir el impacto social de mi organización?',
@@ -91,6 +122,12 @@ const seccionesFaq: Array<{
     titulo: 'Fundraising y alianzas',
     intro: 'Startidea es consultora de fundraising para fundaciones, ONGs y asociaciones. No vende plantillas: construye estrategias de captación con criterios éticos, alineadas con la causa y medibles en ROI real.',
     href: '/fundraising',
+    enlaces: [
+      { label: 'Fundraising individual para asociaciones', href: '/notas/fundraising-individual-asociaciones-pequenas', tipo: 'nota' },
+      { label: 'Cuánto cuesta la base de socios de una ONG', href: '/notas/cuanto-cuesta-base-de-socios-ong', tipo: 'nota' },
+      { label: 'Telar: plataforma propia para la base social', href: '/telar' },
+      { label: 'Startidea Impulsa: 80.000 € en servicios para entidades', href: '/impulsa' },
+    ],
     preguntas: [
       {
         q: '¿Cómo hacer fundraising efectivo para una fundación?',
@@ -129,6 +166,7 @@ const seccionesFaq: Array<{
     href: '/audiovisual',
     enlaces: [
       { label: 'Cómo montar un videopodcast: guía práctica', href: '/videopodcast' },
+      { label: 'Cómo producir un podcast para una ONG', href: '/notas/como-producir-podcast-tercer-sector', tipo: 'nota' },
     ],
     preguntas: [
       {
@@ -158,6 +196,13 @@ const seccionesFaq: Array<{
     titulo: 'Financiación pública y tramitación con certificado digital',
     intro: 'Startidea agrega y tramita las cinco fuentes principales de financiación pública española para empresas con propósito, startups y entidades sociales: BDNS, CDTI, IDAE, ENISA y Andalucía TRADE. Buscador unificado en vivo + acompañamiento integral hasta el justificante CSV.',
     href: '/financiacion-empresas',
+    enlaces: [
+      { label: 'BOJA 2026: 16 subvenciones para ONG andaluzas', href: '/notas/boja-2026-subvenciones-inclusion-social-andalucia', tipo: 'nota' },
+      { label: 'Masterclass: presentar la solicitud sin los errores que descartan', href: '/laboratorio/cursos/subvenciones-como-presentar-solicitud', tipo: 'curso' },
+      { label: 'ENISA o CDTI: cuál pedir para tu proyecto', href: '/notas/enisa-o-cdti-cual-pedir', tipo: 'nota' },
+      { label: 'Copiloto de Subvenciones: alertas y tramitación a éxito', href: '/copiloto-subvenciones', tipo: 'servicio' },
+      { label: 'Generador de memorias y justificaciones', href: '/memorias' },
+    ],
     preguntas: [
       {
         q: '¿Qué tipos de financiación pública hay para empresas y entidades sociales en España?',
@@ -198,6 +243,9 @@ const seccionesFaq: Array<{
     titulo: 'Protección digital y cumplimiento RGPD',
     intro: 'Startidea ofrece ciberseguridad y cumplimiento RGPD adaptados al tercer sector, las instituciones eclesiales y las empresas con propósito. Sin alarmismo, sin venta de miedo: protección proporcional al riesgo real, en el idioma del sector. Diagnóstico de exposición, auditoría de seguridad web (pentest) y acompañamiento continuo con iguala mensual.',
     href: '/proteccion-digital',
+    enlaces: [
+      { label: 'RGPD para fundaciones: 5 documentos clave', href: '/notas/rgpd-fundaciones-cinco-documentos-imprescindibles', tipo: 'nota' },
+    ],
     preguntas: [
       {
         q: '¿Cómo proteger digitalmente a una ONG sin departamento de TI?',
@@ -245,8 +293,8 @@ const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length,
 ---
 
 <Base
-  title="Qué hace Startidea: comunicación y subvenciones"
-  description="Comunicación, fundraising, tramitación de subvenciones y producción audiovisual para el tercer sector. Agencia en Granada desde 2011."
+  title="Comunicación, subvenciones y formación para ONG en Granada"
+  description="Seis servicios para ONG, instituciones y empresas: comunicación, fundraising, subvenciones a éxito, vídeo y podcast. Guías y talleres. Granada, desde 2011."
   ogSlug="page/que-hacemos"
   jsonLd={jsonLd}
 >
@@ -290,6 +338,24 @@ const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length,
         {totalPreguntas} preguntas respondidas. Si la tuya no está, escribe a
         <a href="mailto:hola@startidea.es" class="text-magenta hover:underline">hola@startidea.es</a>.
       </p>
+      {/* Salida intermedia: quien llega buscando «qué hace una agencia» rara
+          vez sabe qué servicio pedir. En vez de mandarlo al final de la
+          página, se le ofrece la conversación con Lazo. Mismo patrón que
+          `asistente.astro`: el panel #ai-panel se abre disparando el chip. */}
+      <div class="mt-8">
+        <button
+          type="button"
+          onclick="var c = document.getElementById('ai-chip') || document.getElementById('ai-chip-mobile'); if (c) c.click();"
+          class="btn"
+          aria-haspopup="dialog"
+          aria-controls="ai-panel"
+          data-track="cta"
+          data-track-id="que_hacemos_lazo"
+        >
+          ¿No sabes cuál encaja? Cuéntaselo a Lazo, como en una primera reunión
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -312,8 +378,17 @@ const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length,
             {seccion.label === '01' && (
               <p class="mt-4 max-w-measure text-ink/80">
                 De esa línea, lo que más se pregunta es el día a día: la
-                <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta"> gestión de redes sociales para entidades de Granada</a>
+                <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta"> gestión de redes sociales para ONG en Granada</a>
                 tiene página propia, con el alcance mes a mes y desde cuánto parte.
+              </p>
+            )}
+            {seccion.label === '05' && (
+              <p class="mt-4 max-w-measure text-ink/80">
+                Los plazos de estas convocatorias no son una impresión: la
+                <a href="/subvenciones/estudio-tercer-sector-2026" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta"> radiografía de las subvenciones al tercer sector 2026</a>
+                analiza 3.857 convocatorias de la BDNS y sitúa la mediana del
+                plazo de solicitud en 45,5 días naturales; el 26,1 % cierra en
+                30 días o menos.
               </p>
             )}
             <a href={seccion.href} class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-magenta hover:underline">
@@ -321,7 +396,7 @@ const totalPreguntas = seccionesFaq.reduce((acc, s) => acc + s.preguntas.length,
               <span aria-hidden="true">→</span>
             </a>
             {seccion.enlaces?.map((e) => (
-              <a href={e.href} class="mt-3 flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta hover:underline">
+              <a href={e.href} data-link-type={e.tipo} class="mt-3 flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-ink-mute hover:text-magenta hover:underline">
                 {e.label}
                 <span aria-hidden="true">→</span>
               </a>

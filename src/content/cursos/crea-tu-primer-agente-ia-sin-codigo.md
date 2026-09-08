@@ -1,6 +1,8 @@
 ---
 title: 'Crea tu primer agente de IA sin código'
+seoTitle: 'Taller: crea un agente de IA sin código para tu entidad'
 description: 'Taller práctico para entidades y pymes: construye un agente de IA que responde con los documentos reales de tu organización — tarifas, protocolos, tono — sobre una plataforma visual sin programar. Sales con tu agente funcionando.'
+metaDescription: 'Taller práctico de 8 horas: construye un agente de IA que responde con los documentos de tu organización, sin programar. Para ONG y pymes. 320 €.'
 pubDate: 2026-07-04
 formato: hibrido
 modalidad: taller
@@ -11,6 +13,17 @@ estado: a-demanda
 audience: 'Equipos de entidades sociales y pymes sin perfil técnico'
 category: Digital
 tags: ['inteligencia artificial', 'agentes IA', 'sin código', 'tercer sector', 'formación', 'digitalización']
+faqs:
+  - question: '¿Cuánto dura el taller y en qué formato se imparte?'
+    answer: 'Ocho horas, en una jornada o en dos sesiones de cuatro horas. El formato es híbrido: presencial en Granada, online en directo o en las instalaciones de la entidad cuando es un grupo cerrado.'
+  - question: '¿Hace falta saber programar?'
+    answer: 'No: ni una línea de código en todo el taller. Se trabaja sobre una plataforma visual de agentes. Hay que llevar un portátil y de tres a cinco documentos reales de la organización — dossier, tarifas, memoria, protocolos —, que son la materia prima del taller.'
+  - question: '¿Para quién es este taller?'
+    answer: 'Para equipos de entidades sociales y pymes sin perfil técnico: quien responde una y otra vez a las mismas preguntas internas y quiere un agente que conozca la documentación de la casa, no una herramienta genérica.'
+  - question: '¿Cuánto cuesta y hay precio reducido para entidades sin ánimo de lucro?'
+    answer: 'El taller cuesta 320 €. Las entidades sin ánimo de lucro pagan 240 €; el precio reducido se verifica con la documentación de la entidad.'
+  - question: '¿Cuándo es la próxima edición?'
+    answer: 'El taller se imparte bajo demanda, con un máximo de diez participantes para que cada agente reciba revisión individual. La edición se abre cuando hay seis personas inscritas; si no llega a abrirse, la señal se devuelve íntegra.'
 draft: false
 ---
 

@@ -111,4 +111,6 @@ Medir impacto social no es una decisión técnica. Es una decisión política: s
 
 Las organizaciones que aceptan esa incomodidad son las que mejoran. Las que se refugian en métricas de actividad se quedan donde están. El cambio empieza por una conversación honesta entre la junta directiva o el patronato y el equipo ejecutivo: qué estamos dispuestos a medir, qué nos da miedo medir y qué estamos dispuestos a hacer si los resultados no son los que esperábamos.
 
+Medir es la mitad del trabajo; la otra mitad es que el dato llegue a quien decide. Cuando el destinatario es una empresa financiadora, el formato cambia: qué espera encontrar y en cuántas páginas está en [el informe de impacto que sí lee un patrono](/notas/informe-impacto-para-patrono-empresarial).
+
 Si esa conversación necesita facilitación externa, en Startidea se acompaña ese proceso desde el [diagnóstico inicial](/diagnostico) hasta el sistema de medición funcionando. Sin marcos genéricos, sin libros blancos. Con la organización concreta y sus restricciones reales.

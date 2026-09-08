@@ -1,6 +1,8 @@
 ---
 title: 'Email marketing segmentado para el tercer sector'
+seoTitle: 'Curso de email marketing para ONG: segmentación en 4 h'
 description: 'Masterclass de 4 horas para comunicación de asociaciones y fundaciones: segmenta tu lista, automatiza secuencias para donantes y voluntarios y mide qué funciona. Sin grandes presupuestos.'
+metaDescription: 'Masterclass online de 4 horas para asociaciones y fundaciones: segmenta la lista, automatiza secuencias para donantes y mide qué funciona. 129 €.'
 pubDate: 2026-05-26
 formato: online
 modalidad: masterclass
@@ -11,6 +13,17 @@ estado: a-demanda
 audience: 'Responsables de comunicación y captación de fondos de ESFL, asociaciones y fundaciones'
 category: Comunicación
 tags: ['email marketing', 'newsletter', 'segmentación', 'donantes', 'voluntarios', 'tercer sector', 'comunicación']
+faqs:
+  - question: '¿Cuánto dura la masterclass y en qué formato se imparte?'
+    answer: 'Cuatro horas en sesión única y en directo por videoconferencia. La sesión se graba y los participantes tienen acceso a la grabación durante seis meses.'
+  - question: '¿Para quién es esta masterclass?'
+    answer: 'Para responsables de comunicación y de captación de fondos de entidades sin ánimo de lucro, asociaciones y fundaciones. No se necesita experiencia técnica avanzada: basta con tener una lista de correo activa, aunque sea pequeña.'
+  - question: '¿Cuánto cuesta y hay precio reducido para entidades sin ánimo de lucro?'
+    answer: 'La masterclass cuesta 129 €. Las entidades sin ánimo de lucro pagan 89 €; el precio reducido se verifica con la documentación de la entidad.'
+  - question: '¿Sirve si la entidad no usa Mailchimp ni Brevo?'
+    answer: 'Sí. Los ejemplos prácticos usan Mailchimp y Brevo porque son los más habituales en entidades pequeñas, pero los principios de segmentación y automatización se aplican igual en cualquier plataforma de email marketing.'
+  - question: '¿Cuándo es la próxima edición?'
+    answer: 'La masterclass se organiza bajo demanda: la edición se abre cuando hay al menos seis personas inscritas. La señal de 50 € reserva la plaza y se devuelve íntegra si la edición no llega a abrirse.'
 draft: false
 ---
 
@@ -28,6 +41,10 @@ No se necesita experiencia técnica avanzada. Se necesita tener una lista de cor
 - Qué miran los suscriptores en los primeros 3 segundos de un email
 - Por qué una lista de 500 personas bien segmentada supera a una de 5.000 sin segmentar
 - Los 3 indicadores que importan de verdad: apertura, clics y bajas
+
+Como lectura previa, dos notas de Startidea plantean el problema que esta parte
+resuelve: [por qué tu newsletter llega a todos y no interesa a nadie](/notas/newsletter-segmentacion-ong-tercer-sector)
+y [qué métricas de email importan en una ESFL](/notas/medir-resultados-email-marketing-esfl).
 
 **Parte 2 · Segmentar sin complicarse (60 min)**
 
