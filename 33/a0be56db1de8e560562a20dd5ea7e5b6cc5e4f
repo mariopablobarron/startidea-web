@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_95c581e76bdc4b 3,7,11-14,18-21,25,27,31,33
+docs/seo-prensa-2026-09.md
+  s_42946cec6cd017::t_788564e712bb1a 32-35,43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "33a0be56db1de8e560562a20dd5ea7e5b6cc5e4f",
+  "prompts": {},
+  "sessions": {
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
