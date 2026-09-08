@@ -65,10 +65,10 @@ const jsonLd = [
   serviceSchema({
     name: 'Comunicación estratégica y marketing social',
     description:
-      'Servicio de comunicación estratégica y marketing social para entidades del tercer sector, instituciones y empresas con propósito. Incluye estrategia, contenidos editoriales, identidad visual, gestión de medios y campañas de captación.',
+      'Servicio de comunicación estratégica y marketing para empresas, instituciones, entidades sociales y personas que emprenden. Incluye estrategia, contenidos editoriales, identidad visual, gestión de medios y campañas de captación.',
     serviceType: 'Comunicación estratégica',
     url: `${SITE_URL}/comunicacion`,
-    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial'],
+    audience: ['ONG', 'Fundación', 'Asociación', 'Cooperativa', 'Empresa', 'Institución pública', 'Institución eclesial', 'Persona que emprende'],
     offers: [
       { name: 'Estrategia de comunicación', description: 'Diagnóstico, audiencias, narrativa, plan editorial y KPIs.' },
       { name: 'Contenidos editoriales', description: 'Notas, reportajes, memoria anual, newsletters y guiones.' },
@@ -151,9 +151,9 @@ const areas = [
   {
     num: '05',
     title: 'Marketing digital con sentido',
-    body: 'Cuando hace falta, Startidea lo hace. Sin convertirte en una agencia de growth: se mide por causa, no por clicks.',
+    body: 'Startidea adapta los canales y la medición a cada objetivo: dar a conocer un proyecto, captar clientes, sumar apoyos o facilitar la participación.',
     items: [
-      { name: 'Estrategia digital y embudos con propósito', desc: 'Captación, conversión y fidelización adaptados al ciclo del donante o del socio. Aquí no se venden zapatillas: se comunica una causa.' },
+      { name: 'Estrategia digital y embudos con propósito', desc: 'Captación, conversión y fidelización adaptadas al recorrido de cada público: clientes, participantes, socios o donantes.' },
       { name: 'Webs y landings orientadas a conversión', desc: 'Páginas de captación, páginas de campaña, páginas de evento. Stack moderno (Astro/Next.js) cuando suma.' },
       { name: 'Email marketing y automatizaciones', desc: 'Newsletter editorial — no boletín corporativo. Con respeto al inbox y a la privacidad.' },
       { name: 'Campañas en Meta, Google y redes (si procede)', desc: '"Si procede" es importante — no toda organización necesita gastar en paid. Cuando se hace, se hace con auditoría.' },
@@ -194,7 +194,7 @@ const proceso = [
 ---
 
 <Base
-  title="Agencia de comunicación para ONG y tercer sector en Granada"
+  title="Comunicación estratégica y marketing en Granada · Startidea"
   description="Marca, contenidos, redes y campañas para empresas, instituciones, entidades sociales y personas que emprenden. Startidea en Granada. 30 min sin coste."
   ogSlug="page/comunicacion"
   jsonLd={jsonLd}
@@ -208,7 +208,7 @@ const proceso = [
         <em class="italic text-magenta">Comunicar para algo</em>.
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
-        Startidea es la agencia de comunicación para ONG, entidades sociales, instituciones, empresas con propósito y proyectos con impacto —en Granada y en toda España—: convierte su comunicación en una herramienta real de posicionamiento, movilización y sostenibilidad, para comunicar mejor lo que hacen, por qué lo hacen y para qué sirve.
+        Startidea es una agencia de comunicación en Granada para empresas, instituciones, entidades sociales y personas que emprenden, con proyectos en toda España. Estrategia, marca, contenidos y campañas para explicar lo que hacen, llegar a sus públicos y acompañar sus objetivos comerciales, institucionales o sociales.
       </p>
       <div class="mt-10">
         <a href="/contacto" class="btn" data-track="cta" data-track-id="cta_comunicacion_hero">
