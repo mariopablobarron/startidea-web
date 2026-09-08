@@ -19,6 +19,8 @@ import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
 import { getProfileById, getProfileByStripeCustomer, setProfilePlan } from '@/lib/auto-copiloto-db';
 import { COPILOTO_PLANS, isCopilotoPlan } from '@/lib/copiloto-pro';
+import { getPedido as getMemoriaPedido, markPaid as markMemoriaPaid } from '@/lib/memorias-db';
+import { MEMORIA_TIPOS } from '@/lib/memorias-engine';
 
 /**
  * Copiloto Pro: sincroniza el plan del perfil con la suscripción de Stripe.
@@ -91,6 +93,20 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+    // ── Generador de memorias: pago único del documento ────────────────────
+    if (session.metadata?.kind === 'memoria') {
+      if (session.payment_status === 'paid') {
+        const pedidoId = session.metadata?.pedido_id ?? '';
+        const pedido = pedidoId ? getMemoriaPedido(pedidoId) : null;
+        if (pedido && markMemoriaPaid(pedido.id)) {
+          const def = MEMORIA_TIPOS[pedido.tipo];
+          sendTelegram(
+            `<b>💳 Documento pagado</b> · ${esc(def.nombre)} · ${esc(pedido.org_nombre)} · ${esc(((session.amount_total ?? 0) / 100).toFixed(2))} € · ${esc(pedido.id)}`,
+          ).catch(() => {});
+        }
+      }
+      return new Response(JSON.stringify({ received: true }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
     if (session.metadata?.kind === 'copiloto_pro') {
       const subId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
       if (subId) {
