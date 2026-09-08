@@ -1,0 +1,29 @@
+src/content/config.ts
+  s_f4711e85a048a0::t_5583baa091043a 221-228
+src/content/productos/kit-de-marca-expres.md
+  s_f4711e85a048a0::t_5583baa091043a 15-16
+src/content/productos/web-asociacion-en-un-dia.md
+  s_f4711e85a048a0::t_5583baa091043a 15-16
+src/content/productos/piloto-redes-sociales.md
+  s_f4711e85a048a0::t_5583baa091043a 15-16
+src/pages/laboratorio/productos/[...slug].astro
+  s_f4711e85a048a0::t_0efa59e7cb08a1 194,196-198,201-205,208-217
+src/pages/laboratorio/productos/index.astro
+  s_f4711e85a048a0::t_324d3a716b44b1 134-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "1af8db0edfcd0f54deab18f0ba1e4a8d124069c4",
+  "prompts": {},
+  "sessions": {
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
