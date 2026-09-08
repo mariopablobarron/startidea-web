@@ -1,0 +1,165 @@
+astro.config.mjs
+  s_f4711e85a048a0::t_d9a220dbff392e 62-63
+docs/auditoria-seo-geo-2026-09.md
+  s_f4711e85a048a0::t_f39c52da7abfa9 5,118,156,219,318,380
+src/content/config.ts
+  s_f4711e85a048a0::t_acb00f75c673fb 111-112,114-122,124-126,153-163
+src/content/cursos/comunicacion-estrategica-tercer-sector.md
+  s_f4711e85a048a0::t_622c7081cf1b15 3,5,17-27,84
+src/content/cursos/crea-tu-primer-agente-ia-sin-codigo.md
+  s_f4711e85a048a0::t_8e070698c667f9 3,5,16-26
+src/content/cursos/email-marketing-segmentado-tercer-sector.md
+  s_f4711e85a048a0::t_5bb8fd9093f103 3,5,16-26,45-48
+src/content/cursos/subvenciones-como-presentar-solicitud.md
+  s_f4711e85a048a0::t_eb6e5e65b5ede8 3,5,16-26
+src/content/notas/boja-2026-subvenciones-inclusion-social-andalucia.md
+  s_a549fbdd213a9a::t_1e273e1cbe2ba4 3,5,26,28-34
+src/content/notas/como-conseguir-subvenciones-ong.md
+  s_6c8bb6980942b5::t_a0c23cb74b8936 127-128
+src/content/notas/como-medir-impacto-social-organizacion.md
+  s_f4711e85a048a0::t_4009405718b4dc 114-115
+src/content/notas/convocatorias-2026-tercer-sector-espana.md
+  s_42946cec6cd017::t_5898288e141603 42
+src/content/notas/copiloto-subvenciones-ia-startidea.md
+  s_f4711e85a048a0::t_76c0f87a36c993 95-96
+src/content/notas/cultura-participativa-tercer-sector.md
+  s_f4711e85a048a0::t_7a5dba187e4de9 73-74
+src/content/notas/errores-justificacion-subvencion.md
+  s_f4711e85a048a0::t_e30600b541f79e 82-83
+src/content/notas/financiacion-entidades-sociales-granada.md
+  s_f4711e85a048a0::t_a46bee634f7a81 117-118
+src/content/notas/medir-resultados-email-marketing-esfl.md
+  s_f4711e85a048a0::t_96d491259dfb90 36
+src/content/notas/memoria-anual-que-se-lee.md
+  s_f4711e85a048a0::t_a135dfd66b4492 67-68
+src/content/notas/newsletter-segmentacion-ong-tercer-sector.md
+  s_f4711e85a048a0::t_78ea1af5db972d 109-110
+src/content/notas/organizacion-sin-animo-de-lucro-granada.md
+  s_f4711e85a048a0::t_af33157a11f91f 54-55
+src/content/notas/profesionalizar-asociacion-sin-perder-alma.md
+  s_f4711e85a048a0::t_106647a28712e0 79-80
+src/content/notas/que-evalua-empresa-antes-convenio-ong.md
+  s_f4711e85a048a0::t_3780fab6ba8344 53-56
+src/content/notas/social-media-tercer-sector-granada.md
+  s_f4711e85a048a0::t_dee69690fde364 89
+src/content/notas/subvenciones-abiertas-andalucia-2026.md
+  s_f4711e85a048a0::t_8fe09454c0b460 3,40
+src/content/notas/tesoreria-defensiva-ong-esperar-pago-administracion.md
+  s_6c8bb6980942b5::t_b1a42fbf8a2aa5 44-45,91-92
+src/data/redes-sociales-ia-verticales.ts
+  s_f4711e85a048a0::t_7fc647adb7146a 28,30,72,74,116,118
+src/lib/cursos.ts
+  s_f4711e85a048a0::t_71ba7de45c8300 1-26
+src/lib/jsonld.ts
+  s_f4711e85a048a0::t_b34bbe1e17fce2 694-698,700-707,763-777,779-781,790,794-814,828-859
+src/pages/audiovisual.astro
+  s_f4711e85a048a0::t_73958f72c47a48 186-187,195-196
+src/pages/casos.astro
+  s_f4711e85a048a0::t_8bb9f2c813c4cc 34
+src/pages/comunicacion.astro
+  s_35e98636369891::t_f0345fabda1a35 198,253,377-389
+src/pages/consultoria.astro
+  s_f4711e85a048a0::t_e2e451baad2130 155-156
+src/pages/contacto.astro
+  s_f4711e85a048a0::t_995cc411449c14 40-41
+src/pages/copiloto-subvenciones.astro
+  s_35e98636369891::t_54af07f613393b 51,657-668
+src/pages/financiacion-empresas.astro
+  s_f4711e85a048a0::t_e5bb3cc82fde72 402-452
+src/pages/fundraising.astro
+  s_f4711e85a048a0::t_2c13cd6bd0e587 309,313-315
+src/pages/hub.astro
+  s_f4711e85a048a0::t_6d3bc849e180e0 47-48,127-139
+src/pages/index.astro
+  s_f4711e85a048a0::t_36426dc0de43cf 4-13,26,28-131,148,155-198,203-231,246-247,256-265,279-285
+src/pages/laboratorio/cursos/[slug].astro
+  s_f4711e85a048a0::t_e6d4d498a164ba 6,11-12,48-73,75,80,83,85-86,92-99,101,106-107,170,174,253-275
+src/pages/laboratorio/cursos/index.astro
+  s_f4711e85a048a0::t_82740b5d8b482d 11-12,40-41,46,48-59,64,91-95,111,148,211
+src/pages/llms-full.txt.ts
+  s_f4711e85a048a0::t_9c29cd09a5f5c9 4-5,12-16,18-51,58-129,137,142-144,147-153,157-162,164-179,185-187,192-221
+src/pages/llms.txt.ts
+  s_f4711e85a048a0::t_145c20331019e1 4-5,13-19,21-52,61-123,138,144,146-147,152-157,159-161,173,181-182,190,193-222,231-233
+src/pages/manifiesto.astro
+  s_f4711e85a048a0::t_413fde1ed4fd37 18
+src/pages/notas.astro
+  s_f4711e85a048a0::t_605d98917f8d15 56
+src/pages/notas/[...slug].astro
+  s_f4711e85a048a0::t_0be6f8679bf6c6 298
+src/pages/og/[...slug].png.ts
+  s_f4711e85a048a0::t_cbbb69a9e15038 24-25
+src/pages/prensa.astro
+  s_f4711e85a048a0::t_601d9641dc47ed 48
+src/pages/proteccion-digital.astro
+  s_f4711e85a048a0::t_e83cc62dc44d14 128
+src/pages/que-hacemos.astro
+  s_f4711e85a048a0::t_869e2bb5bce8cb 13-27,34-38,46-55,88-92,125-130,169,199-205,246-248,296-297,341-358,381,385-393,399
+src/pages/redes-sociales-granada.astro
+  s_f4711e85a048a0::t_cc1713f57e04cd 7,54-61,137-138,157,229-268
+src/pages/redes-sociales-ia.astro
+  s_35e98636369891::t_7cfadaa99d954a 317
+src/pages/redes-sociales-ia/[vertical].astro
+  s_f4711e85a048a0::t_aef2dc64b61e71 198-212
+src/pages/sobre.astro
+  s_f4711e85a048a0::t_0f86bee4dd7e9c 53,65-69
+src/pages/subvenciones/boja-2026-inclusion-social.astro
+  s_f4711e85a048a0::t_f2e2a5f480a000 13,204-228,269,278,298,301-307,350-354,584,587,598-603
+src/pages/subvenciones/estudio-tercer-sector-2026.astro
+  s_f4711e85a048a0::t_f014d6e3ff2d5f 816-819
+src/pages/subvenciones/granada.astro
+  s_f4711e85a048a0::t_c52da89487e4f9 99-108
+src/pages/subvenciones/index.astro
+  s_f4711e85a048a0::t_fac3e8ac10f325 14-15,143-146,151,154-155,162,165-173,427-437
+src/pages/subvenciones/presentar/index.astro
+  s_f4711e85a048a0::t_9e78eb101e14c0 4,7-9,227-279
+src/pages/tecnologia.astro
+  s_f4711e85a048a0::t_2176f312ee228d 140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "4157891ae163373cc33f5fe915807bf2909c1601",
+  "prompts": {},
+  "sessions": {
+    "s_35e98636369891": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90a71132-7b4d-45c2-adfc-cd09dd169366",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_6c8bb6980942b5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d927fd05-20bc-478c-ba0a-dc5611fc78f4",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_a549fbdd213a9a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a080d4-0372-7852-88dc-783a3113bfe5",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-opus-5"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
