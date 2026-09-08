@@ -40,8 +40,9 @@ implementarla y pidió comprobar antes lo que había hecho Claude.
   sin errores JavaScript; envíos interceptados localmente, sin CRM/correos/pagos.
 - Baseline autenticado GSC/GA4 extraído en solo lectura, con host exacto y
   consulta-página conjunta; datos privados fuera del repositorio público.
-- Implementación todavía local; pendiente publicación de PR. Sin integración
-  ni despliegue de esta tanda. El último workflow de despliegue consultado es
+- PR #101 abierta en borrador, fusionable; código validado en `59e55d5`.
+  Rama publicada. Sin integración ni despliegue de esta tanda.
+  El último workflow de despliegue consultado es
   `9db5dff`, success; no es prueba de runtime actual de esta tanda.
 - HUB, Lazo, vídeo, regalos ocultos, precios y productos permanecen fuera de
   las modificaciones. Las tareas de Copiloto Pro y memorias siguen sus docs
@@ -49,6 +50,7 @@ implementarla y pidió comprobar antes lo que había hecho Claude.
 
 ## Siguiente acción
 
-Publicar la rama y dejar una PR revisable para integración.
-Después de integrar/desplegar, verificar SHA/runtime y recepción de eventos en
-GA4. El desglose en informes requiere revisar las definiciones personalizadas.
+Revisar y autorizar integración/publicación de la PR #101:
+https://github.com/mariopablobarron/startidea-web/pull/101
+El merge a main activa el despliegue. Después, verificar SHA/runtime y recepción
+de eventos en GA4; revisar las definiciones personalizadas para los desgloses.
