@@ -16,7 +16,7 @@ import { getCollection } from 'astro:content';
 import { pickModel } from '@/lib/model-router';
 import { getEnv } from '@/lib/env';
 import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
-import { INTENCIONES, catalogoParaModelo, clasificarPorPatron, getEstacion, getAudiencia } from '@/data/plano';
+import { INTENCIONES, catalogoParaModelo, clasificarPorPatron, getEstacion, getAudiencia, getIntencion } from '@/data/plano';
 import { REGALOS, esTipoRegalo } from '@/lib/regalos';
 import { contextoDocumentos } from '@/lib/knowledge-db';
 
@@ -178,10 +178,17 @@ export async function charlar(messages: Msg[], audienciaId: string): Promise<Tur
       : [];
     const intencion = limpiar(p.intencion, 40);
     const regaloRaw = limpiar(p.regalo, 40);
+    const intencionValida = INTENCIONES.some((i) => i.id === intencion) ? intencion : '';
+    // Visto en producción (2026-09-08): el modelo detecta la intención pero deja
+    // «estaciones» vacío en turnos intermedios y el plano no se ilumina. Si hay
+    // intención, se iluminan sus estaciones por defecto.
+    const estacionesFinales = estaciones.length > 0
+      ? estaciones
+      : (intencionValida ? (getIntencion(intencionValida)?.estaciones ?? []) : []);
     return {
       reply,
-      estaciones,
-      intencion: INTENCIONES.some((i) => i.id === intencion) ? intencion : '',
+      estaciones: estacionesFinales,
+      intencion: intencionValida,
       regalo: esTipoRegalo(regaloRaw) ? regaloRaw : '',
       cierre: p.cierre === true || turnosUsuario >= MAX_TURNOS_USUARIO,
       fuente: 'modelo',

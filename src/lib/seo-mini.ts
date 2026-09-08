@@ -201,10 +201,17 @@ export async function analizarUrl(raw: string): Promise<HechosSeo> {
     .replace(/<[^>]+>/g, ' ');
   const palabras = decode(texto).split(/\s+/).filter((w) => w.length > 1).length;
 
-  const [robotsTxt, sitemap] = await Promise.all([
-    fetchSeguro(new URL('/robots.txt', final), { method: 'HEAD', saltos: 1 }).then((r) => r.res.status === 200).catch(() => false),
+  // robots.txt se lee entero (es pequeño) para detectar la directiva Sitemap:,
+  // y el sitemap se busca en /sitemap.xml y /sitemap-index.xml (Astro y otros
+  // generadores publican el índice, no el fichero plano).
+  const robots = await fetchSeguro(new URL('/robots.txt', final), { saltos: 1, maxBytes: 50_000 }).catch(() => null);
+  const robotsTxt = !!robots && robots.res.status === 200;
+  const robotsBody = robotsTxt ? await robots.res.text().catch(() => '') : '';
+  const sitemapEnRobots = /^\s*sitemap\s*:/im.test(robotsBody);
+  const sitemap = sitemapEnRobots || (await Promise.all([
     fetchSeguro(new URL('/sitemap.xml', final), { method: 'HEAD', saltos: 1 }).then((r) => r.res.status === 200).catch(() => false),
-  ]);
+    fetchSeguro(new URL('/sitemap-index.xml', final), { method: 'HEAD', saltos: 1 }).then((r) => r.res.status === 200).catch(() => false),
+  ])).some(Boolean);
 
   const avisos: string[] = [];
   if (!title) avisos.push('Sin <title>');
@@ -221,7 +228,7 @@ export async function analizarUrl(raw: string): Promise<HechosSeo> {
   if (!ogTitle || !ogImage) avisos.push('Faltan etiquetas Open Graph (cómo se ve al compartir en redes y WhatsApp)');
   if (jsonLd === 0) avisos.push('Sin datos estructurados JSON-LD (Google y los asistentes de IA entienden peor la página)');
   if (!robotsTxt) avisos.push('Sin robots.txt');
-  if (!sitemap) avisos.push('Sin sitemap.xml en la raíz');
+  if (!sitemap) avisos.push('Sin sitemap (ni /sitemap.xml, ni /sitemap-index.xml, ni directiva Sitemap en robots.txt)');
   if (final.protocol !== 'https:') avisos.push('La web no sirve por HTTPS');
   if (ms > 2500) avisos.push(`Respuesta lenta del servidor (${ms} ms)`);
   if (palabras < 150) avisos.push(`Muy poco texto (${palabras} palabras): poco que indexar`);
