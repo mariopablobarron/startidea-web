@@ -1,0 +1,73 @@
+---
+// «Entra en la idea» — el vídeo en bucle del hero inmersivo anterior
+// (/hero/hero-loop.mp4), conservado como bloque propio cuando la portada pasó
+// a ser la conversación con Lazo (Mario, 2026-09-08: «el vídeo que había me
+// gustaría que siguiera estando en algún sitio»).
+//
+// Se reproduce solo en escritorio y solo cuando entra en pantalla
+// (IntersectionObserver); en móvil queda el póster y un botón para verlo.
+// Respeta prefers-reduced-motion. preload="none": no cuesta datos hasta que toca.
+---
+
+<section id="entra-en-la-idea" class="relative overflow-hidden bg-ink text-paper" data-video-idea aria-labelledby="idea-h2">
+  <video
+    id="idea-video"
+    class="absolute inset-0 h-full w-full object-cover opacity-70"
+    muted
+    loop
+    playsinline
+    preload="none"
+    poster="/hero/hero-poster.jpg"
+    aria-hidden="true"
+  >
+    <source src="/hero/hero-loop.mp4" type="video/mp4" />
+  </video>
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/30" aria-hidden="true"></div>
+
+  <div class="container-x relative z-10 grid grid-cols-12 gap-x-8 py-24 md:py-32">
+    <div class="col-span-12 lg:col-span-3">
+      <span class="label !text-paper/70">— Startidea · innovación social</span>
+    </div>
+    <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+      <h2 id="idea-h2" class="font-display text-display-lg leading-[0.98] text-paper md:text-display-xl">
+        Entra en la <em class="italic text-magenta-light">idea</em>.
+      </h2>
+      <p class="mt-8 max-w-measure text-lede text-paper/85">
+        Comunicación, recursos y tecnología que no envejecen. Estrategia, comunicación, audiovisual y tecnología bajo un mismo techo en Granada, para organizaciones que existen para algo más.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a href="/que-hacemos" class="btn !bg-paper !text-ink !border-paper hover:!bg-ink hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="idea_que_hacemos">
+          Qué hace Startidea
+          <span aria-hidden="true">→</span>
+        </a>
+        <button type="button" id="idea-play" class="btn-ghost !border-paper/60 !text-paper hover:!bg-paper hover:!text-ink md:hidden">
+          Ver el vídeo
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var v = document.getElementById('idea-video');
+    var btn = document.getElementById('idea-play');
+    if (!v) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var escritorio = window.matchMedia('(min-width: 768px)').matches;
+    if (escritorio && !reduce && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); }
+        });
+      }, { threshold: 0.25 }).observe(v);
+    }
+    if (btn) btn.addEventListener('click', function () {
+      v.setAttribute('controls', '');
+      v.classList.remove('opacity-70');
+      v.muted = false;
+      v.play().catch(function () {});
+      btn.remove();
+    });
+  })();
+</script>

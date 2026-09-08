@@ -8,6 +8,9 @@
 // (HeroJourney + Ecosistema + …) y /lab/home-journey conserva el hero 3D.
 import Base from '@/layouts/Base.astro';
 import PlanoStartidea from '@/components/PlanoStartidea.astro';
+import TesisImpacto from '@/components/TesisImpacto.astro';
+import VideoIdea from '@/components/VideoIdea.astro';
+import Manifesto from '@/components/Manifesto.astro';
 import LogosBanner from '@/components/LogosBanner.astro';
 import ParaQuien from '@/components/ParaQuien.astro';
 import Casos from '@/components/Casos.astro';
@@ -44,6 +47,10 @@ const marcas = [
   <!-- 1. Pregunta + plano -->
   <PlanoStartidea pagina="/" />
 
+  <!-- 1b. Tesis + cifras (15 años · 90+ organizaciones · 320+ proyectos): el texto con
+       las palabras clave que el H1 (ahora una pregunta) ya no lleva. -->
+  <TesisImpacto />
+
   <!-- 2. Servicios: una sola taxonomía, las 4 puertas de entrada -->
   <section id="servicios" class="bg-paper py-20 md:py-28">
     <div class="container-x">
@@ -51,6 +58,10 @@ const marcas = [
         <div class="col-span-12 lg:col-span-3">
           <span class="label">— Servicios</span>
           <p class="mt-4 text-sm text-ink/70">Cuatro líneas. Se contratan juntas o por separado. Para empresas, instituciones, entidades sociales y personas que emprenden.</p>
+          <p class="mt-4 flex flex-col gap-1 font-mono text-[11px] uppercase tracking-widest">
+            <a href="/que-hacemos" class="text-magenta hover:underline">Todo lo que hace Startidea →</a>
+            <a href="/como-trabajamos" class="text-magenta hover:underline">Cómo trabaja: el método de las tres preguntas →</a>
+          </p>
         </div>
         <ul class="col-span-12 mt-8 grid gap-px border border-ink/15 bg-ink/15 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
           {servicios.map((s) => (
@@ -70,6 +81,9 @@ const marcas = [
       </div>
     </div>
   </section>
+
+  <!-- 2b. El vídeo del hero anterior, como bloque propio -->
+  <VideoIdea />
 
   <!-- 3. Para quién -->
   <ParaQuien />
@@ -102,6 +116,9 @@ const marcas = [
       </div>
     </div>
   </section>
+
+  <!-- 6b. Manifiesto: voz de marca + enlace a /manifiesto -->
+  <Manifesto />
 
   <!-- 7. Cómo empezar -->
   <PresupuestoHome />
