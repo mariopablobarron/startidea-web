@@ -93,6 +93,11 @@ Verificado en producción (2026-09-08 06:25 UTC): `/lab/home-plano`, `/asistente
     8 bloques; `/lab/home-plano` → 301 a `/`; el hero 3D anterior sigue en git y en
     `/lab/home-journey`. Eventos GA4 nuevos: `lazo_mensaje`, `lazo_atajo`, `lazo_regalo`,
     `lazo_resumen` y `generate_lead` (method `lazo_resumen`).
+  - **Refuerzo SEO + vídeo (2026-09-08, tras preguntar Mario):** la home pasó de 2.446 a
+    1.998 palabras y de 52 a 37 enlaces al cambiar el hero. Se devuelven `TesisImpacto`
+    (keywords + cifras, tras el hero), `Manifesto` (antes de «cómo empezar»), enlaces a
+    `/que-hacemos` y `/como-trabajamos`, keyword en el párrafo del hero y el vídeo del hero
+    antiguo como bloque `VideoIdea.astro` («Entra en la idea», tras servicios).
   - **Siguiente acción:** vigilar 2-3 semanas `/admin/plano`, GA4 (eventos `lazo_*`) y GSC
     (CTR/posición de `/`: el H1 cambió a «¿A dónde quiere llegar tu organización?»); si
     cae la visibilidad de «agencia de comunicación» reforzar el copy del hero. Pendiente de Mario: `.env.example` (ver
