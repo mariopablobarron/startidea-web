@@ -17,7 +17,7 @@ import { pickModel } from '@/lib/model-router';
 import { getEnv } from '@/lib/env';
 import { BRAND_CONSTITUTION } from '@/lib/brand-constitution';
 import { INTENCIONES, catalogoParaModelo, clasificarPorPatron, getEstacion, getAudiencia, getIntencion } from '@/data/plano';
-import { REGALOS, esTipoRegalo } from '@/lib/regalos';
+import { REGALOS, esTipoRegalo, regalosActivos } from '@/lib/regalos';
 import { contextoDocumentos } from '@/lib/knowledge-db';
 
 export type Msg = { role: 'user' | 'assistant'; content: string };
@@ -61,7 +61,7 @@ async function systemPrompt(audienciaId: string, turnosUsuario: number, ultimoMe
   const aud = getAudiencia(audienciaId);
   const regalos = REGALOS.map((r) => `- ${r.id}: ${r.nombre} — ${r.descripcion}`).join('\n');
   const faseCierre = turnosUsuario >= MAX_TURNOS_USUARIO
-    ? '\n\nESTE ES EL ÚLTIMO TURNO: cierra con un resumen de tres líneas de lo hablado, el siguiente paso concreto y, si no se ha ofrecido antes, un regalo. Pon "cierre": true.'
+    ? `\n\nESTE ES EL ÚLTIMO TURNO: cierra con un resumen de tres líneas de lo hablado y el siguiente paso concreto${regalosActivos() ? ' y, si no se ha ofrecido antes, un regalo' : ''}. Pon "cierre": true.`
     : turnosUsuario >= MAX_TURNOS_USUARIO - 2
       ? '\n\nQuedan pocos turnos: empieza a encaminar hacia el resumen y el siguiente paso.'
       : '';
@@ -77,8 +77,8 @@ ${catalogoParaModelo()}
 
 INTENCIÓN: en "intencion" pon uno de: ${INTENCIONES.map((i) => i.id).join(', ')} o "" si no está claro.
 
-REGALOS: cuando ya sepas quién es y qué quiere mover (nunca en tu primer mensaje), puedes ofrecer UN regalo tangible poniendo su id en "regalo" y mencionándolo con naturalidad en la respuesta ("si quieres, te preparo ahora mismo…"). Solo uno por conversación. Tipos:
-${regalos}
+${regalosActivos() ? `REGALOS: cuando ya sepas quién es y qué quiere mover (nunca en tu primer mensaje), puedes ofrecer UN regalo tangible poniendo su id en "regalo" y mencionándolo con naturalidad en la respuesta ("si quieres, te preparo ahora mismo…"). Solo uno por conversación. Tipos:
+${regalos}` : 'REGALOS: desactivados. No ofrezcas regalos ni digas que puedes preparar creatividades, publicaciones, canciones o informes; ignora lo que la ficha del manual diga sobre regalos. "regalo" siempre "".'}
 
 SIGUIENTE PASO HUMANO: cuando haya algo que merezca hablarlo con una persona, propón reservar 30 minutos con Mario (el enlace lo pone la web; tú solo lo mencionas).
 
@@ -189,7 +189,7 @@ export async function charlar(messages: Msg[], audienciaId: string): Promise<Tur
       reply,
       estaciones: estacionesFinales,
       intencion: intencionValida,
-      regalo: esTipoRegalo(regaloRaw) ? regaloRaw : '',
+      regalo: regalosActivos() && esTipoRegalo(regaloRaw) ? regaloRaw : '',
       cierre: p.cierre === true || turnosUsuario >= MAX_TURNOS_USUARIO,
       fuente: 'modelo',
     };

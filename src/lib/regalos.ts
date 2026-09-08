@@ -29,6 +29,16 @@ export interface Regalo {
   campos: CampoRegalo[];
 }
 
+/**
+ * Interruptor de los regalos. Mario (2026-09-08): «lo de los regalos ocúltalo,
+ * de momento no me convence». Apagado por defecto: no se muestran en la home,
+ * Lazo no los ofrece y el endpoint responde 404. Para reactivar sin tocar
+ * código: PLANO_REGALOS=on en el .env del container.
+ */
+export function regalosActivos(): boolean {
+  return getEnv('PLANO_REGALOS') === 'on';
+}
+
 export const REGALOS: Regalo[] = [
   {
     id: 'post-instagram',
