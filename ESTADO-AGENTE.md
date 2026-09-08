@@ -4,53 +4,55 @@ Foto de relevo · 8 de septiembre de 2026.
 
 ## Encargo actual
 
-Corrección de la señal de diagnóstico/presupuesto y privacidad de su medición,
-por continuación del loop autorizado por Mario. Las demás mejoras están en pausa.
-No crear otra automatización; esta tarea conserva el ownership de implementación.
+Terminada la corrección de medición y privacidad del loop autorizado por Mario.
+No crear otra automatización. La coordinación existente conserva la siguiente acción.
 
-## Base y coordinación
+## Código e integración
 
-- Base remota: `652b0a3`, cierre documental de PR #102. La primera tanda SEO
-  publicada es `2d0a714` (PR #101), con runtime comprobado antes de esta iteración.
-- Worktree propio `codex-seo-medicion-privacidad-20260908`, rama
-  `codex/seo-medicion-privacidad-20260908`. Observador y worktree Claude intactos.
-- El trabajo restante de Claude en `plano` no se integra en bloque. La auditoría
-  revisada sigue en `8f48dec`; las cautelas sobre JOIN de GSC, landings masivas
-  y promesas GEO siguen vigentes.
+- PR #103 integrada: `dca237f7dc88703a1c08376d9ad45930a8de3311`.
+  Base `652b0a3`; fuentes validadas en `c5ae252` y equivalentes tras el squash.
+- La primera tanda SEO permanece en PR #101 (`2d0a714`): recorridos de notas,
+  servicios y cursos, recomendaciones estables y limpieza de sitemap/utilidades.
+- Trabajo en worktree propio `codex-seo-medicion-privacidad-20260908`.
+  Observador y worktree Claude `plano` intactos; no integrar aquel trabajo en bloque.
 
-## Corrección
+## Resultado
 
-- Tras respuesta aceptada del receptor, identificador válido y honeypot vacío,
-  se guarda con consentimiento una marca mínima de un solo uso (tipo y hora).
-  Gracias la elimina, valida y emite `form_submit` con consentimiento vigente.
-  La visita o recarga no convierten. Sin identificadores, campos libres ni tokens.
-- Bloqueo durante petición y tras éxito. Redirección sin espera analítica; emitir
-  en el documento estable evita el batch perdido al navegar reproducido en Chrome.
-  Un fallo de etiqueta no interrumpe la solicitud. No se promete idempotencia HUB.
-- SDK solo con aceptación explícita y fuera de páginas privadas. Excepción
-  mínima de confirmación con marca válida, sin pageview ni tracking genérico de utilidad.
-- Visitas GA4/Umami saneadas; Clarity/Spotify/GTM omitidos con contexto sensible.
-  Atribución opcional minimizada. Revocar detiene las instancias con recarga,
-  avisada en el banner; no se alteran sus opciones ni textos de política.
-- Umami pasa a muestra consentida: el panel y los documentos explican que el
-  histórico no es directamente comparable. No atribuir su descenso a SEO.
+- Tras aceptación probada del receptor y consentimiento se guarda una marca
+  mínima de un uso (tipo y hora, cinco minutos). Gracias la elimina antes de
+  medir con consentimiento vigente. Visitar o recargar no equivale a aceptación.
+- Sin IDs del receptor, campos del formulario o tokens en la señal. Bloqueo de
+  doble clic; sin esperar a Analytics antes de navegar. Un fallo de medición no
+  interrumpe la solicitud. El receptor HUB no se ha modificado.
+- SDK analíticos tras aceptación explícita, fuera de utilidades; única excepción
+  mínima de confirmación con marca válida, sin pageview de esa página.
+  URL/referente saneados; atribución minimizada. Revocación con recarga avisada.
+- La muestra de GA4/Umami cambia: una bajada de visitas medidas no prueba pérdida SEO.
+  No se han cambiado títulos comerciales, canonical, sitemap, noindex, precios,
+  checkout, Lazo, vídeo ni textos de política en esta corrección.
 
-## Validación y estado
+## Despliegue y validación
 
-- 150 pruebas focalizadas y build completo (374 s) pasan. Ocho escenarios de
-  formularios con transporte simulado y seis comprobaciones de consentimiento
-  con SDK real pasan. Seis escenarios de formularios con SDK real también pasan:
-  una señal mínima por aceptación consentida, sin automáticos ni datos privados.
-  Todas las solicitudes y mediciones de prueba se interceptan.
-- Sin integración ni despliegue de esta corrección todavía.
-- No cambios en HUB, políticas comerciales, precios, checkout, noindex, Lazo,
-  vídeo ni regalos ocultos. Las pruebas no crean leads, correos ni pagos.
-- Evidencias privadas en `../seo-baseline-privado-20260908/`, fuera del repo público.
+- Pull automático KVM8 iniciado 15:58:03 UTC. Código de build completo `dca237f…`;
+  imagen `cmoh7d8hi001bp2a4qwjobhzy:dca237f`, contenedor `running/healthy` y deploy OK
+  comprobados hacia 16:03 UTC. Home HTTPS 200. Este cierre documental no pide deploy.
+- Local: 150 pruebas y build completo (374 s); ocho recorridos con transporte
+  simulado, seis con SDK Google real y seis comprobaciones de privacidad pasan.
+- Producción: seis recorridos con SDK real, seis comprobaciones de privacidad
+  y diez URL con estado, títulos, canonical e indexación correctos. Sin errores JS.
+  Éxitos consentidos: una señal cada uno; rechazo/error/bot y recargas: ninguna nueva.
+- Todos los receptores y colecciones se interceptaron: sin leads, correos ni pagos
+  de prueba. Evidencias en `../seo-baseline-privado-20260908/`, fuera del repo público.
 
-## Siguiente acción
+## Límites y siguiente acción
 
-Integrar y verificar versión/runtime con el mecanismo
-real de pull del VPS. Después cerrar el relevo. La recepción en Google y las
-nuevas definiciones de GA4 siguen pendientes si no pueden probarse sin datos reales.
+La recepción/procesamiento en los informes de Google sigue sin acreditarse. El
+receptor tampoco garantiza idempotencia ante respuesta de red perdida. Las
+nuevas definiciones de GA4 y el JOIN de consultas/páginas de GSC en HUB siguen
+pendientes; no usar aquella alerta para decidir canibalización. Las demás mejoras
+SEO siguen pausadas hasta cerrar la comprobación de medición.
+
+Única siguiente acción: verificar en GA4 la próxima aceptación real consentida,
+sin fabricar conversiones. No requiere una nueva autorización de Mario.
 
 Detalle: `docs/seo-medicion-privacidad-2026-09.md`.
