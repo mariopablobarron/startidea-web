@@ -1,0 +1,31 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_acca4cecc2969b 3,7,9,11-14,16,18-22,26,28
+docs/piloto-precios-iva-2026-09.md
+  s_42946cec6cd017::t_40a875d6ed4817 1-18
+src/content/productos/piloto-redes-sociales.md
+  s_1c51cfd99bed79::t_d679303aa7bb11 5,12,62-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "45b9ceac329bf30b425387c42fd09037427018bc",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
