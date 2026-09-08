@@ -25,7 +25,10 @@ Baseline público congelado el 8 de septiembre a las 22:11 UTC (9 de septiembre 
 - Artefacto final servido localmente: **214/214 comprobaciones**. Canonicals, robots, FAQPage/HowTo/Offer, bloques de FAQ/precios y formularios conservados; 122 tarjetas y 13 filtros de Notas idénticos. Todos los enlaces anteriores presentes; cuatro enlaces nuevos a las familias existentes. Los 115 destinos internos y nueve anclas funcionan.
 - Metadatos y presentación revisados en el HTML; nuevo párrafo BOJA presente y promesa retirada. Revisión independiente del diff sin hallazgos bloqueantes.
 - Solo GET y análisis local de HTML. Sin navegador, SDK, eventos ni envíos. Servidor temporal cerrado.
-- Integración, despliegue y comprobación pública posterior pendientes.
+- PR117 integrada: `78e98d931d245e34c4a3b4201ac515cd453aea7e`, el 8 de septiembre a las 22:18 UTC (9 de septiembre a las 00:18 CEST). Fuentes iguales al head validado `34938b98fd332b9e144623690da2fef1005d2eae` tras fetch.
+- Producción: imagen `78e98d9`, fuente completa coincidente, `running/healthy` y log de despliegue OK. Arranque `2026-09-08T22:24:00.736842363Z` (9 de septiembre a las 00:24 CEST).
+- HTTPS público, 00:24:48–00:25:05 CEST: **214/214 comprobaciones**, con los mismos criterios de preservación y enlaces. **40/40 comparaciones** adicionales de metadatos, H1, introducciones, texto y enlaces del main, JSON-LD, tarjetas y filtros coinciden con el artefacto final validado localmente. El contenido nuevo está servido, incluido el párrafo BOJA.
+- Evidencia: `editorial-production-before.json`, `editorial-local-after.json`, `editorial-production-after.json`, `artifact-production-match.json` y `build.log`, fuera del repositorio. Cierre documental posterior, sin más cambios de aplicación ni otro despliegue necesario.
 
 ## Límites
 

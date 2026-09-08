@@ -2,6 +2,8 @@
 
 8 de septiembre de 2026. Revisión de lectura y documentación sobre `origin/main` actualizado, `58691987fe589c3055fc8a0eac96cc0ec4804905`. No es otra auditoría ni una nueva tanda de código.
 
+**Actualización posterior, 9 de septiembre:** Mario reabrió una tanda editorial acotada tras esta conciliación. PR117 (`78e98d9`) integra los cambios generales de Comunicación, Qué hacemos y Notas, y retira la promesa BOJA de presentación el primer día. La publicación se verificó a las 00:25 CEST: imagen saludable, 214/214 comprobaciones públicas y 40/40 coincidencias con el artefacto local. El [informe de esa tanda](seo-editorial-publicos-2026-09.md) distingue validación, integración y publicación. La matriz que sigue conserva la foto del día 8; esos dos pendientes deben leerse con la actualización posterior, sin dar por resueltas las demás recomendaciones.
+
 El criterio es el [informe corregido de `8f48dec`](auditoria-seo-geo-corregida-2026-09.md). El archivo homónimo que volvió a main con las entregas de Claude contiene el borrador anterior; queda identificado como histórico. Se recuperan el informe corregido y su evidencia pública original, sin convertir aquella fotografía en una comprobación actual.
 
 ## Decisión de cierre
