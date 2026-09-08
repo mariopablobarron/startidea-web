@@ -1,6 +1,6 @@
 # Identidad de Startidea
 
-**Startidea** es una agencia de innovación social fundada en Granada en febrero de 2011 por **Mario Pablo Sánchez Barrón**. Trabaja con organizaciones del Tercer Sector, instituciones públicas y empresas con propósito.
+**Startidea** es una agencia de innovación social fundada en Granada en febrero de 2011 por **Mario Pablo Sánchez Barrón**. Trabaja con cuatro públicos: empresas (pymes, grandes, startups, autónomos), instituciones (públicas, educativas, sanitarias y eclesiales), entidades sociales (asociaciones, fundaciones, cooperativas, ONG, redes) y personas que emprenden.
 
 ## Voz y tono
 - Directa, sin jerga, antinarcisista, sin clickbait.

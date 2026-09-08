@@ -9,7 +9,7 @@
  * de /contacto (no se rompe nada). Es un enlace externo (se abre en pestaña
  * nueva): NO requiere tocar la CSP ni Traefik.
  */
-export const BOOKING_URL = 'https://cal.com/mariopablo';
+export const BOOKING_URL = 'https://cal.com/mariopablo/30min';
 
 /** href del botón de reserva: el calendario si está configurado, si no /contacto. */
 export function bookingHref(): string {

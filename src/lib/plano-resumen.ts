@@ -45,7 +45,7 @@ const MAX_PASO_CORREO = 300;
 
 const PASOS_METODO = [
   'Sitúa en una frase qué quieres mover y quién tiene que tomar la decisión.',
-  'Escribe qué tendría que haber cambiado dentro de un año para que esto haya merecido la pena.',
+  'Escribe cuál es el resultado concreto que mediría el éxito dentro de un año.',
   'Reserva 30 minutos con Mario: Startidea convierte esa frase en una ruta con plazos y presupuesto.',
 ];
 

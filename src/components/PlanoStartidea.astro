@@ -56,7 +56,7 @@ const datosCliente = {
           ¿A dónde quiere llegar <em class="italic text-magenta">tu organización?</em>
         </h1>
         <p class="mt-4 max-w-measure text-base text-ink/80">
-          Habla con Lazo, la IA de Startidea, como en una primera reunión. Sin agenda, sin formulario. El plano de la derecha se ilumina con lo que hablas.
+          Habla con Lazo, la IA de Startidea, como en una primera reunión. Sin agenda, sin formulario. El plano se ilumina con lo que hablas.
         </p>
 
         <!-- Mascota + tooltip -->
@@ -152,8 +152,11 @@ const datosCliente = {
 
       <!-- Columna plano -->
       <div class="col-span-12 lg:col-span-7">
-        <div id="plano-mapa" class="plano-mapa">
-          <svg viewBox="0 0 980 470" role="img" aria-labelledby="plano-svg-t" class="block h-auto w-full">
+        <!-- En móvil el plano no cabe legible en 375 px: se desplaza en horizontal con un
+             ancho mínimo (las etiquetas quedan a ~9 px en vez de 5). -->
+        <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-ink-mute lg:hidden">Desliza para recorrer el plano →</p>
+        <div id="plano-mapa" class="plano-mapa overflow-x-auto overscroll-x-contain">
+          <svg viewBox="0 0 980 470" role="img" aria-labelledby="plano-svg-t" class="block h-auto w-full min-w-[720px] lg:min-w-0">
             <title id="plano-svg-t">Plano de servicios de Startidea: cuatro líneas y el Laboratorio como terminal común</title>
             {LINEAS.filter((l) => l.y).map((l) => (
               <polyline class="track" data-linea={l.id} points={`80,${l.y} 900,${l.y}`} style={`stroke:${l.color}`} />
@@ -410,7 +413,7 @@ const datosCliente = {
       var b = ev.target.closest('.plano-chip'); if (!b) return;
       var id = b.getAttribute('data-intencion'); var i = INT[id]; if (!i) return;
       var etiqueta = b.textContent.trim();
-      var pregunta = S.aud ? ' ¿Qué te gustaría que hubiera cambiado dentro de un año?' : ' ¿Desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
+      var pregunta = S.aud ? ' ¿Cuál es el resultado concreto que mediría el éxito en un año?' : ' ¿Desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
       S.messages.push({ role: 'user', content: 'Quiero hablar de ' + etiqueta.toLowerCase() + '.', atajo: true });
       S.messages.push({ role: 'assistant', content: i.say + pregunta, estaciones: i.estaciones, intencion: id });
       guardar(); pintarHilo(); marcarChip(id);

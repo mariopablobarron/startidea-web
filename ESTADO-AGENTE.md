@@ -3,7 +3,7 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, PR #89 (home que pregunta + Lazo) ampliado con fases 2 y 3.
+**Última actualización:** 2026-09-08, PR #89 (Lazo) rebasado sobre el PR #90 (productos autoservicio).
 
 ---
 
@@ -64,6 +64,18 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
   `/lab/home-plano` sustituye a la home.
 
 ---
+
+## Hecho el 2026-09-08 — Laboratorio: rama «Productos autoservicio» (10 planes de negocio) (PR #90, en main)
+
+- **Colección `productos`** en `src/content/config.ts` + 10 fichas en `src/content/productos/`
+  (piloto de redes, copiloto de subvenciones Pro, memorias y justificaciones, web en un día,
+  nota de voz a contenido, newsletter curada, kit de marca exprés, asistente para socios,
+  eventos con inscripciones, merchandising bajo demanda). Ranking por rentabilidad, `beta`,
+  `tldr`, `faqs`.
+- **Páginas**: `/laboratorio/productos` (ranking con filtros, `<script is:inline>`) y
+  `/laboratorio/productos/[...slug]`. Rama en primera posición del array `ramas` de `/laboratorio`.
+- Siguiente acción de esa rama: comprobar `/laboratorio/productos` en producción y decidir
+  qué beta arranca primero (propuesta: piloto de redes).
 
 ## Hecho el 2026-08-18 (desplegado y verificado en producción)
 

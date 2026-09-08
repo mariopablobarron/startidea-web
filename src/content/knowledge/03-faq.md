@@ -1,10 +1,10 @@
 # Preguntas frecuentes
 
 ## ¿La llamada de diagnóstico es gratuita?
-Sí. 30 minutos sin compromiso, sin coste. Se hace para entender si encajamos antes de que tú decidas invertir nada.
+Sí. 30 minutos sin compromiso, sin coste. Se hace para entender si hay encaje antes de que tú decidas invertir nada.
 
 ## ¿Trabajáis con presupuestos pequeños?
-Depende del problema. Hay proyectos de 3.000€ y proyectos de 300.000€. Lo que no se hace es bajar la calidad para que un alcance grande quepa en un presupuesto que no llega.
+Según el problema. Hay proyectos de 3.000€ y proyectos de 300.000€. Lo que no se hace es bajar la calidad para que un alcance grande quepa en un presupuesto que no llega.
 
 ## ¿Trabajáis solo en Granada?
 No. Operamos desde Granada con clientes en toda España y proyectos europeos.

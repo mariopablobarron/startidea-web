@@ -103,7 +103,7 @@ function turnoGuion(messages: Msg[], audienciaId: string): TurnoCharla {
   if (turnos === 1) {
     const quien = getAudiencia(audienciaId) ? '' : ' Antes de nada, ¿desde dónde hablas: una empresa, una institución, una entidad social o un proyecto que empieza?';
     return {
-      reply: i ? `${i.say}${quien || ' ¿Qué tendría que haber cambiado dentro de un año para que esto haya merecido la pena?'}` : `Cuéntame un poco más: ¿qué tendría que haber cambiado dentro de un año para que esto haya merecido la pena?${quien}`,
+      reply: i ? `${i.say}${quien || ' ¿Cuál es el resultado concreto que mide el éxito en un año?'}` : `Cuéntame un poco más: ¿cuál es el resultado concreto que mide el éxito en un año?${quien}`,
       estaciones: i ? i.estaciones : [],
       intencion: i?.id ?? '',
       regalo: '',
