@@ -13,7 +13,8 @@ Todas son **opcionales**: sin ellas, Lazo funciona con los valores por defecto. 
 | `MODELO_PLANO` | Modelo del clasificador de intención de `/api/plano` (ruta rápida). | `pickModel('clasificacion')` = Haiku 4.5 |
 | `PLANO_EMBEDDINGS` | `on` activa la búsqueda semántica en los documentos subidos (llamada extra por turno). | desactivado (solo FTS) |
 | `MODELO_EMBEDDING` | Modelo de embeddings cuando `PLANO_EMBEDDINGS=on`. | `openai/text-embedding-3-small` |
-| `PLANO_REGALOS_POR_IP` | Regalos por IP y día. | `2` |
+| `PLANO_REGALOS` | `on` muestra y activa los regalos (creatividad, LinkedIn, canción, informe SEO). Apagados desde el 2026-09-08 a petición de Mario. | apagado |
+| `PLANO_REGALOS_POR_IP` | Regalos por IP y día (solo con `PLANO_REGALOS=on`). | `2` |
 | `PLANO_REGALOS_DIA` | Tope global de regalos al día (coste). | `150` |
 | `PLANO_RESUMENES_DIA` | Tope global de resúmenes por correo al día. | `100` |
 | `RESEND_API_KEY`, `RESEND_FROM`, `RESEND_REPLY_TO` | Correo del resumen (ya existentes). Sin `RESEND_API_KEY` el resumen se muestra en pantalla y no se envía. | — |
@@ -30,6 +31,7 @@ MODELO_RESUMEN=
 MODELO_PLANO=
 PLANO_EMBEDDINGS=
 MODELO_EMBEDDING=
+PLANO_REGALOS=
 PLANO_REGALOS_POR_IP=
 PLANO_REGALOS_DIA=
 PLANO_RESUMENES_DIA=

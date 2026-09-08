@@ -12,7 +12,7 @@ import type { APIRoute } from 'astro';
 import { rateLimit } from '@/lib/rate-limit';
 import { getEnv } from '@/lib/env';
 import { registrarEvento, registrarRegalo, regalosHoyPorIp, regalosHoyTotal } from '@/lib/plano-db';
-import { generarRegalo, getRegalo } from '@/lib/regalos';
+import { generarRegalo, getRegalo, regalosActivos } from '@/lib/regalos';
 import { getAudiencia } from '@/data/plano';
 
 export const prerender = false;
@@ -33,6 +33,7 @@ const MENSAJES_ERROR: Record<string, string> = {
 };
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  if (!regalosActivos()) return json({ ok: false, error: 'desactivado', message: 'Los regalos no están disponibles por ahora.' }, 404);
   const ip = clientAddress || 'unknown';
   const limit = rateLimit({ key: ip, bucket: 'plano-regalo', maxHits: 4, windowMs: 60_000 });
   if (!limit.ok) return json({ ok: false, error: 'rate', message: 'Espera un momento antes de pedir otro.' }, 429);

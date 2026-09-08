@@ -72,6 +72,9 @@ Verificado en producción (2026-09-08 06:25 UTC): `/lab/home-plano`, `/asistente
   - **Ajustes tras la prueba real (rama `fix/lazo-estaciones-sitemap`):** si el modelo devuelve
     intención sin estaciones, se iluminan las de la intención; el informe SEO reconoce
     `sitemap-index.xml` y la directiva `Sitemap:` de robots.txt (daba falso negativo en startidea.es).
+  - **Regalos OCULTOS (Mario 2026-09-08: «de momento no me convence»):** interruptor
+    `regalosActivos()` en `src/lib/regalos.ts` (env `PLANO_REGALOS=on` para reactivar). Sin
+    «Lo tangible» en la home, Lazo no los ofrece, `/api/plano/regalo` → 404. Código intacto.
   - **Home sustituida (2026-09-08, «IMPLEMENTA»):** `src/pages/index.astro` = Lazo + plano +
     8 bloques; `/lab/home-plano` → 301 a `/`; el hero 3D anterior sigue en git y en
     `/lab/home-journey`. Eventos GA4 nuevos: `lazo_mensaje`, `lazo_atajo`, `lazo_regalo`,

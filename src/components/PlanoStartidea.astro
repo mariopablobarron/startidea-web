@@ -19,7 +19,7 @@
 // script desactivan la transpilación TS (gotcha ESTADO-AGENTE); un «script» literal
 // en este comentario confundía además al escáner de dependencias de Vite.
 import { LINEAS, ESTACIONES, CHIPS, INTENCIONES, AUDIENCIAS } from '@/data/plano';
-import { REGALOS } from '@/lib/regalos';
+import { REGALOS, regalosActivos } from '@/lib/regalos';
 import { bookingHref, hasBooking } from '@/data/booking';
 
 interface Props {
@@ -42,7 +42,7 @@ const datosCliente = {
   estaciones: ESTACIONES.map((e) => ({ id: e.id, label: e.label, url: e.url, lineas: e.lineas })),
   intenciones: INTENCIONES.map((i) => ({ id: i.id, say: i.say, estaciones: i.estaciones, linea: i.linea })),
   audiencias: AUDIENCIAS,
-  regalos: REGALOS,
+  regalos: regalosActivos() ? REGALOS : [],
 };
 ---
 
@@ -201,7 +201,8 @@ const datosCliente = {
           <li>◎ transbordo</li>
         </ul>
 
-        <!-- Regalos: qué se puede pedir -->
+        <!-- Regalos: qué se puede pedir. Ocultos salvo PLANO_REGALOS=on (Mario 2026-09-08). -->
+        {regalosActivos() && (
         <div class="mt-8 border border-ink/15 bg-paper-warm p-5">
           <p class="label">— Lo tangible</p>
           <p class="mt-2 text-sm text-ink/80">Cuando la conversación tiene contexto, Lazo prepara al momento una muestra de cómo trabaja Startidea. Dos por persona y día.</p>
@@ -216,6 +217,7 @@ const datosCliente = {
             ))}
           </ul>
         </div>
+        )}
       </div>
     </div>
   </div>
