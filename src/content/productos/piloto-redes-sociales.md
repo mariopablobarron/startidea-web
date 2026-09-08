@@ -2,14 +2,14 @@
 title: "Piloto de redes sociales"
 seoTitle: "Piloto de redes sociales con IA"
 description: "Un producto autoservicio que planifica, redacta, diseña y publica las redes de una organización. La persona conecta sus cuentas, aprueba desde el móvil y el sistema hace el resto. Convierte la gestión de redes en una suscripción sin horas de agencia."
-metaDescription: "Piloto de redes sociales con IA para entidades y pymes: calendario, copys, imágenes y reels generados y publicados tras tu aprobación. Desde 49 €/mes."
+metaDescription: "Piloto de redes sociales con IA para entidades y pymes: calendario, copys, imágenes y reels generados y publicados tras tu aprobación. Desde 49 €/mes + IVA."
 pubDate: 2026-09-08
 orden: 1
 claim: "Tus redes, publicadas cada semana. Tú solo apruebas."
 categoria: "Comunicación"
 audience: ["Tercer sector", "Empresas con propósito", "Instituciones"]
 modelo: "Suscripción mensual por marca"
-precio_desde: "49 €/mes"
+precio_desde: "49 €/mes + IVA"
 estado: "Construcción"
 base_hub: "Alta"
 alta_url: "https://hub.startidea.tech/piloto/alta"
@@ -59,9 +59,9 @@ Startidea ya opera este flujo para clientes de agencia dentro del HUB: curador d
 
 | Plan | Precio | Incluye |
 |---|---|---|
-| Base | 49 €/mes | 2 redes, 8 piezas al mes, aprobación por Telegram |
-| Activo | 99 €/mes | 4 redes, 20 piezas, reels desde vídeo, informe mensual |
-| Agencia | 149 €/mes | Todo lo anterior, 2 marcas, revisión humana trimestral |
+| Base | 49 €/mes + IVA | 2 redes, 8 piezas al mes, aprobación por Telegram |
+| Activo | 99 €/mes + IVA | 4 redes, 20 piezas, reels desde vídeo, informe mensual |
+| Agencia | 149 €/mes + IVA | Todo lo anterior, 2 marcas, revisión humana trimestral |
 
 El coste variable por cliente se sitúa entre 3 y 8 € al mes en modelos de IA e infraestructura. El margen bruto supera el 85 % desde el primer cliente. No hay coste de entrega humano salvo en el plan Agencia.
 
