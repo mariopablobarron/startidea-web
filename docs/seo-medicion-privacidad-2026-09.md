@@ -83,3 +83,13 @@ La referencia de Google explica el [envío agrupado de eventos](https://support.
 
 Los receptores y colecciones se interceptaron. Estas pruebas acreditan el
 comportamiento del navegador y el intento de transporte, no recepción en Google.
+
+## Publicación comprobada
+
+PR #103 integrada como `dca237f7dc88703a1c08376d9ad45930a8de3311` y desplegada
+por el pull automático de KVM8 el 8 de septiembre. Imagen `dca237f`, contenedor
+running/healthy y log de despliegue correcto comprobados hacia las 16:03 UTC.
+En producción pasaron seis recorridos con SDK Google real, seis comprobaciones
+de privacidad y diez URL de servicios/utilidades con estado, título, canonical
+e indexación esperados. Toda colección y recepción de formularios de las pruebas
+permaneció interceptada. La recepción en los informes de Google sigue pendiente.
