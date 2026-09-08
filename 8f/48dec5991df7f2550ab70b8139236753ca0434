@@ -1,0 +1,31 @@
+ESTADO-AGENTE.md
+  s_d7c7eefea3e1fe::t_aaff7d2437f523 6,10-25
+docs/auditoria-seo-geo-2026-09.md
+  s_d62853e0ec4b5e::t_2544494966f70a 1-221
+docs/seo-geo-evidencias/verificacion-2026-09-08.json
+  s_d62853e0ec4b5e::t_0c05269e72562f 1-808
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "8f48dec5991df7f2550ab70b8139236753ca0434",
+  "prompts": {},
+  "sessions": {
+    "s_d62853e0ec4b5e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a080d4-039d-7610-ad85-e9365d96ef82",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_d7c7eefea3e1fe": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a080d4-039d-7610-ad85-e9365d96ef82",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
