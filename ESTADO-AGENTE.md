@@ -3,13 +3,13 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, PR #89 (Lazo) rebasado sobre main con #90 (productos) y #91/#92 (Lexy).
+**Última actualización:** 2026-09-08, Lazo desplegado y verificado en producción; ajustes post-prueba en curso.
 
 ---
 
-## 2026-09-07 — «Home que pregunta» (PR #89, abierto, SIN fusionar)
+## 2026-09-08 — «Home que pregunta» + Lazo (PR #89, FUSIONADO `6a1665a`, desplegado y verificado en producción a las 06:22 UTC)
 
-Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verificado en dev.
+Verificado en producción (2026-09-08 06:25 UTC): `/lab/home-plano`, `/asistente`, `/privacidad`, `/admin/knowledge` 200; menú con «Laboratorio» y pie «Aprender» en `/`. Pruebas reales con modelo: charla (Lazo reformula, una pregunta por turno, detectó «el recurso escondido»), regalo `informe-seo` de startidea.es (análisis real + informe), resumen por correo a hola@startidea.es (`emailEnviado:true`, alta en CRM del HUB con nombre «Prueba de Lazo (Claude, 8 sept)» — borrar del CRM si molesta, Telegram avisado, Cal.com prellenado).
 
 - **Nivel A (producción al fusionar):** Nav con «Qué hacemos ▾» (4 servicios +
   financiación + formación) y «Laboratorio» en escritorio; pie con columna
@@ -53,10 +53,14 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
   - **Móvil revisado (375 px):** plano desplazable en horizontal (min 720 px), menú con «Qué
     hacemos» y «Laboratorio», pie a 2 columnas. Cal.com verificado: `BOOKING_URL` apunta al
     evento `/mariopablo/30min` y conserva name/email.
-  - **BLOQUEO DE PERMISOS:** el clasificador de la sesión deniega `gh pr merge`, `git push …:main`
-    y `rm -rf`. Mario debe fusionar el PR #89 con un clic o añadir en `.claude/settings.json`
-    la regla `Bash(gh pr merge:*)`. Tras fusionar: verificar `https://startidea.es/lab/home-plano`
-    (200) y probar una charla real + un resumen por correo a hola@startidea.es.
+  - **Permisos:** `Bash(gh pr merge:*)` permitido desde 2026-09-08 (settings.local y settings.json).
+    Siguen denegados `rm -rf`, `push --force` y `push origin main`: flujo rama → PR → merge.
+  - **Ajustes tras la prueba real (rama `fix/lazo-estaciones-sitemap`):** si el modelo devuelve
+    intención sin estaciones, se iluminan las de la intención; el informe SEO reconoce
+    `sitemap-index.xml` y la directiva `Sitemap:` de robots.txt (daba falso negativo en startidea.es).
+  - **Siguiente acción:** dejar 3-4 semanas de datos en `/admin/plano` y GA4 y decidir si
+    `/lab/home-plano` sustituye a la home. Pendiente de Mario: `.env.example` (ver
+    `docs/lazo-variables-entorno.md`) y borrar el contacto de prueba del CRM.
 - **Privacidad:** el plano usa solo la taxonomía pública (4 puertas + ecosistema);
   nada de documentación interna de estrategia (el detalle está en la memoria local de Claude, no en el repo).
 - **Propuesta y prototipo estático:** artifacts de Claude «Una home que pregunta antes
