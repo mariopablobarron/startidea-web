@@ -50,8 +50,12 @@ Esto no modifica la configuración previa de los pageviews automáticos.
 Para desglosar estos parámetros en los informes estándar de GA4, revisar las
 definiciones personalizadas existentes y registrar solo las que falten, con
 ámbito de evento. La publicación del código no registra esas definiciones ni
-acredita recepción en Analytics. Tras desplegar, comprobar una navegación real
-en DebugView y contrastarla con el evento esperado.
+acredita recepción en Analytics. La consulta de configuración del 8 de septiembre
+de 2026 confirmó que todavía no hay definiciones personalizadas; los parámetros
+de esta tabla siguen pendientes de registro. La API de tiempo real es accesible,
+pero una respuesta sin filas no prueba recepción ni ausencia de eventos. Tras
+desplegar, comprobar una navegación real en DebugView y contrastarla con el
+evento esperado.
 
 ## Rastreo
 
