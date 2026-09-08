@@ -1,0 +1,23 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_2dbd1dcfac9844 3,7,11-15,17,19,21,25,27
+docs/seo-conciliacion-2026-09.md
+  s_42946cec6cd017::t_7e580e3fd10a91 5-6
+docs/seo-editorial-publicos-2026-09.md
+  s_42946cec6cd017::t_95334b86c43dac 28-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "b7f251b3f0e0e35cb0577151e20fce0f7a8bf918",
+  "prompts": {},
+  "sessions": {
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
