@@ -12,6 +12,8 @@ modelo: "Pago único con precio cerrado"
 precio_desde: "290 €"
 estado: "Diseño"
 base_hub: "Baja"
+alta_url: "https://hub.startidea.tech/marca/alta"
+alta_cobra: true
 rentabilidad: 3
 beta: "Q1 2027"
 tags: ["branding", "identidad", "IA", "diseño"]

@@ -218,6 +218,14 @@ const productos = defineCollection({
     estado: z.enum(['Idea', 'Diseño', 'Construcción', 'Beta', 'Disponible']).default('Diseño'),
     // Cuánto del producto ya existe en el HUB de Startidea.
     base_hub: z.enum(['Alta', 'Media', 'Baja']),
+    // Dirección del alta autoservicio en el HUB, cuando el producto ya se
+    // puede contratar. Sin esto la ficha solo ofrece apuntarse a la beta:
+    // hasta el 2026-09-08 los tres productos con alta funcionando no tenían
+    // ningún enlace desde la web y su tráfico se perdía entero.
+    alta_url: z.string().url().optional(),
+    // Si el alta ya puede cobrar. Cuando es false, el botón invita a empezar
+    // el alta pero no promete pago, porque faltan precios por configurar.
+    alta_cobra: z.boolean().default(false),
     // Rentabilidad esperada 1-5 (criterio interno: recurrencia × margen × coste de entrega).
     rentabilidad: z.number().int().min(1).max(5),
     // Fecha objetivo de la beta (texto: "Q4 2026").
