@@ -248,9 +248,9 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
                 </div>
               </dl>
               <p class="mt-4 text-xs text-ink/75 border-t border-ink/10 pt-4">
-                ¿Necesitas actualizar los datos del perfil?{' '}
-                <a href={`mailto:hola@startidea.es?subject=Actualizar perfil Copiloto ${esc(profile.org_nombre)}`} class="text-magenta hover:underline">
-                  Escríbenos →
+                Cuanto más completo esté el perfil, mejor acierta el Copiloto.{' '}
+                <a href={`/subvenciones/mi-copiloto/perfil?t=${encodeURIComponent(token)}`} class="font-mono uppercase tracking-wider text-magenta hover:underline">
+                  Editar perfil →
                 </a>
               </p>
             </div>
@@ -278,7 +278,7 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
                         <p class="text-xs text-ink/75 mt-0.5">
                           {formatDate(entry.created_at)}
                           {entry.expediente_id && (
-                            <> · <code class="font-mono">{esc(entry.expediente_id)}</code></>
+                            <> · <a href={`/subvenciones/presentar/gracias?id=${encodeURIComponent(entry.expediente_id)}`} class="font-mono text-magenta hover:underline">{esc(entry.expediente_id)}</a></>
                           )}
                           {entry.error && (
                             <span class="text-red-400"> · Error: {esc(entry.error)}</span>

@@ -563,3 +563,55 @@ export function setProfilePlan(
     });
   return r.changes > 0;
 }
+
+/**
+ * Edición del perfil por la propia organización (manage_token como bearer).
+ * No toca email, tokens, estado, plan ni Stripe.
+ */
+export function updateProfile(
+  manageToken: string,
+  data: {
+    org_nombre: string;
+    org_cif: string;
+    org_tipo: string;
+    org_descripcion: string;
+    representante: string;
+    telefono: string;
+    web: string;
+    ccaa: string;
+    keywords: string;
+    finalidades: string[];
+    territorios: string[];
+    importe_min: number;
+    importe_max: number | null;
+    auto_generar: boolean;
+    anos_activos: number;
+    beneficiarios_anuales: number;
+    presupuesto_anual: string;
+    proyectos_anteriores: string;
+    logros_principales: string;
+  },
+): boolean {
+  const db = getDb();
+  const r = db
+    .prepare(
+      `UPDATE auto_copiloto_profiles SET
+         org_nombre = @org_nombre, org_cif = @org_cif, org_tipo = @org_tipo,
+         org_descripcion = @org_descripcion, representante = @representante,
+         telefono = @telefono, web = @web, ccaa = @ccaa, keywords = @keywords,
+         finalidades = @finalidades, territorios = @territorios,
+         importe_min = @importe_min, importe_max = @importe_max, auto_generar = @auto_generar,
+         anos_activos = @anos_activos, beneficiarios_anuales = @beneficiarios_anuales,
+         presupuesto_anual = @presupuesto_anual, proyectos_anteriores = @proyectos_anteriores,
+         logros_principales = @logros_principales
+       WHERE manage_token = @manage_token`,
+    )
+    .run({
+      ...data,
+      finalidades: JSON.stringify(data.finalidades),
+      territorios: JSON.stringify(data.territorios),
+      auto_generar: data.auto_generar ? 1 : 0,
+      manage_token: manageToken,
+    });
+  return r.changes > 0;
+}

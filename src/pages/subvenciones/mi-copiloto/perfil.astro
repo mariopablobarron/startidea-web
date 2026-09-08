@@ -1,0 +1,258 @@
+---
+/**
+ * /subvenciones/mi-copiloto/perfil?t=TOKEN
+ *
+ * Edición del perfil de organización del Copiloto por la propia organización.
+ * El manage_token actúa como bearer (sin login). Envía a /api/auto-copiloto/update.
+ * El email no se edita aquí (identidad del perfil): se cambia por soporte.
+ */
+
+import Base from '@/layouts/Base.astro';
+import { getProfileByManageToken } from '@/lib/auto-copiloto-db';
+import { FINALIDADES, TERRITORIOS_PUBLIC } from '@/lib/subsidies-api';
+import { ORG_TIPOS } from '@/lib/copiloto-perfil';
+
+export const prerender = false;
+
+const token = Astro.url.searchParams.get('t') ?? '';
+const profile = token ? getProfileByManageToken(token) : null;
+
+let finalidadesArr: string[] = [];
+try { finalidadesArr = JSON.parse(profile?.finalidades ?? '[]'); } catch {}
+let territoriosArr: string[] = [];
+try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } catch {}
+
+const inputCls =
+  'mt-2 w-full border border-ink bg-paper px-4 py-3 font-mono text-sm text-ink placeholder:text-ink/75 focus:border-magenta focus:outline-none focus:ring-2 focus:ring-magenta/40';
+const labelCls = 'block font-mono text-[10px] uppercase tracking-widest text-ink-mute';
+---
+
+<Base
+  title={profile ? `Perfil de ${profile.org_nombre} — Copiloto · Startidea` : 'Perfil del Copiloto — Startidea'}
+  description="Edita el perfil de tu organización en el Copiloto de subvenciones."
+  ogSlug="page/subvenciones"
+  noindex={true}
+>
+  <section class="border-b border-ink/15 bg-paper-warm py-10 md:py-12">
+    <div class="container-x">
+      <nav class="mb-4 font-mono text-[10px] uppercase tracking-widest text-ink/75">
+        <a href={`/subvenciones/mi-copiloto?t=${encodeURIComponent(token)}`} class="hover:text-magenta">← Mi Copiloto</a>
+      </nav>
+      <span class="label">— Perfil de la organización</span>
+      <h1 class="mt-3 font-display text-display-md leading-tight text-ink">
+        {profile ? profile.org_nombre : 'Enlace no válido'}
+      </h1>
+      {profile && (
+        <p class="mt-3 max-w-measure text-ink/75">
+          Este perfil es lo que el Copiloto usa para decidir qué convocatorias encajan y para redactar los
+          documentos. Cuanto más completo, mejor acierta.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section class="bg-paper py-12 md:py-16">
+    <div class="container-x">
+      <div class="mx-auto max-w-2xl">
+        {!profile ? (
+          <div class="border border-red-200 bg-red-50 p-6">
+            <p class="font-mono text-xs uppercase tracking-widest text-red-500 mb-2">Enlace no válido</p>
+            <p class="text-sm text-ink/70">Este enlace de gestión no es válido. Revisa el email de confirmación que recibiste al registrarte.</p>
+          </div>
+        ) : (
+          <form id="perfil-form" class="space-y-6" novalidate>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="org_nombre" class={labelCls}>Nombre de la organización *</label>
+                <input id="org_nombre" name="org_nombre" type="text" required maxlength="200" value={profile.org_nombre} class={inputCls} />
+              </div>
+              <div>
+                <label for="org_cif" class={labelCls}>CIF</label>
+                <input id="org_cif" name="org_cif" type="text" maxlength="20" value={profile.org_cif} class={inputCls} />
+              </div>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="org_tipo" class={labelCls}>Tipo de organización *</label>
+                <select id="org_tipo" name="org_tipo" required class={inputCls}>
+                  {Object.entries(ORG_TIPOS).map(([slug, label]) => (
+                    <option value={slug} selected={profile.org_tipo === slug}>{label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label for="ccaa" class={labelCls}>Comunidad autónoma principal</label>
+                <select id="ccaa" name="ccaa" class={inputCls}>
+                  <option value="" selected={!profile.ccaa}>Sin especificar</option>
+                  {TERRITORIOS_PUBLIC.map((t) => (
+                    <option value={t.slug} selected={profile.ccaa === t.slug}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="representante" class={labelCls}>Representante legal *</label>
+              <input id="representante" name="representante" type="text" required maxlength="150" value={profile.representante} class={inputCls} />
+            </div>
+
+            <div>
+              <label for="org_descripcion" class={labelCls}>Descripción de actividades * (mínimo 40 caracteres)</label>
+              <textarea id="org_descripcion" name="org_descripcion" required minlength="40" maxlength="800" rows="5" class={`${inputCls} resize-y`}>{profile.org_descripcion}</textarea>
+            </div>
+
+            <div class="border-t border-ink/15 pt-6">
+              <h2 class="font-display text-xl font-bold text-ink">Qué convocatorias te interesan</h2>
+            </div>
+
+            <div>
+              <label for="keywords" class={labelCls}>Palabras clave (separadas por coma)</label>
+              <input id="keywords" name="keywords" type="text" maxlength="300" value={profile.keywords} class={inputCls} />
+              <p class="mt-1 font-mono text-[11px] text-ink-mute">En el plan gratuito filtran; en el Pro son pista para el encaje real.</p>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="finalidad" class={labelCls}>Área principal de interés</label>
+                <select id="finalidad" name="finalidad" class={inputCls}>
+                  <option value="" selected={finalidadesArr.length === 0}>Cualquier área</option>
+                  {FINALIDADES.map((f) => (
+                    <option value={f.slug} selected={finalidadesArr.includes(f.slug)}>{f.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label for="importe_min" class={labelCls}>Importe mínimo (€)</label>
+                <input id="importe_min" name="importe_min" type="number" min="0" step="1000" value={profile.importe_min || ''} class={inputCls} />
+              </div>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="territorios" class={labelCls}>Territorios de búsqueda</label>
+                <select id="territorios" name="territorios" multiple size="5" class={inputCls}>
+                  <option value="nacional" selected={territoriosArr.includes('nacional')}>Toda España (nacional)</option>
+                  <option value="europa" selected={territoriosArr.includes('europa')}>Europa</option>
+                  {TERRITORIOS_PUBLIC.map((t) => (
+                    <option value={t.slug} selected={territoriosArr.includes(t.slug)}>{t.label}</option>
+                  ))}
+                </select>
+                <p class="mt-1 font-mono text-[11px] text-ink-mute">Ctrl/Cmd + clic para elegir varios.</p>
+              </div>
+              <div>
+                <label for="telefono" class={labelCls}>Teléfono</label>
+                <input id="telefono" name="telefono" type="tel" maxlength="30" value={profile.telefono} class={inputCls} />
+                <label for="web" class={`${labelCls} mt-4`}>Web</label>
+                <input id="web" name="web" type="text" maxlength="200" value={profile.web} class={inputCls} />
+              </div>
+            </div>
+
+            <div class="border-t border-ink/15 pt-6">
+              <h2 class="font-display text-xl font-bold text-ink">Contexto para los documentos</h2>
+              <p class="mt-1 text-sm text-ink/75">Opcional. Cuantos más datos, mejores memorias.</p>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-3">
+              <div>
+                <label for="anos_activos" class={labelCls}>Años en activo</label>
+                <input id="anos_activos" name="anos_activos" type="number" min="0" max="200" value={profile.anos_activos || ''} class={inputCls} />
+              </div>
+              <div>
+                <label for="beneficiarios_anuales" class={labelCls}>Beneficiarios/año</label>
+                <input id="beneficiarios_anuales" name="beneficiarios_anuales" type="number" min="0" value={profile.beneficiarios_anuales || ''} class={inputCls} />
+              </div>
+              <div>
+                <label for="presupuesto_anual" class={labelCls}>Presupuesto anual</label>
+                <input id="presupuesto_anual" name="presupuesto_anual" type="text" maxlength="50" value={profile.presupuesto_anual} class={inputCls} />
+              </div>
+            </div>
+
+            <div>
+              <label for="proyectos_anteriores" class={labelCls}>Proyectos anteriores financiados con subvenciones</label>
+              <textarea id="proyectos_anteriores" name="proyectos_anteriores" rows="3" maxlength="600" class={`${inputCls} resize-y`}>{profile.proyectos_anteriores}</textarea>
+            </div>
+            <div>
+              <label for="logros_principales" class={labelCls}>Logros e indicadores de impacto</label>
+              <textarea id="logros_principales" name="logros_principales" rows="2" maxlength="400" class={`${inputCls} resize-y`}>{profile.logros_principales}</textarea>
+            </div>
+
+            <label class="flex items-start gap-3 text-sm text-ink/80">
+              <input id="auto_generar" name="auto_generar" type="checkbox" checked={profile.auto_generar === 1} class="mt-1" />
+              <span>Generar y enviarme los documentos preliminares cuando una convocatoria encaje (si lo desactivas, solo recibirás el aviso).</span>
+            </label>
+
+            <div class="border-t border-ink/15 pt-5">
+              <button type="submit" id="perfil-submit" class="btn">Guardar perfil →</button>
+              <p class="mt-3 font-mono text-[11px] text-ink-mute">
+                El email de contacto ({profile.email}) no se cambia desde aquí: escribe a hola@startidea.es.
+              </p>
+            </div>
+
+            <div id="perfil-result" class="hidden border p-4 text-sm" role="alert"></div>
+          </form>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('perfil-form');
+    if (!form) return;
+    var token = new URLSearchParams(window.location.search).get('t') || '';
+    var result = document.getElementById('perfil-result');
+    var btn = document.getElementById('perfil-submit');
+
+    function show(msg, isError) {
+      result.className = 'border p-4 text-sm ' + (isError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700');
+      result.textContent = msg;
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var fd = new FormData(form);
+      var finalidad = fd.get('finalidad');
+      var territorios = Array.prototype.slice.call(document.getElementById('territorios').selectedOptions).map(function (o) { return o.value; });
+      var body = {
+        token: token,
+        org_nombre: fd.get('org_nombre'),
+        org_cif: fd.get('org_cif'),
+        org_tipo: fd.get('org_tipo'),
+        org_descripcion: fd.get('org_descripcion'),
+        representante: fd.get('representante'),
+        telefono: fd.get('telefono'),
+        web: fd.get('web'),
+        ccaa: fd.get('ccaa'),
+        keywords: fd.get('keywords'),
+        finalidades: finalidad ? [finalidad] : [],
+        territorios: territorios,
+        importe_min: fd.get('importe_min') || 0,
+        importe_max: null,
+        auto_generar: !!fd.get('auto_generar'),
+        anos_activos: fd.get('anos_activos') || 0,
+        beneficiarios_anuales: fd.get('beneficiarios_anuales') || 0,
+        presupuesto_anual: fd.get('presupuesto_anual'),
+        proyectos_anteriores: fd.get('proyectos_anteriores'),
+        logros_principales: fd.get('logros_principales'),
+      };
+      btn.disabled = true;
+      try {
+        var res = await fetch('/api/auto-copiloto/update', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        var j = await res.json();
+        if (j.ok) show('Perfil guardado. El Copiloto usará estos datos a partir del próximo ciclo diario.', false);
+        else show(j.detail || 'No se pudo guardar. Revisa los campos obligatorios.', true);
+      } catch (err) {
+        show('No se pudo guardar. Inténtalo de nuevo o escribe a hola@startidea.es.', true);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  })();
+</script>
