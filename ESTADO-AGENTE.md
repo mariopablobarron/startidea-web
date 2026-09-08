@@ -19,8 +19,8 @@ Base: `origin/main` = `8717f18` + rama `feat/home-plano`. Build local OK; verifi
   + Plano Startidea (SVG en servidor; datos en `src/data/plano.ts`).
   - `/api/plano/charla` + `src/lib/plano-charla.ts`: turno de conversación (Haiku, JSON
     validado; guion de respaldo si falla el modelo). Máx. 8 turnos. Lee TODAS las fichas
-    de `src/content/knowledge/`, incluida la nueva **`05-manual-conversacion.md`**
-    (BORRADOR de Claude: cómo conversa Mario en un diagnóstico; **Mario debe revisarla**).
+    de `src/content/knowledge/`, incluida **`05-manual-conversacion.md` v2** (voz real de
+    Startidea extraída de los textos públicos; 63 citas verificadas; Mario puede afinarla).
     Ojo: el chat flotante (`/api/chat`) también la carga.
   - Regalos tangibles (`src/lib/regalos.ts`, `/api/plano/regalo`): post Instagram (con
     tarjeta SVG descargable), publicación LinkedIn, letra de canción, informe SEO REAL
