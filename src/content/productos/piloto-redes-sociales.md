@@ -12,6 +12,8 @@ modelo: "Suscripción mensual por marca"
 precio_desde: "49 €/mes"
 estado: "Construcción"
 base_hub: "Alta"
+alta_url: "https://hub.startidea.tech/piloto/alta"
+alta_cobra: false
 rentabilidad: 5
 beta: "Q4 2026"
 tags: ["redes sociales", "IA", "autoservicio", "suscripción"]

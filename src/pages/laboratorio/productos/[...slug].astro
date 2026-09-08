@@ -191,16 +191,30 @@ if (d.faqs?.length) jsonLd.push(faqPageSchema(d.faqs));
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8">
         <div class="col-span-12 lg:col-span-9 lg:col-start-2">
-          <span class="label !text-paper/60">— Beta</span>
+          <span class="label !text-paper/60">— {d.alta_url ? 'Empezar' : 'Beta'}</span>
           <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
-            ¿Tu organización <em class="italic text-magenta">lo probaría</em>?
+            {d.alta_url
+              ? <Fragment>Ya se puede <em class="italic text-magenta">usar</em>.</Fragment>
+              : <Fragment>¿Tu organización <em class="italic text-magenta">lo probaría</em>?</Fragment>}
           </h2>
           <p class="mt-6 max-w-measure text-paper/80">
-            Las betas son de pocas organizaciones, a mitad de precio y a cambio de opinión honesta. Si encaja, Startidea avisa cuando abra.
+            {d.alta_url
+              ? (d.alta_cobra
+                  ? 'El alta se hace en línea, sin llamada previa. Se responden unas preguntas y el producto queda listo.'
+                  : 'El alta ya está abierta y se puede dejar el producto listo. La suscripción se activa después, cuando Startidea confirme el precio contigo.')
+              : 'Las betas son de pocas organizaciones, a mitad de precio y a cambio de opinión honesta. Si encaja, Startidea avisa cuando abra.'}
           </p>
           <div class="mt-12 flex flex-wrap gap-4">
-            <a href={`/contacto?asunto=beta-${entry.slug}`} class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta">
-              Apuntarme a la beta
+            {d.alta_url && (
+              <a href={d.alta_url} class="btn !bg-magenta !text-paper !border-magenta hover:!bg-paper hover:!text-ink hover:!border-paper">
+                {d.alta_cobra ? 'Empezar ahora' : 'Empezar el alta'}
+                <span aria-hidden="true">→</span>
+              </a>
+            )}
+            <a href={`/contacto?asunto=beta-${entry.slug}`} class={d.alta_url
+              ? "btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink"
+              : "btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta"}>
+              {d.alta_url ? 'Prefiero que me llamen' : 'Apuntarme a la beta'}
               <span aria-hidden="true">→</span>
             </a>
             <a href="/laboratorio/productos" class="btn-ghost !text-paper !border-paper hover:!bg-paper hover:!text-ink">

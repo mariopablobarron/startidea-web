@@ -12,6 +12,8 @@ modelo: "Alta única y cuota mensual"
 precio_desde: "300 € de alta y 29 €/mes"
 estado: "Construcción"
 base_hub: "Alta"
+alta_url: "https://hub.startidea.tech/web/alta"
+alta_cobra: false
 rentabilidad: 4
 beta: "Q4 2026"
 tags: ["web", "SEO", "multi-tenant", "IA"]
