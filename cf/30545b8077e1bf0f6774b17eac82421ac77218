@@ -1,0 +1,37 @@
+src/components/PlanoStartidea.astro
+  s_f4711e85a048a0::t_81e28c091e5137 16,36,45,50,53-67,74,193-225,236,329
+src/data/plano.ts
+  s_6f979bbb5c27db::t_922c71a3f5aa5b 54-72,83-84,86,88,92-93,97,100-101,107-113,115,124-127
+src/lib/plano-db.ts
+  s_6f979bbb5c27db::t_ea75ca7778570a 35,57-58,88,93-94,106,127,138-140,150
+src/pages/admin/plano.astro
+  s_6f979bbb5c27db::t_47bea9c21283a4 7,60-72,92,101,107
+src/pages/api/plano.ts
+  s_6f979bbb5c27db::t_9c904905a79881 26,65,69,95,147,161,171,181
+src/pages/lab/home-plano.astro
+  s_f4711e85a048a0::t_0fd8e5759f1402 21-24,41,55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "cf30545b8077e1bf0f6774b17eac82421ac77218",
+  "prompts": {},
+  "sessions": {
+    "s_6f979bbb5c27db": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "867a0b96-429b-41cc-9c32-7edd0bbc65f1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

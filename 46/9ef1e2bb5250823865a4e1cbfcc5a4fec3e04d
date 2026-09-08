@@ -1,0 +1,47 @@
+docs/lazo-variables-entorno.md
+  s_f4711e85a048a0::t_b47b6e0cff3372 1-38
+ESTADO-AGENTE.md
+  s_f4711e85a048a0::t_45532205e216fc 6,68-79
+src/components/PlanoStartidea.astro
+  s_f4711e85a048a0::t_b2763ea85ba822 59,155-159,416
+src/content/knowledge/00-identidad.md
+  s_f4711e85a048a0::t_d72da24f324559 3
+src/content/knowledge/02-metodo.md
+  s_f4711e85a048a0::t_d51a748a5878f9 4,11,13,17-20,22
+src/content/knowledge/03-faq.md
+  s_f4711e85a048a0::t_cfa152c40c38ee 4,7
+src/content/knowledge/05-manual-conversacion.md
+  s_cfd674561a4b66::t_f3e6915abc3d6f 4-33,35-50,52-70,72-89,92-95,98-110,113-132,135-142
+src/data/booking.ts
+  s_f4711e85a048a0::t_0ed0244b1858fe 12
+src/lib/brand-constitution.ts
+  s_f4711e85a048a0::t_d7f252876b55ed 22
+src/lib/plano-charla.ts
+  s_f4711e85a048a0::t_7e27a1d0140a88 106
+src/lib/plano-resumen.ts
+  s_f4711e85a048a0::t_fd132cf4392d81 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "469ef1e2bb5250823865a4e1cbfcc5a4fec3e04d",
+  "prompts": {},
+  "sessions": {
+    "s_cfd674561a4b66": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e44e7d66-bf90-4cca-9445-bcbf71e46315",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    },
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
