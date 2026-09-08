@@ -16,7 +16,7 @@ const datosClave = [
   { label: 'Fundación', value: 'Febrero de 2011' },
   { label: 'Fundador', value: 'Mario Pablo Sánchez Barrón' },
   { label: 'Disciplinas', value: 'Consultoría, Comunicación, Audiovisual, Tecnología, Fundraising' },
-  { label: 'Audiencias', value: 'Tercer sector, instituciones, empresas con propósito' },
+  { label: 'Audiencias', value: 'Empresas, instituciones, entidades sociales y personas que emprenden' },
   { label: 'Hub físico', value: 'Hub Startidea — coworking, salas de formación, estudio podcast' },
   { label: 'Contacto prensa', value: 'hola@startidea.es' },
   { label: 'Teléfono', value: '+34 958 045 789' },
@@ -24,11 +24,11 @@ const datosClave = [
 
 const logos = [
   { name: 'Logo principal — color', src: '/brand/logo-original.png', sizeNote: 'PNG · 2× retina', kind: 'PNG' },
-  { name: 'Logo principal — vector', src: '/brand/logo-original.pdf', sizeNote: 'PDF', kind: 'PDF' },
+  { name: 'Logo principal — vector', src: '/brand/logo-original.pdf', preview: '/brand/logo-original.png', sizeNote: 'PDF', kind: 'PDF' },
   { name: 'Logo en negro', src: '/brand/logo-negro.png', sizeNote: 'PNG', kind: 'PNG' },
   { name: 'Logo en blanco (sobre fondo oscuro)', src: '/brand/logo-blanco.png', sizeNote: 'PNG', kind: 'PNG' },
   { name: 'Logo en rosa magenta', src: '/brand/logo-rosa.png', sizeNote: 'PNG', kind: 'PNG' },
-  { name: 'Logo rosa — vector', src: '/brand/logo-rosa.pdf', sizeNote: 'PDF', kind: 'PDF' },
+  { name: 'Logo rosa — vector', src: '/brand/logo-rosa.pdf', preview: '/brand/logo-rosa.png', sizeNote: 'PDF', kind: 'PDF' },
   { name: 'Isotipo', src: '/brand/logo-isotipo-only.png', sizeNote: 'PNG', kind: 'PNG' },
   { name: 'Identidad iOS / PWA (S blanca sobre magenta)', src: '/icon-512.png', sizeNote: 'PNG 512×512', kind: 'PNG' },
 ];
@@ -205,7 +205,7 @@ const lineaTiempo = [
                   data-track="download"
                   class="block aspect-video bg-paper-warm p-6 transition-colors hover:bg-paper-deep"
                 >
-                  <img src={l.src} alt={l.name} class="h-full w-full object-contain" loading="lazy" />
+                  <img src={l.preview ?? l.src} alt={l.name} class="h-full w-full object-contain" loading="lazy" />
                 </a>
                 <div class="flex items-baseline justify-between gap-3">
                   <span class="font-display text-sm leading-tight text-ink">{l.name}</span>
