@@ -1,3 +1,5 @@
+> **Documento histórico superado.** Este borrador de Claude contiene conclusiones corregidas y no es una lista de acciones vigente. Use el [informe corregido de referencia (8f48dec)](auditoria-seo-geo-corregida-2026-09.md) y la [conciliación de las entregas PR101–113](seo-conciliacion-2026-09.md). Se conserva el cuerpo para trazabilidad; sus promesas de tráfico, supuesta canibalización, indexación masiva y ofertas por estado de desarrollo no autorizan cambios.
+
 # Auditoría SEO + GEO de startidea.es — septiembre 2026
 
 - **Fecha:** 2026-09-08. **Datos:** panel HUB (55 GA4 · 28.557 filas GSC, sync hace 6 h), web viva y código en `startidea-web-wt/plano`.
