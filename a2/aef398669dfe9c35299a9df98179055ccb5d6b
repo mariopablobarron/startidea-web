@@ -1,0 +1,19 @@
+.claude/settings.json
+  s_f4711e85a048a0::t_9fc7ed236219ec 12-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "a2aef398669dfe9c35299a9df98179055ccb5d6b",
+  "prompts": {},
+  "sessions": {
+    "s_f4711e85a048a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d4e850d-81af-4a6b-ae85-74f7cede3270",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
