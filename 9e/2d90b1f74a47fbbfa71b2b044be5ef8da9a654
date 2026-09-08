@@ -1,0 +1,23 @@
+src/pages/prensa.astro
+  s_1c51cfd99bed79::t_d85050ac701060 19,27,31,208
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_1a561dd3242901 3,7,15,19-20,36
+docs/seo-prensa-2026-09.md
+  s_1c51cfd99bed79::t_b2598cc5dcded1 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "9e2d90b1f74a47fbbfa71b2b044be5ef8da9a654",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
