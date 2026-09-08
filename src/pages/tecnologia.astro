@@ -2,6 +2,8 @@
 import Base from '@/layouts/Base.astro';
 import OtrosServicios from '@/components/OtrosServicios.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CursoRelacionado from '@/components/CursoRelacionado.astro';
 import { breadcrumbList, serviceSchema, SITE_URL } from '@/lib/jsonld';
 import { rangoPublico, fmtEur } from '@/data/servicios';
 
@@ -286,4 +288,10 @@ const stack = [
   <CasosRelacionados slugs={casosSlugs} titulo="Producto digital que funciona" />
 
   <OtrosServicios current="tecnologia" />
+  <CursoRelacionado slug="crea-tu-primer-agente-ia-sin-codigo" />
+  <NotasRelacionadas category="Estrategia" slugs={[
+    'ia-sin-ceder-tus-datos-plataforma-propia',
+    'agentes-ia-para-ong-tercer-sector',
+    'rehacer-startidea-en-doce-horas',
+  ]} />
 </Base>

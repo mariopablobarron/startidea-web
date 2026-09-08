@@ -10,6 +10,7 @@
 import Base from '@/layouts/Base.astro';
 import { breadcrumbList, faqPageSchema, serviceSchema, SITE_URL } from '@/lib/jsonld';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CursoRelacionado from '@/components/CursoRelacionado.astro';
 
 const faqs = [
   {
@@ -428,5 +429,10 @@ const fases = [
     </div>
   </section>
 
-  <NotasRelacionadas category="Financiación" />
+  <CursoRelacionado slug="subvenciones-como-presentar-solicitud" />
+  <NotasRelacionadas category="Financiación" slugs={[
+    'enisa-o-cdti-cual-pedir',
+    'cdti-ayudas-innovacion-empresas',
+    'solicitar-enisa-cdti-con-consultora',
+  ]} />
 </Base>

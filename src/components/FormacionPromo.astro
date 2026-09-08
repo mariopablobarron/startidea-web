@@ -9,9 +9,20 @@
 // más recientes.
 import { getCollection } from 'astro:content';
 
+interface Props {
+  category?: 'Comunicación' | 'Financiación' | 'Estrategia' | 'Digital';
+  context?: string;
+  slugs?: string[];
+}
+
+const { category, context = 'home', slugs } = Astro.props;
 const allCursos = await getCollection('cursos', (c) => !c.data.draft);
 const cursos = allCursos
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .filter((c) => !category || c.data.category === category)
+  .filter((c) => !slugs || slugs.includes(c.slug))
+  .sort((a, b) => slugs
+    ? slugs.indexOf(a.slug) - slugs.indexOf(b.slug)
+    : b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
 const ESTADO_LABEL: Record<string, string> = {
@@ -22,8 +33,8 @@ const ESTADO_LABEL: Record<string, string> = {
 };
 ---
 
-<section
-  id="formacion-promo"
+{cursos.length > 0 && <section
+  id={context === 'home' ? 'formacion-promo' : `formacion-promo-${context}`}
   class="relative border-y border-magenta/30 bg-paper-warm py-16 md:py-20"
 >
   <div class="container-x">
@@ -40,17 +51,21 @@ const ESTADO_LABEL: Record<string, string> = {
           Aprende a hacerlo
           <em class="italic text-magenta">con tu propio equipo.</em>
         </h2>
-        <p class="mt-6 max-w-measure text-lede text-ink/80">
+        {category ? <p class="mt-6 max-w-measure text-lede text-ink/80">
+          Formación relacionada con este servicio para desarrollar capacidades en tu equipo.
+          Cada ficha detalla los destinatarios, el formato y las condiciones.
+        </p> : <p class="mt-6 max-w-measure text-lede text-ink/80">
           Talleres prácticos para el tercer sector y organizaciones con propósito:
           nadie sale con apuntes — se sale con un plan, una solicitud o
           <strong>un agente de IA construido</strong>. En Granada, online o en tu entidad.
-        </p>
+        </p>}
 
         <ul class="mt-8 divide-y divide-ink/15 border-t border-ink/15">
           {cursos.map((c) => (
             <li>
               <a
                 href={`/laboratorio/cursos/${c.slug}`}
+                data-link-type="curso"
                 class="group grid grid-cols-12 items-baseline gap-x-4 py-4"
               >
                 <span class="col-span-12 font-display text-lg font-bold leading-tight text-ink group-hover:text-magenta sm:col-span-8">
@@ -60,7 +75,7 @@ const ESTADO_LABEL: Record<string, string> = {
                   {c.data.duracion.split('(')[0].trim()}
                 </span>
                 <span class="col-span-4 mt-1 text-right font-mono text-[10px] uppercase tracking-widest text-magenta sm:col-span-2 sm:mt-0">
-                  {ESTADO_LABEL[c.data.estado] ?? c.data.estado}
+                  {category ? 'Ver condiciones' : ESTADO_LABEL[c.data.estado] ?? c.data.estado}
                 </span>
               </a>
             </li>
@@ -74,7 +89,8 @@ const ESTADO_LABEL: Record<string, string> = {
           href="/laboratorio/cursos"
           class="btn w-full !justify-center !py-4 !text-base lg:!text-lg"
           data-track="cta"
-          data-track-id="cta_formacion_home"
+          data-track-id={`cta_formacion_${context}`}
+          data-link-type="curso"
         >
           Ver toda la formación
           <span aria-hidden="true">→</span>
@@ -85,4 +101,4 @@ const ESTADO_LABEL: Record<string, string> = {
       </div>
     </div>
   </div>
-</section>
+</section>}
