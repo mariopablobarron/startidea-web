@@ -1,0 +1,43 @@
+---
+// El auto-pageview pasa por el mismo consentimiento y filtro de rutas que GA4.
+const websiteId = '3535ee03-30aa-4c5c-a74e-4650ed465c21';
+---
+
+<script is:inline define:vars={{ websiteId }}>
+  (function () {
+    var loaded = false;
+
+    function isAllowed() {
+      var privacy = window.stPrivacy;
+      return privacy && typeof privacy.isAllowed === 'function' && privacy.isAllowed();
+    }
+
+    // Se instala antes del SDK: también cubre su primer pageview automático.
+    window.stUmamiBeforeSend = function (_type, payload) {
+      if (!isAllowed() || !payload) return false;
+      return Object.assign({}, payload, {
+        url: window.stPrivacy.pageLocation,
+        referrer: window.stPrivacy.pageReferrer,
+      });
+    };
+
+    function loadUmami() {
+      if (loaded || !websiteId || !isAllowed()) return;
+      loaded = true;
+      window.stNonessentialLoaded = true;
+      var script = document.createElement('script');
+      script.defer = true;
+      script.referrerPolicy = 'no-referrer';
+      script.src = 'https://analytics.hubstartidea.es/script.js';
+      script.setAttribute('data-website-id', websiteId);
+      script.setAttribute('data-exclude-search', 'true');
+      script.setAttribute('data-exclude-hash', 'true');
+      script.setAttribute('data-before-send', 'stUmamiBeforeSend');
+      var firstScript = document.getElementsByTagName('script')[0];
+      firstScript.parentNode.insertBefore(script, firstScript);
+    }
+
+    loadUmami();
+    document.addEventListener('cookieconsent:all', loadUmami);
+  })();
+</script>

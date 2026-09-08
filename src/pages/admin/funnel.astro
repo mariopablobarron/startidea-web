@@ -62,10 +62,9 @@ function pct(a: number, b: number): string {
 // Si hay datos GA4 sincronizados, anteponemos 2 etapas al embudo (visitas
 // globales → visitas a subvenciones). Si la BD del snapshot está vacía
 // (cron no implementado aún), arrancamos directamente en "perfiles".
-// Volumen: Umami (sin gate de consentimiento, ve todo el tráfico). GA4 solo
-// cuenta a quienes aceptan el banner (~3-5% desde jul-2026) — se muestra como
-// muestra consentida, no como volumen. Si Umami aún no tiene datos, se cae a
-// GA4 para no dejar el embudo sin cabecera.
+// Desde 2026-09-08, Umami y GA4 requieren consentimiento y página pública:
+// son muestras consentidas, no el tráfico total. Una ventana que incluya
+// días anteriores mezcla coberturas. Si falta Umami, se muestra GA4.
 const usaUmami = ga4.umami_days_covered > 0;
 const etapasGa4 = (usaUmami || ga4.days_covered > 0) ? [
   {
@@ -74,7 +73,7 @@ const etapasGa4 = (usaUmami || ga4.days_covered > 0) ? [
       : `Visitas web · GA4 (últimos ${ga4.days_covered} d)`,
     valor:    usaUmami ? ga4.umami_sessions : ga4.sessions_total,
     detalle:  usaUmami
-      ? `${ga4.umami_page_views} páginas vistas · GA4 (muestra consentida): ${ga4.sessions_total} sesiones · hasta: ${ga4.last_date ?? '—'}`
+      ? `${ga4.umami_page_views} páginas vistas · Umami: muestra con consentimiento desde 8/09/2026, no tráfico total; el histórico no es directamente comparable · GA4: ${ga4.sessions_total} sesiones · hasta: ${ga4.last_date ?? '—'}`
       : `${ga4.page_views_total} páginas vistas · top: ${ga4.last_date ?? '—'}`,
     desde:    '/admin',
   },

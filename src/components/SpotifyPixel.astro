@@ -1,23 +1,24 @@
 ---
 // Spotify Pixel para atribuir visitas y conversiones de campañas.
-// Solo se carga tras consentimiento explícito de cookies de terceros.
+// Solo se carga con consentimiento explícito, en páginas públicas sin query/hash.
 const spotifyPixelId = '18ec3e2261264ed991f8ba10a2d90161';
 ---
 
 {spotifyPixelId && (
   <script is:inline define:vars={{ spotifyPixelId }}>
     (function () {
-      var CONSENT_KEY = 'startidea.cookieconsent.v2';
       var loaded = false;
 
-      function hasConsent() {
-        try { return localStorage.getItem(CONSENT_KEY) === 'all'; }
-        catch (_) { return false; }
+      function canLoad() {
+        var privacy = window.stPrivacy;
+        return privacy && typeof privacy.isAllowed === 'function' && privacy.isAllowed() &&
+          !privacy.hasSensitiveContext && !location.search && !location.hash;
       }
 
       function loadSpotifyPixel() {
-        if (loaded || !spotifyPixelId) return;
+        if (loaded || !spotifyPixelId || !canLoad()) return;
         loaded = true;
+        window.stNonessentialLoaded = true;
 
         (function (w, d) {
           var id = 'spdt-capture';
@@ -29,6 +30,7 @@ const spotifyPixelId = '18ec3e2261264ed991f8ba10a2d90161';
             var script = d.createElement(tag);
             script.id = id;
             script.async = true;
+            script.referrerPolicy = 'no-referrer';
             script.src = 'https://pixel.byspotify.com/ping.min.js';
             var firstScript = d.getElementsByTagName(tag)[0];
             firstScript.parentNode.insertBefore(script, firstScript);
@@ -39,7 +41,7 @@ const spotifyPixelId = '18ec3e2261264ed991f8ba10a2d90161';
         })(window, document);
       }
 
-      if (hasConsent()) loadSpotifyPixel();
+      loadSpotifyPixel();
       document.addEventListener('cookieconsent:all', loadSpotifyPixel);
     })();
   </script>

@@ -252,8 +252,14 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
 </Base>
 
 <script>
+  import { createDiagnosisSubmission } from '@/lib/diagnosis-submission';
   const form = document.getElementById("presu-form");
   if (!form) throw new Error("form missing");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const submission = createDiagnosisSubmission('presupuesto', {
+    getStorage: () => window.sessionStorage,
+    hasConsent: () => window.stPrivacy?.hasConsent() === true,
+  });
 
   const intakeUrl = form.dataset.intakeUrl;
   const steps = Array.from(form.querySelectorAll("fieldset[data-step]"));
@@ -323,6 +329,8 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     e.preventDefault();
     const err = validateStep();
     if (err) { showStatus(err, true); return; }
+    if (!submission.begin()) return;
+    if (submitButton instanceof HTMLButtonElement) submitButton.disabled = true;
     showStatus("Enviando…", false);
     const fd = new FormData(form);
     const data: Record<string, unknown> = { kind: "presupuesto" };
@@ -337,7 +345,8 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
     }
     const services = fd.getAll("services").map(String).filter(Boolean);
     if (services.length) data.answers = { services };
-    data.attribution = (window.stAttribution && window.stAttribution()) || {};
+    try { data.attribution = (window.stAttribution && window.stAttribution()) || {}; }
+    catch { data.attribution = {}; }
 
     try {
       const r = await fetch(intakeUrl, {
@@ -346,13 +355,16 @@ const INTAKE_URL = "https://hub.startidea.tech/api/diagnosticos/intake";
         body: JSON.stringify(data),
       });
       const json = await r.json().catch(() => null);
-      if (r.ok && json?.ok) {
+      if (submission.complete(r.ok, json, fd.get('honeypot'))) {
         window.location.href = "/diagnostico/gracias?kind=presupuesto";
       } else {
         showStatus(`No se pudo enviar (${json?.error ?? r.status}). Inténtalo en unos minutos.`, true);
       }
     } catch {
+      submission.fail();
       showStatus("Error de red. Inténtalo en unos minutos.", true);
+    } finally {
+      if (!submission.isCompleted() && submitButton instanceof HTMLButtonElement) submitButton.disabled = false;
     }
   });
 

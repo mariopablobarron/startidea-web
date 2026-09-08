@@ -1,0 +1,37 @@
+---
+// Una política técnica compartida por los transportes analíticos. Las opciones
+// del banner siguen siendo las mismas: solo «all» permite medición opcional.
+const { noindex = false } = Astro.props;
+---
+
+<script is:inline define:vars={{ noindex }}>
+  (function () {
+    var KEY = 'startidea.cookieconsent.v2';
+    var consent = false;
+    try { consent = localStorage.getItem(KEY) === 'all'; } catch (_) {}
+    var path = location.pathname.replace(/\/$/, '') || '/';
+    function isUtility(path) { return /^\/(?:portal|admin|api|contrato)(?:\/|$)/.test(path) ||
+      /^\/memorias\/pedido(?:\/|$)/.test(path) || /\/gracias$/.test(path) ||
+      /^\/subvenciones\/(?:mi-copiloto|presentar\/nuevo)(?:\/|$)/.test(path) ||
+      path === '/presupuesto/nuevo'; }
+    var publicPage = !noindex && !isUtility(path);
+    var referrer = '';
+    var sensitive = Boolean(location.search || location.hash);
+    try {
+      var ref = new URL(document.referrer);
+      referrer = ref.origin + '/';
+      sensitive = sensitive || Boolean(ref.search || ref.hash) || isUtility(ref.pathname.replace(/\/$/, ''));
+    } catch (_) {}
+
+    window.stPrivacy = {
+      hasConsent: function () { return consent; },
+      isAllowed: function () { return consent && publicPage; },
+      isPublicPage: publicPage,
+      hasSensitiveContext: sensitive,
+      pageLocation: location.origin + path,
+      pageReferrer: referrer,
+    };
+    document.addEventListener('cookieconsent:all', function () { consent = true; });
+    document.addEventListener('cookieconsent:essential', function () { consent = false; });
+  })();
+</script>

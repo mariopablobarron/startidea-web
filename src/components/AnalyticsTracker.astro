@@ -1,18 +1,18 @@
 ---
 /**
- * Eventos a la etiqueta GA4 activa, con respaldo dataLayer si solo hay GTM.
+ * Eventos mínimos al transporte GA4 después de aceptación explícita.
  *
  * Expone window.stTrack(event, params) para llamadas programáticas
  * (chat, form submit, etc.) y monta listeners que disparan
  * automáticamente:
  *
  *   - cta_click       en cualquier elemento con [data-track="cta"]
- *                     y opcional data-track-id="..." data-track-text="..."
+ *                     con su identificador editorial data-track-id="..."
  *   - file_download   en <a> con [data-track="download"]
- *                     leyendo file_name y file_extension del href
+ *                     enviando solo la extensión, sin nombre ni URL del archivo
  *
- * GoogleTagManager configura Consent Mode antes de este componente. No se
- * modifica ese consentimiento. Los recorridos usan solo rutas públicas,
+ * AnalyticsPrivacy aplica la elección del banner antes de este componente.
+ * Los recorridos usan solo rutas públicas,
  * nunca parámetros de URL, texto de formularios ni conversaciones.
  */
 ---
@@ -21,58 +21,76 @@
   (function () {
     window.dataLayer = window.dataLayer || [];
     var pagePath = location.pathname.replace(/\/$/, '') || '/';
-    var utilityPage = /^\/(?:portal|admin|api|contrato)(?:\/|$)/.test(pagePath) ||
-      /^\/memorias\/pedido(?:\/|$)/.test(pagePath) || /\/gracias$/.test(pagePath) ||
-      /^\/subvenciones\/mi-copiloto(?:\/|$)/.test(pagePath);
-
-    function safeReferrer() {
-      try {
-        var ref = new URL(document.referrer);
-        return ref.origin === location.origin && publicKind(ref.pathname)
-          ? ref.origin + ref.pathname : ref.origin + '/';
-      } catch (_) { return ''; }
-    }
+    var privacy = window.stPrivacy;
+    var acceptancePage = pagePath === '/diagnostico/gracias';
 
     window.stTrack = function (event, params) {
-      if (utilityPage) return;
+      if (!privacy || !privacy.hasConsent()) return false;
+      var formType = params && params.form_type;
+      var acceptedForm = event === 'form_submit' && acceptancePage &&
+        (formType === 'diagnostico' || formType === 'presupuesto');
+      if (!privacy.isAllowed() && !acceptedForm) return false;
+      // La confirmación solo llama tras consumir una marca de aceptación válida.
+      if (event === 'form_submit' && !acceptedForm) return false;
       try {
-        // GA4 añade document.location/document.referrer si no se sobrescriben.
-        // Sanear también estos campos automáticos, no solo los propios.
-        var eventParams = Object.assign({}, params || {}, {
-          page_location: location.origin + pagePath,
-          page_referrer: safeReferrer(),
+        var eventParams = Object.assign({}, acceptedForm ? { form_type: formType } : (params || {}), {
+          page_location: privacy.pageLocation,
+          page_referrer: privacy.pageReferrer,
         });
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', event, eventParams);
-        } else {
-          window.dataLayer.push(Object.assign({ event: event }, eventParams));
+        // Ningún texto capturado del DOM ni campos libres llegan a la etiqueta.
+        delete eventParams.cta_text;
+        delete eventParams.link_url;
+        delete eventParams.file_name;
+        if (typeof window.stSendAnalyticsEvent === 'function') {
+          return window.stSendAnalyticsEvent(event, eventParams);
         }
-      } catch (_) { /* no-op */ }
+        return false;
+      } catch (_) { return false; }
     };
 
-    // ── Atribución first-touch: se captura UNA vez (primer aterrizaje) y persiste.
-    //    Cierra el embudo: un lead/venta se traza a la página y fuente que lo trajo.
-    try {
-      var ATTR_KEY = 'st_attribution';
-      if (!localStorage.getItem(ATTR_KEY)) {
+    // Atribución opcional: nunca almacenar antes de aceptar ni conservar URLs
+    // completas de referentes o términos libres de campañas.
+    var ATTR_KEY = 'st_attribution';
+    function originOnly(value) {
+      try { return new URL(value).origin + '/'; } catch (_) { return ''; }
+    }
+    function campaign(value) {
+      return typeof value === 'string' && /^[a-zA-Z0-9_.-]{1,80}$/.test(value) ? value : '';
+    }
+    function cleanAttribution(value) {
+      var landing = value && value.landing_page;
+      // Solo conservar una ruta de entrada de la taxonomía pública conocida.
+      return {
+        utm_source: campaign(value && value.utm_source),
+        utm_medium: campaign(value && value.utm_medium),
+        utm_campaign: campaign(value && value.utm_campaign),
+        landing_page: typeof landing === 'string' && publicKind(landing) ? landing : '/',
+        referrer: originOnly(value && value.referrer),
+      };
+    }
+    function captureAttribution() {
+      if (!privacy || !privacy.isAllowed()) return;
+      try {
+        var stored = localStorage.getItem(ATTR_KEY);
         var p = new URLSearchParams(location.search);
-        localStorage.setItem(ATTR_KEY, JSON.stringify({
-          utm_source: p.get('utm_source') || '',
-          utm_medium: p.get('utm_medium') || '',
-          utm_campaign: p.get('utm_campaign') || '',
-          utm_content: p.get('utm_content') || '',
-          utm_term: p.get('utm_term') || '',
-          landing_page: location.pathname,
-          referrer: document.referrer || '',
-        }));
-      }
-    } catch (_) { /* localStorage puede no estar disponible */ }
-
-    // Devuelve la atribución guardada (objeto plano; {} si no hay/falla).
+        var value = stored ? JSON.parse(stored) : {
+          utm_source: p.get('utm_source'), utm_medium: p.get('utm_medium'),
+          utm_campaign: p.get('utm_campaign'), landing_page: pagePath,
+          referrer: document.referrer,
+        };
+        localStorage.setItem(ATTR_KEY, JSON.stringify(cleanAttribution(value)));
+      } catch (_) { /* El formulario funciona sin atribución. */ }
+    }
     window.stAttribution = function () {
-      try { return JSON.parse(localStorage.getItem('st_attribution') || '{}'); }
+      if (!privacy || !privacy.hasConsent()) return {};
+      try { return cleanAttribution(JSON.parse(localStorage.getItem(ATTR_KEY) || '{}')); }
       catch (_) { return {}; }
     };
+    function clearAttribution() {
+      try { localStorage.removeItem(ATTR_KEY); } catch (_) {}
+    }
+    document.addEventListener('cookieconsent:essential', clearAttribution);
+    if (!privacy || !privacy.hasConsent()) clearAttribution();
 
     // ── view_service: dispara al cargar una ficha de servicio (centralizado, sin
     //    tocar cada página). Mide qué servicios se ven, no solo los que convierten.
@@ -80,10 +98,6 @@
       '/mantenimiento-web', '/ia-administraciones', '/fundraising', '/donaciones-bizum-ong',
       '/proteccion-digital', '/google-ad-grants', '/hub', '/merchandising',
       '/agentes-ia', '/financiacion-empresas', '/copiloto-subvenciones', '/redes-sociales-ia'];
-    if (SERVICES.indexOf(pagePath) !== -1) {
-      window.stTrack('view_service', { service: pagePath.slice(1), page_path: pagePath });
-    }
-
     function publicKind(path) {
       if (SERVICES.indexOf(path) !== -1) return 'servicio';
       if (path !== '/laboratorio/cursos/gracias' && /^\/laboratorio\/cursos\/[a-z0-9-]+$/.test(path)) return 'curso';
@@ -92,9 +106,20 @@
       if (['/', '/que-hacemos', '/notas', '/laboratorio', '/laboratorio/cursos'].indexOf(path) !== -1) return 'indice';
       return null;
     }
-    if (publicKind(pagePath) === 'curso') {
-      window.stTrack('view_course', { course_id: pagePath.split('/').pop(), page_path: pagePath });
+    var viewRecorded = false;
+    function recordPageContext() {
+      if (!privacy || !privacy.isAllowed() || viewRecorded) return;
+      viewRecorded = true;
+      captureAttribution();
+      if (SERVICES.indexOf(pagePath) !== -1) {
+        window.stTrack('view_service', { service: pagePath.slice(1), page_path: pagePath });
+      }
+      if (publicKind(pagePath) === 'curso') {
+        window.stTrack('view_course', { course_id: pagePath.split('/').pop(), page_path: pagePath });
+      }
     }
+    document.addEventListener('cookieconsent:all', recordPageContext);
+    recordPageContext();
 
     // Clic editorial dentro de <main>: permite distinguir nota → servicio,
     // servicio → curso y consulta. Un clic no equivale a un lead ni a una venta.
@@ -146,7 +171,9 @@
     document.addEventListener('focusin', function (e) {
       var form = e.target.closest && e.target.closest('form');
       if (!form) return;
-      var id = form.getAttribute('id') || form.getAttribute('data-form') || form.getAttribute('action') || 'form';
+      if (!privacy || !privacy.isAllowed()) return;
+      var id = form.getAttribute('id') || form.getAttribute('data-form') || 'form';
+      if (!/^[a-zA-Z0-9_-]{1,80}$/.test(id)) id = 'form';
       if (formsStarted[id]) return;
       formsStarted[id] = true;
       window.stTrack('form_start', { form_id: id, page_path: location.pathname });
@@ -161,7 +188,6 @@
       if (kind === 'cta') {
         window.stTrack('cta_click', {
           cta_id: el.getAttribute('data-track-id') || '',
-          cta_text: (el.getAttribute('data-track-text') || el.textContent || '').trim().slice(0, 80),
           page_path: location.pathname,
         });
         return;
@@ -169,13 +195,12 @@
 
       if (kind === 'download') {
         var href = el.getAttribute('href') || '';
-        var name = href.split('/').pop() || '';
-        var ext = name.includes('.') ? name.split('.').pop().toLowerCase() : '';
+        var ext = '';
+        try { ext = new URL(href, location.origin).pathname.split('.').pop().toLowerCase(); } catch (_) {}
+        if (!/^(pdf|docx?|xlsx?|csv|zip|pptx?)$/.test(ext)) ext = 'other';
         window.stTrack('file_download', {
-          file_name: name,
           file_extension: ext,
-          link_url: href,
-          page_path: location.pathname,
+          page_path: pagePath,
         });
         return;
       }
