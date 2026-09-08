@@ -46,11 +46,20 @@ export interface AutoCopilotoProfile {
   presupuesto_anual: string;         // rango ej: "50.000-100.000"
   proyectos_anteriores: string;      // texto libre: proyectos financiados anteriores
   logros_principales: string;        // indicadores de impacto históricos
+  // Copiloto Pro (plan de pago, 2026-09-08): free | pro | pro_memoria
+  plan: string;
+  plan_until: number | null;         // unix seconds; null = sin caducidad conocida
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
 }
 
 export interface AutoCopilotoLog {
   id: number;
   profile_id: string;
+  /** Encaje real (Copiloto Pro): 0-100, motivo y si lo evaluó el modelo. */
+  encaje_score: number | null;
+  encaje_motivo: string | null;
+  encaje_llm: number;            // 0/1
   convocatoria_slug: string;
   convocatoria_title: string;
   expediente_id: string | null;
@@ -138,6 +147,14 @@ function getDb(): Database.Database {
     `ALTER TABLE auto_copiloto_log ADD COLUMN deadline TEXT`,
     `ALTER TABLE auto_copiloto_log ADD COLUMN reminded_7d INTEGER NOT NULL DEFAULT 0`,
     `ALTER TABLE auto_copiloto_log ADD COLUMN reminded_2d INTEGER NOT NULL DEFAULT 0`,
+    // Copiloto Pro (2026-09-08)
+    `ALTER TABLE auto_copiloto_profiles ADD COLUMN plan TEXT NOT NULL DEFAULT 'free'`,
+    `ALTER TABLE auto_copiloto_profiles ADD COLUMN plan_until INTEGER`,
+    `ALTER TABLE auto_copiloto_profiles ADD COLUMN stripe_customer_id TEXT`,
+    `ALTER TABLE auto_copiloto_profiles ADD COLUMN stripe_subscription_id TEXT`,
+    `ALTER TABLE auto_copiloto_log ADD COLUMN encaje_score INTEGER`,
+    `ALTER TABLE auto_copiloto_log ADD COLUMN encaje_motivo TEXT`,
+    `ALTER TABLE auto_copiloto_log ADD COLUMN encaje_llm INTEGER NOT NULL DEFAULT 0`,
   ];
   for (const sql of colMigrations) {
     try { _db.exec(sql); } catch { /* columna ya existe — ignorar */ }
@@ -203,6 +220,10 @@ export function createProfile(data: {
     presupuesto_anual: data.presupuesto_anual ?? '',
     proyectos_anteriores: data.proyectos_anteriores ?? '',
     logros_principales: data.logros_principales ?? '',
+    plan: 'free',
+    plan_until: null,
+    stripe_customer_id: null,
+    stripe_subscription_id: null,
   };
 
   db.prepare(`
@@ -276,14 +297,20 @@ export function logGeneration(data: {
   sent?: boolean;
   error?: string;
   deadline?: string | null;  // ISO "YYYY-MM-DD"
+  /** Encaje real (Copiloto Pro). */
+  encaje_score?: number | null;
+  encaje_motivo?: string | null;
+  encaje_llm?: boolean;
 }): boolean {
   const db = getDb();
   try {
     db.prepare(`
       INSERT INTO auto_copiloto_log
-        (profile_id, convocatoria_slug, convocatoria_title, expediente_id, sent, error, deadline)
+        (profile_id, convocatoria_slug, convocatoria_title, expediente_id, sent, error, deadline,
+         encaje_score, encaje_motivo, encaje_llm)
       VALUES
-        (@profile_id, @convocatoria_slug, @convocatoria_title, @expediente_id, @sent, @error, @deadline)
+        (@profile_id, @convocatoria_slug, @convocatoria_title, @expediente_id, @sent, @error, @deadline,
+         @encaje_score, @encaje_motivo, @encaje_llm)
     `).run({
       profile_id: data.profile_id,
       convocatoria_slug: data.convocatoria_slug,
@@ -292,6 +319,9 @@ export function logGeneration(data: {
       sent: data.sent ? 1 : 0,
       error: data.error ?? null,
       deadline: data.deadline ?? null,
+      encaje_score: data.encaje_score ?? null,
+      encaje_motivo: data.encaje_motivo ?? null,
+      encaje_llm: data.encaje_llm ? 1 : 0,
     });
     return true;
   } catch {
@@ -488,4 +518,48 @@ export function previewCleanupUnconfirmed(olderThanDays = 30): {
     .prepare(`SELECT COUNT(*) as n, MIN(created_at) as oldest FROM auto_copiloto_profiles WHERE confirmed = 0 AND created_at < ?`)
     .get(cutoff) as { n: number; oldest: number | null };
   return { count: row.n ?? 0, oldest_ts: row.oldest };
+}
+
+// ─── Copiloto Pro (plan de pago) ───────────────────────────────────────────
+
+export function getProfileById(id: string): AutoCopilotoProfile | null {
+  const db = getDb();
+  return (db.prepare(`SELECT * FROM auto_copiloto_profiles WHERE id = ?`).get(id) as AutoCopilotoProfile | undefined) ?? null;
+}
+
+export function getProfileByStripeCustomer(customerId: string): AutoCopilotoProfile | null {
+  const db = getDb();
+  return (
+    (db.prepare(`SELECT * FROM auto_copiloto_profiles WHERE stripe_customer_id = ?`).get(customerId) as
+      | AutoCopilotoProfile
+      | undefined) ?? null
+  );
+}
+
+/**
+ * Fija el plan de un perfil (lo llama el webhook de Stripe). `plan_until` en
+ * unix seconds (fin del periodo pagado); null = sin caducidad conocida.
+ */
+export function setProfilePlan(
+  id: string,
+  data: { plan: string; plan_until?: number | null; stripe_customer_id?: string | null; stripe_subscription_id?: string | null },
+): boolean {
+  const db = getDb();
+  const r = db
+    .prepare(
+      `UPDATE auto_copiloto_profiles
+         SET plan = @plan,
+             plan_until = @plan_until,
+             stripe_customer_id = COALESCE(@stripe_customer_id, stripe_customer_id),
+             stripe_subscription_id = COALESCE(@stripe_subscription_id, stripe_subscription_id)
+       WHERE id = @id`,
+    )
+    .run({
+      id,
+      plan: data.plan,
+      plan_until: data.plan_until ?? null,
+      stripe_customer_id: data.stripe_customer_id ?? null,
+      stripe_subscription_id: data.stripe_subscription_id ?? null,
+    });
+  return r.changes > 0;
 }

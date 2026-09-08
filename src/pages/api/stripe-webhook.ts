@@ -17,6 +17,32 @@ import { getStripe, webhookSecret } from '@/lib/stripe';
 import { markReservaPaid } from '@/lib/cursos-db';
 import { sendTelegram } from '@/lib/telegram';
 import { sendOwnerLeadEmail, sendEmail } from '@/lib/email-resend';
+import { getProfileById, getProfileByStripeCustomer, setProfilePlan } from '@/lib/auto-copiloto-db';
+import { COPILOTO_PLANS, isCopilotoPlan } from '@/lib/copiloto-pro';
+
+/**
+ * Copiloto Pro: sincroniza el plan del perfil con la suscripción de Stripe.
+ * Lo llaman checkout.session.completed (alta) y customer.subscription.* (renovación,
+ * impago, baja). Idempotente: escribir el mismo plan dos veces no cambia nada.
+ */
+function syncCopilotoPlan(sub: Stripe.Subscription, profileIdHint?: string | null): { profile: string; plan: string } | null {
+  const profileId = profileIdHint || sub.metadata?.profile_id || null;
+  const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id ?? null;
+  const profile = (profileId ? getProfileById(profileId) : null) ?? (customerId ? getProfileByStripeCustomer(customerId) : null);
+  if (!profile) return null;
+  const requested = sub.metadata?.plan;
+  const active = sub.status === 'active' || sub.status === 'trialing' || sub.status === 'past_due';
+  const plan = active && isCopilotoPlan(requested) && requested !== 'free' ? requested : 'free';
+  const item = sub.items?.data?.[0] as { current_period_end?: number } | undefined;
+  const periodEnd = item?.current_period_end ?? (sub as unknown as { current_period_end?: number }).current_period_end ?? null;
+  setProfilePlan(profile.id, {
+    plan,
+    plan_until: plan === 'free' ? null : periodEnd,
+    stripe_customer_id: customerId,
+    stripe_subscription_id: sub.id,
+  });
+  return { profile: profile.org_nombre, plan };
+}
 
 export const prerender = false;
 
@@ -47,8 +73,42 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response('firma inválida', { status: 400 });
   }
 
+  // ── Copiloto Pro: suscripciones ──────────────────────────────────────────
+  if (
+    event.type === 'customer.subscription.created' ||
+    event.type === 'customer.subscription.updated' ||
+    event.type === 'customer.subscription.deleted'
+  ) {
+    const sub = event.data.object as Stripe.Subscription;
+    if (sub.metadata?.kind === 'copiloto_pro') {
+      const r = syncCopilotoPlan(sub);
+      if (r && event.type !== 'customer.subscription.updated') {
+        sendTelegram(`<b>🧭 Copiloto Pro</b> · ${esc(r.profile)} → plan <b>${esc(r.plan)}</b> (${esc(event.type)})`).catch(() => {});
+      }
+    }
+    return new Response(JSON.stringify({ received: true }), { status: 200, headers: { 'content-type': 'application/json' } });
+  }
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+    if (session.metadata?.kind === 'copiloto_pro') {
+      const subId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
+      if (subId) {
+        try {
+          const sub = await stripe.subscriptions.retrieve(subId);
+          const r = syncCopilotoPlan(sub, session.metadata?.profile_id ?? null);
+          if (r) {
+            const planDef = isCopilotoPlan(r.plan) ? COPILOTO_PLANS[r.plan] : null;
+            sendTelegram(
+              `<b>💳 Copiloto Pro contratado</b>\n${esc(r.profile)} · ${esc(planDef?.nombre ?? r.plan)} · ${esc(String(planDef?.precioEur ?? ''))} €/mes`,
+            ).catch(() => {});
+          }
+        } catch (err) {
+          console.error('[stripe-webhook] copiloto_pro subscription:', err);
+        }
+      }
+      return new Response(JSON.stringify({ received: true }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
     if (session.payment_status === 'paid') {
       const email = session.customer_details?.email ?? '';
       const nombre = session.customer_details?.name ?? '';

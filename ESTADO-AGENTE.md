@@ -3,9 +3,23 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, Lazo ES la portada (`/`), decisión Mario «IMPLEMENTA».
+**Última actualización:** 2026-09-08, Copiloto de subvenciones Pro hito 1 (encaje real + planes + Stripe).
 
 ---
+
+## 2026-09-08 — Copiloto de subvenciones Pro · hito 1 (loop autónomo de productos, iteración 4)
+
+- Producto 2 de `/laboratorio/productos`. Construido AQUÍ (no en el HUB) porque el Copiloto Autónomo
+  (perfiles, docs, recordatorios, `mi-copiloto`) vive en esta web sobre SQLite; el HUB solo aporta el
+  catálogo `/api/public/subsidies` y las alertas `SubsidyWatch` (otro sistema, sin perfil de organización).
+- `src/lib/copiloto-pro.ts` (planes free/pro/pro_memoria, `planEfectivo`, `encajeReal` con OpenRouter +
+  score determinista + heurístico de respaldo), columnas nuevas en `auto-copiloto-db.ts`, `trigger.ts`
+  con encaje real y cupo por plan (el gratuito NO cambia), `GET /api/copiloto-pro/checkout`,
+  ramas `copiloto_pro` en `stripe-webhook.ts`, tarjeta de plan + encaje en `/subvenciones/mi-copiloto`.
+  Doc: `docs/copiloto-pro.md`. Pruebas vitest 8/8, build OK.
+- Pendiente de Mario: precios `STRIPE_PRICE_COPILOTO_PRO` / `_PRO_MEMORIA` en el env de Coolify y añadir
+  `customer.subscription.*` al webhook de Stripe. Decisión abierta: qué se retira del plan gratuito.
+- Hito 2: checklist de elegibilidad como pantalla y borrador de memoria adaptado al baremo (pro_memoria).
 
 ## 2026-09-08 — «Home que pregunta» + Lazo (PR #89, FUSIONADO `6a1665a`, desplegado y verificado en producción a las 06:22 UTC)
 

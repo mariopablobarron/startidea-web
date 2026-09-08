@@ -9,12 +9,17 @@
 
 import Base from '@/layouts/Base.astro';
 import { getProfileByManageToken, getLogByProfile } from '@/lib/auto-copiloto-db';
+import { COPILOTO_PLANS, planEfectivo } from '@/lib/copiloto-pro';
 
 export const prerender = false;
 
 const token = Astro.url.searchParams.get('t') ?? '';
 const profile = token ? getProfileByManageToken(token) : null;
 const logEntries = profile ? getLogByProfile(profile.id, 30) : [];
+const proParam = Astro.url.searchParams.get('pro');
+const planKey = profile ? planEfectivo(profile) : 'free';
+const planDef = COPILOTO_PLANS[planKey];
+const planUntil = profile?.plan_until ? new Date(profile.plan_until * 1000) : null;
 
 function esc(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>
@@ -135,6 +140,64 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
               </div>
             </div>
 
+            <!-- Plan (Copiloto Pro) -->
+            {proParam === 'ok' && (
+              <div class="border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+                Pago recibido. Tu plan se activa en unos segundos, en cuanto Stripe confirme la suscripción. Recarga esta página para verlo.
+              </div>
+            )}
+            {proParam === 'cancelado' && (
+              <div class="border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
+                Pago cancelado. Sigues en el plan {planDef.nombre}; puedes contratar el Pro cuando quieras.
+              </div>
+            )}
+            <div class="border border-ink/15 p-6">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75 mb-1">Plan</p>
+                  <p class="text-lg font-bold text-ink">{planDef.nombre}</p>
+                  <p class="mt-1 text-xs text-ink/75">
+                    {planDef.precioEur === 0 ? 'Gratis' : `${planDef.precioEur} €/mes`}
+                    {planUntil && ` · renovación ${formatDate(Math.floor(planUntil.getTime() / 1000))}`}
+                  </p>
+                </div>
+                {planKey === 'free' ? (
+                  <div class="flex flex-col gap-2">
+                    <a
+                      href={`/api/copiloto-pro/checkout?t=${encodeURIComponent(token)}&plan=pro`}
+                      class="border border-magenta bg-magenta px-4 py-2 text-center font-mono text-xs uppercase tracking-wider text-paper hover:bg-paper hover:text-magenta transition-colors"
+                    >
+                      Pasar a Pro · 19 €/mes
+                    </a>
+                    <a
+                      href={`/api/copiloto-pro/checkout?t=${encodeURIComponent(token)}&plan=pro_memoria`}
+                      class="border border-ink/20 px-4 py-2 text-center font-mono text-xs uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors"
+                    >
+                      Pro Memoria · 39 €/mes
+                    </a>
+                  </div>
+                ) : (
+                  <a
+                    href={`/api/copiloto-pro/checkout?t=${encodeURIComponent(token)}&plan=${planKey === 'pro' ? 'pro_memoria' : 'pro'}`}
+                    class="border border-ink/20 px-4 py-2 font-mono text-xs uppercase tracking-wider text-ink/75 hover:border-ink hover:text-ink transition-colors"
+                  >
+                    {planKey === 'pro' ? 'Subir a Pro Memoria' : 'Cambiar a Pro'}
+                  </a>
+                )}
+              </div>
+              <ul class="mt-4 grid gap-1 text-sm text-ink/80 sm:grid-cols-2">
+                {(planKey === 'free' ? COPILOTO_PLANS.pro : planDef).features.map((f) => (
+                  <li>· {f}</li>
+                ))}
+              </ul>
+              {planKey === 'free' && (
+                <p class="mt-3 text-xs text-ink/75">
+                  Con el Pro recibes solo las convocatorias en las que encajas de verdad, con puntuación y motivo, hasta cinco al día.
+                  Plan completo en <a href="/laboratorio/productos/copiloto-subvenciones-pro" class="text-magenta hover:underline">el Laboratorio</a>.
+                </p>
+              )}
+            </div>
+
             <!-- Ficha del perfil -->
             <div class="border border-ink/15 p-6 space-y-4">
               <h2 class="font-mono text-xs uppercase tracking-widest text-ink/75">Perfil registrado</h2>
@@ -206,6 +269,12 @@ try { territoriosArr = JSON.parse(profile?.territorios ?? '["nacional"]'); } cat
                       </span>
                       <div class="min-w-0">
                         <p class="text-sm text-ink font-medium truncate">{esc(entry.convocatoria_title)}</p>
+                        {entry.encaje_score !== null && entry.encaje_score !== undefined && (
+                          <p class="text-xs text-ink/80 mt-0.5">
+                            <span class="font-mono text-magenta">Encaje {entry.encaje_score}/100</span>
+                            {entry.encaje_motivo && <> · {esc(entry.encaje_motivo)}</>}
+                          </p>
+                        )}
                         <p class="text-xs text-ink/75 mt-0.5">
                           {formatDate(entry.created_at)}
                           {entry.expediente_id && (
