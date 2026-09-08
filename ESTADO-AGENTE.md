@@ -52,5 +52,8 @@ implementarla y pidió comprobar antes lo que había hecho Claude.
 
 Revisar y autorizar integración/publicación de la PR #101:
 https://github.com/mariopablobarron/startidea-web/pull/101
-El merge a main activa el despliegue. Después, verificar SHA/runtime y recepción
-de eventos en GA4; revisar las definiciones personalizadas para los desgloses.
+Según el código vigente, el VPS recoge main mediante cron;
+`.github/workflows/deploy.yml` es solo respaldo manual (la guía antigua que
+atribuye el auto-deploy a Actions está desfasada). Revalidar el cron al publicar,
+y después comprobar SHA/runtime y recepción de eventos en GA4; revisar las
+definiciones personalizadas para los desgloses.
