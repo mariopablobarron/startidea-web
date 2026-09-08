@@ -53,6 +53,13 @@ COPILOTO_PRO_UMBRAL=60          # opcional
 `npx vitest run src/lib/copiloto-pro.test.ts` (8 casos: planes, caducidad, parseo, score,
 heurístico, fallback, prompt).
 
+## Edición del perfil (2026-09-08, mismo hito 1)
+
+`/subvenciones/mi-copiloto/perfil?t=<manage_token>` + `POST /api/auto-copiloto/update`
+(`parseProfileUpdate` en `src/lib/copiloto-perfil.ts`, `updateProfile` en la BD). La organización
+edita todo menos el email, el estado, el plan y Stripe. El historial de Mi Copiloto enlaza cada
+expediente a su página de estado (`/subvenciones/presentar/gracias?id=`).
+
 ## Hito 2 (pendiente)
 
 Checklist de elegibilidad como pantalla propia y borrador de memoria adaptado al baremo por

@@ -3,7 +3,7 @@
 Foto del presente para la siguiente sesión (Claude Code o Codex). **No es un diario:**
 al cerrar una tanda larga, se reescribe.
 
-**Última actualización:** 2026-09-08, Copiloto de subvenciones Pro hito 1 (encaje real + planes + Stripe).
+**Última actualización:** 2026-09-08, Copiloto Pro: hito 1 + edición de perfil autoservicio.
 
 ---
 
@@ -19,6 +19,9 @@ al cerrar una tanda larga, se reescribe.
   Doc: `docs/copiloto-pro.md`. Pruebas vitest 8/8, build OK.
 - Pendiente de Mario: precios `STRIPE_PRICE_COPILOTO_PRO` / `_PRO_MEMORIA` en el env de Coolify y añadir
   `customer.subscription.*` al webhook de Stripe. Decisión abierta: qué se retira del plan gratuito.
+- Iteración 5 (mismo día): edición del perfil por la organización (`/subvenciones/mi-copiloto/perfil`,
+  `POST /api/auto-copiloto/update`, `src/lib/copiloto-perfil.ts` con 4 pruebas) y enlace del historial al
+  estado del expediente. Vitest 12/12, build OK.
 - Hito 2: checklist de elegibilidad como pantalla y borrador de memoria adaptado al baremo (pro_memoria).
 
 ## 2026-09-08 — «Home que pregunta» + Lazo (PR #89, FUSIONADO `6a1665a`, desplegado y verificado en producción a las 06:22 UTC)
