@@ -4,15 +4,15 @@ Foto de relevo · 8 de septiembre de 2026.
 
 ## Encargo actual
 
-Revisión acotada de PR106 terminada y publicada mediante PR108. Continúa el loop con una microtanda autorizada sobre la etiqueta estática de FormacionPromo. Referencia editorial: [auditoría corregida en 8f48dec](https://github.com/mariopablobarron/startidea-web/blob/8f48dec/docs/auditoria-seo-geo-2026-09.md). La revisión y su evidencia están en [docs/revision-pr106-2026-09.md](docs/revision-pr106-2026-09.md).
+Revisión acotada de PR106 terminada y publicada mediante PR108, cierre documental PR109. Microtanda autorizada de FormacionPromo validada localmente, pendiente de publicación. Referencia editorial: [auditoría corregida en 8f48dec](https://github.com/mariopablobarron/startidea-web/blob/8f48dec/docs/auditoria-seo-geo-2026-09.md). La revisión y su evidencia están en [docs/revision-pr106-2026-09.md](docs/revision-pr106-2026-09.md).
 
 ## Código e integración
 
 - Base remota comprobada: `d9a030021267d89ac12d1becd1c4a17d09eee0f1` (PR107), incluye los quick wins de PR106 y la privacidad/medición de PR103–104.
-- Worktree propio: `/Users/STARTIDEA/startidea-web-wt/codex-seo-revision-pr106-20260908`, rama `codex/seo-revision-pr106-20260908`. Observador, `plano`, `qw` y HUB sin cambios de esta sesión.
+- Worktree propio: `/Users/STARTIDEA/startidea-web-wt/codex-seo-revision-pr106-20260908`, rama actual `codex/seo-formacion-etiqueta-20260908` desde `fd92602009a6295a0168dc62f97e0058a6d4fc1a` (cierre PR109). Observador, `plano`, `qw` y HUB sin cambios de esta sesión.
 - Corregidas incorporaciones de PR106: públicos de páginas generales, promesa de formación audiovisual sin respaldo, docentes no acreditados y fechas de cursos congeladas al generar la web. Cursos, índice y llms pasan a evaluación por petición; se conserva sitemap y URL. La edición pasada no permite iniciar un pago.
 - Tipado de dos callbacks en pruebas de Google corregido. Componentes y lógica de consentimiento/medición sin cambios.
-- [PR108](https://github.com/mariopablobarron/startidea-web/pull/108) integrada en `8dd74134a4ab9fc70bd9a04d940a6f9b2e713b4b`. Fuente y pruebas idénticas al head validado `3e227b1`; este cierre solo modifica documentación.
+- [PR108](https://github.com/mariopablobarron/startidea-web/pull/108) integrada en `8dd74134a4ab9fc70bd9a04d940a6f9b2e713b4b`. Fuente y pruebas idénticas al head validado `3e227b1`; su cierre PR109 solo modificó documentación. La nueva microtanda cambia únicamente el componente FormacionPromo.
 
 ## Validación y producción
 
@@ -31,4 +31,4 @@ Revisión acotada de PR106 terminada y publicada mediante PR108. Continúa el lo
 
 Acción de Mario: ninguna para esta revisión, ya autorizada.
 
-Única siguiente acción autorizada: en el mismo componente `FormacionPromo.astro`, sustituir la etiqueta de disponibilidad de la banda estática por «Ver condiciones», conservando cursos y destinos. La home mantiene una etiqueta antigua «Próxima edición» que no se recalcula por petición; es anterior a PR106 y queda separada de este cierre. No ampliar a otros módulos.
+Única siguiente acción: integrar FormacionPromo y comprobar producción. Validación local completa: build 330,73 s y comparación HTML con cinco enlaces conservados en dos bandas de dos páginas. Cambio local: etiqueta fija «Ver condiciones» y eliminación del mapa de estados estáticos, conservando los cinco enlaces de cursos presentes en dos bandas publicadas. Sin otros módulos de código modificados.

@@ -25,12 +25,6 @@ const cursos = allCursos
     : b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 
-const ESTADO_LABEL: Record<string, string> = {
-  abierto: 'Inscripción abierta',
-  proximo: 'Próxima edición',
-  agotado: 'Plazas agotadas',
-  'a-demanda': 'A demanda',
-};
 ---
 
 {cursos.length > 0 && <section
@@ -75,7 +69,7 @@ const ESTADO_LABEL: Record<string, string> = {
                   {c.data.duracion.split('(')[0].trim()}
                 </span>
                 <span class="col-span-4 mt-1 text-right font-mono text-[10px] uppercase tracking-widest text-magenta sm:col-span-2 sm:mt-0">
-                  {category ? 'Ver condiciones' : ESTADO_LABEL[c.data.estado] ?? c.data.estado}
+                  Ver condiciones
                 </span>
               </a>
             </li>
