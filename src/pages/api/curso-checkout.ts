@@ -14,6 +14,7 @@ import { getCollection } from 'astro:content';
 import { randomUUID } from 'node:crypto';
 import { getStripe, hasStripe } from '@/lib/stripe';
 import { createReserva } from '@/lib/cursos-db';
+import { edicionFinalizada } from '@/lib/cursos';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const prerender = false;
@@ -43,11 +44,11 @@ export const POST: APIRoute = async ({ request, clientAddress, redirect }) => {
   }
 
   // Curso autoritativo desde la colección (nunca confiar en el precio del cliente).
-  // Se busca por .slug igual que getStaticPaths, para evitar la ambigüedad
+  // Se busca por .slug igual que la ficha, para evitar la ambigüedad
   // slug/id de getEntry en Astro 5.
   const cursos = await getCollection('cursos', (c) => !c.data.draft);
   const curso = cursos.find((c) => c.slug === slug);
-  if (!curso || curso.data.estado === 'agotado') {
+  if (!curso || curso.data.estado === 'agotado' || edicionFinalizada(curso.data.proxima_edicion)) {
     return redirect(`/laboratorio/cursos/${encodeURIComponent(slug)}`);
   }
 

@@ -86,13 +86,10 @@ const servicios: {
   },
 ];
 
-// Puertas de entrada más frecuentes, en HTML estático: los crawlers de IA
-// (GPTBot, ClaudeBot, PerplexityBot) no ejecutan el JavaScript de Lazo, así
-// que sin este bloque la portada solo enlazaba a /que-hacemos y
-// /como-trabajamos (auditoría SEO de septiembre de 2026, QW8).
+// Puertas de entrada por necesidad y público, en HTML estático. Complementan
+// los enlaces a servicios y formación que la portada ya incluye.
 // `tipo` alimenta `data-link-type`, la taxonomía que ya lee AnalyticsTracker
-// para etiquetar `internal_link_click`. El estudio se queda sin tipo: no es
-// servicio, curso ni nota, y el tracker no emite para ese destino.
+// para etiquetar `internal_link_click`.
 const puertas: { contexto: string; label: string; href: string; tipo?: 'servicio' | 'curso' | 'nota' }[] = [
   {
     contexto: 'Las redes ya se publican, pero sin plan editorial ni quien las sostenga cada semana:',
@@ -101,19 +98,19 @@ const puertas: { contexto: string; label: string; href: string; tipo?: 'servicio
     tipo: 'servicio',
   },
   {
-    contexto: 'No hay nada escrito y cada campaña se decide sobre la marcha:',
-    label: 'plan de comunicación para una ONG',
-    href: '/notas/plan-comunicacion-ong',
-    tipo: 'nota',
+    contexto: 'La institución necesita explicar un proyecto y llegar a sus públicos:',
+    label: 'estrategia de comunicación y contenidos',
+    href: '/comunicacion',
+    tipo: 'servicio',
   },
   {
-    contexto: 'La convocatoria anual de la Junta abre y no está claro qué línea encaja:',
-    label: 'subvenciones del BOJA para el tercer sector',
-    href: '/notas/boja-2026-subvenciones-inclusion-social-andalucia',
-    tipo: 'nota',
+    contexto: 'Estás emprendiendo y necesitas definir el proyecto y priorizar los siguientes pasos:',
+    label: 'consultoría para orientar tu proyecto',
+    href: '/consultoria',
+    tipo: 'servicio',
   },
   {
-    contexto: 'El expediente hay que presentarlo y no hay horas para hacerlo dentro:',
+    contexto: 'La entidad social tiene que presentar una subvención y no hay horas para hacerlo dentro:',
     label: 'tramitación de subvenciones a comisión de éxito',
     href: '/copiloto-subvenciones',
     tipo: 'servicio',
@@ -125,9 +122,10 @@ const puertas: { contexto: string; label: string; href: string; tipo?: 'servicio
     tipo: 'servicio',
   },
   {
-    contexto: 'Antes de decidir nada, ver cómo está el dinero público del sector:',
-    label: 'Radiografía de las subvenciones al tercer sector 2026',
-    href: '/subvenciones/estudio-tercer-sector-2026',
+    contexto: 'La empresa necesita una web, una plataforma a medida o automatizar un proceso:',
+    label: 'desarrollo web, plataformas y agentes de IA',
+    href: '/tecnologia',
+    tipo: 'servicio',
   },
 ];
 
@@ -145,7 +143,7 @@ const marcas = [
 
 <Base
   title="Agencia de comunicación e innovación social · Startidea"
-  description="Agencia de comunicación e innovación social en Granada desde 2011: comunicación, subvenciones, fundraising y vídeo para ONG, instituciones y empresas."
+  description="Consultoría, comunicación, audiovisual y tecnología en Granada para empresas, instituciones, entidades sociales y personas que emprenden. Startidea, desde 2011."
   ogSlug="home"
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
@@ -176,7 +174,7 @@ const marcas = [
         </div>
         <div>
           <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Con quién</dt>
-          <dd class="mt-1">Tercer sector, instituciones y empresas con propósito</dd>
+          <dd class="mt-1">Empresas, instituciones, entidades sociales y personas que emprenden</dd>
         </div>
         <div class="sm:col-span-2">
           <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Trabajo publicado</dt>
@@ -200,9 +198,8 @@ const marcas = [
        las palabras clave que el H1 (ahora una pregunta) ya no lleva. -->
   <TesisImpacto />
 
-  <!-- 1c. Por dónde suele empezar cada organización: los seis caminos reales,
-       en enlaces estáticos con anchor descriptivo. Sin esto la portada solo
-       enlazaba a /que-hacemos y /como-trabajamos (QW8). -->
+  <!-- 1c. Seis recorridos por necesidad, con enlaces descriptivos a servicios
+       existentes para los cuatro públicos de Startidea. -->
   <section id="por-donde-empezar" class="border-b border-ink/15 bg-paper py-14 md:py-16">
     <div class="container-x">
       <div class="grid grid-cols-12 gap-x-8">
@@ -210,7 +207,7 @@ const marcas = [
           <span class="label">— Por dónde empezar</span>
           <h2 class="mt-4 font-display text-2xl leading-tight text-ink md:text-3xl">
             Por dónde suele empezar<br />
-            <em class="italic text-magenta">cada organización.</em>
+            <em class="italic text-magenta">cada proyecto.</em>
           </h2>
         </div>
         <ul class="col-span-12 mt-8 divide-y divide-ink/10 border-t border-ink/15 lg:col-span-8 lg:col-start-5 lg:mt-0">

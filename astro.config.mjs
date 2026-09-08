@@ -22,6 +22,17 @@ try {
   /* sin lastmod si no se puede leer */
 }
 
+// Las fichas de cursos se sirven por petición. Sitemap no enumera rutas SSR
+// dinámicas: conservar explícitamente solo los cursos publicados del catálogo.
+const cursoPages = readdirSync(new URL('./src/content/cursos/', import.meta.url))
+  .filter((file) => file.endsWith('.md'))
+  .flatMap((file) => {
+    const fm = readFileSync(new URL(`./src/content/cursos/${file}`, import.meta.url), 'utf8').split('---')[1] || '';
+    if (!/^draft:\s*false\s*(?:#.*)?$/m.test(fm)) return [];
+    const slug = fm.match(/^slug:\s*['"]?([a-z0-9-]+)['"]?\s*$/m)?.[1] || file.replace(/\.md$/, '');
+    return [`https://startidea.es/laboratorio/cursos/${slug}`];
+  });
+
 export default defineConfig({
   site: 'https://startidea.es',
   output: 'static',
@@ -97,6 +108,7 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     sitemap({
+      customPages: cursoPages,
       serialize(item) {
         // Inyecta <lastmod> en las notas a partir de su fecha de frontmatter.
         const m = item.url.match(/\/notas\/([^/]+)\/?$/);

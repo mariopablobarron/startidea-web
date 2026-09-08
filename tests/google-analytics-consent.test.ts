@@ -74,7 +74,7 @@ function browser(options: Options = {}) {
     stored.set(consentKey, consent);
     listeners[`cookieconsent:${consent}`]?.forEach(fn => fn({ type: `cookieconsent:${consent}` }));
   }
-  const commands = () => window.dataLayer.filter((item: any) => typeof item?.length === 'number').map((item: any) => Array.from(item) as any[]);
+  const commands = (): unknown[][] => window.dataLayer.filter((item: any) => typeof item?.length === 'number').map((item: any) => Array.from(item));
   const events = (name?: string) => commands().filter((item: any[]) => item[0] === 'event' && (!name || item[1] === name));
   const acceptanceEnv = {
     getStorage: () => sessionStorage,
@@ -140,7 +140,7 @@ describe('Privacy + Google + Tracker: consentimiento y contexto público', () =>
       cta_id: 'contacto', page_location: 'PRIVATE_URL', page_referrer: 'PRIVATE_REFERRER',
       cta_text: 'PRIVATE_TEXT', link_url: 'PRIVATE_LINK', file_name: 'PRIVATE_FILE',
     });
-    for (const command of page.commands().filter(item => ['event', 'config'].includes(item[0]))) {
+    for (const command of page.commands().filter(item => item[0] === 'event' || item[0] === 'config')) {
       expect(command[2]).toMatchObject({ page_location: 'https://startidea.es/contacto', page_referrer: 'https://startidea.es/' });
     }
     expect(JSON.stringify(page.commands())).not.toContain('PRIVATE_');

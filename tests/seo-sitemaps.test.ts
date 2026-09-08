@@ -19,12 +19,23 @@ vi.mock('@/lib/expedientes-db', async (importOriginal) => ({
 import '../astro.config.mjs';
 import { GET } from '../src/pages/sitemap-catalogo.xml';
 
-const { filter, serialize } = mocks.sitemap.mock.calls[0][0] as {
+const { filter, serialize, customPages } = mocks.sitemap.mock.calls[0][0] as {
+  customPages: string[];
   filter: (page: string) => boolean;
   serialize: (item: { url: string; lastmod?: string }) => { url: string; lastmod?: string };
 };
 
 describe('sitemap público', () => {
+  it('conserva las cuatro fichas publicadas aunque se rendericen por petición', () => {
+    expect(customPages).toEqual(expect.arrayContaining([
+      'https://startidea.es/laboratorio/cursos/comunicacion-estrategica-tercer-sector',
+      'https://startidea.es/laboratorio/cursos/crea-tu-primer-agente-ia-sin-codigo',
+      'https://startidea.es/laboratorio/cursos/email-marketing-segmentado-tercer-sector',
+      'https://startidea.es/laboratorio/cursos/subvenciones-como-presentar-solicitud',
+    ]));
+    expect(customPages).not.toContain('https://startidea.es/laboratorio/cursos/gracias');
+    expect(customPages.every(filter)).toBe(true);
+  });
   it.each([
     '/portal', '/portal/', '/portal/registro', '/portal/enviado', '/portal/dashboard',
     '/portal/link/enlace-personal', '/portal/docs/expediente/memoria',

@@ -7,6 +7,9 @@ pubDate: 2026-05-26
 formato: presencial
 modalidad: taller
 duracion: '8 horas (9:00–18:30 con pausa)'
+docente:
+  name: 'Mario Pablo Sánchez Barrón'
+  url: 'https://startidea.es/sobre#fundador'
 precio: 320
 precio_esfl: 240
 estado: proximo
@@ -22,9 +25,9 @@ faqs:
   - question: '¿Cuánto cuesta y hay precio reducido para entidades sin ánimo de lucro?'
     answer: 'El taller cuesta 320 €. Las entidades sin ánimo de lucro pagan 240 €; el precio reducido se verifica con la documentación de la entidad.'
   - question: '¿Cuándo es la próxima edición y dónde se imparte?'
-    answer: 'El taller es presencial en Granada, en una sola jornada de ocho horas. La fecha de la próxima edición aparece en la ficha del curso; las plazas están limitadas a 12 participantes.'
+    answer: 'El taller es presencial en Granada, en una sola jornada de ocho horas. Consulta en la ficha si hay una próxima edición con fecha publicada; si no la hay, puedes consultar futuras ediciones. Las plazas están limitadas a 12 participantes.'
   - question: '¿Cómo se reserva la plaza?'
-    answer: 'Con una señal de 50 € que reserva la plaza y se descuenta del precio total al confirmarse la edición. También se puede escribir a Startidea antes de reservar para comprobar si el taller encaja.'
+    answer: 'Cuando hay una edición disponible, se reserva con una señal de 50 € que se descuenta del precio total al confirmarse la edición. También se puede escribir a Startidea para consultar futuras ediciones y comprobar si el taller encaja.'
 draft: false
 ---
 

@@ -131,6 +131,11 @@ const cursos = defineCollection({
     modalidad: z.enum(['taller', 'curso', 'masterclass', 'mentoria']),
     // Duración legible ("4 horas", "6 semanas", "3 sesiones de 90 min")
     duracion: z.string(),
+    // Solo declarar un docente cuando esté acreditado en la ficha del curso.
+    docente: z.object({
+      name: z.string().trim().min(1),
+      url: z.string().url().optional(),
+    }).optional(),
     // Precio base en euros (sin IVA)
     precio: z.number().int().nonnegative(),
     // Precio reducido para entidades sin ánimo de lucro (opcional)

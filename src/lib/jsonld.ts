@@ -688,6 +688,10 @@ interface CourseInput {
   name: string;
   description: string;
   courseMode: 'online' | 'onsite' | 'blended';
+  // Docente acreditado en la ficha; no se presupone para todo el catálogo.
+  instructor?: { name: string; url?: string };
+  // Una edición pasada no conserva su instancia ni una oferta de reserva.
+  editionExpired?: boolean;
   audience?: string;
   price?: number | string;
   availability?: 'InStock' | 'SoldOut' | 'PreOrder';
@@ -697,8 +701,7 @@ interface CourseInput {
   // taller — justo mientras se vende la plaza. La fecha de la edición va en
   // `startDate`.
   validFrom?: string;
-  // Duración lectiva en ISO 8601 (PT8H, PT4H). Google la exige en la
-  // CourseInstance salvo que se den startDate + endDate + repeatFrequency.
+  // Duración lectiva publicada en ISO 8601 (PT8H, PT4H), si se conoce.
   courseWorkload?: string;
   // Fecha de inicio de la edición (ISO YYYY-MM-DD), si ya está fijada.
   startDate?: string;
@@ -763,17 +766,14 @@ export function jobPostingSchema(j: JobPostingInput) {
 /**
  * Course + CourseInstance para las fichas de Startidea Lab.
  *
- * Google no emite el resultado enriquecido de Course sin `hasCourseInstance`,
- * y la instancia usa los valores capitalizados de CourseMode (Online, Onsite,
- * Blended), distintos de los del Course. `instructor` apunta al mismo @id
- * #founder que /sobre: es lo que ata la formación a una persona identificada
- * en lugar de a una marca suelta.
+ * `courseMode` e `instructor` pertenecen a CourseInstance. La instancia
+ * describe el modo de impartición y los demás datos publicados; no presupone
+ * fechas ni docente. Google retiró Course Info en 2025: este marcado describe
+ * el contenido con Schema.org, sin prometer resultados enriquecidos.
  *
- * OJO: este helper solo emite las REFERENCIAS por @id a #organization
- * (`provider`) y a #founder (`instructor`). La página que lo monte tiene que
- * emitir además `organizationSchema()`, que trae los dos nodos dentro
- * (ORG.founder es la Person completa); si no, las dos referencias quedan
- * colgando.
+ * `provider` referencia #organization. La página debe emitir además
+ * `organizationSchema()`. Si el docente coincide con el fundador acreditado,
+ * su Person reutiliza #founder; el resto conserva solo su nombre y URL.
  */
 export function courseSchema(c: CourseInput) {
   const instanceMode =
@@ -787,32 +787,45 @@ export function courseSchema(c: CourseInput) {
     description: c.description,
     url: c.url,
     provider: { '@id': `${SITE_URL}/#organization` },
-    instructor: { '@id': `${SITE_URL}/#founder` },
-    courseMode: c.courseMode,
     inLanguage: 'es-ES',
     ...(c.audience ? { audience: { '@type': 'Audience', audienceType: c.audience } } : {}),
-    hasCourseInstance: {
-      '@type': 'CourseInstance',
-      courseMode: instanceMode,
-      inLanguage: 'es-ES',
-      instructor: { '@id': `${SITE_URL}/#founder` },
-      ...(c.courseWorkload ? { courseWorkload: c.courseWorkload } : {}),
-      ...(c.startDate ? { startDate: c.startDate } : {}),
-      ...(c.location
-        ? {
-            location: {
-              '@type': 'Place',
-              name: c.location,
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: c.location,
-                addressCountry: 'ES',
-              },
-            },
-          }
-        : {}),
-    },
-    ...(c.price !== undefined
+    ...(!c.editionExpired
+      ? {
+          hasCourseInstance: {
+            '@type': 'CourseInstance',
+            courseMode: instanceMode,
+            inLanguage: 'es-ES',
+            ...(c.instructor
+              ? {
+                  instructor: {
+                    '@type': 'Person',
+                    ...(c.instructor.name === FOUNDER_NAME && c.instructor.url === FOUNDER.url
+                      ? { '@id': FOUNDER['@id'] }
+                      : {}),
+                    name: c.instructor.name,
+                    ...(c.instructor.url ? { url: c.instructor.url } : {}),
+                  },
+                }
+              : {}),
+            ...(c.courseWorkload ? { courseWorkload: c.courseWorkload } : {}),
+            ...(c.startDate ? { startDate: c.startDate } : {}),
+            ...(c.location
+              ? {
+                  location: {
+                    '@type': 'Place',
+                    name: c.location,
+                    address: {
+                      '@type': 'PostalAddress',
+                      addressLocality: c.location,
+                      addressCountry: 'ES',
+                    },
+                  },
+                }
+              : {}),
+          },
+        }
+      : {}),
+    ...(!c.editionExpired && c.price !== undefined
       ? {
           offers: {
             '@type': 'Offer',

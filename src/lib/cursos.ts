@@ -1,26 +1,25 @@
-/**
- * Helpers compartidos de la colección `cursos`.
- */
+/** Fechas de edición publicadas como días completos, con corte en España. */
+const diaMadrid = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit',
+});
 
-/**
- * ¿La edición anunciada sigue por delante?
- *
- * `proxima_edicion` es una fecha suelta del frontmatter. Sin guarda, una vez
- * pasada la fecha la web seguiría anunciándola como «próxima edición» y el
- * JSON-LD emitiría un `startDate` en el pasado, que Google lee como una
- * CourseInstance caducada.
- *
- * La comparación se hace por día en UTC: la fecha del frontmatter llega a
- * medianoche UTC, así que el día de la edición todavía cuenta como vigente.
- *
- * OJO: las páginas de cursos son estáticas, así que esto se evalúa en el
- * build. La fecha desaparece en el primer despliegue posterior a la edición,
- * no en el instante exacto. Es una red de seguridad, no un sustituto de
- * actualizar el frontmatter cuando se cierra una edición.
- */
-export function edicionVigente(fecha: Date | undefined): fecha is Date {
-  if (!fecha) return false;
-  const hoy = new Date();
-  const hoyUTC = Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate());
-  return fecha.getTime() >= hoyUTC;
+function fechaValida(fecha: Date | undefined): fecha is Date {
+  return fecha instanceof Date && Number.isFinite(fecha.getTime());
+}
+
+/** Se evalúa en cada petición; no depende de que haya otro despliegue. */
+export function edicionVigente(fecha: Date | undefined, ahora = new Date()): fecha is Date {
+  if (!fechaValida(fecha)) return false;
+  const partes = diaMadrid.formatToParts(ahora);
+  const hoy = ['year', 'month', 'day'].map((tipo) => partes.find((p) => p.type === tipo)!.value).join('-');
+  return fecha.toISOString().slice(0, 10) >= hoy;
+}
+
+export function edicionFinalizada(fecha: Date | undefined, ahora = new Date()): boolean {
+  return fechaValida(fecha) && !edicionVigente(fecha, ahora);
+}
+
+type EstadoCurso = 'abierto' | 'proximo' | 'a-demanda' | 'agotado';
+export function estadoCursoPublico(estado: EstadoCurso, fecha: Date | undefined, ahora = new Date()) {
+  return edicionFinalizada(fecha, ahora) ? 'edicion-finalizada' : estado;
 }
