@@ -4,7 +4,7 @@ Foto de relevo · 8 de septiembre de 2026.
 
 ## Encargo actual
 
-Revisión acotada de PR106 dentro del loop SEO/GEO autorizado. Referencia editorial: [auditoría corregida en 8f48dec](https://github.com/mariopablobarron/startidea-web/blob/8f48dec/docs/auditoria-seo-geo-2026-09.md). La revisión y su evidencia están en [docs/revision-pr106-2026-09.md](docs/revision-pr106-2026-09.md).
+Revisión acotada de PR106 terminada y publicada mediante PR108. Continúa el loop con una microtanda autorizada sobre la etiqueta estática de FormacionPromo. Referencia editorial: [auditoría corregida en 8f48dec](https://github.com/mariopablobarron/startidea-web/blob/8f48dec/docs/auditoria-seo-geo-2026-09.md). La revisión y su evidencia están en [docs/revision-pr106-2026-09.md](docs/revision-pr106-2026-09.md).
 
 ## Código e integración
 
@@ -12,13 +12,13 @@ Revisión acotada de PR106 dentro del loop SEO/GEO autorizado. Referencia editor
 - Worktree propio: `/Users/STARTIDEA/startidea-web-wt/codex-seo-revision-pr106-20260908`, rama `codex/seo-revision-pr106-20260908`. Observador, `plano`, `qw` y HUB sin cambios de esta sesión.
 - Corregidas incorporaciones de PR106: públicos de páginas generales, promesa de formación audiovisual sin respaldo, docentes no acreditados y fechas de cursos congeladas al generar la web. Cursos, índice y llms pasan a evaluación por petición; se conserva sitemap y URL. La edición pasada no permite iniciar un pago.
 - Tipado de dos callbacks en pruebas de Google corregido. Componentes y lógica de consentimiento/medición sin cambios.
-- Código local validado y listo para integrar. Integración y despliegue pendientes en este commit.
+- [PR108](https://github.com/mariopablobarron/startidea-web/pull/108) integrada en `8dd74134a4ab9fc70bd9a04d940a6f9b2e713b4b`. Fuente y pruebas idénticas al head validado `3e227b1`; este cierre solo modifica documentación.
 
 ## Validación y producción
 
 - 261/261 pruebas y TypeScript sin errores. Checkout probado con simulaciones de proveedores, sin contactos, reservas, pagos ni eventos analíticos reales.
 - Build completo correcto en 309,50 s; 212/212 comprobaciones HTTP en 19 GET, con el mismo proceso y artefacto antes/después de medianoche de Madrid. Cursos, índice, llms, schema, sitemap, gracias y 404 correctos. Servidor de prueba cerrado.
-- Producción anterior verificada por SSH y HTTPS: imagen `4e2acc7`, `running/healthy`, fuente completa `4e2acc744792dc7cc04fc4de959bef952c59e74f`; 14 recursos públicos, sitemap de cuatro cursos y redirect a consultoría correctos. Esto acredita servicio, no posiciones en Google.
+- Producción verificada por SSH y HTTPS a las 19:32 de Madrid: imagen `8dd7413`, `running/healthy`, fuente completa `8dd74134a4ab9fc70bd9a04d940a6f9b2e713b4b`, log de despliegue OK. Los 14 recursos públicos comprobados tienen los cambios esperados, las cuatro fichas conservan canonical/indexabilidad y el sitemap las incluye una vez. Sin instructor inventado; redirect a consultoría correcto. Evidencia privada `pr106-public-after.json`. Esto acredita servicio, no posiciones en Google.
 
 ## Límites
 
@@ -31,4 +31,4 @@ Revisión acotada de PR106 dentro del loop SEO/GEO autorizado. Referencia editor
 
 Acción de Mario: ninguna para esta revisión, ya autorizada.
 
-Única siguiente acción: integrar y comprobar el SHA desplegado y la respuesta pública; actualizar este relevo con el cierre.
+Única siguiente acción autorizada: en el mismo componente `FormacionPromo.astro`, sustituir la etiqueta de disponibilidad de la banda estática por «Ver condiciones», conservando cursos y destinos. La home mantiene una etiqueta antigua «Próxima edición» que no se recalcula por petición; es anterior a PR106 y queda separada de este cierre. No ampliar a otros módulos.
