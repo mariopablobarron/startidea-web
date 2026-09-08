@@ -46,4 +46,6 @@ La recepción de la próxima aceptación real consentida en GA4 continúa pendie
 
 ## Siguiente microtanda separada
 
-La banda estática de portada `FormacionPromo.astro`, anterior a PR106, aún lee el estado original y puede mostrar «Próxima edición» tras pasar la fecha. No impide el bloqueo de checkout ni cambia la fecha evaluada por la ficha. Queda autorizada una corrección posterior, limitada a ese componente: etiqueta estable «Ver condiciones», manteniendo cursos y destinos. El cierre de PR108 no atribuye a esta etiqueta antigua la caducidad por petición.
+Después del cierre PR109 se corrige la banda estática `FormacionPromo.astro`, anterior a PR106: leía el estado original y podía mostrar «Próxima edición» tras pasar la fecha. Todas las etiquetas de disponibilidad de ese componente pasan al texto estable «Ver condiciones»; se elimina su mapa de estados. La ficha sigue siendo la referencia vigente. No cambian selección de cursos, destinos, diseño ni otros módulos.
+
+Validación específica: build completo correcto en 330,73 s. Comparación del HTML final con el snapshot anterior: dos bandas en dos páginas, cinco enlaces de cursos idénticos y todas las etiquetas «Ver condiciones». No se añaden tests unitarios para este cambio de texto; se comprueba el render real. Evidencia privada `formacion-etiqueta-before.json` y `formacion-etiqueta-local.json`. Integración y verificación viva pendientes en este commit.
