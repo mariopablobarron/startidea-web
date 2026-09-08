@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_6ecb5d1306f1a5 7,15,21,34
+docs/revision-pr106-2026-09.md
+  s_42946cec6cd017::t_e3bd472986ee8b 35,46-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "a48b6e1efdb1e545b46ff65743d1dc19a9de734c",
+  "prompts": {},
+  "sessions": {
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
