@@ -1,0 +1,27 @@
+ESTADO-AGENTE.md
+  s_3199ac6ee9a667::t_b5a38be527c06f 96-100
+src/components/PlanoStartidea.astro
+  s_3199ac6ee9a667::t_2de39bb7ac81d1 59
+src/components/TesisImpacto.astro
+  s_3199ac6ee9a667::t_54e937e1179b53 35-38
+src/components/VideoIdea.astro
+  s_3199ac6ee9a667::t_cd01b17852524f 1-73
+src/pages/index.astro
+  s_3199ac6ee9a667::t_53a1a60189cd4c 11-13,50-53,61-64,85-87,120-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "8f6544410179aa560ec3930481901ca5262f9f4d",
+  "prompts": {},
+  "sessions": {
+    "s_3199ac6ee9a667": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9fcdffc2-e9cd-4f59-8661-d35d77e03d1f",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
