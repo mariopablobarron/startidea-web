@@ -1,0 +1,34 @@
+src/lib/copiloto-perfil.ts
+  s_35e98636369891::t_454719be50832a 1-110
+src/lib/copiloto-perfil.test.ts
+  s_35e98636369891::t_925c0fd2bdcb30 1-52
+src/pages/subvenciones/mi-copiloto/perfil.astro
+  s_35e98636369891::t_5e9d4e3afad6a9 1-258
+src/pages/api/auto-copiloto/update.ts
+  s_35e98636369891::t_8a1e099aa1c2e4 1-42
+src/pages/subvenciones/mi-copiloto.astro
+  s_35e98636369891::t_3e1bc39c8b3356 251-253
+  s_35e98636369891::t_ac8fc2a83546b2 281
+ESTADO-AGENTE.md
+  s_35e98636369891::t_c1aa2d1ac7d1a2 6,22-24
+docs/copiloto-pro.md
+  s_35e98636369891::t_86cf18ad95738c 56-62
+src/lib/auto-copiloto-db.ts
+  s_35e98636369891::t_104a218cee7ee8 566-617
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "7a62b72d27633f00aaabfe33eda8b71f60a7d1df",
+  "prompts": {},
+  "sessions": {
+    "s_35e98636369891": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90a71132-7b4d-45c2-adfc-cd09dd169366",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
