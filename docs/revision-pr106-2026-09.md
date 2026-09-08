@@ -44,8 +44,12 @@ No se cambia la lista de 35 landings, el recorte de FAQ sujeto a 21 días, Lazo,
 
 La recepción de la próxima aceptación real consentida en GA4 continúa pendiente, igual que el límite de idempotencia ante respuesta perdida descrito en [el cierre de privacidad](seo-medicion-privacidad-2026-09.md). Las pruebas de emisión no demuestran recepción en Google. El menor volumen de una muestra consentida no acredita pérdida de tráfico orgánico.
 
-## Siguiente microtanda separada
+## Microtanda separada: FormacionPromo
 
 Después del cierre PR109 se corrige la banda estática `FormacionPromo.astro`, anterior a PR106: leía el estado original y podía mostrar «Próxima edición» tras pasar la fecha. Todas las etiquetas de disponibilidad de ese componente pasan al texto estable «Ver condiciones»; se elimina su mapa de estados. La ficha sigue siendo la referencia vigente. No cambian selección de cursos, destinos, diseño ni otros módulos.
 
-Validación específica: build completo correcto en 330,73 s. Comparación del HTML final con el snapshot anterior: dos bandas en dos páginas, cinco enlaces de cursos idénticos y todas las etiquetas «Ver condiciones». No se añaden tests unitarios para este cambio de texto; se comprueba el render real. Evidencia privada `formacion-etiqueta-before.json` y `formacion-etiqueta-local.json`. Integración y verificación viva pendientes en este commit.
+Validación específica: build completo correcto en 330,73 s. Comparación del HTML final con el snapshot anterior: dos bandas en dos páginas, cinco enlaces de cursos idénticos y todas las etiquetas «Ver condiciones». No se añaden tests unitarios para este cambio de texto; se comprueba el render real. Evidencia privada `formacion-etiqueta-before.json` y `formacion-etiqueta-local.json`. [PR110](https://github.com/mariopablobarron/startidea-web/pull/110) integrada y desplegada en `f3aafbbd53a31bb519afed72a9cb4ceef8e2413f`. Verificación a las 19:46 de Madrid: imagen `f3aafbb`, `running/healthy`, fuente completa y log OK; las dos páginas por HTTPS conservan las dos bandas y cinco enlaces, con todos los textos «Ver condiciones». Evidencia privada `formacion-etiqueta-production.json`.
+
+## Incidencia transitoria observada durante el despliegue
+
+Al recrear el contenedor de PR110, mientras su salud figuraba como `starting`, `/` y `/comunicacion` respondieron `404 page not found`. Tras pasar a `healthy`, ambas recuperaron 200 y la comprobación de las bandas pasó, sin intervención en infraestructura. Arranque del contenedor: 17:45:35 UTC; verificación final correcta: 17:46:23 UTC. No se ha medido la duración exacta de la interrupción ni demostrado impacto en buscadores. Este mecanismo de despliegue no acredita disponibilidad continua; no se modifica infraestructura dentro de esta revisión.
