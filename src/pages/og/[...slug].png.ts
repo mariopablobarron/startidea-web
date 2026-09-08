@@ -21,8 +21,8 @@ async function buildCatalog(): Promise<Record<string, OgInput>> {
     'page/boja-2026-inclusion-social': {
       kind: 'page',
       eyebrow: '— Subvenciones · BOJA 2026',
-      title: '15 líneas de inclusión social.',
-      accent: '15 líneas',
+      title: '16 líneas de inclusión social.',
+      accent: '16 líneas',
       subtitle: 'Las convocatorias de la Consejería de Inclusión Social de la Junta de Andalucía, explicadas línea a línea. Startidea las tramita a comisión de éxito.',
     },
     'page/manifiesto': {

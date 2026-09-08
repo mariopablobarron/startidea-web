@@ -172,4 +172,3 @@ Para startups que aún no tienen el proyecto cerrado, conviene empezar por una *
 ---
 
 Si tu empresa está considerando un préstamo ENISA, [reserva 30 minutos con Startidea](/contacto). Esa llamada sirve para ver cuál de las tres líneas encaja con tu momento, qué importe es realista solicitar, y si conviene un préstamo ENISA solo o combinado con otra fuente de financiación. Sin coste, sin compromiso.
-</content>

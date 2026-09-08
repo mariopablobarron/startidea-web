@@ -106,6 +106,8 @@ Hay formatos que sistemáticamente funcionan mejor por tipo de audiencia:
 
 **Para simpatizantes**: la posición editorial de la organización en un debate del sector. No "hemos participado en una jornada sobre X". Sí "esto es lo que pensamos sobre X, y por qué creemos que la mayoría del sector lo está haciendo al revés". Las organizaciones que opinan tienen lectores; las que informan tienen suscriptores que borran sin leer.
 
+Segmentar bien cambia lo que se puede medir: en cuanto la lista está partida, las cifras de apertura y de clic dejan de ser un promedio sin sentido. Cuáles se miran y cuáles son ruido está en [qué métricas de email importan en una ESFL](/notas/medir-resultados-email-marketing-esfl).
+
 ## Qué no es segmentación
 
 Algunos errores frecuentes que vale la pena mencionar:

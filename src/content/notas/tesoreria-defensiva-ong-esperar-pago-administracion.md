@@ -41,6 +41,8 @@ Una entidad que depende en un 75% de financiación pública y tiene un presupues
 
 ## Cuatro mecanismos que funcionan hoy
 
+Antes de recorrerlos conviene tener puesto el precio de no hacer nada. En [cobrar tarde una subvención: qué cuesta](/notas/subvencion-cobrada-tarde-prestamo-al-estado) está el número del préstamo que la entidad le hace al Estado mientras espera el ingreso.
+
 ### 1. Anticipos de subvención — el derecho que nadie pide
 
 La mayoría de entidades saben que existen los anticipos, pero los tratan como una posibilidad remota o como algo que hay que negociar. No es así.
@@ -85,6 +87,8 @@ La regla práctica para una entidad con dependencia pública del 70%+: mantener 
 La única vía realista para entidades pequeñas es destinar un porcentaje fijo de cada ingreso de captación privada (cuotas, donaciones, patrocinios) a reservas patrimoniales, no a gasto corriente. Aunque ese porcentaje sea el 10%. En cinco años, una entidad que capta 20.000€ anuales en privado y reserva el 10% tiene 10.000€ de colchón. No es suficiente, pero es el inicio de la independencia financiera.
 
 La trampa que hay que evitar: no usar esas reservas para cubrir déficits de ejercicio porque "ya entrarán las subvenciones". Eso es exactamente lo que hace que el colchón nunca se construya.
+
+El colchón tiene además un segundo uso, menos evidente: absorber el hueco del ejercicio en que se acaba una financiación grande y todavía no ha entrado la siguiente. Ese año concreto está descrito en [fin del fondo europeo: el año sin presupuesto](/notas/fin-proyecto-europeo-ano-sin-presupuestar).
 
 ## El problema de la comunicación interna
 

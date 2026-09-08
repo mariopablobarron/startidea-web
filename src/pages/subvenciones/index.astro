@@ -11,6 +11,8 @@
 import Base from '@/layouts/Base.astro';
 import SubsidyCard from '@/components/SubsidyCard.astro';
 import SubvencionesTabs from '@/components/SubvencionesTabs.astro';
+import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
+import CursoRelacionado from '@/components/CursoRelacionado.astro';
 import {
   fetchSubsidies,
   FINALIDADES,
@@ -138,24 +140,36 @@ const jsonLd = [
     </div>
   </div>
 
-  <!-- Banner BOJA 2026 — Inclusión Social (eliminar cuando cierre el plazo: 16-jun-2026) -->
+  <!-- Banner BOJA 2026 — Inclusión Social. La cifra correcta es 16, no 15
+       (auditoría 2026-09-08: el «15» sobrevivía aquí y en la imagen OG). La
+       edición 2026 cerró el 16 de junio; la guía se mantiene como referencia
+       para preparar la siguiente. -->
   <div class="border-b border-magenta/20 bg-magenta/5 py-4">
     <div class="container-x flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-start gap-3">
         <span class="shrink-0 font-mono text-[10px] uppercase tracking-widest text-magenta bg-magenta/10 border border-magenta/20 px-2 py-1">
-          ⚡ Plazo abierto
+          Guía de referencia
         </span>
         <p class="text-sm text-ink">
-          <strong>15 líneas BOJA 2026 · Consejería de Inclusión Social.</strong>
-          {' '}Entidades privadas, locales y particulares. Cierre general: <strong>16 junio</strong>.
+          <strong>16 líneas BOJA 2026 · Consejería de Inclusión Social.</strong>
+          {' '}Entidades privadas, locales y particulares. La edición 2026 cerró el <strong>16 de junio</strong>; aquí está quién puede pedir cada línea para preparar la siguiente.
         </p>
       </div>
       <a
         href="/subvenciones/boja-2026-inclusion-social"
         class="shrink-0 bg-magenta text-paper font-mono text-[11px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-magenta/90 transition-colors"
       >
-        Ver las 15 líneas →
+        Ver las 16 líneas →
       </a>
+    </div>
+    <div class="container-x mt-3">
+      <p class="text-sm text-ink/75">
+        Para seguir leyendo:{' '}
+        <a href="/notas/boja-2026-subvenciones-inclusion-social-andalucia" data-link-type="nota" class="text-magenta hover:underline">BOJA 2026: 16 subvenciones para ONG andaluzas</a>,{' '}
+        <a href="/notas/convocatorias-2026-tercer-sector-espana" data-link-type="nota" class="text-magenta hover:underline">Convocatorias 2026: dónde mirar y cómo no perderte ninguna</a>{' '}
+        y{' '}
+        <a href="/notas/subvencion-que-no-deberias-pedir" data-link-type="nota" class="text-magenta hover:underline">La subvención que no deberías pedir</a>.
+      </p>
     </div>
   </div>
 
@@ -409,6 +423,17 @@ const jsonLd = [
       </div>
     </div>
   </section>
+
+  <!-- QW10: /subvenciones no enlazaba a ninguna nota. Con `tags` el componente
+       elige por afinidad temática y no por la rotación mensual. Las etiquetas
+       están escogidas para no repetir las tres notas del banner de arriba:
+       seleccionan cuánto cobra una consultora, cómo leer una convocatoria y
+       cómo conseguir subvenciones. -->
+  <CursoRelacionado slug="subvenciones-como-presentar-solicitud" />
+  <NotasRelacionadas
+    category="Financiación"
+    tags={['bases reguladoras', 'financiación pública', 'comisión de éxito', 'honorarios']}
+  />
 
   <!-- Diferenciación honesta -->
   <section class="bg-paper-warm py-16 md:py-20">

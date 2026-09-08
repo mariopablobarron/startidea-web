@@ -108,8 +108,22 @@ const knowledge = defineCollection({
 const cursos = defineCollection({
   type: 'content',
   schema: z.object({
+    // `title` se pinta VISIBLE como H1 de la ficha, así que se escribe para
+    // el lector. Para el <title> del SERP está `seoTitle`.
     title: z.string(),
+    // Título del SERP. A diferencia de notas y diagnósticos, aquí NO se le
+    // añade sufijo: si se define, sustituye por completo al
+    // `${title} · Startidea Lab` de la plantilla, así que el máximo es el
+    // corte de Google (60), no 48.
+    seoTitle: z.string().min(20).max(60).optional(),
+    // `description` se pinta VISIBLE en el índice de cursos y es la meta
+    // description por defecto. Las cuatro fichas la tienen entre 166 y 229
+    // caracteres, longitud a la que Google trunca: para separar ambos usos
+    // está `metaDescription`.
     description: z.string(),
+    // Snippet del SERP. 155 y no los 158 de notas: es el objetivo editorial
+    // de la auditoría SEO de septiembre de 2026.
+    metaDescription: z.string().min(80).max(155).optional(),
     pubDate: z.coerce.date(),
     // Formato de impartición
     formato: z.enum(['online', 'presencial', 'hibrido']),
@@ -136,6 +150,17 @@ const cursos = defineCollection({
     // Imagen de portada (ruta desde /public)
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
+    // FAQs opcionales, mismo shape que en `notas`. Si se definen,
+    // /laboratorio/cursos/[slug] las pinta y emite un FAQPage adicional.
+    faqs: z
+      .array(
+        z.object({
+          question: z.string().min(5).max(200),
+          answer: z.string().min(20).max(800),
+        }),
+      )
+      .max(8)
+      .optional(),
     draft: z.boolean().default(true),
   }),
 });

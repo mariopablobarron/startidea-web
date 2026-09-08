@@ -90,4 +90,3 @@ Lo que no se ofrece nunca: garantía de concesión. Quien resuelve es el organis
 ---
 
 Si hay un expediente ENISA o CDTI sobre la mesa, [reserva 30 minutos con Startidea](/contacto). Esa llamada sirve para ver qué instrumento encaja, qué documentación falta y qué parte del trabajo tiene sentido externalizar. Sin coste, sin compromiso.
-</content>

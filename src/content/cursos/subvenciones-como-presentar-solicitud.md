@@ -1,6 +1,8 @@
 ---
 title: 'Subvenciones: cómo preparar y presentar una solicitud con garantías'
+seoTitle: 'Curso online de subvenciones: de la convocatoria a la sede'
 description: 'Masterclass de 4 horas para entidades del tercer sector y pymes: de identificar la convocatoria a presentar el expediente en sede electrónica con certificado digital.'
+metaDescription: 'Masterclass online de 4 horas para ONG y pymes: elegir la convocatoria, redactar la memoria y presentar el expediente con certificado digital. 149 €.'
 pubDate: 2026-05-26
 formato: online
 modalidad: masterclass
@@ -11,6 +13,17 @@ estado: a-demanda
 audience: 'Responsables de gestión, directivos y técnicos de ESFL, asociaciones, fundaciones y PYMEs con proyectos financiables'
 category: Financiación
 tags: ['subvenciones', 'financiación', 'BDNS', 'solicitud', 'tercer sector', 'formación', 'certificado digital']
+faqs:
+  - question: '¿Cuánto dura la masterclass y en qué formato se imparte?'
+    answer: 'Cuatro horas en sesión única y en directo por videoconferencia, en cuatro bloques: identificar convocatorias, leer las bases reguladoras, redactar la memoria técnica y presentar en sede electrónica. Media hora final de preguntas sobre casos concretos.'
+  - question: '¿Para quién es esta masterclass?'
+    answer: 'Para responsables de gestión, directivos y técnicos de entidades sin ánimo de lucro, asociaciones, fundaciones y pymes con un proyecto que financiar. No se necesita experiencia previa con subvenciones.'
+  - question: '¿Cuánto cuesta y hay precio reducido para entidades sin ánimo de lucro?'
+    answer: 'La masterclass cuesta 149 €. Las entidades sin ánimo de lucro pagan 99 €; el precio reducido se verifica con la documentación de la entidad.'
+  - question: '¿Hace falta certificado digital para seguir la masterclass?'
+    answer: 'Para seguirla no: el bloque de sede electrónica se hace con una demostración en vivo y explica cómo se instala y se configura Autofirma. Para presentar después una solicitud real sí hace falta el certificado digital de la entidad.'
+  - question: '¿Cuándo es la próxima edición?'
+    answer: 'La masterclass se organiza bajo demanda: la edición se abre cuando hay al menos seis personas inscritas. Quien deje su aviso en la ficha recibe la convocatoria en cuanto se fija la fecha.'
 draft: false
 ---
 

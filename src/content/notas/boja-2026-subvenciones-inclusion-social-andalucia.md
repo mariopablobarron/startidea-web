@@ -1,8 +1,8 @@
 ---
 title: 'Subvenciones del BOJA para el tercer sector andaluz: las 16 líneas de la convocatoria anual y quién puede pedir cada una'
-seoTitle: 'Subvenciones inclusión social BOJA: 16 líneas'
+seoTitle: 'BOJA 2026: 16 subvenciones para ONG andaluzas'
 description: 'Referencia de la convocatoria anual de subvenciones de la Junta de Andalucía para el tercer sector: las 16 líneas de la Orden de 20 de mayo de 2026 (BOJA nº 99), quién puede pedir cada una, en qué fechas se ha publicado los últimos años y qué plazo abre cada edición.'
-metaDescription: 'Las 16 líneas de subvención de la Junta de Andalucía para el tercer sector: quién puede pedir cada una, cuándo se publica en el BOJA y qué plazo abre.'
+metaDescription: 'Las 16 líneas del BOJA para el tercer sector andaluz: quién puede pedir cada una, cuándo sale la próxima convocatoria y tramitación a comisión de éxito.'
 pubDate: 2026-05-27
 updatedDate: 2026-08-25
 tldr: 'La Junta de Andalucía convoca cada año, en una sola orden, dieciséis líneas de subvención en materia social. La edición de 2026 se publicó en el BOJA nº 99 (26 may 2026) y su plazo general cerró el 16 de junio. Cada línea tiene beneficiarios e importes propios; antes de presentarse conviene comprobar el encaje y reunir la documentación administrativa habitual. Startidea tramita estas convocatorias con certificado digital.'
@@ -23,9 +23,15 @@ faqs:
     answer: 'El Copiloto es el servicio de tramitación completa de Startidea: diagnóstico de encaje, memoria técnica, presupuesto justificado y presentación electrónica ante la sede de la Junta de Andalucía. El modelo de honorarios es a comisión de éxito: Startidea cobra el 12% del importe que la Administración concede. Si la subvención no se aprueba, no hay ningún coste. El formulario de solicitud está en startidea.es/subvenciones/presentar/nuevo.'
 ---
 
-> **Actualización (julio de 2026):** la convocatoria BOJA 2026 de Inclusión Social está **cerrada** — el plazo general finalizó el 16 de junio de 2026. Esta nota se mantiene como referencia de las 16 líneas y del calendario de la convocatoria. Consulta las [convocatorias abiertas ahora](/subvenciones); Startidea avisa y tramita cuando la Junta publica la siguiente edición.
+## Estado a día de hoy
 
-El 26 de mayo de 2026, la Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía publicó en el **BOJA nº 99** las convocatorias anuales de subvenciones para el ejercicio 2026. Son **16 líneas distintas** dirigidas a tipos de beneficiarios muy diferentes: desde personas físicas hasta ayuntamientos, pasando por asociaciones, fundaciones, cooperativas y universidades.
+- **¿Está abierta?** No.
+- **Cerró** el 16 de junio de 2026 (plazo general de la edición 2026).
+- **Próxima ventana estimada:** mayo-julio de 2027, por el calendario de las tres últimas ediciones.
+
+Esta nota se mantiene como referencia de las 16 líneas y del calendario de la convocatoria. Consulta las [convocatorias abiertas ahora](/subvenciones); Startidea avisa y tramita cuando la Junta publica la siguiente edición.
+
+El 26 de mayo de 2026, la Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía publicó en el **BOJA nº 99** las convocatorias anuales de subvenciones para el ejercicio 2026. Son **16 líneas distintas** dirigidas a tipos de beneficiarios muy diferentes: desde personas físicas hasta ayuntamientos, pasando por asociaciones, fundaciones, cooperativas y universidades. [Startidea tramita las 16 líneas a comisión de éxito](/subvenciones/boja-2026-inclusion-social).
 
 El plazo general de la edición 2026 cerró el **16 de junio de 2026**. Esta nota explica qué hay, a quién va dirigido cada bloque y qué se necesita para presentarse, y sirve de referencia de cara a la próxima edición.
 

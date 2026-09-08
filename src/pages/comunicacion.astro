@@ -195,7 +195,7 @@ const proceso = [
 
 <Base
   title="Agencia de comunicación para ONG y tercer sector en Granada"
-  description="Estrategia, contenidos y redes para ONG e instituciones. Proyectos desde 2.400 € y continuidad desde 800 €/mes. Startidea, en Granada desde 2011."
+  description="Agencia de comunicación para ONG y fundaciones en Granada desde 2011. Plan, contenidos y redes. Casos: Down Granada, Proyecto Hombre. 30 min sin coste."
   ogSlug="page/comunicacion"
   jsonLd={jsonLd}
 >
@@ -250,7 +250,7 @@ const proceso = [
     <div class="container-x">
       <p class="max-w-measure text-sm text-ink/70">
         ¿El foco es solo el social media local? Startidea tiene una página dedicada a la
-        <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">gestión de redes sociales y social media en Granada</a>.
+        <a href="/redes-sociales-granada" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">gestión de redes sociales para ONG en Granada</a>.
         ¿Eres una institución de la Iglesia? Hay una página específica de
         <a href="/comunicacion-eclesial" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">comunicación eclesial</a>.
         Y si antes de contratar quieres entender el proceso, esta guía explica cómo construir un
@@ -372,6 +372,19 @@ const proceso = [
                 Antes de decidirlo conviene leer
                 <a href="/videopodcast" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">qué hace falta para lanzar un videopodcast</a>:
                 espacio, calendario sostenible y las horas reales que lleva cada episodio.
+              </p>
+            )}
+
+            {/* QW4: la guía de métricas de email no recibía ningún enlace
+                editorial entrante. Entra junto al ítem de email marketing, que
+                es donde el lector ya está en ese tema. La nota de segmentación
+                no se repite aquí: ya la enlaza la selección editorial de
+                «Lecturas relacionadas» al pie de esta misma página. */}
+            {area.num === '05' && (
+              <p class="mt-8 max-w-measure text-sm text-ink/80">
+                Antes de montar la primera secuencia conviene decidir qué se va a mirar después. Esta guía repasa
+                <a href="/notas/medir-resultados-email-marketing-esfl" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">qué métricas de email importan en una ESFL</a>
+                y cuáles solo hacen bulto en el informe.
               </p>
             )}
           </div>

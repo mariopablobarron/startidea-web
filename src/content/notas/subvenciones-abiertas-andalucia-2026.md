@@ -1,6 +1,6 @@
 ---
 title: 'Subvenciones abiertas en Andalucía 2026: qué convocatorias gestiona Startidea y cómo solicitar'
-seoTitle: 'Subvenciones abiertas en Andalucía 2026'
+seoTitle: 'Subvenciones en Andalucía 2026 por convocante'
 description: 'Guía práctica de las convocatorias de subvenciones abiertas en Andalucía en 2026 para tercer sector y entidades locales. Cuáles son, para quién, cómo saber si encajan y cómo tramitar el expediente a comisión de éxito.'
 metaDescription: 'Catálogo de convocatorias de subvenciones abiertas en Andalucía 2026 para tercer sector y entidades locales: beneficiarios, plazos y cómo tramitar.'
 pubDate: 2026-05-28
@@ -37,7 +37,7 @@ Asociaciones, fundaciones y entidades del tercer sector de acción social que tr
 **Entidades locales**
 Ayuntamientos, mancomunidades y diputaciones provinciales, especialmente para municipios de menos de 20.000 o 50.000 habitantes. Las convocatorias más frecuentes financian equipamientos, planes de empleo local, cultura y deportes.
 
-En 2026 las líneas activas se concentran principalmente en la Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía, aunque el catálogo recoge también convocatorias de otras consejerías y del nivel estatal cuando tienen impacto en Andalucía.
+En 2026 las líneas activas se concentran principalmente en la Consejería de Inclusión Social, Juventud, Familias e Igualdad de la Junta de Andalucía, aunque el catálogo recoge también convocatorias de otras consejerías y del nivel estatal cuando tienen impacto en Andalucía. Esa convocatoria anual se publica en una sola orden y agrupa dieciséis líneas con beneficiarios distintos: quién puede pedir cada una está detallado en [BOJA 2026: 16 subvenciones para ONG andaluzas](/notas/boja-2026-subvenciones-inclusion-social-andalucia).
 
 ## Cómo funciona el proceso de tramitación
 

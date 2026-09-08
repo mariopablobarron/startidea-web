@@ -114,6 +114,8 @@ Para una entidad que trabaja solo en Granada, la línea de ámbito provincial es
 
 Las fechas y los importes de esta tabla corresponden al ejercicio 2026 y cambian cada año. Lo estable es la estructura: dos tandas, una en primavera para las líneas provinciales y otra a comienzos de verano para las supraprovinciales.
 
+La misma Consejería convoca aparte, en una sola orden, las dieciséis líneas de acción social del BOJA, con beneficiarios distintos en cada una: quién puede pedir cada una está desglosado en [BOJA 2026: 16 subvenciones para ONG andaluzas](/notas/boja-2026-subvenciones-inclusion-social-andalucia).
+
 ## Dónde se publica todo: los tres boletines
 
 Ninguna administración avisa. La convocatoria existe desde que se publica, y el plazo corre desde el día siguiente.

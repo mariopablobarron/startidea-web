@@ -1,11 +1,16 @@
 ---
 // Home «que pregunta» (decisión Mario 2026-09-08: «IMPLEMENTA»): la portada es
 // la conversación con Lazo + el Plano Startidea, en lugar del hero inmersivo.
-// Orden: pregunta → 4 servicios (una sola taxonomía) → para quién → prueba
-// (logos + casos) → formación → marcas propias (franja compacta) → cómo
-// empezar → CTA final. Manifiesto, feed de Granada Social y promo de
-// merchandising siguen en sus páginas. La versión anterior queda en git
-// (HeroJourney + Ecosistema + …) y /lab/home-journey conserva el hero 3D.
+// Orden: pregunta → ficha de entidad → tesis → por dónde empezar → 4
+// servicios (una sola taxonomía) → para quién → formación → prueba (logos +
+// casos) → marcas propias (franja compacta) → cómo empezar → CTA final.
+// Manifiesto, feed de Granada Social y promo de merchandising siguen en sus
+// páginas. La versión anterior queda en git (HeroJourney + Ecosistema + …) y
+// /lab/home-journey conserva el hero 3D.
+//
+// Auditoría SEO+GEO de septiembre de 2026 (QW8): la ficha de entidad y el
+// bloque «por dónde empezar» son HTML estático a propósito — el contenido de
+// Lazo es JavaScript y los crawlers de IA no lo ejecutan.
 import Base from '@/layouts/Base.astro';
 import PlanoStartidea from '@/components/PlanoStartidea.astro';
 import TesisImpacto from '@/components/TesisImpacto.astro';
@@ -18,12 +23,112 @@ import FormacionPromo from '@/components/FormacionPromo.astro';
 import PresupuestoHome from '@/components/PresupuestoHome.astro';
 import CtaFinal from '@/components/CtaFinal.astro';
 import { organizationSchema, websiteSchema, localBusinessSchema } from '@/lib/jsonld';
+import { casos } from '@/data/casos';
 
-const servicios = [
-  { nombre: 'Consultoría', linea: 'L1', tag: 'Innovación social · Proyectos', body: 'Diagnóstico, estrategia, financiación pública y medición de impacto o RSC. Para quien dirige una empresa, una institución, una entidad o un proyecto que empieza.', href: '/consultoria', color: '#E6356B' },
-  { nombre: 'Comunicación', linea: 'L2', tag: 'Estratégica · Marketing social', body: 'Marca, contenidos, redes y campañas. Comunicación corporativa, institucional o con causa, según quién seas.', href: '/comunicacion', color: '#2F6FD6' },
-  { nombre: 'Audiovisual', linea: 'L3', tag: 'Vídeo · Pódcast · Estudio', body: 'Vídeo corporativo o institucional, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.', href: '/audiovisual', color: '#D98A1C' },
-  { nombre: 'Tecnología', linea: 'L4', tag: 'Plataformas · Producto · IA', body: 'Webs que traen clientes o cuentan bien, plataformas a medida, agentes de IA y protección digital.', href: '/tecnologia', color: '#2E9A6C' },
+// Casos publicados: la cifra se calcula, no se escribe a mano, para que la
+// ficha de entidad de más abajo nunca prometa más casos de los que hay.
+const numCasos = casos.length;
+
+// `extra`: segunda salida de la tarjeta hacia la formación relacionada
+// (auditoría SEO de septiembre de 2026, QW8). Se pinta fuera del <a> de la
+// tarjeta: un enlace dentro de otro enlace no es HTML válido.
+const servicios: {
+  nombre: string;
+  linea: string;
+  tag: string;
+  body: string;
+  href: string;
+  color: string;
+  extra?: { label: string; href: string };
+}[] = [
+  {
+    nombre: 'Consultoría',
+    linea: 'L1',
+    tag: 'Innovación social · Proyectos',
+    body: 'Diagnóstico, estrategia, financiación pública y medición de impacto o RSC. Para quien dirige una empresa, una institución, una entidad o un proyecto que empieza.',
+    href: '/consultoria',
+    color: '#E6356B',
+    extra: {
+      label: 'Masterclass: presentar la solicitud sin los errores que descartan',
+      href: '/laboratorio/cursos/subvenciones-como-presentar-solicitud',
+    },
+  },
+  {
+    nombre: 'Comunicación',
+    linea: 'L2',
+    tag: 'Estratégica · Marketing social',
+    body: 'Marca, contenidos, redes y campañas. Comunicación corporativa, institucional o con causa, según quién seas.',
+    href: '/comunicacion',
+    color: '#2F6FD6',
+    extra: {
+      // Sin fecha en el literal: la edición del taller caduca y este texto no se
+      // regenera solo. La fecha vive en `proxima_edicion` de la colección
+      // `cursos` y solo se pinta en la ficha del taller.
+      label: 'Taller de comunicación estratégica para el tercer sector',
+      href: '/laboratorio/cursos/comunicacion-estrategica-tercer-sector',
+    },
+  },
+  {
+    nombre: 'Audiovisual',
+    linea: 'L3',
+    tag: 'Vídeo · Pódcast · Estudio',
+    body: 'Vídeo corporativo o institucional, videopódcast y streaming con estudio propio. De la idea al guion, de la grabación a la difusión.',
+    href: '/audiovisual',
+    color: '#D98A1C',
+  },
+  {
+    nombre: 'Tecnología',
+    linea: 'L4',
+    tag: 'Plataformas · Producto · IA',
+    body: 'Webs que traen clientes o cuentan bien, plataformas a medida, agentes de IA y protección digital.',
+    href: '/tecnologia',
+    color: '#2E9A6C',
+  },
+];
+
+// Puertas de entrada más frecuentes, en HTML estático: los crawlers de IA
+// (GPTBot, ClaudeBot, PerplexityBot) no ejecutan el JavaScript de Lazo, así
+// que sin este bloque la portada solo enlazaba a /que-hacemos y
+// /como-trabajamos (auditoría SEO de septiembre de 2026, QW8).
+// `tipo` alimenta `data-link-type`, la taxonomía que ya lee AnalyticsTracker
+// para etiquetar `internal_link_click`. El estudio se queda sin tipo: no es
+// servicio, curso ni nota, y el tracker no emite para ese destino.
+const puertas: { contexto: string; label: string; href: string; tipo?: 'servicio' | 'curso' | 'nota' }[] = [
+  {
+    contexto: 'Las redes ya se publican, pero sin plan editorial ni quien las sostenga cada semana:',
+    label: 'gestión de redes sociales en Granada',
+    href: '/redes-sociales-granada',
+    tipo: 'servicio',
+  },
+  {
+    contexto: 'No hay nada escrito y cada campaña se decide sobre la marcha:',
+    label: 'plan de comunicación para una ONG',
+    href: '/notas/plan-comunicacion-ong',
+    tipo: 'nota',
+  },
+  {
+    contexto: 'La convocatoria anual de la Junta abre y no está claro qué línea encaja:',
+    label: 'subvenciones del BOJA para el tercer sector',
+    href: '/notas/boja-2026-subvenciones-inclusion-social-andalucia',
+    tipo: 'nota',
+  },
+  {
+    contexto: 'El expediente hay que presentarlo y no hay horas para hacerlo dentro:',
+    label: 'tramitación de subvenciones a comisión de éxito',
+    href: '/copiloto-subvenciones',
+    tipo: 'servicio',
+  },
+  {
+    contexto: 'Hay un proyecto que contar en vídeo o un podcast propio que abrir:',
+    label: 'productora de vídeo y podcast en Granada',
+    href: '/audiovisual',
+    tipo: 'servicio',
+  },
+  {
+    contexto: 'Antes de decidir nada, ver cómo está el dinero público del sector:',
+    label: 'Radiografía de las subvenciones al tercer sector 2026',
+    href: '/subvenciones/estudio-tercer-sector-2026',
+  },
 ];
 
 const marcas = [
@@ -40,16 +145,89 @@ const marcas = [
 
 <Base
   title="Agencia de comunicación e innovación social · Startidea"
-  description="Estrategia, comunicación, audiovisual y tecnología para empresas, instituciones, entidades sociales y personas que emprenden. Habla con Lazo, la IA de Startidea, como en una primera reunión. Granada, desde 2011."
+  description="Agencia de comunicación e innovación social en Granada desde 2011: comunicación, subvenciones, fundraising y vídeo para ONG, instituciones y empresas."
   ogSlug="home"
   jsonLd={[organizationSchema(), websiteSchema(), localBusinessSchema()]}
 >
   <!-- 1. Pregunta + plano -->
   <PlanoStartidea pagina="/" />
 
+  <!-- 1a. Ficha de entidad en HTML estático, sin JavaScript: es lo único de
+       la portada que un crawler de IA (GPTBot, ClaudeBot, PerplexityBot) lee
+       sin ejecutar nada, y lo que fija quién es Startidea, desde cuándo y
+       dónde. Auditoría SEO+GEO de septiembre de 2026, QW8. -->
+  <section id="ficha-entidad" aria-label="Ficha de Startidea" class="border-b border-ink/15 bg-paper-warm py-8">
+    <div class="container-x">
+      <dl class="grid gap-x-8 gap-y-4 text-sm leading-relaxed text-ink/80 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Qué es</dt>
+          <dd class="mt-1">Agencia de comunicación e innovación social</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Dónde</dt>
+          <dd class="mt-1">Granada, C/ Conde Cifuentes, 33 · trabaja en toda España</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Desde cuándo</dt>
+          <dd class="mt-1">
+            Fundada en febrero de 2011 por Mario Pablo Sánchez Barrón —
+            <a href="/sobre" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">quién está detrás de Startidea</a>
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Con quién</dt>
+          <dd class="mt-1">Tercer sector, instituciones y empresas con propósito</dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Trabajo publicado</dt>
+          <dd class="mt-1">
+            {numCasos} casos con cliente y cifra —
+            <a href="/casos" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">ver los casos de Startidea</a>
+          </dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">Datos propios</dt>
+          <dd class="mt-1">
+            Estudio anual de subvenciones, 3.857 convocatorias analizadas en 2026 —
+            <a href="/subvenciones/estudio-tercer-sector-2026" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">Radiografía de las subvenciones al tercer sector 2026</a>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
   <!-- 1b. Tesis + cifras (15 años · 90+ organizaciones · 320+ proyectos): el texto con
        las palabras clave que el H1 (ahora una pregunta) ya no lleva. -->
   <TesisImpacto />
+
+  <!-- 1c. Por dónde suele empezar cada organización: los seis caminos reales,
+       en enlaces estáticos con anchor descriptivo. Sin esto la portada solo
+       enlazaba a /que-hacemos y /como-trabajamos (QW8). -->
+  <section id="por-donde-empezar" class="border-b border-ink/15 bg-paper py-14 md:py-16">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Por dónde empezar</span>
+          <h2 class="mt-4 font-display text-2xl leading-tight text-ink md:text-3xl">
+            Por dónde suele empezar<br />
+            <em class="italic text-magenta">cada organización.</em>
+          </h2>
+        </div>
+        <ul class="col-span-12 mt-8 divide-y divide-ink/10 border-t border-ink/15 lg:col-span-8 lg:col-start-5 lg:mt-0">
+          {puertas.map((p) => (
+            <li class="py-4">
+              <p class="max-w-measure text-sm leading-relaxed text-ink/75">
+                {p.contexto}{' '}
+                <a href={p.href} data-link-type={p.tipo} class="font-display text-base text-ink underline decoration-magenta/40 underline-offset-4 hover:text-magenta hover:decoration-magenta">
+                  {p.label}
+                </a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <!-- 2. Servicios: una sola taxonomía, las 4 puertas de entrada -->
   <section id="servicios" class="bg-paper py-20 md:py-28">
@@ -65,8 +243,8 @@ const marcas = [
         </div>
         <ul class="col-span-12 mt-8 grid gap-px border border-ink/15 bg-ink/15 sm:grid-cols-2 lg:col-span-9 lg:mt-0">
           {servicios.map((s) => (
-            <li class="bg-paper">
-              <a href={s.href} class="group block h-full p-6 transition-colors hover:bg-paper-warm md:p-8">
+            <li class="flex h-full flex-col bg-paper">
+              <a href={s.href} class="group block flex-1 p-6 transition-colors hover:bg-paper-warm md:p-8">
                 <div class="flex items-center gap-3">
                   <span class="inline-block h-1.5 w-8" style={`background:${s.color}`} aria-hidden="true"></span>
                   <span class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">{s.linea} · {s.tag}</span>
@@ -75,6 +253,16 @@ const marcas = [
                 <p class="mt-3 text-sm leading-relaxed text-ink/75">{s.body}</p>
                 <span class="mt-5 inline-block font-mono text-[11px] uppercase tracking-widest text-magenta">Ver servicio →</span>
               </a>
+              {s.extra && (
+                <a
+                  href={s.extra.href}
+                  data-link-type="curso"
+                  class="border-t border-ink/10 px-6 py-4 text-sm leading-snug text-ink/75 transition-colors hover:bg-paper-warm hover:text-magenta md:px-8"
+                >
+                  {s.extra.label}
+                  <span aria-hidden="true"> →</span>
+                </a>
+              )}
             </li>
           ))}
         </ul>
@@ -88,12 +276,15 @@ const marcas = [
   <!-- 3. Para quién -->
   <ParaQuien />
 
-  <!-- 4. Prueba: logos + casos -->
+  <!-- 4. Formación: el Lab sube una posición mientras haya plazas del taller
+       presencial (auditoría SEO de septiembre de 2026, QW8: estaba al 73 % del
+       scroll). FormacionPromo lee la colección `cursos`: ni el orden ni el
+       estado de las ediciones se escriben aquí. -->
+  <FormacionPromo />
+
+  <!-- 5. Prueba: logos + casos -->
   <LogosBanner />
   <Casos />
-
-  <!-- 5. Formación: el Lab, terminal común -->
-  <FormacionPromo />
 
   <!-- 6. Marcas propias: franja compacta, sin competir con los servicios -->
   <section id="marcas" class="border-y border-ink/15 bg-paper-warm py-12 md:py-14">

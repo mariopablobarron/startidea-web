@@ -1,9 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
-import { breadcrumbList, serviceSchema, howToSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
+import { breadcrumbList, organizationSchema, serviceSchema, howToSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 const jsonLd = [
+  // organizationSchema primero: cierra la referencia por @id que emite
+  // serviceSchema en `provider` (https://startidea.es/#organization).
+  organizationSchema(),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Financiación', url: `${SITE_URL}/financiacion-empresas` },
@@ -221,8 +224,59 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- Notas relacionadas (silo pilar ↔ cluster) -->
-  <NotasRelacionadas category="Financiación" limit={3} />
+  <!-- QW4: bloque fijo de lecturas previas. Estas cuatro notas no recibían un
+       solo enlace editorial entrante (auditoría 2026-09-08). Los anchors van
+       en mayúscula inicial: son titulares de lista, no enlaces dentro de una
+       frase. -->
+  <section class="border-t border-ink/15 bg-paper py-14 md:py-16">
+    <div class="container-x">
+      <span class="label">— Antes de presentar, lee</span>
+      <ul class="mt-6 max-w-measure space-y-4">
+        <li>
+          <a href="/notas/subvencion-que-no-deberias-pedir" data-link-type="nota" class="font-display text-lg text-ink hover:text-magenta">
+            La subvención que no deberías pedir
+          </a>
+          <p class="mt-1 text-sm text-ink/70">
+            Cuándo decir que no es una decisión de tesorería, no de ambición.
+          </p>
+        </li>
+        <li>
+          <a href="/notas/subvencion-cobrada-tarde-prestamo-al-estado" data-link-type="nota" class="font-display text-lg text-ink hover:text-magenta">
+            Cobrar tarde una subvención: qué cuesta
+          </a>
+          <p class="mt-1 text-sm text-ink/70">
+            Lo que hay que tener en caja mientras la Administración resuelve y paga.
+          </p>
+        </li>
+        <li>
+          <a href="/notas/fin-proyecto-europeo-ano-sin-presupuestar" data-link-type="nota" class="font-display text-lg text-ink hover:text-magenta">
+            Fin del fondo europeo: el año sin presupuesto
+          </a>
+          <p class="mt-1 text-sm text-ink/70">
+            Qué pasa el ejercicio siguiente al cierre de un proyecto europeo y cómo se presupuesta.
+          </p>
+        </li>
+        <li>
+          <a href="/notas/boja-2026-subvenciones-inclusion-social-andalucia" data-link-type="nota" class="font-display text-lg text-ink hover:text-magenta">
+            BOJA 2026: 16 subvenciones para ONG andaluzas
+          </a>
+          <p class="mt-1 text-sm text-ink/70">
+            Quién puede pedir cada una de las 16 líneas de la Consejería de Inclusión Social.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Notas relacionadas (silo pilar ↔ cluster). Con `tags` el componente elige
+       por afinidad temática y no por la rotación mensual (QW10). Las etiquetas
+       están escogidas para no repetir las cuatro notas del bloque de arriba:
+       seleccionan memoria técnica, errores de justificación y ROI. -->
+  <NotasRelacionadas
+    category="Financiación"
+    limit={3}
+    tags={['memoria técnica', 'gastos elegibles', 'reintegro', 'ROI', 'formulación de proyectos']}
+  />
 
   <!-- CTA final -->
   <section class="bg-ink py-16 md:py-24">

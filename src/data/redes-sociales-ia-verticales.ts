@@ -25,9 +25,9 @@ export const VERTICALES: Record<string, Vertical> = {
   'tercer-sector': {
     nombre: 'Asociaciones y fundaciones',
     audiencia: ['Asociación', 'Fundación', 'ONG', 'Entidad social'],
-    title: 'Redes sociales con IA para asociaciones y fundaciones — Startidea',
+    title: 'Redes sociales con IA para asociaciones y fundaciones',
     description:
-      'Gestión de redes sociales para asociaciones, fundaciones y ONG: IA calibrada con la voz de la entidad y supervisada por personas. Sin pornografía emocional, sin perfil parado. Desde 190 € al mes, sin permanencia.',
+      'Redes sociales para asociaciones, fundaciones y ONG: IA calibrada con la voz de la entidad y supervisada por personas. Desde 190 € al mes, sin permanencia.',
     h1: 'Las redes de tu entidad,',
     h1Acento: 'sin robarle horas a la misión.',
     lede:
@@ -69,9 +69,9 @@ export const VERTICALES: Record<string, Vertical> = {
   iglesia: {
     nombre: 'Parroquias y entidades de la Iglesia',
     audiencia: ['Parroquia', 'Diócesis', 'Congregación religiosa', 'Movimiento laical', 'Obra social de la Iglesia'],
-    title: 'Redes sociales con IA para parroquias, diócesis y congregaciones — Startidea',
+    title: 'Redes sociales con IA para parroquias y diócesis',
     description:
-      'Gestión de redes sociales para parroquias, diócesis, congregaciones y obras sociales de la Iglesia: IA calibrada con el lenguaje de la institución y revisada por personas que conocen la comunicación eclesial. Sin permanencia.',
+      'Redes sociales para parroquias y diócesis: IA calibrada con el lenguaje de la Iglesia y revisada por personas. Desde 190 € al mes, sin permanencia.',
     h1: 'Las redes de la parroquia,',
     h1Acento: 'con el lenguaje de la Iglesia.',
     lede:
@@ -113,9 +113,9 @@ export const VERTICALES: Record<string, Vertical> = {
   'empresas-con-proposito': {
     nombre: 'Empresas con propósito',
     audiencia: ['Empresa con propósito', 'Pyme', 'Empresa social', 'Dirección de RSC'],
-    title: 'Redes sociales con IA para empresas con propósito y RSC — Startidea',
+    title: 'Redes sociales con IA para empresas con propósito',
     description:
-      'Gestión de redes sociales para pymes y empresas con propósito: IA calibrada con la voz de la marca y supervisada por personas. Acción social empresarial y ESG contados con pruebas, sin greenwashing. Sin permanencia.',
+      'Redes sociales para empresas con propósito: IA calibrada con la voz de la marca y revisada por personas. Acción social con pruebas, sin greenwashing.',
     h1: 'Tu propósito en redes,',
     h1Acento: 'con pruebas y sin postureo.',
     lede:

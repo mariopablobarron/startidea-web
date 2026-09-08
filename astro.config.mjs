@@ -59,6 +59,8 @@ export default defineConfig({
     '/produccion-audiovisual-y-podcast-startidea':        '/audiovisual',
     '/produccion-audiovisual-y-podcast':                  '/audiovisual',
     '/consultoria-e-innovacion-social':                   '/consultoria',
+    // /innovacion-social devolvía 404 y es consulta real (auditoría 2026-09-08)
+    '/innovacion-social':                                 '/consultoria',
     '/fundraising-alianzas':                              '/fundraising',
     '/hub-startidea-espacios-y-comunidad':                '/hub',
     // Enlaces vivos desde granadasocial.org/sobre/startidea (verificados en 404 el 21-ago-2026)

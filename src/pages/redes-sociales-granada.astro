@@ -4,7 +4,7 @@ import OtrosServicios from '@/components/OtrosServicios.astro';
 import NotasRelacionadas from '@/components/NotasRelacionadas.astro';
 import CasosRelacionados from '@/components/CasosRelacionados.astro';
 import { rangoPublico, fmtEur } from '@/data/servicios';
-import { organizationSchema, websiteSchema, localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { organizationSchema, localBusinessSchema, serviceSchema, faqPageSchema, breadcrumbList, SITE_URL } from '@/lib/jsonld';
 
 // Reutiliza el rango de Comunicación: la gestión de redes vive ahí (€/mes).
 const rango = rangoPublico('/comunicacion');
@@ -51,12 +51,15 @@ const faqs = [
 ];
 
 const jsonLd = [
-  // Organization y WebSite cierran referencias que hasta hoy colgaban: el
-  // Service declara provider {@id: #organization} y localBusinessSchema()
-  // apunta a #founder, pero ninguno de esos nodos se emitía en esta página
-  // (Base.astro no pinta schema sitewide). Mismo patrón que index.astro.
+  // QW9 (canibalización «redes sociales Granada»): esta página emitía
+  // organizationSchema() y websiteSchema(), los mismos nodos que la home.
+  // websiteSchema() sale de aquí —WebSite con SearchAction es un nodo de
+  // sitio y solo debe vivir en la home—, pero organizationSchema() se queda:
+  // serviceSchema() declara provider {@id: #organization} y
+  // localBusinessSchema() referencia #founder, y sin este nodo las dos
+  // referencias quedan colgando en un grafo que no las resuelve. ORG.founder
+  // emite la Person completa, así que un solo nodo cierra las dos.
   organizationSchema(),
-  websiteSchema(),
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Comunicación estratégica', url: `${SITE_URL}/comunicacion` },
@@ -131,8 +134,8 @@ const local = [
 ---
 
 <Base
-  title="Agencia de redes sociales y social media en Granada"
-  description="Gestión de redes sociales y social media en Granada para tercer sector, instituciones y empresas con propósito. Desde 800 €/mes, estudio propio en Granada."
+  title="Gestión de redes sociales para ONG y asociaciones en Granada"
+  description="Social media en Granada para ONG y parroquias: estrategia, contenidos y eventos. Equipo propio desde 800 €/mes o IA supervisada desde 190 €/mes."
   ogSlug="page/redes-sociales-granada"
   jsonLd={jsonLd}
 >
@@ -151,7 +154,7 @@ const local = [
 
       <span class="label mt-8 block">— Redes sociales · Social media · Granada</span>
       <h1 class="mt-4 font-display text-display-xl leading-[0.96] text-ink">
-        Redes sociales y social media<br/>
+        Gestión de redes sociales<br/>
         <em class="italic text-magenta">en Granada</em>.
       </h1>
       <p class="mt-8 max-w-measure text-lede text-ink/80">
@@ -218,6 +221,46 @@ const local = [
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QW9: las dos ofertas de redes conviven en una sola página con
+       territorio. Las verticales de IA se quedan nacionales (sin «Granada») y
+       reciben desde aquí el enlace, en lugar de competir por la misma
+       consulta local. -->
+  <section class="bg-paper py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8 border-t border-ink/15 pt-8">
+        <div class="col-span-12 lg:col-span-3">
+          <span class="label">— Dos formatos</span>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-9 lg:mt-0">
+          <h2 class="font-display text-display-md leading-tight text-ink">
+            Dos formas de trabajar <em class="italic text-magenta">las redes</em>.
+          </h2>
+          <div class="mt-12 grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            <div class="bg-paper p-8">
+              <span class="label">— Equipo propio</span>
+              <h3 class="mt-4 font-display text-2xl leading-tight text-ink">Gestión con el equipo de Startidea</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink/80">
+                Estrategia, calendario editorial, producción de piezas, programación, moderación y
+                cobertura de eventos en la ciudad. Desde 800 €/mes, con estudio propio en el centro
+                de Granada. Es la opción cuando hace falta presencia local y producción propia.
+              </p>
+            </div>
+            <div class="bg-paper p-8">
+              <span class="label">— IA supervisada</span>
+              <h3 class="mt-4 font-display text-2xl leading-tight text-ink">Redes con IA revisada por personas</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink/80">
+                La IA redacta y programa con la voz de la entidad y una persona de Startidea aprueba
+                antes de publicar. Sin permanencia y sin equipo dedicado: el
+                <a href="/redes-sociales-ia/tercer-sector" class="underline decoration-magenta/40 underline-offset-4 hover:decoration-magenta">plan de redes con IA para asociaciones desde 190 €/mes</a>
+                encaja cuando el presupuesto no llega a una gestión completa.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ Antes de vigilar convocatorias hay que saber de dónde vienen. En España, la fi
 
 **Financiación europea.** Los fondos europeos —FSE+, FEDER, FEADER, programas como Erasmus+, Europa Creativa o el Fondo de Asilo, Migración e Integración— operan con lógica distinta: plazos más largos, exigencias de cofinanciación, gestión a menudo delegada a autoridades nacionales o autonómicas. Para muchas entidades pequeñas el acceso directo es difícil; el acceso indirecto, como socias de proyectos liderados por otras organizaciones, es más realista. El Portal de Financiación y Licitaciones de la Comisión Europea es la fuente primaria para convocatorias europeas directas.
 
-Si tu entidad trabaja en Andalucía, hay una lectura complementaria sobre [subvenciones abiertas en Andalucía en 2026](/notas/subvenciones-abiertas-andalucia-2026) que detalla el panorama autonómico con más profundidad.
+Si tu entidad trabaja en Andalucía, hay una lectura complementaria sobre [subvenciones abiertas en Andalucía en 2026](/notas/subvenciones-abiertas-andalucia-2026) que detalla el panorama autonómico con más profundidad. Y si la entidad es andaluza y de acción social, la convocatoria con más peso es la anual de la Consejería de Inclusión Social, y [BOJA 2026: 16 subvenciones para ONG andaluzas](/notas/boja-2026-subvenciones-inclusion-social-andalucia) desglosa quién puede pedir cada línea.
 
 ## Por qué la mayoría de entidades se entera tarde
 

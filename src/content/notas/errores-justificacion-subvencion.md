@@ -79,4 +79,6 @@ La prevención se resume en una idea: preparar la justificación desde el día u
 
 Una entidad que se presenta a una subvención sin pensar en cómo la justificará asume un riesgo que rara vez calcula: ejecutar el proyecto, gastar el dinero y tener que devolverlo igualmente. La justificación no es el papeleo del final; es una parte del proyecto que empieza el día de la concesión.
 
+Hay además un efecto que no aparece en ninguna resolución: la justificación es el expediente que la administración tiene delante cuando decide si sigue trabajando con la entidad. De eso trata [qué mira un ayuntamiento antes de renovar](/notas/ayuntamiento-antes-de-renovar-convenio) un convenio.
+
 Startidea acompaña ese ciclo completo: [prepara y presenta el expediente](/subvenciones/presentar) y organiza la justificación para que llegue completa y en plazo, con la imputación, las memorias y la acreditación de la difusión en orden. La primera conversación de 30 minutos es sin coste.

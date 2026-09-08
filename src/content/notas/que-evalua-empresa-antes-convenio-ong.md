@@ -50,3 +50,7 @@ No hace falta un dossier enorme. Hace falta llegar a la mesa con lo que baja el 
 La causa es lo que hace que te reciban. La fiabilidad es lo que hace que firmen. Entre dos entidades con buena causa, la empresa elige siempre a la que le da menos trabajo defender.
 
 Y eso —a diferencia de la causa— sí depende enteramente de ti.
+
+Las cláusulas que se acaban firmando son también la prueba de si la alianza es real: [cómo distinguir greenwashing de propósito](/notas/greenwashing-vs-proposito) se resuelve leyendo el contrato, no el relato de marca.
+
+El mismo cálculo de riesgo aparece cuando quien está al otro lado no es una empresa sino otra entidad social: [cómo crear alianzas estratégicas entre ONGs](/notas/como-crear-alianzas-estrategicas-entre-ongs) recorre esa conversación desde la primera reunión hasta el acuerdo escrito.
