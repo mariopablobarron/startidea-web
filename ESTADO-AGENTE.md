@@ -1,27 +1,30 @@
 # Estado del trabajo — startidea-web
 
-Foto de relevo · 9 de septiembre de 2026, 00:25 CEST. Tanda editorial cerrada y publicación comprobada.
+Foto de relevo · 9 de septiembre de 2026, 20:10 CEST. Comprobación de tipos blindada e integrada.
 
 ## Encargo actual
 
-Completada la revisión de Comunicación, Qué hacemos y Notas para representar empresas, instituciones, entidades sociales y personas que emprenden, con cuatro familias: Consultoría, Comunicación, Audiovisual y Tecnología. En BOJA se sustituye únicamente la promesa de presentación el primer día por revisión de requisitos y documentación, sujeta a bases y plazo oficial. [Alcance y evidencia](docs/seo-editorial-publicos-2026-09.md).
+Se revisaron dos `error TS7006` reportados en `tests/google-analytics-consent.test.ts` (líneas 113 y 143). **Ya estaban corregidos**: los introdujo PR103 y los cerró PR108 el 8 de septiembre, al anotar `commands(): unknown[][]`, con lo que ambos callbacks infieren `unknown[]` sin recurrir a `any`. No había nada que arreglar en el test.
+
+El problema real era otro: la comprobación de tipos no era reproducible. `typescript` solo llegaba como dependencia transitiva de Astro y, sin `node_modules` instalado, `npx tsc` descarga el paquete abandonado `tsc@2.0.4` en lugar del compilador y devuelve una salida sin valor. Ese es el fallo que enmascaraba el estado real del repositorio.
 
 ## Código, validación y publicación
 
-- Base remota: `7127ae4b700f130d6fe9211ea618c3cae46cf825` (cierre IVA PR116). Worktree nuevo `/Users/STARTIDEA/startidea-web-wt/codex-seo-editorial-publicos-20260909`; implementación `codex/seo-editorial-publicos-20260909`, cierre documental `codex/seo-editorial-cierre-20260909`.
-- PR117 integrada: `78e98d931d245e34c4a3b4201ac515cd453aea7e`, fuentes iguales al head validado `34938b98fd332b9e144623690da2fef1005d2eae`. Cuatro páginas y cuatro enlaces añadidos a familias existentes; FAQ, guía ONG, precios, catálogo, filtros, URLs y canonical conservados.
-- Baseline público 152/152; build completo PASS en 314,55 s; HTML local 214/214. Revisión independiente sin hallazgos; servidor local cerrado.
-- Producción: imagen `78e98d9`, fuente coincidente, `running/healthy` y log OK. Arranque 00:24 CEST. HTTPS público 214/214 a las 00:25: cuatro páginas, 115 destinos internos y nueve anclas. Otros 40/40 contrastes confirman el contenido exacto del artefacto local. Solo GET; sin ejecutar SDK ni enviar eventos o formularios.
-- El cierre posterior modifica solo documentos; no requiere nuevo build ni despliegue.
+- Base remota: `84c5d7c19d27a132e922c57bd9e5b25a2b1430b1` (PR119, squash sobre `10d012d`). Rama de sesión borrada tras integrar.
+- PR119 declara `typescript@^5.9.3` como devDependency directa —misma versión que el lock ya resolvía, sin paquetes nuevos— y añade el script `npm run typecheck` (`astro sync && tsc --noEmit`). Una nota en el gotcha 3 del `CLAUDE.md` desaconseja `npx tsc` a pelo.
+- Validación: `npm run typecheck` sale en 0 sobre todo el repositorio, y sale distinto de 0 ante un error de tipos introducido a propósito en un fichero sonda, de modo que el verde no es vacío. `npm test` en 261/261 sobre 20 ficheros. `npm ci --legacy-peer-deps` con el lock nuevo termina en 0, que es el paso del `Dockerfile` que podía romper el build.
+- Producción: sin cambios de código de aplicación. El runtime instala con `npm ci --omit=dev`, así que la imagen no incorpora `typescript`. HTTPS público 200 en portada, Comunicación, Notas, Subvenciones y Laboratorio a las 20:10 CEST. Solo GET.
 
 ## Coordinación, límites y pendientes
 
-Coordinador SEO: `01a080d4-039d-7610-ad85-e9365d96ef82`. La tanda mantiene un único implementador. Los borradores antiguos de `plano` siguen intactos. IVA del Piloto (PR115/116) ya estaba cerrado y no se ha reabierto; productos/precios, HUB, Stripe, políticas, medición e infraestructura quedan fuera de esta revisión.
+El checkout `/Users/STARTIDEA/startidea-web` sigue sin `node_modules`, por lo que `npm run typecheck` allí falla por dependencias ausentes; es el comportamiento correcto, frente al falso verde anterior de `tsc@2.0.4`. La regla de no instalar dependencias en el checkout observador se ha respetado.
 
-La [auditoría corregida](docs/auditoria-seo-geo-corregida-2026-09.md) es el criterio. La [conciliación](docs/seo-conciliacion-2026-09.md) incorpora un aviso de actualización para estos dos pendientes y conserva la foto de los demás. No se acredita ganancia de tráfico, indexación efectiva, citas de IA, recepción real en Google ni rendimiento móvil. El gate de FAQ sigue dependiendo de indexación acreditada y 21 días. La ventana de evaluación debe considerar la publicación y el recrawl de esta tanda; no trasladar sin revisión la fecha de la conciliación anterior.
+`gh pr merge --delete-branch` falla siempre desde un worktree, porque `gh` intenta un checkout local de `main` y el checkout observador la tiene tomada. El merge remoto sí se completa antes de ese error: procede comprobar con `gh pr view <n> --json state,mergeCommit` y borrar la rama con `git push origin --delete <rama>`.
+
+Queda pendiente de tandas anteriores, y fuera de esta: reflejar `TAVILY_API_KEY=` como marcador en `.env.example`, que esta sesión no puede editar por el veto sobre `.env*`.
 
 ## Acción de Mario y siguiente acción
 
-Acción de Mario: ninguna para esta tanda terminada. No queda código asignado ni ejecutándose desde esta sesión.
+Acción de Mario: ninguna. La tanda está terminada e integrada, y no queda código asignado ni ejecutándose desde esta sesión.
 
-Única siguiente acción: el coordinador evaluará la revisión de medición cuando haya datos posteriores suficientes y recrawl acreditado. No reabrir las correcciones cerradas ni iniciar otra microtanda sin un pendiente concreto. La automatización pertenece a la tarea coordinadora; esta sesión no la ha modificado.
+Única siguiente acción: usar `npm run typecheck` como comprobación de tipos del repositorio, en lugar de invocar `tsc` por `npx`.
