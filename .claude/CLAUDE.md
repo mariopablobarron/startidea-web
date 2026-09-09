@@ -101,6 +101,8 @@ const fichaUrl = buildFichaUrl(exp.convocatoria_slug);
 
 `tsc --noEmit` no detecta los problemas anteriores porque no parsea los `<script>` inline ni el JSX del template. **Antes de cualquier push con cambios en `.astro`, correr `npm run build` local**. Tarda ~2 min pero evita ciclos de deploy fallido en Coolify.
 
+Para la comprobación de tipos usar `npm run typecheck`, nunca `npx tsc` a pelo: sin `node_modules` instalado, `npx` se descarga el paquete abandonado `tsc@2.0.4` en lugar del compilador y su salida no significa nada.
+
 ### 4. Auto-deploy = cron-pull en la VPS (NO GitHub Actions, NO panel Coolify)
 
 **Cada push a `main` despliega solo, pero NO vía GitHub Actions.** El mecanismo real (desde el incidente del 18-jun y su recuperación el 21-jun-2026) es un **cron-pull en la VPS**: `*/2 * * * * /usr/local/bin/deploy-lock /root/startidea-web-autodeploy.sh`. El script hace `git fetch origin main`; si `HEAD != origin/main`, hace `git pull --ff-only` + rebuild Docker + recreate (~2-4 min en total tras el push). Coolify solo gestiona Traefik/certs/panel.
