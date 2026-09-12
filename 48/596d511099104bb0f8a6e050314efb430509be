@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_28dd6c63fdd2dc 3,26,28,30-32
+docs/seo-general-medicion-2026-09.md
+  s_1c51cfd99bed79::t_b0e61a491ffbba 43-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "48596d511099104bb0f8a6e050314efb430509be",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
