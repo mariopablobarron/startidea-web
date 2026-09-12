@@ -40,7 +40,11 @@ Las dos plantillas cambian únicamente los tres distintivos a **«Página de alt
 
 El harness compara once páginas con el baseline público congelado a las 09:33 UTC: **121/121 condiciones locales PASS**, incluidas canonicals, metas, JSON-LD, ofertas, enlaces, importes, artículos y `main`. Solo admite los cambios de texto descritos. No envía formularios, ejecuta SDK ni sigue altas externas.
 
-**Dato comercial pendiente de Mario:** el alcance que puede contratarse y entregarse hoy en cada una de las tres altas. Los importes de Piloto ya aprobados no vuelven a preguntarse. No se modifica HUB, Stripe ni se deduce capacidad de entrega del estado Beta/Construcción. `BlogPosting` se conserva porque las fichas presentan planes editoriales; no se inventa `Offer` para convertir un plan en producto disponible.
+**Decisión comercial recibida el 12 de septiembre:** Mario confirma que las tres altas deben entregar **un servicio operativo**, no una inscripción para más adelante. No queda pendiente esa decisión ni otra confirmación de los importes ya aprobados.
+
+La comprobación posterior identifica trabajo técnico que impide acreditar el recorrido completo. Las tres altas responden HTTP 200, pero eso solo confirma su acceso. En la configuración viva faltan los precios que los flujos de Piloto y Web requieren para completar la contratación online. Kit genera una propuesta y avisa tras el pago, pero su entrega final y varias modalidades necesitan una operación humana o funcionalidad adicional todavía no acreditada. También hay prestaciones anunciadas de Piloto y Web Plus que no aparecen conectadas al recorrido de alta revisado. La evidencia detallada permanece fuera del repositorio público.
+
+La decisión de negocio y la verificación técnica son distintas: no se cambia el catálogo a «Disponible» ni se declara entrega completa únicamente por esa confirmación. En esta comprobación no se modifican HUB, pagos, precios, contenido público ni datos estructurados. `BlogPosting` se conserva como descripción del plan editorial. El siguiente trabajo corresponde a contratación y entrega de los productos en HUB; no a nuevas optimizaciones SEO.
 
 ## Efecto SEO/GEO y protocolo de comparación
 
