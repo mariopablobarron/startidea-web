@@ -1,6 +1,6 @@
 # Estado del trabajo — startidea-web
 
-Foto de relevo · 12 de septiembre de 2026. Revisión general integrada, publicada y comprobada.
+Foto de relevo · 12 de septiembre de 2026. Mejoras SEO publicadas; decisión comercial recibida y contraste de contratación completado.
 
 ## Encargo actual
 
@@ -23,8 +23,10 @@ Google confirma cinco páginas indexadas, pero los datos finales solo llegan al 
 
 ## Acción de Mario y siguiente acción
 
-Acción de Mario pendiente: precisar qué se puede entregar hoy en Piloto de redes, Kit de marca y Web para asociaciones. La pregunta ya está enviada; no reabrir los precios aprobados. La aclaración genérica y la optimización pueden cerrarse sin inventar esa respuesta.
+Acción de Mario: ninguna para definir la oferta. Ha respondido «un servicio operativo» para Piloto de redes, Kit de marca y Web para asociaciones; ese es el criterio de entrega. No volver a preguntar disponibilidad deseada ni precios aprobados.
 
-Estado de ejecución: correcciones de esta tanda terminadas, integradas y comprobadas en público; ninguna tarea de código asignada ni ejecutándose.
+Estado de ejecución: las correcciones de PR121/122 siguen terminadas y comprobadas en público. La revisión posterior de contratación está terminada, sin cambios de aplicación: 14 GET públicos correctos, código HUB desplegado coincidente con el revisado y comprobación de presencia de precios en producción. Faltan las seis referencias de precio usadas por Piloto y Web; sus rutas no pueden completar el pago online sin ellas. Kit necesita cerrar la entrega final; otras prestaciones de los planes requieren validación o implementación. Las 57 pruebas locales del producto no acreditan entrega real. El [informe actualizado](docs/seo-general-medicion-2026-09.md) recoge los límites.
 
-Única siguiente acción: conciliar el alcance comercial de las tres altas cuando Mario aporte el dato solicitado. La medición posterior queda condicionada a valores de GA4, solicitudes reales y ventanas finales comparables en GSC; no hay otra tanda de código automática. Fuera de alcance siguen TAVILY_API_KEY en .env.example y las demás recomendaciones históricas no retomadas.
+No hay implementación de HUB asignada ni ejecutándose desde esta sesión. No se modificó su relevo ni se interfirió con sus otras líneas de trabajo. Evidencia detallada local: `startidea-web-wt/productos-operativos-evidencias-20260912/`; la revisión técnica distingue servicio con intervención humana de autoservicio completo.
+
+Única siguiente acción, en HUB: completar primero la contratación de Piloto y Web con los importes ya aprobados y validar el flujo, incluido el cobro de alta de Web; después avanzar a los criterios de entrega documentados. La medición posterior queda condicionada a valores de GA4, solicitudes reales y ventanas finales comparables en GSC; no hay otra tanda de código automática. Fuera de alcance siguen TAVILY_API_KEY en .env.example y las demás recomendaciones históricas no retomadas.
