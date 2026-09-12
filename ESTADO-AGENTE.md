@@ -1,6 +1,6 @@
 # Estado del trabajo — startidea-web
 
-Foto de relevo · 12 de septiembre de 2026. Revisión general retomada por Mario.
+Foto de relevo · 12 de septiembre de 2026. Revisión general integrada, publicada y comprobada.
 
 ## Encargo actual
 
@@ -11,8 +11,9 @@ Cerrar lo verificable de la medición real GA4, rendimiento móvil, coherencia c
 - Base remota actualizada: `fef554a5254313a118cf07322c96db18692e4bbc`. Trabajo aislado en `codex/seo-general-20260912`.
 - Manifiesto: Three se carga al aproximarse a la sección y la animación se detiene fuera de vista. Se mantienen diseño, partículas, resize y movimiento reducido.
 - Productos: tres altas se describen como páginas de alta; se retiran las promesas automáticas de disponibilidad/activación deducidas de tener enlace. Precios, estados, fechas, enlaces y datos estructurados conservados.
-- Validación: tipos, 261 pruebas y build completo (282,35 s) correctos. Once páginas de productos pasan 121 comprobaciones. Doce pruebas funcionales de animación y cuatro estados del artefacto compilado correctos.
-- Integración y publicación de esta tanda: pendientes al preparar este cambio. La última producción comprobada sigue en `fef554a`, saludable; no atribuir todavía al público las correcciones locales.
+- Validación: tipos, 261 pruebas y build completo (282,35 s) correctos. Once páginas de productos pasan 121 comprobaciones. Doce pruebas funcionales de animación y cuatro estados del artefacto compilado correctos. En producción, ocho controles correctos y dos cargas móviles: 305.083 bytes iniciales frente a 501.137 anteriores (196.054 menos); LCP 2.032/2.018 ms, CLS 0. Son mediciones de laboratorio, no efecto SEO ni CWV de campo.
+- Integración: [PR121](https://github.com/mariopablobarron/startidea-web/pull/121), `d1d1364cd62f337b43fbad9cf2739638c0985db9`, a las 09:42 UTC. La fuente integrada coincide con el código validado.
+- Producción: imagen y fuente `d1d1364`, contenedor arrancado a las 09:46:46 UTC y comprobado saludable a las 09:47. Comprobación a las 09:47: API de salud JSON 200, configuración y base de datos correctas; once páginas del catálogo pasan 121/121 comprobaciones públicas. El despliegue lo hizo el cron vigente, sin intervención manual.
 
 ## Medición y límites
 
@@ -24,4 +25,6 @@ Google confirma cinco páginas indexadas, pero los datos finales solo llegan al 
 
 Acción de Mario pendiente: precisar qué se puede entregar hoy en Piloto de redes, Kit de marca y Web para asociaciones. La pregunta ya está enviada; no reabrir los precios aprobados. La aclaración genérica y la optimización pueden cerrarse sin inventar esa respuesta.
 
-Única siguiente acción de ejecución: integrar esta tanda validada y verificar imagen, salud y comportamiento públicos; después actualizar este relevo con esa evidencia. Fuera de alcance siguen TAVILY_API_KEY en .env.example y las demás recomendaciones históricas no retomadas.
+Estado de ejecución: correcciones de esta tanda terminadas, integradas y comprobadas en público; ninguna tarea de código asignada ni ejecutándose.
+
+Única siguiente acción: conciliar el alcance comercial de las tres altas cuando Mario aporte el dato solicitado. La medición posterior queda condicionada a valores de GA4, solicitudes reales y ventanas finales comparables en GSC; no hay otra tanda de código automática. Fuera de alcance siguen TAVILY_API_KEY en .env.example y las demás recomendaciones históricas no retomadas.
