@@ -1,6 +1,6 @@
 # Estado del trabajo: radar de tendencias
 
-Foto de relevo: 12 de septiembre de 2026. Primera version del radar terminada y validada en local.
+Foto de relevo: 12 de septiembre de 2026. Publicación del radar autorizada y en preparación.
 
 ## Encargo actual
 
@@ -16,6 +16,6 @@ Radar interno de Startidea para detectar temas, revisar encaje de marca y genera
 
 ## Integracion, limites y accion siguiente
 
-El cambio queda en una rama local propia. No se ha ejecutado push, integracion, despliegue, cron ni publicacion desde esta tarea. No se ha realizado una llamada real al proveedor de IA; las pruebas del generador usan respuestas simuladas. Los memes son conceptos y texto, no imagenes generadas. No se acredita notoriedad ni rendimiento editorial. El servidor de pruebas esta cerrado.
+Mario ha autorizado publicar y comprobar una generación real. Se ha creado el worktree nuevo `/Users/STARTIDEA/startidea-web-wt/codex-radar-publicacion-20260912`, rama `codex/radar-publicacion-20260912`, desde `origin/main` actualizada (`5664fed`), incorporando el radar sin cambios funcionales. La revisión independiente no encuentra bloqueos. Producción tiene la conexión de IA y el volumen configurados; existe backup íntegro previo de la base de datos. Integración, despliegue y generación real pendientes de cerrar en esta tanda; hasta aquí, las pruebas de IA usan respuestas simuladas. Los memes son conceptos y texto, no imagenes generadas. No se acredita notoriedad ni rendimiento editorial. El servidor de pruebas esta cerrado.
 
-Accion de Mario: decidir la publicacion de esta version interna. Unica siguiente accion: tras esa decision, integrar la rama y desplegar siguiendo la metodologia vigente, comprobar el SHA servido y probar una generacion real. Consultar antes las referencias de infraestructura exigidas por AGENTS.md. Para continuar en una tarea nueva: «Publica el radar de tendencias desde codex/radar-20260912-01a09546 y verifica el panel y una generacion real».
+Acción de Mario: ninguna; publicación y prueba real ya autorizadas. Estado de ejecución: comprobación local y publicación en curso. El despliegue vigente se ha verificado: cron del VPS cada dos minutos, con lock y build; GitHub Actions queda como respaldo manual. Única siguiente acción: integrar tras el build correcto, comprobar el SHA desplegado, ejecutar una generación real y cerrar el relevo con su evidencia. No activar cron del radar ni publicar el borrador fuera del panel.
