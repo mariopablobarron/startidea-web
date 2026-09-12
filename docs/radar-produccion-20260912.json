@@ -1,0 +1,156 @@
+{
+  "checkedAt": "2026-09-12T11:59:14.423Z",
+  "integration": {
+    "pr": 124,
+    "url": "https://github.com/mariopablobarron/startidea-web/pull/124",
+    "sha": "ab25218aac0d3aad35627d8d623b5aaabbc60bc2",
+    "mergedAt": "2026-09-12T11:45:30Z",
+    "integratedTreeMatchesValidated": true
+  },
+  "localValidation": {
+    "typecheck": "passed",
+    "tests": 281,
+    "suites": 24,
+    "buildSeconds": 272.55,
+    "initialBuildFailure": "ENOSPC; successful rebuild after cleaning session-generated files"
+  },
+  "deployment": {
+    "mechanism": "existing VPS pull cron",
+    "image": "cmoh7d8hi001bp2a4qwjobhzy:ab25218",
+    "buildSourceSha": "ab25218aac0d3aad35627d8d623b5aaabbc60bc2",
+    "buildSourceClean": true,
+    "containerStatus": "running",
+    "health": "healthy",
+    "startedAt": "2026-09-12T11:57:48.711466658Z"
+  },
+  "httpChecks": {
+    "anonymousPanel": 302,
+    "anonymousMutation": 401,
+    "crossOrigin": 403,
+    "panel": 200,
+    "noStore": true,
+    "noindex": true,
+    "adminEntry": true,
+    "aiConfigured": true
+  },
+  "capture": {
+    "ok": true,
+    "partial": true,
+    "added": 10,
+    "total": 10,
+    "sources": [
+      {
+        "source": "google-trends",
+        "ok": true,
+        "count": 10
+      },
+      {
+        "source": "reddit",
+        "ok": false,
+        "count": 0,
+        "error": "HTTP_403"
+      }
+    ]
+  },
+  "finalRuntime": {
+    "at": "2026-09-12T11:59:14.423Z",
+    "health": {
+      "status": 200,
+      "ok": true,
+      "checks": {
+        "telegram_config": {
+          "ok": true
+        },
+        "openrouter_config": {
+          "ok": true
+        },
+        "database": {
+          "ok": true,
+          "latency_ms": 1,
+          "detail": "n=3"
+        }
+      }
+    },
+    "panel": {
+      "status": 200,
+      "noStore": true,
+      "noindex": true
+    },
+    "effectiveMaxTokens": 3000,
+    "candidate": {
+      "id": "google-trends:16504e077c882944a34a43ed3343c99629c26219",
+      "status": "validada",
+      "ai_pack_json": null,
+      "ai_generated_at": null,
+      "generation_started_at": 1789214214
+    },
+    "counts": [
+      {
+        "status": "detectada",
+        "count": 9
+      },
+      {
+        "status": "validada",
+        "count": 1
+      }
+    ],
+    "changedExistingTables": []
+  },
+  "generation": {
+    "completed": false,
+    "blocker": "OpenRouter HTTP 402: insufficient credits",
+    "publicAttempts": [
+      {
+        "focus": "articulo",
+        "maxTokens": 3000,
+        "generated": {
+          "status": 502,
+          "body": {
+            "ok": false,
+            "error": "generation_failed"
+          }
+        },
+        "elapsedMs": 220,
+        "status": "validada"
+      },
+      {
+        "focus": "articulo",
+        "maxTokens": 2000,
+        "generated": {
+          "status": 502,
+          "body": {
+            "ok": false,
+            "error": "generation_failed"
+          }
+        },
+        "elapsedMs": 18127,
+        "status": "validada"
+      },
+      {
+        "focus": "contenido",
+        "maxTokens": 2000,
+        "generated": {
+          "status": 502,
+          "body": {
+            "ok": false,
+            "error": "generation_failed"
+          }
+        },
+        "elapsedMs": 31597,
+        "status": "validada"
+      }
+    ],
+    "intermediateFailureCause": "The public endpoint returns generation_failed without logging provider detail; no claim about truncation or JSON format",
+    "lastDiagnosticProviderStatus": 402,
+    "configurationRestored": true,
+    "finalMaxTokens": 3000,
+    "persistedDraft": false,
+    "nextAction": "Restore provider credit, retry over HTTPS, verify stored pack and full rendered text"
+  },
+  "effects": {
+    "radarCronActivated": false,
+    "contentPublishedOutsidePanel": false,
+    "providerTopupPerformed": false,
+    "existingTableSchemasChanged": []
+  }
+}

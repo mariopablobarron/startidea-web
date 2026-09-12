@@ -38,4 +38,8 @@ No hay cron activado en esta entrega. Programar capturas, ampliar fuentes a TikT
 
 Pruebas locales del parser, persistencia, controles de estado, endpoints y generador con respuestas simuladas. La captura funcional usa fuentes publicas reales y una base de datos temporal. El contenido de IA simulado solo sirve para comprobar el contrato, no para certificar calidad creativa ni una llamada real al proveedor.
 
-La compilacion y el resultado final de pruebas se recogen en el relevo de la rama. No hay integracion ni despliegue de esta entrega acreditados.
+Publicación comprobada el 12 de septiembre de 2026: PR124, commit `ab25218aac0d3aad35627d8d623b5aaabbc60bc2`, imagen y fuente coincidentes, contenedor saludable. Validación local: TypeScript, 281 pruebas y build completo de 272,55 segundos. HTTPS: panel 200/no-store/noindex, acceso anónimo 302, escritura anónima 401 y origen externo 403. Captura en producción: 10 tendencias de Google; Reddit devuelve 403 y se informa lectura parcial.
+
+La generación real se ha intentado, pero no está completada. OpenRouter ha devuelto 402 por crédito insuficiente. El endpoint vuelve a Validada y no guarda una propuesta inválida. Reducir temporalmente el límite a 2000 tokens no resolvió la prueba; se ha restaurado el valor original de 3000. Los intentos intermedios devolvieron 502 sin detalle público; no se atribuye a truncamiento u otra causa no verificada. Hace falta recuperar saldo, repetir por HTTPS y comprobar el JSON guardado y el texto servido antes de dar la generación por validada. No se acredita coste exacto, artículo completo ni calidad editorial real.
+
+Evidencia de publicación y del bloqueo: `docs/radar-produccion-20260912.json`. Último control a las 11:59 UTC: imagen correcta y saludable, configuración original restaurada, panel y salud HTTPS 200.
