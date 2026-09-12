@@ -1,0 +1,21 @@
+ESTADO-AGENTE.md
+  s_42946cec6cd017::t_e08511ce572e99 3,14-16,28-30
+docs/seo-general-medicion-2026-09.md
+  s_42946cec6cd017::t_12babdcbf0b560 5,33-34,61,65,67,70,72,74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "71326abe5c94b58a1e9fae4fec20ef58abebdda7",
+  "prompts": {},
+  "sessions": {
+    "s_42946cec6cd017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
