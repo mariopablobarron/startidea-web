@@ -1,0 +1,357 @@
+---
+import Base from '@/layouts/Base.astro';
+import { isAdminLoggedIn } from '@/lib/admin-session';
+import {
+  listCandidates,
+  statsRadar,
+} from '@/lib/radar/db';
+import { RadarStatus } from '@/lib/radar/types';
+
+import { getEnv } from '@/lib/env';
+import { safeUrl } from '@/lib/radar/fetchers';
+
+export const prerender = false;
+Astro.response.headers.set('Cache-Control', 'no-store');
+const aiReady = !!getEnv('OPENROUTER_API_KEY');
+
+if (!isAdminLoggedIn(Astro.cookies)) {
+  return Astro.redirect(`/admin/login?next=${encodeURIComponent('/admin/radar')}`);
+}
+
+const statusFilterRaw = (Astro.url.searchParams.get('status') ?? '').trim();
+const sourceFilterRaw = (Astro.url.searchParams.get('source') ?? '').trim();
+const qFilter = (Astro.url.searchParams.get('q') ?? '').trim();
+const msg = (Astro.url.searchParams.get('msg') ?? '').trim();
+
+const STATUS: RadarStatus[] = ['detectada', 'validada', 'descartada', 'generando', 'lista', 'publicada'];
+const FOCUS = [
+  { value: 'meme', label: 'Meme' },
+  { value: 'articulo', label: 'Artículo' },
+  { value: 'contenido', label: 'Contenido social' },
+];
+
+const statusFilter = STATUS.includes(statusFilterRaw as RadarStatus)
+  ? (statusFilterRaw as RadarStatus)
+  : undefined;
+const sourceFilter = sourceFilterRaw === 'google-trends' || sourceFilterRaw === 'reddit'
+  ? (sourceFilterRaw as 'google-trends' | 'reddit')
+  : undefined;
+
+const stats = statsRadar();
+const candidates = listCandidates({
+  status: statusFilter,
+  source: sourceFilter,
+  q: qFilter || undefined,
+  limit: 120,
+});
+
+const msgText: Record<string, string> = {
+  'fetch-ok-0': 'Lectura completada. No hay tendencias nuevas con este filtro.',
+  'fetch-ok-1': '1 tendencia detectada.',
+  'fetch-fail': 'No se pudo actualizar el radar.',
+  'status-updated': 'Estado actualizado.',
+  'generated': 'Propuesta IA guardada.',
+  'generate-fail': 'No se pudo generar el borrador. La tendencia vuelve a validada para reintentar.',
+  'ai-unavailable': 'La generación de IA todavía no está configurada.',
+  'validate-first': 'Valida la tendencia antes de generar. Si ya está en generación, espera a que termine.',
+  'invalid-transition': 'No se puede guardar ese estado durante la generación, o sin un borrador listo.',
+  'invalid-input': 'Revisa los datos y los límites del formulario.',
+  'not-found': 'No se encuentra esa tendencia.',
+};
+
+const fetchMessage = msg.match(/^fetch-(ok|partial)-(\d+)$/);
+const notice = fetchMessage
+  ? `${Number(fetchMessage[2])} tendencias nuevas. ${fetchMessage[1] === 'partial' ? 'Lectura parcial: una fuente no ha respondido. Puedes reintentar.' : 'Lectura completada.'}`
+  : msgText[msg];
+const MANUAL_STATUS = STATUS.filter((s) => s !== 'generando' && s !== 'lista');
+
+const statusText: Record<RadarStatus, string> = {
+  detectada: 'Detectada',
+  validada: 'Validada',
+  descartada: 'Descartada',
+  generando: 'Generando',
+  lista: 'Borrador listo',
+  publicada: 'Publicación registrada',
+};
+
+const statusColor: Record<RadarStatus, string> = {
+  detectada: 'bg-blue-100 text-blue-800 border-blue-200',
+  validada: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  descartada: 'bg-zinc-100 text-zinc-700 border-zinc-200',
+  generando: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  lista: 'bg-purple-100 text-purple-800 border-purple-200',
+  publicada: 'bg-magenta/10 text-magenta border-magenta/40',
+};
+
+function fmtDate(ts: number): string {
+  return new Date(ts * 1000).toLocaleString('es-ES', {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Madrid',
+  });
+}
+
+---
+
+<Base title="Radar de tendencias · Admin · Startidea" description="Tendencias y borradores de contenido para Startidea." noindex>
+  <section class="bg-paper py-10">
+    <div class="container-x">
+      <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <a href="/admin" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">← Admin</a>
+          <h1 class="mt-1 font-display text-4xl text-ink">Radar de tendencias</h1>
+          <p class="mt-1 text-sm text-ink/75">
+            Detecta temas, revisa su encaje con Startidea y prepara memes, artículos o publicaciones.
+          </p>
+        </div>
+        <a href="/admin/radar?source=google-trends" class="font-mono text-[11px] uppercase tracking-widest text-ink/75 hover:text-magenta">Google Trends</a>
+      </div>
+
+      {notice && (
+        <p class="mb-6 border border-ink/15 bg-paper px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-ink/75">
+          {notice}
+        </p>
+      )}
+
+      <p class="mb-4 max-w-3xl text-sm text-ink/75">Google Trends recoge búsquedas en España; Reddit aporta conversación internacional. Potencial y encaje son puntuaciones orientativas, no probabilidades de éxito. Cada borrador necesita revisión editorial.</p>
+      {!aiReady && <p class="mb-4 border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Puedes recoger y validar tendencias. La generación estará disponible cuando se configure la conexión de IA.</p>}
+
+      <!-- KPIs -->
+      <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div class="border border-ink/15 bg-paper p-4">
+          <p class="font-display text-3xl text-ink">{stats.total}</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/75">Total</p>
+        </div>
+        <div class="border border-blue-200 bg-blue-50/30 p-4">
+          <p class="font-display text-3xl text-blue-700">{stats.detectada}</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-blue-700">Detectadas</p>
+        </div>
+        <div class="border border-emerald-200 bg-emerald-50/30 p-4">
+          <p class="font-display text-3xl text-emerald-700">{stats.validada + stats.lista}</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-emerald-600">Validadas y borradores</p>
+        </div>
+        <div class="border border-yellow-200 bg-yellow-50/30 p-4">
+          <p class="font-display text-3xl text-yellow-700">{stats.generando}</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-yellow-600">En generación</p>
+        </div>
+        <div class="border border-magenta/40 bg-magenta/5 p-4">
+          <p class="font-display text-3xl text-magenta">{stats.publicada}</p>
+          <p class="mt-1 font-mono text-[10px] uppercase tracking-widest text-magenta">Publicadas</p>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="mb-6 grid gap-4 sm:grid-cols-2">
+        <form method="post" action="/api/admin/radar/fetch" class="flex flex-wrap items-end gap-2 border border-ink/15 bg-paper p-4">
+          <div class="min-w-0 flex-1">
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/75">Máximo por fuente</label>
+            <input
+              type="number"
+              name="maxPerSource"
+              value="18"
+              min="1"
+              max="30"
+              class="mt-1 w-full border border-ink/20 bg-paper px-2 py-2 text-sm"
+              aria-label="Máximo por fuente"
+            />
+          </div>
+          <div class="min-w-0 flex-1">
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/75">Potencial mínimo (0–100)</label>
+            <input
+              type="number"
+              name="signalFloor"
+              value="0"
+              min="0"
+              max="100"
+              class="mt-1 w-full border border-ink/20 bg-paper px-2 py-2 text-sm"
+              aria-label="Potencial mínimo"
+            />
+          </div>
+          <div>
+            <button type="submit" class="btn">Actualizar radar</button>
+          </div>
+        </form>
+
+        <form method="get" class="grid gap-2 border border-ink/15 bg-paper p-4" aria-label="Filtros">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/75">Estado</label>
+              <select name="status" class="mt-1 w-full border border-ink/20 bg-paper px-2 py-2 text-sm">
+                <option value="">Todos</option>
+                {STATUS.map((s) => (
+                  <option value={s} selected={statusFilter === s}>{statusText[s]}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/75">Fuente</label>
+              <select name="source" class="mt-1 w-full border border-ink/20 bg-paper px-2 py-2 text-sm">
+                <option value="">Todas</option>
+                <option value="google-trends" selected={sourceFilterRaw === 'google-trends'}>Google Trends</option>
+                <option value="reddit" selected={sourceFilterRaw === 'reddit'}>Reddit</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block font-mono text-[10px] uppercase tracking-widest text-ink/75">Buscar por texto</label>
+            <input
+              name="q"
+              value={qFilter}
+              placeholder="palabra clave"
+              class="mt-1 w-full border border-ink/20 bg-paper px-2 py-2 text-sm"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="submit" class="btn">Filtrar</button>
+            <a href="/admin/radar" class="font-mono text-[10px] uppercase tracking-widest text-ink/60 hover:text-magenta">Limpiar</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista -->
+      <div class="space-y-4">
+        {candidates.length === 0 ? (
+          <p class="text-sm text-ink/70">
+            Aún no hay elementos. Ejecuta “Actualizar radar” para detectar tendencias del día.
+          </p>
+        ) : null}
+
+        {candidates.map((c) => {
+          const pack = c.aiPack;
+          const busy = c.status === 'generando' && c.generationStartedAt !== null && Date.now() / 1000 - c.generationStartedAt < 180;
+          const canGenerate = aiReady && c.status === 'validada';
+          const stale = Date.now() / 1000 - (c.publishedAt || c.createdAt) > 48 * 3600;
+          const delta = c.previousSignal === null ? null : c.sourceSignal - c.previousSignal;
+          const evidence = c.evidence.map(safeUrl).filter((url): url is string => !!url);
+          return (
+            <article class="border border-ink/15 bg-paper p-4">
+              <div class="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <p class={`border px-2 py-1 font-mono text-[10px] uppercase tracking-widest border ${statusColor[c.status]} inline-block`}>
+                    {statusText[c.status]}
+                  </p>
+                  <h2 class="mt-2 font-display text-xl text-ink">{c.title}</h2>
+                  <p class="mt-1 text-sm text-ink/75 whitespace-pre-line">{c.summary}</p>
+                </div>
+                <div class="text-right text-xs text-ink/75">
+                  <p>Fuente: <span class="font-mono">{c.source === 'google-trends' ? 'Google Trends · España' : 'Reddit · global'}</span></p>
+                  <p>Potencial: <span class="font-mono">{c.viralityScore}/100</span></p>
+                  <p>Encaje: <span class="font-mono">{c.relevanceScore}/100</span></p>
+                  <p>{c.source === 'google-trends' ? 'Búsquedas aprox.' : 'Votos + comentarios ponderados'}: <span class="font-mono">{c.sourceSignal.toLocaleString('es-ES')}</span></p>
+                  <p>{delta === null ? 'Primera lectura: sin comparación' : `Cambio entre lecturas: ${delta > 0 ? '+' : ''}${delta.toLocaleString('es-ES')}`}</p>
+                  {c.previousSeenAt && <p>Anterior: {fmtDate(c.previousSeenAt)}</p>}
+                  <p>{c.publishedAt ? `Origen: ${fmtDate(c.publishedAt)}` : 'Fecha de origen no disponible'}</p>
+                  {stale && <p class="text-amber-800">Más de 48 h: comprobar vigencia</p>}
+                </div>
+              </div>
+
+              {c.sourceUrl && (
+                <p class="mt-2 text-sm">
+                  <a href={c.sourceUrl} target="_blank" rel="noopener" class="underline decoration-magenta/40 hover:text-magenta">
+                    Abrir tendencia original →
+                  </a>
+                </p>
+              )}
+
+              {evidence.length > 0 && <details class="mt-2 text-sm"><summary class="cursor-pointer">Referencias para contrastar ({evidence.length})</summary><ul class="mt-2 space-y-1">{evidence.map((url, i) => <li><a href={url} target="_blank" rel="noopener noreferrer" class="underline">Referencia {i + 1}</a></li>)}</ul></details>}
+
+              {c.tags?.length > 0 && (
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  {c.tags.map((tag) => (
+                    <span class="rounded border border-ink/15 px-2 py-1 font-mono text-[10px] text-ink/80">#{tag}</span>
+                  ))}
+                </div>
+              )}
+
+              <div class="mt-4 flex flex-wrap items-center gap-2 border-t border-ink/10 pt-3">
+                <form method="post" action="/api/admin/radar/candidate" class="flex flex-wrap items-center gap-2">
+                  <input type="hidden" name="id" value={c.id} />
+                  <label class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Estado:</label>
+                  <select name="status" aria-label={`Estado de ${c.title}`} disabled={busy} class="border border-ink/20 bg-paper px-2 py-1 text-xs">
+                    {MANUAL_STATUS.map((s) => (
+                      <option value={s} disabled={s === 'publicada' && (!pack || !['lista', 'publicada'].includes(c.status))} selected={c.status === s || (!MANUAL_STATUS.includes(c.status) && s === 'validada')}>{statusText[s]}</option>
+                    ))}
+                  </select>
+                  <button type="submit" disabled={busy} class="btn-ghost disabled:opacity-40">Guardar</button>
+                </form>
+
+                <form method="post" action="/api/admin/radar/generate" class="flex flex-wrap items-center gap-2">
+                  <input type="hidden" name="id" value={c.id} />
+                  <label class="font-mono text-[10px] uppercase tracking-wider text-ink/75">Generar:</label>
+                  <select name="focus" aria-label={`Formato para ${c.title}`} disabled={!canGenerate} class="border border-ink/20 bg-paper px-2 py-1 text-xs">
+                    {FOCUS.map((f) => (
+                      <option value={f.value}>{f.label}</option>
+                    ))}
+                  </select>
+                  <button type="submit" disabled={!canGenerate} class="btn disabled:opacity-40">Generar borrador</button>
+                </form>
+
+                {c.sourceUrl && (
+                  <a href={c.sourceUrl} target="_blank" rel="noopener" class="btn-ghost">Ver fuente</a>
+                )}
+              </div>
+
+              {c.status === 'detectada' && <p class="mt-2 text-xs text-ink/70">Contrasta las referencias y guarda el estado Validada para generar.</p>}
+              {c.status === 'generando' && !busy && <p class="mt-2 text-xs text-amber-800">La generación se interrumpió. Guarda el estado Validada para reintentar.</p>}
+              <p class="mt-2 text-xs text-ink/60">Publicación registrada deja constancia de una publicación realizada fuera del radar.</p>
+
+              {pack && (
+                <div class="mt-4 border-t border-ink/10 pt-4">
+                  <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Propuesta IA</p>
+                  <h3 class="mt-1 font-display text-xl text-ink">{pack.titulo_propuesta}</h3>
+                  <p class="mt-1 text-sm text-ink/80">{pack.resumen_operativo}</p>
+                  <div class="mt-3 space-y-2 text-sm">
+                    <p><strong>Eje:</strong> {pack.eje_mensaje}</p>
+                    <p class="whitespace-pre-line"><strong>Idea y ejecución:</strong> {pack.idea_implementable}</p>
+                    <label for={`radar-copy-${c.id}`} class="block font-semibold">Texto del borrador</label>
+                    <textarea id={`radar-copy-${c.id}`} readonly rows={c.aiLastFocus === 'articulo' ? 14 : 6} class="w-full border border-ink/20 bg-white p-3 text-sm leading-relaxed">{pack.texto_para_publicar}</textarea>
+                    <button type="button" data-copy-target={`radar-copy-${c.id}`} class="btn-ghost">Copiar texto</button>
+                    <p><strong>Tono:</strong> {pack.tono}</p>
+                    <p><strong>Formatos:</strong> {pack.formatos_recomendados.join(', ')}</p>
+                    <p><strong>CTA:</strong> {pack.call_to_action}</p>
+                  </div>
+                  <div class="mt-2">
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Hashtags</p>
+                    <p class="mt-1 text-sm">{pack.hashtags.join(' ')}</p>
+                  </div>
+                  {pack.riesgos.length > 0 ? (
+                    <div class="mt-2">
+                      <p class="font-mono text-[10px] uppercase tracking-widest text-ink/75">Riesgos</p>
+                      <ul class="mt-1 list-disc pl-5 text-sm">
+                        {pack.riesgos.map((x) => <li>{x}</li>)}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              )}
+
+              <p class="mt-3 text-right text-xs text-ink/50">
+                Última lectura {fmtDate(c.lastSeenAt)} · detectada {fmtDate(c.createdAt)}
+              </p>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  document.querySelectorAll('[data-copy-target]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const field = document.getElementById(button.dataset.copyTarget);
+      if (!field) return;
+      try { await navigator.clipboard.writeText(field.value); button.textContent = 'Texto copiado'; }
+      catch { field.focus(); field.select(); button.textContent = 'Texto seleccionado para copiar'; }
+    });
+  });
+  document.querySelectorAll('form[method="post"]').forEach((form) => {
+    form.addEventListener('submit', () => {
+      const button = form.querySelector('button[type="submit"]');
+      if (button) { button.disabled = true; button.textContent = 'Procesando…'; }
+      form.setAttribute('aria-busy', 'true');
+    });
+  });
+</script>
