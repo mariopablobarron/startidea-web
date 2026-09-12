@@ -1,0 +1,33 @@
+src/pages/laboratorio/productos/index.astro
+  s_1c51cfd99bed79::t_132276d3d72999 135
+src/components/Manifesto.astro
+  s_1c51cfd99bed79::t_117e277fe41764 49-50,55-59,61-62,93,97-98,100-116,119-123,125-145
+docs/seo-general-medicion-2026-09.md
+  s_1c51cfd99bed79::t_5c48ff72d81791 1-4,6-10,12,15-28,30,33-60,62,65-67
+  s_1c51cfd99bed79::t_bc11185c75b0c1 5,11,13-14,29,31-32,68-72
+  s_1c51cfd99bed79::t_a8a1eec6f59a3e 61,63-64
+docs/seo-conciliacion-2026-09.md
+  s_1c51cfd99bed79::t_1020800b68e83d 9-10
+docs/seo-recorridos-2026-09.md
+  s_1c51cfd99bed79::t_1020800b68e83d 56-61
+src/pages/laboratorio/productos/[...slug].astro
+  s_1c51cfd99bed79::t_132276d3d72999 197,202
+ESTADO-AGENTE.md
+  s_1c51cfd99bed79::t_68d6ff24b6f355 3,7,9,11-15,17,19,21,25,27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "6e4397653f085b82abf5e5b47e2d69d05a1ddcd1",
+  "prompts": {},
+  "sessions": {
+    "s_1c51cfd99bed79": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0811c-52e2-7853-b3d8-e55d87154f7a",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
