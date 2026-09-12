@@ -1,0 +1,62 @@
+tests/radar-db.test.ts
+  s_a526f6948b78c5::t_7f32624f9afc2c 59,61-64,69,86,89,106,117-121,131-134,144-148
+  s_a526f6948b78c5::t_0d6b05ffec3a3d 95
+  s_a526f6948b78c5::t_fcae8251aea88e 1-58,60,65-68,70-85,87-88,90-94,96-105,107-116,122-130,135-143,149-153
+src/pages/admin/index.astro
+  s_a526f6948b78c5::t_e1c24f8f6f8e26 816-824
+src/lib/radar/db.ts
+  s_a526f6948b78c5::t_dff32f982a2d9d 1-235,237-322
+  s_a526f6948b78c5::t_53f6234e152b14 236
+src/pages/admin/radar.astro
+  s_a526f6948b78c5::t_0f24dcb91f031e 1-357
+tests/radar-generator.test.ts
+  s_a526f6948b78c5::t_1d284bb8765692 1-44
+src/lib/radar/fetchers.ts
+  s_a526f6948b78c5::t_20fac69b9aa790 1-120
+scripts/radar/run.mjs
+  s_a526f6948b78c5::t_53f6234e152b14 1-71
+.env.example
+  s_a526f6948b78c5::t_e1c24f8f6f8e26 10-14
+src/lib/radar/types.ts
+  s_a526f6948b78c5::t_dff32f982a2d9d 1-79
+tests/radar-fetchers.test.ts
+  s_a526f6948b78c5::t_0d6b05ffec3a3d 52,102
+  s_a526f6948b78c5::t_fcae8251aea88e 1-9,11-16,18-51,53-54,57-101,103-109,112-123,125,131-132
+  s_a526f6948b78c5::t_7f32624f9afc2c 10,17,55-56,110-111,124,126-130
+src/lib/radar/generator.ts
+  s_a526f6948b78c5::t_e1c24f8f6f8e26 1-158
+tests/radar-routes.test.ts
+  s_a526f6948b78c5::t_0d6b05ffec3a3d 81
+  s_a526f6948b78c5::t_6c1938a66c135f 115
+  s_a526f6948b78c5::t_7f32624f9afc2c 1-80,82-114,116-151
+ESTADO-AGENTE.md
+  s_a526f6948b78c5::t_e1965778d55765 1,3,7,9,11-14,16,18,20
+docs/radar-tendencias.md
+  s_a526f6948b78c5::t_32695f22fb6266 1-41
+docs/radar-validacion-20260912.json
+  s_a526f6948b78c5::t_37917ab16e9c31 1-62
+src/lib/radar/http.ts
+  s_a526f6948b78c5::t_e3b3c3fa9c34ac 1-30
+src/pages/api/admin/radar/candidate.ts
+  s_a526f6948b78c5::t_4c946cf6b1d0a1 1-26
+src/pages/api/admin/radar/fetch.ts
+  s_a526f6948b78c5::t_3364f9de1d683a 1-28
+src/pages/api/admin/radar/generate.ts
+  s_a526f6948b78c5::t_b175c7cf4a4701 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "42dfc1d789a2bb70ed60fc249462ab20611618ae",
+  "prompts": {},
+  "sessions": {
+    "s_a526f6948b78c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a09546-db34-7de1-912a-b553759250ba",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}

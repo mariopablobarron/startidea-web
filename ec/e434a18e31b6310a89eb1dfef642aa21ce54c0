@@ -1,0 +1,21 @@
+src/lib/radar/generator.ts
+  s_a526f6948b78c5::t_a27d65115e0c75 99
+ESTADO-AGENTE.md
+  s_a526f6948b78c5::t_a27d65115e0c75 13-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ece434a18e31b6310a89eb1dfef642aa21ce54c0",
+  "prompts": {},
+  "sessions": {
+    "s_a526f6948b78c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a09546-db34-7de1-912a-b553759250ba",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
