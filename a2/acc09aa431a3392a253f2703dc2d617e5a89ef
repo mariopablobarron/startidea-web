@@ -1,0 +1,23 @@
+ESTADO-AGENTE.md
+  s_847d67c3f7dea8::t_913744d1f04a2e 3,7,9,11-15,17,19,21-29
+docs/radar-produccion-20260912.json
+  s_847d67c3f7dea8::t_e60ac9a1613ee1 1-156
+docs/radar-tendencias.md
+  s_847d67c3f7dea8::t_cbc154ce368e42 41-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a2acc09aa431a3392a253f2703dc2d617e5a89ef",
+  "prompts": {},
+  "sessions": {
+    "s_847d67c3f7dea8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a09564-0c2c-73a1-b82f-2e929b6bb99d",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
