@@ -1,30 +1,27 @@
 # Estado del trabajo — startidea-web
 
-Foto de relevo · 9 de septiembre de 2026, 20:10 CEST. Comprobación de tipos blindada e integrada.
+Foto de relevo · 12 de septiembre de 2026. Revisión general retomada por Mario.
 
 ## Encargo actual
 
-Se revisaron dos `error TS7006` reportados en `tests/google-analytics-consent.test.ts` (líneas 113 y 143). **Ya estaban corregidos**: los introdujo PR103 y los cerró PR108 el 8 de septiembre, al anotar `commands(): unknown[][]`, con lo que ambos callbacks infieren `unknown[]` sin recurrir a `any`. No había nada que arreglar en el test.
+Cerrar lo verificable de la medición real GA4, rendimiento móvil, coherencia comercial de productos y evaluación SEO/GEO. Las entregas editoriales PR117/118 y la comprobación de tipos PR119/120 siguen cerradas.
 
-El problema real era otro: la comprobación de tipos no era reproducible. `typescript` solo llegaba como dependencia transitiva de Astro y, sin `node_modules` instalado, `npx tsc` descarga el paquete abandonado `tsc@2.0.4` en lugar del compilador y devuelve una salida sin valor. Ese es el fallo que enmascaraba el estado real del repositorio.
+## Código, integración y producción
 
-## Código, validación y publicación
+- Base remota actualizada: `fef554a5254313a118cf07322c96db18692e4bbc`. Trabajo aislado en `codex/seo-general-20260912`.
+- Manifiesto: Three se carga al aproximarse a la sección y la animación se detiene fuera de vista. Se mantienen diseño, partículas, resize y movimiento reducido.
+- Productos: tres altas se describen como páginas de alta; se retiran las promesas automáticas de disponibilidad/activación deducidas de tener enlace. Precios, estados, fechas, enlaces y datos estructurados conservados.
+- Validación: tipos, 261 pruebas y build completo (282,35 s) correctos. Once páginas de productos pasan 121 comprobaciones. Doce pruebas funcionales de animación y cuatro estados del artefacto compilado correctos.
+- Integración y publicación de esta tanda: pendientes al preparar este cambio. La última producción comprobada sigue en `fef554a`, saludable; no atribuir todavía al público las correcciones locales.
 
-- Base remota: `84c5d7c19d27a132e922c57bd9e5b25a2b1430b1` (PR119, squash sobre `10d012d`). Rama de sesión borrada tras integrar.
-- PR119 declara `typescript@^5.9.3` como devDependency directa —misma versión que el lock ya resolvía, sin paquetes nuevos— y añade el script `npm run typecheck` (`astro sync && tsc --noEmit`). Una nota en el gotcha 3 del `CLAUDE.md` desaconseja `npx tsc` a pelo.
-- Validación: `npm run typecheck` sale en 0 sobre todo el repositorio, y sale distinto de 0 ante un error de tipos introducido a propósito en un fichero sonda, de modo que el verde no es vacío. `npm test` en 261/261 sobre 20 ficheros. `npm ci --legacy-peer-deps` con el lock nuevo termina en 0, que es el paso del `Dockerfile` que podía romper el build.
-- Producción: sin cambios de código de aplicación. El runtime instala con `npm ci --omit=dev`, así que la imagen no incorpora `typescript`. HTTPS público 200 en portada, Comunicación, Notas, Subvenciones y Laboratorio a las 20:10 CEST. Solo GET.
+## Medición y límites
 
-## Coordinación, límites y pendientes
+GA4 recibe eventos posteriores: 9–11 de septiembre, host exacto Startidea, 45 vistas, 32 sesiones, 18 usuarios; ninguna solicitud aceptada acreditada. Las nueve dimensiones personalizadas se han registrado y verificado mediante API a las 09:40 UTC del día 12. Su disponibilidad con valores depende de procesamiento y eventos posteriores. Una sesión del día 9 se atribuye a chatgpt.com; ya existían visitas desde ese origen en agosto.
 
-El checkout `/Users/STARTIDEA/startidea-web` sigue sin `node_modules`, por lo que `npm run typecheck` allí falla por dependencias ausentes; es el comportamiento correcto, frente al falso verde anterior de `tsc@2.0.4`. La regla de no instalar dependencias en el checkout observador se ha respetado.
-
-`gh pr merge --delete-branch` falla siempre desde un worktree, porque `gh` intenta un checkout local de `main` y el checkout observador la tiene tomada. El merge remoto sí se completa antes de ese error: procede comprobar con `gh pr view <n> --json state,mergeCommit` y borrar la rama con `git push origin --delete <rama>`.
-
-Queda pendiente de tandas anteriores, y fuera de esta: reflejar `TAVILY_API_KEY=` como marcador en `.env.example`, que esta sesión no puede editar por el veto sobre `.env*`.
+Google confirma cinco páginas indexadas, pero los datos finales solo llegan al 9 de septiembre. Notas y BOJA aún informan rastreo anterior a la tanda editorial. No hay base para atribuir ganancias o pérdidas SEO/GEO. El rendimiento medido es de laboratorio, sin INP ni datos de campo. El [informe](docs/seo-general-medicion-2026-09.md) recoge evidencia y protocolo.
 
 ## Acción de Mario y siguiente acción
 
-Acción de Mario: ninguna. La tanda está terminada e integrada, y no queda código asignado ni ejecutándose desde esta sesión.
+Acción de Mario pendiente: precisar qué se puede entregar hoy en Piloto de redes, Kit de marca y Web para asociaciones. La pregunta ya está enviada; no reabrir los precios aprobados. La aclaración genérica y la optimización pueden cerrarse sin inventar esa respuesta.
 
-Única siguiente acción: usar `npm run typecheck` como comprobación de tipos del repositorio, en lugar de invocar `tsc` por `npx`.
+Única siguiente acción de ejecución: integrar esta tanda validada y verificar imagen, salud y comportamiento públicos; después actualizar este relevo con esa evidencia. Fuera de alcance siguen TAVILY_API_KEY en .env.example y las demás recomendaciones históricas no retomadas.

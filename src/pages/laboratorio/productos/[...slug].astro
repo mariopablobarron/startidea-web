@@ -194,14 +194,12 @@ if (d.faqs?.length) jsonLd.push(faqPageSchema(d.faqs));
           <span class="label !text-paper/60">— {d.alta_url ? 'Empezar' : 'Beta'}</span>
           <h2 class="mt-4 font-display text-display-md leading-tight text-paper md:text-display-lg">
             {d.alta_url
-              ? <Fragment>Ya se puede <em class="italic text-magenta">usar</em>.</Fragment>
+              ? <Fragment>Consulta el <em class="italic text-magenta">alta del producto</em>.</Fragment>
               : <Fragment>¿Tu organización <em class="italic text-magenta">lo probaría</em>?</Fragment>}
           </h2>
           <p class="mt-6 max-w-measure text-paper/80">
             {d.alta_url
-              ? (d.alta_cobra
-                  ? 'El alta se hace en línea, sin llamada previa. Se responden unas preguntas y el producto queda listo.'
-                  : 'El alta ya está abierta y se puede dejar el producto listo. La suscripción se activa después, cuando Startidea confirme el precio contigo.')
+              ? 'Esta ficha recoge el plan y el estado de desarrollo del producto. En la página de alta se detallan los pasos y las condiciones de preparación, activación y pago. Revísalos antes de continuar.'
               : 'Las betas son de pocas organizaciones, a mitad de precio y a cambio de opinión honesta. Si encaja, Startidea avisa cuando abra.'}
           </p>
           <div class="mt-12 flex flex-wrap gap-4">

@@ -53,11 +53,12 @@ Para desglosar estos parámetros en los informes estándar de GA4, revisar las
 definiciones personalizadas existentes y registrar solo las que falten, con
 ámbito de evento. La publicación del código no registra esas definiciones ni
 acredita recepción en Analytics. La consulta de configuración del 8 de septiembre
-de 2026 confirmó que todavía no hay definiciones personalizadas; los parámetros
-de esta tabla siguen pendientes de registro. La API de tiempo real es accesible,
-pero una respuesta sin filas no prueba recepción ni ausencia de eventos. Tras
-desplegar, comprobar una navegación real en DebugView y contrastarla con el
-evento esperado.
+de 2026 confirmó que entonces no había definiciones personalizadas. La revisión
+del 12 de septiembre registra las nueve dimensiones pendientes y comprueba
+recepción de eventos posteriores de navegación, cursos y servicios; el
+[informe actualizado](seo-general-medicion-2026-09.md) distingue configuración,
+recepción y solicitudes aceptadas aún sin evidencia. Una respuesta sin filas
+en tiempo real no prueba recepción ni ausencia de eventos.
 
 ## Rastreo
 

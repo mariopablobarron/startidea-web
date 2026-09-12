@@ -6,6 +6,8 @@
 
 El criterio es el [informe corregido de `8f48dec`](auditoria-seo-geo-corregida-2026-09.md). El archivo homónimo que volvió a main con las entregas de Claude contiene el borrador anterior; queda identificado como histórico. Se recuperan el informe corregido y su evidencia pública original, sin convertir aquella fotografía en una comprobación actual.
 
+**Actualización posterior, 12 de septiembre:** Mario ha retomado expresamente la medición real, el rendimiento móvil, la coherencia comercial y la evaluación SEO/GEO. El [informe de esta revisión](seo-general-medicion-2026-09.md) contiene la nueva evidencia y sustituye los estados de esos cuatro frentes. La matriz siguiente conserva su carácter histórico; la pausa del día 8 no cancela este encargo posterior.
+
 ## Decisión de cierre
 
 **Pausar las microtandas automáticas de código.** Los defectos funcionales acometidos tienen validación e historial de publicación. Quedan resultados por medir, recomendaciones sin diagnóstico suficiente y textos comerciales que requieren una revisión acotada. La auditoría completa no está «resuelta».
