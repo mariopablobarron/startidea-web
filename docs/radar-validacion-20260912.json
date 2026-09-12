@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-09-12T11:24:07.124Z",
+  "scope": "local isolated database, public feeds only",
+  "first": {
+    "ok": true,
+    "partial": true,
+    "added": 10,
+    "total": 10,
+    "sources": [
+      {
+        "source": "google-trends",
+        "ok": true,
+        "count": 10
+      },
+      {
+        "source": "reddit",
+        "ok": false,
+        "count": 0,
+        "error": "HTTP_403"
+      }
+    ]
+  },
+  "second": {
+    "ok": true,
+    "partial": true,
+    "added": 0,
+    "total": 10,
+    "sources": [
+      {
+        "source": "google-trends",
+        "ok": true,
+        "count": 10
+      },
+      {
+        "source": "reddit",
+        "ok": false,
+        "count": 0,
+        "error": "HTTP_403"
+      }
+    ]
+  },
+  "rows": 10,
+  "auth": 302,
+  "page": 200,
+  "csrf": 403,
+  "formRedirect": 303,
+  "invalidBody": 400,
+  "aiNotConfigured": 503,
+  "validation": {
+    "types": "pass",
+    "tests": {
+      "passed": 281,
+      "suites": 24,
+      "radar": 20
+    },
+    "build": "pass",
+    "renderedLongArticle": "pass with simulated fixture",
+    "liveAI": "not run",
+    "production": "not deployed by this task",
+    "scheduledCollection": "not enabled"
+  }
+}
