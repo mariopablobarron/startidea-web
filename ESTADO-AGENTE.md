@@ -1,21 +1,29 @@
 # Estado del trabajo: radar de tendencias
 
-Foto de relevo: 12 de septiembre de 2026. Publicación del radar autorizada y en preparación.
+Foto de relevo: 12 de septiembre de 2026. Radar publicado; generación real pendiente de completar por crédito del proveedor.
 
 ## Encargo actual
 
-Radar interno de Startidea para detectar temas, revisar encaje de marca y generar borradores de memes, articulos y contenido social. Uso y limites: [guia del radar](docs/radar-tendencias.md). Las tandas SEO/comerciales anteriores conservan su evidencia en `docs/seo-general-medicion-2026-09.md`; este encargo no modifica productos, precios ni HUB.
+Publicar el radar interno y comprobar una generación real. Mario ha autorizado ambas acciones; no volver a pedir permiso de publicación. La publicación está completada, la generación real todavía no. Las tandas SEO/comerciales anteriores conservan su evidencia en `docs/seo-general-medicion-2026-09.md`.
 
-## Codigo y validacion
+## Código, integración y validación
 
-- Base: `origin/main` actualizada, `5664fed`. Rama nueva `codex/radar-20260912-01a09546`, worktree `/Users/STARTIDEA/startidea-web-wt/codex-radar-20260912-01a09546`. El prototipo del checkout observador permanece intacto; se trasladaron solo los archivos del radar y se adapto la tarjeta del panel a la base remota.
-- Fuentes con errores visibles, identidades estables, fechas, comparacion de senales, enlaces de contraste y orden por potencial/encaje/recencia. Generacion requiere validacion y claim atomico; recupera errores, conserva articulos completos y usa el selector de modelos existente.
-- Implementacion guardada en el commit local `c1b48dd`; cierre posterior de documentacion y espacios sin efecto funcional.
-- Validacion local: TypeScript correcto; 281/281 pruebas en 24 suites, incluidas 20 del radar; build completo correcto en 258,96 segundos. El build mantiene advertencias preexistentes sobre cabeceras en paginas prerenderizadas de subvenciones.
-- Smoke real aislado: 10 tendencias Google, segunda lectura sin duplicados; Reddit devuelve 403 y se informa lectura parcial. Panel200/noindex/no-store, acceso anonimo302, origen externo403, formulario303, JSON invalido400 y ausencia de conexion IA503. Articulo largo simulado renderizado con parrafos, idea, riesgos y boton copiar; fixture retirado. Evidencia: `docs/radar-validacion-20260912.json`.
+- Base remota actualizada `5664fed`. Worktree propio `/Users/STARTIDEA/startidea-web-wt/codex-radar-publicacion-20260912`; rama de implementación `codex/radar-publicacion-20260912`, cierre `codex/radar-cierre-20260912`. Checkout observador y prototipo original intactos.
+- [PR124](https://github.com/mariopablobarron/startidea-web/pull/124) integrada a las 11:45:30 UTC: `ab25218aac0d3aad35627d8d623b5aaabbc60bc2`. Árbol integrado idéntico al revisado; no hubo cambios funcionales respecto a la rama original del radar.
+- TypeScript correcto, 281/281 pruebas en 24 suites y build Astro completo en 272,55 s. Revisión independiente sin bloqueos estáticos. El primer build se detuvo por ENOSPC del Mac; se retiraron únicamente archivos generados por esta sesión y se reconstruyó correctamente. Persisten avisos previos de páginas prerenderizadas de subvenciones.
+- Despliegue real por cron del VPS, detectado a las 11:46:03 UTC. Imagen `cmoh7d8hi001bp2a4qwjobhzy:ab25218`; fuente del build con SHA completo coincidente y árbol limpio. Arranque inicial 11:50:03 UTC y estado healthy comprobado. GitHub Actions queda como respaldo manual.
+- Panel HTTPS200 con cookie, no-store/noindex y entrada desde Admin. Sin sesión 302, escritura anónima 401, origen externo 403. Salud JSON 200 con configuración y BD correctas. Captura real: 10 tendencias de Google; Reddit 403, lectura parcial informada. Backup SQLite previo íntegro en el volumen persistente.
 
-## Integracion, limites y accion siguiente
+## Generación real y bloqueo
 
-Mario ha autorizado publicar y comprobar una generación real. Se ha creado el worktree nuevo `/Users/STARTIDEA/startidea-web-wt/codex-radar-publicacion-20260912`, rama `codex/radar-publicacion-20260912`, desde `origin/main` actualizada (`5664fed`), incorporando el radar sin cambios funcionales. La revisión independiente no encuentra bloqueos. Producción tiene la conexión de IA y el volumen configurados; existe backup íntegro previo de la base de datos. Integración, despliegue y generación real pendientes de cerrar en esta tanda; hasta aquí, las pruebas de IA usan respuestas simuladas. Los memes son conceptos y texto, no imagenes generadas. No se acredita notoriedad ni rendimiento editorial. El servidor de pruebas esta cerrado.
+Se validó una tendencia real y se llamó al endpoint público. El intento de artículo con 3000 tokens devolvió 502 y recuperó Validada. El diagnóstico con el generador desplegado acreditó OpenRouter 402 por crédito insuficiente. Se ensayó temporalmente el límite documentado de 2000 tokens; artículo y contenido social devolvieron 502, sin borrador válido. Esas respuestas no permiten conocer el fallo intermedio exacto porque el endpoint no registra el detalle. El diagnóstico posterior volvió a acreditar402, ahora incluso para 2000 tokens.
 
-Acción de Mario: ninguna; publicación y prueba real ya autorizadas. Estado de ejecución: comprobación local y publicación en curso. El despliegue vigente se ha verificado: cron del VPS cada dos minutos, con lock y build; GitHub Actions queda como respaldo manual. Única siguiente acción: integrar tras el build correcto, comprobar el SHA desplegado, ejecutar una generación real y cerrar el relevo con su evidencia. No activar cron del radar ni publicar el borrador fuera del panel.
+Se ha restaurado la configuración original de 3000 tokens; mismo modelo, credenciales y código. Último arranque 11:57:48 UTC; a las 11:59:14 UTC, contenedor healthy, salud y panel HTTPS 200. Las tablas previas del Copiloto conservan su esquema. Nueve tendencias Detectadas y una Validada; ningún borrador guardado. No se ha recargado saldo ni cambiado de proveedor. La tendencia queda Validada, sin texto simulado ni borrador acreditado. No se ha activado cron del radar ni publicado contenido fuera del panel. El coste exacto de los intentos no queda medido por esta aplicación.
+
+La [guía del radar](docs/radar-tendencias.md) recoge el uso y los límites. Resumen verificable: `docs/radar-produccion-20260912.json`. Evidencia local completa: `/Users/STARTIDEA/startidea-web-wt/radar-publicacion-evidencias-20260912/`. El cierre documental no cambia la aplicación ni requiere otro build.
+
+## Acción de Mario y siguiente acción
+
+Acción de Mario: recargar crédito en OpenRouter y avisar. Se ha solicitado durante la tarea; no hay aprobación de compra o recarga automática.
+
+Estado de ejecución: publicación terminada; comprobación de una generación real sin completar. No queda un proceso de generación activo. Única siguiente acción: con saldo suficiente, repetir por HTTPS una generación en el panel, comprobar estado Lista, JSON persistido y texto completo servido. Si devuelve 502, diagnosticar la respuesta del proveedor; el saldo no acredita por sí solo calidad ni finalización. Para continuar en una tarea nueva: «Ya hay saldo en OpenRouter; completa la generación real del radar y verifica el borrador en producción».
