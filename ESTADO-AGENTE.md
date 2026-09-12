@@ -10,7 +10,8 @@ Radar interno de Startidea para detectar temas, revisar encaje de marca y genera
 
 - Base: `origin/main` actualizada, `5664fed`. Rama nueva `codex/radar-20260912-01a09546`, worktree `/Users/STARTIDEA/startidea-web-wt/codex-radar-20260912-01a09546`. El prototipo del checkout observador permanece intacto; se trasladaron solo los archivos del radar y se adapto la tarjeta del panel a la base remota.
 - Fuentes con errores visibles, identidades estables, fechas, comparacion de senales, enlaces de contraste y orden por potencial/encaje/recencia. Generacion requiere validacion y claim atomico; recupera errores, conserva articulos completos y usa el selector de modelos existente.
-- Validacion local: TypeScript correcto; 281/281 pruebas en 24 suites, incluidas 20 del radar; build completo correcto. El build mantiene advertencias preexistentes sobre cabeceras en paginas prerenderizadas de subvenciones.
+- Implementacion guardada en el commit local `c1b48dd`; cierre posterior de documentacion y espacios sin efecto funcional.
+- Validacion local: TypeScript correcto; 281/281 pruebas en 24 suites, incluidas 20 del radar; build completo correcto en 258,96 segundos. El build mantiene advertencias preexistentes sobre cabeceras en paginas prerenderizadas de subvenciones.
 - Smoke real aislado: 10 tendencias Google, segunda lectura sin duplicados; Reddit devuelve 403 y se informa lectura parcial. Panel200/noindex/no-store, acceso anonimo302, origen externo403, formulario303, JSON invalido400 y ausencia de conexion IA503. Articulo largo simulado renderizado con parrafos, idea, riesgos y boton copiar; fixture retirado. Evidencia: `docs/radar-validacion-20260912.json`.
 
 ## Integracion, limites y accion siguiente

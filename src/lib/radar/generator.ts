@@ -96,7 +96,7 @@ Campos obligatorios:
 }
 
 Necesito que adaptes el copy al formato ${focus}. Mantén el texto en 2-5 bloques útiles y accionables.
-`; 
+`;
 }
 
 function userPrompt(candidate: RadarCandidate, focus: RadarFocus): string {
