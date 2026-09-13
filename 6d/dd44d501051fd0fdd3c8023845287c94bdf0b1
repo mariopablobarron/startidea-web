@@ -1,0 +1,14 @@
+src/pages/admin/login.astro
+  h_838f0aaf157975 147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "6ddd44d501051fd0fdd3c8023845287c94bdf0b1",
+  "prompts": {},
+  "humans": {
+    "h_838f0aaf157975": {
+      "author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
