@@ -1,0 +1,19 @@
+src/lib/subsidies-api.ts
+  s_67c4ca372c2134::t_28888522688ce5 5-9,12,80-99,103,107-108,111-118,120-121,123-126,136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "7d3ab0ef32bcec8b331fa7ae64af5c8276b2c5c8",
+  "prompts": {},
+  "sessions": {
+    "s_67c4ca372c2134": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a09741-287b-7d12-b76c-d63aa29908b9",
+        "model": "unknown"
+      },
+      "human_author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
