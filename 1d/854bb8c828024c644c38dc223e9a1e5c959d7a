@@ -1,0 +1,14 @@
+src/pages/comunicacion-ong-granada.astro
+  h_838f0aaf157975 1-293
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "1d854bb8c828024c644c38dc223e9a1e5c959d7a",
+  "prompts": {},
+  "humans": {
+    "h_838f0aaf157975": {
+      "author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
