@@ -1,0 +1,2014 @@
+{
+  "generatedAt": "2026-09-13T06:57:47.054Z",
+  "andalucia": {
+    "ok": true,
+    "page": 0,
+    "pageSize": 25,
+    "total": 75,
+    "totalPages": 3,
+    "items": [
+      {
+        "id": 12037,
+        "slug": "resolucion-de-7-de-septiembre-de-2026-por-la-que-se-convocan-928332",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/928332",
+        "title": "Resolución de 7 de septiembre de 2026 por la que se convocan subven. a EELL para adquisición equipamiento y actuaciones en edificios,edificaciones e instalaciones de titularidad pública dentro del Plan de Coop.Municipal-MEINFRA",
+        "organization": "CONSEJERÍA DE JUSTICIA, ADMINISTRACIÓN LOCAL Y FUNCIÓN PÚBLICA",
+        "deadline": "2026-09-16",
+        "amount_eur": 4517819.58,
+        "published_at": "2026-09-08",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "infraestructuras"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10797,
+        "slug": "orden-de-4-de-agosto-de-2026-de-la-consejeria-de-servicios-s-923555",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/923555",
+        "title": "Orden de 4 de agosto de 2026, de la Consejería de Servicios Sociales, Familias e Igualdad, conc. no compt 2026. Linea 3 Subvenciones a entidades locales para proyectos en materia de Conciliación y Corresponsabilidad, en marco Plan Corresponsables",
+        "organization": "CONSEJERÍA DE INCLUSIÓN SOCIAL, JUVENTUD, FAMILIAS E IGUALDAD",
+        "deadline": "2026-10-10",
+        "amount_eur": 12621000,
+        "published_at": "2026-08-05",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10798,
+        "slug": "orden-de-4-de-agosto-de-2026-de-la-consejeria-de-servicios-s-923554",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/923554",
+        "title": "Orden de 4 de agosto de 2026, de la Consejería de Servicios Sociales, Familias e Igualdad, conc. no compt 2026. Linea 1 Subvenciones a entidades privadas sin ánimo de lucro para proyectos en materia de conciliación y corresponsabilidad en marco Plan Cor.",
+        "organization": "CONSEJERÍA DE INCLUSIÓN SOCIAL, JUVENTUD, FAMILIAS E IGUALDAD",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-08-05",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10799,
+        "slug": "orden-de-4-de-agosto-de-2026-de-la-consejeria-de-serivicios--923553",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/923553",
+        "title": "Orden de 4 de Agosto de 2026, de la Consejería de Serivicios Sociales, Familias e Igualdad, conc. no compt 2026. Linea 2 Subvenciones a Universidades Públicas Andaluzas para proyectos en materia de Conciliación y Corresponsabilidad en marco Plan Corresp",
+        "organization": "CONSEJERÍA DE INCLUSIÓN SOCIAL, JUVENTUD, FAMILIAS E IGUALDAD",
+        "deadline": "2026-10-10",
+        "amount_eur": 500000,
+        "published_at": "2026-08-05",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10702,
+        "slug": "resolucion-de-31-de-julio-de-2026-de-la-d-g-de-comunicacion--923162",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/923162",
+        "title": "Resolución de 31 de Julio de 2026,de la D.G. de Comunicación Social de la Consej.de Presidencia, Sanidad y Emergencias, por la que se convoca para 2026 la XIII edición de los Premios Andalucía de Comunicación Audiovisual Local",
+        "organization": "CONSEJERÍA DE LA PRESIDENCIA, INTERIOR, DIÁLOGO SOCIAL Y SIMPLIFICACIÓN ADMINISTRATIVA",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-08-03",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10589,
+        "slug": "resolucion-de-26-de-agosto-de-2026-convocatoria-de-subv-diri-923023",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/923023",
+        "title": "Resolución de 26 de agosto de 2026,convocatoria de subv,dirigidas al fomento del deporte para personas con discapacidad para la adquisición de equipam. y material deportivo inventariables",
+        "organization": "CONSEJERÍA DE CULTURA Y DEPORTE",
+        "deadline": "2026-09-15",
+        "amount_eur": 300000,
+        "published_at": "2026-07-31",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "otras-actuaciones-de-caracter-economico"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10541,
+        "slug": "resolucion-de-29-de-julio-de-2026-dgiece-para-la-insercion-l-922528",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922528",
+        "title": "Resolución de 29 de julio de 2026, DGIECE, para la inserción laboral y el fomento de la contratación en el ámbito de la Comunidad Autónoma de Andalucía. Programa Emplea-T (Línea 5). MINIMI GENERAL",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": "2026-11-30",
+        "amount_eur": 3500000,
+        "published_at": "2026-07-30",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10540,
+        "slug": "resolucion-de-29-de-julio-de-2026-dgiece-para-la-insercion-l-922529",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922529",
+        "title": "Resolución de 29 de julio de 2026, DGIECE, para la inserción laboral y el fomento de la contratación en el ámbito de la Comunidad Autónoma de Andalucía. Programa Emplea-T (Línea 5). MINIMIS PESCA Y ACUICULTURA.",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-30",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10539,
+        "slug": "resolucion-de-29-de-julio-de-2026-dgiece-para-la-insercion-l-922530",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922530",
+        "title": "Resolución de 29 de julio de 2026, DGIECE, para la inserción laboral y el fomento de la contratación en el ámbito de la Comunidad Autónoma de Andalucía. Programa Emplea-T (Línea 5). MINIMIS SECTOR AGRÍCOLA.",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": "2026-11-30",
+        "amount_eur": 1000000,
+        "published_at": "2026-07-30",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10453,
+        "slug": "orden-de-28-de-julio-de-2026-ayudas-contrat-seguros-agrarios-922234",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922234",
+        "title": "ORDEN de 28 de julio de 2026, Ayudas contrat Seguros Agrarios Combin. 2026",
+        "organization": "CONSEJERÍA DE AGRICULTURA, PESCA, AGUA Y DESARROLLO RURAL",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-29",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10356,
+        "slug": "orden-de-28-de-julio-de-2026-ayudas-para-la-consolidacion-de-922096",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922096",
+        "title": "Orden de 28  de julio de 2026, Ayudas para la consolidación de las OOPP y acuícolas, y para la preparación y ejecución de los planes de producción y comercialización 2027  al amparo de la Orden de 9 de octubre de 2024, Linea 2 Planes de Prod y Comerciali.",
+        "organization": "CONSEJERÍA DE AGRICULTURA, PESCA, AGUA Y DESARROLLO RURAL",
+        "deadline": "2026-09-30",
+        "amount_eur": 4000000,
+        "published_at": "2026-07-28",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "agricultura-pesca"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 10357,
+        "slug": "orden-de-28-de-julio-de-2026-ayudas-para-la-consolidacion-de-922095",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/922095",
+        "title": "Orden de 28  de julio de 2026, Ayudas para la consolidación de las OOPP y acuícolas, y para la preparación y ejecución de los planes de producción y comercialización 2027  al amparo de la Orden de 9 de octubre de 2024, Linea 1 consolidación de OOPP",
+        "organization": "CONSEJERÍA DE AGRICULTURA, PESCA, AGUA Y DESARROLLO RURAL",
+        "deadline": "2026-09-30",
+        "amount_eur": 115000,
+        "published_at": "2026-07-28",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme"
+        ],
+        "finalidades": [
+          "agricultura-pesca"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 9859,
+        "slug": "resolucion-de-la-direccion-general-de-formacion-profesional--920309",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/920309",
+        "title": "Resolución de la Dirección General de Formación Profesional para el Empleo, por la que se convocan para el año 2026 las subvenciones públicas previstas en la Orden de 13 de septiembre de 2021, por la que se regula el programa de empleo y formación en la C",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": 108106379.11,
+        "published_at": "2026-07-20",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "gran-empresa",
+          "persona-fisica-no-economica",
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 9725,
+        "slug": "resolucion-de-15-de-julio-de-2026-destinadas-a-la-financiaci-919648",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/919648",
+        "title": "Resolucion de 15 de julio de 2026, destinadas a la financiación de la oferta formativa de Formación Profesional y Formación en el Trabajo en el sector Naval, dirigida a personas trabajadoras desempleadas en la provincia de Cádiz. Linea 2 FP Grado C presen",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": 303138.75,
+        "published_at": "2026-07-16",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "gran-empresa",
+          "persona-fisica-no-economica",
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 9726,
+        "slug": "resolucion-de-15-de-julio-2026-destinadas-a-la-financiacion--919639",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/919639",
+        "title": "Resolucion de 15 de julio 2026 destinadas a la financiación de la oferta formativa de Formación Profesional y Formación en el Trabajo en el sector Naval, dirigida a personas trabajadoras desempleadas en la provincia de Cádiz. Linea 1 modalidad presencial",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-16",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 9724,
+        "slug": "resolucion-de-15-de-julio-de-2026-destinadas-a-la-financiaci-919652",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/919652",
+        "title": "Resolución de 15 de julio de 2026 destinadas a la financiación de la oferta formativa de Formación Profesional y Formación en el Trabajo en el sector Naval, dirigida a personas trabajadoras desempleadas en la provincia de Cádiz. Linea 3 mod. teleformación",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-16",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 9173,
+        "slug": "resolucion-de-7-de-julio-de-2026-de-la-d-g-de-participacion--917862",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/917862",
+        "title": "Resolución de 7 de julio de 2026 de la D.G. de Participación e Inclusión Educativa, por la que se convocan los premios anuales EDUCACIUDAD, que se conceden a los municipios distinguidos por su compromiso con la educación 2026",
+        "organization": "CONSEJERÍA DE DESARROLLO EDUCATIVO Y FORMACIÓN PROFESIONAL",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-08",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8688,
+        "slug": "resolucion-de-3-de-julio-de-2026-convocatoria-formacion-para-917072",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/917072",
+        "title": "Resolucion de 3 de julio de 2026, Convocatoria Formación para el empleo relacionada con  Base Logistica Ejercito de Tierra Córdoba   Línea 3 Formación profesional grado C desempeados modalidad presencial",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": 2559633.43,
+        "published_at": "2026-07-03",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "gran-empresa",
+          "persona-fisica-no-economica",
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8760,
+        "slug": "resolucion-de-1-de-julio-2026-subvenciones-en-regimen-de-con-916639",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/916639",
+        "title": "Resolución de 1 de julio 2026. Subvenciones en régimen de concurrencia competitiva,a la producción de largometrajes, documetales y otras obras audiovisuales Linea 2",
+        "organization": "AGENCIA ANDALUZA DE INSTITUCIONES CULTURALES",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-07-01",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8693,
+        "slug": "resolucion-de-3-de-julio-de-2026-convocatoria-formacion-para-917061",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/917061",
+        "title": "Resolucion de 3 de julio de 2026, Convocatoria Formación para el empleo relacionada con  Base Logistica Ejercito de Tierra Córdoba   Línea 1 Formacion en el trabajo para personas trabajadoras desempleadas, en modalidad presencial",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": 1951620.99,
+        "published_at": "2026-07-03",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "gran-empresa",
+          "persona-fisica-no-economica",
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8690,
+        "slug": "resolucion-de-3-de-julio-de-2026-convocatoria-formacion-para-917066",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/917066",
+        "title": "Resolucion de 3 de julio de 2026, Convocatoria Formación para el empleo relacionada con  Base Logistica Ejercito de Tierra Córdoba   Línea 2 Formacion en el trabajo para personas trabajadoras ocupados, en modalidad prsencial",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": 377010,
+        "published_at": "2026-07-03",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "gran-empresa",
+          "persona-fisica-no-economica",
+          "persona-juridica-no-economica",
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8096,
+        "slug": "resolucion-de-18-de-junio-de-2026-por-la-que-se-convocan-sub-914183",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/914183",
+        "title": "Resolución de 18 de Junio de 2026, por la que se convocan subvenciones de la línea 4  regulada en la Orden de 5 de octubre de 2020,conciliación de la vida personal,familiar y laboral en Andalucía. Mínimi 707/2014",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": "2026-09-15",
+        "amount_eur": 83333.34,
+        "published_at": "2026-06-19",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8088,
+        "slug": "resolucion-de-18-de-junio-de-2026-por-la-que-se-convocan-sub-914198",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/914198",
+        "title": "Resolución de 18 de Junio de 2026, por la que se convocan subvenciones de la línea 5 regulada en la Orden de 5 de octubre de 2020,conciliación de la vida personal,familiar y laboral en Andalucía. Mínimi 1408/2013",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": "2026-09-15",
+        "amount_eur": 83333.33,
+        "published_at": "2026-06-19",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme"
+        ],
+        "finalidades": [
+          "fomento-empleo"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8097,
+        "slug": "resolucion-de-18-de-junio-de-2026-por-la-que-se-convocan-sub-914182",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/914182",
+        "title": "Resolución de 18 de Junio de 2026, por la que se convocan subvenciones de la línea 4 regulada en la Orden de 5 de octubre de 2020,conciliación de la vida personal,familiar y laboral en Andalucía. Mínimi 1408/2013",
+        "organization": "CONSEJERÍA DE EMPLEO, EMPRESA Y TRABAJO AUTÓNOMO",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-06-19",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 8082,
+        "slug": "resolucion-de-17-de-junio-de-2026-por-la-que-se-convocan-sub-914209",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/914209",
+        "title": "Resolución de 17 de junio de 2026, por la que se convocan Subvenciones a centros docentes privados con planes de compensación educativa autorizados para facilitar la permanencia en el Sistema Educativo del alumnado mediante prestación del servicio comedor",
+        "organization": "CONSEJERÍA DE DESARROLLO EDUCATIVO Y FORMACIÓN PROFESIONAL",
+        "deadline": "2026-09-15",
+        "amount_eur": 2289295.82,
+        "published_at": "2026-06-19",
+        "geo_level": "AUTONOMICA",
+        "ccaa": "andalucia",
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "autonomico"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      }
+    ]
+  },
+  "granada": {
+    "ok": true,
+    "page": 0,
+    "pageSize": 25,
+    "total": 16,
+    "totalPages": 1,
+    "items": [
+      {
+        "id": 6259,
+        "slug": "convenio-entre-diputacion-provincial-de-granada-y-agencia-es-893786",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/893786",
+        "title": "CONVENIO ENTRE DIPUTACIÓN PROVINCIAL DE GRANADA Y AGENCIA ESTATAL CONSEJO SUPERIOR DE INVESTIGACIONES CIENTÍFICAS A TRAVÉS DE SU INSTITUTO GEOLÓGICO Y MINERO DE ESPAÑA (CSIC-IGME), PARA EL APOYO TÉCNICO EN MATERIA DE AGUAS SUBTERRÁNEAS Y RIESGOS NATURALES",
+        "organization": "DIPUTACIÓN PROVINCIAL DE GRANADA",
+        "deadline": null,
+        "amount_eur": 262342.01,
+        "published_at": "2026-03-18",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": "diputacion-prov-de-granada",
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "i-d-i"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "local"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 6254,
+        "slug": "resolucion-del-rector-de-la-universidad-de-granada-sobre-la--905315",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/905315",
+        "title": "RESOLUCIÓN DEL RECTOR DE LA UNIVERSIDAD DE GRANADA SOBRE LA CONCESIÓN DE SUBVENCIÓN NOMINATIVA EN EL PRESUPUESTO DE LA UNIVERSIDAD DE GRANADA DEL EJERCICIO 2026 A LA ASOCIACIÓN SÍNDROME DE DOWN GRANADA (6-5-26)",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": null,
+        "amount_eur": 62400,
+        "published_at": "2026-05-13",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5858,
+        "slug": "convocatoria-sostenibilidad-movimiento-vecinal-2026-909261",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/909261",
+        "title": "CONVOCATORIA SOSTENIBILIDAD MOVIMIENTO VECINAL 2026",
+        "organization": "AYUNTAMIENTO DE GRANADA",
+        "deadline": "2026-12-31",
+        "amount_eur": 64000,
+        "published_at": "2026-05-29",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": "granada",
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "local"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5862,
+        "slug": "convocatoria-fomento-movimiento-vecinal-2026-909243",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/909243",
+        "title": "CONVOCATORIA FOMENTO MOVIMIENTO VECINAL 2026",
+        "organization": "AYUNTAMIENTO DE GRANADA",
+        "deadline": "2026-12-31",
+        "amount_eur": 82000,
+        "published_at": "2026-05-29",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": "granada",
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "local"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5497,
+        "slug": "resolucion-del-vicerrector-de-estudiantes-19-5-26-convocando-908139",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/908139",
+        "title": "RESOLUCIÓN DEL VICERRECTOR DE ESTUDIANTES 19-5-26 CONVOCANDO AYUDAS PARA EL FOMENTO DE LA ADQUISICIÓN Y ACREDITACIÓN DE COMPETENCIAS LINGÜÍSTICAS EXIGIDAS PARA LA OBTENCIÓN DEL TÍTULO DE GRADO. Curso 25-26 (Ayuda competencias lingüísticas Junta Andalucía)",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-10-09",
+        "amount_eur": 55000,
+        "published_at": "2026-05-26",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Ayudas para acreditación de competencias lingüísticas en grados de la Universidad de Granada. Plazo: 1 de junio a 9 de octubre de 2026."
+      },
+      {
+        "id": 5174,
+        "slug": "convocatoria-de-subvenciones-a-proyectos-de-cooperacion-inte-907370",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/907370",
+        "title": "CONVOCATORIA DE SUBVENCIONES A PROYECTOS DE COOPERACIÓN INTERNACIONAL Y DE EDUCACIÓN PARA LA CIUDADANÍA GLOBAL PARA EL AÑO 2026",
+        "organization": "DIPUTACIÓN PROVINCIAL DE GRANADA",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-05-22",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 4356,
+        "slug": "resolucion-de-la-vicerrectora-de-igualdad-inclusion-y-compro-894863",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/894863",
+        "title": "RESOLUCIÓN de la vicerrectora de Igualdad, Inclusión y Compromiso Social (23-3-26) por la que se convocan ayudas extraordinarias a estudiantes internacionales de doctorado que sufran una situación sobrevenida de emergencia",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-10-20",
+        "amount_eur": 10000,
+        "published_at": "2026-03-24",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Ayudas extraordinarias para estudiantes internacionales de doctorado en situación de emergencia sobrevenida en la Universidad de Granada."
+      },
+      {
+        "id": 4448,
+        "slug": "convocatoria-de-subvenciones-destinadas-a-ayudas-a-la-natali-894661",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/894661",
+        "title": "CONVOCATORIA DE SUBVENCIONES DESTINADAS A AYUDAS A LA NATALIDAD EN MUNICIPIOS Y ENTIDADES LOCALES AUTÓNOMAS EN RIESGO DE DESPOBLACIÓN EN LA PROVINCIA DE GRANADA (CHEQUE BEBÉ)-2026.",
+        "organization": "DIPUTACIÓN PROVINCIAL DE GRANADA",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-03-23",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 2934,
+        "slug": "resolucion-del-vicerrector-de-estudiantes-y-vida-universitar-898221",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/898221",
+        "title": "RESOLUCIÓN DEL VICERRECTOR DE ESTUDIANTES Y VIDA UNIVERSITARIA POR LA QUE SE PUBLICAN LAS BBRR Y SE CONVOCAN LAS “BECAS SANTANDER | AYUDA ECONÓMICA 2026” PARA ESTUDIANTES MATRICULADOS EN TITULACIONES OFICIALES DE GRADO, EN EL CURSO 2026/2027",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-10-07",
+        "amount_eur": 200000,
+        "published_at": "2026-04-13",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Becas Santander de ayuda económica para estudiantes de grado de la Universidad de Granada en 2026/2027. Plazo hasta octubre de 2026."
+      },
+      {
+        "id": 2628,
+        "slug": "resolucion-de-10-de-abril-de-2026-del-rector-de-la-universid-898995",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/898995",
+        "title": "RESOLUCION de 10 de abril de 2026 del Rector de la Universidad de Granada por la que se convoca el XX Premio Andaluz de Investigación sobre Integración Europea de la Red de Información Europea de Andalucía.",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-09-25",
+        "amount_eur": 1500,
+        "published_at": "2026-04-15",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Premio de investigación sobre integración europea para personas físicas. Convocatoria de la Universidad de Granada con plazo hasta septiembre de 2026."
+      },
+      {
+        "id": 1552,
+        "slug": "resolucion-de-la-vicerrectora-de-posgrado-y-formacion-perman-901883",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/901883",
+        "title": "RESOLUCIÓN DE LA VICERRECTORA DE POSGRADO Y FORMACIÓN PERMANENTE POR LA QUE SE PUBLICAN LAS BBRR Y CONVOCAN AYUDAS DESTINADAS A DOCTORANDOS Y DOCTORANDAS DE LA ESCUELA DE DOCTORADO DE CIENCIAS, TECNOLOGÍAS E INGENIERÍAS PARA ASISTENCIA A CONGRESOS 25/26",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-09-30",
+        "amount_eur": 8000,
+        "published_at": "2026-04-27",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "i-d-i"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Ayudas para doctorandos de la Escuela de Doctorado de Ciencias, Tecnologías e Ingenierías de la Universidad de Granada para asistencia a congresos."
+      },
+      {
+        "id": 1504,
+        "slug": "resolucion-de-la-vicerrectora-de-posgrado-y-formacion-perman-902008",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/902008",
+        "title": "RESOLUCIÓN DE LA VICERRECTORA DE POSGRADO Y FORMACIÓN PERMANENTE DE BBRR Y AYUDAS DESTINADAS A DOCTORANDOS/AS DE LA ESCUELA DE DOCTORADO DE HUMANIDADES, CIENCIAS SOCIALES Y JURÍDICAS PARA ASISTENCIA A CONGRESOS NACIONALES E INTERNACIONALES CURSO 2025/2026",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-09-30",
+        "amount_eur": 12607.5,
+        "published_at": "2026-04-28",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "i-d-i"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Ayudas para doctorandos de Humanidades, Ciencias Sociales y Jurídicas de la Universidad de Granada para asistencia a congresos nacionales e internacionales"
+      },
+      {
+        "id": 1386,
+        "slug": "convocatoria-de-subvenciones-en-regimen-de-concurrencia-comp-902337",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/902337",
+        "title": "CONVOCATORIA DE SUBVENCIONES EN RÉGIMEN DE CONCURRENCIA COMPETITIVA PARA PROYECTOS CULTURALES DE ENTIDADES SIN ÁNIMO DE LUCRO DE LA PROVINCIA DE GRANADA 2026: DELEGACIÓN DE CULTURA Y EDUCACIÓN",
+        "organization": "DIPUTACIÓN PROVINCIAL DE GRANADA",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": "2026-04-29",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [],
+        "finalidades": [],
+        "instrument_types": [],
+        "funding_origins": [],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 1251,
+        "slug": "fim-2026-902738",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/902738",
+        "title": "FIM 2026",
+        "organization": "AYUNTAMIENTO DE GRANADA",
+        "deadline": "2026-12-31",
+        "amount_eur": 41049.33,
+        "published_at": "2026-04-30",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": "granada",
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "local"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 1224,
+        "slug": "aprobacion-de-la-convocatoria-de-los-premios-enheduanna-leer-902846",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/902846",
+        "title": "APROBACIÓN DE LA CONVOCATORIA DE LOS “PREMIOS ENHEDUANNA: LEER PARA CRECER EN IGUALDAD, SÉPTIMA EDICIÓN 2026. DIPUTACIÓN DE GRANADA",
+        "organization": "DIPUTACIÓN PROVINCIAL DE GRANADA",
+        "deadline": "2026-10-04",
+        "amount_eur": 6000,
+        "published_at": "2026-04-30",
+        "geo_level": "LOCAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": "diputacion-prov-de-granada",
+        "beneficiary_types": [
+          "persona-juridica-no-economica"
+        ],
+        "finalidades": [
+          "servicios-sociales"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "local"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 1129,
+        "slug": "resolucion-del-director-de-transferencia-e-innovacion-de-29--903059",
+        "source": "bdns",
+        "source_url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/903059",
+        "title": "RESOLUCIÓN del director de Transferencia e Innovación, de 29 de abril de 2026, por la que se publican las BBRR y se convoca la II Edición de los Premios al mejor Trabajo Fin de Grado y Trabajo Fin de Máster en la Cátedra de Economía Social de la UGR",
+        "organization": "UNIVERSIDAD DE GRANADA",
+        "deadline": "2026-09-30",
+        "amount_eur": 800,
+        "published_at": "2026-05-04",
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": "granada",
+        "municipality": null,
+        "beneficiary_types": [
+          "persona-fisica-no-economica"
+        ],
+        "finalidades": [
+          "educacion"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional"
+        ],
+        "status": "abierto",
+        "meta_description": "Premios a trabajos fin de grado y máster en Economía Social de la UGR. Plazo hasta 30 de septiembre de 2026."
+      }
+    ]
+  },
+  "estatal": {
+    "ok": true,
+    "page": 0,
+    "pageSize": 25,
+    "total": 676,
+    "totalPages": 28,
+    "items": [
+      {
+        "id": 6973,
+        "slug": "idae-programa-innovae-32a2bea7",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-innovae",
+        "title": "Programa Innovae",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5390,
+        "slug": "idae-programa-de-estudios-de-prefactibilidad-de-proyectos-de-biogas-par-9cde7b4b",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-de-estudios-de-prefactibilidad-de-proyectos-de-biogas-para-usos",
+        "title": "Programa de Estudios de Prefactibilidad de Proyectos de Biogas Para Usos",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5389,
+        "slug": "idae-programa-de-incentivos-proyectos-singulares-de-instalaciones-de-bi-50708528",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-de-incentivos-proyectos-singulares-de-instalaciones-de-biogas",
+        "title": "Programa de Incentivos Proyectos Singulares de Instalaciones de Biogas",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5388,
+        "slug": "idae-programa-de-ayudas-para-actuaciones-de-eficiencia-energetica-en-de-bc76e7c2",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-de-ayudas-para-actuaciones-de-eficiencia-energetica-en-desaladoras",
+        "title": "Programa de Ayudas Para Actuaciones de Eficiencia Energetica en Desaladoras",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5387,
+        "slug": "idae-programa-de-ayudas-para-la-realizacion-de-actuaciones-de-eficienci-5fd82fc5",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-de-ayudas-para-la-realizacion-de-actuaciones-de-eficiencia",
+        "title": "Programa de Ayudas Para la Realizacion de Actuaciones de Eficiencia",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5386,
+        "slug": "idae-para-instalaciones-de-produccion-de-energia-electrica-con-eolica-y-e4b7fd26",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-instalaciones-de-produccion-de-energia-electrica-con-eolica-y/eolcan-2",
+        "title": "Eolcan 2",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5385,
+        "slug": "idae-para-instalaciones-de-produccion-de-energia-electrica-con-eolica-y-b14c295c",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-instalaciones-de-produccion-de-energia-electrica-con-eolica-y/solbal-2",
+        "title": "Solbal 2",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5384,
+        "slug": "idae-programa-ipcei-hy2-66171bdb",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-ipcei-hy2",
+        "title": "Programa Ipcei Hy2",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5383,
+        "slug": "idae-programas-de-ayuda-la-cadena-de-valor-innovadora-del-hidrogeno-ren-5ac1d751",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programas-de-ayuda-la-cadena-de-valor-innovadora-del-hidrogeno-renovable-en",
+        "title": "Programas de Ayuda la Cadena de Valor Innovadora Del Hidrogeno Renovable en",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5382,
+        "slug": "idae-programa-h2-pioneros-ayudas-para-proyectos-pioneros-y-singulares-d-d6bc114c",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-h2-pioneros-ayudas-para-proyectos-pioneros-y-singulares-de-hidrogeno",
+        "title": "Programa H2 Pioneros Ayudas Para Proyectos Pioneros y Singulares de Hidrogeno",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5381,
+        "slug": "idae-proyectos-innovadores-de-almacenamiento-energetico-hibridado-con-f1b83a6a",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/proyectos-innovadores-de-almacenamiento-energetico-hibridado-con",
+        "title": "Proyectos Innovadores de Almacenamiento Energetico Hibridado Con",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5380,
+        "slug": "idae-proyectos-innovadores-de-almacenamiento-electrico-independiente-3733cdba",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/proyectos-innovadores-de-almacenamiento-electrico-independiente",
+        "title": "Proyectos Innovadores de Almacenamiento Electrico Independiente",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5379,
+        "slug": "idae-para-eficiencia-energetica-en-la-industria-concesion-directa-ccaa--804d42f6",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-eficiencia-energetica-en-la-industria/concesion-directa-ccaa-de-las",
+        "title": "Concesion Directa Ccaa de Las",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5378,
+        "slug": "idae-para-eficiencia-energetica-en-la-industria-concesion-directa-ccaa--b250eb0b",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-eficiencia-energetica-en-la-industria/concesion-directa-ccaa-de-las-0",
+        "title": "Concesion Directa Ccaa de Las 0",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5377,
+        "slug": "idae-para-eficiencia-energetica-en-la-industria-actuaciones-pyme-y-gran-aaf9cc38",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-eficiencia-energetica-en-la-industria/actuaciones-pyme-y-gran-empresa-industrial",
+        "title": "Actuaciones Pyme y Gran Empresa Industrial",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5376,
+        "slug": "idae-programa-dus-5000-ayudas-para-inversiones-proyectos-singulares-loc-da7c7003",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-dus-5000-ayudas-para-inversiones-proyectos-singulares-locales-de",
+        "title": "Programa Dus 5000 Ayudas Para Inversiones Proyectos Singulares Locales de",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5375,
+        "slug": "idae-para-la-transicion-energetica-en-las-islas-prtr-rd-4512022-de-conc-4d6e1dfc",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-la-transicion-energetica-en-las-islas-prtr/rd-4512022-de-concesion",
+        "title": "Rd 4512022 de Concesion",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5374,
+        "slug": "idae-para-la-transicion-energetica-en-las-islas-prtr-programa-de-conces-470fdd5b",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-la-transicion-energetica-en-las-islas-prtr/programa-de-concesion-de",
+        "title": "Programa de Concesion de",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5373,
+        "slug": "idae-para-la-renovacion-de-alumbrado-exterior-fnee-proyectos-singulares-10371d62",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-la-renovacion-de-alumbrado-exterior-fnee/proyectos-singulares-para-la",
+        "title": "Proyectos Singulares Para la",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5372,
+        "slug": "idae-programa-renmarinas-demos-c6cfdd49",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-renmarinas-demos",
+        "title": "Programa Renmarinas Demos",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5371,
+        "slug": "idae-programa-geotermia-profunda-c2c1a979",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-geotermia-profunda",
+        "title": "Programa Geotermia Profunda",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5370,
+        "slug": "idae-programa-valles-de-h2-e9270f98",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-valles-de-h2",
+        "title": "Programa Valles de H2",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5369,
+        "slug": "idae-programa-de-ayudas-subastas-de-hidrogeno-renovable-aaas-98b5a50d",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/programa-de-ayudas-subastas-de-hidrogeno-renovable-AaaS",
+        "title": "Programa de Ayudas Subastas de Hidrogeno Renovable Aaas",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5368,
+        "slug": "idae-para-movilidad-y-vehiculos-programa-moves-iii-e1ee8f5a",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-movilidad-y-vehiculos/programa-moves-iii",
+        "title": "Programa MOVES III",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      },
+      {
+        "id": 5367,
+        "slug": "idae-para-movilidad-y-vehiculos-moves-iii-2025-9c4eda98",
+        "source": "idae",
+        "source_url": "https://www.idae.es/ayudas-y-financiacion/para-movilidad-y-vehiculos/moves-iii-2025",
+        "title": "MOVES III 2025",
+        "organization": "IDAE — Instituto para la Diversificación y Ahorro de la Energía",
+        "deadline": null,
+        "amount_eur": null,
+        "published_at": null,
+        "geo_level": "ESTATAL",
+        "ccaa": null,
+        "province": null,
+        "municipality": null,
+        "beneficiary_types": [
+          "pyme",
+          "particular",
+          "ayuntamiento",
+          "asociacion"
+        ],
+        "finalidades": [
+          "energia",
+          "sostenibilidad",
+          "transicion-ecologica"
+        ],
+        "instrument_types": [
+          "subvencion"
+        ],
+        "funding_origins": [
+          "nacional",
+          "next-generation"
+        ],
+        "status": "abierto",
+        "meta_description": null
+      }
+    ]
+  }
+}

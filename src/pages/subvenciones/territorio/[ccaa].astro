@@ -1,112 +1,260 @@
 ---
-// /subvenciones/territorio/[ccaa] — Landing SEO por CCAA.
+// /subvenciones/territorio/[ccaa] — Landing territorial de subvenciones.
 //
-// 19 CCAA + ceuta/melilla → 19 landings. Estatal y Europa van aparte.
+// DECISIÓN ESTRATÉGICA (FASE C5): Opción B — Granada + Andalucía.
+// Despliegue controlado: solo Andalucía activa en esta fase.
+// Granada se gestiona en su landing canónica (/subvenciones/granada).
+// El resto de territorios permanece en standby como experimento controlado.
 
 import Base from '@/layouts/Base.astro';
 import SubsidyCard from '@/components/SubsidyCard.astro';
-import { fetchSubsidies, TERRITORIOS_PUBLIC, territorioLabel } from '@/lib/subsidies-api';
-import { breadcrumbList, SITE_URL } from '@/lib/jsonld';
+import { fetchSubsidies } from '@/lib/subsidies-api';
+import { breadcrumbList, serviceSchema, faqPageSchema, SITE_URL } from '@/lib/jsonld';
 
 export async function getStaticPaths() {
   return [
-    ...TERRITORIOS_PUBLIC.map((t) => ({ params: { ccaa: t.slug } })),
-    { params: { ccaa: 'nacional' } },
-    { params: { ccaa: 'europa' } },
+    { params: { ccaa: 'andalucia' } },
   ];
 }
 
 const { ccaa } = Astro.params;
-const isNacional = ccaa === 'nacional';
-const isEuropa = ccaa === 'europa';
-const label = isNacional
-  ? 'España (estatales)'
-  : isEuropa
-    ? 'Europa'
-    : territorioLabel(ccaa as string);
 
-const queryParams: Record<string, string | number> = {
+if (ccaa !== 'andalucia') {
+  return Astro.redirect('/subvenciones', 302);
+}
+
+const data = await fetchSubsidies({
+  ccaa: 'andalucia',
   status: 'abierto',
   pageSize: 50,
   sort: 'recent',
-};
-if (isNacional) queryParams.geo = 'ESTATAL';
-else if (isEuropa) queryParams.geo = 'EUROPA';
-else queryParams.ccaa = ccaa as string;
+});
 
-const data = await fetchSubsidies(queryParams);
+const faqs = [
+  {
+    question: '¿Qué tipo de subvenciones hay en Andalucía para el tercer sector?',
+    answer: 'La Junta de Andalucía convoca anualmente ayudas clave a través de la Consejería de Inclusión Social, Juventud, Familias e Igualdad (como las líneas de IRPF autonómico, Corresponsables o voluntariado), la Consejería de Empleo (inserción y empleo social) y programas de sostenibilidad y cultura. Además, las diputaciones provinciales y ayuntamientos publican líneas específicas locales.',
+  },
+  {
+    question: '¿Cómo funciona la concurrencia no competitiva en la Junta de Andalucía?',
+    answer: 'En líneas como el Plan Corresponsables, las solicitudes se resuelven por estricto orden de registro de entrada y las ayudas se conceden hasta agotar el crédito disponible. No se bareman unas entidades contra otras: llegar con la memoria técnica lista el primer día de plazo es el factor decisivo.',
+  },
+  {
+    question: '¿Es obligatorio estar inscrito en el Registro de Entidades de Servicios Sociales?',
+    answer: 'Para la gran mayoría de convocatorias de política social e igualdad de la Junta de Andalucía es un requisito obligatorio y excluyente. La entidad debe estar legalmente registrada antes de que termine el plazo de presentación de solicitudes.',
+  },
+  {
+    question: '¿Se pueden anticipar los fondos de las subvenciones andaluzas?',
+    answer: 'Sí. En muchas líneas sociales de la Junta de Andalucía para entidades sin ánimo de lucro se contempla el anticipo de hasta el 100% del importe concedido sin necesidad de prestar aval, lo que mitiga el riesgo de asfixia en tesorería.',
+  },
+];
 
-const title = `Subvenciones en ${label} · Buscador Startidea`;
-const description = `${data.total.toLocaleString('es-ES')} subvenciones abiertas en ${label}. Convocatorias actualizadas diariamente desde BDNS — listadas para tercer sector, instituciones y empresas con propósito.`;
+const title = 'Subvenciones en Andalucía para el tercer sector · Buscador Startidea';
+const description = `${data.total.toLocaleString('es-ES')} subvenciones abiertas en Andalucía. Convocatorias de la Junta y administraciones locales analizadas para asociaciones y fundaciones.`;
 
 const jsonLd = [
   breadcrumbList([
     { name: 'Inicio', url: `${SITE_URL}/` },
     { name: 'Subvenciones', url: `${SITE_URL}/subvenciones` },
-    { name: label, url: `${SITE_URL}/subvenciones/territorio/${ccaa}` },
+    { name: 'Andalucía', url: `${SITE_URL}/subvenciones/territorio/andalucia` },
   ]),
+  faqPageSchema(faqs.map((f) => ({ q: f.question, a: f.answer }))),
+  serviceSchema({
+    name: 'Asesoramiento y tramitación de subvenciones en Andalucía para el tercer sector',
+    description:
+      'Diagnóstico de elegibilidad, preparación de memoria técnica y acompañamiento en la justificación de subvenciones de la Junta de Andalucía y administraciones andaluzas para ONG y fundaciones.',
+    serviceType: 'Consultoría de financiación pública',
+    url: `${SITE_URL}/subvenciones/territorio/andalucia`,
+    areaServed: [
+      { type: 'AdministrativeArea', name: 'Andalucía' },
+      { type: 'Country', name: 'España' },
+    ],
+    audience: ['ONG y asociaciones', 'Fundaciones', 'Entidades del tercer sector', 'Empresas con propósito'],
+    offers: [
+      { name: 'Diagnóstico de encaje de subvención', description: 'Revisión en 30 minutos de los requisitos de tu entidad y de la convocatoria andaluza.' },
+      { name: 'Preparación de memoria técnica', description: 'Redacción rigurosa según baremo de la Junta de Andalucía.' },
+      { name: 'Acompañamiento en justificación', description: 'Revisión de gastos de personal, auditoría y trazabilidad del proyecto.' },
+    ],
+  }),
+];
+
+const claves = [
+  {
+    num: '01',
+    title: 'Concurrencia competitiva vs orden de registro',
+    body: 'Líneas como el Plan Corresponsables se resuelven por orden de entrada en registro: las solicitudes se inadmiten cuando se agota el crédito. En cambio, las líneas de IRPF o voluntariado bareman proyecto contra proyecto. Saber a qué tipo pertenece tu ayuda determina si la prioridad es la velocidad de registro o la puntuación técnica.',
+  },
+  {
+    num: '02',
+    title: 'Plazos BOJA: cuenta desde el extracto',
+    body: 'En Andalucía el plazo nunca empieza con la orden de bases reguladoras, sino al día siguiente de la publicación del extracto de la convocatoria en el BOJA. Confundir ambas fechas suele costar la presentación fuera de plazo.',
+  },
+  {
+    num: '03',
+    title: 'Personal con convenio y costes indirectos',
+    body: 'La Junta exige que los gastos de personal respeten los límites salariales del convenio sectorial aplicable. Los costes indirectos (gestión, suministros) suelen estar topados entre un 5% y un 10% del total subvencionable.',
+  },
+  {
+    num: '04',
+    title: 'Registro de Entidades de Servicios Sociales',
+    body: 'Para las líneas sociales de la Junta de Andalucía es requisito excluyente estar inscrita en el registro autonómico correspondiente. Sin este trámite previo, cualquier solicitud resulta rechazada.',
+  },
 ];
 ---
 
 <Base title={title} description={description} ogSlug="page/subvenciones" jsonLd={jsonLd}>
-  <section class="border-b border-ink/15 bg-paper py-16 md:py-20">
+  <!-- Hero -->
+  <section class="border-b border-ink/15 bg-paper py-16 md:py-24">
     <div class="container-x">
       <nav aria-label="Breadcrumb" class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">
-        <a href="/subvenciones" class="hover:text-magenta">← Buscador</a>
+        <a href="/subvenciones" class="hover:text-magenta">← Buscador general</a>
       </nav>
-      <span class="label mt-4">— Territorio</span>
+      <span class="label mt-4">— Convocatorias autonómicas y provinciales</span>
       <h1 class="mt-3 font-display text-display-xl leading-[0.96] text-ink">
         Subvenciones en<br />
-        <em class="italic text-magenta">{label}</em>.
+        <em class="italic text-magenta">Andalucía</em>.
       </h1>
       <p class="mt-6 max-w-measure text-lede text-ink/80">
-        {data.total.toLocaleString('es-ES')} convocatorias abiertas. Incluye
-        BOE, boletines autonómicos, diputaciones y ayuntamientos según
-        proceda. Filtrado por organismo convocante real (no por dónde
-        operes tú).
+        Convocatorias abiertas de la Junta de Andalucía, diputaciones provinciales y administraciones andaluzas.
+        Filtradas y organizadas con criterio editorial para el tercer sector, instituciones y empresas con propósito.
       </p>
+
+      <div class="mt-8 flex flex-wrap gap-6 font-mono text-[11px] uppercase tracking-widest text-ink/75">
+        <span><strong class="text-magenta">{data.total}</strong> convocatorias abiertas</span>
+        <span>Ámbito: <strong class="text-ink">Comunidad Autónoma de Andalucía</strong></span>
+        <span>Fuente: <strong class="text-ink">BDNS + BOJA diario</strong></span>
+      </div>
+
+      <div class="mt-10">
+        <a href="#convocatorias" class="btn" data-track="cta" data-track-id="cta_subvenciones_andalucia_ver">
+          Explorar convocatorias
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
     </div>
   </section>
 
-  <section class="bg-paper py-12 md:py-16">
+  <!-- Claves editoriales: cómo tramitar en Andalucía -->
+  <section class="border-b border-ink/15 bg-paper-warm py-16 md:py-24">
     <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-4">
+          <span class="label">— Criterio Startidea</span>
+          <h2 class="mt-4 font-display text-display-md leading-tight text-ink">
+            Cómo tramitar en la Junta <em class="italic text-magenta">sin perder meses</em>.
+          </h2>
+          <p class="mt-4 max-w-measure text-sm leading-relaxed text-ink/80">
+            No basta con recopilar enlaces de la BDNS. Presentar en Andalucía exige conocer los tiempos reales del BOJA, las exigencias de justificación y qué líneas se agotan en las primeras 48 horas.
+          </p>
+          <p class="mt-6 text-sm text-ink/75">
+            ¿Entidad de Granada? Consulta la vista exclusiva de <a href="/subvenciones/granada" class="text-magenta hover:underline font-semibold">subvenciones para Granada</a> (Diputación, Ayuntamiento y Universidad).
+          </p>
+        </div>
+        <div class="col-span-12 mt-8 lg:col-span-8 lg:mt-0">
+          <ol class="grid gap-px border-2 border-ink/15 bg-ink/15 sm:grid-cols-2">
+            {claves.map((c) => (
+              <li class="bg-paper p-7">
+                <span class="font-mono text-xs uppercase tracking-widest text-magenta">{c.num}</span>
+                <h3 class="mt-3 font-display text-xl font-bold leading-tight text-ink">{c.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink/75">{c.body}</p>
+              </li>
+            ))}
+          </ol>
+
+          <!-- Referencia a la nota editorial del BOJA -->
+          <div class="mt-8 border-l-2 border-magenta bg-paper p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-ink-mute">— Análisis en detalle</p>
+            <p class="mt-2 text-sm leading-relaxed text-ink/85">
+              Consulta nuestra guía analítica línea a línea: <a href="/notas/boja-2026-subvenciones-inclusion-social-andalucia" class="text-magenta font-semibold hover:underline">BOJA 2026: 16 subvenciones para ONG andaluzas de inclusión social</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Listado de ayudas abiertas -->
+  <section id="convocatorias" class="bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="mb-10 border-t border-ink/15 pt-6 flex flex-col md:flex-row md:items-baseline md:justify-between gap-4">
+        <div>
+          <span class="label">— Convocatorias en plazo</span>
+          <h2 class="mt-2 font-display text-2xl font-bold text-ink">
+            Ayudas activas en la Comunidad Autónoma de Andalucía
+          </h2>
+        </div>
+        <p class="font-mono text-[11px] uppercase tracking-widest text-ink-mute">
+          Mostrando {data.items.length} de {data.total} abiertas
+        </p>
+      </div>
+
       {data.items.length === 0 ? (
         <p class="py-16 text-center text-ink-mute">
-          Sin convocatorias abiertas ahora mismo en {label}. Vuelve pronto.
+          Sin convocatorias abiertas ahora mismo en Andalucía. Vuelve pronto o activa una alerta abajo.
         </p>
       ) : (
-        data.items.map((item) => <SubsidyCard item={item} />)
+        <div class="space-y-4">
+          {data.items.map((item) => <SubsidyCard item={item} />)}
+        </div>
       )}
 
       {data.totalPages > 1 && (
-        <div class="mt-10 text-center">
+        <div class="mt-12 text-center">
           <a
-            href={`/subvenciones?${isNacional ? 'geo=ESTATAL' : isEuropa ? 'geo=EUROPA' : `ccaa=${ccaa}`}`}
+            href="/subvenciones?ccaa=andalucia"
             class="btn"
+            data-track="cta"
+            data-track-id="ver_todas_subvenciones_andalucia"
           >
-            Ver todas las {data.total.toLocaleString('es-ES')} convocatorias →
+            Ver todas las {data.total.toLocaleString('es-ES')} en el buscador general →
           </a>
         </div>
       )}
     </div>
   </section>
 
-  <section class="bg-paper-warm py-12 md:py-16">
+  <!-- Preguntas frecuentes -->
+  <section class="border-t border-ink/15 bg-paper py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid grid-cols-12 gap-x-8">
+        <div class="col-span-12 lg:col-span-4">
+          <span class="label">— Dudas habituales</span>
+          <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
+            Preguntas sobre ayudas en <em class="italic text-magenta">Andalucía</em>.
+          </h2>
+        </div>
+        <div class="col-span-12 mt-6 lg:col-span-8 lg:mt-0">
+          <dl class="divide-y divide-ink/15 border-y border-ink/15">
+            {faqs.map((f) => (
+              <div class="py-6">
+                <dt class="font-display text-lg font-bold text-ink">{f.question}</dt>
+                <dd class="mt-2 max-w-measure text-sm leading-relaxed text-ink/80">{f.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Servicio Startidea -->
+  <section class="border-t border-ink/15 bg-ink py-20 text-paper md:py-24">
     <div class="container-x text-center">
-      <span class="label">— Alerta</span>
-      <h2 class="mt-3 font-display text-display-md leading-tight text-ink">
-        Alerta de subvenciones en <em class="italic text-magenta">{label}</em>.
+      <span class="label !text-paper/60">— Acompañamiento especializado</span>
+      <h2 class="mt-4 font-display text-display-lg leading-[1.02] text-paper">
+        Presenta tu proyecto en Andalucía <em class="italic text-magenta">con garantías</em>.
       </h2>
-      <p class="mx-auto mt-4 max-w-measure text-ink/75">
-        Startidea te avisa cuando aparezca una nueva convocatoria en {label} que
-        encaje con tu organización. Gratis.
+      <p class="mx-auto mt-6 max-w-measure text-paper/80 leading-relaxed">
+        Startidea revisa la elegibilidad de tu entidad, el encaje de la convocatoria y la memoria técnica antes de presentarla a la Junta. Sin compromiso y con tarifa reducida para el tercer sector.
       </p>
-      <a
-        href={`/subvenciones/crear-alerta?territorio=${isNacional || isEuropa ? 'nacional' : ccaa}`}
-        class="btn mt-6 inline-flex"
-      >
-        Crear alerta →
-      </a>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <a href="/contacto" class="btn !bg-paper !text-ink !border-paper hover:!bg-magenta hover:!text-paper hover:!border-magenta" data-track="cta" data-track-id="cta_subvenciones_andalucia_diagnostico">
+          Pedir diagnóstico de 30 min →
+        </a>
+        <a href="/subvenciones/crear-alerta?territorio=andalucia" class="btn-ghost !text-paper !border-paper/40 hover:!border-paper" data-track="cta" data-track-id="cta_subvenciones_andalucia_alerta">
+          Activar alerta gratuita de Andalucía
+        </a>
+      </div>
     </div>
   </section>
 </Base>

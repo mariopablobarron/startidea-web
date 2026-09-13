@@ -2,11 +2,14 @@
 // (hub.startidea.tech). Se usa en build (getStaticPaths) y en runtime
 // (componentes JS del navegador).
 //
-// La API es pública (sin auth), pero la cacheamos en CDN con
-// `Cache-Control: s-maxage=300` desde el HUB. Aquí dentro tipamos las
-// respuestas para que TS no se queje en las páginas Astro.
+// FASE C5: Arquitectura resiliente con LAST_KNOWN_GOOD_DATA. Si el HUB no está
+// disponible, está en mantenimiento o responde 503, se recurre de forma
+// automática e inmediata al snapshot estático (`subsidies-snapshot.json`).
+// Esto garantiza que el build de Astro nunca falle y que los metadatos SEO
+// y el número de convocatorias nunca queden a cero por caídas transitorias.
 
 import { HUB_URL } from '@/lib/hub';
+import snapshotData from '@/data/subsidies-snapshot.json';
 
 export const SUBSIDY_API = {
   list: (params: Record<string, string | number | undefined> = {}) => {
@@ -74,24 +77,53 @@ export interface DetailResponse {
   subsidy: SubsidyDetail;
 }
 
-/** Fetch con fallback silencioso en build (devuelve respuesta vacía si HUB no disponible). */
+interface SnapshotType {
+  generatedAt: string;
+  andalucia: ListResponse;
+  granada: ListResponse;
+  estatal: ListResponse;
+}
+
+const snapshot = snapshotData as unknown as SnapshotType;
+
+/** Recupera el snapshot LAST_KNOWN_GOOD_DATA según los parámetros de consulta. */
+export function getSnapshotFallback(
+  params: Parameters<typeof SUBSIDY_API.list>[0] = {},
+): ListResponse {
+  if (params.province === 'granada') return snapshot.granada;
+  if (params.ccaa === 'andalucia') return snapshot.andalucia;
+  if (params.geo === 'ESTATAL') return snapshot.estatal;
+  return snapshot.andalucia;
+}
+
+/** Fetch con fallback garantizado a LAST_KNOWN_GOOD_DATA (inmune a caídas del HUB o 503). */
 export async function fetchSubsidies(
   params: Parameters<typeof SUBSIDY_API.list>[0] = {},
 ): Promise<ListResponse> {
+  const fallback = getSnapshotFallback(params);
   try {
     const res = await fetch(SUBSIDY_API.list(params), {
       headers: { Accept: 'application/json' },
-      // Build/edge friendly: timeout corto
-      signal: AbortSignal.timeout(15000),
+      // Timeout corto para agilizar builds
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) {
-      console.warn(`[subsidies-api] list ${res.status}`);
-      return emptyList();
+      console.warn(
+        `[subsidies-api] list HTTP ${res.status} — aplicando LAST_KNOWN_GOOD_DATA (${fallback.total} items)`,
+      );
+      return fallback;
     }
-    return (await res.json()) as ListResponse;
+    const data = (await res.json()) as ListResponse;
+    if (data && data.ok && Array.isArray(data.items) && data.items.length > 0) {
+      return data;
+    }
+    console.warn(`[subsidies-api] respuesta sin items válidos — aplicando LAST_KNOWN_GOOD_DATA`);
+    return fallback;
   } catch (err) {
-    console.warn('[subsidies-api] list error:', (err as Error).message);
-    return emptyList();
+    console.warn(
+      `[subsidies-api] list error: ${(err as Error).message} — aplicando LAST_KNOWN_GOOD_DATA (${fallback.total} items)`,
+    );
+    return fallback;
   }
 }
 
@@ -101,7 +133,7 @@ export async function fetchSubsidyDetail(
   try {
     const res = await fetch(SUBSIDY_API.detail(slug), {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) return null;
     const j = (await res.json()) as DetailResponse;
@@ -110,10 +142,6 @@ export async function fetchSubsidyDetail(
     console.warn('[subsidies-api] detail error:', (err as Error).message);
     return null;
   }
-}
-
-function emptyList(): ListResponse {
-  return { ok: false, page: 0, pageSize: 0, total: 0, totalPages: 0, items: [] };
 }
 
 // ─── Taxonomía pública (espejo de la del HUB) ─────────────────────────
