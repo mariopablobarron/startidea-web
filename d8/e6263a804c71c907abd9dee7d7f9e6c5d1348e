@@ -1,0 +1,14 @@
+src/components/CursoRelacionado.astro
+  h_838f0aaf157975 2-8,17,19-41,48,53-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d8e6263a804c71c907abd9dee7d7f9e6c5d1348e",
+  "prompts": {},
+  "humans": {
+    "h_838f0aaf157975": {
+      "author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
