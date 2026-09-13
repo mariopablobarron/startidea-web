@@ -1,0 +1,22 @@
+src/content/diagnosticos/asociacion-igualdad-pacto-estado.md
+  h_838f0aaf157975 1-73
+src/content/diagnosticos/federacion-pacientes-enfermedad-rara.md
+  h_838f0aaf157975 1-73
+src/content/diagnosticos/protectora-animalista-microdonantes.md
+  h_838f0aaf157975 1-73
+src/content/notas/legados-herencias-solidarias-tercer-sector.md
+  h_838f0aaf157975 1-68
+src/content/notas/transparencia-cuentas-claras-captacion.md
+  h_838f0aaf157975 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "97c245ae8856839bb773076b684c7c164a0b466c",
+  "prompts": {},
+  "humans": {
+    "h_838f0aaf157975": {
+      "author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
