@@ -1,0 +1,14 @@
+scripts/refresh-subsidies-snapshot.mjs
+  h_838f0aaf157975 1-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4f1ae46e3b8a28ea622b20ce04cac329bf45db6a",
+  "prompts": {},
+  "humans": {
+    "h_838f0aaf157975": {
+      "author": "mariopablobarron <mariopablobarron@users.noreply.github.com>"
+    }
+  }
+}
