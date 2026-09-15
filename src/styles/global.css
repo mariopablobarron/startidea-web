@@ -7,6 +7,21 @@
 
 /* ─── Reset y base ────────────────────────────────────────── */
 @layer base {
+  /* Altura reservada por la barra de CTAs móvil (MobileCtaBar).
+     FUENTE ÚNICA: la usan el padding-bottom del <body> y la posición del FAB
+     (HubFlotante). Antes cada uno llevaba su propio número mágico —72px y
+     104px— frente a los 90px reales de la barra, así que la barra tapaba los
+     últimos 18px de contenido. El breakpoint debe ir en pareja con el
+     `min-[1180px]:hidden` de MobileCtaBar y con el burger de Nav. */
+  :root {
+    --st-barra-movil-h: 90px;
+  }
+  @media (min-width: 1180px) {
+    :root {
+      --st-barra-movil-h: 0px;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     /* Compensa el header sticky al saltar a anclas (#ecosistema, #faq, etc.) */

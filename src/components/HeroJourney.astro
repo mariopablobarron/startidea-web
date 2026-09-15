@@ -10,6 +10,14 @@
 //
 // SEO: el H1 real ("Innovación social que se nota") vive en la llegada (DOM
 // siempre presente). Reduce-motion: hero estático con el H1, sin viaje.
+import { bookingHref, hasBooking } from '@/data/booking';
+
+// CTA de reserva: mismo destino que el de la Nav (calendario externo si está
+// configurado, si no el formulario de /contacto). Antes estaba fijo a
+// /contacto y el mismo botón llevaba a dos sitios distintos según dónde se
+// pulsara.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 ---
 
 <section class="jny" data-jny>
@@ -33,7 +41,7 @@
         <p class="jny__eyebrow">— Agencia de comunicación e innovación social</p>
         <h1 class="jny__h1">Innovación social<br />que <em>se nota</em>.</h1>
         <p class="jny__sub">Consultoría, comunicación, audiovisual y tecnología para el tercer sector, las instituciones y las empresas con propósito.</p>
-        <div class="jny__cta"><a href="/contacto" class="btn" data-track="cta" data-track-id="hero_journey_diagnostico">Reserva un diagnóstico de 30 min →</a></div>
+        <div class="jny__cta"><a href={reservaHref} {...reservaExt} class="btn" data-track="cta" data-track-id="hero_journey_diagnostico">Reserva un diagnóstico de 30 min →</a></div>
         <div class="jny__cta-secondary">
           <span class="jny__cta-label">o directo —</span>
           <a

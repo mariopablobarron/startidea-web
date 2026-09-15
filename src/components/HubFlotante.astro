@@ -15,7 +15,8 @@
 const WA = 'https://wa.me/34958045789?text=' + encodeURIComponent('Hola, quería preguntar por Startidea.');
 ---
 
-<div id="hub-flotante" class="fixed bottom-[104px] right-5 z-50 flex flex-col items-end gap-3 xl:bottom-6 xl:right-6">
+<div id="hub-flotante" class="fixed right-5 z-50 flex flex-col items-end gap-3 xl:right-6"
+  style="bottom: calc(var(--st-barra-movil-h) + 24px)">
   <!-- Menú de canales (oculto hasta abrir) -->
   <div id="hub-menu" class="pointer-events-none flex translate-y-2 flex-col items-end gap-2 opacity-0 transition-all duration-200">
     <button type="button" data-hub="ai" class="hub-item">

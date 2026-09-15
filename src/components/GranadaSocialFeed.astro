@@ -20,7 +20,51 @@ interface Articulo {
 
 const FEED_URL = 'https://granadasocial.org/feed.xml';
 const MAX_ITEMS = 4;
+// Se leen bastantes más de los que se pintan: el feed del medio cubre también
+// actualidad nacional y de servicio ("beber dos litros de agua al día…"), que
+// en la home de la agencia es ruido. Se puntúan y se pintan los 4 mejores.
+const SCAN_ITEMS = 20;
 const TIMEOUT_MS = 6000;
+
+// Heurística, no clasificación: el RSS no trae <category>, así que la única
+// señal disponible es el texto. Se PUNTÚA (no se excluye) para que el bloque
+// nunca se quede vacío: si nada casa, salen igual los 4 más recientes.
+const TERMINOS_LOCALES = [
+  'granada', 'granadin', 'albaicín', 'albaicin', 'alhambra', 'realejo', 'zaidín', 'zaidin',
+  'chana', 'motril', 'guadix', 'baza', 'loja', 'almuñécar', 'almunecar', 'alpujarra',
+  'sierra nevada', 'vega de granada', 'diputación', 'diputacion', 'ayuntamiento',
+  'andalucía', 'andalucia', 'junta de andalucía', 'junta de andalucia',
+  'manuel de falla', 'isabel la católica', 'isabel la catolica', 'la chumbera',
+];
+const TERMINOS_SOCIALES = [
+  'ong', 'ongd', 'fundación', 'fundacion', 'asociación', 'asociacion', 'federación',
+  'federacion', 'plataforma', 'entidad social', 'tercer sector', 'voluntariado',
+  'solidari', 'cooperación', 'cooperacion', 'discapacidad', 'salud mental',
+  'migra', 'refugiad', 'exclusión', 'exclusion', 'pobreza', 'sinhogar', 'inclusión',
+  'inclusion', 'mayores', 'infancia', 'igualdad', 'accesibilidad', 'subvención',
+  'subvencion', 'vivienda', 'sindicat', 'derechos humanos',
+];
+
+function normaliza(s: string): string {
+  return s.replace(/<[^>]+>/g, ' ').toLowerCase();
+}
+
+function relevancia(a: Articulo): number {
+  const texto = normaliza(`${a.title} ${a.description}`);
+  const local = TERMINOS_LOCALES.some((t) => texto.includes(t)) ? 2 : 0;
+  const social = TERMINOS_SOCIALES.some((t) => texto.includes(t)) ? 1 : 0;
+  return local + social;
+}
+
+// Orden estable: primero relevancia, y a igualdad se respeta el orden del feed
+// (que ya viene por fecha descendente).
+function seleccionar(items: Articulo[]): Articulo[] {
+  return items
+    .map((a, i) => ({ a, i, r: relevancia(a) }))
+    .sort((x, y) => y.r - x.r || x.i - y.i)
+    .slice(0, MAX_ITEMS)
+    .map((e) => e.a);
+}
 
 function stripCData(s: string): string {
   return s.replace(/<!\[CDATA\[(.*?)\]\]>/gs, '$1').trim();
@@ -30,7 +74,7 @@ function parseRss(xml: string): Articulo[] {
   const itemPattern = /<item>([\s\S]*?)<\/item>/g;
   const items: Articulo[] = [];
   let m: RegExpExecArray | null;
-  while ((m = itemPattern.exec(xml)) !== null && items.length < MAX_ITEMS) {
+  while ((m = itemPattern.exec(xml)) !== null && items.length < SCAN_ITEMS) {
     const block = m[1];
     const get = (tag: string) => {
       const re = new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/${tag}>`);
@@ -59,7 +103,7 @@ try {
   clearTimeout(timeout);
   if (res.ok) {
     const xml = await res.text();
-    articulos = parseRss(xml);
+    articulos = seleccionar(parseRss(xml));
   }
 } catch (err) {
   // Silencioso: si el feed no responde no rompemos el home, solo no se renderiza.

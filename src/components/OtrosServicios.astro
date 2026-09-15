@@ -3,6 +3,11 @@
 // 3 servicios "hermanos" + CTA reservar diagnóstico.
 // Marca el actual (slug) para no listarlo.
 import FranjaConfianza from '@/components/FranjaConfianza.astro';
+import { bookingHref, hasBooking } from '@/data/booking';
+
+// CTA "Reservar diagnóstico": mismo destino que la Nav y el hero.
+const reservaHref = bookingHref();
+const reservaExt = hasBooking() ? { target: '_blank', rel: 'noopener' } : {};
 
 interface Props {
   current: string;
@@ -46,8 +51,8 @@ const otros = servicios.filter((s) => s.slug !== current);
           Las disciplinas se contratan juntas o por separado. Si no tienes claro cuál encaja con tu reto, se aclara en la llamada de diagnóstico.
         </p>
         <div class="mt-8">
-          <a href="/contacto" class="btn">
-            Reservar 30 min
+          <a href={reservaHref} {...reservaExt} class="btn">
+            Reservar diagnóstico
             <span aria-hidden="true">→</span>
           </a>
         </div>
